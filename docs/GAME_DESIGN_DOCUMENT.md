@@ -93,3 +93,14 @@ The game is designed **controller-first**, targeting DualSense and DualShock 4 w
 
 ### MVP acceptance criteria additions
 A complete 8–12-minute run can be played from launch to exit using only a PlayStation-style controller on Windows PC, with no keyboard or mouse needed. The game must clearly show the correct prompts and handle unplug/replug without losing progress.
+
+
+## PC / Steam release plan (confirmed)
+- **Launch platform:** Windows PC, downloadable through Steam.
+- **Primary input:** PlayStation DualSense; keyboard/mouse secondary.
+- **Development engine:** Godot 4; export Windows x86_64 builds.
+- **Distribution progression:** local PC controller playtests → private Windows playtest builds → Steam demo/playtest → full Steam release.
+- **Steam Input:** test PlayStation controller support both with Steam Input enabled and disabled; prevent double inputs and display accurate button glyphs.
+- **Release readiness:** full controller navigation, rebindable controls, windowed/fullscreen settings, persistent save data, performance targets, crash/error logging, clear build/version numbers, and a reproducible export pipeline.
+- **Steam publishing:** requires a Steamworks partner account, store assets, app setup, review, and applicable fees; console PlayStation publishing is not part of this scope.
+- **First milestone:** launch a standalone Windows build, complete a full mission on DualSense without keyboard/mouse, and verify save/load and controller reconnect.
