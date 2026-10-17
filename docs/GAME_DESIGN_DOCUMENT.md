@@ -61,3 +61,35 @@ Multiplayer, full open world, character creator, extensive story/cutscenes, proc
 
 ## Original IP
 Do not use Naruto village insignia, protected characters, or branded techniques. Review terminology and visual references before commercial release.
+
+
+## Primary input: PlayStation controller (required for MVP)
+The game is designed **controller-first**, targeting DualSense and DualShock 4 when connected to a PC. Keyboard/mouse is a secondary option. Controller support on PC does **not** imply PlayStation console certification or a console release.
+
+### Default gamepad mapping
+| Input | Action |
+|---|---|
+| Left stick | 360-degree movement |
+| Right stick | Directional aiming; retain last aim direction when neutral |
+| Cross (X) | Dash / evade |
+| Square | Light attack / three-hit combo |
+| Triangle | Heavy attack / launcher |
+| Circle | Interact / contextual counter (context priority) |
+| L1 | Guard / timed parry |
+| R1 | Quick technique |
+| R2 | Signature technique |
+| L2 (hold) | Technique wheel; right stick selects; release activates |
+| D-pad | Consumables / equipped technique shortcuts |
+| Options | Pause |
+| Touchpad press | Map / mission status |
+
+### Controller-first requirements
+- Use Godot 4 InputMap **actions**, not hard-coded keyboard keys or gamepad IDs; expose remapping and input presets.
+- Support DualSense and DualShock 4 over USB and Bluetooth where recognized by the operating system. Test both native and Steam Input paths; avoid double-input.
+- Detect connected/disconnected controllers and swap on-screen button glyphs between PlayStation and keyboard/mouse based on last active device. Include a manual glyph override.
+- All menus, pause screens, technique wheel, rewards, and hub interfaces must be fully navigable by D-pad/sticks, with visible focus, confirm/cancel, and no mouse requirement.
+- Tune dead zones, dash response, directional aim assist, buffered inputs, and optional vibration. Do not depend on adaptive triggers, touch gestures, or platform-exclusive features.
+- Test on a real controller for movement, aiming, attack chaining, pause/resume, controller reconnection, remapping, and menu navigation.
+
+### MVP acceptance criteria additions
+A complete 8–12-minute run can be played from launch to exit using only a PlayStation-style controller on Windows PC, with no keyboard or mouse needed. The game must clearly show the correct prompts and handle unplug/replug without losing progress.
