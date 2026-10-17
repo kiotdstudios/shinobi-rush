@@ -129,3 +129,15 @@ Use Black Myth: Wukong Type A as the ergonomic reference, while retaining origin
 | Options | Pause |
 
 Test two selectable presets: **Face Attacks** (above) and **Shoulder Attacks** (R1 light, R2 heavy; move technique modifier to L2 and guard to L1). Support full rebinding and correct on-screen glyphs. For the isometric camera, right stick should aim/select rather than rotate the world camera; add soft lock-on and a visible target indicator. Prioritize dodge timing, attack cancel windows, buffered inputs, and responsive combo chains.
+
+
+## L2 Substitution Jutsu — confirmed control requirement
+**L2 is dedicated to Substitution Jutsu**, replacing the previous proposed L2 guard/parry mapping. This is a timed defensive escape inspired by arena fighting games, but must use original Shinobi Rush visual effects and implementation.
+
+- On a correctly timed L2 press as an enemy strike connects, cancel incoming damage and reposition the player behind or to the side of the attacker, subject to safe collision/arena bounds.
+- Play a distinct smoke/afterimage effect and a brief recovery/response window; the ability should not guarantee a free counterattack.
+- Early/late presses fail and consume no charge in the initial prototype (tune during testing).
+- Prototype with 3 substitution charges, shown in the HUD. Compare timed recharge versus combat-earned recharge in playtests.
+- Circle remains the standard evasive dodge/dash, with its own timing and recovery.
+- Guard/parry is unassigned pending controller playtesting; do not overload L2.
+- Prototype tests: multiple enemies, projectiles, boss attacks, corner positioning, no valid teleport destination, repeated presses, charge exhaustion, controller input buffering, and clear success/failure feedback.
