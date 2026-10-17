@@ -104,3 +104,28 @@ A complete 8–12-minute run can be played from launch to exit using only a Play
 - **Release readiness:** full controller navigation, rebindable controls, windowed/fullscreen settings, persistent save data, performance targets, crash/error logging, clear build/version numbers, and a reproducible export pipeline.
 - **Steam publishing:** requires a Steamworks partner account, store assets, app setup, review, and applicable fees; console PlayStation publishing is not part of this scope.
 - **First milestone:** launch a standalone Windows build, complete a full mission on DualSense without keyboard/mouse, and verify save/load and controller reconnect.
+
+## Proposed Black Myth: Wukong-inspired controller preset (pending playtest)
+Use Black Myth: Wukong Type A as the ergonomic reference, while retaining original Shinobi Rush abilities and identity. This **supersedes the earlier default proposal for playtesting**, not yet a locked final scheme.
+
+| DualSense | Shinobi Rush action |
+|---|---|
+| Left stick | Move |
+| Right stick | Aim / select target direction |
+| R3 | Lock on / cycle target |
+| Square | Light combo |
+| Triangle | Heavy / charged attack |
+| Circle | Dodge / dash |
+| Cross | Jump or traversal (prototype; omit if no meaningful verticality) |
+| R1 / L3 | Sprint |
+| L1 | Heal |
+| L2 | Guard / parry |
+| R2 + Square | Technique 1 (Shadow Clone prototype) |
+| R2 + Triangle | Technique 2 (Lightning Strike prototype) |
+| R2 + Circle | Technique 3 (Wind Palm prototype) |
+| R2 + Cross | Technique 4 (custom / ultimate prototype) |
+| D-pad | Consumables or fighting stances, pending combat test |
+| Touchpad | Mission map |
+| Options | Pause |
+
+Test two selectable presets: **Face Attacks** (above) and **Shoulder Attacks** (R1 light, R2 heavy; move technique modifier to L2 and guard to L1). Support full rebinding and correct on-screen glyphs. For the isometric camera, right stick should aim/select rather than rotate the world camera; add soft lock-on and a visible target indicator. Prioritize dodge timing, attack cancel windows, buffered inputs, and responsive combo chains.
