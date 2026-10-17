@@ -141,3 +141,26 @@ Test two selectable presets: **Face Attacks** (above) and **Shoulder Attacks** (
 - Circle remains the standard evasive dodge/dash, with its own timing and recovery.
 - Guard/parry is unassigned pending controller playtesting; do not overload L2.
 - Prototype tests: multiple enemies, projectiles, boss attacks, corner positioning, no valid teleport destination, repeated presses, charge exhaustion, controller input buffering, and clear success/failure feedback.
+
+
+## Confirmed combat design decisions — October 2026
+These decisions are approved for Shinobi Rush and supersede any earlier tentative descriptions.
+
+### Aerial combat — YES
+- Ground light/heavy combos can launch enemies; the player can pursue and chain aerial strikes.
+- Add air attacks, aerial technique use, air recovery, landing states, and limits to prevent indefinite juggling.
+- Maintain clear depth shadows and readable height indicators in the faux-isometric view.
+- Prototype controlled jump arcs and grounded hitboxes before committing to full sprite sheets.
+
+### Awakening system — YES
+- Each playable character has a temporary powered-up state earned through active combat.
+- Awakening modifies selected attacks, technique behavior, effects, and combo finishers.
+- Specify gauge gain, activation input, duration, cancel rules, and balance in a dedicated design pass; avoid consuming an already-assigned button.
+- Prototype after the base combat loop is stable.
+
+### Fluid multi-enemy combat with optional lock-on — YES
+- Default movement and attacks support fighting multiple enemies fluidly.
+- R3 toggles optional hard lock-on for bosses and elite enemies; right stick cycles targets when locked.
+- Without hard lock-on, right stick provides directional aim and soft-target assistance.
+- Enforce clear enemy attack telegraphs, fair off-screen aggression rules, and camera framing that keeps threats visible.
+- Prototype targeting and camera behavior alongside combos, dash, and L2 substitution.
