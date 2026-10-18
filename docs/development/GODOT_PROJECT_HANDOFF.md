@@ -165,7 +165,7 @@ Stage 2 is delivered by a pull request (placeholder art only). The order is fini
 
 1. Stage 1 (the pipeline) is merged (done: PR #4), and the stage 2 pull request carries the real `project.godot` with a Web preset named `Web` as above.
 2. `Godot CI` passes on the stage 2 pull request (the `godot-ci-gate` check, with `build` and `smoke-predeploy` green).
-3. The Pages steps in [GODOT_CI_AND_DEPLOYMENT.md](GODOT_CI_AND_DEPLOYMENT.md#admin-only-steps) hold (Pages and the `github-pages` environment are set up, done on 2026-10-18; the Godot gate is added to the required status checks by an administrator once the first `main` run has proven it).
+3. The Pages steps in [GODOT_CI_AND_DEPLOYMENT.md](GODOT_CI_AND_DEPLOYMENT.md#admin-only-steps) hold (Pages and the `github-pages` environment are set up, done on 2026-10-18; the Godot gate `godot-ci-gate` was added to the required status checks on 2026-10-18, after the first `main` runs had proven it).
 4. A push to `main` deployed: `deploy` and `smoke-postdeploy` are green and the post-deploy artifact holds `deploy-info.json` with the real `page_url` and a matching commit SHA.
 5. Someone opens that URL in a browser and confirms the game starts.
 6. `orders/Kiro/order_01.md` acceptance boxes are ticked with links to the runs, the job report is updated with the URL and build ID, and the report's URL/build evidence box is ticked last. The orchestrator sets the final status.

@@ -42,13 +42,21 @@ All local results are VERIFIED on Windows with Godot 4.7.2 and Playwright 1.64.1
 - Panel buttons are canvas-drawn, so the probe triggers Download and Copy with F7/F8 key presses, not button clicks.
 - Running Godot in the console interactively once hung at a `debugger>` prompt; output was redirected to a file.
 - No reply from Aki on PR #2; the interface was written to work without `DebugTelemetry`.
-- The full manual download/copy flow on the deployed URL is NOT done and must be done after merge and deploy.
+- The full manual download/copy flow on the deployed URL was NOT done before the merge; it was done after the merge and deploy, see "Live verification" below.
 
 ## Questions for project owner
 None.
 
 ## Outstanding work / next steps
-- Orchestrator: review, merge, then verify the deployed build (download and copy flow on the live URL, live smoke result) before any DONE.
+- Done by the orchestrator: merged ([PR #10](https://github.com/kiotdstudios/shinobi-rush/pull/10), 0f01f81), deployed and verified live (see "Live verification"). The order stays at REVIEW, not DONE: acceptance criterion 1 needs Aki's in-game events.
 - Aki: integrate `DebugTelemetry` per DEBUG_LOG_INTERFACE.md (summary posted on PR #2).
 - Orcha: camera events can be logged through `record()` once the camera lands.
-- Live deployment: not yet done; not claimed.
+- Live deployment: done and verified for the browser side (see "Live verification"); the in-game event content is not available until Aki's producer exists.
+
+
+## Live verification (orchestrator, 2026-10-18, after merge and deploy)
+Run against the deployed URL https://kiotdstudios.github.io/shinobi-rush/?debug=1 (build 0f01f81, then re-checked at 068047e) with a real browser, **clicking the real canvas buttons** (no hooks, no F7/F8): 13 of 13 checks pass.
+- Download Debug Log produced valid JSONL; the filename and the header carry the live build commit, equal to the served `build-info.json`; both induced browser errors (a thrown error and an unhandled rejection) are in the log as `browser_error` events.
+- Text typed into the page is absent from the log; clicking Download caused 0 new network requests; no `localStorage`, `sessionStorage` or cookie was written.
+- The TXT button downloaded a file. Copy Bug Report copied a 1,048-character report (build SHA, session, tester note); with the clipboard denied the panel showed "Copy was refused. Select the text below and copy it manually." and a selectable text box (screenshot opened).
+- Closes the reviewer's note that the canvas buttons and the clipboard-refused fallback had never run in a real browser. Not verified: iOS Safari downloads and clipboard rules, and events from the game itself (Aki's producer does not exist yet).
