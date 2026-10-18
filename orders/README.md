@@ -14,7 +14,7 @@ This directory is the **single source of truth for agent work orders**. Each age
 5. Status values: `QUEUED`, `IN_PROGRESS`, `BLOCKED`, `REVIEW`, `DONE`. Update the order when work changes status; include PR/commit links and test evidence.
 6. Keep work on dedicated branches/PRs when multiple agents are active. Avoid direct concurrent edits to `main`. Only merge after review and testing.
 7. Respect locked gameplay/visual decisions. Read [Codex player handoff](../docs/prototype/PLAYER_CHARACTER_CODEX_HANDOFF.md), [baseline character](../docs/prototype/BASELINE_PLAYER_CHARACTER.md), and the latest [world/gameplay rules](../world/maps/MVP_WORLD_MAP.md) where relevant.
-8. **Do not assume an order is active merely because it exists.** Work begins only when explicitly assigned.
+8. **Orders are executable immediately upon discovery.** When an agent reads a QUEUED order assigned to them, they must start work without waiting for a follow-up prompt. Set status to IN_PROGRESS and proceed, unless blocked by a stated dependency, conflicting assignment, or missing required access. Do not automatically execute orders owned by another agent.
 9. When a task spans multiple agents, designate one owner and list collaborators and handoff artifacts.
 10. Never overwrite another agent's work or mark an untested feature complete.
 
@@ -92,3 +92,11 @@ None / details
 
 ## Outstanding work / next steps
 ```
+
+
+## Automatic execution and live playtesting deployment — REQUIRED
+- **No extra approval prompt:** An agent who opens their orders folder must inspect all assigned `QUEUED` orders and begin the highest-priority unblocked one immediately. Continue through remaining assigned orders as practical; do not wait for the project owner to repeat the instruction. If blocked, record the blocker and question in the order/report and move to the next unblocked order.
+- **Every completed gameplay/code change must reach the shared live testing build automatically**, without waiting to be told to deploy. The live game is the project's browser-playable Godot Web test build, not a production release. Follow the repository's actual configured deployment pipeline; never invent a deployment URL or claim a deployment succeeded without checking it.
+- **Sequence:** implement → run local tests and playtest → write job report with evidence → commit and push changes → integrate through the approved branch/PR workflow → deploy/publish the updated live test build → open the live game and smoke-test the deployed version → update the report with commit, deployment URL/build ID, time, smoke-test result, and issues. The report may need a final report-only commit after deployment.
+- **Live-build coordination:** When multiple agents work concurrently, integrate through reviewed PRs or a designated integration owner. Do not force-push, overwrite another agent's changes, or bypass required CI/branch protections to make a deployment happen. If publishing is blocked by access, CI, conflicts, or missing deployment configuration, mark `BLOCKED`, document it, and ask a targeted question; do not falsely report the game as updated.
+- **Definition of DONE:** accepted tests pass, code is committed/integrated, live testing build is updated and verified, and job report is complete. If the job changes only docs/art and has no runtime impact, commit/push the changes and explicitly state `Live deployment: not applicable` with the reason.
