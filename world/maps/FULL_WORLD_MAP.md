@@ -20,7 +20,7 @@ flowchart TB
     class G start;
     class A,B,AF,BF,D mvp;
     class C,N future;
-    linkStyle 7 stroke:#d6ae63,stroke-width:3px,stroke-dasharray:6 4;
+    linkStyle 6 stroke:#d6ae63,stroke-width:3px,stroke-dasharray:6 4;
 ```
 
 ### Confirmed topology
