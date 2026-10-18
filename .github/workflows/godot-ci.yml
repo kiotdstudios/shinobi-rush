@@ -147,6 +147,12 @@ jobs:
           --out-dir "$EVIDENCE_DIR/smoke-predeploy"
           --label pre-deploy
           --expected-sha "$GITHUB_SHA"
+      - name: Run controls probe (walk, sprint and wall checks through window.__SHINOBI_STATE__)
+        working-directory: scripts/ci/smoke
+        run: >-
+          node controls-probe.mjs
+          --serve-dir "$EXPORT_DIR"
+          --out-dir "$EVIDENCE_DIR/controls-probe"
       - name: Upload smoke-test evidence
         if: ${{ always() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

@@ -25,7 +25,7 @@ def fake_export(d: Path) -> Path:
     """A structurally valid export (synthetic bytes with the real magic numbers)."""
     d.mkdir(parents=True)
     wasm = b"\x00asm" + b"\x01\x00\x00\x00" + b"x" * 1_100_000
-    pck = b"GDPC" + b"\x00" * 200
+    pck = b"GDPC" + b"\x00" * 100 + b"res://project.binary" + b"\x00" * 100
     cfg = json.dumps({"executable": "index", "fileSizes": {"index.pck": len(pck), "index.wasm": len(wasm)}})
     (d / "index.wasm").write_bytes(wasm)
     (d / "index.pck").write_bytes(pck)
@@ -81,6 +81,55 @@ class ExportToolsTests(unittest.TestCase):
     def test_build_info_needs_a_real_commit_sha(self):
         with self.assertRaises(ValueError):
             et.make_build_info(self.d, kind="game", env={"GITHUB_SHA": "abc"}, godot_version="4.7.2", godot_version_string="x", project_dir=".", project_name="x")
+
+
+class PckContentTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.d = fake_export(self.tmp / "web")
+        self.project = self.tmp / "proj"
+        (self.project / "assets/characters/p1/idle").mkdir(parents=True)
+        (self.project / "assets/characters/p1/p1.manifest.json").write_text("{}", encoding="utf-8")
+        (self.project / "assets/characters/p1/idle/S.png").write_bytes(b"png")
+        (self.project / "assets/characters/p1/source").mkdir()
+        (self.project / "assets/characters/p1/source/raw.png").write_bytes(b"png")  # excluded by the preset
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def set_pck(self, *entries: str):
+        (self.d / "index.pck").write_bytes(b"GDPC" + b"\x00" * 200 + b"".join(e.encode() + b"\x00" for e in entries))
+
+    def test_expected_entries_skip_excluded_dirs(self):
+        exp = et.expected_pck_entries(self.project)
+        self.assertEqual(exp["manifests"], ["assets/characters/p1/p1.manifest.json"])
+        self.assertEqual(exp["pngs"], ["assets/characters/p1/idle/S.png.import"])
+
+    def test_complete_pck_passes_and_reports_counts(self):
+        self.set_pck("project.binary", "assets/characters/p1/p1.manifest.json", "assets/characters/p1/idle/S.png.import")
+        findings, notes = et.check_pck_contents(self.d, self.project)
+        self.assertEqual(findings, [])
+        self.assertIn("1 sprite manifest(s) and 1 sprite PNG", notes[0])
+
+    def test_missing_manifest_and_png_fail(self):
+        self.set_pck("project.binary")
+        findings, _ = et.check_pck_contents(self.d, self.project)
+        messages = " ".join(f.message for f in findings)
+        self.assertEqual({f.code for f in findings}, {"EXPORT011"})
+        self.assertIn("p1.manifest.json", messages)
+        self.assertIn("S.png.import", messages)
+
+    def test_missing_project_binary_fails(self):
+        self.set_pck("assets/characters/p1/p1.manifest.json", "assets/characters/p1/idle/S.png.import")
+        findings, _ = et.check_pck_contents(self.d, self.project)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("project.binary", findings[0].message)
+
+    def test_project_without_sprites_states_nothing_to_assert(self):
+        self.set_pck("project.binary")
+        findings, notes = et.check_pck_contents(self.d, self.tmp / "empty")
+        self.assertEqual(findings, [])
+        self.assertIn("nothing sprite-related to assert", notes[0])
 
 
 class PagesGateTests(unittest.TestCase):

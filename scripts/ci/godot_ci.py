@@ -6,7 +6,7 @@
   godot_ci.py tests              --project P ...
   godot_ci.py export             --project P --out DIR ...        (Web preset "Web", DEBUG template, single-threaded)
   godot_ci.py finalize-export    --project P --out DIR --kind game|selftest
-  godot_ci.py check-export       --dir DIR [--kind game] [--expect-sha SHA]
+  godot_ci.py check-export       --dir DIR [--kind game] [--expect-sha SHA] [--project DIR]
 
 Godot exits 0 on many real errors, so every Godot step ALSO scans its output (godot_log.scan) and fails on engine
 ERROR / SCRIPT ERROR lines. The Web export uses the DEBUG template on purpose: release templates silently swallow
@@ -256,6 +256,12 @@ def cmd_check_export(args: argparse.Namespace) -> int:
     except ValueError as e:
         annotate("error", str(e), title="export check usage")
         return 2
+    if args.kind == "game":  # self-test exports are not the game and ship no sprites
+        project = Path(args.project).resolve() if args.project else Path(__file__).resolve().parents[2]
+        pck_findings, notes = export_tools.check_pck_contents(d, project)
+        findings += pck_findings
+        for note in notes:
+            print(note)
     ok = report_findings(findings, "export check")
     print("export check:", "OK" if ok else "FAILED", f"({d})")
     return 0 if ok else 1
@@ -288,6 +294,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     p.add_argument("--dir", required=True)
     p.add_argument("--kind", choices=export_tools.KINDS)
     p.add_argument("--expect-sha")
+    p.add_argument("--project", help="project dir whose sprites must be inside the PCK (kind=game; default: repository root)")
     p.set_defaults(fn=cmd_check_export)
     args = ap.parse_args(argv)
     return args.fn(args)
