@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner cadence assessment pending
-- Commit / PR: Not committed; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: ce04a86; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Owner suspected a duplicated south normal-run frame. Audited all 20 run-v3 south frames: no exact duplicate RGBA poses. Consecutive changed-pixel counts range 1946-2615, with 2364 changed pixels at the loop seam. Closest nonconsecutive pose pairs include frames 10/18 and 15/18 (385 changed pixels each). Half-speed GIF durations are 80/90ms for every frame, with no double-length hold. All 20 frames inspected on .tools/south-run-frame-audit.png. Similar stride poses plus the upright first two poses can create a perceptual cadence hitch even though the files are unique.
@@ -26,3 +26,5 @@ None. Revised comparison will be supplied for inspection.
 Inspect replacement, export/check, publish south comparison and updated run grid. Sprint review remains pending owner feedback. Full Order 01 incomplete. Live deployment: not applicable to review-only GIFs; no gameplay files changed.
 
 South silhouette height is 88-95px through the new mid-run poses, versus 93-108px including the old upright lead-in and stronger hair spikes. No compensating per-frame scaling was applied; uniform scale 104/108 and nominal ground origin [64,116] remain unchanged. Body/pose perception and cadence acceptance remain for owner review.
+
+Public verification: south-comparison and eight-direction half-speed GIFs both HTTP 200, 20 frames, 1670ms loop; comparison 800x560, grid 600x1240. https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/run-v4-south-comparison.gif
