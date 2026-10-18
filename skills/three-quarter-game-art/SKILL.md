@@ -16,3 +16,7 @@ Read [camera and art direction](../../docs/visuals/CAMERA_AND_ART_DIRECTION.md) 
 
 
 Use [Order 01 fluidity and equipment standards](../../orders/Codex/order_01.md): eight directions, 24 fps authored animation baseline, meaningful in-betweens, layered equipment sockets, independent VFX, and Web performance testing.
+
+
+## Mandatory PixelLab API art-generation policy
+**All new generated pixel-art assets for Shinobi Rush must be created through the PixelLab API** (characters, directional sprites, animations, equipment, enemies, tiles, props, environment art, UI pixel art and pixel VFX). Read [PixelLab API art pipeline](../../docs/visuals/PIXELLAB_API_ART_PIPELINE.md) before art work. Codex owns generation; other agents request assets from Codex rather than using alternative generators. Manual pixel cleanup, sprite compositing, shaders, particle systems, and programmatic Godot integration are permitted post-processing—not substitutes for PixelLab-generated source art. Never embed or commit API keys. If PixelLab API credentials, features, quotas or outputs are unavailable, report BLOCKED; do not silently switch generators.
