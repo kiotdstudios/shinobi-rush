@@ -112,3 +112,7 @@ Before related work, consult the [project skill index](../skills/README.md). Cod
 
 ## Premium roguelike-inspired game vision
 **Required reading:** [Shinobi Rush quality and inspiration brief](../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md). Aim for premium AAA-level polish in combat, animation, VFX, enemy readability and replay appeal. **Do not change the locked persistent RPG progression, world layout, death/save rules, or add permadeath/procedural run resets without owner approval.**
+
+
+## Locked genre clarification (owner decision 2026-10-17)
+Shinobi Rush is a **persistent-world shinobi action RPG** inspired by the **premium combat feel** of high-quality roguelikes and action games, **not a run-based roguelike**. Do not implement procedural runs, permadeath, reset loops, or changes to locked save/progression/world rules. See [premium combat vision](../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md).
