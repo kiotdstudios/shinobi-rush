@@ -134,3 +134,6 @@ North-west uses one complete11-pose cycle, retaining half-speed12poses/sec. Seve
 - [North-west before/after](sprint-v5-north-west-comparison.gif)
 - [North-west normal speed](sprint-v5-north-west-normal.gif)
 - [North-west quarter speed](sprint-v5-north-west-quarter-speed.gif)
+
+
+- [Latest v5 all eight directions, half speed](sprint-v5-all-directions-half-speed.gif) — includes revised north-west; each direction loops independently.
