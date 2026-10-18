@@ -1,9 +1,9 @@
-# Job Report â€” Align the Godot project, validator and docs with the locked 128x128 art standard
+# Job Report - Align the Godot project, validator and docs with the locked 128x128 art standard
 - Agent: Kiro
 - Order: [orders/Kiro/order_01.md](../order_01.md) (follow-up stage 3b: 128x128 alignment)
 - Date: 2026-10-18
 - Final status: REVIEW (PR open, CI results below; not merged, not deployed from this branch)
-- Commit / PR: [PR #8](https://github.com/kiotdstudios/shinobi-rush/pull/8), branch `kiro/order-01-128-standard-alignment`; verified in CI at ca0b4d3 (run 39141121856) and again after merging 14 newer origin/main commits at 585d960254f79d4984dc2327152b6026b13fb5f2 ([Godot CI run 39148246767](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39148246767): all required checks pass, 245 tests passed 0 failed, smoke PASS, controls probe and debug probe ok, screenshot opened). This line was added in a report-only commit. Live deployment: not applicable until the orchestrator merges (a PR never deploys).
+- Commit / PR: [PR #8](https://github.com/kiotdstudios/shinobi-rush/pull/8), branch `kiro/order-01-128-standard-alignment`; verified in CI at ca0b4d3 (run 39141121856) and again after merging 24 newer origin/main commits (28 with merges) at 585d960254f79d4984dc2327152b6026b13fb5f2 ([Godot CI run 39148246767](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39148246767): all required checks pass, 245 tests passed 0 failed, smoke PASS, controls probe and debug probe ok, screenshot opened). This line was added in a report-only commit. Live deployment: not applicable until the orchestrator merges (a PR never deploys).
 
 ## Work completed
 - D2 validator: `scripts/ci/validate_sprite_manifests.py` now errors on a production base `frame_size` other than [128,128] (FRAME128), a per-animation canvas under 128 in either dimension (FRAME128_OVERFLOW), and a `foot_anchor` outside its frame (FOOT_ANCHOR); it warns when `body_height_px` is outside 100-112 (BODY_HEIGHT). Manifests under `references/`, `previews/`, `source/` or `study/` get a schema check only. `export_presets.cfg` exclude_filter keeps those four folders out of the PCK.

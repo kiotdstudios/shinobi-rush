@@ -60,7 +60,7 @@ class Stand extends Node2D:
 		var d := WorldScale.STAND_DIAMOND
 		draw_colored_polygon(PackedVector2Array([Vector2(0, -d.y), Vector2(d.x, 0), Vector2(0, d.y), Vector2(-d.x, 0)]), Color("#8c8c8c"))
 		draw_polyline(PackedVector2Array([Vector2(0, -d.y), Vector2(d.x, 0), Vector2(0, d.y), Vector2(-d.x, 0), Vector2(0, -d.y)]), Color(0, 0, 0, 0.5), 1.0)
-		# Unclipped, centred on the stand. Shrink the font so it never exceeds the 130 px stand spacing.
+		# Unclipped, centred on the stand. Shrink the font so it never exceeds the stand spacing.
 		var fsize := 11
 		while fsize > 7 and ThemeDB.fallback_font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > 126.0:
 			fsize -= 1

@@ -101,7 +101,7 @@ Every function has a key and a clickable button. The status line is always on sc
 
 The metrics line shows set id, frame size, animations/frames loaded, load ms and texture memory
 (`RENDER_TEXTURE_MEM_USED`) so you can compare the cost of two sets or overflow canvases. Sets load lazily on first use.
-Grids: the iso grid is 32x32 world tiles drawn 2:1 (64x32 diamonds); the square grid is plain 32 px.
+Grids: the iso grid is 144x72 diamonds (`WorldScale.TILE_SIZE`, drawn 2:1); the square grid is plain 32 px.
 
 ## 6. Links and CI
 

@@ -7,7 +7,7 @@ extends RefCounted
 const DIRS8: Array[String] = ["S", "SE", "E", "NE", "N", "NW", "W", "SW"]
 const OCTANT_DIRS: Array[String] = ["E", "SE", "S", "SW", "W", "NW", "N", "NE"]  ## indexed by angle / 45 degrees (y down)
 const DEFAULT_FPS := 24.0
-const DEFAULT_BODY_HEIGHT := 108.0
+const DEFAULT_BODY_HEIGHT := WorldScale.BODY_HEIGHT
 
 var id: String = ""
 var manifest_path: String = ""
