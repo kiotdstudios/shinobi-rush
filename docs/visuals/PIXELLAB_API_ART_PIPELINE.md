@@ -10,8 +10,8 @@
 4. Preserve the approved visual reference and test at the actual elevated three-quarter gameplay camera, not only on an orthographic turnaround.
 5. For each source, export actual transparent PNG assets, animation manifest, frame dimensions, directions, FPS, consistent foot anchor, equippable attachment alignment and in-engine previews. Manual correction, rigging, compositing and effects are allowed.
 
-## Pixel dimensions — 64×64 vs 128×128
-The owner has provided a successful **64×64 character example**. **64×64 is a valid candidate; 128×128 is not a blanket requirement.** Before mass-generating animations, Codex should produce a controlled comparison of 64×64 and 128×128 at actual gameplay zoom, including diagonal pose, idle/run/sprint test motion, equippable readability, and Godot Web texture/performance costs. Recommend and record one production scale for owner approval. Do not confuse the resolution of an uploaded *composite reference image* with the underlying sprite frame size.
+## Pixel dimensions
+Production sprite frames are locked at 128×128 RGBA (see the FINAL OWNER DECISION below and [orders/README.md](../../orders/README.md)). Before mass-generating animations, test at actual gameplay zoom, including diagonal pose, idle/run/sprint test motion, equippable readability, and Godot Web texture/performance costs. Do not confuse the resolution of an uploaded *composite reference image* with the underlying sprite frame size.
 
 ## Motion quality
 Aim for premium, responsive, well-timed animation. More frames only help when they improve motion arcs, transitions and secondary movement. Frame-count tables in Order 01 are **targets to evaluate**, not required filler. Use the best viable frame counts and timing after gameplay preview.
