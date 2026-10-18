@@ -94,5 +94,13 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - The player starts with **12 total shared inventory slots** for scroll fragments and crafting materials combined (not 12 each).
 - Increasing bag capacity requires gathering **bag-upgrade materials** and performing an upgrade. Upgrade service/location and material recipes TBD.
 - Inventory capacity is a meaningful exploration and resource-management constraint.
-- **Not yet locked:** item stacking rules and maximum stack sizes; exact expansion increments and maximum bag capacity; whether quest items use separate slots; handling pickups when full.
-- **Suggested only (not locked):** 12 → 16 → 20 → 24 slots; identical items stack within a slot.
+- **Locked stacking:** identical scroll fragments and crafting materials stack up to **99 units per slot**. The 100th unit begins a new stack and consumes another shared bag slot.
+- **Locked jutsu fragment costs:** basic jutsu require **10 technique-specific scroll fragments**; rarer jutsu require **20 or more** fragments, scaled by rarity. Every jutsu additionally requires crafting materials and trainer exchange.
+- **Not yet locked:** exact expansion increments and maximum bag capacity; whether quest items use separate slots; handling pickups when full; specific rare-tier costs and material recipes.
+- **Suggested only (not locked):** 12 → 16 → 20 → 24 slots; identical items stack up to 99 units per slot.
+
+## Inventory stacking and jutsu fragment thresholds — confirmed
+- Shared bag begins at **12 slots** for fragments and materials.
+- Each identical item stack holds **99**; additional units split into new stacks and consume additional slots.
+- **Basic jutsu: 10 fragments** of that specific technique, plus crafting materials, exchanged at a trainer.
+- **Rare jutsu: 20+ fragments** of that specific technique, plus crafting materials, exchanged at a trainer. Precise higher-tier costs TBD.
