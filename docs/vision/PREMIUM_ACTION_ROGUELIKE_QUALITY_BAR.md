@@ -27,3 +27,7 @@ The authoritative world/gameplay rules are in `world/maps/MVP_WORLD_MAP.md`. **D
 - **Kiro:** protect performance, browser export reliability, CI, deployment, and measurable tests; do not treat this document as a request to rewrite gameplay systems.
 
 This is a **quality and inspiration brief**, not a genre-system redesign.
+
+
+## OWNER DECISION — Genre interpretation LOCKED (2026-10-17)
+**Shinobi Rush is an existing-world action RPG, NOT a run-based roguelike.** The user explicitly chose **primarily the premium combat feel of Hades II, Returnal, and Black Myth: Wukong within the existing RPG world**. Preserve seamless regions, persistent levels/skills, crafting, inventory, save stones, and established death rules. Roguelike references are **feel and quality benchmarks only**: responsive dodges, precise attacks, animation polish, hit feedback, readable VFX, intelligent enemies, and build expression. **Do not add randomized runs, run resets, procedural level generation, permadeath, or roguelike progression loops** unless a new explicit order approves them. This owner decision supersedes any ambiguous “roguelike-inspired” language in earlier docs.
