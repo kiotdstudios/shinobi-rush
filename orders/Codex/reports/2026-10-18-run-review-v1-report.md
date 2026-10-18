@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner normal-run assessment pending
-- Commit / PR: Not committed; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: 4b3ed45; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Owner allowed progression after requesting a west/east walk height audit. All 16 walk silhouettes measured: east 98-103px, mean 100.5625px; west 97-103px, mean 100.5px. Contact sheet includes original E, original W and mirrored E at frames 0,4,8,12. No systematic height mismatch found, so unique west retained. Mirroring would reverse asymmetric hair/outfit details and is not necessary for this measured size difference.
@@ -27,3 +27,5 @@ None. New animation will be supplied for visual review.
 Finish normal-run generation, export/test all eight directions and publish mobile review. Sprint, jump, dodge, melee and hit states remain outstanding. Full Order 01 is incomplete. Live deployment: not applicable to review-only GIF publication; no gameplay files changed.
 
 Normal-run silhouette heights vary through crouch/flight (90-109px overall), with unchanged anatomical scale. Run east mean 95.85px, west 96.5px. First/last pose and perceived gait speed remain subject to owner review; Godot checks verify rendering and integrity, not subjective animation acceptance. No gameplay transitions or live game Web playtest performed for this review-only job.
+
+Public verification: HTTP 200, decoded 600x1240 GIF, 20 frames, 1670ms half-speed loop. URL: https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/run-v1-half-speed.gif
