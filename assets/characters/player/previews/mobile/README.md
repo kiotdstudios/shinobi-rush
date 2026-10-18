@@ -76,3 +76,11 @@ North replaced with a fitted vest candidate following torso motion. Other seven 
 - [Eight directions half speed](run-v2-half-speed.gif)
 - [Eight directions normal speed](run-v2-normal.gif)
 - [Eight directions quarter speed](run-v2-quarter-speed.gif)
+
+## East run arm revision v3
+East-only replacement for the rear-hand hold. Seven other directions retain v2 PNGs, including north vest revision.
+
+- [East arm before/after](run-v3-east-comparison.gif)
+- [Eight directions half speed](run-v3-half-speed.gif)
+- [Eight directions normal speed](run-v3-normal.gif)
+- [Eight directions quarter speed](run-v3-quarter-speed.gif)
