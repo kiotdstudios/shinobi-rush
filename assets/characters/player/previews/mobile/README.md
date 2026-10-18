@@ -45,3 +45,10 @@ West and north-west revised for quieter planted breathing. Other six directions 
 - [V4 half speed](idle-v4-half-speed.gif)
 - [V4 normal speed](idle-v4-normal.gif)
 - [V4 quarter speed](idle-v4-quarter-speed.gif)
+
+## Idle shoulder refinement v5
+East and north-west shoulder breathing revised with fixed head/lower-body cels. Other six directions retain v4 frames. Half-speed default preserved.
+
+- [V5 half speed](idle-v5-half-speed.gif)
+- [V5 normal speed](idle-v5-normal.gif)
+- [V5 quarter speed](idle-v5-quarter-speed.gif)
