@@ -47,21 +47,21 @@ Add checkpoint positions, encounters, landmark names, rewards, boss arena, and u
 
 ## Progression discovery and route tutorials — design direction
 - **Jutsu scrolls** are discoverable throughout the world. Collecting a scroll adds **unlearned knowledge** to inventory; it does not instantly unlock a technique.
-- Players take discovered scrolls to **Training Grounds** (universal gameplay term; village-specific local names and architecture) to learn the corresponding jutsu and add it to their usable technique inventory.
+- Players bring the required scrolls and/or crafting materials to a **trainer** at **Training Grounds** (universal gameplay term; village-specific local names and architecture), exchange the resources, and learn the corresponding jutsu.
 - Learned techniques can be assigned to the existing four R2 technique slots. Exact costs and learning interaction TBD.
 - **Awakenings** are taught by specialist NPCs, not granted by scrolls alone. Training requires a specified number of encounters/challenges and specified crafting items; requirements vary by awakening and remain TBD.
 - Eight Gates and Sage Mode are mechanical inspirations; use original terminology, lore, and visual designs in Shinobi Rush.
-- **Forest A** introduces scroll discovery, unlearned inventory, and learning locations; its dead-end branch is a candidate for the first scroll.
+- **Forest A** introduces scroll/material discovery, inventory, and trainer-based learning; its dead-end branch is a candidate for the first scroll.
 - **Forest B** introduces specialist NPCs, awakening prerequisites, and crafting materials.
 - **Both forests stay open immediately.** Route tutorials are contextual and optional; entering Forest B first must not break onboarding or progression.
 - **Locked naming:** Training Grounds is the universal term. **Kōsen Village uses Mastery Chambers** as its local training-ground identity. **Inner Mastery Court** is a proposed name for another village's training grounds (village assignment TBD). Each village can have distinctive architecture while sharing the same scroll-learning function.
 
 
-## Mastery Chamber training minigames — confirmed
-- A found jutsu scroll is **not** immediately usable. The player brings it to a Training Ground (Kōsen: **Mastery Chamber**).
-- Learning the jutsu requires **successfully completing a playable minigame or puzzle** tailored to that technique. Success moves the jutsu into the learned inventory, ready to equip.
-- Proposed challenge archetypes: lightning timing, wind environmental manipulation, shadow-clone coordination, fire precision, movement obstacle courses. These examples are not yet locked individual jutsu designs.
-- Failure does not consume the scroll; players can retry.
-- Challenges should teach mechanics that translate into real combat usage.
-- **MVP scope:** one functioning Mastery Chamber and one complete scroll-to-minigame-to-learned-jutsu sequence. Other jutsu challenges expand later.
-- Awakening disciplines remain separate and require NPC specialist instruction, encounters, and crafting items.
+## Trainer-based jutsu learning — current locked design
+- **No jutsu-learning minigames or puzzles.** This supersedes the earlier Mastery Chamber minigame concept.
+- Players collect the required number of **scrolls, crafting materials, or a combination** as specified by each jutsu.
+- Visit a **trainer** at a Training Ground (Kōsen's local training facility: **Mastery Chambers**) and exchange the required resources to learn the technique.
+- Learned jutsu enters the usable skill inventory and can be assigned to the four R2 technique slots.
+- **Awakenings remain distinct:** NPC specialists teach them after required encounters/training milestones and crafting-item prerequisites.
+- **MVP:** one trainer, one obtainable jutsu, resource requirement, exchange interaction, and learned-skill equip flow.
+- Exact costs, scroll types, and whether duplicate scrolls are consumed are TBD.
