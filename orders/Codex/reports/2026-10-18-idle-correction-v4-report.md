@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner inspection pending
-- Commit / PR: Pending preview commit; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: dc72e8c; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Generated PixelLab replacements for west and north-west. Preserved all six other v3 directions byte-for-byte, including the south-east reference and prior corrections. Kept 128x128 RGBA frames, 16 timeline ticks, 0.5x default, and synchronized actual-seconds timer (1.333s loop). No procedural animation or interpolated filler frames.
@@ -30,3 +30,5 @@ None. Updated preview is provided for visual feedback.
 
 ## Outstanding work / next steps
 Owner inspection of the new idle GIF. Full Order 01 is incomplete; remaining states and gameplay integration outstanding. Live deployment: not applicable to these review-only GIFs; no gameplay code changed.
+
+Public verification after push: HTTP 200, decoded 600x1240 GIF, 16 frames, 1330ms half-speed loop. New mobile URL: https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/idle-v4-half-speed.gif
