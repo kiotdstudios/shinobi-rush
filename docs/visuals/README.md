@@ -18,3 +18,7 @@ This directory is the canonical home for **visual design source files, UI diagra
 ## Main design sources
 - [MVP World Map and current confirmed rules](../../world/maps/MVP_WORLD_MAP.md)
 - [Game Design Document](../GAME_DESIGN_DOCUMENT.md)
+
+## Combat Skill Tree
+- [Visual Combat Skill Tree (SVG)](./combat-skill-tree/combat-skill-tree.svg)
+- [Combat Skill Tree progression notes](./combat-skill-tree/README.md)
