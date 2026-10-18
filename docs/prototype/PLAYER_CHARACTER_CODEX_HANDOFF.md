@@ -130,3 +130,13 @@ Final portrait/sprite sheet without approved visual reference; village, procedur
 
 ## 14. Codex execution request
 **Build this prototype in `kiotdstudios/shinobi-rush`.** First inspect repository structure and latest locked rules, then commit implementation in small logical commits. If the repository is docs-only, initialize the Godot project without overwriting design files. Deliver actual playable Web export instructions and a test report. Do not report completion until the project runs and acceptance tests are performed. Surface any unavailable dependencies or controller/browser limitations explicitly.
+
+
+## 15. Naruto-style shinobi sprint animation — USER-APPROVED REQUIREMENT
+- **Sprint (R1 + movement) must use a recognizable ninja-run silhouette:** torso leaning sharply forward, both arms extended/swept backward behind the hips, head looking toward the travel direction, quick compact leg cycles and dynamic foot contact.
+- This is a **movement/animation reference only**. Create **original** character poses, sprite frames, proportions, and timing for the approved baseline Shinobi Rush character; do not trace, rip, or reuse Naruto animation assets.
+- Keep **walk/run** and **ninja sprint** as distinct animation states: normal directional locomotion when moving without sprint; Naruto-inspired forward-leaning arms-back sprint only while sprint is active.
+- Create directional variants consistent with the project's 2D faux-isometric presentation (N/S/E/W at minimum), with coherent shoulder/arm silhouette and no cape, mask, sword, or sword strap.
+- Suggested starting sprite set: 6–8 looping frames per direction for sprint, plus anticipation and stop/transition poses if time permits. These are prototype production targets, not final timing locks.
+- During ninja sprint, movement collision/hurtbox should stay stable and centered on the character's feet; visual lean must not cause clipping, jitter, or sudden collision shifts. Handle sprint-to-dodge, sprint-to-attack, and sprint-to-idle transitions cleanly.
+- Add explicit acceptance test: hold R1 and move; character visibly switches from ordinary running to the forward-leaning, arms-back ninja sprint in every supported direction, then returns to normal movement when R1 is released.
