@@ -46,3 +46,7 @@ snapshot. No main merge performed.
 - Direct raw.githubusercontent.com links returned HTTP 200 and decoded as 600x660 GIFs with 4/8/20 frames.
 - Owner can open files remotely; no PC-local server required.
 
+
+## Owner selection
+Owner selected 128x128 after viewing these GIFs. Resolution approval is satisfied; full Order 01 production is in progress.
+
