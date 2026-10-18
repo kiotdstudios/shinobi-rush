@@ -175,3 +175,11 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Jutsu mastery improves technique effectiveness and can unlock enhanced combat behavior; exact mastery tiers and requirements TBD.
 - Equipment and items modify stats and/or combat performance; awakenings temporarily boost stats and grant stronger combat options.
 - Design upgrades so their impact is felt in moment-to-moment fights, not only on the character sheet. Exact formulas, scaling, and unlock details remain TBD.
+
+
+## Jutsu-specific mastery requirements — locked
+- **Each jutsu defines its own mastery progression method** rather than sharing one universal upgrade rule.
+- Supported methods: **Combat Mastery** (progress through use in combat), **Trainer Mastery** (visit a specialist/trainer and meet their requirements), and **Hybrid Mastery** (satisfy combat milestones, then complete trainer requirements).
+- Trainer mastery may require technique-specific materials, scrolls, or other prerequisites as defined per jutsu. Exact requirements are TBD.
+- Mastery improvements must be noticeable in combat, potentially affecting damage, range, speed, duration, Chakra efficiency, or technique behavior.
+- Assign the method and progression requirements per technique when the jutsu roster is designed; example techniques are illustrative, not locked roster entries.
