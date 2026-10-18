@@ -38,3 +38,10 @@ East and north revised for planted breathing. Other six directions retain v2 fra
 - [V3 normal speed](idle-v3-normal.gif)
 - [V3 half speed](idle-v3-half-speed.gif)
 - [V3 quarter speed](idle-v3-quarter-speed.gif)
+
+## Idle refinement v4
+West and north-west revised for quieter planted breathing. Other six directions preserve v3 frames. Default remains half speed.
+
+- [V4 half speed](idle-v4-half-speed.gif)
+- [V4 normal speed](idle-v4-normal.gif)
+- [V4 quarter speed](idle-v4-quarter-speed.gif)
