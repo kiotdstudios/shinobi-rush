@@ -22,7 +22,7 @@ flowchart TB
     class A,B forest;
     class AF,BF fork;
     class D optional;
-    linkStyle 6 stroke:#d6ae63,stroke-width:3px,stroke-dasharray:6 4;
+    linkStyle 5 stroke:#d6ae63,stroke-width:3px,stroke-dasharray:6 4;
 ```
 
 **Read order:** Spawn at Kōsen Gate → choose Forest A or Forest B → each trail leads to its own fork → Forest A's fork has a dead-end branch → the **potential shortcut connects Forest A's fork directly to Forest B's fork**. It does **not** connect back to the gate.
