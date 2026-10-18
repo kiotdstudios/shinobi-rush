@@ -13,3 +13,7 @@ Before **any implementation commit**, run relevant tests and playtest changed ga
 
 ## Start immediately and publish to live testing
 When you read a `QUEUED` order assigned to you, **start it immediately without another prompt**. After testing and committing, integrate using the shared PR/branch process and **publish gameplay changes to the live browser test build automatically**. Open the deployed game and verify the change, then record the live build URL/version, result, issues, and questions in your report. See [master execution and deployment policy](../README.md). Do not mark DONE if the live build was not verified (unless deployment is genuinely not applicable).
+
+
+## Premium roguelike-inspired game vision
+**Required reading:** [Shinobi Rush quality and inspiration brief](../../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md). Aim for premium AAA-level polish in combat, animation, VFX, enemy readability and replay appeal. **Do not change the locked persistent RPG progression, world layout, death/save rules, or add permadeath/procedural run resets without owner approval.**
