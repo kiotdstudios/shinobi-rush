@@ -129,3 +129,9 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - **Loading a saved game** repopulates regular enemies.
 - Bosses, unique enemies, and quest-critical encounters should **not automatically respawn** under these rules; track their persistent completion states separately unless explicitly designed as repeatable encounters.
 - Keep regular-enemy defeat state in temporary active-map data independent of streamed chunk visibility.
+
+## Save Stones and death respawn — confirmed
+- On death, the player respawns at the **nearest activated Save Stone**.
+- Save Stones are checkpoint landmarks, distinct from the trainer-based Mastery Chambers.
+- Proposed checkpoint placements (not locked): Kōsen Village Gate, Forest A, and Forest B.
+- **Still to decide:** whether proximity is measured by map distance or travel distance; what happens if no nearby stone has been activated; health/resource restoration; whether inventory or currency is lost on death; whether dying resets normal enemies or dropped loot. These are not yet locked.
