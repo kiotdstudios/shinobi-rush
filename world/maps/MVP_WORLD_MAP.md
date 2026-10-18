@@ -55,3 +55,13 @@ Add checkpoint positions, encounters, landmark names, rewards, boss arena, and u
 - **Forest B** introduces specialist NPCs, awakening prerequisites, and crafting materials.
 - **Both forests stay open immediately.** Route tutorials are contextual and optional; entering Forest B first must not break onboarding or progression.
 - **Locked naming:** Training Grounds is the universal term. **Kōsen Village uses Mastery Chambers** as its local training-ground identity. **Inner Mastery Court** is a proposed name for another village's training grounds (village assignment TBD). Each village can have distinctive architecture while sharing the same scroll-learning function.
+
+
+## Mastery Chamber training minigames — confirmed
+- A found jutsu scroll is **not** immediately usable. The player brings it to a Training Ground (Kōsen: **Mastery Chamber**).
+- Learning the jutsu requires **successfully completing a playable minigame or puzzle** tailored to that technique. Success moves the jutsu into the learned inventory, ready to equip.
+- Proposed challenge archetypes: lightning timing, wind environmental manipulation, shadow-clone coordination, fire precision, movement obstacle courses. These examples are not yet locked individual jutsu designs.
+- Failure does not consume the scroll; players can retry.
+- Challenges should teach mechanics that translate into real combat usage.
+- **MVP scope:** one functioning Mastery Chamber and one complete scroll-to-minigame-to-learned-jutsu sequence. Other jutsu challenges expand later.
+- Awakening disciplines remain separate and require NPC specialist instruction, encounters, and crafting items.
