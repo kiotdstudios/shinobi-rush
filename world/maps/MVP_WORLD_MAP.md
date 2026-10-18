@@ -236,3 +236,10 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - The active melee loadout determines which grounded, aerial, stagger, or multi-hit combo finishers the player can perform. Not all light combo chains launch enemies.
 - **Melee combo loadout slots are separate from the four R2 + face-button jutsu slots**.
 - Players may change builds by equipping different unlocked finishers; exact restrictions on where swapping is allowed, number of active finisher slots, skill tree branches, and unlock costs remain TBD.
+
+## Active melee combo finisher capacity — locked
+- Players may equip **exactly two active melee combo finishers** at a time: **Finisher Slot 1 (primary)** and **Finisher Slot 2 (secondary)**.
+- Both are selected in **Character Equipment → Combat Loadout** from finishers unlocked or upgraded in the **Combat Skill Tree**.
+- Example pairing: Aerial Launcher + Ground Slam; actual finisher roster and activation inputs remain TBD.
+- These two melee finisher slots are **independent of the four R2 + face-button jutsu slots**.
+- Both equipped finishers must be accessible through distinct, deliberate combat inputs; exact control mapping and combo branch conditions to be designed.
