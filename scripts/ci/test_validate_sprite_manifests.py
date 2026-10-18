@@ -29,7 +29,7 @@ def make_png(path: Path, w: int, h: int) -> None:
 
 def good_manifest() -> dict:
     return {
-        "schema": 1, "id": "t", "frame_size": [32, 32], "foot_anchor": [16, 28], "body_height_px": 24,
+        "schema": 1, "id": "t", "frame_size": [128, 128], "foot_anchor": [64, 120], "body_height_px": 108,
         "directions": ["S", "E", "N"], "mirror": {"W": "E"},
         "animations": {
             "idle": {"fps": 12, "loop": True, "frames": {"S": ["i/S.png"], "E": ["i/E.png"], "N": ["i/N.png"]}},
@@ -48,8 +48,8 @@ class ValidatorTests(unittest.TestCase):
         d = self.root / rel
         d.mkdir(parents=True, exist_ok=True)
         for f in ("i/S.png", "i/E.png", "i/N.png"):
-            make_png(d / f, 32, 32)
-        make_png(d / "run.png", 96, 96)
+            make_png(d / f, 128, 128)
+        make_png(d / "run.png", 384, 384)
         p = d / name
         p.write_text(data if isinstance(data, str) else json.dumps(data), encoding="utf-8")
         return p
@@ -87,7 +87,7 @@ class ValidatorTests(unittest.TestCase):
         self.assertTrue(any('"id"' in e for e in errs))
 
     def test_bad_frame_size(self):
-        errs = self.check(lambda m: m.update(frame_size=[0, 32]))
+        errs = self.check(lambda m: m.update(frame_size=[0, 128]))
         self.assertTrue(any('"frame_size"' in e for e in errs))
 
     def test_unknown_direction(self):
@@ -105,23 +105,116 @@ class ValidatorTests(unittest.TestCase):
     def test_png_size_must_equal_frame_size(self):
         m = good_manifest()
         p = self.write("s", m)
-        make_png(p.parent / "i" / "E.png", 33, 32)
+        make_png(p.parent / "i" / "E.png", 129, 128)
         _, errs = v.validate_manifest(p)
-        self.assertTrue(any("i/E.png is 33x32, expected 32x32" in e for e in errs), errs)
+        self.assertTrue(any("i/E.png is 129x128, expected 128x128" in e for e in errs), errs)
 
     def test_sheet_dimensions(self):
         m = good_manifest()
         p = self.write("s", m)
-        make_png(p.parent / "run.png", 96, 64)
+        make_png(p.parent / "run.png", 384, 256)
         _, errs = v.validate_manifest(p)
-        self.assertTrue(any("run.png is 96x64, expected 96x96" in e for e in errs), errs)
+        self.assertTrue(any("run.png is 384x256, expected 384x384" in e for e in errs), errs)
 
     def test_per_animation_frame_size_override(self):
         m = good_manifest()
-        m["animations"]["run"]["frame_size"] = [48, 48]
+        m["animations"]["run"]["frame_size"] = [192, 192]
         p = self.write("s", m)
-        make_png(p.parent / "run.png", 144, 144)
+        make_png(p.parent / "run.png", 576, 576)
         self.assertEqual(v.validate_manifest(p)[1], [])
+
+    def test_production_base_frame_must_be_128(self):
+        m = good_manifest()
+        m["frame_size"] = [64, 64]
+        m["foot_anchor"] = [32, 60]
+        m["animations"]["run"]["columns"] = 3
+        p = self.write("s", m)
+        for f in ("i/S.png", "i/E.png", "i/N.png"):
+            make_png(p.parent / f, 64, 64)
+        make_png(p.parent / "run.png", 192, 192)
+        _, errs = v.validate_manifest(p)
+        self.assertEqual(len(errs), 1, errs)
+        self.assertIn("rule FRAME128", errs[0])
+        self.assertIn("[128, 128]", errs[0])
+
+    def test_per_animation_frame_size_below_128_is_error(self):
+        m = good_manifest()
+        m["animations"]["run"]["frame_size"] = [128, 96]
+        p = self.write("s", m)
+        make_png(p.parent / "run.png", 384, 288)
+        _, errs = v.validate_manifest(p)
+        self.assertEqual(len(errs), 1, errs)
+        self.assertIn("rule FRAME128_OVERFLOW", errs[0])
+
+    def test_foot_anchor_outside_base_frame_is_error(self):
+        errs = self.check(lambda m: m.update(foot_anchor=[64, 129]))
+        self.assertTrue(any("rule FOOT_ANCHOR" in e for e in errs), errs)
+        errs = self.check(lambda m: m.update(foot_anchor=[-1, 100]))
+        self.assertTrue(any("rule FOOT_ANCHOR" in e for e in errs), errs)
+
+    def test_foot_anchor_outside_animation_frame_is_error(self):
+        def f(m):
+            m["animations"]["idle"]["foot_anchor"] = [200, 120]
+        errs = self.check(f)
+        self.assertTrue(any('animation "idle": rule FOOT_ANCHOR' in e for e in errs), errs)
+
+    def test_overflow_canvas_with_inside_anchor_passes(self):
+        m = good_manifest()
+        m["animations"]["run"].update(frame_size=[256, 256], foot_anchor=[128, 200])
+        p = self.write("s", m)
+        make_png(p.parent / "run.png", 768, 768)
+        self.assertEqual(v.validate_manifest(p)[1], [])
+
+    def test_body_height_outside_range_is_warning_only(self):
+        for bh in (90, 120):
+            m = good_manifest()
+            m["body_height_px"] = bh
+            warns = []
+            _, errs = v.validate_manifest(self.write("s", m), warnings=warns)
+            self.assertEqual(errs, [])
+            self.assertEqual(len(warns), 1, warns)
+            self.assertIn("rule BODY_HEIGHT", warns[0])
+        warns = []
+        v.validate_manifest(self.write("s", good_manifest()), warnings=warns)
+        self.assertEqual(warns, [])
+
+    def test_run_prints_warning_and_still_passes(self):
+        m = good_manifest()
+        m["body_height_px"] = 90
+        self.write("a", m)
+        buf = io.StringIO()
+        self.assertEqual(v.run(self.root, self.root, out=buf), 0)
+        self.assertIn("::warning file=a/t.manifest.json::rule BODY_HEIGHT", buf.getvalue())
+
+    def test_exempt_folders_get_schema_checks_only(self):
+        legacy = good_manifest()
+        legacy["frame_size"] = [64, 64]
+        legacy["foot_anchor"] = [500, 500]
+        legacy["body_height_px"] = 48
+        legacy["animations"]["run"]["frame_size"] = [32, 32]
+        for i, seg in enumerate(v.EXEMPT_DIRS):
+            d = self.root / "assets" / "characters" / "p" / seg
+            d.mkdir(parents=True)
+            legacy["id"] = f"legacy{i}"
+            (d / "x.manifest.json").write_text(json.dumps(legacy), encoding="utf-8")  # no PNGs on purpose
+        buf = io.StringIO()
+        self.assertEqual(v.run(self.root / "assets" / "characters", self.root, out=buf), 0, buf.getvalue())
+        self.assertNotIn("::error", buf.getvalue())
+        self.assertNotIn("::warning", buf.getvalue())
+
+    def test_exempt_folder_still_checks_schema(self):
+        d = self.root / "assets" / "characters" / "p" / "references"
+        d.mkdir(parents=True)
+        (d / "x.manifest.json").write_text('{"schema": 2}', encoding="utf-8")
+        buf = io.StringIO()
+        self.assertEqual(v.run(self.root / "assets" / "characters", self.root, out=buf), 1)
+        self.assertIn('"schema" must be 1', buf.getvalue())
+
+    def test_exempt_is_by_whole_path_segment(self):
+        self.assertTrue(v.is_exempt(Path("assets/characters/p/previews/a.manifest.json")))
+        self.assertTrue(v.is_exempt(Path("assets/characters/p/study/a.manifest.json")))
+        self.assertFalse(v.is_exempt(Path("assets/characters/p/sources_v2/a.manifest.json")))
+        self.assertFalse(v.is_exempt(Path("assets/characters/p/sprites/source.manifest.json")))
 
     def test_missing_cardinal_needs_mirror(self):
         def f(m):

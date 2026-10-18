@@ -4,7 +4,10 @@
 Python stdlib only (no Pillow). PNG sizes are read from the IHDR chunk with struct.
 Usage: python scripts/ci/validate_sprite_manifests.py [--root assets/characters] [--repo-root <dir>]
 The repo root defaults to this script's own repository (parents[2]), not the current directory.
-Exit code: 0 = ok (or no manifests), 1 = at least one error.
+128x128 standard (LOCKED): a production manifest (not under a references/, previews/, source/ or study/ path
+segment) must have base frame_size [128,128], per-animation frame_size >= 128 in both dimensions and foot_anchor
+inside its frame; body_height_px outside 100-112 is a warning. Exempt folders get JSON/schema checks only.
+Exit code: 0 = ok (or no manifests), 1 = at least one error (warnings never fail).
 Messages use GitHub Actions annotation syntax: ::error file=<path>::<message>
 """
 from __future__ import annotations
@@ -18,6 +21,9 @@ from pathlib import Path
 SUFFIX = ".manifest.json"
 DIRS8 = ("S", "SE", "E", "NE", "N", "NW", "W", "SW")
 CARDINALS = ("N", "E", "S", "W")
+EXEMPT_DIRS = ("references", "previews", "source", "study")
+STANDARD_FRAME = 128
+BODY_HEIGHT_RANGE = (100, 112)
 PNG_SIG = b"\x89PNG\r\n\x1a\n"
 # scripts/ci/validate_sprite_manifests.py -> parents[2] is the repository root, independent of the cwd.
 DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -50,8 +56,24 @@ def _dir(v):
     return t if t in DIRS8 else None
 
 
-def validate_manifest(path: Path):
-    """Return (set_id_or_None, [error strings]) for one manifest file."""
+def is_exempt(path: Path) -> bool:
+    """True when any directory segment of the path is references/, previews/, source/ or study/."""
+    return any(part.lower() in EXEMPT_DIRS for part in path.parent.parts)
+
+
+def _anchor_outside(anchor, w: int, h: int) -> bool:
+    return not (0 <= anchor[0] <= w and 0 <= anchor[1] <= h)
+
+
+def validate_manifest(path: Path, exempt: bool | None = None, warnings: list | None = None):
+    """Return (set_id_or_None, [error strings]) for one manifest file.
+
+    exempt: True = JSON/schema checks only (no 128 standard, no PNG file checks); default derived from the path.
+    warnings: optional list that receives non-fatal messages.
+    """
+    if exempt is None:
+        exempt = is_exempt(path)
+    warn = warnings if warnings is not None else []
     errors: list[str] = []
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -73,12 +95,23 @@ def validate_manifest(path: Path):
         errors.append('"frame_size" must be [width, height] with positive numbers')
         return set_id, errors
     fw, fh = int(fs[0]), int(fs[1])
-    if "foot_anchor" in data and _pair(data["foot_anchor"]) is None:
-        errors.append('"foot_anchor" must be [x, y]')
+    if not exempt and [fs[0], fs[1]] != [STANDARD_FRAME, STANDARD_FRAME]:
+        errors.append(f"rule FRAME128: production base frame_size is [{fs[0]}, {fs[1]}], must be [128, 128]; "
+                      "re-author the frames at 128x128 or move legacy art under references/, previews/, source/ or study/")
+    if "foot_anchor" in data:
+        fa = _pair(data["foot_anchor"])
+        if fa is None:
+            errors.append('"foot_anchor" must be [x, y]')
+        elif not exempt and _anchor_outside(fa, fw, fh):
+            errors.append(f"rule FOOT_ANCHOR: foot_anchor {fa} lies outside the {fw}x{fh} frame; "
+                          "use pixel coordinates inside the frame")
     if "body_height_px" in data:
         bh = data["body_height_px"]
         if isinstance(bh, bool) or not isinstance(bh, (int, float)) or bh <= 0:
             errors.append('"body_height_px" must be a number > 0')
+        elif not exempt and not BODY_HEIGHT_RANGE[0] <= bh <= BODY_HEIGHT_RANGE[1]:
+            warn.append(f"rule BODY_HEIGHT: body_height_px {bh} is outside {BODY_HEIGHT_RANGE[0]}-{BODY_HEIGHT_RANGE[1]}; "
+                        "aim for about 108 on the 128 frame")
     declared = data.get("directions")
     if declared is not None:
         if not isinstance(declared, list):
@@ -119,8 +152,16 @@ def validate_manifest(path: Path):
                 errors.append(f'{pre}: bad "frame_size"')
                 continue
             cw, ch = int(ofs[0]), int(ofs[1])
-        if "foot_anchor" in a and _pair(a["foot_anchor"]) is None:
-            errors.append(f'{pre}: bad "foot_anchor"')
+            if not exempt and (ofs[0] < STANDARD_FRAME or ofs[1] < STANDARD_FRAME):
+                errors.append(f"{pre}: rule FRAME128_OVERFLOW: frame_size [{ofs[0]}, {ofs[1]}] is smaller than 128 in a "
+                              "dimension; overflow canvases must be >= 128x128 with the same body scale")
+        if "foot_anchor" in a:
+            afa = _pair(a["foot_anchor"])
+            if afa is None:
+                errors.append(f'{pre}: bad "foot_anchor"')
+            elif not exempt and _anchor_outside(afa, cw, ch):
+                errors.append(f"{pre}: rule FOOT_ANCHOR: foot_anchor {afa} lies outside the {cw}x{ch} frame; "
+                              "use pixel coordinates inside the frame")
         dirs: list[str] = []
         if isinstance(a.get("frames"), dict):
             for k, lst in a["frames"].items():
@@ -133,7 +174,8 @@ def validate_manifest(path: Path):
                     continue
                 dirs.append(dn)
                 for p in lst:
-                    errors.extend(_check_png(base, p, (cw, ch), f"{pre} direction {dn}"))
+                    if not exempt:
+                        errors.extend(_check_png(base, p, (cw, ch), f"{pre} direction {dn}"))
         elif "sheet" in a:
             cols = a.get("columns")
             rows = a.get("rows")
@@ -153,7 +195,8 @@ def validate_manifest(path: Path):
                     dirs.append(rn)
             if bad_row:
                 continue
-            errors.extend(_check_png(base, a["sheet"], (cols * cw, len(rows) * ch), f"{pre} sheet"))
+            if not exempt:
+                errors.extend(_check_png(base, a["sheet"], (cols * cw, len(rows) * ch), f"{pre} sheet"))
         else:
             errors.append(f'{pre} needs either "frames" or "sheet"')
             continue
@@ -198,12 +241,16 @@ def run(root: Path, repo_root: Path, out=None) -> int:
             shown = m.relative_to(repo_root).as_posix()
         except ValueError:
             shown = m.as_posix()
-        set_id, errs = validate_manifest(m)
+        warns: list[str] = []
+        rel = m.relative_to(repo_root) if m.is_relative_to(repo_root) else m
+        set_id, errs = validate_manifest(m, exempt=is_exempt(rel), warnings=warns)
         if set_id is not None:
             if set_id in seen:
                 errs.append(f'duplicate set id "{set_id}" (also used by {seen[set_id].name})')
             else:
                 seen[set_id] = m
+        for w in warns:
+            print(f"::warning file={shown}::{w}", file=out)
         for e in errs:
             print(f"::error file={shown}::{e}", file=out)
         n_err += len(errs)
