@@ -264,3 +264,14 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Jutsu cancels do **not** inherently launch targets or override the equipped finisher's behavior.
 - **Recommended for later approval:** basic cancel capability available at game start; advanced cancel techniques unlocked via Combat Skill Tree.
 - Exact cancel windows, buffering, stagger interactions, recovery restrictions, and advanced-cancel unlocks TBD.
+
+
+## Combo Mastery progression — locked
+- Add **Combo Mastery** to the Combat Skill Tree as a persistent progression system that unlocks **new combat capabilities**, not merely higher damage numbers.
+- Starting kit includes standard light/heavy melee chains and **basic eligible melee-to-jutsu cancels**.
+- **Aerial Mastery** progression unlocks or improves aerial pursuit options, extended aerial combos/juggle control, and aerial jutsu cancels where the equipped technique supports airborne use.
+- **Flow Mastery** progression unlocks extended grounded combo routes, additional eligible cancel windows, and faster recovery/transition options.
+- **Advanced Combo Mastery** unlocks specialized high-level melee-to-jutsu transitions and deeper combo routes, gated by skill prerequisites/training as appropriate.
+- **Combat Skill Tree** governs unlocking and upgrading capabilities and finishers; **Character Equipment → Combat Loadout** governs which **two melee finishers** (Light and Heavy) are currently equipped. Combo Mastery does not create additional finisher slots.
+- Maintain deliberate restrictions: move-specific cancel windows, Chakra costs, cooldowns, aerial-juggle limits, and recovery-locked powerful attacks. No infinite combos.
+- Exact node names, tree topology, skill point costs, prerequisites, unlock levels, and numerical frame tuning remain TBD.
