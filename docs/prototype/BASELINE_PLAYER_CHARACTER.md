@@ -1,7 +1,7 @@
 # Baseline Player Character — LOCKED (2026-10-17)
 
 ## Approved visual reference
-The user approved the latest **three-view character turnaround** generated in the current conversation, after removing the mask, cape, sword, and straps. The original approved three-view PNG is now **uploaded and verified in GitHub**: [view image](../../assets/characters/player/references/56530463-8782-4BEC-848E-BA64200C6D8F.png). Use it as the authoritative visual reference.
+The user approved the latest **three-view character turnaround** generated in the current conversation, after removing the mask, cape, sword, and straps. The original approved three-view PNG is now **uploaded and verified in GitHub**: [view image](../../assets/characters/player/references/baseline_turnaround.png). Use it as the authoritative visual reference.
 
 ## Silhouette and identity
 - Original young Black male shinobi, athletic/muscular, confident serious face.
@@ -25,5 +25,5 @@ The user approved the latest **three-view character turnaround** generated in th
 - Use this design for all future idle, move, sprint, dodge, jump, melee, aerial and hit animations.
 - First game prototype may use labeled placeholder art; **do not pretend a generic placeholder is the final approved character**.
 - Aim for crisp directional 2D character sprites with consistent foot anchors and readable arm/leg silhouette at gameplay zoom.
-- Source turnaround is committed at `assets/characters/player/references/56530463-8782-4BEC-848E-BA64200C6D8F.png`; inspect it before final sprite production.
+- Source turnaround is committed at `assets/characters/player/references/baseline_turnaround.png`; inspect it before final sprite production.
 - See [Codex playable character handoff](./PLAYER_CHARACTER_CODEX_HANDOFF.md) for Godot gameplay, controller, and browser test requirements.
