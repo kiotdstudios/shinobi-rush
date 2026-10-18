@@ -28,3 +28,7 @@ All Codex art orders must follow [Shinobi Rush camera and art direction](../../d
 
 ## Locked art scale and fluidity
 Follow [Order 01 high-detail production requirements](./order_01.md): 128×128 RGBA standard frames, approximately 100–112 px standing character height, fixed foot anchor, eight-direction coverage, purposeful 24 fps authored animation, high-detail layered equippables and separate directional VFX. Bigger frame counts are useful only when timing and poses improve; verify Web performance.
+
+
+## Premium roguelike-inspired game vision
+**Required reading:** [Shinobi Rush quality and inspiration brief](../../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md). Aim for premium AAA-level polish in combat, animation, VFX, enemy readability and replay appeal. **Do not change the locked persistent RPG progression, world layout, death/save rules, or add permadeath/procedural run resets without owner approval.**
