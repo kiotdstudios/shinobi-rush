@@ -137,3 +137,11 @@ North-west uses one complete11-pose cycle, retaining half-speed12poses/sec. Seve
 
 
 - [Latest v5 all eight directions, half speed](sprint-v5-all-directions-half-speed.gif) — includes revised north-west; each direction loops independently.
+
+
+## Eight-direction jump review v1
+24poses per direction: takeoff, airborne and landing.128px anatomical scale, fixed ground marker and timer. Repeated review loop only; gameplay jump is a one-shot action.
+
+- [All eight directions half speed](jump-v1-half-speed.gif)
+- [All eight directions normal speed](jump-v1-normal.gif)
+- [All eight directions quarter speed](jump-v1-quarter-speed.gif)
