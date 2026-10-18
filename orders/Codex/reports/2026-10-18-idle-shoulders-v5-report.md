@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner visual assessment pending
-- Commit / PR: Not committed; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: 2fdc4ce; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Revised east and north-west to show shoulder and upper-arm breathing. Preserved all six other v4 directions byte-for-byte, including south-east. Retained 128x128 exports, synchronized timer, 16 timeline ticks and half-speed default (12 ticks/sec, 1.333s breath).
@@ -31,3 +31,5 @@ None. Visual acceptance remains pending.
 
 ## Outstanding work / next steps
 Owner inspection of the published mobile review. Full Order 01 is incomplete; remaining states and gameplay integration outstanding. Live deployment: not applicable to review-only GIFs; no gameplay code changed.
+
+Public verification: HTTP 200, decoded 600x1240 GIF, 16 frames, 1330ms loop. Preview publication rebased cleanly onto the remote branch update dc05234, preserving the other agents' integrated project files. No gameplay modifications were made by this job. Link: https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/idle-v5-half-speed.gif
