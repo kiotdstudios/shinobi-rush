@@ -59,3 +59,12 @@ Idle v5 approved by the owner. Next review: 16 unique walk poses per direction a
 - [Walk half speed - default](walk-v1-half-speed.gif)
 - [Walk normal speed](walk-v1-normal.gif)
 - [Walk quarter speed](walk-v1-quarter-speed.gif)
+
+## Normal run review v1
+Eight directions, 20 poses per clip, bent arms pumping beside the torso. Separate from arms-back ninja sprint. Default review remains half speed with synchronized timer.
+
+- [Normal run half speed](run-v1-half-speed.gif)
+- [Normal run normal speed](run-v1-normal.gif)
+- [Normal run quarter speed](run-v1-quarter-speed.gif)
+
+Walk E/W height audit: E mean 100.5625px (98-103), W mean 100.5px (97-103). No systematic height mismatch; distinct west retained. [Comparison including mirrored east](walk-east-west-check.png).
