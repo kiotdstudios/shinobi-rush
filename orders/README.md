@@ -104,3 +104,7 @@ None / details
 
 ## Art department ownership
 **Codex owns art production** (sprites, sprite sheets, animation frames, VFX, environment/prop/UI art) unless an order explicitly assigns otherwise. Gameplay agents own implementation/integration unless an order assigns it to Codex. Cross-agent work requires clear handoff and no concurrent editing of the same files.
+
+
+## Project skills and visual standard
+Before related work, consult the [project skill index](../skills/README.md). Codex and any agent creating art must use [camera/art direction](../docs/visuals/CAMERA_AND_ART_DIRECTION.md): **2D three-quarter overhead faux-isometric**, not side-scrolling. Follow [GitHub workflow recommendations](../docs/development/GITHUB_WORKFLOW_RECOMMENDATIONS.md); recommended admin settings are not automatically enabled.
