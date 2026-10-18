@@ -2,7 +2,7 @@
 - Agent: Codex
 - Order: Order 01
 - Date: 2026-10-18
-- Final status: REVIEW - owner vest-motion assessment pending
+- Final status: REJECTED by owner - torso motion frozen
 - Commit / PR: e7ba36f; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
@@ -32,3 +32,5 @@ None. North-only before/after supplied for inspection.
 Owner visual review of north vest and updated sprint grid. Full Order 01 remains incomplete. Live deployment: not applicable to review-only GIFs; no gameplay code changed or live-game playtest claimed.
 
 Public verification: north-comparison and eight-direction half-speed GIFs both HTTP 200, 20 frames, 1670ms loop; comparison 800x560, grid 600x1240. https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/sprint-v2-north-comparison.gif
+
+Owner review: FAIL, torso stopped moving. V2 is rejected; see north-sprint-moving-vest-v3 report for corrected per-pose approach.
