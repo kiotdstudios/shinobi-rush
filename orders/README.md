@@ -5,6 +5,7 @@ This directory is the **single source of truth for agent work orders**. Each age
 - [Aki](./Aki/README.md) — `orders/Aki/`
 - [Orcha](./Orcha/README.md) — `orders/Orcha/`
 - [Kiro](./Kiro/README.md) — `orders/Kiro/`
+- [Codex](./Codex/README.md) — `orders/Codex/` **(art department)**
 
 ## Operating rules
 1. Put each new task in the assigned agent's folder as a separate Markdown file named `YYYY-MM-DD-short-task-name.md`.
@@ -44,7 +45,7 @@ This directory is the **single source of truth for agent work orders**. Each age
 
 ## Mandatory pre-commit testing and post-job report
 
-**These rules apply to Aki, Orcha, Kiro, and any future agent on every job.**
+**These rules apply to Aki, Orcha, Kiro, Codex, and any future agent on every job.**
 
 ### Before committing any implementation
 1. Review the assigned order, its acceptance criteria, and affected systems.
@@ -100,3 +101,6 @@ None / details
 - **Sequence:** implement → run local tests and playtest → write job report with evidence → commit and push changes → integrate through the approved branch/PR workflow → deploy/publish the updated live test build → open the live game and smoke-test the deployed version → update the report with commit, deployment URL/build ID, time, smoke-test result, and issues. The report may need a final report-only commit after deployment.
 - **Live-build coordination:** When multiple agents work concurrently, integrate through reviewed PRs or a designated integration owner. Do not force-push, overwrite another agent's changes, or bypass required CI/branch protections to make a deployment happen. If publishing is blocked by access, CI, conflicts, or missing deployment configuration, mark `BLOCKED`, document it, and ask a targeted question; do not falsely report the game as updated.
 - **Definition of DONE:** accepted tests pass, code is committed/integrated, live testing build is updated and verified, and job report is complete. If the job changes only docs/art and has no runtime impact, commit/push the changes and explicitly state `Live deployment: not applicable` with the reason.
+
+## Art department ownership
+**Codex owns art production** (sprites, sprite sheets, animation frames, VFX, environment/prop/UI art) unless an order explicitly assigns otherwise. Gameplay agents own implementation/integration unless an order assigns it to Codex. Cross-agent work requires clear handoff and no concurrent editing of the same files.
