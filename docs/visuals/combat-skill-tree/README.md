@@ -1,3 +1,10 @@
+## Cross-branch prerequisites — locked
+- Advanced skill nodes may require **multiple prerequisite nodes**, including nodes from different branches within a mastery category and, when appropriate, across mastery categories.
+- Prerequisite relationships must support **ALL-of** requirements (both skills needed), not only a single parent or simple linear chain.
+- **Example:** Aerial Pursuit (Taijutsu → Aerial) **AND** Flow Cancel Control (Taijutsu → Flow) unlock eligibility for a specialized **Midair Combo Transition**. This is an illustrative advanced technique; its exact effects, cost, and balancing remain TBD.
+- Multi-prerequisite nodes can merge paths in a nonlinear network; unlocking a node never forces an exclusive specialization. All branches remain eventually learnable.
+- Skill data should model prerequisites as arrays of stable skill IDs, with explicit logical requirements, and allow future branches/categories without restructuring existing nodes.
+
 ## Current architecture — V3: nonlinear mastery categories (locked)
 
 ![Taijutsu Mastery nonlinear network](./taijutsu-mastery-network-v3.svg)
