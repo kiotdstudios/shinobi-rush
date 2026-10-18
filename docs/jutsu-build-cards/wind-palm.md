@@ -1,3 +1,9 @@
+![wind-palm visual build card](./wind-palm.svg)
+
+[Open full-size visual card](./wind-palm.svg)
+
+---
+
 # Wind Palm — Build Illustration
 
 > **Wind · Knockback and interruption**
