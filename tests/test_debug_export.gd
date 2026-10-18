@@ -60,7 +60,9 @@ func test_report_note_and_cap() -> void:
 	ck.call("report has NOTE line sanitized", r.contains("NOTE: ") and not r.contains("ghp_" + "a".repeat(30)))
 	ck.call("report capped to last 100 events", r.contains("LAST 100 EVENTS"))
 	ck.call("note is not recorded as an event", not str(bd.recent(1000)).contains("it broke"))
-	ck.call("copy_bug_report off returns empty", (load("res://scripts/web/browser_debug.gd").new() as Node).copy_bug_report("x") == "")
+	var off: Node = load("res://scripts/web/browser_debug.gd").new()
+	ck.call("copy_bug_report off returns empty", off.copy_bug_report("x") == "")
+	off.free()
 	bd.free()
 
 
@@ -83,5 +85,5 @@ func test_panel(tree_root: Node) -> void:
 	ck.call("copy adds no events", bd.recent(1000).size() == before)
 	bd.set_enabled(false)
 	ck.call("panel hidden when debug off", not panel.visible)
-	panel.queue_free()
-	bd.queue_free()
+	panel.free()
+	bd.free()
