@@ -120,3 +120,12 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Loot the player has not picked up remains available within the active map. Treatment of unopened chests, quest-critical items, and enemy respawns is separate and TBD.
 - **Implementation direction:** keep the authored forest route graph, forks, and connections fixed; stream chunks/props/encounters procedurally as needed for fluid travel. This does **not** mean randomizing the established map topology.
 - MVP still contains Kōsen Gate and Forest A/B; Forest C and neighboring village transitions can be added later.
+
+
+## Enemy respawn lifecycle — locked
+- **Regular enemies respawn on a fresh map load**, following the same boundary concept as temporary dropped loot.
+- Moving seamlessly among forest paths in the **same map** does **not** respawn defeated enemies, even if their chunks are streamed out and back in.
+- When the player transitions to a **different map** (e.g., another village), regular-enemy defeat state for the departed forest map is reset. Returning to the forest repopulates normal encounters at their designated spawn locations.
+- **Loading a saved game** repopulates regular enemies.
+- Bosses, unique enemies, and quest-critical encounters should **not automatically respawn** under these rules; track their persistent completion states separately unless explicitly designed as repeatable encounters.
+- Keep regular-enemy defeat state in temporary active-map data independent of streamed chunk visibility.
