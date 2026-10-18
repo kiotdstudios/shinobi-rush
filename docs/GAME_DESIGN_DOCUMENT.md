@@ -164,3 +164,25 @@ These decisions are approved for Shinobi Rush and supersede any earlier tentativ
 - Without hard lock-on, right stick provides directional aim and soft-target assistance.
 - Enforce clear enemy attack telegraphs, fair off-screen aggression rules, and camera framing that keeps threats visible.
 - Prototype targeting and camera behavior alongside combos, dash, and L2 substitution.
+
+
+## Revised MVP direction — guided semi-open world (confirmed October 17, 2026)
+**This section supersedes the earlier seven-room roguelite / Storm Shrine MVP, three-enemy roster, and 8–12-minute room-run structure.** The game is now a guided, interconnected semi-open-world action RPG inspired by Black Myth: Wukong's exploration pacing, while retaining original Shinobi Rush IP, 2D faux-isometric presentation, and previously confirmed combat systems.
+
+### Locked MVP content
+- **One playable character.**
+- **One continuous, playable biome** with authored pathways, branching exploration, optional discoveries, shortcuts, and checkpoints; no room-by-room roguelite run selection.
+- **Two regular enemy archetypes:** Basic Bandit and Heavy Bandit.
+- **One boss** at the biome's main objective.
+- Preserve DualSense-first combat, L2 Substitution Jutsu, combos, aerial launch/pursuit, awakening, and optional R3 hard lock-on.
+
+### Proposed first-biome traversal (layout concept, not final map)
+Starting outpost/tutorial → forest approach (basic bandits) → fork between mountain trail (heavy bandits) and hidden ruins (optional exploration) → bandit stronghold and boss. Provide return routes and shortcuts, with readable navigation and limited loading transitions as required by performance.
+
+### Scope and implementation
+- Build an authored interconnected map using streamed or segmented Godot scenes as needed; the player's experience should feel continuous.
+- Prototype checkpoints, respawn, persistent pickups, shortcut unlocks, enemy reset rules, and boss retry flow.
+- No procedural combat-room generation required for the MVP.
+- Target a short but complete exploration-to-boss vertical slice; playtime to be established through testing rather than assumed.
+- Prioritize navigation readability in a 2D faux-isometric camera, clear elevation cues, and robust collision/occlusion handling.
+- The existing six-week schedule is an outdated estimate; re-estimate after mapping and movement prototypes.
