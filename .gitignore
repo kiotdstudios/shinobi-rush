@@ -1,0 +1,15 @@
+# CI / local tooling output
+node_modules/
+__pycache__/
+*.pyc
+# default --log-dir of scripts/ci/godot_ci.py when run locally without --log-dir
+godot-ci-logs/
+
+# Godot generated data (never commit; each developer and CI regenerate it)
+.godot/
+
+# Web export output (CI exports to a temp dir; local exports go here). The approved prototype brief
+# (docs/prototype/PLAYER_CHARACTER_CODEX_HANDOFF.md, sections 10 and 11) names exports/web/ and web/index.html.
+/exports/
+/web/index.*
+**/build/web/
