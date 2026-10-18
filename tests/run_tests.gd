@@ -173,7 +173,7 @@ func test_manifest_parser() -> void:
 	ck("parser: frames form", s.animations["idle"]["kind"] == "frames" and s.animations["idle"]["frames"]["S"].size() == 2)
 	ck("parser: sheet form", s.animations["run"]["kind"] == "sheet" and s.animations["run"]["columns"] == 3 and s.animations["run"]["rows"].size() == 5)
 	ck("parser: mirror table", s.mirror == {"W": "E", "SW": "SE", "NW": "NE"}, str(s.mirror))
-	ck("parser: default body height 48 when absent", _parse_inline(_base_manifest()).body_height_px == 48.0)
+	ck("parser: default body height 108 when absent", _parse_inline(_base_manifest()).body_height_px == SpriteSet.DEFAULT_BODY_HEIGHT and SpriteSet.DEFAULT_BODY_HEIGHT == 108.0)
 	ck("parser: default anchor bottom-centre", _parse_inline(_base_manifest()).foot_anchor == Vector2(16, 32))
 	var e := SpriteSet.parse("{nope", "res://x.manifest.json")
 	ck("error: invalid JSON is readable", not e.is_valid() and e.first_error().begins_with("invalid JSON"), e.first_error())

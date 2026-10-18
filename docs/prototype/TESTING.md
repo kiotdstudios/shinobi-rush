@@ -41,8 +41,10 @@ templates installed. CI uses `scripts/ci/godot_ci.py export`, then `finalize-exp
 - [ ] `WASD` moves the player; `Shift` sprints (270 px/s, leaning pose); diagonals are not faster.
 - [ ] Walking into a block or the arena edge stops the player; the player passes in front of and behind blocks.
 - [ ] `Esc` shows PAUSED and freezes movement; `Esc` again resumes.
-- [ ] With a sprite set: `Tab` opens the lab; set, animation, direction, speed, pause/step, compare, zoom and the
+- [ ] With a sprite set: `Tab` opens the lab; set, animation, direction, speed, pause/step, compare (any two sets), zoom and the
       six overlays work both by key and by clicking the panel buttons.
+- [ ] Sprite sets are 128x128 base frames (overflow canvases >= 128), the ruler (`5`) reads 108 px by default and
+      the placeholder/fallback frame box is 128x128. 64x64 art is legacy reference only (not in a shipped folder).
 - [ ] Switching run and sprint does not move the feet (anchor crosshair stays on the footprint ellipse).
 
 ## Browser console checklist (Web build, DevTools console)

@@ -115,8 +115,8 @@ class LabOverlay extends Node2D:
 				var a := TAU * k / 24.0
 				pts.append(origin + Vector2(cos(a) * FOOTPRINT.x * 0.5, sin(a) * FOOTPRINT.y * 0.5 - FOOTPRINT.y * 0.5))
 			draw_polyline(pts, Color(1, 0.3, 0.3, 0.95), w * 1.5)
-		var fs := Vector2(s.anim_frame_size(aid)) if s != null else Vector2(64, 64)
-		var anchor := s.anim_anchor(aid) if s != null else Vector2(32, 64)
+		var fs := Vector2(s.anim_frame_size(aid)) if s != null else Vector2(128, 128)
+		var anchor := s.anim_anchor(aid) if s != null else Vector2(64, 116)
 		if lab.overlay_on["bbox"] and s != null:
 			draw_rect(Rect2(origin - anchor, fs), Color(0.4, 1, 0.4, 0.9), false, w)
 		if lab.overlay_on["ruler"]:
