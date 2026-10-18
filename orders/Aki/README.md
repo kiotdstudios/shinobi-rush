@@ -17,3 +17,7 @@ When you read a `QUEUED` order assigned to you, **start it immediately without a
 
 ## Premium roguelike-inspired game vision
 **Required reading:** [Shinobi Rush quality and inspiration brief](../../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md). Aim for premium AAA-level polish in combat, animation, VFX, enemy readability and replay appeal. **Do not change the locked persistent RPG progression, world layout, death/save rules, or add permadeath/procedural run resets without owner approval.**
+
+
+## Mandatory PixelLab API art-generation policy
+**All new generated pixel-art assets for Shinobi Rush must be created through the PixelLab API** (characters, directional sprites, animations, equipment, enemies, tiles, props, environment art, UI pixel art and pixel VFX). Read [PixelLab API art pipeline](../../docs/visuals/PIXELLAB_API_ART_PIPELINE.md) before art work. Codex owns generation; other agents request assets from Codex rather than using alternative generators. Manual pixel cleanup, sprite compositing, shaders, particle systems, and programmatic Godot integration are permitted post-processing—not substitutes for PixelLab-generated source art. Never embed or commit API keys. If PixelLab API credentials, features, quotas or outputs are unavailable, report BLOCKED; do not silently switch generators.
