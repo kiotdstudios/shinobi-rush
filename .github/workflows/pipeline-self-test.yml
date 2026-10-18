@@ -1,0 +1,124 @@
+name: Pipeline self-test
+# TOOLING VERIFICATION ONLY. Proves the Godot CI / smoke-test tooling works by generating a THROWAWAY Godot project
+# at runtime in $RUNNER_TEMP (never committed, never named project.godot inside the repository, never uploaded to
+# Pages, never described as the game) and by checking that deliberately broken variants are rejected.
+# This workflow has no Pages permissions and no deploy job. It is path-filtered, so it must NOT be a required check
+# (a path-filtered workflow that does not run leaves a required check Pending forever).
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/ci/**'
+      - 'docs/development/GODOT_CI_AND_DEPLOYMENT.md'
+      - 'docs/development/GODOT_PROJECT_HANDOFF.md'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/ci/**'
+      - 'docs/development/GODOT_CI_AND_DEPLOYMENT.md'
+      - 'docs/development/GODOT_PROJECT_HANDOFF.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pipeline-self-test-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  tooling-checks:
+    name: Tooling lint and unit tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Load pinned tool versions
+        run: python3 scripts/ci/pins.py github-env >> "$GITHUB_ENV"
+      - name: Check pins, workflow hygiene and doc pin markers
+        run: python3 scripts/ci/check_workflows.py
+      - name: Lint workflows with actionlint (pinned, checksum-verified)
+        run: |
+          set -euo pipefail
+          archive="${RUNNER_TEMP}/actionlint.tar.gz"
+          curl --fail --silent --show-error --location --retry 3 --output "$archive" \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          echo "${ACTIONLINT_LINUX_AMD64_SHA256}  ${archive}" | sha256sum --check --strict -
+          mkdir -p "${RUNNER_TEMP}/actionlint"
+          tar -xzf "$archive" -C "${RUNNER_TEMP}/actionlint" actionlint
+          "${RUNNER_TEMP}/actionlint/actionlint" -no-color
+      - name: Python unit tests (stdlib unittest)
+        run: python3 -m unittest discover -s scripts/ci/tests -v
+      - name: Sprite manifest validator unit tests
+        run: python3 -m unittest scripts/ci/test_validate_sprite_manifests.py -v
+      - name: Set up Node.js (pinned)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: scripts/ci/smoke/package-lock.json
+      - name: Install smoke-test dependencies (locked)
+        working-directory: scripts/ci/smoke
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Node unit tests (node:test)
+        working-directory: scripts/ci/smoke
+        run: node --test
+
+  e2e:
+    name: Self-test - positive and negative cases (throwaway project, never deployed)
+    needs: tooling-checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare working directories
+        run: |
+          {
+            echo "GODOT_INSTALL_DIR=${HOME}/.cache/shinobi-rush/godot"
+            echo "SELFTEST_WORK_DIR=${RUNNER_TEMP}/selftest"
+            echo "SELFTEST_EVIDENCE_DIR=${RUNNER_TEMP}/selftest-evidence"
+          } >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/selftest-evidence"
+      - name: Load pinned tool versions
+        run: python3 scripts/ci/pins.py github-env >> "$GITHUB_ENV"
+      - name: Restore Godot install cache (includes the threaded debug template used by a negative case)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/shinobi-rush/godot
+          key: godot-${{ runner.os }}-${{ env.GODOT_CACHE_KEY }}-threaded-templates
+      - name: Install pinned Godot and Web export templates
+        run: python3 scripts/ci/install_godot.py install --platform linux --dest "$GODOT_INSTALL_DIR" --with-threaded-templates --github-env
+      - name: Set up Node.js (pinned)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: scripts/ci/smoke/package-lock.json
+      - name: Install smoke-test dependencies (locked)
+        working-directory: scripts/ci/smoke
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore Playwright browser cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}-headless-shell-v1
+      - name: Install Chromium headless shell for Playwright
+        working-directory: scripts/ci/smoke
+        run: npx playwright install --no-progress --with-deps --only-shell chromium
+      - name: Run self-test (generates throwaway projects in RUNNER_TEMP)
+        run: >-
+          python3 scripts/ci/selftest.py
+          --godot-dir "$GODOT_INSTALL_DIR"
+          --work-dir "$SELFTEST_WORK_DIR"
+          --evidence-dir "$SELFTEST_EVIDENCE_DIR"
+      - name: Upload self-test evidence (tooling verification, not the game)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: selftest-evidence
+          path: ${{ runner.temp }}/selftest-evidence
+          if-no-files-found: warn
+          retention-days: 14
+          overwrite: true

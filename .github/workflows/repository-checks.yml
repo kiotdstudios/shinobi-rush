@@ -8,9 +8,12 @@ permissions:
   contents: read
 jobs:
   validate-orders-and-project:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Validate agent instructions, camera standard, and order format
         shell: bash
         run: |
@@ -21,19 +24,6 @@ jobs:
           python3 scripts/ci/validate_orders.py
       - name: Detect Godot project and export readiness
         shell: bash
-        run: |
-          set -euo pipefail
-          mapfile -d '' projects < <(find . -name project.godot -not -path './.git/*' -print0)
-          if [ "${#projects[@]}" -eq 0 ]; then
-            echo "::notice::No Godot project found. Godot build checks are NOT configured or passing; follow the bootstrap order."
-            exit 0
-          fi
-          if [ "${#projects[@]}" -gt 1 ]; then
-            echo "::error::Multiple Godot projects found; configure explicit project root."
-            exit 1
-          fi
-          project_dir="$(dirname "${projects[0]}")"
-          echo "Found Godot project: $project_dir"
-          if [ ! -f "$project_dir/export_presets.cfg" ]; then
-            echo "::warning::Godot project exists but export_presets.cfg is missing. Live Web export is NOT ready."
-          fi
+        env:
+          GODOT_PROJECT_DIR: ${{ vars.GODOT_PROJECT_DIR }}
+        run: python3 scripts/ci/discover_project.py

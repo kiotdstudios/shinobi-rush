@@ -1,0 +1,284 @@
+name: Godot CI
+# Validates, exports, smoke-tests and (on main only) deploys the Godot Web test build.
+# With no Godot project in the repository every Godot job is skipped and godot-ci-gate reports
+# "NOT VALIDATED / NOT DEPLOYED" loudly instead of passing silently. There is deliberately NO workflow-level
+# `paths:` filter: a filtered-out workflow leaves a required check "Pending" forever.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: godot-ci-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  detect:
+    name: Detect Godot project
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      project_found: ${{ steps.discover.outputs.project_found }}
+      project_dir: ${{ steps.discover.outputs.project_dir }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check pins, workflow hygiene and doc pin markers
+        run: python3 scripts/ci/check_workflows.py
+      - name: Validate sprite manifests
+        run: python3 scripts/ci/validate_sprite_manifests.py
+      - name: Discover Godot project at runtime
+        id: discover
+        env:
+          GODOT_PROJECT_DIR: ${{ vars.GODOT_PROJECT_DIR }}
+        run: python3 scripts/ci/discover_project.py
+
+  build:
+    name: Import, validate, test and export (Web)
+    needs: detect
+    if: ${{ needs.detect.outputs.project_found == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      PROJECT_DIR: ${{ needs.detect.outputs.project_dir }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare working directories
+        run: |
+          {
+            echo "EVIDENCE_DIR=${RUNNER_TEMP}/evidence"
+            echo "EXPORT_DIR=${RUNNER_TEMP}/web-export"
+            echo "GODOT_INSTALL_DIR=${HOME}/.cache/shinobi-rush/godot"
+          } >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/evidence/logs"
+      - name: Load pinned tool versions
+        run: python3 scripts/ci/pins.py github-env >> "$GITHUB_ENV"
+      - name: Restore Godot install cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/shinobi-rush/godot
+          key: godot-${{ runner.os }}-${{ env.GODOT_CACHE_KEY }}
+      - name: Install pinned Godot and Web export templates
+        run: python3 scripts/ci/install_godot.py install --platform linux --dest "$GODOT_INSTALL_DIR" --github-env
+      - name: Headless import
+        run: python3 scripts/ci/godot_ci.py import --project "$PROJECT_DIR" --log-dir "$EVIDENCE_DIR/logs"
+      - name: Validate project settings and Web export preset
+        run: python3 scripts/ci/validate_godot_project.py --project "$PROJECT_DIR" --json-out "$EVIDENCE_DIR/project-validation.json" --github
+      - name: Validate all scripts and scenes load
+        run: python3 scripts/ci/godot_ci.py validate-resources --project "$PROJECT_DIR" --log-dir "$EVIDENCE_DIR/logs"
+      - name: Run GDScript tests (GUT or gdUnit4, if present)
+        run: python3 scripts/ci/godot_ci.py tests --project "$PROJECT_DIR" --log-dir "$EVIDENCE_DIR/logs"
+      - name: Export Web build (single-threaded, Compatibility renderer)
+        run: python3 scripts/ci/godot_ci.py export --project "$PROJECT_DIR" --out "$EXPORT_DIR" --log-dir "$EVIDENCE_DIR/logs"
+      - name: Validate export and write build-info.json
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python3 scripts/ci/godot_ci.py finalize-export --project "$PROJECT_DIR" --out "$EXPORT_DIR" --kind game
+      - name: Upload web export (the exact bytes that get smoke-tested and deployed)
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: web-export
+          path: ${{ runner.temp }}/web-export
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+      - name: Upload build evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: godot-ci-build-evidence
+          path: ${{ runner.temp }}/evidence
+          if-no-files-found: warn
+          retention-days: 14
+          overwrite: true
+
+  smoke-predeploy:
+    name: Pre-deploy browser smoke test
+    needs: [detect, build]
+    if: ${{ needs.detect.outputs.project_found == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare working directories
+        run: |
+          {
+            echo "EVIDENCE_DIR=${RUNNER_TEMP}/evidence"
+            echo "EXPORT_DIR=${RUNNER_TEMP}/web-export"
+          } >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/evidence"
+      - name: Load pinned tool versions
+        run: python3 scripts/ci/pins.py github-env >> "$GITHUB_ENV"
+      - name: Download the web export built by the build job
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: web-export
+          path: ${{ runner.temp }}/web-export
+      - name: Verify export integrity against build-info.json
+        run: python3 scripts/ci/godot_ci.py check-export --dir "$EXPORT_DIR" --kind game --expect-sha "$GITHUB_SHA"
+      - name: Set up Node.js (pinned)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: scripts/ci/smoke/package-lock.json
+      - name: Install smoke-test dependencies (locked)
+        working-directory: scripts/ci/smoke
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore Playwright browser cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}-headless-shell-v1
+      - name: Install Chromium headless shell for Playwright
+        working-directory: scripts/ci/smoke
+        run: npx playwright install --no-progress --with-deps --only-shell chromium
+      - name: Run browser smoke test (local static server, no COOP/COEP headers)
+        working-directory: scripts/ci/smoke
+        run: >-
+          node smoke.mjs
+          --serve-dir "$EXPORT_DIR"
+          --out-dir "$EVIDENCE_DIR/smoke-predeploy"
+          --label pre-deploy
+          --expected-sha "$GITHUB_SHA"
+      - name: Run controls probe (walk, sprint and wall checks through window.__SHINOBI_STATE__)
+        working-directory: scripts/ci/smoke
+        run: >-
+          node controls-probe.mjs
+          --serve-dir "$EXPORT_DIR"
+          --out-dir "$EVIDENCE_DIR/controls-probe"
+      - name: Upload smoke-test evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: godot-ci-predeploy-smoke-evidence
+          path: ${{ runner.temp }}/evidence
+          if-no-files-found: warn
+          retention-days: 14
+          overwrite: true
+
+  deploy:
+    name: Deploy to GitHub Pages (main only)
+    needs: [detect, build, smoke-predeploy]
+    # Spelled out on purpose instead of relying on the implicit success(): every gate result is named, and
+    # check_workflows.py (WF014) fails if this expression or `needs` changes or if always()/!cancelled()/failure() is added.
+    if: ${{ needs.detect.outputs.project_found == 'true' && needs.build.result == 'success' && needs.smoke-predeploy.result == 'success' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Preflight - GitHub Pages is enabled for GitHub Actions deployments
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PAGES_ALLOW_CUSTOM_DOMAIN: ${{ vars.PAGES_ALLOW_CUSTOM_DOMAIN }}
+        run: |
+          rc=0
+          gh api "repos/${GITHUB_REPOSITORY}/pages" > "${RUNNER_TEMP}/pages.json" 2> "${RUNNER_TEMP}/pages.err" || rc=$?
+          python3 scripts/ci/pages_gate.py preflight --gh-exit-code "$rc" --json "${RUNNER_TEMP}/pages.json" --stderr "${RUNNER_TEMP}/pages.err"
+      - name: Download the smoke-tested web export
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: web-export
+          path: ${{ runner.temp }}/site
+      - name: Refuse anything that is not the smoke-tested game build of this commit
+        run: python3 scripts/ci/godot_ci.py check-export --dir "${RUNNER_TEMP}/site" --kind game --expect-sha "$GITHUB_SHA"
+      - name: Configure Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: ${{ runner.temp }}/site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  smoke-postdeploy:
+    name: Post-deploy live smoke test
+    needs: [detect, deploy]
+    if: ${{ needs.detect.outputs.project_found == 'true' && needs.deploy.result == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare working directories
+        run: |
+          echo "EVIDENCE_DIR=${RUNNER_TEMP}/evidence" >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/evidence"
+      - name: Load pinned tool versions
+        run: python3 scripts/ci/pins.py github-env >> "$GITHUB_ENV"
+      - name: Set up Node.js (pinned)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: scripts/ci/smoke/package-lock.json
+      - name: Install smoke-test dependencies (locked)
+        working-directory: scripts/ci/smoke
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore Playwright browser cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}-headless-shell-v1
+      - name: Install Chromium headless shell for Playwright
+        working-directory: scripts/ci/smoke
+        run: npx playwright install --no-progress --with-deps --only-shell chromium
+      - name: Run browser smoke test against the live URL (waits for this commit's build-info.json)
+        working-directory: scripts/ci/smoke
+        env:
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+        run: >-
+          node smoke.mjs
+          --base-url "$PAGE_URL"
+          --expected-sha "$GITHUB_SHA"
+          --out-dir "$EVIDENCE_DIR/smoke-postdeploy"
+          --label post-deploy
+      - name: Upload live smoke-test evidence (includes deploy-info.json)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: godot-ci-postdeploy-smoke-evidence
+          path: ${{ runner.temp }}/evidence
+          if-no-files-found: warn
+          retention-days: 14
+          overwrite: true
+
+  # The single check to require once a project exists. It always runs (never skipped) and never reports
+  # success merely because upstream jobs were skipped: see scripts/ci/pages_gate.py for the exact rules.
+  godot-ci-gate:
+    needs: [detect, build, smoke-predeploy, deploy, smoke-postdeploy]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Evaluate Godot CI gate
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          EVENT_NAME: ${{ github.event_name }}
+          GIT_REF: ${{ github.ref }}
+        run: python3 scripts/ci/pages_gate.py gate
