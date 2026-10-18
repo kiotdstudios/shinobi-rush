@@ -2,8 +2,8 @@
 - Agent: Kiro
 - Order: Owner instruction "128x128 RGBA is the final locked production sprite standard. Remove contradictory 64x64 production guidance. Keep 64x64 assets only as non-production references." (follow-up to Kiro Order 01 workstream; no separate order file)
 - Date: 2026-10-18
-- Final status: Docs change complete and locally validated; PR review and CI pending (see Commit / PR)
-- Commit / PR: Pending (to be added in a report-only follow-up commit)
+- Final status: Docs change complete; local validation and CI green on the PR head; independent review: see the PR (merge by the orchestrator)
+- Commit / PR: [PR #7](https://github.com/kiotdstudios/shinobi-rush/pull/7). Commits on the branch: a1bdc81 (job report), 9e8dd9b (the 11-file docs change), 1413943 (clean merge of origin/main 0f01f81 into the branch). CI on head 1413943: [Godot CI run 39153583020](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39153583020) and [Repository checks run 39153583025](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39153583025), all jobs success (Deploy and Post-deploy skipped by design on a PR).
 
 ## Work completed
 Docs-only change. Rewrote guidance that treated 64x64 as a production candidate, default or pending comparison so it states the locked 128x128 RGBA standard (standing height about 100-112 px) and links to the FINAL OWNER DECISION in orders/README.md instead of duplicating it. Removed the superseded "64x64 and 128x128 are both candidates ... seek owner approval before bulk animation generation" text and the "Pixel dimensions - 64x64 vs 128x128" comparison section content. Kept still-valid guidance: PixelLab skill/API review before a batch, test at actual gameplay zoom, Godot Web texture/performance review. World-tile scale statements derived from the 64 px canvas now say the scale is provisional, set against the 128x128 character in the in-engine test arena, subject to owner approval; no new numbers were invented.
@@ -30,7 +30,10 @@ Files owned by other agents with changed lines: orders/Codex/README.md (30, 41),
 | `python scripts/ci/validate_orders.py` | Pass (exit 0) | "Agent READMEs and order structure validated." |
 | Re-run of 64x64 / comparison / candidate inventory over in-scope files | Pass: no category A (production-guidance) hits remain | c:\tmp\shinobi-order01\stage3a\inventory.md |
 | `git diff --name-only origin/main` scope check | Pass: 11 in-scope files, 17 insertions / 17 deletions | git diff --stat |
-| Runtime / Godot build | Not applicable, no code changed | n/a |
+| Re-check after merging origin/main (PRs #1, #2, #3, #5, #6, #10 had landed) | Pass: no new category-A hits; remaining hits are the LOCKED decision text and the four files owned by the 128x128 code PR | search over in-scope `*.md` excluding `orders/*/reports/**` and `assets/**` |
+| `python scripts/ci/validate_orders.py` after the merge | Pass (exit 0) | "Agent READMEs and order structure validated." |
+| GitHub CI on PR head 1413943 | Pass | Godot CI run 39153583020, Repository checks run 39153583025 |
+| Runtime / Godot build | Not applicable, no code changed (CI still builds and smoke-tests the unchanged project) | n/a |
 
 ## Issues encountered
 None. Residual 64x64 wording in the four stage 3b files is expected and handled by that PR.
