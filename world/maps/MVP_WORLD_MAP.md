@@ -108,6 +108,15 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 ## Full inventory and loot pickup — confirmed
 - If all 12 shared slots (or the current upgraded capacity) are occupied, the player **cannot pick up loot that requires a new slot**.
 - Show **Inventory Full** feedback and require the player to manually drop an item or stack to free space before collecting the loot.
-- Dropped items remain in the world and can be picked up again; uncollected loot remains at its source. Persistence/despawn rules TBD.
+- Dropped items remain in the world and can be picked up again; uncollected loot remains at its source. Dropped loot persists until the player loads a save or transitions to another map; returning to the previous map does not restore it.
 - If a matching existing stack has room (up to 99), items may be added without needing a new slot; overflow requiring a new stack is blocked while full.
 - No automatic sending to storage or automatic deletion to make room.
+
+## Seamless forest streaming and dropped-loot lifetime — confirmed
+- Forest paths within the same world map connect **seamlessly without loading-screen transitions**. Moving between Forest A and Forest B does **not** clear dropped items; the same applies to Forest C when built.
+- Dropped items persist at their world positions while the player remains within the **same loaded map**, even after traveling to another forest path and returning.
+- **On a new-map transition** (for example, entering a neighboring village), all dropped loot from the previous map is cleared. Returning to that map does not restore those drops.
+- **Loading a saved game** also clears temporary dropped loot; it is not persistent save data.
+- Loot the player has not picked up remains available within the active map. Treatment of unopened chests, quest-critical items, and enemy respawns is separate and TBD.
+- **Implementation direction:** keep the authored forest route graph, forks, and connections fixed; stream chunks/props/encounters procedurally as needed for fluid travel. This does **not** mean randomizing the established map topology.
+- MVP still contains Kōsen Gate and Forest A/B; Forest C and neighboring village transitions can be added later.
