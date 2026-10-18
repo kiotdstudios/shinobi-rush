@@ -84,3 +84,11 @@ East-only replacement for the rear-hand hold. Seven other directions retain v2 P
 - [Eight directions half speed](run-v3-half-speed.gif)
 - [Eight directions normal speed](run-v3-normal.gif)
 - [Eight directions quarter speed](run-v3-quarter-speed.gif)
+
+## Ninja sprint review v1
+Eight-direction arms-back sprint, separate from accepted normal run v3. Generated 24 poses, excluded four lead-in poses to retain 20 real sprint frames. Approved 128px scale and half-speed review default preserved.
+
+- [Ninja sprint half speed](sprint-v1-half-speed.gif)
+- [Normal run vs ninja sprint](sprint-v1-action-comparison.gif)
+- [Ninja sprint normal speed](sprint-v1-normal.gif)
+- [Ninja sprint quarter speed](sprint-v1-quarter-speed.gif)
