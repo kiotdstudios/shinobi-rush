@@ -68,3 +68,11 @@ Eight directions, 20 poses per clip, bent arms pumping beside the torso. Separat
 - [Normal run quarter speed](run-v1-quarter-speed.gif)
 
 Walk E/W height audit: E mean 100.5625px (98-103), W mean 100.5px (97-103). No systematic height mismatch; distinct west retained. [Comparison including mirrored east](walk-east-west-check.png).
+
+## North run vest revision v2
+North replaced with a fitted vest candidate following torso motion. Other seven directions are byte-identical to v1. Half-speed and synchronized timer preserved.
+
+- [North vest before/after](run-v2-north-comparison.gif)
+- [Eight directions half speed](run-v2-half-speed.gif)
+- [Eight directions normal speed](run-v2-normal.gif)
+- [Eight directions quarter speed](run-v2-quarter-speed.gif)
