@@ -3,7 +3,7 @@
 - Order: Order01
 - Date: 2026-10-18
 - Final status: REVIEW - owner assessment pending
-- Commit / PR: pending; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: adf264b; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Audited owner-reported repeated-looking north-west sprint. Previous20 PNGs are distinct, GIF holds80/90ms; no doubled hold. Similar gait poses recur about9frames apart inside20frames, leaving an incomplete gait phase at the boundary. This is a motion-cadence diagnosis, not proof of duplicate images.
@@ -31,3 +31,5 @@ None. Focused preview supplied.
 
 ## Outstanding work / next steps
 Owner review. Order01 remains incomplete. Live deployment: not applicable to review-only GIFs; no gameplay code changed or live-game validation claimed.
+
+Public verification after push: focused half-speed GIF HTTP200,11frames,920ms; before/after HTTP200,220frames,18330ms.
