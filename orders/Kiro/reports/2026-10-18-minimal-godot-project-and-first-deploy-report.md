@@ -2,8 +2,8 @@
 - Agent: Kiro
 - Order: [orders/Kiro/order_01.md](../order_01.md)
 - Date: 2026-10-18
-- Final status: IN_PROGRESS — stage 2 of 2: PR open, first deployment pending. Local verification on Windows is complete (table below); GitHub Actions evidence for this pull request is not available yet and is added by the CI step. **Live deployment: PENDING (deploys on merge to main; verified separately by the orchestrator).**
-- Commit / PR: PR link and commit SHAs are not recorded yet. They are added in a report-only follow-up commit once the pull request exists. Branch: `kiro/order-01-stage2-godot-project` (from `main` 5dcad328ed6961f81888c9762df4a06f1ee0214e, the merge of stage 1, PR #4).
+- Final status: IN_PROGRESS — stage 2 of 2: PR open, first deployment pending. Local verification on Windows is complete and all GitHub Actions checks on the pull request head are green (tables below). **Live deployment: PENDING (deploys on merge to main; verified separately by the orchestrator).**
+- Commit / PR: [PR #6](https://github.com/kiotdstudios/shinobi-rush/pull/6) (open, ready for review, not merged). Implementation head SHA checked by CI: `857cc16636b9b2e062d6cdb40c9f6033cbd9fbd6`; this report-only follow-up commit sits on top of it (see `git log`). Implementation commits (all prefixed `Order 01 (Kiro): `): 17a9965 (project), 97a5cf1 (scripts/ci patches), 786c085 (review follow-ups), 75e1d49 (controls probe in CI, PCK assertion), 7da1ff2 (smoke test fix), 857cc16 (docs). Branch: `kiro/order-01-stage2-godot-project` (from `main` 5dcad328ed6961f81888c9762df4a06f1ee0214e, the merge of stage 1, PR #4).
 
 ## Work completed
 - **Minimal real Godot 4.7.2 project at the repository root** (the locked architecture, section 11 of `docs/prototype/PLAYER_CHARACTER_CODEX_HANDOFF.md`): GL Compatibility, one single-threaded Web export preset named `Web`, main scene `res://scenes/main.tscn`, a training arena with a controllable placeholder player (WASD move, Shift sprint, InputMap actions, wall collision), a debug HUD, an animation lab for judging sprite size and animation (compare view for two sets, zoom, overlays), a `JavaScriptBridge` readiness hook `window.__SHINOBI_READY__` and a state object `window.__SHINOBI_STATE__`.
@@ -20,7 +20,7 @@
 Not listed file by file yet; the exact `git diff --stat` and SHAs come with the report-only follow-up. Areas: Godot project files at the root (`project.godot`, `export_presets.cfg`, `icon.svg`, `icon.svg.import`, `scenes/`, `scripts/arena|player|sprites|ui|web`, `tests/`); `scripts/ci/**` (patches, validator, probe, tests); `.github/workflows/godot-ci.yml` and `pipeline-self-test.yml`; `.gitignore` (`exports/*` plus `!exports/.gdignore` instead of `/exports/`, so the marker is trackable); `docs/development/*`; `docs/prototype/TESTING.md` and `SPRITE_DROP_IN.md`; the `.gdignore` files; `orders/Kiro/order_01.md` and reports. No file of other agents or of open PRs #1, #2 and #3 was edited.
 
 ## Tests run before commit
-Environment: Windows, PowerShell 5.1, Godot 4.7.2.stable (`Godot_v4.7.2-stable_win64_console.exe`), Node v24.19.0, Chromium via Playwright under `%TEMP%\shinobi-stage2b\pw-browsers`, ephemeral ports. Durations are wall clock. Results are quoted from the stage 2B progress log. Run URLs: none yet (pending CI run).
+Environment: Windows, PowerShell 5.1, Godot 4.7.2.stable (`Godot_v4.7.2-stable_win64_console.exe`), Node v24.19.0, Chromium via Playwright under `%TEMP%\shinobi-stage2b\pw-browsers`, ephemeral ports. Durations are wall clock. Results are quoted from the stage 2B progress log. Local rows have no run URL; the GitHub Actions runs are in the CI table below.
 
 | Test / command / manual steps | Result | Evidence |
 | --- | --- | --- |
@@ -46,7 +46,27 @@ Environment: Windows, PowerShell 5.1, Godot 4.7.2.stable (`Godot_v4.7.2-stable_w
 | Compare view with two synthetic sets (`__verify__128`, `__verify__64`, generated in a temp copy, never in the repo, deleted afterwards): `compare-shots.mjs`, 1280x720, zoom 1x and 2x, idle and run; six screenshots opened and inspected | rc=0, 24 s, 0 error/pageerror. Caption overlap: none at 1x and 2x. Nothing hidden under the lab panel at 1x/2x/3x. One minor observation, see Issues | local, `stage2b\evidence\compare\cmp-00..05` |
 | `git status --short --ignored` after the runs | only `!! scripts/ci/smoke/node_modules/` (ignored); no export output in the repo; `git ls-files` matching `__verify__`: 0 | local |
 
-Not run by this report step: nothing was re-run for the documentation commit. GitHub Actions runs for this branch: pending CI run.
+Not run by this report step: nothing was re-run for the documentation commit. GitHub Actions runs for this branch: see the next section.
+## GitHub Actions results (pull request #6, head `857cc16636b9b2e062d6cdb40c9f6033cbd9fbd6`, all first attempts, no fixes needed)
+| Check (workflow) | Conclusion | Run |
+| --- | --- | --- |
+| `validate-orders-and-project` (Repository checks) | success | [39133101233](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39133101233) |
+| `Detect Godot project` (Godot CI) | success | [39133101326](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39133101326) |
+| `Import, validate, test and export (Web)` (Godot CI) | success | same run |
+| `Pre-deploy browser smoke test` (Godot CI) | success | same run |
+| `godot-ci-gate` (Godot CI) | success | same run |
+| `Deploy to GitHub Pages (main only)` (Godot CI) | skipped by design on pull requests | same run |
+| `Post-deploy live smoke test` (Godot CI) | skipped by design on pull requests | same run |
+| `Tooling lint and unit tests` (Pipeline self-test) | success | [39133101282](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39133101282) |
+| `Self-test - positive and negative cases` (Pipeline self-test) | success | same run |
+Status read from `gh pr view 6 --json statusCheckRollup` and `gh run list`. Deploy and post-deploy did not run, so nothing is deployed.
+### Evidence artifacts inspected (downloaded with `gh run download 39133101326` into a temp folder outside the repo)
+- `web-export/build-info.json` and `smoke-predeploy/build-info.json`: `kind=game`, `export_preset=Web`, `export_mode=debug`, `godot_version=4.7.2-stable`, templates `4.7.2.stable`, `renderer=gl_compatibility`, `thread_support=false`, `event=pull_request`, `run_id=39133101326`, `head_sha=857cc16...`. `commit_sha` is `9a66e0b67d4f725cbba40314ccbe1a5ee5552886`, the pull request merge commit (`refs/pull/6/merge`) that CI checked out, not the branch head; it is not a commit on the branch. I re-hashed the 9 exported files with SHA-256 and all match the manifest. The two build-info copies have identical field values.
+- `smoke-result.json` / `summary.md`: VERDICT PASS, 11 checks passed: webgl2 (SwiftShader), build-info matches expected commit, 9 served files verified by sha256, engine-start 2704 ms, canvas 1280x720 not blank (58 colours), ready hook true, input-effect 4.168% pixels changed (needs >= 0.10%), Emscripten 4.0.20 single-threaded with Compatibility renderer, console 8 events, 4 warnings, 0 fatal.
+- `controls-probe/probe-result.json`: 6/6 pass: ready after 1428 ms, walk dx 90.4 per 500 ms (MOVE), sprint dx 169.2 (SPRINT, `sprinting=true`), wall: y 60 to -488 with 3 later samples spread 0.00, 7 console messages, 0 errors. These dx values differ from the local run (70.0 / 106.2) because frame rate differs on the runner; the checks are relative.
+- `logs/tests-builtin.log`: `SUMMARY: 123 passed, 0 failed`. `project-validation.json`: `[]` (no findings). Import, export and resource-validation logs are present.
+- Screenshots `02-after-input.png` and `probe-04-at-wall.png` opened and looked at: the arena renders with the `BOOTSTRAP BUILD - PLACEHOLDER ART` HUD, `SPRITES: none (placeholder)`, placeholder boxes and a placeholder figure; after input the state reads MOVE at 175 px/s, Pos (441, -487) at the wall. FPS shows 8 (software GL on the runner), so smoothness remains unverified.
+- This is a CI export served locally on the runner, not the live site.
 
 ## Issues encountered
 - **Harness test depended on the shipped config** (found by `node --test`): fixed in the test (commit 7da1ff2), not by relaxing a gate.
@@ -54,7 +74,7 @@ Not run by this report step: nothing was re-run for the documentation commit. Gi
 - **Minor layout observation (not fixed, product decision):** in the compare view at 2x zoom the translucent HUD backing panel (top left) dims the head and upper body of the 128 stand; at 3x/4x the stands are partly or fully off screen (documented limit). Workaround: use 1x, or walk N/W. Possible fixes (move the stands, or hide/shrink the HUD while compare is on) change the 1x look and were not applied.
 - **Smoothness unverified:** FPS could only be observed under software GL (4 to 6 FPS in headless Chromium).
 - **Shell tool dropped some command outputs;** each affected command was re-run with output redirected, and the table only lists results seen in a completed call.
-- **The Godot jobs have not yet run on a GitHub runner against this project.** Expect glue defects on the first run; they are fixed in this pull request, never by relaxing a gate.
+- **First GitHub run of the Godot jobs against this project:** all green on the first attempt for head 857cc16, no glue defects found, no gate relaxed.
 - **Rollback is a revert-and-redeploy, not a dispatch of an old commit:** `deploy` only runs on `main` and builds the commit it was started on, so `workflow_dispatch` rebuilds the head of `main`. Documented in `GODOT_CI_AND_DEPLOYMENT.md#manual-rollback`; re-running the last good run is documented but not yet exercised.
 - Not verified at all: controller hardware, DualSense in browsers, Safari and mobile, real art, 60 FPS on a real GPU.
 
@@ -65,7 +85,7 @@ Not run by this report step: nothing was re-run for the documentation commit. Gi
 - STILL OPEN: PR #2 (debug telemetry) adds a spec and two orders; should its Kiro order extend this project's `window.__SHINOBI_STATE__` or replace it?
 
 ## Outstanding work / next steps
-- Open the pull request, drive CI to green, then add the PR link, SHAs and run URLs in a report-only follow-up commit (and tick the order boxes that CI proves).
+- Pull request #6 is open and CI is green (above). Remaining: review, merge by the orchestrator.
 - The orchestrator merges, watches the first deployment (`deploy`, `smoke-postdeploy`, `deploy-info.json`), verifies `https://kiotdstudios.github.io/shinobi-rush/` (expected, not verified) and only then closes the order out (its final status is set by the orchestrator, not by this report).
 - **Live deployment: PENDING (deploys on merge to main; verified separately by the orchestrator).**
 - Codex drop-in via manifest (`docs/prototype/SPRITE_DROP_IN.md`, 128x128 default).
