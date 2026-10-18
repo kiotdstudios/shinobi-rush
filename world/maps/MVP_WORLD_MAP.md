@@ -59,9 +59,15 @@ Add checkpoint positions, encounters, landmark names, rewards, boss arena, and u
 
 ## Trainer-based jutsu learning — current locked design
 - **No jutsu-learning minigames or puzzles.** This supersedes the earlier Mastery Chamber minigame concept.
-- Players collect the required number of **scrolls, crafting materials, or a combination** as specified by each jutsu.
-- Visit a **trainer** at a Training Ground (Kōsen's local training facility: **Mastery Chambers**) and exchange the required resources to learn the technique.
+- Every learnable jutsu requires **both technique-specific scroll fragments AND crafting materials**. Neither resource alone is sufficient.
+- Visit a **trainer** at a Training Ground (Kōsen's local training facility: **Mastery Chambers**) and exchange the required scroll fragments and crafting materials to learn the technique.
 - Learned jutsu enters the usable skill inventory and can be assigned to the four R2 technique slots.
 - **Awakenings remain distinct:** NPC specialists teach them after required encounters/training milestones and crafting-item prerequisites.
 - **MVP:** one trainer, one obtainable jutsu, resource requirement, exchange interaction, and learned-skill equip flow.
-- Exact costs, scroll types, and whether duplicate scrolls are consumed are TBD.
+- Exact fragment counts, material types, costs, drop locations, and exchange quantities are TBD; exchanges consume the required resources.
+
+## Locked jutsu resource rule
+- Jutsu learning requires **scroll fragments + crafting materials together** at a trainer in the village-specific Training Grounds (Kōsen: Mastery Chambers).
+- Fragments are **technique-specific**, with requirements and crafting materials varying by jutsu.
+- Once the trainer exchange is completed, the jutsu is learned and can be equipped.
+- Sample costs mentioned during planning are illustrative only and are **not locked balance values**.
