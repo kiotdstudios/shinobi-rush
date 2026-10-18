@@ -71,3 +71,7 @@ Provide N/S/E/W directions at minimum, or coordinate any directional mirroring/8
 
 ## Questions and blockers
 Write questions in the report; if something is not specified, use a reversible prototype default and label it as provisional rather than silently locking new design decisions.
+
+
+## Mandatory camera interpretation (read before drawing)
+**The gameplay camera is fixed-angle 2D three-quarter overhead / faux-isometric**, looking diagonally downward. Read [authoritative camera and art direction](../../docs/visuals/CAMERA_AND_ART_DIRECTION.md) and [three-quarter art skill](../../skills/three-quarter-game-art/SKILL.md). The approved front/side/back turnaround is an **appearance reference, not the gameplay viewing angle**. Translate the design into elevated three-quarter directional gameplay sprites with visible top planes, consistent feet anchors, correct prop overlap, and N/S/E/W plus planned diagonals. **Do not create side-view platformer sprites or pure orthographic turnaround frames as final gameplay assets.** Exact numeric camera elevation, tile diamond ratio, and pixel resolution are still prototype-tunable; coordinate and test a representative in-engine frame before producing full batches.
