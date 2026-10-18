@@ -20,10 +20,9 @@ flowchart TB
 
     classDef start fill:#30473d,color:#fff,stroke:#89b99a,stroke-width:2px;
     classDef mvp fill:#243b32,color:#fff,stroke:#7dab8c;
-    classDef future fill:#41474b,color:#fff,stroke:#a7aeb2,stroke-dasharray:5 4;
     class G start;
     class A,B,AF,BF,D mvp;
-    class C,CF,C1,N future;
+    class C,CF,C1,N mvp;
     linkStyle 6 stroke:#d6ae63,stroke-width:3px,stroke-dasharray:6 4;
 ```
 
@@ -38,6 +37,7 @@ flowchart TB
 - Diagrams represent route connections, not physical scale.
 
 ### Revisions
+- v0.5: All forest and destination nodes share the same green styling; dashed links still identify future routes.
 - v0.4: Forest C Path 2 connects to Forest B fork; Path 3 goes directly to the neighboring village gate; Path 1 remains TBD.
 - v0.3: Added Forest C three-way fork with one route to the neighboring village gate and two future destinations.
 - v0.2: Corrected shortcut to join the two forks; separated full-world and MVP diagrams.
