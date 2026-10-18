@@ -141,4 +141,10 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - This reset occurs even without a map transition or manual save load, overriding the ordinary same-map no-respawn rule specifically for death.
 - **Bosses and completed story objectives remain completed**; unique/quest-critical encounters are not automatically reset.
 - **Learned jutsu and persistent player progression are retained** on death.
-- Whether temporary dropped loot is cleared on death remains undecided; the existing map-transition and save-load cleanup rules still apply.
+- **Death clears all temporary dropped loot** in the active map, just like transitioning to a different map or loading a save.
+
+## Death cleanup of dropped loot — confirmed
+- On **player death**, all player-dropped items left on the ground in the active map **disappear permanently** and cannot be recovered.
+- Items held in inventory are **not** deleted by this rule.
+- Temporary dropped loot also clears on **loading a saved game** or **transitioning to a different map**.
+- Seamless forest-path travel alone does **not** clear dropped loot.
