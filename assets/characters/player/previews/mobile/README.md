@@ -100,3 +100,11 @@ Audit found no exact duplicated frame or double-length hold; similar stride pose
 - [Eight directions half speed](run-v4-half-speed.gif)
 - [Eight directions normal speed](run-v4-normal.gif)
 - [Eight directions quarter speed](run-v4-quarter-speed.gif)
+
+## North ninja-sprint vest revision v2
+Original arms-back sprint preserved; north torso/vest cel stabilized to remove independent plate swing. Other seven directions retain v1 PNGs. Half-speed default and timer unchanged.
+
+- [North sprint vest before/after](sprint-v2-north-comparison.gif)
+- [Eight directions half speed](sprint-v2-half-speed.gif)
+- [Eight directions normal speed](sprint-v2-normal.gif)
+- [Eight directions quarter speed](sprint-v2-quarter-speed.gif)
