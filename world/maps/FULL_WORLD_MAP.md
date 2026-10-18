@@ -11,7 +11,7 @@ flowchart TB
     A --> AF{"A FORK"}
     B --> BF{"B FORK"}
     AF --> D["Dead-end clearing"]
-    AF <-->|"Confirmed forest path"| BF
+    AF <--> BF
     BF -.-> N["NEIGHBORING VILLAGE GATE"]
     C -.-> CF{"FOREST C — THREE-WAY FORK"}
     CF -.-> C1["PATH 1 — DEAD END"]
@@ -37,6 +37,7 @@ flowchart TB
 - Diagrams represent route connections, not physical scale.
 
 ### Revisions
+- v0.8: Removed the redundant "Confirmed forest path" label from the A–B connector; retained the solid line.
 - v0.7: Forest C Path 1 confirmed dead end; removed explanatory subtitles and shortened Path 2/3 link labels for a cleaner diagram.
 - v0.6: Confirmed A fork to B fork as a real forest path.
 - v0.5: All forest and destination nodes share the same green styling; dashed links still identify future routes.
