@@ -3,7 +3,7 @@
 - Order: Order01
 - Date: 2026-10-18
 - Final status: REVIEW
-- Commit / PR: pending; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: 2d30ac5; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed / files changed
 Published all eight latest v5 directions together at half speed with timer and per-direction pose counters. Uses existing verified v5 PNGs; no sprite edits. North-west loops11poses independently of seven20-pose loops. Whole GIF runs220ticks to close all loops cleanly, preventing a forced north-west reset at20ticks. Local render_all.py and all-directions-contact.png under source/sprint-review-v5; review branch contains GIF, README and report.
@@ -19,3 +19,5 @@ None.
 
 ## Outstanding work / next steps
 Owner visual review; full Order01 incomplete. Live deployment: not applicable to review-only GIF; no gameplay code changed.
+
+Public verification: HTTP200,220frames,600x1240 after push.
