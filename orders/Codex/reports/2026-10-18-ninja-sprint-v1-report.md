@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner sprint assessment pending
-- Commit / PR: Not committed; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: 37e2750; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Owner passed normal run v3 and instructed progression to ninja sprint. Queued all eight directions, 24 generated poses per direction, in PixelLab group 471a4495-8a9d-451d-9779-2a0feb371e9a (16 generations total). Target: forward torso lean, both arms swept back throughout, powerful alternating leg cycle, clearly distinct from normal bent-arm running. Preserve fitted armor and body scale.
@@ -26,3 +26,5 @@ None. New animation supplied for visual review.
 Owner visual review of eight-direction ninja sprint and normal-run comparison. Jump, dodge, melee, hit/recovery, equipment/VFX and runtime integration remain outstanding. Full Order 01 remains incomplete. Live deployment: not applicable to review-only GIFs; no gameplay code changed.
 
 Final visual inspection: all 20 retained poses in each direction reviewed on contact sheets; south-west now maintains forward lean and both arms extended back throughout. North is foreshortened by the back-facing camera angle; perceived lean and gait speed remain subject to owner review. No claim of flawless subjective animation acceptance. Final frame-integrity checks pass 160 unique RGBA poses with no clipping, binary alpha, unchanged anatomical scale. Godot commands: Python assets/characters/player/source/sprint-review-v1/stage_godot.py, assets/characters/player/source/sprint-review-v1/run_review.ps1 (all eight), then finalize_southwest.ps1 and run_final_southwest.ps1 for changed south-west. Evidence in source/sprint-review-v1/evidence/. Final decoded GIF duration and repository/staged-diff checks run before commit.
+
+Public verification: sprint half-speed and action comparison both HTTP 200, 20 frames, 1670ms loop; eight-direction grid 600x1240, comparison 800x560. https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/sprint-v1-half-speed.gif
