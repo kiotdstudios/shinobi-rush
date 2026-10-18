@@ -94,7 +94,22 @@ Environment: Windows, Godot 4.7.2 (console build), Playwright headless Chromium 
 2. Do you want the figure enlarged so it keeps its pre-scale on-screen size (57 px instead of 48 px)? That changes `BODY_HEIGHT` against the 128x128 standard, so I did not do it.
 
 ## Outstanding work / next steps
-- Push, update the PR #12 body, and run CI until `godot-ci-gate` is green; then the orchestrator merges and verifies the live build. Add the commit SHA and CI run link here afterwards.
+- The orchestrator merges PR #12 and verifies the live build (nothing is merged or deployed by this report).
+- Final review verdict on head `10b68b0`: APPROVED (second review pass; the first pass had 7 findings, all fixed in `10b68b0`). Cosmetic leftover: the PR body says 24 new in-engine checks, the count is 25.
+
+## CI on head `10b68b0` (from `gh pr checks 12`, read at report time)
+All checks successful, 7 passed, 2 skipped (deploy jobs, main only), 0 failing.
+| Check | Conclusion | Run |
+| --- | --- | --- |
+| Detect Godot project | SUCCESS | https://github.com/kiotdstudios/shinobi-rush/actions/runs/39166137438/job/117789345996 |
+| Import, validate, test and export (Web) | SUCCESS | https://github.com/kiotdstudios/shinobi-rush/actions/runs/39166137438/job/117789375692 |
+| Pre-deploy browser smoke test | SUCCESS | https://github.com/kiotdstudios/shinobi-rush/actions/runs/39166137438/job/117789466274 |
+| Deploy to GitHub Pages (main only) | SKIPPED | https://github.com/kiotdstudios/shinobi-rush/actions/runs/39166137438/job/117789902694 |
+| Post-deploy live smoke test | SKIPPED | https://github.com/kiotdstudios/shinobi-rush/actions/runs/39166137438/job/117789902886 |
+| godot-ci-gate (required) | SUCCESS (the checks list showed all successful) | https://github.com/kiotdstudios/shinobi-rush/actions/runs/39166137438/job/117789902144 |
+| Tooling lint and unit tests | SUCCESS | https://github.com/kiotdstudios/shinobi-rush/actions/runs/39166137219/job/117789345776 |
+| Self-test, positive and negative cases | SUCCESS | https://github.com/kiotdstudios/shinobi-rush/actions/runs/39166137219/job/117789412590 |
+| validate-orders-and-project | SUCCESS | https://github.com/kiotdstudios/shinobi-rush/actions/runs/39166137108/job/117789345222 |
 - Re-check legibility with real 128x128 production art and real GPU frame rate (neither was tested).
 - Optional UI follow-up for the HUD overlap at the corners.
 
@@ -113,7 +128,7 @@ Environment: Windows, Godot 4.7.2 (console build), Playwright headless Chromium 
 | Sprite legibility tradeoff | VERIFIED for synthetic art only | metrics from a software-rendered browser; moving samples are only 3 per combination; production art not tested |
 | Option D (larger viewport) effect | ASSUMED | reasoning about `canvas_items` stretch, not measured |
 | 60 FPS on a real GPU, gamepad input | ASSUMED / not tested | software rendering ran at about 3 to 5 fps |
-| PR CI green on the final head | See the PR checks page; not claimed here | `gh pr checks 12` |
+| PR CI green on head `10b68b0` | VERIFIED | `gh pr checks 12`: all successful, 0 failing (table above) |
 | Deployed live build shows the wide view | NOT YET VERIFIED | the orchestrator verifies after merge |
 
 ## Coordination note for Orcha (camera director, PR #5 order)
