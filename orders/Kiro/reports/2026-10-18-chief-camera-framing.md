@@ -3,7 +3,7 @@
 - Date: 2026-10-18 (all dates and times are UTC unless marked local; local time is UTC-4)
 - Assignment: owner message "review PR #12 first (camera framing), followed by PR #9 (wall occlusion) ... complete the required tests before merging or reporting completion. Report your findings, fixes, test results, and PR links."
 - Final status: camera order **DONE (verified live)**; occlusion order **IN_PROGRESS** (order merged, investigation running, no result yet).
-- This report ships in the docs-only PR that adds this file. It was written after the live result was verified (section 4).
+- This report ships in docs-only [PR #14](https://github.com/kiotdstudios/shinobi-rush/pull/14). It was written after the live result was verified (section 4).
 
 **TL;DR**
 - The wider view is back and live. At 1280x720 the game shows 51.2% of the arena again (it showed 10.1% after the 2.25x world rescale). Tile size and all five obstacles are pixel-identical to the pre-scale build. The 128x128 sprite standard is untouched.
@@ -24,7 +24,7 @@
 | --- | --- | --- | --- | --- |
 | [#12](https://github.com/kiotdstudios/shinobi-rush/pull/12) | Restore wider arena camera framing after 128x128 world scaling (reviewed, tested) | 9a467ea | 21:12:21 | Baseline camera zoom is now `1 / WorldScale.SCALE`, derived in code. Lab zoom list is `[wide, 1, 2, 3, 4]`. World captions scale with the zoom. Head room and foot room at the north and south walls. `__SHINOBI_STATE__` gains `zoom`, `view_w`, `view_h`. 25 in-engine checks, 4 probe checks, docs. 13 files, +377/-16. Opened by another agent as a one-line zoom change (every agent commits as the same GitHub user, so the author cannot be told apart). Kiro's six commits: 4ec5757, b7b1752, c2baa65, 0754d0b, 10b68b0, 707f7be. |
 | [#9](https://github.com/kiotdstudios/shinobi-rush/pull/9) | Queue deferred Kiro wall/player occlusion investigation | 3d25e98 | 21:26:20 | Docs only: adds the order file (27 lines). Merged because the dependency it names (PR #12 live) was cleared. |
-| this report's PR | Chief report for the camera task | filled in by the PR page | after green | Docs only: this report, `CHIEF_INDEX.md`, the standing-rule section in `orders/Kiro/README.md`, camera order set to DONE, a live-verification section appended to the camera job report, one erratum in the first chief report. |
+| [#14](https://github.com/kiotdstudios/shinobi-rush/pull/14) | Chief report: wide camera framing verified live (PR #12) | on the PR page (a report cannot cite its own merge commit) | after CI is green | Docs only: this report, `CHIEF_INDEX.md`, the standing-rule section in `orders/Kiro/README.md`, camera order set to DONE, a live-verification section appended to the camera job report, one erratum in the first chief report. |
 
 ## 3. Evidence and test results
 Each claim is labelled. CI numbers come from the logs of the runs named in the last column; I read them myself, not from a summary.
