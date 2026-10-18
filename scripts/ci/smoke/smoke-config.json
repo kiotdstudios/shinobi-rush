@@ -1,0 +1,8 @@
+{
+  "canvas_selector": "canvas",
+  "settle_ms": 3000,
+  "startup_timeout_ms": 90000,
+  "input_sequence": ["KeyD:500", "Space:100", "KeyJ:100"],
+  "require_input_effect": false,
+  "require_ready_hook": false
+}
