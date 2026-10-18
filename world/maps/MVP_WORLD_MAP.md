@@ -253,3 +253,14 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - An aerial launch occurs only if the equipped finisher/attack has a launcher effect; it is not automatic for every light combo.
 - These are two active finisher slots (Light and Heavy), separate from the four R2 jutsu slots.
 - Exact hit timings, cancel windows, damage scaling between routes, and additional mixed combo strings TBD.
+
+
+## Melee-to-jutsu cancels — locked
+- Players can cancel **eligible** light or heavy melee attacks into an equipped jutsu via **R2 + Square/Triangle/Circle/Cross** during that attack's permitted cancel window.
+- Example: **Square → Square → R2 + Circle** cancels the light combo into the jutsu assigned to R2+Circle.
+- Heavy-to-jutsu and heavy-finisher-to-jutsu transitions are supported **only when the specific move allows a cancel**; powerful recovery-locked attacks may not be cancelable.
+- Airborne melee-to-jutsu cancels are available **only for jutsu explicitly supporting aerial use**.
+- Jutsu still consume their normal Chakra and obey cooldowns, availability, and other requirements.
+- Jutsu cancels do **not** inherently launch targets or override the equipped finisher's behavior.
+- **Recommended for later approval:** basic cancel capability available at game start; advanced cancel techniques unlocked via Combat Skill Tree.
+- Exact cancel windows, buffering, stagger interactions, recovery restrictions, and advanced-cancel unlocks TBD.
