@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_ctrl"]
+[ext_resource type="Script" path="res://scripts/player/placeholder_visual.gd" id="2_vis"]
+
+[ext_resource type="Script" path="res://scripts/player/player_visual.gd" id="3_pv"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_feet"]
+size = Vector2(22, 12)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_ctrl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -6)
+shape = SubResource("RectangleShape2D_feet")
+
+[node name="PlayerVisual" type="Node2D" parent="."]
+script = ExtResource("3_pv")
+
+[node name="PlaceholderVisual" type="Node2D" parent="PlayerVisual"]
+script = ExtResource("2_vis")
+
+[node name="Camera2D" type="Camera2D" parent="."]

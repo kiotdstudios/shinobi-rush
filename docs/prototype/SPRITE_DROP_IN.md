@@ -1,0 +1,118 @@
+# Sprite drop-in contract (Codex -> Shinobi Rush prototype)
+
+Drop art in, push, open the live build, judge animation and size. **No code edits needed.**
+Until a valid set exists the game shows the labeled PLACEHOLDER figure and
+`SPRITES: none (placeholder)`.
+
+## 1. Folder layout
+
+```
+assets/characters/player/
+  <anything>.manifest.json        <- every *.manifest.json under assets/characters/ is one SPRITE SET
+  sprites/idle/S_000.png ...      <- per-frame form
+  sprites/run.png                 <- sheet form
+  animations/                     <- also fine; paths in the manifest are relative to the manifest file
+  source/                         <- NOT shipped in the Web build (excluded from the PCK); keep big masters here
+  references/                     <- ignored by Godot (.gdignore), never loaded
+```
+
+**Runtime files (anything a manifest points to) must live under sprites/ or animations/, not source/.**
+Everything else under assets/characters/ that Godot imports is shipped and counts toward load size.
+
+Keep 64 and 128 candidates as **two manifests with different `id`s** (e.g. `player_64`, `player_128`);
+the lab compares the first two sets (sorted by id).
+
+## 2. Manifest schema v1 (parsed tolerantly: unknown keys are ignored)
+
+```json
+{
+  "schema": 1,
+  "id": "player_128",
+  "frame_size": [128, 128],
+  "foot_anchor": [64, 116],
+  "body_height_px": 108,
+  "directions": ["S", "SE", "E", "NE", "N", "NW", "W", "SW"],
+  "mirror": { "W": "E", "SW": "SE", "NW": "NE" },
+  "animations": {
+    "idle": { "fps": 24, "loop": true,
+              "frames": { "S": ["sprites/idle/S_000.png", "sprites/idle/S_001.png"],
+                          "E": ["sprites/idle/E_000.png", "sprites/idle/E_001.png"] } },
+    "run":  { "fps": 24, "loop": true, "sheet": "sprites/run.png", "columns": 20,
+              "rows": ["S", "SE", "E", "NE", "N", "NW", "W", "SW"] },
+    "dodge": { "fps": 24, "loop": false, "frame_size": [192, 192], "foot_anchor": [96, 180],
+               "sheet": "sprites/dodge.png", "columns": 16, "rows": ["S", "E", "N", "W"] }
+  }
+}
+```
+
+- `frame_size`: 64x64 or 128x128 RGBA (the lab decides which). Overflow canvases (192/256) for wide
+  attacks: set `frame_size` (and usually `foot_anchor`) on that animation only.
+- `foot_anchor`: pixel inside the frame that sits on the ground-contact point (the player origin).
+  Collision footprint and shadow never move. Mirroring flips around this anchor.
+- `body_height_px` (optional, default 48): drives the height ruler. Target about 100-112 on a 128 frame.
+- **Per-frame form**: `frames` = direction -> list of PNG paths, in play order.
+- **Sheet form**: `sheet` PNG, `columns` frames per row, `rows` = one direction name per row, cell size =
+  `frame_size`. Sheet size must be `columns*frame_w` x `rows*frame_h`. Optional `frame_count` (<= columns)
+  when a row is not full.
+- `fps` > 0 (author at 24), `loop` true/false.
+
+## 3. Directions and fallback
+
+Names: `N NE E SE S SW W NW` (screen space, S = toward the camera). N/S/E/W is the minimum.
+For a missing direction the game uses, in order: (1) its own frames, (2) the `mirror` source flipped
+horizontally, (3) for a diagonal: the vertical cardinal, then the horizontal one (own or mirrored),
+(4) the nearest available heading. A missing cardinal with no mirror is a manifest error.
+
+## 4. Animation ids and gameplay use
+
+| id | used by gameplay |
+|----|------------------|
+| `idle` | no input (falls back to frame 0 of run/walk) |
+| `run` | moving without sprint (falls back to `walk`) |
+| `walk` | only as the fallback for `run` |
+| `sprint` | moving with Shift / R1 (falls back to `run`). Must look distinct from `run` |
+| `dodge`, `jump`, `light`, `heavy`, `hit` | no gameplay yet; preview them in the lab |
+
+Any other id in the manifest is previewable too. The player uses the first valid set, or the set picked in the lab.
+
+## 5. Preview in the lab
+
+`Tab` (or the Lab button) toggles the panel, the turntable stand beside the spawn point and overlays.
+Every function has a key and a clickable button. The status line is always on screen:
+`SPRITES: none (placeholder)` | `SPRITES: <id> <WxH> OK` | `SPRITES: <id> ERROR: <first problem>`.
+
+| key | action | key | action |
+|-----|--------|-----|--------|
+| `[` `]` | set prev/next (incl. placeholder) | `P` / `O` | pause / single-step |
+| `,` `.` | animation prev/next | `C` | compare first two sets side by side |
+| `;` `'` | direction prev/next | `Z` or wheel | zoom 1x-4x |
+| `V` | direction mode follow / fixed / spin | `1`-`6` | iso grid, square grid, anchor, footprint, height ruler, frame box |
+| `-` `=` | speed 0.25x-2x | gamepad | Back = lab, R-stick click = compare, L-stick click = zoom |
+
+The metrics line shows set id, frame size, animations/frames loaded, load ms and texture memory
+(`RENDER_TEXTURE_MEM_USED`) so you can compare 64 vs 128 cost. Sets load lazily on first use.
+Grids: the iso grid is 32x32 world tiles drawn 2:1 (64x32 diamonds); the square grid is plain 32 px.
+
+## 6. Links and CI
+
+- Live link: GitHub Pages URL of this repo (posted by the repo owner once Pages is enabled).
+- Deep link query (`?set=&anim=&dir=&zoom=&lab=1`) is **not implemented yet** (follow-up); use the keys.
+- CI check: `scripts/ci/validate_sprite_manifests.py` (Python stdlib only) checks every `*.manifest.json` under
+  `assets/characters/`: JSON parses, `schema` is 1, ids are unique, `frame_size`/`foot_anchor`/`fps` are valid,
+  directions are known and the N/S/E/W cardinals exist (own frames or `mirror`), every referenced file exists,
+  each PNG is exactly `frame_size` (read from the PNG header) and each sheet is `columns*frame_w` x `rows*frame_h`.
+  Run it locally from the repo root: `python scripts/ci/validate_sprite_manifests.py` (exit 0 = fine, or
+  nothing to validate). Problems print as `::error file=<path>::<message>`. It is **not wired into CI yet**:
+  that comes with stage 2B. Until then the in-game status line plus the browser console warning are your feedback.
+- Web preset ships `*.json`, so manifests and PNGs are inside the PCK.
+
+## 7. Definition of ready
+
+- [ ] manifest(s) under `assets/characters/`, `schema: 1`, unique `id`, status line says `OK`
+- [ ] frame canvas 64x64 or 128x128 RGBA (or documented overflow per animation)
+- [ ] `foot_anchor` set; feet sit on the crosshair in every animation (lab overlay `3`)
+- [ ] standing height about 100-112 px on 128 (ruler `5`, `body_height_px` filled in)
+- [ ] 8 directions or N/S/E/W + `mirror` entries
+- [ ] `idle`, `run`, `sprint` (distinct from run) present; others as available
+- [ ] no jump when switching run <-> sprint (watch with `C`/`P`/`O`)
+- [ ] integration note: frame sizes, ids, fps, anchor, collision recommendation, transitions
