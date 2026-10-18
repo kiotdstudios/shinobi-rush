@@ -27,6 +27,13 @@ flowchart TB
 
 **Read order:** Spawn at Kōsen Gate → choose Forest A or Forest B → each trail leads to its own fork → Forest A's fork has a dead-end branch → the **confirmed path connects Forest A's fork directly to Forest B's fork**. It does **not** connect back to the gate.
 
+### Locked exploration rule
+- **Both Forest A and Forest B are open immediately** when the player leaves Kōsen Village Gate; no quest gate or artificial lock.
+- **Forest A is the lower-difficulty route**, introducing basic bandits, combat practice, and exploration.
+- **Forest B is the higher-difficulty route**, including tougher encounters and heavy bandits. Players may enter it first at their own risk.
+- The **Forest A fork ↔ Forest B fork** connection is a real traversable path, allowing travel between both forests without returning to the gate.
+- Exact enemy placements, rewards, and boss location remain TBD.
+
 ### MVP design notes
 - One contiguous forest biome, two playable routes; branching exploration and backtracking.
 - Basic bandit, heavy bandit, and one boss. Enemy placements and boss location remain TBD.
