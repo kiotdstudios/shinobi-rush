@@ -22,3 +22,10 @@ Order 01 art production and integration are still in progress.
 - [Idle](idle.gif)
 
 These earlier comparisons show 64px on the left and 128px on the right.
+
+## Idle refinement v2
+South-east preserved; south/north-east resampled with planted breathing; south-west retimed to one breath per reference loop.
+- [V2 normal speed](idle-v2-normal.gif)
+- [V2 half speed](idle-v2-half-speed.gif)
+- [V2 quarter speed](idle-v2-quarter-speed.gif)
+
