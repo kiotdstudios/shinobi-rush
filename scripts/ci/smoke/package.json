@@ -1,0 +1,17 @@
+{
+  "name": "shinobi-rush-ci-smoke",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser smoke-test harness for the Godot Web export. CI tooling only, not part of the game.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "smoke": "node smoke.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.64.1"
+  }
+}

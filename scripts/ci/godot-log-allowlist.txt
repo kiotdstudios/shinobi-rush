@@ -1,0 +1,11 @@
+# Known-benign Godot CLI messages that must NOT fail the import/validate/export steps.
+# One Python regular expression per line, matched (re.search) against the header line of an engine message
+# (a line starting with "ERROR: ", "SCRIPT ERROR: ", "USER ERROR: " or "WARNING: "). The indented lines that follow a
+# matched header ("   at: ...", backtraces) are skipped automatically.
+#
+# Rules for adding an entry (enforced in review):
+#   1. A comment line directly above it explains why the message is harmless and links evidence (CI run or issue).
+#   2. The regex is as specific as possible (no ".*" alone, no bare "ERROR").
+#   3. Entries are never added to hide a message that comes from the game's own code.
+#
+# (intentionally empty: no benign messages have been observed yet)
