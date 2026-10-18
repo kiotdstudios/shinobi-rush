@@ -144,8 +144,8 @@ Final portrait/sprite sheet without approved visual reference; village, procedur
 
 ## Approved baseline character image — VERIFIED IN REPOSITORY (2026-10-17)
 
-**Authoritative visual reference:** [Approved three-view turnaround](../../assets/characters/player/references/56530463-8782-4BEC-848E-BA64200C6D8F.png)
+**Authoritative visual reference:** [Approved three-view turnaround](../../assets/characters/player/references/baseline_turnaround.png)
 
-Exact repository path: `assets/characters/player/references/56530463-8782-4BEC-848E-BA64200C6D8F.png`.
+Exact repository path: `assets/characters/player/references/baseline_turnaround.png`.
 
 Codex: **open and inspect this image before producing final sprites**. The user explicitly confirmed it is the baseline playable shinobi. Match its visible face, hair, skin tone, outfit, proportions, palette, and front/side/back silhouette. Do not restore any mask, cape, sword, scabbard, or weapon straps from superseded drafts. The separate [baseline character specification](./BASELINE_PLAYER_CHARACTER.md) supplements the PNG; the PNG takes precedence for visual details. Create original animations, including the required forward-leaning arms-back ninja sprint (R1), using this same character consistently across all frames and directions. Keep normal movement separate from ninja sprint. If sprite generation cannot faithfully reproduce the image, use placeholders clearly labeled as such and flag the asset gap rather than substituting a different character.
