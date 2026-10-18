@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-label="Shinobi Rush HUD placement wireframe">
+<rect width="960" height="640" fill="#10131d"/>
+<g font-family="Arial,sans-serif" fill="#e8ecf4" font-size="14">
+<rect x="15" y="15" width="285" height="92" rx="6" fill="#202733" stroke="#b99755" stroke-width="2"/>
+<path d="M56 22 92 58 56 94 20 58Z" fill="#192c43" stroke="#b99755" stroke-width="3"/>
+<text x="108" y="36">HP 82 / 100</text><rect x="108" y="43" width="180" height="12" fill="#441b25"/><rect x="108" y="43" width="148" height="12" fill="#b82b35"/>
+<text x="108" y="73">Chakra 64 / 100</text><rect x="108" y="80" width="180" height="12" fill="#17273f"/><rect x="108" y="80" width="115" height="12" fill="#2878d8"/>
+<g stroke="#b99755" stroke-width="2"><path d="M120 103 130 113 120 123 110 113Z" fill="#68baff"/><path d="M150 103 160 113 150 123 140 113Z" fill="#68baff"/><path d="M180 103 190 113 180 123 170 113Z" fill="#17273f"/></g>
+<rect x="770" y="15" width="175" height="124" rx="5" fill="#202733" stroke="#b99755" stroke-width="2"/>
+<path d="M800 48 836 29 862 62 901 38 929 66 891 93 841 86 813 110 788 89Z" fill="#48515f" stroke="#8995a5" stroke-width="2"/>
+<text x="783" y="132" font-size="11">MINIMAP</text>
+<rect x="770" y="148" width="175" height="86" rx="5" fill="#202733" stroke="#b99755" stroke-width="2"/>
+<text x="784" y="171" fill="#e0c17e">◇ Mission</text><text x="784" y="194">Clear the shrine</text><text x="784" y="216" font-size="12">□ Defeat enemies (3/6)</text>
+<text x="372" y="310" fill="#68798d" font-size="22">GAMEPLAY VIEW</text>
+<g fill="#17345b" stroke="#b99755" stroke-width="3">
+<rect x="15" y="552" width="72" height="72" rx="5"/><rect x="102" y="552" width="72" height="72" rx="5"/><rect x="189" y="552" width="72" height="72" rx="5"/><rect x="276" y="552" width="72" height="72" rx="5"/>
+</g>
+<g font-size="26" text-anchor="middle" fill="#bde7ff"><text x="51" y="597">✦</text><text x="138" y="597">ϟ</text><text x="225" y="597">◎</text><text x="312" y="597">✧</text></g>
+<g font-size="12" text-anchor="middle"><text x="51" y="543">R2 + □</text><text x="138" y="543">R2 + △</text><text x="225" y="543">R2 + ○</text><text x="312" y="543">R2 + ✕</text></g>
+</g></svg>
