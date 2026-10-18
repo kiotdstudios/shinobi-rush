@@ -1,9 +1,9 @@
-# Job Report — Align the Godot project, validator and docs with the locked 128x128 art standard
+# Job Report â€” Align the Godot project, validator and docs with the locked 128x128 art standard
 - Agent: Kiro
 - Order: [orders/Kiro/order_01.md](../order_01.md) (follow-up stage 3b: 128x128 alignment)
 - Date: 2026-10-18
 - Final status: REVIEW (PR open, CI results below; not merged, not deployed from this branch)
-- Commit / PR: branch `kiro/order-01-128-standard-alignment`; PR link and head SHA are added in a report-only follow-up commit. Live deployment: not applicable until the orchestrator merges (a PR never deploys).
+- Commit / PR: [PR #8](https://github.com/kiotdstudios/shinobi-rush/pull/8), branch `kiro/order-01-128-standard-alignment`; implementation verified in CI at head ca0b4d33b2d1b4aaf3a923997c5c9e42a88189bb (a later report-only commit adds this line). Live deployment: not applicable until the orchestrator merges (a PR never deploys).
 
 ## Work completed
 - D2 validator: `scripts/ci/validate_sprite_manifests.py` now errors on a production base `frame_size` other than [128,128] (FRAME128), a per-animation canvas under 128 in either dimension (FRAME128_OVERFLOW), and a `foot_anchor` outside its frame (FOOT_ANCHOR); it warns when `body_height_px` is outside 100-112 (BODY_HEIGHT). Manifests under `references/`, `previews/`, `source/` or `study/` get a schema check only. `export_presets.cfg` exclude_filter keeps those four folders out of the PCK.
@@ -27,8 +27,9 @@ Validator and tests (`scripts/ci/`), `export_presets.cfg`, `scripts/world_scale.
 | `controls-probe.mjs --serve-dir <export>` | VERDICT PASS; walk dx 157.5 / 500 ms, sprint dx 319.9, wall stops player, 0 console errors | local |
 | Screenshots from a temp copy with synthetic sets (placeholder in rescaled arena with ruler and grid; synthetic 128 set; compare mode; 192 overflow set) | opened and checked; saved under c:\tmp\shinobi-order01\stage3\shots, nothing committed | manual |
 | D5 perf measurements in a temp copy (real Chromium, SwiftShader) | PCK 8.37 MiB sheets / 10.1 loose / 49.4 noise worst case / 32.1 VRAM-compressed / 0.98 lossy; texture memory 7.1 -> 92.4 MiB, no growth when cycling; 28.4 MiB VRAM-compressed | local; frame rate under software GL is not meaningful |
+| GitHub CI on PR #8 at ca0b4d3 ([Godot CI run 39141121856](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39141121856), Repository checks 39141121854, Pipeline self-test 39141121871) | validate-orders-and-project, Detect Godot project, Import/validate/test/export, Pre-deploy smoke, godot-ci-gate, Tooling lint and unit tests, Self-test all pass; Deploy and Post-deploy smoke skipped by design on a PR | downloaded artifacts: build-info.json (kind game, head_sha ca0b4d3, ref refs/pull/8/merge, 9 files hashed), tests-builtin.log 123 passed 0 failed, smoke PASS (engine start 2183 ms, 74 colours, input effect 7.0%), controls probe all ok, screenshot 02-after-input.png opened: rescaled arena with ~108 px placeholder figure |
 
-Tests were run at 324aa0b; later commits only added the D5 docs and merges of origin/main. GitHub CI results for the PR are in the PR body and the follow-up commit.
+Local tests were run at 324aa0b; later commits only added the D5 docs, this report and merges of origin/main. Nothing was deployed from this branch.
 
 ## Issues encountered
 - Finding, pre-existing and not a regression: with the placeholder selected the lab's anim id is empty, so compare mode cannot compare the placeholder against a set in-engine.
