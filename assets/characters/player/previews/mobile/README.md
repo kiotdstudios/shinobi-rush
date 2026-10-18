@@ -92,3 +92,11 @@ Eight-direction arms-back sprint, separate from accepted normal run v3. Generate
 - [Normal run vs ninja sprint](sprint-v1-action-comparison.gif)
 - [Ninja sprint normal speed](sprint-v1-normal.gif)
 - [Ninja sprint quarter speed](sprint-v1-quarter-speed.gif)
+
+## South normal-run cadence revision v4
+Audit found no exact duplicated frame or double-length hold; similar stride poses and upright loop lead-in created the apparent hitch. South regenerated from an already-running reference. Other seven directions preserve v3 PNGs.
+
+- [South before/after](run-v4-south-comparison.gif)
+- [Eight directions half speed](run-v4-half-speed.gif)
+- [Eight directions normal speed](run-v4-normal.gif)
+- [Eight directions quarter speed](run-v4-quarter-speed.gif)
