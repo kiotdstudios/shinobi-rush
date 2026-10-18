@@ -309,7 +309,7 @@ func test_anchor_stability() -> void:
 	var anchor_idle: Vector2 = v.actor.sprite.global_transform * s.foot_anchor
 	ck("anchor: unchanged for idle", v.last_anim == "idle" and anchor_idle.is_equal_approx(player.global_position))
 	var collider := player.get_node("CollisionShape2D") as CollisionShape2D
-	ck("collision footprint stays fixed while frames swap", collider.position == Vector2(0, -6))
+	ck("collision footprint stays fixed while frames swap", collider.position == Vector2(0, -WorldScale.FOOTPRINT.y * 0.5) and (collider.shape as RectangleShape2D).size == WorldScale.FOOTPRINT)
 	v.set_sprite_set(null)
 	ck("visual: clearing the set returns to the placeholder", v.placeholder.visible and not v.actor.visible)
 	player.queue_free()
@@ -365,7 +365,7 @@ func test_main_scene_and_movement() -> void:
 	_place(player, Vector2(-600, 100))
 	await _hold(["move_right", "sprint"], 40)
 	var sprint_v := player.velocity.length()
-	ck("sprint is faster than walk", sprint_v > walk_v + 50.0, "walk=%.1f sprint=%.1f" % [walk_v, sprint_v])
+	ck("sprint is faster than walk", sprint_v > walk_v + (player.sprint_speed - player.walk_speed) * 0.5, "walk=%.1f sprint=%.1f" % [walk_v, sprint_v])
 	ck("walk speed reaches walk_speed", is_equal_approx(walk_v, player.walk_speed), str(walk_v))
 
 	# diagonal not faster than straight
@@ -376,11 +376,14 @@ func test_main_scene_and_movement() -> void:
 	await _hold([], 30)  # friction to a stop
 
 	# wall blocks
-	_place(player, Vector2(200, -150))  # block at (280,-120), 64x64 footprint, left face at x=248
+	var wall: Array = TrainingArena.BLOCKS[1]  # derived from WorldScale: [bottom-centre, footprint, height]
+	var wall_face: float = (wall[0] as Vector2).x - (wall[1] as Vector2).x * 0.5
+	var wall_start := wall_face - 80.0
+	_place(player, Vector2(wall_start, (wall[0] as Vector2).y - (wall[1] as Vector2).y * 0.5))
 	await _hold(["move_right"], 60)
 	var px := player.global_position.x
-	ck("a wall (block) blocks the player", px > 200.0 and px < 248.0, "x=%.1f" % px)
-	_place(player, Vector2(850, 0))
+	ck("a wall (block) blocks the player", px > wall_start and px < wall_face, "x=%.1f face=%.1f" % [px, wall_face])
+	_place(player, Vector2(arena.bounds.end.x - 150.0, 0))
 	await _hold(["move_right"], 90)
 	ck("arena bounds wall blocks the player", player.global_position.x <= arena.bounds.end.x, "x=%.1f" % player.global_position.x)
 

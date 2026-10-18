@@ -24,6 +24,8 @@ func set_pose(dir8: Vector2, sprinting: bool, moving: bool) -> void:
 
 
 func _draw() -> void:
+	# Procedural figure is authored at its native size and scaled to the ~108 px standard (WorldScale).
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * WorldScale.FIGURE_SCALE)
 	# Elliptical ground shadow (fixed under the feet).
 	var shadow := PackedVector2Array()
 	for k in 16:

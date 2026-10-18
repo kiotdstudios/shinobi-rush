@@ -40,7 +40,7 @@ func _draw() -> void:
 	var pts := PackedVector2Array()
 	for k in 16:
 		var a := TAU * k / 16.0
-		pts.append(Vector2(cos(a) * 15.0, sin(a) * 6.0))
+		pts.append(Vector2(cos(a) * 15.0 * WorldScale.SCALE, sin(a) * 6.0 * WorldScale.SCALE))
 	draw_colored_polygon(pts, SHADOW)
 
 
