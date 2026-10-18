@@ -116,3 +116,12 @@ Restores original moving torso and repaints armor separately per pose. Original 
 - [Eight directions half speed](sprint-v3-half-speed.gif)
 - [Eight directions normal speed](sprint-v3-normal.gif)
 - [Eight directions quarter speed](sprint-v3-quarter-speed.gif)
+
+
+## South ninja-sprint facing revision v4
+South faces straight screen-down throughout the loop. Seven other directions retain v3, including moving north torso. Half-speed review and timer retained.
+
+- [South facing before/after](sprint-v4-south-comparison.gif)
+- [Eight directions half speed](sprint-v4-half-speed.gif)
+- [Eight directions normal speed](sprint-v4-normal.gif)
+- [Eight directions quarter speed](sprint-v4-quarter-speed.gif)
