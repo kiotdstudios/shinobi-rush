@@ -46,13 +46,13 @@ class RepositoryDefinitionTests(unittest.TestCase):
             self.assertIn(f"`{folder}`", handoff, f"{folder} is missing from the .gdignore list of the handoff document")
         self.assertIn("section 11", handoff)
         self.assertIn("the repository root IS the Godot project", handoff)
-        self.assertIn("stage 1 commits none", handoff)
+        self.assertIn("only change under `assets/`", handoff)  # the one assets/ exception stays documented
 
     def test_the_godot_import_cache_is_ignored_and_never_cached_or_uploaded(self):
         """Repo-root layout: `.godot/` sits in the checkout root next to docs/ and scripts/. It must be git-ignored, and no workflow
         may cache or upload it (every run imports from scratch); generated output goes to RUNNER_TEMP, never into the checkout."""
         ignore = [ln.strip() for ln in (REPO_ROOT / ".gitignore").read_text(encoding="utf-8").splitlines()]
-        for rule in (".godot/", "/exports/", "node_modules/", "godot-ci-logs/"):
+        for rule in (".godot/", "exports/*", "node_modules/", "godot-ci-logs/"):
             self.assertIn(rule, ignore, f".gitignore lacks {rule}")
         for wf in sorted((REPO_ROOT / ".github" / "workflows").glob("*.yml")):
             for n, line in enumerate(wf.read_text(encoding="utf-8").splitlines(), 1):

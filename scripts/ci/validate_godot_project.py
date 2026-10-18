@@ -307,7 +307,8 @@ def validate(project: Path, engine: Tuple[int, int], repo_root: Optional[Path] =
     if repo_root is not None and project.resolve() == repo_root.resolve():  # PRJ012: root project scans the whole repo
         missing = [d for d in NON_GAME_DIRS if (project / d).is_dir() and not (project / d / ".gdignore").exists()]
         if missing:
-            rep.add("warning", "PRJ012", "The Godot project is the repository root, so Godot will import-scan folders that hold no game resources and may export their images (the approved turnaround in assets/characters/player/references must never ship). Add an empty .gdignore file to: " + ", ".join(missing) + ". (Do NOT add one to scripts/ itself: game code lives in scripts/player, scripts/combat, ... and a .gdignore hides it from load(), preload() and the export.)", "project.godot")
+            level = "error" if "assets/characters/player/references" in missing else "warning"  # the approved turnaround must never ship
+            rep.add(level, "PRJ012", "The Godot project is the repository root, so Godot will import-scan folders that hold no game resources and may export their images (the approved turnaround in assets/characters/player/references must never ship). Add an empty .gdignore file to: " + ", ".join(missing) + ". (Do NOT add one to scripts/ itself: game code lives in scripts/player, scripts/combat, ... and a .gdignore hides it from load(), preload() and the export.)", "project.godot")
     return rep
 
 

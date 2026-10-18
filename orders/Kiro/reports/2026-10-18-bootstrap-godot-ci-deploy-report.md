@@ -179,7 +179,7 @@ All three workflows were green on the first run of the pull request head, with n
 2. The gdUnit4 command line in the test-detection step is unverified (no project with tests exists).
 3. The repository-root layout is proven against generated projects in temp folders (Windows locally and Linux in CI), not against the real stage 2 project.
 
-The checks of this follow-up commit itself are visible in the pull request's checks tab, because a report cannot record the result of its own commit.>
+The checks of this follow-up commit itself are visible in the pull request's checks tab, because a report cannot record the result of its own commit.
 
 ## Questions for project owner
 **Resolved**

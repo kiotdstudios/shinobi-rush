@@ -141,6 +141,7 @@ class ValidatorTests(unittest.TestCase):
         (self.base / "assets" / "characters" / "player" / "placeholder").mkdir(parents=True)
         rep = v.validate(self.base, ENGINE, repo_root=self.base)
         warned = [f.message for f in rep.findings if f.code == "PRJ012"]
+        self.assertEqual([f.level for f in rep.findings if f.code == "PRJ012"], ["error"], "missing references/.gdignore is an error")
         self.assertEqual(len(warned), 1)
         listed = warned[0].split("Add an empty .gdignore file to: ")[1].split(". (")[0]
         self.assertEqual(listed, "docs, scripts/ci, assets/characters/player/references",
@@ -324,7 +325,7 @@ class FixtureGeneratorTests(unittest.TestCase):
 
     def test_validator_accepts_the_repository_root_layout_and_names_a_missing_references_gdignore(self):
         """Statically: project == repo root, images everywhere, every .gdignore in place -> clean; remove the one next to the
-        approved turnaround -> exactly one PRJ012 warning that names it (never an error)."""
+        approved turnaround -> exactly one PRJ012 error that names it."""
         tmp = Path(tempfile.mkdtemp())
         try:
             with mock.patch.dict(os.environ, {ci_common.ALLOW_SELFTEST_ENV: "1"}):
@@ -332,7 +333,7 @@ class FixtureGeneratorTests(unittest.TestCase):
                 self.assertEqual([(f.level, f.code) for f in v.validate(d, ENGINE, repo_root=d).findings], [])
                 (d / sp.REFERENCES_FOLDER / ".gdignore").unlink()
                 findings = v.validate(d, ENGINE, repo_root=d).findings
-            self.assertEqual([(f.level, f.code) for f in findings], [("warning", "PRJ012")])
+            self.assertEqual([(f.level, f.code) for f in findings], [("error", "PRJ012")])
             self.assertIn("assets/characters/player/references", findings[0].message)
             self.assertNotIn("Add an empty .gdignore file to: docs", findings[0].message, "only the missing folder is listed")
         finally:

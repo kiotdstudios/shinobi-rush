@@ -89,7 +89,7 @@ def main() -> int:
     set_output("project_found", "true")
     set_output("project_dir", posix(project))
     set_output("export_presets_present", "true" if presets else "false")
-    print(f"Found Godot project: {posix(project)}")
+    print(f"Found Godot project: {sanitize(posix(project))}")
     annotate("notice", f"Godot project at '{posix(project)}'. Import, validation, Web export and deployment are checked by the 'Godot CI' workflow (job godot-ci-gate).", title="Godot project found")
     if not presets:
         annotate("warning", "Godot project exists but export_presets.cfg is missing. Live Web export is NOT ready.", title="export_presets.cfg missing")

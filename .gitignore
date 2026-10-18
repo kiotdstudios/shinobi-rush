@@ -10,6 +10,14 @@ godot-ci-logs/
 
 # Web export output (CI exports to a temp dir; local exports go here). The approved prototype brief
 # (docs/prototype/PLAYER_CHARACTER_CODEX_HANDOFF.md, sections 10 and 11) names exports/web/ and web/index.html.
-/exports/
+# Local exports: only the .gdignore marker is tracked
+exports/*
+!exports/.gdignore
 /web/index.*
 **/build/web/
+# Godot / Shinobi Rush additions (stage 2A snippet)
+*.translation
+/build/
+/export/
+*.pck
+*.tmp
