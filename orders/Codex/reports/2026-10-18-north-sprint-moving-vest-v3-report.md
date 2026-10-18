@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner motion/armor assessment pending
-- Commit / PR: Not committed; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: f005b8b; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Owner rejected sprint-v2 because a copied torso rectangle froze its movement. V2 is rejected. V3 restores the ORIGINAL sprint-v1 moving poses and repaints the armor separately for each pose. No static torso cel or repeated frame is used.
@@ -32,3 +32,5 @@ None. Updated moving-torso comparison supplied for review.
 
 ## Outstanding work / next steps
 Owner review of north sprint torso/vest motion. Full Order 01 remains incomplete. Live deployment: not applicable to review-only GIFs; no gameplay code changed or live-game smoke test claimed.
+
+Public verification: north-comparison and eight-direction half-speed GIFs both HTTP 200, 20 frames, 1670ms loop; comparison 800x560, grid 600x1240. https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/sprint-v3-north-comparison.gif
