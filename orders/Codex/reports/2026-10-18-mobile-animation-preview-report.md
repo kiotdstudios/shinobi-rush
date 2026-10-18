@@ -39,3 +39,10 @@ Open the direct GIF links on mobile, collect the required scale decision, and
 continue full art production. Reviewed integration and actual live game deployment
 remain separate work. Live game deployment: not applicable to this art-review-only
 snapshot. No main merge performed.
+
+## Published preview verification
+- Asset commit: 8a9c35c4e490bb7c6bbf83af0dd00f8f59ecee8b
+- Draft PR: https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Direct raw.githubusercontent.com links returned HTTP 200 and decoded as 600x660 GIFs with 4/8/20 frames.
+- Owner can open files remotely; no PC-local server required.
+
