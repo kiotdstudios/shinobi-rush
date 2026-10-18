@@ -52,3 +52,10 @@ East and north-west shoulder breathing revised with fixed head/lower-body cels. 
 - [V5 half speed](idle-v5-half-speed.gif)
 - [V5 normal speed](idle-v5-normal.gif)
 - [V5 quarter speed](idle-v5-quarter-speed.gif)
+
+## Eight-direction walk review v1
+Idle v5 approved by the owner. Next review: 16 unique walk poses per direction at approved 128px scale. Synchronized timer and shared playback speed.
+
+- [Walk half speed - default](walk-v1-half-speed.gif)
+- [Walk normal speed](walk-v1-normal.gif)
+- [Walk quarter speed](walk-v1-quarter-speed.gif)
