@@ -286,3 +286,13 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Add an expandable **Evasion Mastery** category alongside Aerial and Flow Mastery, with no specialization lockout.
 - **Proposed Evasion Mastery nodes, pending individual approval/balance:** Counter Strike (fast attack after Perfect Dodge), Phantom Step (enhanced repositioning), Shadow Counter (counter into equipped jutsu). Node costs, requirements, and animations TBD.
 - Preserve existing controls: L1 heal, R1 sprint, R2 jutsu modifier, R3 optional lock-on, Cross jump.
+
+
+## Perfect Dodge prototype reference — Wukong-inspired (direction locked, timings NOT locked)
+- **Reference feel:** use Black Myth: Wukong's last-moment Perfect Dodge as a benchmark for pacing, readable risk/reward, brief cinematic feedback, afterimage, and rapid return to control. Build original shinobi animation/VFX, not copied assets.
+- **Trigger:** press Circle to evade an incoming hit at the last moment. A successful Perfect Dodge is determined by timing relative to an actual threatening attack, not simply by pressing dodge.
+- **Feedback:** brief momentary slowdown; translucent chakra-tinted shinobi afterimage at the pre-dodge location, dissipating quickly; distinct audio/visual cue. Avoid lengthy slow motion that breaks combat flow.
+- **Follow-up:** return to actionable combat rapidly. A successful dodge creates a possible counter opportunity but does not guarantee that enemies stop attacking; the player may need to dodge subsequent hits.
+- **Progression:** Perfect Dodge available from the start. Evasion Mastery may unlock enhanced follow-ups/counters, subject to later node approval.
+- **TUNING PENDING PLAYTEST:** Perfect Dodge timing window, slowdown time scale/duration, afterimage lifetime/opacity, counter cancel window, dodge travel distance and invulnerability frames. Do not present speculative values as final or as verified Wukong frame data.
+- **No traditional guard/parry button.** Preserve L2 Substitution's three independently recharging charges.
