@@ -117,6 +117,9 @@ Grids: the iso grid is 32x32 world tiles drawn 2:1 (64x32 diamonds); the square 
   pull request and push and annotates the offending manifest; its unit tests run in `Pipeline self-test`. The in-game
   status line plus the browser console warning remain your feedback while authoring.
 - Web preset ships `*.json`, so manifests and PNGs are inside the PCK.
+- Size budget: a full 128x128 set (1024 frames) costs about 85 MiB of GPU texture and 8 to 49 MiB of download (flat art to worst case) as sheets; use one
+  sheet per animation, not loose frames. Measured numbers and recommendations:
+  [GODOT_CI_AND_DEPLOYMENT.md](../development/GODOT_CI_AND_DEPLOYMENT.md#performance-budget-for-a-full-128x128-set-measured-2026-10-18).
 
 ## 7. Definition of ready
 
