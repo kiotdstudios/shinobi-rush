@@ -20,3 +20,7 @@ Read [master agent orders and execution rules](../README.md) **before working**.
 
 ## Current orders
 No orders assigned by creating this folder. Previous Codex character handoff in `docs/prototype/` is reference material; a new order should specify what Codex is to execute.
+
+
+## Mandatory art camera standard
+All Codex art orders must follow [Shinobi Rush camera and art direction](../../docs/visuals/CAMERA_AND_ART_DIRECTION.md) and the [three-quarter art skill](../../skills/three-quarter-game-art/SKILL.md). **Gameplay is 2D three-quarter overhead faux-isometric**, not side-scrolling. The baseline PNG is a character appearance turnaround, not the gameplay camera. Test an in-engine sample before mass-producing sprite frames.
