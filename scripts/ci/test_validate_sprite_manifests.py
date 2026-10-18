@@ -6,6 +6,7 @@ Run: python -m unittest scripts/ci/test_validate_sprite_manifests.py   (from the
 import io
 import json
 import struct
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -171,6 +172,27 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(v.main(["--repo-root", str(self.root), "--root", str(self.root)]), 0)
         self.write("b", "{nope", "z.manifest.json")
         self.assertEqual(v.main(["--repo-root", str(self.root), "--root", str(self.root)]), 1)
+
+    def test_default_repo_root_is_script_location(self):
+        self.assertEqual(v.DEFAULT_REPO_ROOT, Path(v.__file__).resolve().parents[2])
+
+    def test_foreign_cwd_does_not_change_resolution(self):
+        # A fake repo with a broken manifest, plus a foreign cwd that has no assets at all: the script must
+        # follow --repo-root (or its own location), never the cwd, so a wrong cwd cannot become a silent pass.
+        fake = self.root / "repo"
+        self.write("repo/assets/characters/hero", {"schema": 2})
+        foreign = self.root / "elsewhere"
+        foreign.mkdir()
+        script = Path(v.__file__).resolve()
+        r = subprocess.run([sys.executable, str(script), "--repo-root", str(fake)], cwd=foreign,
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+        self.assertIn("::error file=assets/characters/hero/t.manifest.json::", r.stdout)
+        # Without --repo-root it must use the script's own repo, not the (empty) foreign cwd.
+        r = subprocess.run([sys.executable, str(script)], cwd=foreign, capture_output=True, text=True)
+        repo_chars = v.DEFAULT_REPO_ROOT / "assets" / "characters"
+        self.assertTrue(str(repo_chars) in r.stdout or "manifest(s) checked" in r.stdout, r.stdout)
+        self.assertNotIn(str(foreign), r.stdout)
 
 
 if __name__ == "__main__":

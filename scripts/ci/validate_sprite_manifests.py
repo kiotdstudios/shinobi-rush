@@ -2,7 +2,8 @@
 """Validate every sprite manifest (schema v1) under assets/characters/.
 
 Python stdlib only (no Pillow). PNG sizes are read from the IHDR chunk with struct.
-Usage: python scripts/ci/validate_sprite_manifests.py [--root assets/characters] [--repo-root .]
+Usage: python scripts/ci/validate_sprite_manifests.py [--root assets/characters] [--repo-root <dir>]
+The repo root defaults to this script's own repository (parents[2]), not the current directory.
 Exit code: 0 = ok (or no manifests), 1 = at least one error.
 Messages use GitHub Actions annotation syntax: ::error file=<path>::<message>
 """
@@ -18,6 +19,8 @@ SUFFIX = ".manifest.json"
 DIRS8 = ("S", "SE", "E", "NE", "N", "NW", "W", "SW")
 CARDINALS = ("N", "E", "S", "W")
 PNG_SIG = b"\x89PNG\r\n\x1a\n"
+# scripts/ci/validate_sprite_manifests.py -> parents[2] is the repository root, independent of the cwd.
+DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def png_size(path: Path):
@@ -212,10 +215,11 @@ def run(root: Path, repo_root: Path, out=None) -> int:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--repo-root", default=".", help="used to print repo-relative paths")
+    ap.add_argument("--repo-root", default=None,
+                    help="repository root (default: derived from this script's location, never the current directory)")
     ap.add_argument("--root", default=None, help="folder to scan (default: <repo-root>/assets/characters)")
     args = ap.parse_args(argv)
-    repo_root = Path(args.repo_root).resolve()
+    repo_root = Path(args.repo_root).resolve() if args.repo_root else DEFAULT_REPO_ROOT
     root = Path(args.root).resolve() if args.root else repo_root / "assets" / "characters"
     return run(root, repo_root)
 

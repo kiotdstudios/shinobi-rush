@@ -27,6 +27,8 @@ jobs:
           persist-credentials: false
       - name: Check pins, workflow hygiene and doc pin markers
         run: python3 scripts/ci/check_workflows.py
+      - name: Validate sprite manifests
+        run: python3 scripts/ci/validate_sprite_manifests.py
       - name: Discover Godot project at runtime
         id: discover
         env:
