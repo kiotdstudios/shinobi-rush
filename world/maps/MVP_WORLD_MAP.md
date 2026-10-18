@@ -243,3 +243,13 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Example pairing: Aerial Launcher + Ground Slam; actual finisher roster and activation inputs remain TBD.
 - These two melee finisher slots are **independent of the four R2 + face-button jutsu slots**.
 - Both equipped finishers must be accessible through distinct, deliberate combat inputs; exact control mapping and combo branch conditions to be designed.
+
+
+## Melee input routing and shared heavy finisher — locked
+- **Square → Square → Square:** three-hit light combo ending in the equipped **Light Finisher** (Combat Loadout Slot 1).
+- **Triangle → Triangle → Triangle:** three-hit **heavy combo** ending in the equipped **Heavy Finisher** (Combat Loadout Slot 2).
+- **Square → Square → Triangle:** light-to-heavy combo route; the final Triangle executes the **same equipped Heavy Finisher** used at the end of Triangle → Triangle → Triangle. It is not a third finisher or a different move.
+- Equipping a different Heavy Finisher updates **both routes**; e.g., Ground Slam or Aerial Launcher depending on loadout.
+- An aerial launch occurs only if the equipped finisher/attack has a launcher effect; it is not automatic for every light combo.
+- These are two active finisher slots (Light and Heavy), separate from the four R2 jutsu slots.
+- Exact hit timings, cancel windows, damage scaling between routes, and additional mixed combo strings TBD.
