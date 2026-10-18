@@ -24,15 +24,15 @@ Use Godot 4 2D rendering with a fixed-angle Camera2D; align 2D ground movement, 
 4. Test normal run versus R1 ninja sprint from this camera.
 5. Reject art that accidentally looks side-scrolling, straight-on orthographic, or directly top-down.
 
-**Status:** Camera style and three-quarter visual intent are locked; exact numeric angle, tile geometry, and zoom remain prototype-tunable. **Player art frame size is locked to 64×64 or 128×128 (pending in-engine comparison) RGBA with approximately 100–112 px standing character height for Order 01.**
+**Status:** Camera style and three-quarter visual intent are locked; exact numeric angle, tile geometry, and zoom remain prototype-tunable. **Player art frame size is locked to 128×128 RGBA with approximately 100–112 px standing character height for Order 01.**
 
 
 ## Character animation / equipment standard
-Use the [Codex Order 01 specification](../../orders/Codex/order_01.md) for 64×64 or 128×128 (pending in-engine comparison) player frames, eight-direction coverage, purposeful 24 fps animation, aligned equippable layers, independent VFX and Web performance validation. Extended poses may use larger canvases without scaling the character.
+Use the [Codex Order 01 specification](../../orders/Codex/order_01.md) for 128×128 RGBA player frames, eight-direction coverage, purposeful 24 fps animation, aligned equippable layers, independent VFX and Web performance validation. Extended poses may use larger canvases without scaling the character.
 
 
 ## Owner revision — PixelLab skill review and art scale
-Codex may use its own proven art-generation skills; **review PixelLab API skills and existing credentials first** and use PixelLab when advantageous, not by default for every asset. **64×64 and 128×128 are both candidates**; test at actual gameplay zoom and seek owner approval before bulk animation generation. See [revised art workflow](./PIXELLAB_API_ART_PIPELINE.md). This owner revision supersedes earlier mandatory-PixelLab and fixed-128px wording.
+Codex may use its own proven art-generation skills; **review PixelLab API skills and existing credentials first** and use PixelLab when advantageous, not by default for every asset. Sprite frame size is locked at 128×128 (see the decision below and [orders/README.md](../../orders/README.md)); test at actual gameplay zoom before bulk animation generation. See [revised art workflow](./PIXELLAB_API_ART_PIPELINE.md). This owner revision supersedes earlier mandatory-PixelLab wording.
 
 
 ## FINAL OWNER DECISION — Production sprite frame size (2026-10-18)

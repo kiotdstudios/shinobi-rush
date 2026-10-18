@@ -77,8 +77,8 @@ Write questions in the report; if something is not specified, use a reversible p
 **The gameplay camera is fixed-angle 2D three-quarter overhead / faux-isometric**, looking diagonally downward. Read [authoritative camera and art direction](../../docs/visuals/CAMERA_AND_ART_DIRECTION.md) and [three-quarter art skill](../../skills/three-quarter-game-art/SKILL.md). The approved front/side/back turnaround is an **appearance reference, not the gameplay viewing angle**. Translate the design into elevated three-quarter directional gameplay sprites with visible top planes, consistent feet anchors, correct prop overlap, and N/S/E/W plus planned diagonals. **Do not create side-view platformer sprites or pure orthographic turnaround frames as final gameplay assets.** Exact numeric camera elevation, tile diamond ratio, and pixel resolution are still prototype-tunable; coordinate and test a representative in-engine frame before producing full batches.
 
 
-## High-detail character production and fluid animation — scale subject to owner review
-- **Standard player animation canvas:** **64×64 or 128×128 (pending in-engine comparison) px RGBA**, transparent, with approximately **100–112 px standing character height** and a fixed ground/feet anchor. Larger 192×192 or 256×256 overflow canvases are allowed for wide attacks and motion, without scaling the character. Keep proportions and visual density consistent across NPCs, equippables and effects.
+## LOCKED — High-detail character production and fluid animation
+- **Standard player animation canvas:** **128×128 px RGBA**, transparent, with approximately **100–112 px standing character height** and a fixed ground/feet anchor. Larger 192×192 or 256×256 overflow canvases are allowed for wide attacks and motion, without scaling the character. Keep proportions and visual density consistent across NPCs, equippables and effects.
 - **Camera:** elevated three-quarter overhead faux-isometric. The flat turnaround is an *appearance* reference, not the gameplay angle.
 - **Direction coverage:** eight unique directions (N, NE, E, SE, S, SW, W, NW) as the production goal; check asymmetrical hair/armor and avoid incorrect mirroring. Review one south-facing and one diagonal gameplay-scale sample before batching all directions.
 - **Animation baseline:** author at **24 animation frames per second** with purposeful spacing, anticipation, follow-through, impact timing and secondary motion (hair, wraps, clothing). The game can render at 60+ fps independently. **More frames alone do not ensure smooth motion**; do not pad with duplicate/warped frames or introduce input lag.
@@ -96,7 +96,7 @@ Write questions in the report; if something is not specified, use a reversible p
 
 
 ## Owner revision — PixelLab skill review and art scale
-Codex may use its own proven art-generation skills; **review PixelLab API skills and existing credentials first** and use PixelLab when advantageous, not by default for every asset. **64×64 and 128×128 are both candidates**; test at actual gameplay zoom and seek owner approval before bulk animation generation. See [revised art workflow](../../docs/visuals/PIXELLAB_API_ART_PIPELINE.md). This owner revision supersedes earlier mandatory-PixelLab and fixed-128px wording.
+Codex may use its own proven art-generation skills; **review PixelLab API skills and existing credentials first** and use PixelLab when advantageous, not by default for every asset. Sprite frame size is locked at 128×128 (see the FINAL OWNER DECISION below); test at actual gameplay zoom before bulk animation generation. See [revised art workflow](../../docs/visuals/PIXELLAB_API_ART_PIPELINE.md). This owner revision supersedes earlier mandatory-PixelLab wording.
 
 
 ## FINAL OWNER DECISION — Production sprite frame size (2026-10-18)
