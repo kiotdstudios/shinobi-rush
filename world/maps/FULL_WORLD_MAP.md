@@ -11,7 +11,7 @@ flowchart TB
     A --> AF{"A FORK"}
     B --> BF{"B FORK"}
     AF --> D["Dead-end clearing"]
-    AF <-.->|"Potential shortcut"| BF
+    AF <-->|"Confirmed forest path"| BF
     BF -.-> N["NEIGHBORING VILLAGE GATE<br/>Future expansion"]
     C -.-> CF{"FOREST C — THREE-WAY FORK"}
     CF -.-> C1["Path 1<br/>Future destination TBD"]
@@ -23,20 +23,21 @@ flowchart TB
     class G start;
     class A,B,AF,BF,D mvp;
     class C,CF,C1,N mvp;
-    linkStyle 6 stroke:#d6ae63,stroke-width:3px,stroke-dasharray:6 4;
+    linkStyle 6 stroke:#7dab8c,stroke-width:3px;
 ```
 
 ### Confirmed topology
 - Three forest routes ultimately lead away from Kōsen Gate.
 - Forest A forks; one branch terminates in a dead end.
 - Forest B forks; one branch leads toward the neighboring village gate in the future.
-- **Potential shortcut: Forest A fork ↔ Forest B fork. Never route this shortcut to the Kōsen Gate.**
+- **Confirmed path: Forest A fork ↔ Forest B fork.** This is a real connection, not a potential shortcut.
 - Forest C splits into **three paths**: **Path 1** has an undecided destination, **Path 2 connects to Forest B fork**, and **Path 3 goes straight to the neighboring village gate**.
 - Forest B's previously planned connection to the neighboring village gate remains shown; Forest C Path 2 also connects to B fork and Path 3 reaches the neighboring village gate directly.
 - The neighboring village gate and Forest C are **not** part of the MVP.
 - Diagrams represent route connections, not physical scale.
 
 ### Revisions
+- v0.6: Confirmed A fork to B fork as a real forest path.
 - v0.5: All forest and destination nodes share the same green styling; dashed links still identify future routes.
 - v0.4: Forest C Path 2 connects to Forest B fork; Path 3 goes directly to the neighboring village gate; Path 1 remains TBD.
 - v0.3: Added Forest C three-way fork with one route to the neighboring village gate and two future destinations.
