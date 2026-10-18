@@ -24,3 +24,7 @@ No orders assigned by creating this folder. Previous Codex character handoff in 
 
 ## Mandatory art camera standard
 All Codex art orders must follow [Shinobi Rush camera and art direction](../../docs/visuals/CAMERA_AND_ART_DIRECTION.md) and the [three-quarter art skill](../../skills/three-quarter-game-art/SKILL.md). **Gameplay is 2D three-quarter overhead faux-isometric**, not side-scrolling. The baseline PNG is a character appearance turnaround, not the gameplay camera. Test an in-engine sample before mass-producing sprite frames.
+
+
+## Locked art scale and fluidity
+Follow [Order 01 high-detail production requirements](./order_01.md): 128×128 RGBA standard frames, approximately 100–112 px standing character height, fixed foot anchor, eight-direction coverage, purposeful 24 fps authored animation, high-detail layered equippables and separate directional VFX. Bigger frame counts are useful only when timing and poses improve; verify Web performance.
