@@ -24,4 +24,16 @@ Use Godot 4 2D rendering with a fixed-angle Camera2D; align 2D ground movement, 
 4. Test normal run versus R1 ninja sprint from this camera.
 5. Reject art that accidentally looks side-scrolling, straight-on orthographic, or directly top-down.
 
-**Status:** Camera style and three-quarter visual intent are locked; exact numeric angle, sprite resolution, tile geometry, and zoom remain prototype-tunable.
+**Status:** Camera style and three-quarter visual intent are locked; exact numeric angle, tile geometry, and zoom remain prototype-tunable. **Player art frame size is locked to 64×64 or 128×128 (pending in-engine comparison) RGBA with approximately 100–112 px standing character height for Order 01.**
+
+
+## Character animation / equipment standard
+Use the [Codex Order 01 specification](../../orders/Codex/order_01.md) for 64×64 or 128×128 (pending in-engine comparison) player frames, eight-direction coverage, purposeful 24 fps animation, aligned equippable layers, independent VFX and Web performance validation. Extended poses may use larger canvases without scaling the character.
+
+
+## Owner revision — PixelLab skill review and art scale
+Codex may use its own proven art-generation skills; **review PixelLab API skills and existing credentials first** and use PixelLab when advantageous, not by default for every asset. **64×64 and 128×128 are both candidates**; test at actual gameplay zoom and seek owner approval before bulk animation generation. See [revised art workflow](./PIXELLAB_API_ART_PIPELINE.md). This owner revision supersedes earlier mandatory-PixelLab and fixed-128px wording.
+
+
+## FINAL OWNER DECISION — Production sprite frame size (2026-10-18)
+**LOCKED: All standard production character sprite frames MUST be 128×128 pixels, RGBA with transparency.** This overrides any earlier 64×64 vs 128×128 evaluation or scale-approval requirement in this file or linked orders. Do not create 64×64 production character sprites. Legacy 64×64 artwork may be retained as reference only. Larger canvases may be used for attacks/VFX extending outside the base frame, but keep the character's world-space/body scale, proportions, foot anchor and alignment consistent. Maintain eight-direction animation targets and premium fluid motion. PixelLab remains optional after mandatory skill/API review as separately documented.
