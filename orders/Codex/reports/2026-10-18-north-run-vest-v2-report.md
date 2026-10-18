@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner vest motion assessment pending
-- Commit / PR: Not committed; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: 4c3d2ed; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Owner rejected the north run vest moving like a backpack. PixelLab north-only group bcece7c3-f57b-4598-8850-1f8095c2e488, job 9a786628-e176-428f-a7b5-17650fe8a976, replaces the 20 north poses with a fitted back panel intended to follow the torso. Inspected reference-scale frames 1,5,9,13,17,20: the vest stays between the shoulders and waist through alternating running poses. Subjective motion acceptance remains with the owner.
@@ -28,3 +28,5 @@ None. Revised motion supplied for inspection.
 
 ## Outstanding work / next steps
 Owner visual review, then continue distinct arms-back ninja sprint. Full Order 01 remains incomplete. Live deployment: not applicable to review-only GIFs; no gameplay files changed or live-game playtest claimed.
+
+Public verification: north-comparison and half-speed eight-direction GIFs both HTTP 200, 20 frames, 1670ms. Comparison 800x560, eight-direction grid 600x1240. https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/run-v2-north-comparison.gif
