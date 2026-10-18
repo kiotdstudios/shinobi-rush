@@ -1,3 +1,9 @@
+![lightning-strike visual build card](./lightning-strike.svg)
+
+[Open full-size visual card](./lightning-strike.svg)
+
+---
+
 # Lightning Strike — Build Illustration
 
 > **Lightning · Line strike; possible chaining upgrade**
