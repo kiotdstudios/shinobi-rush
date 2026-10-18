@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner arm motion assessment pending
-- Commit / PR: Not committed; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: e36ce42; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Owner noted east's arm looking dragged during several run poses. Inspected all 20 original east frames in PixelLab; rear hand holds behind the hip through much of frames 6-12 instead of a continuous opposing pump. Queued east-only correction: 20 poses, bent elbows, prompt return swing, no trailing straight arm. PixelLab group 7bfaed40-6e08-4de3-9db6-fbb75c9902fa, job b7399f1d-63b2-47e1-b59b-fda5647e5f68.
@@ -24,3 +24,5 @@ None. Corrected candidate will be provided for visual review.
 
 ## Outstanding work / next steps
 Inspect generated arm swing, export/check, publish before/after and updated eight-direction run preview. Full Order 01 remains incomplete; sprint and other states outstanding. Live deployment: not applicable to review-only GIFs; no gameplay code changed.
+
+Public verification: east-comparison and eight-direction half-speed GIFs both HTTP 200, 20 frames, 1670ms loop. Comparison 800x560; grid 600x1240. https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/run-v3-east-comparison.gif
