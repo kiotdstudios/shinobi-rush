@@ -24,4 +24,8 @@ Use Godot 4 2D rendering with a fixed-angle Camera2D; align 2D ground movement, 
 4. Test normal run versus R1 ninja sprint from this camera.
 5. Reject art that accidentally looks side-scrolling, straight-on orthographic, or directly top-down.
 
-**Status:** Camera style and three-quarter visual intent are locked; exact numeric angle, sprite resolution, tile geometry, and zoom remain prototype-tunable.
+**Status:** Camera style and three-quarter visual intent are locked; exact numeric angle, tile geometry, and zoom remain prototype-tunable. **Player art frame size is locked to 128×128 RGBA with approximately 100–112 px standing character height for Order 01.**
+
+
+## Character animation / equipment standard
+Use the [Codex Order 01 specification](../../orders/Codex/order_01.md) for 128×128 player frames, eight-direction coverage, purposeful 24 fps animation, aligned equippable layers, independent VFX and Web performance validation. Extended poses may use larger canvases without scaling the character.
