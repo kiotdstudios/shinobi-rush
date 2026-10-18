@@ -96,7 +96,7 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Inventory capacity is a meaningful exploration and resource-management constraint.
 - **Locked stacking:** identical scroll fragments and crafting materials stack up to **99 units per slot**. The 100th unit begins a new stack and consumes another shared bag slot.
 - **Locked jutsu fragment costs:** basic jutsu require **10 technique-specific scroll fragments**; rarer jutsu require **20 or more** fragments, scaled by rarity. Every jutsu additionally requires crafting materials and trainer exchange.
-- **Not yet locked:** exact expansion increments and maximum bag capacity; whether quest items use separate slots; handling pickups when full; specific rare-tier costs and material recipes.
+- **Not yet locked:** exact expansion increments and maximum bag capacity; whether quest items use separate slots; specific rare-tier costs and material recipes.
 - **Suggested only (not locked):** 12 → 16 → 20 → 24 slots; identical items stack up to 99 units per slot.
 
 ## Inventory stacking and jutsu fragment thresholds — confirmed
@@ -104,3 +104,10 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Each identical item stack holds **99**; additional units split into new stacks and consume additional slots.
 - **Basic jutsu: 10 fragments** of that specific technique, plus crafting materials, exchanged at a trainer.
 - **Rare jutsu: 20+ fragments** of that specific technique, plus crafting materials, exchanged at a trainer. Precise higher-tier costs TBD.
+
+## Full inventory and loot pickup — confirmed
+- If all 12 shared slots (or the current upgraded capacity) are occupied, the player **cannot pick up loot that requires a new slot**.
+- Show **Inventory Full** feedback and require the player to manually drop an item or stack to free space before collecting the loot.
+- Dropped items remain in the world and can be picked up again; uncollected loot remains at its source. Persistence/despawn rules TBD.
+- If a matching existing stack has room (up to 99), items may be added without needing a new slot; overflow requiring a new stack is blocked while full.
+- No automatic sending to storage or automatic deletion to make room.
