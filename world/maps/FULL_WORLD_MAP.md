@@ -7,16 +7,16 @@ flowchart TB
     G["KŌSEN VILLAGE GATE<br/>Player start"]
     G --> A["FOREST A"]
     G --> B["FOREST B"]
-    G -.-> C["FOREST C<br/>Future expansion"]
+    G -.-> C["FOREST C"]
     A --> AF{"A FORK"}
     B --> BF{"B FORK"}
     AF --> D["Dead-end clearing"]
     AF <-->|"Confirmed forest path"| BF
-    BF -.-> N["NEIGHBORING VILLAGE GATE<br/>Future expansion"]
+    BF -.-> N["NEIGHBORING VILLAGE GATE"]
     C -.-> CF{"FOREST C — THREE-WAY FORK"}
-    CF -.-> C1["Path 1<br/>Future destination TBD"]
-    CF -.->|"Path 2 — connects to B fork"| BF
-    CF -.->|"Path 3 — direct"| N
+    CF -.-> C1["PATH 1 — DEAD END"]
+    CF -.->|"PATH 2"| BF
+    CF -.->|"PATH 3"| N
 
     classDef start fill:#30473d,color:#fff,stroke:#89b99a,stroke-width:2px;
     classDef mvp fill:#243b32,color:#fff,stroke:#7dab8c;
@@ -31,12 +31,13 @@ flowchart TB
 - Forest A forks; one branch terminates in a dead end.
 - Forest B forks; one branch leads toward the neighboring village gate in the future.
 - **Confirmed path: Forest A fork ↔ Forest B fork.** This is a real connection, not a potential shortcut.
-- Forest C splits into **three paths**: **Path 1** has an undecided destination, **Path 2 connects to Forest B fork**, and **Path 3 goes straight to the neighboring village gate**.
+- Forest C splits into **three paths**: **Path 1 is a dead end**, **Path 2 connects to Forest B fork**, and **Path 3 goes straight to the neighboring village gate**.
 - Forest B's previously planned connection to the neighboring village gate remains shown; Forest C Path 2 also connects to B fork and Path 3 reaches the neighboring village gate directly.
 - The neighboring village gate and Forest C are **not** part of the MVP.
 - Diagrams represent route connections, not physical scale.
 
 ### Revisions
+- v0.7: Forest C Path 1 confirmed dead end; removed explanatory subtitles and shortened Path 2/3 link labels for a cleaner diagram.
 - v0.6: Confirmed A fork to B fork as a real forest path.
 - v0.5: All forest and destination nodes share the same green styling; dashed links still identify future routes.
 - v0.4: Forest C Path 2 connects to Forest B fork; Path 3 goes directly to the neighboring village gate; Path 1 remains TBD.
