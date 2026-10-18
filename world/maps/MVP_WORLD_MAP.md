@@ -134,4 +134,11 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - On death, the player respawns at the **nearest activated Save Stone**.
 - Save Stones are checkpoint landmarks, distinct from the trainer-based Mastery Chambers.
 - Proposed checkpoint placements (not locked): Kōsen Village Gate, Forest A, and Forest B.
-- **Still to decide:** whether proximity is measured by map distance or travel distance; what happens if no nearby stone has been activated; health/resource restoration; whether inventory or currency is lost on death; whether dying resets normal enemies or dropped loot. These are not yet locked.
+- **Still to decide:** whether proximity is measured by map distance or travel distance; what happens if no nearby stone has been activated; health/resource restoration; whether inventory or currency is lost on death; whether dying resets dropped loot. These are not yet locked.
+
+## Death-triggered enemy respawn — confirmed
+- **Player death resets all regular enemies in the active forest map**, repopulating their designated spawn locations when the player respawns at the nearest activated Save Stone.
+- This reset occurs even without a map transition or manual save load, overriding the ordinary same-map no-respawn rule specifically for death.
+- **Bosses and completed story objectives remain completed**; unique/quest-critical encounters are not automatically reset.
+- **Learned jutsu and persistent player progression are retained** on death.
+- Whether temporary dropped loot is cleared on death remains undecided; the existing map-transition and save-load cleanup rules still apply.
