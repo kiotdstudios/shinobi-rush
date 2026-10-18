@@ -1,3 +1,9 @@
+![shadow-clone visual build card](./shadow-clone.svg)
+
+[Open full-size visual card](./shadow-clone.svg)
+
+---
+
 # Shadow Clone — Build Illustration
 
 > **Clone · Clone decoy / offensive variant TBD**
