@@ -198,3 +198,10 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Bottom-left combat HUD is **exclusively the four equipped R2 + face-button jutsu loadout slots**, NOT light attack/heavy attack/dodge: R2+Square (slot 1), R2+Triangle (slot 2), R2+Circle (slot 3), R2+Cross (slot 4).
 - Follow the provided dark-metal/gold-bordered, blue-lit icon reference design, but use **four** ability icons rather than the reference image's five. Show cooldown and insufficient-Chakra availability states where applicable.
 - L2 Substitution is separate from the four equipped jutsu slots.
+
+## Independent Substitution charge cooldowns — locked
+- The three diamond indicators under HP/Chakra represent **three separately recharging L2 Substitution charges**.
+- A successful Substitution consumes **one available charge** and starts **that charge's own cooldown timer** immediately. Other ready charges remain usable while it recharges.
+- A spent charge becomes available again when **its individual cooldown completes**. If all three are depleted, Substitution is unavailable until one finishes recharging.
+- HUD: each diamond independently shows ready, recharging/progress, or unavailable state; recommended blue radial refill within the existing gold diamond outline (visual treatment provisional).
+- Exact recharge durations, reset behavior on death/save load, and any modifiers affecting recharge speed remain TBD.
