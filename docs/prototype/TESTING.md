@@ -38,11 +38,18 @@ templates installed. CI uses `scripts/ci/godot_ci.py export`, then `finalize-exp
 ## Manual checklist (about 3 minutes)
 
 - [ ] The title, `BOOTSTRAP BUILD - PLACEHOLDER ART` and `SPRITES: none (placeholder)` (or the set status) are readable.
-- [ ] `WASD` moves the player; `Shift` sprints (270 px/s, leaning pose); diagonals are not faster.
+- [ ] `WASD` moves the player; `Shift` sprints (leaning pose, visibly different from walk); diagonals are not faster.
+- [ ] World scale (D4): the PLACEHOLDER figure is about 108 px tall (the ruler `5` agrees), the footprint ellipse is about
+      50x27, tiles are 144x72 (`1` iso grid) and blocks tower over the figure like real props. All of these come from
+      `scripts/world_scale.gd` (one factor, 108/48 = 2.25 applied to the old 64-era values). They are PROVISIONAL
+      prototype values for Aki/Orcha to re-tune (speeds, acceleration, friction, bounds, blocks), not balance.
+      `tests/run_tests.gd` derives its expectations from those constants, so re-tuning them needs no test edits.
 - [ ] Walking into a block or the arena edge stops the player; the player passes in front of and behind blocks.
 - [ ] `Esc` shows PAUSED and freezes movement; `Esc` again resumes.
-- [ ] With a sprite set: `Tab` opens the lab; set, animation, direction, speed, pause/step, compare, zoom and the
+- [ ] With a sprite set: `Tab` opens the lab; set, animation, direction, speed, pause/step, compare (any two sets), zoom and the
       six overlays work both by key and by clicking the panel buttons.
+- [ ] Sprite sets are 128x128 base frames (overflow canvases >= 128), the ruler (`5`) reads 108 px by default and
+      the placeholder/fallback frame box is 128x128. 64x64 art is legacy reference only (not in a shipped folder).
 - [ ] Switching run and sprint does not move the feet (anchor crosshair stays on the footprint ellipse).
 
 ## Browser console checklist (Web build, DevTools console)

@@ -49,6 +49,7 @@ Start immediately on reading. Test before committing. Prepare the job report, co
 - **2026-10-18 — GitHub Pages enabled and merge authorized (project owner, via the orchestrator):** Pages enabled by the orchestrator with the owner's authorization on 2026-10-18 (not by this PR/CI); still NOT DEPLOYED (no project yet). The `github-pages` environment exists with a main-only deployment branch policy ([admin steps](../../docs/development/GODOT_CI_AND_DEPLOYMENT.md#admin-only-steps)). The owner also authorized the orchestrator (not the workflow agents) to merge this pull request once every check is green and the review approved it.
 - Still open (job report): adding the new Godot check(s) to the required status checks after stage 2 has proven them (manual admin step).
 
+- **2026-10-18 - stage 3b (128x128 alignment):** branch `kiro/order-01-128-standard-alignment` aligns the validator, defaults, world scale and docs with the locked 128x128 standard; PR open, not merged, not deployed. Report: [2026-10-18-128-standard-alignment-report.md](reports/2026-10-18-128-standard-alignment-report.md).
 **Definition of DONE for this order:** the unticked criteria above are ticked by someone who has seen the evidence: a real project passed `Godot CI` on a pull request, a push to `main` deployed it, and the post-deploy smoke test confirmed the live URL serves that commit.
 
 ## Handoff / notes

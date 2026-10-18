@@ -4,10 +4,10 @@ extends Node2D
 ## Collision is conventional planar 2D on each block's base footprint.
 ## Children are y-sorted (feet = sort anchor), so actors pass in front of / behind blocks.
 
-## Provisional diamond tile size (ratio 2:1), tunable.
-@export var tile_size: Vector2 = Vector2(64, 32)
+## Provisional diamond tile size (ratio 2:1), tunable. Scaled for the 108 px figure (see WorldScale).
+@export var tile_size: Vector2 = WorldScale.TILE_SIZE
 ## Playable world rectangle; the camera limits come from this.
-@export var bounds: Rect2 = Rect2(-900, -500, 1800, 1000)
+@export var bounds: Rect2 = WorldScale.ARENA_BOUNDS
 
 const GROUND_A := Color("#4b5d44")
 const GROUND_B := Color("#556a4c")
@@ -15,13 +15,8 @@ const GRID_LINE := Color(0, 0, 0, 0.18)
 const BORDER := Color("#d9c27a")
 
 ## Each block: [bottom-centre position, footprint size (w, depth), height in px].
-const BLOCKS: Array = [
-	[Vector2(-260, -80), Vector2(120, 48), 56.0],
-	[Vector2(280, -120), Vector2(64, 64), 64.0],
-	[Vector2(-120, 200), Vector2(160, 40), 40.0],
-	[Vector2(240, 180), Vector2(48, 48), 48.0],
-	[Vector2(0, -260), Vector2(200, 40), 72.0],
-]
+## Provisional prototype values scaled by WorldScale.SCALE; not balance.
+const BLOCKS: Array = WorldScale.BLOCKS
 
 @onready var spawn: Marker2D = $Spawn
 ## Ground layer. The arena y-sorts its children; drawing the ground in the arena's own _draw()
@@ -61,8 +56,8 @@ class Block extends StaticBody2D:
 		draw_colored_polygon(PackedVector2Array([Vector2(-w, -h), Vector2(w, -h), Vector2(w + s, -h - d), Vector2(-w + s, -h - d)]), Color("#9a8670"))
 		# Fit the label to the front face: shrink the font until "PLACEHOLDER" is not wider than the face.
 		var font := ThemeDB.fallback_font
-		var fsize := 8
-		while fsize > 4 and font.get_string_size("PLACEHOLDER", HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > footprint.x - 6.0:
+		var fsize := 12
+		while fsize > 5 and font.get_string_size("PLACEHOLDER", HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > footprint.x - 6.0:
 			fsize -= 1
 		draw_string(font, Vector2(-w + 3, -h * 0.5), "PLACEHOLDER", HORIZONTAL_ALIGNMENT_LEFT, -1, fsize, Color(1, 1, 1, 0.6))
 
@@ -88,7 +83,7 @@ func get_bounds() -> Rect2:
 func _build_bounds_walls() -> void:
 	var body := StaticBody2D.new()
 	body.name = "BoundsWalls"
-	var t := 64.0
+	var t := WorldScale.BOUNDS_WALL_THICKNESS
 	var r := bounds
 	var rects: Array[Rect2] = [
 		Rect2(r.position.x - t, r.position.y - t, r.size.x + 2.0 * t, t),
