@@ -1,3 +1,17 @@
+## Current architecture — V3: nonlinear mastery categories (locked)
+
+![Taijutsu Mastery nonlinear network](./taijutsu-mastery-network-v3.svg)
+
+[Open Taijutsu Mastery V3](./taijutsu-mastery-network-v3.svg)
+
+- **Shinobi Mastery** is an expandable umbrella containing distinct mastery categories.
+- **Taijutsu Mastery** is a parent category containing **Flow Mastery** and **Aerial Mastery** as internal branches/subtrees. These are **not** separate top-level categories.
+- **Evasion Mastery** is currently modeled as a separate mastery category for perfect dodge/counters; its eventual relationship to other categories may evolve.
+- **Skill progression is nonlinear:** individual nodes can fork into multiple routes, reconnect, and have multiple prerequisites. Avoid designing mastery as a fixed one-way list of three nodes.
+- Players can eventually invest in all available categories and branches; no exclusive specialization lockout.
+- New categories, branches, and node clusters can be added over time. Preserve stable identifiers and modular data.
+- The V3 diagram is an **architecture illustration**, not final costs, skill names, prerequisites, or complete skill roster. Earlier V1/V2 diagrams are superseded as architecture references but retained for history.
+
 ## Current visual — V2 (three branches)
 
 ![Expandable combat skill tree V2](./combat-skill-tree-v2.svg)
