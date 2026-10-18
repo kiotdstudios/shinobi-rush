@@ -22,3 +22,11 @@
 - Costs, unlock levels, prerequisites, and precise frame windows must be validated in playtests.
 
 This SVG is a standalone GitHub-previewable visual asset intended for the future HTML GDD.
+
+
+## Expandable multi-category progression — locked
+- Players may invest in **both Aerial Mastery and Flow Mastery** and eventually unlock all skills in both branches. No permanent specialization lockout.
+- Combat progression is an **extensible skill-tree hub**, not a permanently fixed two-branch tree. Additional branches and categories can be introduced as new mechanics are designed.
+- Keep branches modular with stable skill IDs and explicit prerequisites so new categories can be added without redesigning existing unlocks.
+- **Recommended interface direction (not yet locked):** zoom/pan canvas and collapsible skill categories for larger trees.
+- Existing node costs, branch topology, and capstone prerequisites remain **provisional**, not final balancing.
