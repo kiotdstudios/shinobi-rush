@@ -8,6 +8,20 @@ extends RefCounted
 ## 108 / 48: new standing height over the old 48 px placeholder height.
 const SCALE := 2.25
 
+## Gameplay camera zoom: the inverse of SCALE shows the same amount of arena as before the scale pass
+## (visible world rect = viewport * SCALE). Follows SCALE automatically.
+const CAMERA_BASE_ZOOM := 1.0 / SCALE
+## Extra world drawn/visible above the top arena bound so a standing figure at the top wall is not cut off.
+const CAMERA_HEADROOM := BODY_HEIGHT
+## World-space captions are sized so they stay at least this many SCREEN pixels tall.
+const MIN_CAPTION_SCREEN_PX := 8.0
+
+
+## Font size (in the caller's local units) that renders at least MIN_CAPTION_SCREEN_PX on screen.
+## `base` is the size wanted at zoom 1; `local_scale` is any extra scale applied while drawing.
+static func caption_font_size(base: int, zoom: float, local_scale: float = 1.0) -> int:
+	return maxi(base, ceili(MIN_CAPTION_SCREEN_PX / (maxf(zoom, 0.01) * local_scale)))
+
 ## Placeholder figure (procedural drawing) and the shared collider / lab footprint.
 const BODY_HEIGHT := 108.0
 ## Height of the unscaled procedural figure (hip 20 + torso 22 + neck-to-head 8 + head radius 7).

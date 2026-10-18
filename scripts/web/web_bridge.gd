@@ -41,3 +41,8 @@ func _process(delta: float) -> void:
 	_state.state = _player.get_state_name()
 	_state.sprinting = _player.state == PlayerController.State.SPRINT
 	_state.fps = Engine.get_frames_per_second()
+	var zoom := _player.camera.zoom.x
+	var vp := _player.get_viewport().get_visible_rect().size
+	_state.zoom = zoom
+	_state.view_w = vp.x / zoom
+	_state.view_h = vp.y / zoom

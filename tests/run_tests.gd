@@ -396,7 +396,7 @@ func test_main_scene_and_movement() -> void:
 	# camera limits
 	var cam := player.camera
 	var b := arena.get_bounds()
-	ck("camera limits match arena bounds", cam.limit_left == int(b.position.x) and cam.limit_top == int(b.position.y) and cam.limit_right == int(b.end.x) and cam.limit_bottom == int(b.end.y), "%d %d %d %d" % [cam.limit_left, cam.limit_top, cam.limit_right, cam.limit_bottom])
+	ck("camera limits match arena bounds (top has head room)", cam.limit_left == int(b.position.x) and cam.limit_top == int(b.position.y - WorldScale.CAMERA_HEADROOM) and cam.limit_right == int(b.end.x) and cam.limit_bottom == int(b.end.y), "%d %d %d %d" % [cam.limit_left, cam.limit_top, cam.limit_right, cam.limit_bottom])
 
 	main.queue_free()
 	await process_frame
@@ -474,13 +474,13 @@ func test_lab_and_pause() -> void:
 
 	# mouse wheel zoom
 	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
-	ck("lab zoom: wheel up -> 2x on the camera", lab.zoom_index == 1 and player.camera.zoom == Vector2(2, 2))
+	ck("lab zoom: wheel up -> native 1x on the camera", lab.zoom_index == 1 and player.camera.zoom == Vector2.ONE)
 	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
 	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
-	ck("lab zoom: wheel down clamps at 1x", lab.zoom_index == 0 and player.camera.zoom == Vector2.ONE)
+	ck("lab zoom: wheel down clamps at the wide baseline", lab.zoom_index == 0 and is_equal_approx(player.camera.zoom.x, WorldScale.CAMERA_BASE_ZOOM))
 	for i in 6:
 		_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
-	ck("lab zoom: wheel up clamps at 4x", lab.zoom_index == 3 and player.camera.zoom == Vector2(4, 4))
+	ck("lab zoom: wheel up clamps at 4x", lab.zoom_index == 4 and player.camera.zoom == Vector2(4, 4))
 	_restore(lab, base)
 
 	# every panel button does exactly what its dbg_* key does
