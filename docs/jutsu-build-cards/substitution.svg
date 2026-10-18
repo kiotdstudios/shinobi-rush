@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1330" viewBox="0 0 1000 1330" role="img" aria-label="Substitution Jutsu stat card">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#073239"/><stop offset="1" stop-color="#08121d"/></linearGradient><radialGradient id="glow"><stop stop-color="#b5eaff" stop-opacity=".85"/><stop offset="1" stop-color="#b5eaff" stop-opacity="0"/></radialGradient></defs>
+<rect width="1000" height="1330" fill="#000"/><text x="40" y="63" fill="#fff" font-family="Arial,sans-serif" font-size="44">Example: Substitution Jutsu</text>
+<rect x="40" y="105" width="920" height="1180" rx="40" fill="#000" stroke="#202020" stroke-width="2"/>
+<rect x="70" y="140" width="270" height="270" rx="36" fill="url(#bg)" stroke="#13434c" stroke-width="3"/>
+<circle cx="205" cy="275" r="122" fill="url(#glow)"/>
+<path d="M113 324 Q153 214 225 186 Q290 199 290 260 Q267 338 168 350Z" fill="#b5eaff" fill-opacity=".34" stroke="#b5eaff" stroke-width="4"/>
+<text x="205" y="303" text-anchor="middle" font-family="Arial,sans-serif" font-size="108" fill="#fff">◇</text>
+<text x="375" y="232" font-family="Arial,sans-serif" font-size="49" font-weight="600" fill="#fff">Substitution Jutsu</text>
+<text x="375" y="292" font-family="Arial,sans-serif" font-size="27" fill="#aaa">Defensive Technique · L2 Ability</text>
+<rect x="375" y="317" width="185" height="49" rx="25" fill="#262626"/><text x="395" y="350" font-family="Arial,sans-serif" font-size="27" fill="#ddd">Example build</text>
+<path d="M70 453 H930" stroke="#1b1b1b" stroke-width="2"/>
+<g font-family="Arial,sans-serif"><text x="70" y="531" fill="#aaa" font-size="29">Base Charges</text><text x="530" y="531" fill="#aaa" font-size="29">Jutsu Power Bonus</text>
+<text x="70" y="608" fill="#fff" font-size="53" font-weight="600">3</text><text x="530" y="608" fill="#0fbd60" font-size="53" font-weight="600">—</text>
+<text x="70" y="697" fill="#aaa" font-size="29">Starting Charges</text><text x="530" y="697" fill="#aaa" font-size="29">Recovery Bonus</text>
+<text x="70" y="774" fill="#fff" font-size="53" font-weight="600">3</text><text x="530" y="774" fill="#0fbd60" font-size="53" font-weight="600">-10%</text>
+<rect x="70" y="827" width="860" height="325" rx="34" fill="#242424"/>
+<text x="102" y="888" fill="#fff" font-size="37">With the equipment equipped</text>
+<text x="102" y="960" fill="#aaa" font-size="29">Available charges</text><text x="897" y="960" text-anchor="end" fill="#fff" font-size="34" font-weight="600">3</text><text x="102" y="1037" fill="#aaa" font-size="29">Recovery time</text><text x="897" y="1037" text-anchor="end" fill="#0fbd60" font-size="34" font-weight="600">-10%</text><text x="102" y="1114" fill="#aaa" font-size="29">Speed attribute</text><text x="897" y="1114" text-anchor="end" fill="#0fbd60" font-size="34" font-weight="600">+2</text>
+<text x="70" y="1214" fill="#aaa" font-size="24">Illustrative numbers, not final game balance.</text><text x="70" y="1250" fill="#aaa" font-size="24">Placeholder icon; final technique artwork pending.</text></g></svg>
