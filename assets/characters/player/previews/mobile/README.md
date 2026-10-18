@@ -2,6 +2,9 @@
 
 Production scale: **128x128**, selected by the owner.
 
+[Current idle — preferred half-speed breathing](idle-current.gif).
+Default review speed is 0.5x. Gameplay playback is tuned per action.
+
 ## Eight-direction idle with synchronized timer
 
 All eight directions use the same clock and frame index. The clock resets after
