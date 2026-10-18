@@ -183,3 +183,12 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Trainer mastery may require technique-specific materials, scrolls, or other prerequisites as defined per jutsu. Exact requirements are TBD.
 - Mastery improvements must be noticeable in combat, potentially affecting damage, range, speed, duration, Chakra efficiency, or technique behavior.
 - Assign the method and progression requirements per technique when the jutsu roster is designed; example techniques are illustrative, not locked roster entries.
+
+
+## Global Jutsu Power and targeted equipment modifiers — locked
+- Add a **Jutsu Power** character stat that increases damage from offensive jutsu broadly, including techniques learned later. This is separate from individual technique mastery.
+- Equipment can carry **multiple modifiers**, including flat attribute bonuses (e.g., **Strength +2**) and effect-specific bonuses (e.g., **Burn Damage +25%**) on the same item.
+- Support targeted modifiers such as **Fire Damage**, **Burn Damage**, **Jutsu Power**, and **Chakra**, each applying only to its appropriate damage, effect, or resource category.
+- **Individual jutsu mastery** remains separate from global Jutsu Power and can change a technique's damage, efficiency, range, speed, duration, or behavior.
+- Example only (not final balance): Fireball deals 100 base direct damage and 10 burn damage/sec; +20% Jutsu Power raises direct damage to 120, while an Ember Headband with +25% Burn Damage and Strength +2 increases the burn tick to 12.5/sec and adds two Strength points. Whether global Jutsu Power also scales status-effect damage is a future formula decision; this example treats them separately.
+- Ensure character/equipment UI clearly distinguishes **global stats, flat attributes, elemental bonuses, and status-effect bonuses**. Exact stacking/order, caps, and scaling formulas TBD.
