@@ -65,6 +65,20 @@ Record press/release only. Never record typed text.
 `env` `{userAgent, platform, language, screen, devicePixelRatio, gamepads, hardwareConcurrency}`,
 `limits` `{max_events, max_bytes, window_ms}`, `dropped` (by reason plus `total`), `coalesced`, `events`, `bytes`.
 
+### Build info source (`build.commit_sha`, `build.run_id`, filename short SHA)
+
+- The debug code makes **no network request** (it does not fetch the served `build-info.json`).
+- `scripts/ci/godot_ci.py export` writes an identity-only `res://build-info.json` into the project directory just before the Godot export and
+  deletes it again afterwards (`finally`, also when the export fails). It holds `commit_sha`, `head_sha`, `run_id`, `run_attempt`, `ref`,
+  `repository`, `built_at`, `godot_version`, taken from the same environment variables as `finalize-export` (`GITHUB_SHA`, `PR_HEAD_SHA`,
+  `GITHUB_RUN_ID`, ...). The file is inside the PCK (`include_filter="*.json"`); `BrowserDebug` reads it with `FileAccess`.
+- The served `build-info.json` written by `finalize-export` is a different file (it carries file hashes, so it cannot be embedded). The debug
+  probe checks that the downloaded header's `build.commit_sha` equals the served file's `commit_sha`, and that the download filename carries
+  its first 7 characters (`shinobi-debug-<UTC>-<sha7>.jsonl`). This is enforced when `GITHUB_SHA` is set (CI).
+- **Local runs without CI environment** (`GITHUB_SHA` unset, editor runs, `godot_ci.py export` on a laptop): no `res://build-info.json` exists,
+  `build.commit_sha` is `""` and the filename says `unknown`. Set `GITHUB_SHA=<40-hex>` before `export` to test the baked path locally.
+  `window.__SHINOBI_BUILD_INFO__` (if a page defines it) is merged over the baked values.
+
 ## Merge and ordering rules
 
 - The export is ordered by `t_ms`, ascending.
