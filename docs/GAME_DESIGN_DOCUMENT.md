@@ -37,7 +37,7 @@ Abandoned mountain shrine with cool stone, navy shadows, glowing blue energy, go
 ## Art direction
 - Original Kōsen faction: olive tactical gear, white bandage accents, distinctive three-spire emblem, high mountain fortress, precision/resonance arts.
 - Cloud Clan: white garments, pale-blue cloud motifs, gold trim, black tactical layers.
-- 32×32 environment tiles; player/enemy sprites 64×64, approx. 44–52 px tall; boss 96×96 or 128×128.
+- Standard production character sprites 128×128 RGBA, standing height about 100–112 px (see [orders/README.md](../orders/README.md)); world tile scale is provisional, set against that character in the in-engine test arena, subject to owner approval.
 - Four directional animation sets; initial target 640×360 resolution with nearest-neighbor scaling.
 - Faux-isometric backgrounds and straightforward 2D movement/collisions.
 - Approx. 132 player animation frames across idle/run/combo/dash/cast/hit/defeat in four directions; use placeholders first.

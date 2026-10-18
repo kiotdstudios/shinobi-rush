@@ -12,6 +12,17 @@ const INDICATOR := Color("#ffd23f")
 var _dir: Vector2 = Vector2.DOWN
 var _sprinting: bool = false
 var _moving: bool = false
+var _drawn_zoom: float = -1.0
+
+
+func _camera_zoom() -> float:
+	var cam := get_viewport().get_camera_2d() if is_inside_tree() else null
+	return cam.zoom.x if cam != null else 1.0
+
+
+func _process(_d: float) -> void:
+	if not is_equal_approx(_camera_zoom(), _drawn_zoom):
+		queue_redraw()  # caption size depends on the camera zoom
 
 
 func set_pose(dir8: Vector2, sprinting: bool, moving: bool) -> void:
@@ -24,6 +35,8 @@ func set_pose(dir8: Vector2, sprinting: bool, moving: bool) -> void:
 
 
 func _draw() -> void:
+	# Procedural figure is authored at its native size and scaled to the ~108 px standard (WorldScale).
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * WorldScale.FIGURE_SCALE)
 	# Elliptical ground shadow (fixed under the feet).
 	var shadow := PackedVector2Array()
 	for k in 16:
@@ -59,4 +72,8 @@ func _draw() -> void:
 	# Head with a small facing mark.
 	draw_circle(head, 7.0, SKIN)
 	draw_circle(head + Vector2(_dir.x * 4.0, _dir.y * 2.0), 2.0, INDICATOR)
-	draw_string(ThemeDB.fallback_font, Vector2(-30, head.y - 14.0), "PLACEHOLDER", HORIZONTAL_ALIGNMENT_CENTER, 60.0, 8, Color(1, 1, 1, 0.7))
+	# Caption is drawn under FIGURE_SCALE, so account for it to stay >= 8 screen px.
+	_drawn_zoom = _camera_zoom()
+	var csize := WorldScale.caption_font_size(8, _drawn_zoom, WorldScale.FIGURE_SCALE)
+	var cw := 60.0 * csize / 8.0
+	draw_string(ThemeDB.fallback_font, Vector2(-cw * 0.5, head.y - 14.0), "PLACEHOLDER", HORIZONTAL_ALIGNMENT_CENTER, cw, csize, Color(1, 1, 1, 0.7))

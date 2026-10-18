@@ -5,12 +5,13 @@ extends Node
 ## The status line and metrics stay on screen even when the lab is hidden.
 
 const SPEEDS: Array[float] = [0.25, 0.5, 1.0, 1.5, 2.0]
-const ZOOMS: Array[int] = [1, 2, 3, 4]
+## Index 0 is the gameplay baseline (wide view); the rest are native 1:1 pixel steps.
+const ZOOMS: Array[float] = [WorldScale.CAMERA_BASE_ZOOM, 1.0, 2.0, 3.0, 4.0]
 ## Stands sit LEFT of the spawn so they stay clear of the lab panel (screen right) at 1x-2x zoom.
-## 130 px apart so the two 124 px captions do not overlap.
-const STAND_OFFSETS: Array[Vector2] = [Vector2(-100, 0), Vector2(-230, 0)]
+## Provisional prototype values scaled by WorldScale.SCALE (stands far enough apart for the 128 px frames).
+const STAND_OFFSETS: Array[Vector2] = WorldScale.STAND_OFFSETS
 const SPIN_SECONDS := 1.5
-const FOOTPRINT := Vector2(22, 12)  ## matches the player's collision rectangle
+const FOOTPRINT := WorldScale.FOOTPRINT  ## shared with the player's collision rectangle
 const OVERLAYS: Array = [
 	["iso", "1 iso grid"], ["square", "2 square grid"], ["anchor", "3 anchor"],
 	["footprint", "4 footprint"], ["ruler", "5 height ruler"], ["bbox", "6 frame box"],
@@ -57,14 +58,15 @@ class Stand extends Node2D:
 		add_child(actor)
 
 	func _draw() -> void:
-		draw_colored_polygon(PackedVector2Array([Vector2(0, -32), Vector2(64, 0), Vector2(0, 32), Vector2(-64, 0)]), Color("#8c8c8c"))
-		draw_polyline(PackedVector2Array([Vector2(0, -32), Vector2(64, 0), Vector2(0, 32), Vector2(-64, 0), Vector2(0, -32)]), Color(0, 0, 0, 0.5), 1.0)
-		# Unclipped, centred on the stand. Shrink the font so it never exceeds the 130 px stand spacing.
+		var d := WorldScale.STAND_DIAMOND
+		draw_colored_polygon(PackedVector2Array([Vector2(0, -d.y), Vector2(d.x, 0), Vector2(0, d.y), Vector2(-d.x, 0)]), Color("#8c8c8c"))
+		draw_polyline(PackedVector2Array([Vector2(0, -d.y), Vector2(d.x, 0), Vector2(0, d.y), Vector2(-d.x, 0), Vector2(0, -d.y)]), Color(0, 0, 0, 0.5), 1.0)
+		# Unclipped, centred on the stand. Shrink the font so it never exceeds the stand spacing.
 		var fsize := 11
 		while fsize > 7 and ThemeDB.fallback_font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > 126.0:
 			fsize -= 1
 		var tw := ThemeDB.fallback_font.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x
-		draw_string(ThemeDB.fallback_font, Vector2(-tw * 0.5, 46), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize, Color.WHITE)
+		draw_string(ThemeDB.fallback_font, Vector2(-tw * 0.5, d.y + 14.0), caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fsize, Color.WHITE)
 
 
 ## World-space overlays: grids, anchor crosshair, footprint ellipse, height ruler, frame box.
@@ -93,16 +95,17 @@ class LabOverlay extends Node2D:
 				draw_line(Vector2(r.position.x, y), Vector2(r.end.x, y), Color(0.2, 0.8, 1.0, 0.35), 1.0 / zoom)
 				y += 32.0
 		if lab.overlay_on["iso"]:
-			# 32x32 world tiles projected 2:1 -> 64x32 diamonds. Lines y = x/2 + 32j - 16 and y = -x/2 + 32i - 16.
-			var j0 := int(floorf((r.position.y - r.end.x * 0.5) / 32.0)) - 1
-			var j1 := int(ceilf((r.end.y - r.position.x * 0.5) / 32.0)) + 1
+			# World tiles projected 2:1 -> TILE_SIZE diamonds (144x72). Lines y = x/2 + ts*j - ts/2 and y = -x/2 + ts*i - ts/2.
+			var ts := WorldScale.TILE_SIZE.y
+			var j0 := int(floorf((r.position.y - r.end.x * 0.5) / ts)) - 1
+			var j1 := int(ceilf((r.end.y - r.position.x * 0.5) / ts)) + 1
 			for j in range(j0, j1 + 1):
-				var cc := 32.0 * j - 16.0
+				var cc := ts * j - ts * 0.5
 				draw_line(Vector2(r.position.x, r.position.x * 0.5 + cc), Vector2(r.end.x, r.end.x * 0.5 + cc), Color(1.0, 0.8, 0.2, 0.4), 1.0 / zoom)
-			var i0 := int(floorf((r.position.y + r.position.x * 0.5) / 32.0)) - 1
-			var i1 := int(ceilf((r.end.y + r.end.x * 0.5) / 32.0)) + 1
+			var i0 := int(floorf((r.position.y + r.position.x * 0.5) / ts)) - 1
+			var i1 := int(ceilf((r.end.y + r.end.x * 0.5) / ts)) + 1
 			for i in range(i0, i1 + 1):
-				var cc2 := 32.0 * i - 16.0
+				var cc2 := ts * i - ts * 0.5
 				draw_line(Vector2(r.position.x, -r.position.x * 0.5 + cc2), Vector2(r.end.x, -r.end.x * 0.5 + cc2), Color(1.0, 0.8, 0.2, 0.4), 1.0 / zoom)
 		for t: Array in lab.targets():
 			_draw_target(t[0], t[1], t[2], zoom)
@@ -115,8 +118,8 @@ class LabOverlay extends Node2D:
 				var a := TAU * k / 24.0
 				pts.append(origin + Vector2(cos(a) * FOOTPRINT.x * 0.5, sin(a) * FOOTPRINT.y * 0.5 - FOOTPRINT.y * 0.5))
 			draw_polyline(pts, Color(1, 0.3, 0.3, 0.95), w * 1.5)
-		var fs := Vector2(s.anim_frame_size(aid)) if s != null else Vector2(64, 64)
-		var anchor := s.anim_anchor(aid) if s != null else Vector2(32, 64)
+		var fs := Vector2(s.anim_frame_size(aid)) if s != null else Vector2(128, 128)
+		var anchor := s.anim_anchor(aid) if s != null else Vector2(64, 116)
 		if lab.overlay_on["bbox"] and s != null:
 			draw_rect(Rect2(origin - anchor, fs), Color(0.4, 1, 0.4, 0.9), false, w)
 		if lab.overlay_on["ruler"]:
@@ -376,7 +379,7 @@ func _refresh_ui() -> void:
 	_value_labels["speed"].text = "%sx" % str(SPEEDS[speed_index])
 	_value_labels["pause"].text = "PAUSED" if anim_paused else "playing"
 	_value_labels["compare"].text = "ON (first two sets)" if compare else "off"
-	_value_labels["zoom"].text = "%dx" % ZOOMS[zoom_index]
+	_value_labels["zoom"].text = zoom_label(zoom_index)
 	for k: String in _toggle_buttons:
 		_toggle_buttons[k].button_pressed = overlay_on[k]
 	_lab_button.text = "Lab: ON (Tab)" if lab_on else "Lab: off (Tab)"
@@ -390,6 +393,8 @@ func toggle_lab() -> void:
 
 func _set_lab(on: bool) -> void:
 	lab_on = on
+	if not on and zoom_index != 0:
+		set_zoom_index(0)  # closing the lab restores the gameplay baseline
 	if _panel != null:
 		_panel.visible = on
 		overlay.visible = on
@@ -439,6 +444,13 @@ func step_once() -> void:
 func toggle_compare() -> void:
 	compare = not compare
 	_refresh_ui()
+
+
+## "wide 0.44x" for the baseline, "1x".."4x" (native pixels) for the rest.
+static func zoom_label(i: int) -> String:
+	if i == 0:
+		return "wide %.2fx" % ZOOMS[0]
+	return "%dx" % int(ZOOMS[i])
 
 
 func cycle_zoom() -> void:

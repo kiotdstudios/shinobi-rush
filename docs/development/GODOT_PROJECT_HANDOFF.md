@@ -152,7 +152,13 @@ The `tests` step prefers the project's own dependency-free runner `res://tests/r
 
 ## Sprite drop-in and the manifest validator
 
-Codex adds art as a sprite set: a `*.manifest.json` plus PNGs under `assets/characters/` (contract: [SPRITE_DROP_IN.md](../prototype/SPRITE_DROP_IN.md)). **128x128 RGBA frames are the documented production default** (owner-approved scale: roughly 100 to 112 px standing height, consistent foot anchors); 64x64 sets are supported as review evidence, and the lab can compare two sets. `python scripts/ci/validate_sprite_manifests.py` checks every manifest (schema v1) and prints `::error file=<path>::<message>` annotations; CI runs it in the `detect` job, so manifest errors show up before the engine is involved. `check-export` additionally asserts that the exported `index.pck` contains `project.binary`, every manifest and every sprite PNG import record (`EXPORT011`); `source/` and `references/` are excluded from the pack on purpose. No sprite set is committed yet, so the check currently asserts 0 manifests.
+Codex adds art as a sprite set: a `*.manifest.json` plus PNGs under `assets/characters/` (contract: [SPRITE_DROP_IN.md](../prototype/SPRITE_DROP_IN.md)). **Production frames are 128x128 RGBA (locked)**: roughly 100 to 112 px standing height (default 108), consistent foot anchors, overflow canvases of at least 128 in both dimensions with the same body scale. 64x64 art is legacy reference only and must live under `references/`, `previews/`, `source/` or `study/`. The lab can compare any two sets (revisions, overflow canvases). `python scripts/ci/validate_sprite_manifests.py` checks every manifest (schema v1) and prints `::error file=<path>::<message>` annotations; CI runs it in the `detect` job, so manifest errors show up before the engine is involved. `check-export` additionally asserts that the exported `index.pck` contains `project.binary`, every manifest and every sprite PNG import record (`EXPORT011`); `source/`, `references/`, `previews/` and `study/` are excluded from the pack on purpose (add a `.gdignore` to each so Godot does not import them). No sprite set is committed yet, so the check currently asserts 0 manifests.
+
+## Coordination notes for other agents
+
+- **Gameplay camera baseline.** `WorldScale.CAMERA_BASE_ZOOM := 1.0 / SCALE` (0.4444 at SCALE 2.25) is the single source of truth. `player_controller.gd` `_ready` sets `camera.zoom` from it (`player.tscn` has no zoom literal). At 1280x720 it shows a 2880x1620 world rect, the same share of the arena as before the 2.25x world scale. `CAMERA_HEADROOM` (108) and `CAMERA_FOOTROOM` (24) extend the camera limits and the ground above and below the arena so the figure is not clipped at the top and bottom walls. World-space captions size themselves from the zoom (`WorldScale.MIN_CAPTION_SCREEN_PX`).
+- **Lab zoom and the camera.** The animation lab's zoom (`Z` / wheel / L-stick click) still sets `player.camera.zoom` directly (absolute), from `ZOOMS = [CAMERA_BASE_ZOOM, 1, 2, 3, 4]`. Index 0 is the gameplay baseline ("wide 0.44x" in the panel); `1x` to `4x` are native 1:1 pixel steps. Opening the lab does not change the camera, cycling wraps back to the baseline, and closing the lab (`Tab`) restores the baseline. When Orcha's camera director lands, lab zoom must go through the director, or be disabled while the director is active, so the two never fight over the camera. Integration points to test against: `WorldScale.CAMERA_BASE_ZOOM`, `AnimationLab.ZOOMS`/`zoom_label()`, and the `zoom`, `view_w`, `view_h` fields of `__SHINOBI_STATE__`.
+- **WebBridge smoke-test contract.** The `__SHINOBI_READY__` and `__SHINOBI_STATE__` WebBridge hooks are the stable contract the smoke tests rely on. Aki's telemetry must not rename or remove them; add new hooks next to them instead.
 
 ## What finishes Order 01
 
@@ -160,9 +166,13 @@ Stage 2 is delivered by a pull request (placeholder art only). The order is fini
 
 1. Stage 1 (the pipeline) is merged (done: PR #4), and the stage 2 pull request carries the real `project.godot` with a Web preset named `Web` as above.
 2. `Godot CI` passes on the stage 2 pull request (the `godot-ci-gate` check, with `build` and `smoke-predeploy` green).
-3. The Pages steps in [GODOT_CI_AND_DEPLOYMENT.md](GODOT_CI_AND_DEPLOYMENT.md#admin-only-steps) hold (Pages and the `github-pages` environment are set up, done on 2026-10-18; the Godot gate is added to the required status checks by an administrator once the first `main` run has proven it).
+3. The Pages steps in [GODOT_CI_AND_DEPLOYMENT.md](GODOT_CI_AND_DEPLOYMENT.md#admin-only-steps) hold (Pages and the `github-pages` environment are set up, done on 2026-10-18; the Godot gate `godot-ci-gate` was added to the required status checks on 2026-10-18, after the first `main` runs had proven it).
 4. A push to `main` deployed: `deploy` and `smoke-postdeploy` are green and the post-deploy artifact holds `deploy-info.json` with the real `page_url` and a matching commit SHA.
 5. Someone opens that URL in a browser and confirms the game starts.
 6. `orders/Kiro/order_01.md` acceptance boxes are ticked with links to the runs, the job report is updated with the URL and build ID, and the report's URL/build evidence box is ticked last. The orchestrator sets the final status.
 
 Until then the order stays IN_PROGRESS ("stage 2 of 2: PR open, first deployment pending"), live deployment is PENDING and no URL is claimed as verified.
+
+## Debug log (opt-in)
+The browser debug log (`?debug=1` or F9; F7 download, F8 copy report) is owned by the `BrowserDebug` autoload. Tester steps: [DEBUG_LOG_USER_GUIDE.md](DEBUG_LOG_USER_GUIDE.md). Developer contract: [DEBUG_LOG_INTERFACE.md](DEBUG_LOG_INTERFACE.md). CI runs `scripts/ci/smoke/debug-probe.mjs` in the pre-deploy smoke job after the controls probe.
+

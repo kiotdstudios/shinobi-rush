@@ -7,11 +7,12 @@ signal state_changed(new_state: State)
 
 enum State { IDLE, MOVE, SPRINT }
 
-## Handoff prototype values (px/s, px/s^2).
-@export var walk_speed: float = 175.0
-@export var sprint_speed: float = 270.0
-@export var acceleration: float = 1400.0
-@export var friction: float = 1800.0
+## Provisional prototype values (px/s, px/s^2), handoff values scaled by WorldScale.SCALE.
+## Not balance: Aki/Orcha re-tune.
+@export var walk_speed: float = WorldScale.WALK_SPEED
+@export var sprint_speed: float = WorldScale.SPRINT_SPEED
+@export var acceleration: float = WorldScale.ACCELERATION
+@export var friction: float = WorldScale.FRICTION
 @export var camera_smoothing_speed: float = 8.0
 
 var state: State = State.IDLE
@@ -24,16 +25,21 @@ var facing8: Vector2 = Vector2.DOWN  ## facing snapped to 8 directions
 
 func _ready() -> void:
 	add_to_group("player")
+	# Collider comes from the shared footprint constant (the scene values mirror it).
+	var feet := $CollisionShape2D as CollisionShape2D
+	(feet.shape as RectangleShape2D).size = WorldScale.FOOTPRINT
+	feet.position = Vector2(0, -WorldScale.FOOTPRINT.y * 0.5)
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
+	camera.zoom = Vector2.ONE * WorldScale.CAMERA_BASE_ZOOM  # single source of truth (player.tscn has no literal)
 	camera.position_smoothing_enabled = true
 	camera.position_smoothing_speed = camera_smoothing_speed
 	var arena := get_parent()
 	if arena != null and arena.has_method("get_bounds"):
 		var b: Rect2 = arena.get_bounds()
 		camera.limit_left = int(b.position.x)
-		camera.limit_top = int(b.position.y)
+		camera.limit_top = int(b.position.y - WorldScale.CAMERA_HEADROOM)  # head room: a figure at the top wall is not clipped
 		camera.limit_right = int(b.end.x)
-		camera.limit_bottom = int(b.end.y)
+		camera.limit_bottom = int(b.end.y + WorldScale.CAMERA_FOOTROOM)  # foot room: feet and shadow at the bottom wall are not cut off
 	visual.set_pose(facing8, false, false)
 
 

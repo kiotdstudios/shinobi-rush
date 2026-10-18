@@ -93,6 +93,10 @@ class PckContentTests(unittest.TestCase):
         (self.project / "assets/characters/p1/idle/S.png").write_bytes(b"png")
         (self.project / "assets/characters/p1/source").mkdir()
         (self.project / "assets/characters/p1/source/raw.png").write_bytes(b"png")  # excluded by the preset
+        for skipped in ("references", "previews", "study"):  # also excluded by the preset
+            (self.project / "assets/characters/p1" / skipped).mkdir()
+            (self.project / "assets/characters/p1" / skipped / "legacy.png").write_bytes(b"png")
+            (self.project / "assets/characters/p1" / skipped / "legacy.manifest.json").write_text("{}", encoding="utf-8")
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)

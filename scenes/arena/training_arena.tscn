@@ -7,4 +7,4 @@ y_sort_enabled = true
 script = ExtResource("1_arena")
 
 [node name="Spawn" type="Marker2D" parent="."]
-position = Vector2(0, 60)
+position = Vector2(0, 135)

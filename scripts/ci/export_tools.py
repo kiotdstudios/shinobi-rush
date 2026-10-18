@@ -106,7 +106,7 @@ def check_export_dir(d: Path) -> List[Finding]:
 
 
 SPRITE_ROOT = "assets/characters"
-SPRITE_SKIP_DIRS = ("references", "source")  # mirrors exclude_filter in export_presets.cfg
+SPRITE_SKIP_DIRS = ("references", "previews", "source", "study")  # mirrors exclude_filter in export_presets.cfg
 
 
 def expected_pck_entries(project: Path) -> Dict[str, List[str]]:
