@@ -166,3 +166,7 @@ Stage 2 is delivered by a pull request (placeholder art only). The order is fini
 6. `orders/Kiro/order_01.md` acceptance boxes are ticked with links to the runs, the job report is updated with the URL and build ID, and the report's URL/build evidence box is ticked last. The orchestrator sets the final status.
 
 Until then the order stays IN_PROGRESS ("stage 2 of 2: PR open, first deployment pending"), live deployment is PENDING and no URL is claimed as verified.
+
+## Debug log (opt-in)
+The browser debug log (`?debug=1` or F9; F7 download, F8 copy report) is owned by the `BrowserDebug` autoload. Tester steps: [DEBUG_LOG_USER_GUIDE.md](DEBUG_LOG_USER_GUIDE.md). Developer contract: [DEBUG_LOG_INTERFACE.md](DEBUG_LOG_INTERFACE.md). CI runs `scripts/ci/smoke/debug-probe.mjs` in the pre-deploy smoke job after the controls probe.
+

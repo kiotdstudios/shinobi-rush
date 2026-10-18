@@ -1,6 +1,6 @@
 # ORDER — Browser debug log export and error capture
 - Agent: Kiro
-- Status: QUEUED
+- Status: REVIEW
 - Priority: P0
 - Owner: Kiro (Web build, diagnostic export and QA)
 - Collaborator: Aki (Godot runtime event producer)
