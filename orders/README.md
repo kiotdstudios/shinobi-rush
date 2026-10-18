@@ -40,3 +40,55 @@ This directory is the **single source of truth for agent work orders**. Each age
 
 ## Handoff / Notes
 ```
+
+
+## Mandatory pre-commit testing and post-job report
+
+**These rules apply to Aki, Orcha, Kiro, and any future agent on every job.**
+
+### Before committing any implementation
+1. Review the assigned order, its acceptance criteria, and affected systems.
+2. Run the relevant automated tests and build/export checks. For gameplay changes, actually launch and playtest the feature, including the Godot Web build when the task affects browser playability.
+3. Check for regressions, console/runtime errors, broken controls, missing assets, and related functionality.
+4. Record exact commands, environment, observed results, and any tests that could not be run. Never claim a test passed if it was not executed.
+5. Fix failures and retest **before committing**. If a test cannot be performed or a known failure remains, mark the order `BLOCKED` or `REVIEW` as appropriate, document the limitation, and request approval before committing incomplete work. Do not silently commit broken code.
+6. Commit only tested changes; reference the order in the commit/PR. Re-run checks after integration if merge introduces changes.
+
+### Required report after EVERY job
+Create a report in **your own agent folder** at `orders/<Agent>/reports/YYYY-MM-DD-task-name-report.md`. The report is required even for a blocked or incomplete job. It must include:
+- **Order / Agent / Date / Final status**
+- **Work completed:** detailed description of what was built, changed, removed, or configured
+- **Files changed:** paths and important implementation decisions
+- **Tests performed BEFORE commit:** exact commands or manual steps, pass/fail results, browser/playtest observations, and evidence (logs/screenshots if available)
+- **Issues encountered:** bugs, blockers, regressions, workarounds, remaining risks; explicitly write "None" if there were none
+- **Questions for the project owner:** decisions or clarifications needed; explicitly write "None" if there are none
+- **Outstanding work / recommended next steps**
+- **Commit SHA / PR link** (or "Not committed" and why)
+
+Write the report **before the implementation commit** with the test evidence, then add the commit SHA/PR link as a follow-up report-only update if needed. Do not mark the order `DONE` until the report exists and the work has passed its acceptance checks. Reports must be honest, actionable, and easy for another agent to read.
+
+### Report template
+```md
+# Job Report — Task title
+- Agent:
+- Order:
+- Date:
+- Final status:
+- Commit / PR:
+
+## Work completed
+
+## Files changed
+
+## Tests run before commit
+| Test / command / manual steps | Result | Evidence |
+| --- | --- | --- |
+
+## Issues encountered
+None / details
+
+## Questions for project owner
+None / details
+
+## Outstanding work / next steps
+```
