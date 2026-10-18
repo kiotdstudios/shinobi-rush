@@ -86,3 +86,7 @@ Write questions in the report; if something is not specified, use a reversible p
 - **Equippables:** layered armor/clothing/weapon accessories with consistent named attachment sockets (head, torso, back, hands, waist, feet), directional occlusion and no sliding; include an attachment overlay demonstration. **No sword on the approved baseline player.**
 - **VFX:** detailed separate directional flipbooks/particles for sprint dust, dodge afterimages, impact flashes, attack arcs, substitution, speed trails, hit sparks and grounded shadows. Respect camera projection, keep gameplay silhouettes readable and profile Godot Web texture/memory/performance.
 - **Acceptance:** inspect alpha, edge artifacts, frame-to-frame continuity, foot anchors, equipment drift, direction changes, clipping and actual in-game zoom. Deliver frame/FPS/direction manifest and visual previews. The frame standard is locked for this order; numeric camera angle and zoom remain subject to in-engine approval.
+
+
+## Premium roguelike-inspired game vision
+**Required reading:** [Shinobi Rush quality and inspiration brief](../../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md). Aim for premium AAA-level polish in combat, animation, VFX, enemy readability and replay appeal. **Do not change the locked persistent RPG progression, world layout, death/save rules, or add permadeath/procedural run resets without owner approval.**
