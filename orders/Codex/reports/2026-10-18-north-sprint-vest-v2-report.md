@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner vest-motion assessment pending
-- Commit / PR: Not committed; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: e7ba36f; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Owner flagged north sprint armor reading like a swinging backpack. Final correction uses PixelLab exact copy_region editing on the original north arms-back sprint: a single torso/vest attachment cel from raw frame 5 is reused for retained raw frames 5-24, inclusive rectangle [58,46,90,75]. This stabilizes the approved broad olive plate together with its shoulder/waist attachment region. Original sprint motion outside the rectangle is preserved exactly. PixelLab edit ID 4c6b87c4-9910-4e24-83c7-881265ef192c, original source group 471a4495-8a9d-451d-9779-2a0feb371e9a.
@@ -30,3 +30,5 @@ None. North-only before/after supplied for inspection.
 
 ## Outstanding work / next steps
 Owner visual review of north vest and updated sprint grid. Full Order 01 remains incomplete. Live deployment: not applicable to review-only GIFs; no gameplay code changed or live-game playtest claimed.
+
+Public verification: north-comparison and eight-direction half-speed GIFs both HTTP 200, 20 frames, 1670ms loop; comparison 800x560, grid 600x1240. https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/sprint-v2-north-comparison.gif
