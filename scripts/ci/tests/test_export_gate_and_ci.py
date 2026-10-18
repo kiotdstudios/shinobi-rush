@@ -201,6 +201,17 @@ class GodotCiTests(unittest.TestCase):
         self.assertEqual(godot_ci.detect_test_frameworks(self.project), ["gut", "gdunit4"])
         self.assertIn("--ignoreHeadlessMode", godot_ci.test_command("gdunit4", self.project))
 
+    def test_builtin_runner_is_detected_and_run_headless_with_the_script(self):
+        (self.project / "tests").mkdir()
+        self.assertEqual(godot_ci.detect_test_frameworks(self.project), [])
+        (self.project / "tests" / "run_tests.gd").write_text("extends SceneTree\n")
+        self.assertEqual(godot_ci.detect_test_frameworks(self.project), ["builtin"])
+        self.assertEqual(godot_ci.test_command("builtin", self.project),
+                         ["--headless", "--path", str(self.project), "--script", "res://tests/run_tests.gd"])
+        (self.project / "addons" / "gut").mkdir(parents=True)
+        (self.project / "addons" / "gut" / "gut_cmdln.gd").write_text("x")
+        self.assertEqual(godot_ci.detect_test_frameworks(self.project), ["gut", "builtin"])
+
     def test_framework_without_a_tests_directory_runs_nothing_and_only_warns(self):
         (self.project / "addons" / "gut").mkdir(parents=True)
         (self.project / "addons" / "gut" / "gut_cmdln.gd").write_text("x")
