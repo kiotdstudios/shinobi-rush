@@ -49,6 +49,8 @@ jobs:
           "${RUNNER_TEMP}/actionlint/actionlint" -no-color
       - name: Python unit tests (stdlib unittest)
         run: python3 -m unittest discover -s scripts/ci/tests -v
+      - name: Sprite manifest validator unit tests
+        run: python3 -m unittest scripts/ci/test_validate_sprite_manifests.py -v
       - name: Set up Node.js (pinned)
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:

@@ -50,7 +50,7 @@ def strip_ansi(text: str) -> str:
 def sanitize(text: str, max_len: int = 500) -> str:
     """Make untrusted text safe to print into a workflow log: drop control chars, defuse a leading '::'."""
     text = _CONTROL_RE.sub("", strip_ansi(str(text))).replace("\r", "")
-    text = re.sub(r"(^|\n)([ \t]*)::", lambda m: f"{m.group(1)}{m.group(2)}:\u200b:", text)
+    text = re.sub(r"(^|\n)(\s*)::", lambda m: f"{m.group(1)}{m.group(2)}:\u200b:", text)
     return text[:max_len]
 
 

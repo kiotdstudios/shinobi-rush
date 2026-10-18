@@ -105,6 +105,50 @@ def check_export_dir(d: Path) -> List[Finding]:
     return out
 
 
+SPRITE_ROOT = "assets/characters"
+SPRITE_SKIP_DIRS = ("references", "source")  # mirrors exclude_filter in export_presets.cfg
+
+
+def expected_pck_entries(project: Path) -> Dict[str, List[str]]:
+    """Sprite files that the export preset must ship: every *.manifest.json under assets/characters (include_filter
+    "*.json") and the Godot import record "<name>.png.import" of every PNG (the PCK stores that, not the raw PNG)."""
+    root = project / SPRITE_ROOT
+    found: Dict[str, List[str]] = {"manifests": [], "pngs": []}
+    if not root.is_dir():
+        return found
+    for p in sorted(root.rglob("*")):
+        rel = p.relative_to(project)
+        if not p.is_file() or any(part in SPRITE_SKIP_DIRS for part in rel.parts[2:-1]):
+            continue
+        if p.name.endswith(".manifest.json"):
+            found["manifests"].append(rel.as_posix())
+        elif p.suffix.lower() == ".png":
+            found["pngs"].append(rel.as_posix() + ".import")
+    return found
+
+
+def check_pck_contents(d: Path, project: Path) -> "tuple[List[Finding], List[str]]":
+    """Byte-scan index.pck for the entries the project says must ship. Returns (findings, notes); notes always state
+    exactly what was asserted, so a pass is never silent."""
+    pck = d / "index.pck"
+    if not pck.is_file():
+        return [Finding("error", "EXPORT011", "index.pck is missing; cannot check its contents")], []
+    data = pck.read_bytes()
+    out: List[Finding] = []
+    if b"project.binary" not in data:
+        out.append(Finding("error", "EXPORT011", "index.pck has no project.binary entry (the project settings were not packed)"))
+    expected = expected_pck_entries(project)
+    for kind, label in (("manifests", "sprite manifest"), ("pngs", "sprite PNG import record")):
+        for name in expected[kind]:
+            if name.encode("utf-8") not in data:
+                hint = " (check include_filter in export_presets.cfg)" if kind == "manifests" else ""
+                out.append(Finding("error", "EXPORT011", f"index.pck does not contain the {label} {name}{hint}"))
+    n_m, n_p = len(expected["manifests"]), len(expected["pngs"])
+    notes = [f"PCK contents: project.binary present; asserted {n_m} sprite manifest(s) and {n_p} sprite PNG import record(s) in index.pck"
+             + (" (no sprites under assets/characters yet, nothing sprite-related to assert)" if n_m == 0 and n_p == 0 else "")]
+    return out, notes
+
+
 def make_build_info(d: Path, *, kind: str, env: Mapping[str, str], godot_version: str, godot_version_string: str,
                     project_dir: str, project_name: str, preset: str = "Web", export_mode: str = "debug") -> Dict[str, object]:
     if kind not in KINDS:

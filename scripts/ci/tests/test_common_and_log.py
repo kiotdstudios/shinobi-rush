@@ -16,6 +16,9 @@ class SanitizeTests(unittest.TestCase):
     def test_defuses_workflow_commands(self):
         self.assertEqual(ci_common.sanitize("::stop-commands::x"), ":\u200b:stop-commands::x")
         self.assertEqual(ci_common.sanitize("ok\n  ::error::x"), "ok\n  :\u200b:error::x")
+        for ws in ("\u00a0", "\u2003", "\u3000", "\u0085"):  # any Unicode whitespace before the leading ::
+            self.assertEqual(ci_common.sanitize(f"ok\n{ws}::error::x"), f"ok\n{ws}:\u200b:error::x", repr(ws))
+        self.assertEqual(ci_common.sanitize("\u00a0::stop-commands::x"), "\u00a0:\u200b:stop-commands::x")
 
     def test_strips_control_characters_and_ansi(self):
         self.assertEqual(ci_common.sanitize("a\x00b\r\x1b[31mred\x1b[0m"), "abred")

@@ -108,3 +108,22 @@ None / details
 
 ## Project skills and visual standard
 Before related work, consult the [project skill index](../skills/README.md). Codex and any agent creating art must use [camera/art direction](../docs/visuals/CAMERA_AND_ART_DIRECTION.md): **2D three-quarter overhead faux-isometric**, not side-scrolling. Follow [GitHub workflow recommendations](../docs/development/GITHUB_WORKFLOW_RECOMMENDATIONS.md); recommended admin settings are not automatically enabled.
+
+
+## Premium roguelike-inspired game vision
+**Required reading:** [Shinobi Rush quality and inspiration brief](../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md). Aim for premium AAA-level polish in combat, animation, VFX, enemy readability and replay appeal. **Do not change the locked persistent RPG progression, world layout, death/save rules, or add permadeath/procedural run resets without owner approval.**
+
+
+## Locked genre clarification (owner decision 2026-10-17)
+Shinobi Rush is a **persistent-world shinobi action RPG** inspired by the **premium combat feel** of high-quality roguelikes and action games, **not a run-based roguelike**. Do not implement procedural runs, permadeath, reset loops, or changes to locked save/progression/world rules. See [premium combat vision](../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md).
+
+
+
+
+
+## Owner revision — PixelLab skill review and art scale
+Codex may use its own proven art-generation skills; **review PixelLab API skills and existing credentials first** and use PixelLab when advantageous, not by default for every asset. **64×64 and 128×128 are both candidates**; test at actual gameplay zoom and seek owner approval before bulk animation generation. See [revised art workflow](../docs/visuals/PIXELLAB_API_ART_PIPELINE.md). This owner revision supersedes earlier mandatory-PixelLab and fixed-128px wording.
+
+
+## FINAL OWNER DECISION — Production sprite frame size (2026-10-18)
+**LOCKED: All standard production character sprite frames MUST be 128×128 pixels, RGBA with transparency.** This overrides any earlier 64×64 vs 128×128 evaluation or scale-approval requirement in this file or linked orders. Do not create 64×64 production character sprites. Legacy 64×64 artwork may be retained as reference only. Larger canvases may be used for attacks/VFX extending outside the base frame, but keep the character's world-space/body scale, proportions, foot anchor and alignment consistent. Maintain eight-direction animation targets and premium fluid motion. PixelLab remains optional after mandatory skill/API review as separately documented.

@@ -93,8 +93,10 @@ test('ready hook: verdict per state, optional or required', () => {
 });
 
 test('ready hook: --require-ready-hook and the config key reach the verdict', () => {
-  assert.equal(parse(['--out-dir', 'o', '--serve-dir', 'x']).cfg.require_ready_hook, false);
-  assert.equal(parse(['--out-dir', 'o', '--serve-dir', 'x', '--require-ready-hook']).cfg.require_ready_hook, true);
+  // --config points at a missing file so the DEFAULTS are tested, not whatever smoke-config.json currently ships.
+  const noConfig = ['--config', path.join(here, 'no-such-smoke-config.json')];
+  assert.equal(parse(['--out-dir', 'o', '--serve-dir', 'x', ...noConfig]).cfg.require_ready_hook, false);
+  assert.equal(parse(['--out-dir', 'o', '--serve-dir', 'x', ...noConfig, '--require-ready-hook']).cfg.require_ready_hook, true);
 });
 
 test('serve: mirrors GitHub Pages (wasm MIME, no COOP/COEP, no traversal, GET/HEAD only)', async () => {
