@@ -36,6 +36,28 @@ export function headerProblems(h) {
   return p;
 }
 
+/**
+ * Build identity of a downloaded log vs the SERVED build-info.json of the same export.
+ * required=true (CI, GITHUB_SHA set): header.build.commit_sha must equal served.commit_sha and the filename must carry its first 7 chars.
+ * required=false (local run without CI env): the header may be empty and the filename "unknown"; a non-empty SHA must still match.
+ */
+export function buildIdentityProblems({ header, served, filename, required }) {
+  const p = [];
+  const want = served && typeof served.commit_sha === 'string' ? served.commit_sha : '';
+  if (!/^[0-9a-f]{40}$/.test(want)) return ['served build-info.json has no 40-hex commit_sha'];
+  const got = header && header.build && typeof header.build.commit_sha === 'string' ? header.build.commit_sha : '';
+  const m = /^shinobi-debug-\d{8}-\d{6}-([0-9a-z]+)\.(jsonl|txt)$/.exec(filename || '');
+  const tag = m ? m[1] : '';
+  if (!m) p.push(`filename "${filename}" does not match shinobi-debug-<UTC>-<short sha>.jsonl`);
+  if (got !== '' && got !== want) p.push(`header build.commit_sha "${got}" != served build-info commit_sha "${want}"`);
+  if (tag !== 'unknown' && tag !== want.slice(0, 7)) p.push(`filename tag "${tag}" is neither "unknown" nor the short SHA ${want.slice(0, 7)}`);
+  if (required) {
+    if (got !== want) p.push(`CI run: header build.commit_sha must equal "${want}" (got "${got}")`);
+    if (tag !== want.slice(0, 7)) p.push(`CI run: filename must carry the short SHA ${want.slice(0, 7)} (got "${tag}")`);
+  }
+  return p;
+}
+
 /** Returns problems for the event lines: core keys present, one session id, t_ms non-decreasing. */
 export function eventProblems(events, session) {
   const p = [];

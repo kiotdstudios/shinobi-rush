@@ -13,7 +13,7 @@ import path from 'node:path';
 import { startStaticServer } from './lib/serve.mjs';
 import {
   parseJsonl, headerProblems, eventProblems, findBrowserError, stackProblems, leaks, containsTyped,
-  storageProblems, requestProblems, sizeProblems, reportProblems, listenerCount, countIndicatorPixels,
+  storageProblems, requestProblems, sizeProblems, reportProblems, listenerCount, countIndicatorPixels, buildIdentityProblems,
 } from './lib/debug-probe-lib.mjs';
 
 const arg = (n) => { const i = process.argv.indexOf('--' + n); return i < 0 ? undefined : process.argv[i + 1]; };
@@ -125,6 +125,13 @@ try {
   const header = lines[0];
   const events = lines.slice(1);
   recProblems('header-fields', headerProblems(header), `session ${header && header.session}, schema ${header && header.schema}, build ${header && header.build && header.build.commit_sha}`);
+  // Build identity: header SHA and filename vs the SERVED build-info.json of the same export (read from disk, not over the network).
+  // Enforced when GITHUB_SHA is set (CI, where godot_ci.py export bakes res://build-info.json); a local run may say "unknown".
+  let served = {};
+  try { served = JSON.parse(readFileSync(path.join(serveDir, 'build-info.json'), 'utf8')); } catch (e) { served = {}; }
+  const idRequired = !!process.env.GITHUB_SHA;
+  recProblems('build-identity', buildIdentityProblems({ header, served, filename: d1.suggested, required: idRequired }),
+    `header sha "${header && header.build && header.build.commit_sha}" vs served ${String(served.commit_sha).slice(0, 7)}, file ${d1.suggested} (${idRequired ? 'CI: enforced' : 'local: unknown allowed'})`);
   recProblems('events-ordered', eventProblems(events, header && header.session), `${events.length} events with core keys, one session, t_ms non-decreasing`);
   const errEv = findBrowserError(events, MSG_ERR);
   const rejEv = findBrowserError(events, MSG_REJ);

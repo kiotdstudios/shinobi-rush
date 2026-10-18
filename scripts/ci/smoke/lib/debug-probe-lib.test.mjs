@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   parseJsonl, headerProblems, eventProblems, findBrowserError, stackProblems, leaks, containsTyped,
-  storageProblems, requestProblems, sizeProblems, reportProblems, listenerCount,
+  storageProblems, requestProblems, sizeProblems, reportProblems, listenerCount, buildIdentityProblems,
 } from './debug-probe-lib.mjs';
 
 const header = () => ({
@@ -96,4 +96,23 @@ test('reportProblems checks title, sections and size', () => {
 test('listenerCount counts registrations by type', () => {
   assert.equal(listenerCount(['error', 'load', 'error', 'unhandledrejection'], 'error'), 2);
   assert.equal(listenerCount([], 'error'), 0);
+});
+
+test('buildIdentityProblems: CI needs header SHA == served SHA and the short SHA in the filename', () => {
+  const sha = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2';
+  const good = { header: { build: { commit_sha: sha } }, served: { commit_sha: sha }, filename: 'shinobi-debug-20261018-153016-a1b2c3d.jsonl', required: true };
+  assert.deepEqual(buildIdentityProblems(good), []);
+  assert.ok(buildIdentityProblems({ ...good, header: { build: { commit_sha: '' } } }).length >= 1);
+  assert.ok(buildIdentityProblems({ ...good, header: { build: { commit_sha: 'f'.repeat(40) } } }).length >= 1);
+  assert.ok(buildIdentityProblems({ ...good, filename: 'shinobi-debug-20261018-153016-unknown.jsonl' }).length >= 1);
+  assert.ok(buildIdentityProblems({ ...good, filename: 'shinobi-debug-20261018-153016-deadbee.jsonl' }).length >= 1);
+  assert.ok(buildIdentityProblems({ ...good, served: {} }).length >= 1);
+});
+
+test('buildIdentityProblems: local runs may say unknown but never a wrong SHA', () => {
+  const sha = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2';
+  const local = { header: { build: { commit_sha: '' } }, served: { commit_sha: sha }, filename: 'shinobi-debug-20261018-153016-unknown.jsonl', required: false };
+  assert.deepEqual(buildIdentityProblems(local), []);
+  assert.ok(buildIdentityProblems({ ...local, header: { build: { commit_sha: 'f'.repeat(40) } } }).length >= 1);
+  assert.ok(buildIdentityProblems({ ...local, filename: 'weird.jsonl' }).length >= 1);
 });
