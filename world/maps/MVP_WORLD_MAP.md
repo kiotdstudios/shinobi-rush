@@ -228,3 +228,11 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - No automatic aerial pursuit when a combo ends in a grounded finisher; no forced launcher on every light-combo chain.
 - Melee combo/finisher loadouts are a **separate customization layer** from the four R2 + face-button jutsu slots.
 - **Recommended for later approval:** unlock new combo finishers through training/progression. Exact loadout slots, input mappings, cancel windows, pursuit range, and unlock requirements TBD.
+
+
+## Melee combo progression and equipment — locked
+- **Both systems are required:** a **Combat Skill Tree** for unlocking/upgrading melee combo finishers, and **Character Equipment → Combat Loadout** for selecting which unlocked finishers are active.
+- Skill unlocks and upgrades are persistent progression; **unequipping a finisher does not remove its unlock or training investment**.
+- The active melee loadout determines which grounded, aerial, stagger, or multi-hit combo finishers the player can perform. Not all light combo chains launch enemies.
+- **Melee combo loadout slots are separate from the four R2 + face-button jutsu slots**.
+- Players may change builds by equipping different unlocked finishers; exact restrictions on where swapping is allowed, number of active finisher slots, skill tree branches, and unlock costs remain TBD.
