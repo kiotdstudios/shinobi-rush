@@ -108,3 +108,7 @@ None / details
 
 ## Project skills and visual standard
 Before related work, consult the [project skill index](../skills/README.md). Codex and any agent creating art must use [camera/art direction](../docs/visuals/CAMERA_AND_ART_DIRECTION.md): **2D three-quarter overhead faux-isometric**, not side-scrolling. Follow [GitHub workflow recommendations](../docs/development/GITHUB_WORKFLOW_RECOMMENDATIONS.md); recommended admin settings are not automatically enabled.
+
+
+## Premium roguelike-inspired game vision
+**Required reading:** [Shinobi Rush quality and inspiration brief](../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md). Aim for premium AAA-level polish in combat, animation, VFX, enemy readability and replay appeal. **Do not change the locked persistent RPG progression, world layout, death/save rules, or add permadeath/procedural run resets without owner approval.**
