@@ -125,3 +125,12 @@ South faces straight screen-down throughout the loop. Seven other directions ret
 - [Eight directions half speed](sprint-v4-half-speed.gif)
 - [Eight directions normal speed](sprint-v4-normal.gif)
 - [Eight directions quarter speed](sprint-v4-quarter-speed.gif)
+
+
+## North-west ninja-sprint cadence revision v5
+North-west uses one complete11-pose cycle, retaining half-speed12poses/sec. Seven other directions remain v4. Comparison plays20/11-pose loops independently without padding.
+
+- [North-west half speed](sprint-v5-north-west-half-speed.gif)
+- [North-west before/after](sprint-v5-north-west-comparison.gif)
+- [North-west normal speed](sprint-v5-north-west-normal.gif)
+- [North-west quarter speed](sprint-v5-north-west-quarter-speed.gif)
