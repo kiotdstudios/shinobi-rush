@@ -166,3 +166,12 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Debuffs can include **poison, burns, slows, defense reduction, chakra disruption, and Strength reduction**; effects can expire or be countered through items or abilities.
 - Display modified stats and active effects clearly in character UI, distinguishing base values from positive/negative modifiers.
 - Exact XP curves, numerical bonuses, stacking rules, effect durations, and balancing are **TBD**, not approved as final values.
+
+
+## Combat power and stat growth — confirmed progression intent
+- Character progression must deliver **both measurable stat increases and noticeable increases in combat power/effectiveness**.
+- Leveling increases base attributes and provides points for build specialization.
+- Training can provide lasting stat increases and improve combat capabilities.
+- Jutsu mastery improves technique effectiveness and can unlock enhanced combat behavior; exact mastery tiers and requirements TBD.
+- Equipment and items modify stats and/or combat performance; awakenings temporarily boost stats and grant stronger combat options.
+- Design upgrades so their impact is felt in moment-to-moment fights, not only on the character sheet. Exact formulas, scaling, and unlock details remain TBD.
