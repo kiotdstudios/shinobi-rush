@@ -192,3 +192,9 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - **Individual jutsu mastery** remains separate from global Jutsu Power and can change a technique's damage, efficiency, range, speed, duration, or behavior.
 - Example only (not final balance): Fireball deals 100 base direct damage and 10 burn damage/sec; +20% Jutsu Power raises direct damage to 120, while an Ember Headband with +25% Burn Damage and Strength +2 increases the burn tick to 12.5/sec and adds two Strength points. Whether global Jutsu Power also scales status-effect damage is a future formula decision; this example treats them separately.
 - Ensure character/equipment UI clearly distinguishes **global stats, flat attributes, elemental bonuses, and status-effect bonuses**. Exact stacking/order, caps, and scaling formulas TBD.
+
+## HUD reference mapping — confirmed
+- Top-left HUD: three diamond indicators directly beneath HP/Chakra represent the **three L2 Substitution Jutsu charges**. Filled/glowing = available; dark = spent.
+- Bottom-left combat HUD is **exclusively the four equipped R2 + face-button jutsu loadout slots**, NOT light attack/heavy attack/dodge: R2+Square (slot 1), R2+Triangle (slot 2), R2+Circle (slot 3), R2+Cross (slot 4).
+- Follow the provided dark-metal/gold-bordered, blue-lit icon reference design, but use **four** ability icons rather than the reference image's five. Show cooldown and insufficient-Chakra availability states where applicable.
+- L2 Substitution is separate from the four equipped jutsu slots.
