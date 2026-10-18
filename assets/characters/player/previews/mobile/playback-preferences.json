@@ -1,0 +1,14 @@
+{
+  "owner_selected_scale": [
+    128,
+    128
+  ],
+  "default_review_speed": 0.5,
+  "idle_playback_speed": 0.5,
+  "idle_source_timeline_fps": 24,
+  "idle_effective_timeline_fps": 12,
+  "idle_loop_seconds": 1.3333333333333333,
+  "other_actions": "Start reviews at half speed; tune actual gameplay playback per action, preserving responsive controls and authored hit/dodge windows.",
+  "approved_reference": "south-east idle at half-speed preview",
+  "date": "2026-10-18"
+}
