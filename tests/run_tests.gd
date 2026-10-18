@@ -615,6 +615,13 @@ func test_camera_framing() -> void:
 			fields_ok = false
 	ck("state: WebBridge still publishes frame,x,y,state,sprinting,fps plus zoom,view_w,view_h", fields_ok)
 
+	# caption sizing: figure caption (local scale 1.895) and block caption floor reach the minimum screen size at the wide zoom
+	var fig_px := WorldScale.caption_font_size(8, base, 1.895) * 1.895 * base
+	var blk_px := WorldScale.caption_font_size(5, base) * base
+	ck("caption: figure caption is at least MIN_CAPTION_SCREEN_PX on screen at baseline", fig_px >= WorldScale.MIN_CAPTION_SCREEN_PX, "%.2f px" % fig_px)
+	ck("caption: block caption floor is at least MIN_CAPTION_SCREEN_PX on screen at baseline", blk_px >= WorldScale.MIN_CAPTION_SCREEN_PX, "%.2f px" % blk_px)
+	ck("caption: never smaller than the base size at native zoom", WorldScale.caption_font_size(8, 1.0) == 8 and WorldScale.caption_font_size(5, 4.0) == 5)
+
 	main.queue_free()
 	await process_frame
 	lib.sets.clear()

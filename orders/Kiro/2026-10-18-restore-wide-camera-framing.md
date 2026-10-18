@@ -17,5 +17,5 @@ Write report in `orders/Kiro/reports/` with old/new comparison, camera setting, 
 
 ## Status log
 - 2026-10-18 Kiro: QUEUED -> IN_PROGRESS. Measured the pre-scale, main and PR-head builds at 1280x720; the PR zoom of 1/2.25 matches the pre-scale framing (visible arena, tile size, obstacle boxes).
-- 2026-10-18 Kiro: IN_PROGRESS -> REVIEW. Baseline zoom moved to WorldScale.CAMERA_BASE_ZOOM, lab zoom list made baseline-relative, zoom-aware captions, head and foot room at the top and bottom walls, zoom/view_w/view_h in the state object, new unit and probe checks. Local suites pass (see report). Not pushed yet and not yet verified on the live build. NOT DONE: the orchestrator sets DONE after the live build is verified.
+- 2026-10-18 Kiro: IN_PROGRESS -> REVIEW. Baseline zoom moved to WorldScale.CAMERA_BASE_ZOOM, lab zoom list made baseline-relative, zoom-aware captions, head and foot room at the top and bottom walls, zoom/view_w/view_h in the state object, new unit and probe checks. Local suites pass (see report). Pushed to PR #12; CI results are on the PR checks page; not yet verified on the live build. NOT DONE: the orchestrator sets DONE after the live build is verified.
 - Report: orders/Kiro/reports/2026-10-18-wide-camera-framing-report.md. Owner choice pending: sprite filtering and zoom at the wide view.
