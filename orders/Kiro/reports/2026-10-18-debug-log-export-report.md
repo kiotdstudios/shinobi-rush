@@ -2,8 +2,8 @@
 - Agent: Kiro
 - Order: orders/Kiro/2026-10-18-debug-log-export-and-browser-errors.md
 - Date: 2026-10-18
-- Final status: REVIEW (not DONE; not deployed; PR CI evidence is added in a follow-up commit)
-- Commit / PR: branch `kiro/debug-log-export`; PR URL and head SHA are added in the report-only follow-up commit
+- Final status: REVIEW (not DONE; not deployed)
+- Commit / PR: https://github.com/kiotdstudios/shinobi-rush/pull/10 ; branch `kiro/debug-log-export`; implementation head a9e0997 (this report-only commit follows it)
 
 ## Work completed
 - Opt-in debug (`?debug=1` or F9, off by default) with a `BrowserDebug` autoload and a canvas-drawn panel: DEBUG ON label + session id, Download Debug Log (JSONL), TXT, Copy Bug Report with clipboard fallback text box, optional tester note.
@@ -33,7 +33,8 @@ All local results are VERIFIED on Windows with Godot 4.7.2 and Playwright 1.64.1
 | Screenshots with `?debug=1` and without | Panel top-right does not overlap the HUD (an overlap was found and fixed); OFF looks like the normal game | opened and inspected |
 | Microbenchmark `tests/bench_debug.gd` (headless GDScript, Windows native) | record 120.8 us/call (~8.3k/s), 140.6 bytes/event, export of 20000 events 2.81 MB in 0.46 s, disabled record 1.41 us/call | local run, manual, not in CI |
 | Soak (30 virtual minutes, injected clock, 1.53M record calls) | PASS: kept=5000, max bytes 687 KB (cap 2 MB), static memory +96 B after warm-up | local run; virtual clock, NOT a wall-clock 10 minute run |
-| GitHub PR checks | PENDING at the time of writing | filled in by the follow-up commit with run URLs |
+| GitHub PR checks on head a9e0997 | VERIFIED all green: Detect Godot project, Import/validate/test/export (Web), Pre-deploy browser smoke test (smoke, controls probe, debug probe VERDICT PASS incl. build-identity enforced), godot-ci-gate, Tooling lint and unit tests, Self-test, validate-orders-and-project; Deploy and Post-deploy skipped (main only) | Godot CI https://github.com/kiotdstudios/shinobi-rush/actions/runs/39141684858 ; Pipeline self-test .../runs/39141684935 ; Repository checks .../runs/39141684954 |
+| Inspected CI evidence artifact (debug-probe) | debug-log-1.jsonl header has commit sha, run_id, godot version and env; induced error and rejection present with stack; filename ends in short SHA; debug-on.png shows panel top-right without HUD overlap | downloaded and opened locally. Note: CI builds the PR merge commit (bbe46bf), so the SHA in the log is the merge ref, not the branch head |
 
 ## Issues encountered
 - Not verifiable here (ASSUMED, not tested): real controller hardware, DualSense in browsers, iOS Safari download and share behavior, mobile clipboard permissions, GPU frame rate (SwiftShader FPS of 3-6 is not meaningful, with debug on or off), wasm-side per-event cost (benchmark is native).
