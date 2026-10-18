@@ -47,11 +47,11 @@ Add checkpoint positions, encounters, landmark names, rewards, boss arena, and u
 
 ## Progression discovery and route tutorials — design direction
 - **Jutsu scrolls** are discoverable throughout the world. Collecting a scroll adds **unlearned knowledge** to inventory; it does not instantly unlock a technique.
-- Players take discovered scrolls to dedicated learning locations (previously called shrines; **final in-world name TBD**) to learn the corresponding jutsu and add it to their usable technique inventory.
+- Players take discovered scrolls to **Training Grounds** (universal gameplay term; village-specific local names and architecture) to learn the corresponding jutsu and add it to their usable technique inventory.
 - Learned techniques can be assigned to the existing four R2 technique slots. Exact costs and learning interaction TBD.
 - **Awakenings** are taught by specialist NPCs, not granted by scrolls alone. Training requires a specified number of encounters/challenges and specified crafting items; requirements vary by awakening and remain TBD.
 - Eight Gates and Sage Mode are mechanical inspirations; use original terminology, lore, and visual designs in Shinobi Rush.
 - **Forest A** introduces scroll discovery, unlearned inventory, and learning locations; its dead-end branch is a candidate for the first scroll.
 - **Forest B** introduces specialist NPCs, awakening prerequisites, and crafting materials.
 - **Both forests stay open immediately.** Route tutorials are contextual and optional; entering Forest B first must not break onboarding or progression.
-- Suggested name **Echo Sanctums** is a proposal only, **not locked**.
+- **Locked naming:** Training Grounds is the universal term. **Kōsen Village uses Mastery Chambers** as its local training-ground identity. **Inner Mastery Court** is a proposed name for another village's training grounds (village assignment TBD). Each village can have distinctive architecture while sharing the same scroll-learning function.
