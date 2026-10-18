@@ -186,3 +186,13 @@ Starting outpost/tutorial → forest approach (basic bandits) → fork between m
 - Target a short but complete exploration-to-boss vertical slice; playtime to be established through testing rather than assumed.
 - Prioritize navigation readability in a 2D faux-isometric camera, clear elevation cues, and robust collision/occlusion handling.
 - The existing six-week schedule is an outdated estimate; re-estimate after mapping and movement prototypes.
+
+
+## Exploration structure — FINAL MVP DECISION
+**Branching guided-world exploration is locked for the MVP.** This supersedes any earlier uncertainty about linear vs. open layout.
+- One interconnected, hand-authored biome with a clear main objective and destination: the bandit stronghold/boss.
+- A readable main route, multiple optional side paths, discoverable secrets and rewards, backtracking, and unlockable shortcuts.
+- Checkpoints for healing, saving, and respawning; specify enemy reset and boss retry behavior during implementation.
+- Use environmental landmarks and composition to guide navigation rather than constant objective markers.
+- Design around one basic bandit, one heavy bandit, and one boss; reuse these thoughtfully in varied terrain.
+- Test navigation readability, shortcut utility, return routes, and controller-only traversal before expanding content.
