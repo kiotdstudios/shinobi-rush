@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW, revised mobile preview tested
-- Commit / PR: Not committed; mobile review PR https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: 668bf73 (published preview); mobile review PR https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 North replacement reduces head centroid span from 3.403px to 0.179px and torso from 3.265px to 0.395px. Six other directions preserved byte-for-byte from v2, including south-east reference. Half-speed default remains 12 ticks/sec and 1.333s per breath. Review timer displays actual playback seconds.
@@ -21,6 +21,8 @@ First east PixelLab PixMiniMax candidate increased head/torso sway and was rejec
 None.
 
 ## Outstanding work / next steps
-Publish tested mobile review and obtain owner visual feedback. Full Order 01 remains incomplete. Live deployment: not applicable to this GIF review job; gameplay integration remains outstanding.
+Obtain owner visual feedback on the published mobile review. Full Order 01 remains incomplete. Live deployment: not applicable to this GIF review job; gameplay integration remains outstanding.
 
 East final head span 0.061px (was 2.967px), torso 1.285px (was 2.083px), feet 0px. Stable head orientation inspected on contact sheet. Third east source includes one reference plus 16 animated frames; excluded reference index 0 and used indices 1-16. All original source art retained. No procedural frame interpolation.
+
+Public verification: idle-v3-half-speed.gif HTTP 200; Pillow decode 600x1240, 16 frames, 1330ms loop. Published on codex/mobile-animation-preview. Preview-only PR remains under review.
