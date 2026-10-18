@@ -18,3 +18,7 @@ Aim for premium, responsive, well-timed animation. More frames only help when th
 
 ## Coordination
 Codex owns art. Other agents may request assets and integrate approved outputs, but should not overwrite art or mandate a particular generator. The project's existing persistent-world RPG design and quality bar remain unchanged.
+
+
+## FINAL OWNER DECISION — Production sprite frame size (2026-10-18)
+**LOCKED: All standard production character sprite frames MUST be 128×128 pixels, RGBA with transparency.** This overrides any earlier 64×64 vs 128×128 evaluation or scale-approval requirement in this file or linked orders. Do not create 64×64 production character sprites. Legacy 64×64 artwork may be retained as reference only. Larger canvases may be used for attacks/VFX extending outside the base frame, but keep the character's world-space/body scale, proportions, foot anchor and alignment consistent. Maintain eight-direction animation targets and premium fluid motion. PixelLab remains optional after mandatory skill/API review as separately documented.
