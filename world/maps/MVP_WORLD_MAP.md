@@ -275,3 +275,14 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - **Combat Skill Tree** governs unlocking and upgrading capabilities and finishers; **Character Equipment → Combat Loadout** governs which **two melee finishers** (Light and Heavy) are currently equipped. Combo Mastery does not create additional finisher slots.
 - Maintain deliberate restrictions: move-specific cancel windows, Chakra costs, cooldowns, aerial-juggle limits, and recovery-locked powerful attacks. No infinite combos.
 - Exact node names, tree topology, skill point costs, prerequisites, unlock levels, and numerical frame tuning remain TBD.
+
+
+## Dodge-first defense, no traditional block — locked
+- **No traditional block/guard/parry button.** Defense emphasizes precise movement and ninja-style evasions.
+- **Circle:** directional dodge with a brief invulnerability window.
+- **Perfect Dodge:** available from the start; a precisely timed dodge triggers a brief cinematic slowdown / afterimage and opens an opportunity to counterattack. Exact timing, slowdown intensity, and enemy interaction TBD.
+- **L2 Substitution:** emergency defensive escape using three independently recharging charges; remains distinct from free, timing-dependent dodges.
+- **Dodge Counters:** advanced follow-up techniques unlock through the Combat Skill Tree.
+- Add an expandable **Evasion Mastery** category alongside Aerial and Flow Mastery, with no specialization lockout.
+- **Proposed Evasion Mastery nodes, pending individual approval/balance:** Counter Strike (fast attack after Perfect Dodge), Phantom Step (enhanced repositioning), Shadow Counter (counter into equipped jutsu). Node costs, requirements, and animations TBD.
+- Preserve existing controls: L1 heal, R1 sprint, R2 jutsu modifier, R3 optional lock-on, Cross jump.
