@@ -1,0 +1,77 @@
+[
+  {
+    "file": "idle-timed-normal.gif",
+    "speed": 1,
+    "frames": 16,
+    "duration_ms": 670,
+    "shared_source_frame_per_panel": true,
+    "frame_durations_ms": [
+      40,
+      40,
+      40,
+      50,
+      40,
+      40,
+      40,
+      40,
+      50,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      50
+    ]
+  },
+  {
+    "file": "idle-timed-half-speed.gif",
+    "speed": 0.5,
+    "frames": 16,
+    "duration_ms": 1330,
+    "shared_source_frame_per_panel": true,
+    "frame_durations_ms": [
+      80,
+      90,
+      80,
+      80,
+      90,
+      80,
+      80,
+      90,
+      80,
+      80,
+      90,
+      80,
+      80,
+      90,
+      80,
+      80
+    ]
+  },
+  {
+    "file": "idle-timed-quarter-speed.gif",
+    "speed": 0.25,
+    "frames": 16,
+    "duration_ms": 2670,
+    "shared_source_frame_per_panel": true,
+    "frame_durations_ms": [
+      170,
+      160,
+      170,
+      170,
+      160,
+      170,
+      170,
+      160,
+      170,
+      170,
+      160,
+      170,
+      170,
+      160,
+      170,
+      170
+    ]
+  }
+]
