@@ -23,7 +23,6 @@ flowchart TB
     class G start;
     class A,B,AF,BF,D mvp;
     class C,CF,C1,N mvp;
-    linkStyle 6 stroke:#7dab8c,stroke-width:3px;
 ```
 
 ### Confirmed topology
@@ -37,6 +36,7 @@ flowchart TB
 - Diagrams represent route connections, not physical scale.
 
 ### Revisions
+- v0.9: Removed custom green styling from the A–B connector; it now uses the default line style.
 - v0.8: Removed the redundant "Confirmed forest path" label from the A–B connector; retained the solid line.
 - v0.7: Forest C Path 1 confirmed dead end; removed explanatory subtitles and shortened Path 2/3 link labels for a cleaner diagram.
 - v0.6: Confirmed A fork to B fork as a real forest path.
