@@ -117,8 +117,8 @@ func _build_bounds_walls() -> void:
 
 
 func draw_ground(ci: CanvasItem) -> void:
-	# Ground continues above the top wall by the camera head room so the camera never shows void.
-	ci.draw_rect(bounds.grow_individual(0, WorldScale.CAMERA_HEADROOM, 0, 0), GROUND_A)
+	# Ground continues above the top wall (head room) and below the bottom wall (foot room) so the camera never shows void.
+	ci.draw_rect(bounds.grow_individual(0, WorldScale.CAMERA_HEADROOM, 0, WorldScale.CAMERA_FOOTROOM), GROUND_A)
 	var hx := tile_size.x * 0.5
 	var hy := tile_size.y * 0.5
 	var lines := PackedVector2Array()

@@ -39,7 +39,7 @@ func _ready() -> void:
 		camera.limit_left = int(b.position.x)
 		camera.limit_top = int(b.position.y - WorldScale.CAMERA_HEADROOM)  # head room: a figure at the top wall is not clipped
 		camera.limit_right = int(b.end.x)
-		camera.limit_bottom = int(b.end.y)
+		camera.limit_bottom = int(b.end.y + WorldScale.CAMERA_FOOTROOM)  # foot room: feet and shadow at the bottom wall are not cut off
 	visual.set_pose(facing8, false, false)
 
 

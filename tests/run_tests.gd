@@ -397,7 +397,7 @@ func test_main_scene_and_movement() -> void:
 	# camera limits
 	var cam := player.camera
 	var b := arena.get_bounds()
-	ck("camera limits match arena bounds (top has head room)", cam.limit_left == int(b.position.x) and cam.limit_top == int(b.position.y - WorldScale.CAMERA_HEADROOM) and cam.limit_right == int(b.end.x) and cam.limit_bottom == int(b.end.y), "%d %d %d %d" % [cam.limit_left, cam.limit_top, cam.limit_right, cam.limit_bottom])
+	ck("camera limits match arena bounds (top has head room)", cam.limit_left == int(b.position.x) and cam.limit_top == int(b.position.y - WorldScale.CAMERA_HEADROOM) and cam.limit_right == int(b.end.x) and cam.limit_bottom == int(b.end.y + WorldScale.CAMERA_FOOTROOM), "%d %d %d %d" % [cam.limit_left, cam.limit_top, cam.limit_right, cam.limit_bottom])
 
 	main.queue_free()
 	await process_frame
@@ -562,10 +562,11 @@ func test_camera_framing() -> void:
 	ck("camera: visible world rect at baseline is 2880x1620 (= pre-scale 1280x720 times SCALE)", view.is_equal_approx(Vector2(1280, 720) * WorldScale.SCALE) and view.is_equal_approx(Vector2(2880, 1620)), "view=%s" % view)
 	ck("camera: visible rect fits inside ARENA_BOUNDS", view.x <= WorldScale.ARENA_BOUNDS.size.x and view.y <= WorldScale.ARENA_BOUNDS.size.y, "view=%s bounds=%s" % [view, WorldScale.ARENA_BOUNDS.size])
 
-	# camera limits equal the arena bounds (top has CAMERA_HEADROOM above the arena)
+	# camera limits equal the arena bounds (CAMERA_HEADROOM above the top, CAMERA_FOOTROOM below the bottom)
 	var b := WorldScale.ARENA_BOUNDS
 	ck("camera: arena.get_bounds() is WorldScale.ARENA_BOUNDS", arena.get_bounds() == b)
-	ck("camera: limits left/right/bottom equal the arena bounds", cam.limit_left == int(b.position.x) and cam.limit_right == int(b.end.x) and cam.limit_bottom == int(b.end.y), "%d %d %d" % [cam.limit_left, cam.limit_right, cam.limit_bottom])
+	ck("camera: limits left/right equal the arena bounds", cam.limit_left == int(b.position.x) and cam.limit_right == int(b.end.x), "%d %d" % [cam.limit_left, cam.limit_right])
+	ck("camera: limit_bottom is the arena bottom plus CAMERA_FOOTROOM", cam.limit_bottom == int(b.end.y + WorldScale.CAMERA_FOOTROOM), str(cam.limit_bottom))
 	ck("camera: limit_top is the arena top minus CAMERA_HEADROOM", cam.limit_top == int(b.position.y - WorldScale.CAMERA_HEADROOM), str(cam.limit_top))
 	ck("camera: limited area is at least as large as the visible rect (no void can show)", (cam.limit_right - cam.limit_left) >= view.x and (cam.limit_bottom - cam.limit_top) >= view.y)
 

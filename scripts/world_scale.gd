@@ -13,6 +13,9 @@ const SCALE := 2.25
 const CAMERA_BASE_ZOOM := 1.0 / SCALE
 ## Extra world drawn/visible above the top arena bound so a standing figure at the top wall is not cut off.
 const CAMERA_HEADROOM := BODY_HEIGHT
+## Extra world drawn/visible below the bottom arena bound so the feet and ground shadow of a figure at the
+## bottom wall are not cut off (shadow half-height is 6 * FIGURE_SCALE = ~11.4, plus the 3 px border line).
+const CAMERA_FOOTROOM := 24.0
 ## World-space captions are sized so they stay at least this many SCREEN pixels tall.
 const MIN_CAPTION_SCREEN_PX := 8.0
 
