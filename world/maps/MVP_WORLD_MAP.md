@@ -88,3 +88,11 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 **Implementation scope:** For the single-player MVP, prioritize enemy drops, chests, quest rewards, random world loot, and a basic NPC merchant. Player trading and a broader market economy are future systems; do not imply that multiplayer trading ships in the MVP. Exact drop rates, loot tables, item tradability, market prices, merchant rotations, and rarity balance remain TBD.
 
 **Forest onboarding:** Introduce multiple acquisition sources through contextual discoveries on Forest A and Forest B without forcing a linear tutorial or closing either path.
+
+
+## Supply bag capacity and upgrades — locked initial rules
+- The player starts with **12 total shared inventory slots** for scroll fragments and crafting materials combined (not 12 each).
+- Increasing bag capacity requires gathering **bag-upgrade materials** and performing an upgrade. Upgrade service/location and material recipes TBD.
+- Inventory capacity is a meaningful exploration and resource-management constraint.
+- **Not yet locked:** item stacking rules and maximum stack sizes; exact expansion increments and maximum bag capacity; whether quest items use separate slots; handling pickups when full.
+- **Suggested only (not locked):** 12 → 16 → 20 → 24 slots; identical items stack within a slot.
