@@ -41,8 +41,12 @@ func _process(delta: float) -> void:
 	_state.state = _player.get_state_name()
 	_state.sprinting = _player.state == PlayerController.State.SPRINT
 	_state.fps = Engine.get_frames_per_second()
-	var zoom := _player.camera.zoom.x
-	var vp := _player.get_viewport().get_visible_rect().size
-	_state.zoom = zoom
-	_state.view_w = vp.x / zoom
-	_state.view_h = vp.y / zoom
+	var framing := camera_framing(_player.camera.zoom.x, _player.get_viewport().get_visible_rect().size)
+	_state.zoom = framing.zoom
+	_state.view_w = framing.view_w
+	_state.view_h = framing.view_h
+
+
+## Camera framing published in __SHINOBI_STATE__: zoom and the visible world size (viewport / zoom).
+static func camera_framing(zoom: float, viewport_size: Vector2) -> Dictionary:
+	return {"zoom": zoom, "view_w": viewport_size.x / zoom, "view_h": viewport_size.y / zoom}

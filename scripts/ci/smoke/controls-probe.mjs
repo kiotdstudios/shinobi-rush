@@ -53,6 +53,14 @@ try {
   await sleep(200);
   await shot('01-start');
 
+  // Camera framing: the gameplay baseline is the wide view (zoom 1/2.25, visible world 2880x1620 in a 1280x720 viewport).
+  const BASE_ZOOM = 1 / 2.25;
+  const zoomNow = async () => (await state()).zoom;
+  const near = (v, want) => Number.isFinite(v) && Math.abs(v - want) < 0.005;
+  const zs = await state();
+  rec('camera-baseline-at-start', near(zs.zoom, BASE_ZOOM) && Math.abs(zs.view_w - 2880) < 2 && Math.abs(zs.view_h - 1620) < 2,
+    `expected zoom ~${BASE_ZOOM.toFixed(4)} and view 2880x1620; got zoom=${zs.zoom}, view=${zs.view_w}x${zs.view_h}`);
+
   const dxOver = async (keys, settleMs, windowMs) => {
     for (const k of keys) await page.keyboard.down(k);
     await sleep(settleMs);
@@ -88,6 +96,20 @@ try {
   await page.keyboard.up('KeyW');
   const spread = Math.max(...settled) - Math.min(...settled);
   rec('wall-stops-player', prev.y < startY - 20 && spread < 0.5, `y ${startY.toFixed(1)} -> ${settled[2].toFixed(1)} with W held; 3 later samples spread ${spread.toFixed(2)}`);
+
+  // Lab vs framing: Tab opens the lab WITHOUT changing the zoom; only Z changes it; Tab again restores the baseline.
+  // (Published at ~10 Hz and the game may run at a few FPS, so wait for a fresh sample before reading.)
+  const tap = async (key) => { await page.keyboard.down(key); await sleep(120); await page.keyboard.up(key); await sleep(1500); };
+  await tap('Tab');
+  const zOpen = await zoomNow();
+  rec('lab-open-keeps-baseline', near(zOpen, BASE_ZOOM), `after Tab (lab open) zoom=${zOpen}, expected ~${BASE_ZOOM.toFixed(4)} (opening the lab must not change the camera)`);
+  await tap('KeyZ');
+  const zZ = await zoomNow();
+  rec('lab-z-changes-zoom', near(zZ, 1.0), `after Z zoom=${zZ}, expected 1 (native 1:1, the first non-baseline lab zoom)`);
+  await shot('05-lab-zoom-1x');
+  await tap('Tab');
+  const zClosed = await zoomNow();
+  rec('lab-close-restores-baseline', near(zClosed, BASE_ZOOM), `after Tab (lab closed) zoom=${zClosed}, expected ~${BASE_ZOOM.toFixed(4)}`);
 } catch (e) {
   rec('probe-exception', false, String(e.message ?? e).split('\n')[0]);
 }
