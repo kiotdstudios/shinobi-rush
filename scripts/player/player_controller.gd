@@ -30,15 +30,16 @@ func _ready() -> void:
 	(feet.shape as RectangleShape2D).size = WorldScale.FOOTPRINT
 	feet.position = Vector2(0, -WorldScale.FOOTPRINT.y * 0.5)
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
+	camera.zoom = Vector2.ONE * WorldScale.CAMERA_BASE_ZOOM  # single source of truth (player.tscn has no literal)
 	camera.position_smoothing_enabled = true
 	camera.position_smoothing_speed = camera_smoothing_speed
 	var arena := get_parent()
 	if arena != null and arena.has_method("get_bounds"):
 		var b: Rect2 = arena.get_bounds()
 		camera.limit_left = int(b.position.x)
-		camera.limit_top = int(b.position.y)
+		camera.limit_top = int(b.position.y - WorldScale.CAMERA_HEADROOM)  # head room: a figure at the top wall is not clipped
 		camera.limit_right = int(b.end.x)
-		camera.limit_bottom = int(b.end.y)
+		camera.limit_bottom = int(b.end.y + WorldScale.CAMERA_FOOTROOM)  # foot room: feet and shadow at the bottom wall are not cut off
 	visual.set_pose(facing8, false, false)
 
 

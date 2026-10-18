@@ -5,7 +5,8 @@ extends Node
 ## The status line and metrics stay on screen even when the lab is hidden.
 
 const SPEEDS: Array[float] = [0.25, 0.5, 1.0, 1.5, 2.0]
-const ZOOMS: Array[int] = [1, 2, 3, 4]
+## Index 0 is the gameplay baseline (wide view); the rest are native 1:1 pixel steps.
+const ZOOMS: Array[float] = [WorldScale.CAMERA_BASE_ZOOM, 1.0, 2.0, 3.0, 4.0]
 ## Stands sit LEFT of the spawn so they stay clear of the lab panel (screen right) at 1x-2x zoom.
 ## Provisional prototype values scaled by WorldScale.SCALE (stands far enough apart for the 128 px frames).
 const STAND_OFFSETS: Array[Vector2] = WorldScale.STAND_OFFSETS
@@ -378,7 +379,7 @@ func _refresh_ui() -> void:
 	_value_labels["speed"].text = "%sx" % str(SPEEDS[speed_index])
 	_value_labels["pause"].text = "PAUSED" if anim_paused else "playing"
 	_value_labels["compare"].text = "ON (first two sets)" if compare else "off"
-	_value_labels["zoom"].text = "%dx" % ZOOMS[zoom_index]
+	_value_labels["zoom"].text = zoom_label(zoom_index)
 	for k: String in _toggle_buttons:
 		_toggle_buttons[k].button_pressed = overlay_on[k]
 	_lab_button.text = "Lab: ON (Tab)" if lab_on else "Lab: off (Tab)"
@@ -392,6 +393,8 @@ func toggle_lab() -> void:
 
 func _set_lab(on: bool) -> void:
 	lab_on = on
+	if not on and zoom_index != 0:
+		set_zoom_index(0)  # closing the lab restores the gameplay baseline
 	if _panel != null:
 		_panel.visible = on
 		overlay.visible = on
@@ -441,6 +444,13 @@ func step_once() -> void:
 func toggle_compare() -> void:
 	compare = not compare
 	_refresh_ui()
+
+
+## "wide 0.44x" for the baseline, "1x".."4x" (native pixels) for the rest.
+static func zoom_label(i: int) -> String:
+	if i == 0:
+		return "wide %.2fx" % ZOOMS[0]
+	return "%dx" % int(ZOOMS[i])
 
 
 func cycle_zoom() -> void:
