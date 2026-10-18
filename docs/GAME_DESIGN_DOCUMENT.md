@@ -208,3 +208,6 @@ Starting outpost/tutorial → forest approach (basic bandits) → fork between m
 - Preserve the eventual interconnection in the world layout; blocked future routes should read as natural, intentional boundaries.
 - Keep the already approved basic bandit, heavy bandit, one boss, optional exploration, shortcuts, controller-first combat, and guided branching structure. Boss placement within the two MVP paths is not yet finalized.
 - The route names A/B/C in planning diagrams are placeholders, not official region names.
+
+## Canonical world map
+The evolving Kōsen forest topology and potential unlockable shortcut are maintained in [`world/maps/README.md`](../world/maps/README.md). Update that diagram whenever the biome expands; it is the source of truth for route connectivity.
