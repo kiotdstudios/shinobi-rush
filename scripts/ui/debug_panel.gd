@@ -30,7 +30,11 @@ func _ready() -> void:
 
 func _build() -> void:
 	var panel := PanelContainer.new()
-	panel.position = Vector2(8, 8)
+	## Top-right, below the "Lab" chip, so it never covers the left-hand debug HUD text.
+	panel.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	panel.offset_top = 40.0
+	panel.offset_right = -8.0
 	add_child(panel)
 	var box := VBoxContainer.new()
 	panel.add_child(box)

@@ -92,7 +92,7 @@ try {
   await page.mouse.click(640, 400); // canvas keyboard focus
   await sleep(300);
   await page.screenshot({ path: path.join(outDir, 'debug-on.png') });
-  const onShot = (await page.screenshot({ clip: { x: 0, y: 0, width: 360, height: 140 } })).toString('base64');
+  const onShot = (await page.screenshot({ clip: { x: 880, y: 36, width: 400, height: 140 } })).toString('base64');
 
   const hooksOn = await page.evaluate(() => ({
     hooks: typeof window.__SHINOBI_DEBUG_HOOKS__, cb: typeof window.__SHINOBI_DEBUG_CB__,
@@ -180,7 +180,7 @@ try {
   await sleep(1500);
   await off.mouse.click(640, 400);
   await sleep(300);
-  const offShot = (await off.screenshot({ clip: { x: 0, y: 0, width: 360, height: 140 } })).toString('base64');
+  const offShot = (await off.screenshot({ clip: { x: 880, y: 36, width: 400, height: 140 } })).toString('base64');
   const offHooks = await off.evaluate(() => ({
     hooks: typeof window.__SHINOBI_DEBUG_HOOKS__, cb: typeof window.__SHINOBI_DEBUG_CB__,
     wrapped: console.error !== window.__probeOrigConsole.error || console.warn !== window.__probeOrigConsole.warn,
@@ -190,9 +190,9 @@ try {
   const onL = listenerCount(hooksOn.listeners, 'error') + listenerCount(hooksOn.listeners, 'unhandledrejection');
   const offL = listenerCount(offHooks.listeners, 'error') + listenerCount(offHooks.listeners, 'unhandledrejection');
   rec('off-no-listeners', offL < onL && onL - offL === 2, `error+unhandledrejection listeners registered: debug ON ${onL}, OFF ${offL} (debug adds exactly 2)`);
-  const pxOn = await off.evaluate(countIndicatorPixels, { pngBase64: onShot, w: 360, h: 140 });
-  const pxOff = await off.evaluate(countIndicatorPixels, { pngBase64: offShot, w: 360, h: 140 });
-  rec('off-no-indicator', pxOn - pxOff >= 20, `DEBUG ON indicator-coloured pixels in the top-left panel area: ON ${pxOn}, OFF ${pxOff}`);
+  const pxOn = await off.evaluate(countIndicatorPixels, { pngBase64: onShot, w: 400, h: 140 });
+  const pxOff = await off.evaluate(countIndicatorPixels, { pngBase64: offShot, w: 400, h: 140 });
+  rec('off-no-indicator', pxOn - pxOff >= 20, `DEBUG ON indicator-coloured pixels in the top-right panel area: ON ${pxOn}, OFF ${pxOff}`);
   await off.evaluate((m) => { setTimeout(() => { throw new Error(m); }, 0); }, `probe-induced-off-${TAG}`);
   await off.keyboard.press('F7');
   await off.keyboard.press('F8');
