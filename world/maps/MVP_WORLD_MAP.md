@@ -205,3 +205,17 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - A spent charge becomes available again when **its individual cooldown completes**. If all three are depleted, Substitution is unavailable until one finishes recharging.
 - HUD: each diamond independently shows ready, recharging/progress, or unavailable state; recommended blue radial refill within the existing gold diamond outline (visual treatment provisional).
 - Exact recharge durations, reset behavior on death/save load, and any modifiers affecting recharge speed remain TBD.
+
+
+## Hybrid combat direction — locked
+- **Combat feel:** combine the speed, cinematic combo transitions, and aerial pursuit associated with arena-style shinobi action games with the directional precision, positioning, dodge timing, and readable enemy telegraphs of tight isometric action games. Build original animations, effects, and combat mechanics.
+- **Light attacks (Square):** responsive three-hit grounded combo foundation.
+- **Heavy attacks (Triangle):** strong strikes and launchers that connect into aerial combat.
+- **Aerial combat:** follow-up strikes, controlled juggling, and jutsu finishers, with limits against infinite loops.
+- **Targeting:** subtle directional/soft aim assist to reduce frustrating whiffs; optional **R3 hard lock-on**. Aim assist must **not automatically teleport or drag** the character across the arena.
+- **Movement:** responsive eight-direction movement, sprint, and deliberate directional dodge (Circle) with a brief invulnerability window.
+- **Jutsu:** four equipped techniques on **R2 + Square/Triangle/Circle/Cross**, with combo integration and aerial use when supported by that technique.
+- **Substitution:** **L2** timed defensive escape, consuming one of three independently recharging charges.
+- **Enemies:** simultaneous multi-enemy combat with clear attack telegraphs and opportunities to counterattack; positioning remains important.
+- **Signature sequence:** Light Combo → Heavy Launcher → Aerial Combo → Jutsu Finisher, with defensive Substitution and counters woven into the flow.
+- **Tuning TBD:** exact animation frames, input buffers, cancel windows, lock-on cone/range, invulnerability duration, aerial pursuit range, hitstun, juggle limits, and enemy attack concurrency.
