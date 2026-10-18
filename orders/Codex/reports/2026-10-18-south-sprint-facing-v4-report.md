@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner visual acceptance pending
-- Commit / PR: pending; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: be9e76c; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Replaced south only after owner reported it faced diagonally. PixelLab PixMiniMax job 0469ee58-b8d4-4423-8823-3f7249f517f1, group a4351ada-93ae-4bd8-8f5c-1327054d9ba8, cost 2 generations. Prompt pins face/chest to straight screen-down south with visible front shoulders, continuous torso movement, forward lean and arms swept back. Retained source poses 4-23 from 24 generated poses, matching the existing 20-pose sprint timeline. Seven other directions retain exact sprint-v3 PNG bytes, including moving north vest correction. No mirroring or synthetic intermediate frames.
@@ -27,3 +27,5 @@ None. New review links supplied for inspection.
 
 ## Outstanding work / next steps
 Owner review of south sprint and latest north vest. Full Order01 remains incomplete. Live deployment: not applicable to review-only GIFs; no gameplay code changed.
+
+Public verification: half-speed grid and south comparison both HTTP200,20 frames,1670ms loop; verified after push.
