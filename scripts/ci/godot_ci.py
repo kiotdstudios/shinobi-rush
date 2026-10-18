@@ -128,6 +128,9 @@ def detect_test_frameworks(project: Path) -> List[str]:
         found.append("gut")
     if (project / "addons" / "gdUnit4" / "bin" / "GdUnitCmdTool.gd").is_file():
         found.append("gdunit4")
+    # Stage 2A: dependency-free built-in runner (SceneTree script; exits non-zero on failure).
+    if (project / "tests" / "run_tests.gd").is_file():
+        found.append("builtin")
     return found
 
 
@@ -138,6 +141,8 @@ def test_command(framework: str, project: Path) -> Optional[List[str]]:
         if (project / ".gutconfig.json").is_file():
             return base + ["-s", "res://addons/gut/gut_cmdln.gd", "-gexit"]
         return base + ["-s", "res://addons/gut/gut_cmdln.gd", f"-gdir=res://{tests_dir}", "-ginclude_subdirs", "-gexit"] if tests_dir else None
+    if framework == "builtin":
+        return base + ["--script", "res://tests/run_tests.gd"]
     if framework == "gdunit4":
         return base + ["-s", "-d", "res://addons/gdUnit4/bin/GdUnitCmdTool.gd", "--add", f"res://{tests_dir}", "--ignoreHeadlessMode"] if tests_dir else None
     raise ValueError(framework)
@@ -159,6 +164,10 @@ def cmd_tests(args: argparse.Namespace) -> int:
         exit_ok = (0, 101) if fw == "gdunit4" else (0,)  # gdUnit4: 101 = passed with warnings
         scan = run_godot_step(f"tests-{fw}", args, godot_args, TIMEOUTS["tests"], allow_exit_codes=exit_ok)
         log = (Path(args.log_dir) / f"tests-{fw}.log").read_text(encoding="utf-8")
+        if fw == "builtin":
+            if not any(ln.startswith("SUMMARY:") for ln in log.splitlines()):
+                annotate("error", "tests/run_tests.gd printed no SUMMARY line; treating as not run.", title="GDScript tests")
+                status = 1
         if fw == "gut":
             gut_errors = [ln for ln in log.splitlines() if ln.startswith("[GUT ERROR]")]
             hard = [ln for ln in gut_errors if "Nothing was run" not in ln]
