@@ -6,7 +6,7 @@
 - This report ships in docs-only [PR #14](https://github.com/kiotdstudios/shinobi-rush/pull/14). It was written after the live result was verified (section 4).
 
 **TL;DR**
-- The wider view is back and live. At 1280x720 the game shows 51.2% of the arena again (it showed 10.1% after the 2.25x world rescale). Tile size and all five obstacles are pixel-identical to the pre-scale build. The 128x128 sprite standard is untouched.
+- The wider view is back and live. At 1280x720 the game shows 51.2% of the arena again (it showed 10.1% after the 2.25x world rescale). Tile size is the same as in the pre-scale build and all five obstacles sit in identical pixel boxes (only the captions on their faces differ, now legible). The 128x128 sprite standard is untouched.
 - PR #12 as opened was one line, right in idea but not enough. Measuring found unreadable captions, the head cut off at the north wall, the feet cut off at the south wall, and a lab zoom that fought the baseline. All fixed, with 25 new in-engine checks and 4 new browser-probe checks.
 - Not changed, needs your decision: at the wide view the figure is 48 px tall against 57 px before (0.84x), and 1 px sprite details will shimmer at the non-integer zoom with nearest-neighbour filtering (options A to D, question 1).
 - PR #9 (occlusion): the order is merged and the investigation is running. Nothing is concluded yet.
@@ -39,7 +39,7 @@ Each claim is labelled. CI numbers come from the logs of the runs named in the l
 | Post-deploy smoke against the live URL: 11 of 11 PASS | VERIFIED | same run, job "Post-deploy live smoke test" |
 | All three workflows green on 9a467ea: Godot CI 39166792014 (3 min 46 s), Repository checks 39166792064, Pipeline self-test 39166792005 | VERIFIED | `gh run list` |
 | PR head 707f7be was green too: Godot CI 39166562618, Repository checks 39166562467, Pipeline self-test 39166562458 | VERIFIED | `gh run list` |
-| Independent review: pass 1 had 7 findings, all fixed in 10b68b0; pass 2 APPROVED | VERIFIED | review file is local (`c:\tmp\shinobi-order01\camera\review.md`), not in the repo |
+| Independent review: pass 1 had 7 findings, all fixed in 10b68b0; pass 2 APPROVED | VERIFIED (I read the review file; it is on the build laptop, not in the repo) | `c:\tmp\shinobi-order01\camera\review.md` |
 | The workflow's local runs (tests, validators, export, smoke, controls and debug probes) passed | VERIFIED per the [job report](2026-10-18-wide-camera-framing-report.md) | The probes ran at c2baa65. Later commits touched only tests and docs (reviewer's `git diff c2baa65 10b68b0 --stat`), and CI re-ran everything on the final head. |
 | The new checks can fail: forcing zoom 0.5 made 4 in-engine checks and 3 probe checks fail, then reverted | VERIFIED for those 7 only | job report. The other new checks were not mutation-tested. |
 | 128x128 legibility at the wide zoom | VERIFIED for a synthetic set only | software-rendered browser, 3 moving samples per setting. No production art exists yet. |
@@ -72,7 +72,7 @@ Each claim is labelled. CI numbers come from the logs of the runs named in the l
 4. **Standing-rule file on this machine:** `c:\.kiro\steering\chief-report-after-every-task.md` (the reason this report exists). Reverse: delete or edit the file.
 5. **`orders/Kiro/README.md` gets the same rule** for the repo (this PR). Reverse: revert this PR.
 6. **Keep-awake still running** (holds system and display awake) until about 21:01 local. Reverse: stop that process.
-7. **Git worktrees registered in the shared clone's `.git`:** camera, chief report, occlusion, all under `C:\tmp\shinobi-order01`. The shared clone's working tree was not touched. Reverse: `git worktree remove`. I remove the camera one now and the others when their PRs are done.
+7. **Git worktrees registered in the shared clone's `.git`:** camera, chief report, occlusion, all under `C:\tmp\shinobi-order01`. The shared clone's working tree was not touched. Reverse: `git worktree remove`. The camera worktree is already removed; the chief-report one goes after PR #14 merges and the occlusion one after its PR.
 8. **Workflow runs started:** `wf_74a434fd6f617940` (camera, finished) and `wf_6939311f46922c2d` (occlusion, running).
 9. Nothing deleted. Remote branches of merged PRs remain.
 
@@ -102,7 +102,7 @@ Each claim is labelled. CI numbers come from the logs of the runs named in the l
 - Real 128x128 art (none exists yet). The legibility study used a synthetic set.
 - Option D.
 - Whether Aki's F6, F10, F11 and F12 reach the game in real browsers.
-- Your own screenshot: I rebuilt "the previous view" from the pre-scale commit d651078 at 1280x720.
+- Your own screenshot of the problem: I rebuilt "the previous view" from the pre-scale commit d651078 at 1280x720.
 - Mouse-wheel zoom on the live build (covered by in-engine tests only).
 - Edges: the live build was walked to the north and south walls only. The corners and side walls were checked on the PR build (8 positions; the reviewer opened 3 of the 8 images).
 - One local run of my live screenshot logged a single console error, "The AudioContext encountered an error from the audio device or the WebAudio renderer". The next run had none and the CI smoke on the same commit has 0 fatal console events. ASSUMED environmental (no audio device in headless Chromium).
@@ -124,7 +124,7 @@ Each claim is labelled. CI numbers come from the logs of the runs named in the l
 ## 11. Next steps
 - Occlusion investigation: the workflow reproduces on the latest build, diagnoses by measurement, fixes only a proven defect, opens a PR. Then I verify live and write its chief report.
 - Your answers to the questions above. PR #13 merge and live check of the debug-log chain once you say yes.
-- Cleanup: camera worktree now, this report's worktree after merge, occlusion worktree after its PR, keep-awake at the end.
+- Cleanup: camera worktree (done), this report's worktree after PR #14 merges, occlusion worktree after its PR, keep-awake at the end.
 - Re-check the wide view and the sprite filter choice with Codex's first real art.
 
 ## 12. Where to look
