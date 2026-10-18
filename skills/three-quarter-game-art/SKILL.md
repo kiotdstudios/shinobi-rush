@@ -23,3 +23,7 @@ Use [Order 01 fluidity and equipment standards](../../orders/Codex/order_01.md):
 
 ## Owner revision — PixelLab skill review and art scale
 Codex may use its own proven art-generation skills; **review PixelLab API skills and existing credentials first** and use PixelLab when advantageous, not by default for every asset. **64×64 and 128×128 are both candidates**; test at actual gameplay zoom and seek owner approval before bulk animation generation. See [revised art workflow](../../docs/visuals/PIXELLAB_API_ART_PIPELINE.md). This owner revision supersedes earlier mandatory-PixelLab and fixed-128px wording.
+
+
+## FINAL OWNER DECISION — Production sprite frame size (2026-10-18)
+**LOCKED: All standard production character sprite frames MUST be 128×128 pixels, RGBA with transparency.** This overrides any earlier 64×64 vs 128×128 evaluation or scale-approval requirement in this file or linked orders. Do not create 64×64 production character sprites. Legacy 64×64 artwork may be retained as reference only. Larger canvases may be used for attacks/VFX extending outside the base frame, but keep the character's world-space/body scale, proportions, foot anchor and alignment consistent. Maintain eight-direction animation targets and premium fluid motion. PixelLab remains optional after mandatory skill/API review as separately documented.
