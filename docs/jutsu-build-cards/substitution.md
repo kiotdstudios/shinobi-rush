@@ -1,3 +1,9 @@
+![substitution visual build card](./substitution.svg)
+
+[Open full-size visual card](./substitution.svg)
+
+---
+
 # Substitution Jutsu — Build Illustration
 
 > **Defensive · Timed defensive escape**
