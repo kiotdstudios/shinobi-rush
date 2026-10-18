@@ -219,3 +219,12 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - **Enemies:** simultaneous multi-enemy combat with clear attack telegraphs and opportunities to counterattack; positioning remains important.
 - **Signature sequence:** Light Combo → Heavy Launcher → Aerial Combo → Jutsu Finisher, with defensive Substitution and counters woven into the flow.
 - **Tuning TBD:** exact animation frames, input buffers, cancel windows, lock-on cone/range, invulnerability duration, aerial pursuit range, hitstun, juggle limits, and enemy attack concurrency.
+
+
+## Loadout-dependent light combo finishers and assisted aerial pursuit — locked
+- **Do not make all light combos end in an aerial launcher.** Light-combo enders depend on the player's equipped **melee combo loadout**.
+- Different equipped finishers may favor grounded knockback, aerial launch, heavy stagger/damage, or fast multi-hit pressure. These are **example archetypes**, not finalized ability names or unlocks.
+- **Assisted aerial pursuit approved:** after successfully launching an enemy with a launcher-capable attack, pressing **Jump** during a brief follow-up window triggers a short, targeted pursuit toward that airborne enemy, while preserving player directional control.
+- No automatic aerial pursuit when a combo ends in a grounded finisher; no forced launcher on every light-combo chain.
+- Melee combo/finisher loadouts are a **separate customization layer** from the four R2 + face-button jutsu slots.
+- **Recommended for later approval:** unlock new combo finishers through training/progression. Exact loadout slots, input mappings, cancel windows, pursuit range, and unlock requirements TBD.
