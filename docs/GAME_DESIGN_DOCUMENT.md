@@ -196,3 +196,15 @@ Starting outpost/tutorial → forest approach (basic bandits) → fork between m
 - Use environmental landmarks and composition to guide navigation rather than constant objective markers.
 - Design around one basic bandit, one heavy bandit, and one boss; reuse these thoughtfully in varied terrain.
 - Test navigation readability, shortcut utility, return routes, and controller-only traversal before expanding content.
+
+
+## Kōsen Village gate / forest world topology — confirmed
+- The player starts **outside the gates of Kōsen Village**, at the home gate.
+- The long-term world has **three forest paths** leaving this gate.
+- One forest route ends in a **dead end**, but forks before its endpoint.
+- Another route also forks: one branch **connects back to the previously forking forest route**, and the other reaches **a neighboring village gate**.
+- The third forest route exists as part of the larger world plan; its downstream topology remains to be designed.
+- **MVP scope: home gate and two playable forest paths only**. Do not build the neighboring village gate or the third full forest route yet.
+- Preserve the eventual interconnection in the world layout; blocked future routes should read as natural, intentional boundaries.
+- Keep the already approved basic bandit, heavy bandit, one boss, optional exploration, shortcuts, controller-first combat, and guided branching structure. Boss placement within the two MVP paths is not yet finalized.
+- The route names A/B/C in planning diagrams are placeholders, not official region names.
