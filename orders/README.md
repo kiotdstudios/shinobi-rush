@@ -116,3 +116,7 @@ Before related work, consult the [project skill index](../skills/README.md). Cod
 
 ## Locked genre clarification (owner decision 2026-10-17)
 Shinobi Rush is a **persistent-world shinobi action RPG** inspired by the **premium combat feel** of high-quality roguelikes and action games, **not a run-based roguelike**. Do not implement procedural runs, permadeath, reset loops, or changes to locked save/progression/world rules. See [premium combat vision](../docs/vision/PREMIUM_ACTION_ROGUELIKE_QUALITY_BAR.md).
+
+
+## Mandatory PixelLab API art-generation policy
+**All new generated pixel-art assets for Shinobi Rush must be created through the PixelLab API** (characters, directional sprites, animations, equipment, enemies, tiles, props, environment art, UI pixel art and pixel VFX). Read [PixelLab API art pipeline](../docs/visuals/PIXELLAB_API_ART_PIPELINE.md) before art work. Codex owns generation; other agents request assets from Codex rather than using alternative generators. Manual pixel cleanup, sprite compositing, shaders, particle systems, and programmatic Godot integration are permitted post-processing—not substitutes for PixelLab-generated source art. Never embed or commit API keys. If PixelLab API credentials, features, quotas or outputs are unavailable, report BLOCKED; do not silently switch generators.
