@@ -19,6 +19,8 @@ extends Node
 signal debug_toggled(on: bool)
 ## Emitted by copy_bug_report so a panel can show a read-only fallback if the clipboard is refused.
 signal report_ready(text: String)
+## Result of the clipboard attempt (false -> the panel must show its visible fallback text area).
+signal clipboard_done(ok: bool)
 
 const REPORT_EVENTS := 100
 const NOTE_MAX := 500
@@ -83,6 +85,8 @@ var _start_ticks: int = 0
 var _is_web: bool = false
 var _window: JavaScriptObject
 var _cb: JavaScriptObject  ## keep a reference or the callback is freed
+var _copy_cb: JavaScriptObject
+var _panel: Node = null
 var _in_cb: bool = false
 
 
@@ -158,7 +162,16 @@ func set_enabled(on: bool) -> void:
 			JavaScriptBridge.eval(_JS_UNINSTALL, true)
 	if on:
 		record("state", {"event": "debug_on"})
+		_ensure_panel()
 	debug_toggled.emit(on)
+
+
+## The panel only exists once debug has been opted into; it hides itself when debug is toggled off.
+func _ensure_panel() -> void:
+	if _panel != null or not is_inside_tree():
+		return
+	_panel = load("res://scenes/ui/debug_panel.tscn").instantiate()
+	add_child.call_deferred(_panel)
 
 
 ## Kiro-owned events (go to DebugStore). Producers use DebugTelemetry.record instead.
@@ -208,20 +221,51 @@ func download_log() -> bool:
 	return true
 
 
-## Explicit user action only. Returns the text so a panel can show a fallback if the clipboard is refused.
+func export_txt() -> String:
+	return DebugExport.to_txt(store.header(now_ms()), _merged())
+
+
+## Explicit user action only (panel button). Optional readable TXT companion.
+func download_txt() -> bool:
+	if not enabled or not _is_web:
+		return false
+	JavaScriptBridge.download_buffer(export_txt().to_utf8_buffer(), log_filename("txt"), "text/plain")
+	return true
+
+
+## Explicit user action only. Returns the text; a panel shows a visible read-only fallback if the clipboard
+## is refused (clipboard_done(false)). On web, navigator.clipboard.writeText is tried (needs the user gesture).
 func copy_bug_report(note: String = "") -> String:
 	if not enabled:
 		return ""
 	var text := bug_report(note)
-	DisplayServer.clipboard_set(text)
 	report_ready.emit(text)
+	if _is_web:
+		_web_copy(text)
+	else:
+		DisplayServer.clipboard_set(text)
+		clipboard_done.emit(true)
 	return text
 
 
-func log_filename() -> String:
-	var ts := Time.get_datetime_string_from_unix_time(int(store.start_unix)).replace("-", "").replace(":", "").replace("T", "-")
-	var sha := String(store.build.get("commit_sha", "")).substr(0, 7)
-	return "shinobi-debug-%s-%s.jsonl" % [ts, sha if sha != "" else "unknown"]
+func _web_copy(text: String) -> void:
+	_copy_cb = JavaScriptBridge.create_callback(func(a: Array) -> void: clipboard_done.emit(bool(a[0])))
+	_window.__SHINOBI_COPY_CB__ = _copy_cb
+	_window.__SHINOBI_COPY_TEXT__ = text
+	JavaScriptBridge.eval("""
+	(function () {
+	  var t = window.__SHINOBI_COPY_TEXT__, cb = window.__SHINOBI_COPY_CB__;
+	  window.__SHINOBI_COPY_TEXT__ = null;
+	  try {
+	    if (!navigator.clipboard || !navigator.clipboard.writeText) { cb(false); return; }
+	    navigator.clipboard.writeText(t).then(function () { cb(true); }, function () { cb(false); });
+	  } catch (e) { cb(false); }
+	})();
+	""", true)
+
+
+func log_filename(ext: String = "jsonl") -> String:
+	return DebugExport.filename(store.start_unix, String(store.build.get("commit_sha", "")), ext)
 
 
 ## args from JS: [kind, message, source, line, col, stack]
