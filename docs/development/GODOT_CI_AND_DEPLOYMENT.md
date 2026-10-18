@@ -40,9 +40,10 @@ pull_request | push to main | workflow_dispatch
              -> validate every script and scene loads
              -> run tests: res://tests/run_tests.gd, or GUT / gdUnit4 (warning if none exists)
              -> export Web (debug template, single-threaded, Compatibility) + build-info.json
-             -> check-export (files vs build-info.json; sprite manifests and PNG imports inside index.pck)
+             -> finalize-export (build-info.json written; the file and PCK checks run in smoke-predeploy and deploy)
         |
   smoke-predeploy   real Chromium against a local static server (no COOP/COEP, like Pages); runs on PRs too
+                    -> check-export (files vs build-info.json; sprite manifests and PNG imports inside index.pck)
                     -> smoke.mjs (engine start, canvas, ready hook, input effect, console) then controls-probe.mjs
         |
      deploy         ONLY push to main / dispatch from main; Pages preflight, configure, upload, deploy
@@ -66,7 +67,7 @@ Nothing is published from pull requests. The `deploy` job has `pages: write` and
 | Sprite manifests (`detect` job) | a `*.manifest.json` under `assets/characters/` breaks the schema (`::error file=<path>::` annotations); with no manifest it passes ("nothing to validate") | `detect` job log |
 | Tests | `res://tests/run_tests.gd` (or GUT / gdUnit4) reports a failure or exits non-zero (absence of any framework only warns) | `logs/tests-*.log` |
 | Web export | export fails, prints engine errors, produces a threaded build, or files do not match `build-info.json` | `logs/export.log`, `build-info.json` |
-| Export contents (`check-export --project`, error `EXPORT011`) | `index.pck` lacks `project.binary`, or lacks a sprite manifest or sprite PNG import record that exists in the repository (the check always prints what it asserted, including "0 manifests" while no art exists). Runs in `smoke-predeploy` and again on the staged site in `deploy` | job logs |
+| Export contents (`check-export`, error `EXPORT011`; the workflows pass no `--project`, so the project is the repository root, and a non-root `GODOT_PROJECT_DIR` would need `--project` or the check would find no `assets/` and assert 0) | `index.pck` lacks `project.binary`, or lacks a sprite manifest or sprite PNG import record that exists in the repository (the check always prints what it asserted, including "0 manifests" while no art exists). Runs in `smoke-predeploy` and again on the staged site in `deploy` | job logs |
 | Pre-deploy smoke test | engine does not start, canvas missing or blank, fatal console / page / network error, wrong commit, ready hook never true, no visible effect of input | `smoke-predeploy/` |
 | Controls probe | the hooks `window.__SHINOBI_READY__` / `window.__SHINOBI_STATE__` exist but holding D does not move the player, Shift+D is not faster, the player walks through a wall, or the console shows errors. If neither hook is ever defined it prints "SKIPPED - hooks absent" and exits 0 (1 on console errors) | `controls-probe/` in the pre-deploy smoke artifact |
 | Deploy preflight | Pages not enabled for Actions, branch-based Pages, custom domain without opt-in | `deploy` job summary |
@@ -286,7 +287,7 @@ If a workflow is skipped because of path filtering, branch filtering or a commit
 The stage 2 pull request is the first time the Godot jobs run on a runner (everything was run locally on Windows first; see the job report). Expect to look at these in order, and treat any failure there as a pipeline defect to fix in the same PR (not as a reason to disable a check):
 
 1. `Godot CI / detect` summary: `project_found=true` and `project_dir=.` (the repository root); the sprite manifest step passes ("nothing to validate" while no art exists).
-2. `build`: cold cache (the first run downloads the 1.28 GB templates archive and installs two files from it); the `Install pinned Godot` step prints `SHA512 verified`; `Load pinned tool versions` and `Prepare working directories` wrote the environment variables the later steps use (`GODOT_BIN`, `EVIDENCE_DIR`, `EXPORT_DIR`, `PROJECT_DIR`); the tests step prints `SUMMARY: 123 passed, 0 failed` (the count grows as tests are added).
+2. `build`: cold cache (the first run downloads the 1.28 GB templates archive and installs two files from it); the `Install pinned Godot` step downloads and installs (it prints `already installed and verified` on a cache hit and `existing install is not usable ... reinstalling` when a restored cache does not match the pinned manifest; it has no `SHA512 verified` line); `Load pinned tool versions` and `Prepare working directories` wrote the environment variables the later steps use (`GODOT_BIN`, `EVIDENCE_DIR`, `EXPORT_DIR`, `PROJECT_DIR`); the tests step prints `SUMMARY: 123 passed, 0 failed` (the count grows as tests are added).
 3. `build` artifacts: `web-export` (with `build-info.json`) and `godot-ci-build-evidence` exist.
 4. `smoke-predeploy`: `webgl2-available` passes (exit code 3 means the runner's headless Chromium has no WebGL2; see Troubleshooting); the controls probe prints a PASS verdict.
 5. `godot-ci-gate` summary says `VALIDATED (not deployed: only main deploys)` on the PR.

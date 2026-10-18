@@ -4,6 +4,12 @@ Drop art in, push, open the live build, judge animation and size. **No code edit
 Until a valid set exists the game shows the labeled PLACEHOLDER figure and
 `SPRITES: none (placeholder)`.
 
+## 0. Production standard (owner-approved 2026-10-18)
+
+**128x128 RGBA is the production frame size**: standing height about 100-112 px, consistent foot anchors,
+unchanged anatomical scale in every animation. Overflow canvases (192/256) are allowed per animation for
+extended motion. 64x64 sets are supported only as review evidence for the 64 vs 128 comparison (`C` in the lab).
+
 ## 1. Folder layout
 
 ```
@@ -45,7 +51,7 @@ the lab compares the first two sets (sorted by id).
 }
 ```
 
-- `frame_size`: 64x64 or 128x128 RGBA (the lab decides which). Overflow canvases (192/256) for wide
+- `frame_size`: 128x128 RGBA (production); 64x64 only as comparison evidence. Overflow canvases (192/256) for wide
   attacks: set `frame_size` (and usually `foot_anchor`) on that animation only.
 - `foot_anchor`: pixel inside the frame that sits on the ground-contact point (the player origin).
   Collision footprint and shadow never move. Mirroring flips around this anchor.
@@ -95,21 +101,23 @@ Grids: the iso grid is 32x32 world tiles drawn 2:1 (64x32 diamonds); the square 
 
 ## 6. Links and CI
 
-- Live link: GitHub Pages URL of this repo (posted by the repo owner once Pages is enabled).
+- Live link (expected, not yet verified): https://kiotdstudios.github.io/shinobi-rush/ . It answers HTTP 404 until
+  the first deployment from `main` has been verified.
 - Deep link query (`?set=&anim=&dir=&zoom=&lab=1`) is **not implemented yet** (follow-up); use the keys.
 - CI check: `scripts/ci/validate_sprite_manifests.py` (Python stdlib only) checks every `*.manifest.json` under
   `assets/characters/`: JSON parses, `schema` is 1, ids are unique, `frame_size`/`foot_anchor`/`fps` are valid,
   directions are known and the N/S/E/W cardinals exist (own frames or `mirror`), every referenced file exists,
   each PNG is exactly `frame_size` (read from the PNG header) and each sheet is `columns*frame_w` x `rows*frame_h`.
   Run it locally from the repo root: `python scripts/ci/validate_sprite_manifests.py` (exit 0 = fine, or
-  nothing to validate). Problems print as `::error file=<path>::<message>`. It is **not wired into CI yet**:
-  that comes with stage 2B. Until then the in-game status line plus the browser console warning are your feedback.
+  nothing to validate). Problems print as `::error file=<path>::<message>`. In CI the `detect` job of `Godot CI` runs it on every
+  pull request and push and annotates the offending manifest; its unit tests run in `Pipeline self-test`. The in-game
+  status line plus the browser console warning remain your feedback while authoring.
 - Web preset ships `*.json`, so manifests and PNGs are inside the PCK.
 
 ## 7. Definition of ready
 
 - [ ] manifest(s) under `assets/characters/`, `schema: 1`, unique `id`, status line says `OK`
-- [ ] frame canvas 64x64 or 128x128 RGBA (or documented overflow per animation)
+- [ ] frame canvas 128x128 RGBA (64x64 only as comparison evidence; or documented overflow per animation)
 - [ ] `foot_anchor` set; feet sit on the crosshair in every animation (lab overlay `3`)
 - [ ] standing height about 100-112 px on 128 (ruler `5`, `body_height_px` filled in)
 - [ ] 8 directions or N/S/E/W + `mirror` entries
