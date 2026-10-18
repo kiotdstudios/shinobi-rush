@@ -3,7 +3,7 @@
 - Order: Order 01
 - Date: 2026-10-18
 - Final status: REVIEW - owner locomotion assessment pending
-- Commit / PR: Not committed; preview PR https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: 6f03a6c; preview PR https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Owner approved idle v5 and authorized locomotion review. Exporting the existing PixelLab walk group e24eae75-7e91-4711-b8d0-85b74c544234: eight unique directions, 16 generated poses each. No additional generations charged. Using the approved idle scale (104/108), 128x128 transparent RGBA canvas and nominal origin [64,116]. One median root offset per clip preserves stride motion without per-frame recentering or resizing. Half-speed review default is 12 poses/sec, 1.333s per loop; normal and quarter-speed reviews are also supplied with synchronized timer.
@@ -25,3 +25,5 @@ None. Owner visual review is the next acceptance step.
 Owner visual assessment of walk loop, speed, foot contact and directional consistency. Normal run, arms-back sprint and other Order 01 states remain outstanding. Live deployment: not applicable to this review-only GIF job; no gameplay files changed.
 
 Review limitations: source silhouettes vary in height through stride (96-112px across all directions); the fixed anatomical scale is preserved. Lowest visible foot varies through stride (112-122px overall); this is not proof of zero sliding in gameplay. No gameplay transition, collision or Web frame-time test was performed for this review-only job. Full animation acceptance remains pending owner review.
+
+Public verification: HTTP 200; decoded 600x1240 GIF, 16 frames, 1330ms loop. URL: https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/mobile-animation-preview/assets/characters/player/previews/mobile/walk-v1-half-speed.gif
