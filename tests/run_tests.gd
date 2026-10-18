@@ -33,6 +33,8 @@ func _initialize() -> void:
 	await test_anchor_stability()
 	await test_main_scene_and_movement()
 	await test_lab_and_pause()
+	var debug_store_tests = load("res://tests/test_debug_store.gd").new()
+	debug_store_tests.run(ck)
 	_cleanup()
 	print("SUMMARY: %d passed, %d failed" % [passed, failed])
 	quit(1 if failed > 0 else 0)
