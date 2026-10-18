@@ -71,3 +71,20 @@ Add checkpoint positions, encounters, landmark names, rewards, boss arena, and u
 - Fragments are **technique-specific**, with requirements and crafting materials varying by jutsu.
 - Once the trainer exchange is completed, the jutsu is learned and can be equipped.
 - Sample costs mentioned during planning are illustrative only and are **not locked balance values**.
+
+
+## Resource acquisition and trade — locked direction
+Every learnable jutsu requires **technique-specific scroll fragments plus crafting materials**, exchanged at a trainer in the Training Grounds (Kōsen: Mastery Chambers).
+
+**Approved resource sources:**
+1. Enemy loot drops (including bandits, elites, bosses).
+2. Hidden chests and exploration discoveries.
+3. Quest rewards.
+4. Random in-world loot drops.
+5. Player-to-player trading of eligible resources.
+6. Village markets and NPC merchants.
+7. Traveling specialist NPC merchants with distinctive inventories.
+
+**Implementation scope:** For the single-player MVP, prioritize enemy drops, chests, quest rewards, random world loot, and a basic NPC merchant. Player trading and a broader market economy are future systems; do not imply that multiplayer trading ships in the MVP. Exact drop rates, loot tables, item tradability, market prices, merchant rotations, and rarity balance remain TBD.
+
+**Forest onboarding:** Introduce multiple acquisition sources through contextual discoveries on Forest A and Forest B without forcing a linear tutorial or closing either path.
