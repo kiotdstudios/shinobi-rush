@@ -148,3 +148,21 @@ Every learnable jutsu requires **technique-specific scroll fragments plus crafti
 - Items held in inventory are **not** deleted by this rule.
 - Temporary dropped loot also clears on **loading a saved game** or **transitioning to a different map**.
 - Seamless forest-path travel alone does **not** clear dropped loot.
+
+
+## Approved save, healing, loot, and fast-travel rules — locked
+- Save Stones must be **activated by player interaction**; activated stones allow manual saving and act as eligible death respawn points. Respawn uses the nearest activated stone.
+- Death respawn restores **100% HP and Chakra**.
+- **Autosave when entering a new map**; manual saving at activated Save Stones.
+- **Consumable healing items** are used during exploration and occupy the shared inventory capacity.
+- **Uncollected enemy loot is cleared on player death**, along with manually dropped items. This does not delete items already collected into inventory.
+- **Fast travel** becomes available later in progression, and only between previously activated Save Stones. Unlock conditions TBD.
+
+## Traditional RPG leveling and layered stats — locked
+- Players earn **XP** through combat, quests, exploration milestones, and training challenges; leveling raises base stats and awards allocatable attribute points.
+- Core attributes: **Health** (max HP), **Chakra** (max jutsu resource), **Strength** (physical damage/heavy attacks/launchers), **Defense** (damage mitigation), **Speed** (movement/attack speed/dodge performance).
+- Effective combat strength is influenced by **base level/stats + attribute allocation + equipment + training + jutsu + consumable items + awakening effects + active buffs/debuffs**.
+- Buffs may be temporary or permanent where appropriate (e.g., training increases). Equipment may grant passive bonuses; consumables, jutsu, and awakenings may provide timed combat bonuses.
+- Debuffs can include **poison, burns, slows, defense reduction, chakra disruption, and Strength reduction**; effects can expire or be countered through items or abilities.
+- Display modified stats and active effects clearly in character UI, distinguishing base values from positive/negative modifiers.
+- Exact XP curves, numerical bonuses, stacking rules, effect durations, and balancing are **TBD**, not approved as final values.
