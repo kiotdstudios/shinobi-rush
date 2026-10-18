@@ -15,3 +15,7 @@ Individual illustrated **Markdown stat cards** for jutsu/build examples, followi
 ## Template for future jutsu
 
 Each new technique gets its own file in this folder: identity, effect, base stats, global bonuses, targeted equipment, computed output, mastery path, and status (confirmed/prototype/example). If a jutsu does not deal damage, show its relevant cooldown, duration, charges, or defensive properties instead.
+
+## Approved card visual layout
+
+**[Open reusable HTML card gallery](./jutsu-cards.html)** — the canonical UI template for jutsu cards, matching the user-provided Fireball reference: black canvas, thin rounded border, square illustration beside title/element/tag, two-column stats, green modifiers, rounded dark-gray equipped-results panel, and bottom disclaimer. All five example techniques are selectable in the gallery. Illustrations in the HTML are **placeholder vector concepts**, not final commissioned jutsu art; the original screenshot's fireball illustration has not been imported. For the future HTML GDD, reuse this card layout and swap in finalized icon assets. The five individual Markdown files remain the editable stat/source notes.
