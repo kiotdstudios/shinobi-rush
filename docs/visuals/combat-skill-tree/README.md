@@ -1,3 +1,15 @@
+## Current visual — V2 (three branches)
+
+![Expandable combat skill tree V2](./combat-skill-tree-v2.svg)
+
+[Open the full-size V2 SVG](./combat-skill-tree-v2.svg)
+
+**Locked:** Aerial, Flow, and Evasion are compatible progression branches; players can invest in all of them. Perfect Dodge is a starting mechanic, not a skill-tree unlock. No traditional blocking. The skill tree is expandable with future categories.
+
+**Proposed, not locked:** Counter Strike, Phantom Step, and Shadow Counter are Evasion node concepts. Their names, skill-point costs, prerequisites, and connection to Advanced Combo Mastery are illustrative. The dashed connections are not finalized gating requirements.
+
+### Previous concept
+
 # Combat Skill Tree — Visual Concept V1
 
 ![Combat Skill Tree](./combat-skill-tree.svg)
