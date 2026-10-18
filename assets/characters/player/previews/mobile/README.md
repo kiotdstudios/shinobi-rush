@@ -31,3 +31,10 @@ South-east preserved; south/north-east redrawn with planted breathing; south-wes
 - [V2 normal speed](idle-v2-normal.gif)
 - [V2 half speed](idle-v2-half-speed.gif)
 - [V2 quarter speed](idle-v2-quarter-speed.gif)
+
+## Idle refinement v3
+East and north revised for planted breathing. Other six directions retain v2 frames. Half speed remains the default; timer now shows actual playback seconds (1.333s per loop at half speed).
+
+- [V3 normal speed](idle-v3-normal.gif)
+- [V3 half speed](idle-v3-half-speed.gif)
+- [V3 quarter speed](idle-v3-quarter-speed.gif)
