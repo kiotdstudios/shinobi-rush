@@ -3,7 +3,7 @@
 - Order: Order01
 - Date: 2026-10-18
 - Final status: REVIEW - owner visual acceptance pending
-- Commit / PR: pending; https://github.com/kiotdstudios/shinobi-rush/pull/3
+- Commit / PR: 799c057; https://github.com/kiotdstudios/shinobi-rush/pull/3
 
 ## Work completed
 Owner passed latest sprint v5 and authorized eight-direction jump: anticipation, takeoff, airborne tuck, descent, soft landing/recovery. PixelLab PixMiniMax generated24real poses per direction. Initial groupc4a87d88-7e0b-4417-bc1c-bf6cf960afd2 cost16generations. Rejected original north/north-east turning toward camera and south second bounce. Replacements cost1generation each: NEa4b14b6c-85c0-4365-b18b-f9da5fed6ab8, S0981490e-edf4-49fb-89a7-9ede09fe219b, Nad3a71d5-9218-4550-a9df-c5c10f4e118e. Total19generations. Job receipts/exact URLs and rejected originals retained locally.
@@ -30,3 +30,5 @@ None. Review supplied for visual feedback.
 
 ## Outstanding work / next steps
 Owner jump acceptance/revisions, then dodge and remaining Order01 actions/equipment/VFX/integration. Full Order01 remains incomplete. Live deployment: not applicable to review-only GIFs; no gameplay code changed or live-game smoke test claimed.
+
+Public verification after push: all3GIFs HTTP200,24frames,800x1880; normal1000ms/half2000ms/quarter4000ms.
