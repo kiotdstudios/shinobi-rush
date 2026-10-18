@@ -1,11 +1,12 @@
 # ORDER — Implement in-game debug input and interaction telemetry
 - Agent: Aki
-- Status: QUEUED
+- Status: REVIEW
 - Priority: P0
 - Owner: Aki (runtime gameplay instrumentation)
 - Collaborator: Kiro (browser capture/export/QA)
-- Branch/PR: Dedicated feature branch and PR; do not write to main
+- Branch/PR: aki/debug-input-telemetry-producer -> PR to be opened against main (per order: do not write to main)
 - Dependencies: Actual Godot project/controller code; coordinate if not yet present
+- Report: orders/Aki/reports/2026-10-18-debug-input-telemetry-report.md
 
 ## Objective
 Implement an **opt-in debug log** for Shinobi Rush playtesting that records input, controller actions, interactions, gameplay transitions, and errors so bugs can be reproduced precisely.
