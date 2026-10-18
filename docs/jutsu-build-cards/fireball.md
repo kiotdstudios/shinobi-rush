@@ -1,3 +1,9 @@
+![fireball visual build card](./fireball.svg)
+
+[Open full-size visual card](./fireball.svg)
+
+---
+
 # Fireball Jutsu — Build Illustration
 
 > **Fire · Direct hit + Burn**
