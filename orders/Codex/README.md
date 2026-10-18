@@ -1,0 +1,22 @@
+# Codex — Art Department Orders
+
+**Role: Art production owner for Shinobi Rush.** This is Codex's dedicated order inbox: `orders/Codex/`.
+
+Read [master agent orders and execution rules](../README.md) **before working**. When you see a `QUEUED` order assigned to Codex, start immediately without waiting for another prompt. Set it to `IN_PROGRESS`. Do not take implementation orders owned by Aki, Orcha, or Kiro without explicit reassignment.
+
+## Art responsibilities
+- Produce and refine original game-ready **character sprites, directional poses, sprite sheets, animations, VFX, environments, tiles, props, and UI art** when assigned.
+- Follow the [locked baseline player design](../../docs/prototype/BASELINE_PLAYER_CHARACTER.md) and **inspect the approved PNG** at `assets/characters/player/references/baseline_turnaround.png` before making player art.
+- For the player, include a distinct **Naruto-inspired forward-leaning, arms-back ninja sprint** triggered by R1; create original frames rather than copying Naruto assets. Keep the player unmasked and without cape or sword.
+- Match the project's faux-isometric 2D camera, sprite scale, foot anchor, directional consistency, animation states, and performance constraints. Export organized, usable assets with descriptive names and transparent backgrounds when appropriate.
+- Coordinate integration requirements with gameplay agents; do not silently edit their code.
+
+## Mandatory job workflow
+1. Read queued Codex orders and **start immediately**.
+2. Produce the art and verify visual quality, dimensions, transparency, file integrity, and directional/animation consistency **before committing**. When assets are used in-game, preview/test them in Godot and the browser test build where access is available.
+3. Commit and push completed, tested assets using the approved branch/PR workflow; integrate and publish updated art to the **live browser-playable test game automatically** when runtime-visible. Verify the live result. Do not bypass protections or claim deployment success without checking.
+4. **After every job, write a report** in `orders/Codex/reports/YYYY-MM-DD-task-name-report.md` covering work completed, changed files, tests/results, issues, questions for the owner, next steps, commit/PR, and live-build verification. If blocked, still file the report and identify the blocker.
+5. Do not mark an order `DONE` until testing, integration, applicable live deployment, and reporting are complete.
+
+## Current orders
+No orders assigned by creating this folder. Previous Codex character handoff in `docs/prototype/` is reference material; a new order should specify what Codex is to execute.
