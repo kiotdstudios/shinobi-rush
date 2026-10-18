@@ -9,7 +9,7 @@ Upload the approved baseline shinobi three-view turnaround into this directory a
 ## Current status
 - The approved design is a young Black male shinobi with tied dreadlocks, olive tactical chest armor, black sleeveless clothing, white wraps, and black open-toe footwear.
 - **No mask, cape, sword, scabbard, or sword strap.**
-- The reference PNG is **not yet committed**; this folder exists so it can be uploaded here.
+- The approved reference PNG is **committed** as `baseline_turnaround.png`.
 - Codex must use the actual approved image before producing final character sprites, not rely on prose alone.
 - R1 sprint animation should use an original forward-leaning, arms-back ninja run as specified in the Codex handoff.
 
