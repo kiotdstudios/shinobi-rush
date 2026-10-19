@@ -2,8 +2,8 @@
 - Agent: Kiro
 - Order: orders/Kiro/2026-10-19-close-combat-camera-preset-and-validation.md (deliverable 1)
 - Date: 2026-10-19
-- Final status: REVIEW (PR open; not merged; live build not verified; the orchestrator sets DONE)
-- Commit / PR: implementation commit 17bfa53 on kiro/camera-preset-close; PR link and CI result in the PR (see the order status log)
+- Final status: DONE for deliverable 1 (set by the orchestrator after the live check; the workflow had left it at REVIEW). PR #21 merged as eeed7d2, verified on the live build, see "Live verification (added after the merge)" below. Deliverable 2 (validation scene) is not started.
+- Commit / PR: implementation commit 17bfa53 on kiro/camera-preset-close, PR head 7fea08d; [PR #21](https://github.com/kiotdstudios/shinobi-rush/pull/21) merged as eeed7d2793c197f996ee547449fc45e20f6fb401 (2026-10-19T03:12:39Z). PR CI run 39191291445 (all required checks green: 492 passed / 0 failed, smoke 11, controls probe 13, debug probe 26); main run 39193598683 on eeed7d2 (six jobs green). Independent review: APPROVED, 10 non-blocking points (see the follow-up job `2026-10-19-probe-real-art-compat-report.md` and the chief report).
 
 ## Work completed
 - New `scripts/camera/camera_preset.gd` (`CameraPreset`, pure statics plus one active-preset slot). Table: `wide` = 1/SCALE (0.4444), `close` = computed. `DEFAULT_ID = "wide"`: default behaviour is unchanged.
@@ -41,8 +41,37 @@ Notes: sprint-pose figures measure 126 px (north) and 108 px (south) because str
 - Captions >= 8 screen px at close rely on the `caption_font_size` formula (ASSUMED, not measured in the browser).
 - The optional occlusion replay at B3 east with `?camera=close` was not run (sort keys do not depend on zoom: ASSUMED).
 
+## Live verification (added after the merge, by the orchestrator, 2026-10-19)
+Live URL https://kiotdstudios.github.io/shinobi-rush/ , real browser run (headless Chromium, software GL, 1280x720) after the deploy of eeed7d2, repeated on the current deploy c172f6e (which differs from eeed7d2 only by the `reference/` folder; `build-info.json` `commit_sha` equals the merge commit in both checks). VERIFIED:
+
+| Query | Result on the live build |
+| --- | --- |
+| none (default) | `camera_preset` wide, zoom 0.4444, view 2880x1620, standing figure 48 px (6.7 %) |
+| `?camera=close` | close, zoom 1.1667, view 1097.1x617.1, standing figure 127 px = 17.6 % of 720 (palette measurement on the screenshot) |
+| `?camera=bogus` | wide, 0.4444, 2880x1620 |
+| `?camera=2` | custom, zoom 2.0000, view 640x360, figure 218 px |
+| console | 0 errors |
+
+Opened by the orchestrator: the live close screenshot and a side-by-side of it with the owner's reference. Post-deploy smoke on the real URL: green in both main runs (39193598683, 39194231558). Evidence on the build laptop: `c:\tmp\shinobi-order01\camera2\evidence\live\` (eeed7d2) and `...\live-c172f6e\` (state numbers only).
+
+Not covered by that replay: head/feet at the walls and the lab keys at close (covered by the local export in the table above).
+
+### Live with the first real art (added 2026-10-19, build d9ebccf, Codex's PR #23)
+`build-info.json` `commit_sha` d9ebccfbc77400424fcd1e1558e2daeaaa612d7a, run 39223465511 (six jobs green incl. post-deploy smoke; 493 tests, controls probe 16, debug probe 26). Set `player_128`, `body_height_px` 104. VERIFIED by the orchestrator, 0 console errors:
+
+| Query | zoom | view | standing figure (measured on the screenshot) |
+| --- | --- | --- | --- |
+| none | 0.4444 | 2880x1620 | 46 px = 6.4 % |
+| `?camera=close` | 1.2115 | 1056.5x594.3 | 127 px = 17.6 % |
+| `?camera=1.2` | 1.2000 | 1066.7x600 | 122 px = 16.9 % |
+| `?camera=1.25` | 1.2500 | 1024x576 | 131 px = 18.2 % |
+
+At close zoom with real keys: the north wall shows the whole head (about 38 px of ground above the hair), the south wall shows the feet (about 23 px of ground below); at the east and west walls the figure ends at the screen edge, partly cut off (camera limits stop at the arena edge). The snap-to-1.0 rule cannot fire for the standard 100-112 px body, so `close` is always a non-integer zoom with this art (chief report, question 4).
+
 ## Not verified
-Real GPU frame rate; controllers; real Codex 128x128 art (only the 108 px placeholder was measured; the manifest path is unit-tested, not seen with real art); the owner's reference image (not in the repo); browsers other than the software-GL Chromium; the live deployed build (the PR is not merged).
+Real GPU frame rate; controllers; real Codex 128x128 art when this report was written (only the 108 px placeholder was measured; the manifest path is unit-tested; the first real set, `body_height_px` 104, arrived in Codex's PR #23 five hours after the merge and gives close zoom 1.2115); the owner's reference image (it is now in the repo, PR #22); browsers other than the software-GL Chromium. The live deployed build is verified, see above.
+
+Known weakness found afterwards: the controls-probe expectation `CLOSE_ZOOM = (0.175 x 720) / 108` was pinned to the placeholder (review point 3), and the probe assumed the lab starts closed, which was false once any sprite set existed (the lab opened by itself). Both turned Codex's PR #23 red. Codex fixed them inside PR #23 (merged as d9ebccf; the probe now derives the close zoom from the loaded figure height, and the lab now starts closed), see the chief report `2026-10-19-chief-camera-preset.md`. Review points 4 to 7 and 10 are still open.
 
 ## Questions for project owner
 1. Is the close target of 17.5 % of viewport height (zoom about 1.17 for the placeholder) the right middle of the 16-19 % band, and may it become the default after you have compared it in the browser? Recommendation: try `?camera=close` first, then decide; the default stays wide until you say so.
