@@ -36,6 +36,10 @@ enum State { IDLE, MOVE, SPRINT, DODGE, JUMP }
 ## Used only when the active sprite set has no "dodge"/"jump" animation to time against (placeholder visual).
 @export var dodge_fallback_duration: float = 0.5
 @export var jump_fallback_duration: float = 0.6
+## Seconds between dirt-puff bursts while running on the ground (SPRINT uses a shorter interval,
+## see `_update_footsteps()`), roughly matched to footstep cadence.
+@export var footstep_interval_walk: float = 0.28
+@export var footstep_interval_sprint: float = 0.18
 
 var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
@@ -45,9 +49,11 @@ var _action_timer: float = 0.0  ## seconds left in the current dodge/jump; 0 whe
 var _action_duration: float = 0.0  ## total authored length of the current/last action, for progress math
 var _dodge_buffer: float = 0.0  ## seconds left that a buffered dodge press is still eligible to fire
 var _jump_buffer: float = 0.0  ## seconds left that a buffered jump press is still eligible to fire
+var _footstep_timer: float = 0.0  ## seconds left until the next running dirt-puff burst
 
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
+@onready var dust: DustPuff = $DustPuff
 
 
 func _ready() -> void:
@@ -106,6 +112,7 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)
 		_update_jump_lift()
+		_footstep_timer = 0.0
 		if state != prev_state:
 			state_changed.emit(state)
 		return
@@ -134,6 +141,9 @@ func _physics_process(delta: float) -> void:
 		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)
 	else:
 		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
+	if prev_state == State.JUMP and state != State.JUMP:
+		dust.burst(global_position, 1.2)  # landing kicks up a bit less dirt than the takeoff did
+	_update_footsteps(delta)
 	if state != prev_state:
 		state_changed.emit(state)
 
@@ -161,6 +171,20 @@ func _begin_jump() -> void:
 	_action_duration = visual.action_duration("jump", jump_fallback_duration)
 	_action_timer = _action_duration
 	visual.play_action("jump", facing8)
+	dust.burst(global_position, 1.5)
+
+
+## Periodic dirt-puff bursts while running on the ground (MOVE/SPRINT only). Timer resets to 0 by the
+## still-acting path above whenever a dodge/jump is in progress, so running resumes with an immediate
+## puff on the first step out of an action rather than waiting out a stale interval.
+func _update_footsteps(delta: float) -> void:
+	if state != State.MOVE and state != State.SPRINT:
+		_footstep_timer = 0.0
+		return
+	_footstep_timer -= delta
+	if _footstep_timer <= 0.0:
+		dust.burst(global_position, 0.8 if state == State.SPRINT else 0.6)
+		_footstep_timer = footstep_interval_sprint if state == State.SPRINT else footstep_interval_walk
 
 
 ## Visual-only elevation arc for the current jump (0 outside JUMP). Applied to PlayerVisual's local
