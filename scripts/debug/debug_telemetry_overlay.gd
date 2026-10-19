@@ -7,9 +7,9 @@ extends CanvasLayer
 ## existing DebugHud / legend (top-left block + bottom legend strip, see scripts/ui/debug_hud.gd).
 ##
 ## Keys (telemetry already ON via F9 / ?debug=1):
-##   F6  toggle this HUD's visibility
-##   F11 cycle the type filter: ALL -> input -> interaction -> combat -> error -> ALL
-##   F12 cycle verbosity: COMPACT (last line per field) <-> VERBOSE (last N raw JSON lines)
+##   Ctrl+Alt+H  toggle this HUD's visibility
+##   Ctrl+Alt+G  cycle the type filter: ALL -> input -> interaction -> combat -> error -> ALL
+##   Ctrl+Alt+B  cycle verbosity: COMPACT (last line per field) <-> VERBOSE (last N raw JSON lines)
 
 const REFRESH := 0.1
 const VERBOSE_LINES := 8
@@ -92,7 +92,7 @@ func _process(delta: float) -> void:
 
 func _refresh() -> void:
 	var filt: String = FILTERS[_filter_index]
-	_title.text = "TELEMETRY HUD  filter=%s  verbosity=%s  (F6 hide, F11 filter, F12 verbosity, F10 test error)" % [filt, "VERBOSE" if _verbose else "COMPACT"]
+	_title.text = "TELEMETRY HUD  filter=%s  verbosity=%s  (Ctrl+Alt+H hide, Ctrl+Alt+G filter, Ctrl+Alt+B verbosity, Ctrl+Alt+X test error)" % [filt, "VERBOSE" if _verbose else "COMPACT"]
 	var evs: Array = telemetry.call("recent", 200)
 	if filt != "ALL":
 		evs = evs.filter(func(e: Dictionary) -> bool: return String(e.get("type", "")) == filt)

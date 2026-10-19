@@ -138,7 +138,7 @@ func record_error(category: String, message: String, extra: Dictionary = {}) -> 
 	record("error", d)
 
 
-## Deliberately safe, deterministic failure for acceptance testing (F10 while telemetry is enabled).
+## Deliberately safe, deterministic failure for acceptance testing (Ctrl+Alt+X while telemetry is enabled).
 ## Divides by zero is caught before it reaches GDScript's own runtime error, so this never actually
 ## crashes or produces an uncaught engine error -- the whole point is to prove the ERROR record path
 ## without making the game (or the test run) actually fail. This is the same limitation documented in
@@ -147,7 +147,7 @@ func record_error(category: String, message: String, extra: Dictionary = {}) -> 
 func force_test_error() -> void:
 	var zero := 0
 	if zero == 0:
-		record_error("test", "forced test error (F10): simulated divide-by-zero, caught on purpose", {"scene": _current_scene_name()})
+		record_error("test", "forced test error (Ctrl+Alt+X): simulated divide-by-zero, caught on purpose", {"scene": _current_scene_name()})
 	else:
 		record_error("test", str(1 / zero), {})
 
