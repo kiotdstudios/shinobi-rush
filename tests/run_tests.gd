@@ -32,6 +32,7 @@ func _initialize() -> void:
 	test_discovery()
 	await test_anchor_stability()
 	await test_main_scene_and_movement()
+	await test_jump_and_dodge_chaining()
 	await test_lab_and_pause()
 	await test_camera_framing()
 	await load("res://tests/test_camera_preset.gd").new().run(ck, root)
@@ -405,6 +406,208 @@ func test_main_scene_and_movement() -> void:
 
 	main.queue_free()
 	await process_frame
+
+
+# ------------------------------------------------------------------ jump / dodge chaining (fluid movement)
+func test_jump_and_dodge_chaining() -> void:
+	var packed := load("res://scenes/main.tscn") as PackedScene
+	var main := packed.instantiate()
+	root.add_child(main)
+	for i in 5:
+		await process_frame
+	var arena := main.get_node_or_null("TrainingArena") as TrainingArena
+	var player := main.get_node_or_null("TrainingArena/Player") as PlayerController
+	ck("jump/dodge: scene has arena and player", arena != null and player != null)
+	if arena == null or player == null:
+		main.queue_free()
+		return
+
+	# Hold `action` for a few frames then release (a same-frame press+release is faster than this
+	# headless harness can reliably register as a just_pressed edge; a real keypress always spans
+	# several frames). Samples state every frame; returns [reached_target, saw_idle_first, frames].
+	var _tap := func(action: String, target: PlayerController.State, max_frames: int) -> Array:
+		Input.action_press(action)
+		var saw_idle := false
+		var reached := false
+		for i in max_frames:
+			await physics_frame
+			if player.state == PlayerController.State.IDLE:
+				saw_idle = true
+			if player.state == target:
+				reached = true
+				Input.action_release(action)
+				return [reached, saw_idle]
+		Input.action_release(action)
+		return [reached, saw_idle]
+
+	# Fully clears FSM + buffer state between scenarios so one block's input never bleeds into the next.
+	var _reset := func(pos: Vector2) -> void:
+		Input.action_release("move_left")
+		Input.action_release("move_right")
+		Input.action_release("move_up")
+		Input.action_release("move_down")
+		Input.action_release("sprint")
+		Input.action_release("dodge")
+		Input.action_release("jump")
+		player._dodge_buffer = 0.0
+		player._jump_buffer = 0.0
+		player._action_timer = 0.0
+		player.state = PlayerController.State.IDLE
+		_place(player, pos)
+
+	# Idle -> Run -> Jump -> Run: state must go straight from MOVE to JUMP (never an idle detour), and
+	# momentum must never collapse toward 0 across the transition.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	for i in 20:
+		await physics_frame
+	var run_speed := player.velocity.length()
+	ck("run builds up to walk_speed before jumping", is_equal_approx(run_speed, player.walk_speed), str(run_speed))
+	var r1: Array = await _tap.call("jump", PlayerController.State.JUMP, 8)
+	ck("jump fires directly from MOVE (no idle detour)", r1[0] and not r1[1], str(r1))
+	ck("jump preserves run momentum on entry (no stop-before-jump)", player.velocity.length() > run_speed * 0.9, str(player.velocity.length()))
+	var min_v_during_jump := player.velocity.length()
+	var jump_frames := 0
+	while player.state == PlayerController.State.JUMP and jump_frames < 150:
+		await physics_frame
+		jump_frames += 1
+		min_v_during_jump = minf(min_v_during_jump, player.velocity.length())
+	ck("velocity never collapses toward 0 while airborne with input held", min_v_during_jump > run_speed * 0.5, str(min_v_during_jump))
+	ck("landing resumes MOVE immediately with input held (no idle frame)", player.state == PlayerController.State.MOVE, player.get_state_name())
+	Input.action_release("move_right")
+
+	# Sprint -> Jump -> Land -> Sprint: same guarantee at sprint speed; landing resumes SPRINT (not MOVE).
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	Input.action_press("sprint")
+	for i in 20:
+		await physics_frame
+	var sprint_v := player.velocity.length()
+	ck("sprint builds up to sprint_speed before jumping", is_equal_approx(sprint_v, player.sprint_speed), str(sprint_v))
+	var r2: Array = await _tap.call("jump", PlayerController.State.JUMP, 8)
+	ck("jump fires directly from SPRINT (no idle detour)", r2[0] and not r2[1], str(r2))
+	ck("jump preserves sprint momentum on entry", player.velocity.length() > sprint_v * 0.9, str(player.velocity.length()))
+	var jf := 0
+	while player.state == PlayerController.State.JUMP and jf < 150:
+		await physics_frame
+		jf += 1
+	ck("landing resumes SPRINT immediately with sprint+move held", player.state == PlayerController.State.SPRINT, player.get_state_name())
+	Input.action_release("move_right")
+	Input.action_release("sprint")
+
+	# Run -> Dodge -> Run: a real directional burst that displaces the player, not just an animation,
+	# recovering toward run speed (not a dead stop) while input is still held.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	for i in 20:
+		await physics_frame
+	var dodge_start_x := player.global_position.x
+	var r3: Array = await _tap.call("dodge", PlayerController.State.DODGE, 8)
+	ck("dodge fires directly from MOVE (no idle detour)", r3[0] and not r3[1], str(r3))
+	var burst_v := player.velocity.length()
+	ck("dodge produces a real velocity burst, not just an animation", burst_v > player.walk_speed * 1.3, str(burst_v))
+	var dodge_frames := 0
+	while player.state == PlayerController.State.DODGE and dodge_frames < 60:
+		await physics_frame
+		dodge_frames += 1
+	ck("dodge actually displaces the player through the world", player.global_position.x > dodge_start_x + 10.0, str(player.global_position.x - dodge_start_x))
+	ck("dodge recovery blends back into MOVE immediately with input held", player.state == PlayerController.State.MOVE, player.get_state_name())
+	Input.action_release("move_right")
+
+	# Sprint -> Dodge -> Sprint: same burst/displacement guarantee, recovering into SPRINT.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	Input.action_press("sprint")
+	for i in 20:
+		await physics_frame
+	var r4: Array = await _tap.call("dodge", PlayerController.State.DODGE, 8)
+	ck("sprint-dodge fires directly from SPRINT (no idle detour)", r4[0] and not r4[1], str(r4))
+	var sdodge_frames := 0
+	while player.state == PlayerController.State.DODGE and sdodge_frames < 60:
+		await physics_frame
+		sdodge_frames += 1
+	ck("sprint-dodge recovery blends back into SPRINT immediately with sprint+move held", player.state == PlayerController.State.SPRINT, player.get_state_name())
+	Input.action_release("move_right")
+	Input.action_release("sprint")
+
+	# Releasing movement input mid-dodge: recovery target becomes 0, so the dodge eases to a stop and
+	# lands IDLE rather than staying stuck at burst speed or freezing mid-pose.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	for i in 10:
+		await physics_frame
+	Input.action_press("dodge")
+	for i in 3:
+		await physics_frame
+	Input.action_release("dodge")
+	Input.action_release("move_right")
+	var release_frames := 0
+	while player.state == PlayerController.State.DODGE and release_frames < 60:
+		await physics_frame
+		release_frames += 1
+	ck("dodge recovery with input released eases to IDLE, not a frozen pose", player.state == PlayerController.State.IDLE, player.get_state_name())
+
+	# Dodge/jump into a wall: must be blocked at the wall face, never clip through it.
+	var wall: Array = TrainingArena.BLOCKS[1]
+	var wall_face: float = (wall[0] as Vector2).x - (wall[1] as Vector2).x * 0.5
+	var wall_y: float = (wall[0] as Vector2).y - (wall[1] as Vector2).y * 0.5
+	await _reset.call(Vector2(wall_face - 60.0, wall_y))
+	Input.action_press("move_right")
+	for i in 5:
+		await physics_frame
+	Input.action_press("dodge")
+	for i in 3:
+		await physics_frame
+	Input.action_release("dodge")
+	for i in 40:
+		await physics_frame
+	Input.action_release("move_right")
+	ck("dodging into a wall does not clip through it", player.global_position.x < wall_face + 1.0, "x=%.1f face=%.1f" % [player.global_position.x, wall_face])
+
+	await _reset.call(Vector2(wall_face - 60.0, wall_y))
+	Input.action_press("move_right")
+	for i in 5:
+		await physics_frame
+	Input.action_press("jump")
+	for i in 3:
+		await physics_frame
+	Input.action_release("jump")
+	for i in 100:
+		await physics_frame
+	Input.action_release("move_right")
+	ck("jumping into a wall does not clip through it (collision preserved while airborne)", player.global_position.x < wall_face + 1.0, "x=%.1f face=%.1f" % [player.global_position.x, wall_face])
+
+	# Run -> Jump -> Dodge, when the action rules permit it: a dodge press buffered near the tail end
+	# of a jump is remembered and fires the instant the jump ends, instead of being silently dropped.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	for i in 10:
+		await physics_frame
+	var r5: Array = await _tap.call("jump", PlayerController.State.JUMP, 8)
+	ck("jump fires before buffering a chained dodge", r5[0], str(r5))
+	var jump_dur: float = player._action_duration
+	var wait_frames := int(maxf(jump_dur * Engine.physics_ticks_per_second - 4.0, 0.0))
+	for i in wait_frames:
+		await physics_frame
+	Input.action_press("dodge")
+	for i in 3:
+		await physics_frame
+	Input.action_release("dodge")
+	var saw_dodge := false
+	var chase_frames := 0
+	while chase_frames < 30:
+		await physics_frame
+		chase_frames += 1
+		if player.state == PlayerController.State.DODGE:
+			saw_dodge = true
+			break
+	ck("a dodge press buffered near the end of a jump fires the instant the jump ends", saw_dodge, player.get_state_name())
+	Input.action_release("move_right")
+
+	main.queue_free()
+	await process_frame
+
+
 
 
 # ------------------------------------------------------------------ lab controls + pause (real AnimationLab / DebugHud)
