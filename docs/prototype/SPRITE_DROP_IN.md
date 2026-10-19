@@ -95,9 +95,16 @@ Every function has a key and a clickable button. The status line is always on sc
 |-----|--------|-----|--------|
 | `[` `]` | set prev/next (incl. placeholder) | `P` / `O` | pause / single-step |
 | `,` `.` | animation prev/next | `C` | compare any two sets side by side |
-| `;` `'` | direction prev/next | `Z` or wheel | zoom 1x-4x |
+| `;` `'` | direction prev/next | `Z` or wheel | zoom: wide, 1x-4x |
 | `V` | direction mode follow / fixed / spin | `1`-`6` | iso grid, square grid, anchor, footprint, height ruler, frame box |
 | `-` `=` | speed 0.25x-2x | gamepad | Back = lab, R-stick click = compare, L-stick click = zoom |
+
+Zoom steps are `wide` (the gameplay baseline, `WorldScale.CAMERA_BASE_ZOOM` = 1/2.25, panel label "wide 0.44x"),
+then `1x` (native 1:1 pixels: a 128x128 frame is 128 screen px), `2x`, `3x`, `4x`. The lab opens at the baseline without
+moving the camera, `Z` wraps from `4x` back to the baseline, and closing the lab with `Tab` restores the baseline.
+At the baseline a 128x128 production frame is drawn at about 0.44 scale (the 108 px figure is about 48 screen px, shown
+by the nearest-neighbour filter), so check fine detail at `1x` and also at the baseline. (64x64 art is a legacy
+non-production reference only.)
 
 The metrics line shows set id, frame size, animations/frames loaded, load ms and texture memory
 (`RENDER_TEXTURE_MEM_USED`) so you can compare the cost of two sets or overflow canvases. Sets load lazily on first use.

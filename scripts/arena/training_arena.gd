@@ -46,7 +46,19 @@ class Block extends StaticBody2D:
 		col.position = Vector2(0, -size.y * 0.5)
 		add_child(col)
 
+	var _drawn_zoom: float = -1.0
+
+	func _camera_zoom() -> float:
+		var cam := get_viewport().get_camera_2d() if is_inside_tree() else null
+		return cam.zoom.x if cam != null else 1.0
+
+	func _process(_d: float) -> void:
+		var z := _camera_zoom()
+		if not is_equal_approx(z, _drawn_zoom):
+			queue_redraw()
+
 	func _draw() -> void:
+		_drawn_zoom = _camera_zoom()
 		var w := footprint.x * 0.5
 		var d := footprint.y
 		var h := height
@@ -56,8 +68,11 @@ class Block extends StaticBody2D:
 		draw_colored_polygon(PackedVector2Array([Vector2(-w, -h), Vector2(w, -h), Vector2(w + s, -h - d), Vector2(-w + s, -h - d)]), Color("#9a8670"))
 		# Fit the label to the front face: shrink the font until "PLACEHOLDER" is not wider than the face.
 		var font := ThemeDB.fallback_font
-		var fsize := 12
-		while fsize > 5 and font.get_string_size("PLACEHOLDER", HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > footprint.x - 6.0:
+		# Zoomed out (zoom < 1) the font floor rises so the caption stays >= 8 screen px.
+		var zoom := _camera_zoom()
+		var floor_size := 5 if zoom >= 1.0 else WorldScale.caption_font_size(5, zoom)
+		var fsize := maxi(12, floor_size)
+		while fsize > floor_size and font.get_string_size("PLACEHOLDER", HORIZONTAL_ALIGNMENT_LEFT, -1, fsize).x > footprint.x - 6.0:
 			fsize -= 1
 		draw_string(font, Vector2(-w + 3, -h * 0.5), "PLACEHOLDER", HORIZONTAL_ALIGNMENT_LEFT, -1, fsize, Color(1, 1, 1, 0.6))
 
@@ -102,7 +117,8 @@ func _build_bounds_walls() -> void:
 
 
 func draw_ground(ci: CanvasItem) -> void:
-	ci.draw_rect(bounds, GROUND_A)
+	# Ground continues above the top wall (head room) and below the bottom wall (foot room) so the camera never shows void.
+	ci.draw_rect(bounds.grow_individual(0, WorldScale.CAMERA_HEADROOM, 0, WorldScale.CAMERA_FOOTROOM), GROUND_A)
 	var hx := tile_size.x * 0.5
 	var hy := tile_size.y * 0.5
 	var lines := PackedVector2Array()

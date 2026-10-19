@@ -33,6 +33,7 @@ func _initialize() -> void:
 	await test_anchor_stability()
 	await test_main_scene_and_movement()
 	await test_lab_and_pause()
+	await test_camera_framing()
 	var debug_store_tests = load("res://tests/test_debug_store.gd").new()
 	debug_store_tests.run(ck)
 	var browser_debug_tests = load("res://tests/test_browser_debug.gd").new()
@@ -398,7 +399,7 @@ func test_main_scene_and_movement() -> void:
 	# camera limits
 	var cam := player.camera
 	var b := arena.get_bounds()
-	ck("camera limits match arena bounds", cam.limit_left == int(b.position.x) and cam.limit_top == int(b.position.y) and cam.limit_right == int(b.end.x) and cam.limit_bottom == int(b.end.y), "%d %d %d %d" % [cam.limit_left, cam.limit_top, cam.limit_right, cam.limit_bottom])
+	ck("camera limits match arena bounds (top has head room)", cam.limit_left == int(b.position.x) and cam.limit_top == int(b.position.y - WorldScale.CAMERA_HEADROOM) and cam.limit_right == int(b.end.x) and cam.limit_bottom == int(b.end.y + WorldScale.CAMERA_FOOTROOM), "%d %d %d %d" % [cam.limit_left, cam.limit_top, cam.limit_right, cam.limit_bottom])
 
 	main.queue_free()
 	await process_frame
@@ -476,13 +477,13 @@ func test_lab_and_pause() -> void:
 
 	# mouse wheel zoom
 	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
-	ck("lab zoom: wheel up -> 2x on the camera", lab.zoom_index == 1 and player.camera.zoom == Vector2(2, 2))
+	ck("lab zoom: wheel up -> native 1x on the camera", lab.zoom_index == 1 and player.camera.zoom == Vector2.ONE)
 	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
 	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
-	ck("lab zoom: wheel down clamps at 1x", lab.zoom_index == 0 and player.camera.zoom == Vector2.ONE)
+	ck("lab zoom: wheel down clamps at the wide baseline", lab.zoom_index == 0 and is_equal_approx(player.camera.zoom.x, WorldScale.CAMERA_BASE_ZOOM))
 	for i in 6:
 		_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
-	ck("lab zoom: wheel up clamps at 4x", lab.zoom_index == 3 and player.camera.zoom == Vector2(4, 4))
+	ck("lab zoom: wheel up clamps at 4x", lab.zoom_index == 4 and player.camera.zoom == Vector2(4, 4))
 	_restore(lab, base)
 
 	# every panel button does exactly what its dbg_* key does
@@ -529,6 +530,99 @@ func test_lab_and_pause() -> void:
 	_press(hud, "pause")
 	ck("pause: second Esc resumes and hides PAUSED", not paused and not hud._paused.visible)
 	paused = false
+
+	main.queue_free()
+	await process_frame
+	lib.sets.clear()
+	lib.sets.append_array(saved)
+
+
+# ------------------------------------------------------------------ camera framing (wide gameplay view, PR #12)
+func test_camera_framing() -> void:
+	var lib := SpriteLibrary.get_instance()
+	var saved: Array[SpriteSet] = lib.sets.duplicate()
+	lib.sets.clear()
+	lib.sets.append(_make_set("t_cam"))  # a valid set so the lab opens at scene start
+	var main := (load("res://scenes/main.tscn") as PackedScene).instantiate()
+	root.add_child(main)
+	for i in 5:
+		await process_frame
+	var lab := main.get_node("AnimationLab") as AnimationLab
+	var arena := main.get_node("TrainingArena") as TrainingArena
+	var player := main.get_node("TrainingArena/Player") as PlayerController
+	var cam := player.camera
+	var base := WorldScale.CAMERA_BASE_ZOOM
+
+	# baseline zoom at scene start
+	ck("camera: CAMERA_BASE_ZOOM is 1/SCALE", is_equal_approx(base, 1.0 / WorldScale.SCALE))
+	ck("camera: baseline zoom equals 1/SCALE within 1e-6 at scene start", absf(cam.zoom.x - 1.0 / WorldScale.SCALE) < 1e-6 and absf(cam.zoom.y - 1.0 / WorldScale.SCALE) < 1e-6, "zoom=%s expected %.6f" % [cam.zoom, 1.0 / WorldScale.SCALE])
+
+	# visible rect = pre-scale view * SCALE, and it fits inside the arena
+	var vp := root.get_visible_rect().size
+	var view := vp / cam.zoom.x
+	ck("camera: viewport is the 1280x720 base size", vp == Vector2(1280, 720), str(vp))
+	ck("camera: visible world rect at baseline is 2880x1620 (= pre-scale 1280x720 times SCALE)", view.is_equal_approx(Vector2(1280, 720) * WorldScale.SCALE) and view.is_equal_approx(Vector2(2880, 1620)), "view=%s" % view)
+	ck("camera: visible rect fits inside ARENA_BOUNDS", view.x <= WorldScale.ARENA_BOUNDS.size.x and view.y <= WorldScale.ARENA_BOUNDS.size.y, "view=%s bounds=%s" % [view, WorldScale.ARENA_BOUNDS.size])
+
+	# camera limits equal the arena bounds (CAMERA_HEADROOM above the top, CAMERA_FOOTROOM below the bottom)
+	var b := WorldScale.ARENA_BOUNDS
+	ck("camera: arena.get_bounds() is WorldScale.ARENA_BOUNDS", arena.get_bounds() == b)
+	ck("camera: limits left/right equal the arena bounds", cam.limit_left == int(b.position.x) and cam.limit_right == int(b.end.x), "%d %d" % [cam.limit_left, cam.limit_right])
+	ck("camera: limit_bottom is the arena bottom plus CAMERA_FOOTROOM", cam.limit_bottom == int(b.end.y + WorldScale.CAMERA_FOOTROOM), str(cam.limit_bottom))
+	ck("camera: limit_top is the arena top minus CAMERA_HEADROOM", cam.limit_top == int(b.position.y - WorldScale.CAMERA_HEADROOM), str(cam.limit_top))
+	ck("camera: limited area is at least as large as the visible rect (no void can show)", (cam.limit_right - cam.limit_left) >= view.x and (cam.limit_bottom - cam.limit_top) >= view.y)
+
+	# lab zoom list and labels
+	ck("lab zoom list is [baseline, 1, 2, 3, 4]", AnimationLab.ZOOMS.size() == 5 and AnimationLab.ZOOMS[0] == base and AnimationLab.ZOOMS.slice(1) == [1.0, 2.0, 3.0, 4.0], str(AnimationLab.ZOOMS))
+	ck("lab zoom labels: 'wide 0.44x' then 1x..4x", AnimationLab.zoom_label(0) == "wide 0.44x" and AnimationLab.zoom_label(1) == "1x" and AnimationLab.zoom_label(2) == "2x" and AnimationLab.zoom_label(3) == "3x" and AnimationLab.zoom_label(4) == "4x", AnimationLab.zoom_label(0))
+
+	# opening the lab must not change the camera; the panel shows the real zoom
+	var zoom_value := lab._value_labels["zoom"] as Label
+	ck("lab: open at scene start with the baseline zoom and the 'wide 0.44x' label", lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x", "%s idx=%d" % [zoom_value.text, lab.zoom_index])
+	_press(lab, "dbg_toggle_lab")
+	_press(lab, "dbg_toggle_lab")
+	ck("lab: toggling closed and open leaves the camera at baseline", lab.lab_on and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x")
+
+	# Z cycles 1x, 2x, 3x, 4x and wraps to baseline; label and camera agree at every step
+	var seen: Array[float] = []
+	var labels: Array[String] = []
+	for i in 6:
+		_press(lab, "dbg_zoom_cycle")
+		seen.append(cam.zoom.x)
+		labels.append(zoom_value.text)
+	ck("lab: Z cycles 1,2,3,4, baseline, 1 on the camera", seen.size() == 6 and seen[0] == 1.0 and seen[1] == 2.0 and seen[2] == 3.0 and seen[3] == 4.0 and is_equal_approx(seen[4], base) and seen[5] == 1.0, str(seen))
+	ck("lab: panel label matches the real zoom at every step", str(labels) == str(["1x", "2x", "3x", "4x", "wide 0.44x", "1x"]), str(labels))
+
+	# opening while zoomed keeps the zoom; closing restores baseline
+	_press(lab, "dbg_zoom_cycle")  # 1x -> 2x
+	var zoom_2x := cam.zoom.x
+	_press(lab, "dbg_toggle_lab")  # close
+	ck("lab: closing the lab restores the baseline zoom", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_2x == 2.0, "zoom=%s" % cam.zoom)
+	_press(lab, "dbg_toggle_lab")  # open
+	ck("lab: re-opening does not change the camera", lab.lab_on and is_equal_approx(cam.zoom.x, base))
+	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
+	_press(lab, "dbg_toggle_lab")
+	ck("lab: closing after a wheel zoom restores the baseline", is_equal_approx(cam.zoom.x, base) and lab.zoom_index == 0)
+
+	# __SHINOBI_STATE__ framing fields (WebBridge is inert outside the browser, so test the publisher's helper + source)
+	var bridge_script := load("res://scripts/web/web_bridge.gd")
+	var fr: Dictionary = bridge_script.camera_framing(cam.zoom.x, vp)
+	ck("state: camera_framing publishes zoom/view_w/view_h at baseline", absf(fr["zoom"] - base) < 1e-6 and absf(fr["view_w"] - 2880.0) < 0.01 and absf(fr["view_h"] - 1620.0) < 0.01, str(fr))
+	var fr2: Dictionary = bridge_script.camera_framing(2.0, Vector2(1280, 720))
+	ck("state: camera_framing at 2x gives a 640x360 view", fr2 == {"zoom": 2.0, "view_w": 640.0, "view_h": 360.0}, str(fr2))
+	var src := FileAccess.get_file_as_string("res://scripts/web/web_bridge.gd")
+	var fields_ok := true
+	for f: String in ["frame", "x", "y", "state", "sprinting", "fps", "zoom", "view_w", "view_h"]:
+		if not src.contains("_state.%s = " % f):
+			fields_ok = false
+	ck("state: WebBridge still publishes frame,x,y,state,sprinting,fps plus zoom,view_w,view_h", fields_ok)
+
+	# caption sizing: figure caption (local scale 1.895) and block caption floor reach the minimum screen size at the wide zoom
+	var fig_px := WorldScale.caption_font_size(8, base, 1.895) * 1.895 * base
+	var blk_px := WorldScale.caption_font_size(5, base) * base
+	ck("caption: figure caption is at least MIN_CAPTION_SCREEN_PX on screen at baseline", fig_px >= WorldScale.MIN_CAPTION_SCREEN_PX, "%.2f px" % fig_px)
+	ck("caption: block caption floor is at least MIN_CAPTION_SCREEN_PX on screen at baseline", blk_px >= WorldScale.MIN_CAPTION_SCREEN_PX, "%.2f px" % blk_px)
+	ck("caption: never smaller than the base size at native zoom", WorldScale.caption_font_size(8, 1.0) == 8 and WorldScale.caption_font_size(5, 4.0) == 5)
 
 	main.queue_free()
 	await process_frame
