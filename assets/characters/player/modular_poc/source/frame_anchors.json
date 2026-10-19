@@ -1,0 +1,29 @@
+{
+  "light_attack_1": {
+    "grip_px": [[74,72],[91,51],[91,43],[91,43],[97,59],[46,81],[46,81],[46,81]],
+    "angle_deg": [-46,-113,-155,-155,-75,122,124,122],
+    "layer": ["front","front","behind","behind","front","front","front","front"],
+    "contact_frames": [4],
+    "hitbox_active_recommendation": [4,5],
+    "transition_ready_frames": [6,7],
+    "cancel_window_recommendation": [6,7]
+  },
+  "light_attack_2": {
+    "grip_px": [[53,82],[98,59],[90,46],[90,47],[91,48],[91,48],[91,48],[91,48]],
+    "angle_deg": [139,-64,-75,-71,-69,-71,-71,-71],
+    "layer": ["front","front","behind","behind","behind","behind","behind","behind"],
+    "contact_frames": [1],
+    "hitbox_active_recommendation": [1,2],
+    "transition_ready_frames": [5,6,7],
+    "cancel_window_recommendation": [5,6,7]
+  },
+  "light_attack_3": {
+    "grip_px": [[88,46],[94,65],[47,85],[47,83],[47,82],[47,81],[47,81],[47,81]],
+    "angle_deg": [-84,-71,132,130,131,131,131,131],
+    "layer": ["behind","front","front","front","front","front","front","front"],
+    "contact_frames": [2],
+    "hitbox_active_recommendation": [1,2],
+    "transition_ready_frames": [5,6,7],
+    "cancel_window_recommendation": [5,6,7]
+  }
+}

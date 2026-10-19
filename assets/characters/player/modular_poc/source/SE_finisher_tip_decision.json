@@ -1,0 +1,36 @@
+[
+  {
+    "operation": "patch_pixels",
+    "layer": "image",
+    "frames": [
+      1
+    ],
+    "pixels": [
+      [
+        97,
+        30,
+        "#42383eff",
+        "#00000000"
+      ],
+      [
+        98,
+        30,
+        "#42383eff",
+        "#00000000"
+      ],
+      [
+        97,
+        31,
+        "#5b5e50ff",
+        "#00000000"
+      ],
+      [
+        99,
+        31,
+        "#42383eff",
+        "#00000000"
+      ]
+    ],
+    "reason": "Foreshorten only3px of raised sword tip so blade fits native128 frame at original character scale; no body pixels touched."
+  }
+]

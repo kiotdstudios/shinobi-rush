@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shinobi Rush — shared-body sword test</title>
+<link rel="icon" href="data:,">
+<style>:root{--preview-size:233px}body{margin:20px;background:#151c22;color:#e7eef2;font:16px system-ui}header{position:sticky;top:0;background:#151c22;padding:10px 0;z-index:1}h1{font-size:25px;margin:4px 0}p{max-width:85ch;line-height:1.45}button,select,input{font:inherit;margin:6px 4px}label{display:inline-block;margin-right:12px}output{font-variant-numeric:tabular-nums}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}article{background:#25333d;border-radius:9px;padding:12px}h2{font-size:18px;margin:2px 0 12px}canvas{display:block;width:var(--preview-size);height:auto;max-width:100%;image-rendering:pixelated;background:repeating-conic-gradient(#35434d 0% 25%,#2c3741 0% 50%) 50%/16px 16px}small{display:block;color:#b9c8d3;margin-top:10px}.note{color:#f1cb85}#frame-readout{display:block;margin:10px 0}#scrub{width:min(650px,85vw)}#mount{font-variant-numeric:tabular-nums}@media(max-width:600px){header{position:static}}</style>
+<header><h1>Shared-body sword test</h1><p>One southeast three-hit combo. Both separate swords use the same24 weaponless body frames. The847 movement sprites are untouched.</p>
+<select id="action" aria-label="Animation"><option value="combo">Three-hit combo</option><option value="light_attack_1">Light attack1</option><option value="light_attack_2">Light attack2</option><option value="light_attack_3">Light attack3</option></select>
+<button id="pause">Pause</button><button id="restart">Restart</button><button id="step">Next frame</button>
+<label>Speed<input id="speed" aria-label="Speed" type="range" min="0.25" max="1.5" step="0.25" value="0.5"><output id="rate">0.5×</output></label>
+<select id="zoom" aria-label="Preview size"><option value="1.211538">Game-size</option><option value="2">Inspect2×</option><option value="1">Native pixels</option></select>
+<label><input id="anchors" type="checkbox">Anchors</label><label><input id="trails" type="checkbox">Separate trails</label>
+<output id="frame-readout">Loading…</output><input id="scrub" aria-label="Frame" type="range" min="0" max="23" step="1" value="0"></header>
+<main><article><h2>Fully drawn katana</h2><canvas id="baked" width="192" height="192"></canvas><small>Original body and sword in one image.</small></article>
+<article><h2>Weaponless body</h2><canvas id="body" width="192" height="192"></canvas><small>The same body file drives both sword panels.</small></article>
+<article><h2>Attached katana</h2><canvas id="katana" width="192" height="192"></canvas><small>Separate curved blade, shared hand mount.</small></article>
+<article><h2>Attached straight sword</h2><canvas id="straight_sword" width="192" height="192"></canvas><small>Separate straight blade and crossguard.</small></article></main>
+<p id="status">Loading transparent PNG assets…</p><p id="mount"></p><p class="note">Art proof for review. Gameplay attachment, hitboxes and movement integration are assigned to Aki. Timing shown here is a proposal; additional directions and weapon families are deferred.</p>
+<script type="module" src="review.js"></script></html>

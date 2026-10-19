@@ -1,0 +1,482 @@
+[
+  {
+    "animation": "light_attack_1",
+    "frame": 0,
+    "head": {
+      "shift": [
+        0,
+        0
+      ],
+      "matched": 723,
+      "target_pixels": 1032
+    },
+    "foot": {
+      "shift": [
+        0,
+        0
+      ],
+      "matched": 225,
+      "target_pixels": 275
+    }
+  },
+  {
+    "animation": "light_attack_1",
+    "frame": 1,
+    "head": {
+      "shift": [
+        -1,
+        5
+      ],
+      "matched": 711,
+      "target_pixels": 1152
+    },
+    "foot": {
+      "shift": [
+        -1,
+        5
+      ],
+      "matched": 194,
+      "target_pixels": 306
+    }
+  },
+  {
+    "animation": "light_attack_1",
+    "frame": 2,
+    "head": {
+      "shift": [
+        13,
+        0
+      ],
+      "matched": 846,
+      "target_pixels": 1175
+    },
+    "foot": {
+      "shift": [
+        13,
+        0
+      ],
+      "matched": 213,
+      "target_pixels": 298
+    }
+  },
+  {
+    "animation": "light_attack_1",
+    "frame": 3,
+    "head": {
+      "shift": [
+        13,
+        -1
+      ],
+      "matched": 852,
+      "target_pixels": 1178
+    },
+    "foot": {
+      "shift": [
+        13,
+        -1
+      ],
+      "matched": 209,
+      "target_pixels": 299
+    }
+  },
+  {
+    "animation": "light_attack_1",
+    "frame": 4,
+    "head": {
+      "shift": [
+        -3,
+        4
+      ],
+      "matched": 505,
+      "target_pixels": 958
+    },
+    "foot": {
+      "shift": [
+        -3,
+        4
+      ],
+      "matched": 213,
+      "target_pixels": 313
+    }
+  },
+  {
+    "animation": "light_attack_1",
+    "frame": 5,
+    "head": {
+      "shift": [
+        22,
+        -1
+      ],
+      "matched": 487,
+      "target_pixels": 889
+    },
+    "foot": {
+      "shift": [
+        22,
+        -1
+      ],
+      "matched": 247,
+      "target_pixels": 415
+    }
+  },
+  {
+    "animation": "light_attack_1",
+    "frame": 6,
+    "head": {
+      "shift": [
+        23,
+        -1
+      ],
+      "matched": 499,
+      "target_pixels": 896
+    },
+    "foot": {
+      "shift": [
+        23,
+        -1
+      ],
+      "matched": 239,
+      "target_pixels": 400
+    }
+  },
+  {
+    "animation": "light_attack_1",
+    "frame": 7,
+    "head": {
+      "shift": [
+        22,
+        -1
+      ],
+      "matched": 459,
+      "target_pixels": 885
+    },
+    "foot": {
+      "shift": [
+        22,
+        -1
+      ],
+      "matched": 242,
+      "target_pixels": 416
+    }
+  },
+  {
+    "animation": "light_attack_2",
+    "frame": 0,
+    "head": {
+      "shift": [
+        27,
+        -2
+      ],
+      "matched": 502,
+      "target_pixels": 784
+    },
+    "foot": {
+      "shift": [
+        27,
+        -2
+      ],
+      "matched": 252,
+      "target_pixels": 419
+    }
+  },
+  {
+    "animation": "light_attack_2",
+    "frame": 1,
+    "head": {
+      "shift": [
+        -1,
+        -2
+      ],
+      "matched": 705,
+      "target_pixels": 895
+    },
+    "foot": {
+      "shift": [
+        -1,
+        -2
+      ],
+      "matched": 337,
+      "target_pixels": 448
+    }
+  },
+  {
+    "animation": "light_attack_2",
+    "frame": 2,
+    "head": {
+      "shift": [
+        -1,
+        16
+      ],
+      "matched": 713,
+      "target_pixels": 1048
+    },
+    "foot": {
+      "shift": [
+        -1,
+        16
+      ],
+      "matched": 241,
+      "target_pixels": 396
+    }
+  },
+  {
+    "animation": "light_attack_2",
+    "frame": 3,
+    "head": {
+      "shift": [
+        -1,
+        15
+      ],
+      "matched": 751,
+      "target_pixels": 1086
+    },
+    "foot": {
+      "shift": [
+        -1,
+        15
+      ],
+      "matched": 251,
+      "target_pixels": 398
+    }
+  },
+  {
+    "animation": "light_attack_2",
+    "frame": 4,
+    "head": {
+      "shift": [
+        0,
+        16
+      ],
+      "matched": 469,
+      "target_pixels": 1060
+    },
+    "foot": {
+      "shift": [
+        0,
+        16
+      ],
+      "matched": 274,
+      "target_pixels": 400
+    }
+  },
+  {
+    "animation": "light_attack_2",
+    "frame": 5,
+    "head": {
+      "shift": [
+        0,
+        16
+      ],
+      "matched": 498,
+      "target_pixels": 1064
+    },
+    "foot": {
+      "shift": [
+        0,
+        16
+      ],
+      "matched": 266,
+      "target_pixels": 398
+    }
+  },
+  {
+    "animation": "light_attack_2",
+    "frame": 6,
+    "head": {
+      "shift": [
+        0,
+        16
+      ],
+      "matched": 500,
+      "target_pixels": 1064
+    },
+    "foot": {
+      "shift": [
+        0,
+        16
+      ],
+      "matched": 266,
+      "target_pixels": 398
+    }
+  },
+  {
+    "animation": "light_attack_2",
+    "frame": 7,
+    "head": {
+      "shift": [
+        0,
+        16
+      ],
+      "matched": 499,
+      "target_pixels": 1064
+    },
+    "foot": {
+      "shift": [
+        0,
+        16
+      ],
+      "matched": 264,
+      "target_pixels": 398
+    }
+  },
+  {
+    "animation": "light_attack_3",
+    "frame": 0,
+    "head": {
+      "shift": [
+        -5,
+        16
+      ],
+      "matched": 788,
+      "target_pixels": 1110
+    },
+    "foot": {
+      "shift": [
+        -5,
+        16
+      ],
+      "matched": 294,
+      "target_pixels": 392
+    }
+  },
+  {
+    "animation": "light_attack_3",
+    "frame": 1,
+    "head": {
+      "shift": [
+        -2,
+        0
+      ],
+      "matched": 531,
+      "target_pixels": 833
+    },
+    "foot": {
+      "shift": [
+        -2,
+        0
+      ],
+      "matched": 275,
+      "target_pixels": 409
+    }
+  },
+  {
+    "animation": "light_attack_3",
+    "frame": 2,
+    "head": {
+      "shift": [
+        3,
+        7
+      ],
+      "matched": 464,
+      "target_pixels": 572
+    },
+    "foot": {
+      "shift": [
+        3,
+        7
+      ],
+      "matched": 293,
+      "target_pixels": 434
+    }
+  },
+  {
+    "animation": "light_attack_3",
+    "frame": 3,
+    "head": {
+      "shift": [
+        3,
+        7
+      ],
+      "matched": 436,
+      "target_pixels": 578
+    },
+    "foot": {
+      "shift": [
+        3,
+        7
+      ],
+      "matched": 266,
+      "target_pixels": 425
+    }
+  },
+  {
+    "animation": "light_attack_3",
+    "frame": 4,
+    "head": {
+      "shift": [
+        20,
+        -1
+      ],
+      "matched": 502,
+      "target_pixels": 632
+    },
+    "foot": {
+      "shift": [
+        20,
+        -1
+      ],
+      "matched": 249,
+      "target_pixels": 416
+    }
+  },
+  {
+    "animation": "light_attack_3",
+    "frame": 5,
+    "head": {
+      "shift": [
+        20,
+        0
+      ],
+      "matched": 492,
+      "target_pixels": 651
+    },
+    "foot": {
+      "shift": [
+        20,
+        0
+      ],
+      "matched": 253,
+      "target_pixels": 414
+    }
+  },
+  {
+    "animation": "light_attack_3",
+    "frame": 6,
+    "head": {
+      "shift": [
+        20,
+        0
+      ],
+      "matched": 503,
+      "target_pixels": 655
+    },
+    "foot": {
+      "shift": [
+        20,
+        0
+      ],
+      "matched": 255,
+      "target_pixels": 420
+    }
+  },
+  {
+    "animation": "light_attack_3",
+    "frame": 7,
+    "head": {
+      "shift": [
+        20,
+        0
+      ],
+      "matched": 504,
+      "target_pixels": 654
+    },
+    "foot": {
+      "shift": [
+        20,
+        0
+      ],
+      "matched": 261,
+      "target_pixels": 415
+    }
+  }
+]

@@ -1,0 +1,103 @@
+{
+  "frame_size": [
+    128,
+    128
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "direction": "SE",
+  "fps_proposal": 24,
+  "default_review_speed": 0.5,
+  "timing_status": "pending_aki",
+  "clips": {
+    "light_attack_1": {
+      "frames": [
+        "baked_reference/light_attack_1/SE_000.png",
+        "baked_reference/light_attack_1/SE_001.png",
+        "baked_reference/light_attack_1/SE_002.png",
+        "baked_reference/light_attack_1/SE_003.png",
+        "baked_reference/light_attack_1/SE_004.png",
+        "baked_reference/light_attack_1/SE_005.png",
+        "baked_reference/light_attack_1/SE_006.png",
+        "baked_reference/light_attack_1/SE_007.png"
+      ],
+      "frame_count": 8,
+      "generation": "combat-light-1-se-pilot-v3",
+      "common_translation": [
+        -2,
+        -27
+      ],
+      "removed_isolated_pixels": 0,
+      "sha256": [
+        "d8cdc2e18d4ee70ffd3d2e836b81748f50a95de617191df422e78b87222dbfad",
+        "b4c39561f6129c00cafc7b3a740919738d06bb59cb0cbd6df353f92eca962017",
+        "2e7f7792f38bae9602ea1cdfa5cb1512f875dbed21e43512fe732ca2ea30bd37",
+        "45f59a600b4cfb939e73855b33ba63c2041d750e288c6312ba7477a78dc92a6c",
+        "1a4db4882f440de227954c3bca5c16002cd2f1b1f8fabd5b8cdd9ffbd45f8714",
+        "176f6590d4588cb9e9beea38e07e157fe1be95718f6c5ec5ab1b354f77ee7580",
+        "bfe382e4d50942dd9a9050a9a9d3085e6710286b5495134e742bb5733519cbd6",
+        "409c3cfce1cdcd0bad9a2682a90409f42c6751055dff46262f21247bb9c600a0"
+      ]
+    },
+    "light_attack_2": {
+      "frames": [
+        "baked_reference/light_attack_2/SE_000.png",
+        "baked_reference/light_attack_2/SE_001.png",
+        "baked_reference/light_attack_2/SE_002.png",
+        "baked_reference/light_attack_2/SE_003.png",
+        "baked_reference/light_attack_2/SE_004.png",
+        "baked_reference/light_attack_2/SE_005.png",
+        "baked_reference/light_attack_2/SE_006.png",
+        "baked_reference/light_attack_2/SE_007.png"
+      ],
+      "frame_count": 8,
+      "generation": "combat-light-2-se-v2",
+      "common_translation": [
+        -14,
+        -26
+      ],
+      "removed_isolated_pixels": 0,
+      "sha256": [
+        "09798d0ac83a91c13a85a1c07cefba572fb5375da4334cb48d243fb42bd3181b",
+        "f814451f9026f8f39a4ba347638532341cbe46e67b86321e15b9a1409b41b6a2",
+        "05d8e34b39523ef79756a0ecd63c1a20ff95dd062a18687e91b44b36f7934fb0",
+        "bb1d2f2f6210a5bfcca3e466ea967ffdfbcd11f96e0655afa86aa9f437947f6a",
+        "036af273ad82dc80bb8388cd3029cea324ebc4fb7deacfcddfe74653a82b3b91",
+        "8f8a79216cc53bda2bb00dc0162cdfc441fa8bf8fe63ea7cc0338af14be5b73d",
+        "18a1c2afd2da291d64a0eafabe92d7946d456d413635c33b17e715be3a52ea83",
+        "7cd006e2695b9071feda7affa08f0093b5a2c19da9d5c2774839878860863fbe"
+      ]
+    },
+    "light_attack_3": {
+      "frames": [
+        "baked_reference/light_attack_3/SE_000.png",
+        "baked_reference/light_attack_3/SE_001.png",
+        "baked_reference/light_attack_3/SE_002.png",
+        "baked_reference/light_attack_3/SE_003.png",
+        "baked_reference/light_attack_3/SE_004.png",
+        "baked_reference/light_attack_3/SE_005.png",
+        "baked_reference/light_attack_3/SE_006.png",
+        "baked_reference/light_attack_3/SE_007.png"
+      ],
+      "frame_count": 8,
+      "generation": "combat-light-3-se-v2",
+      "common_translation": [
+        -6,
+        -30
+      ],
+      "removed_isolated_pixels": 0,
+      "sha256": [
+        "98c2263a80f78b770174e248307c37eb0755ff0439baee579500e35ac9cae943",
+        "5319ff98da1f9350e63ffd8d281ea38ef5cc3a8b80531966d0f725eaa4e00acf",
+        "eaf509df4d508015637978ffdfb8d3c8048b8fb70e0bd552404508509d9935cd",
+        "59423f19c8d6ffd9ad2da84347d3257dc723b8c39fa8487e6aa88ec997969a89",
+        "f5c8cdf133b9eeda2beef349c167751e82ad34f59d32d714863e6310e5e74e50",
+        "0751c8c032deb369a717dd74b53c21ead31a3831ffdd42d5f33e1f2c53002201",
+        "56b2ff17ae1b3899ba0bc0c64d685012ba13d7aa77d3feb0f5a5aae5daf066ad",
+        "f314c764d3be6f2f123c989e6e755e15f2b4ad02cee5277eb5237cb7186bdb03"
+      ]
+    }
+  }
+}
