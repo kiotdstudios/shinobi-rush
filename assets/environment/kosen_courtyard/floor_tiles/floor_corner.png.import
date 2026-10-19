@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsifd3yivn0w2"
-path="res://.godot/imported/stone_tile_64.png-8657960edce9fc46f64a11bd79b26fdc.ctex"
+uid="uid://b60fx6jothiy7"
+path="res://.godot/imported/floor_corner.png-03cbefc0caca9bdfae2999fc0918539a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/environment/kosen_courtyard/stone_tile_64.png"
-dest_files=["res://.godot/imported/stone_tile_64.png-8657960edce9fc46f64a11bd79b26fdc.ctex"]
+source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_corner.png"
+dest_files=["res://.godot/imported/floor_corner.png-03cbefc0caca9bdfae2999fc0918539a.ctex"]
 
 [params]
 

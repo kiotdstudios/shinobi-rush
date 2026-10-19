@@ -4,35 +4,44 @@ extends Node2D
 ## Collision is conventional planar 2D on each block's base footprint.
 ## Children are y-sorted (feet = sort anchor), so actors pass in front of / behind blocks.
 
-## Provisional diamond tile size (ratio 2:1), tunable. Scaled for the 108 px figure (see WorldScale).
+## Legacy diamond unit (ratio 2:1), scaled for the 108 px figure (see WorldScale). No longer used
+## by draw_ground() itself (the floor is a real TileMapLayer now, see KosenFloorTileset, which
+## uses its own finer 72x36 tile size to match the "fine paving" reference) -- kept as a public
+## export in case other systems still read it as "the arenas nominal diamond unit".
 @export var tile_size: Vector2 = WorldScale.TILE_SIZE
 ## Playable world rectangle; the camera limits come from this.
 @export var bounds: Rect2 = WorldScale.ARENA_BOUNDS
 
-const GROUND_A := Color("#4b5d44")  ## fallback fill if the ground texture ever fails to load
-const GROUND_TILE_SHADE := Color(0, 0, 0, 0.14)  ## subtle checker darkening over the stone texture (keeps the grid legible)
-const GRID_LINE := Color(0, 0, 0, 0.18)
 const BORDER := Color("#d9c27a")
-
-## Kosen courtyard stone tile (PixelLab), 64x64, tiled across the ground rect. Replaces the flat
-## GROUND_A fill now that real ground art exists; GROUND_A stays as the clear-colour fallback.
-const GROUND_TEXTURE: Texture2D = preload("res://assets/environment/kosen_courtyard/stone_tile_64.png")
+## Perimeter ring thickness (world px) around ground_rect that gets the worn edge/corner tile
+## variants instead of the regular interior mix -- roughly one floor tile deep.
+const EDGE_RING_PX := 72.0
 
 ## Each block: [bottom-centre position, footprint size (w, depth), height in px].
 ## Provisional prototype values scaled by WorldScale.SCALE; not balance.
 const BLOCKS: Array = WorldScale.BLOCKS
 
 @onready var spawn: Marker2D = $Spawn
-## Ground layer. The arena y-sorts its children; drawing the ground in the arena's own _draw()
-## would sort it at y=0 and hide every actor/block with y < 0 beneath it. A child on a lower z_index avoids that.
+## Ground layer: a real TileMapLayer (KosenFloorTileset) painted once in _ready(), plus the
+## arena-bounds border line. The arena y-sorts its children; drawing the ground in the arena's
+## own _draw() would sort it at y=0 and hide every actor/block with y < 0 beneath it. A child on
+## a lower z_index avoids that, and the TileMapLayer (as a CHILD of Ground, not a sibling)
+## inherits that same effective z_index, so floor tiles and the border line stay on one sort key.
 class Ground extends Node2D:
 	var arena: TrainingArena
+	var tile_map: TileMapLayer
 	func _init(a: TrainingArena) -> void:
 		arena = a
 		z_index = -1
 		name = "Ground"
+		tile_map = TileMapLayer.new()
+		tile_map.name = "FloorTiles"
+		tile_map.tile_set = KosenFloorTileset.build()
+		add_child(tile_map)
+	func _ready() -> void:
+		arena.paint_floor(tile_map)
 	func _draw() -> void:
-		arena.draw_ground(self)
+		arena.draw_ground_border(self)
 
 
 ## PLACEHOLDER block, front piece: the front face and its caption, y-sorted at the front edge (the node position).
@@ -145,28 +154,50 @@ func _build_bounds_walls() -> void:
 	add_child(body)
 
 
-func draw_ground(ci: CanvasItem) -> void:
+func ground_rect() -> Rect2:
 	# Ground continues above the top wall (head room) and below the bottom wall (foot room) so the camera never shows void.
-	var ground_rect := bounds.grow_individual(0, WorldScale.CAMERA_HEADROOM, 0, WorldScale.CAMERA_FOOTROOM)
-	if GROUND_TEXTURE != null:
-		ci.draw_texture_rect(GROUND_TEXTURE, ground_rect, true)
-	else:
-		ci.draw_rect(ground_rect, GROUND_A)
-	var hx := tile_size.x * 0.5
-	var hy := tile_size.y * 0.5
-	var lines := PackedVector2Array()
-	var n := int(maxf(bounds.size.x / hx, bounds.size.y / hy)) + 2
-	var inner := bounds.grow_individual(-hx, -hy, -hx, -hy)
-	for i in range(-n, n + 1):
-		for j in range(-n, n + 1):
-			var c := Vector2((i - j) * hx, (i + j) * hy)
-			if not inner.has_point(c):
+	return bounds.grow_individual(0, WorldScale.CAMERA_HEADROOM, 0, WorldScale.CAMERA_FOOTROOM)
+
+
+## Paints the floor TileMapLayer once: a continuous, flat stone surface (no texture-rect
+## tiling, no raised-block look) covering ground_rect, with the worn edge/corner variants
+## forming a one-tile-deep ring around the outside and a deterministic weighted mix of
+## base/alt/cracked/dirt/decorative variants filling the interior.
+func paint_floor(tile_map: TileMapLayer) -> void:
+	var rect := ground_rect()
+	var corners := [rect.position, Vector2(rect.end.x, rect.position.y), Vector2(rect.position.x, rect.end.y), rect.end]
+	var min_cell := Vector2i(1 << 30, 1 << 30)
+	var max_cell := Vector2i(-(1 << 30), -(1 << 30))
+	for c in corners:
+		var cell: Vector2i = tile_map.local_to_map(c)
+		min_cell.x = mini(min_cell.x, cell.x)
+		min_cell.y = mini(min_cell.y, cell.y)
+		max_cell.x = maxi(max_cell.x, cell.x)
+		max_cell.y = maxi(max_cell.y, cell.y)
+	# A couple of cells of slack: the rectangle's corners don't bound every cell whose diamond
+	# footprint still overlaps rect once the isometric grid skew is taken into account.
+	min_cell -= Vector2i(2, 2)
+	max_cell += Vector2i(2, 2)
+	for i in range(min_cell.x, max_cell.x + 1):
+		for j in range(min_cell.y, max_cell.y + 1):
+			var pos: Vector2 = tile_map.map_to_local(Vector2i(i, j))
+			if not rect.has_point(pos):
 				continue
-			var pts := PackedVector2Array([c + Vector2(0, -hy), c + Vector2(hx, 0), c + Vector2(0, hy), c + Vector2(-hx, 0)])
-			if (i + j) % 2 == 0:
-				ci.draw_colored_polygon(pts, GROUND_TILE_SHADE)
-			for k in 4:
-				lines.append(pts[k])
-				lines.append(pts[(k + 1) % 4])
-	ci.draw_multiline(lines, GRID_LINE, 1.0)
+			var near_left := pos.x <= rect.position.x + EDGE_RING_PX
+			var near_right := pos.x >= rect.end.x - EDGE_RING_PX
+			var near_top := pos.y <= rect.position.y + EDGE_RING_PX
+			var near_bottom := pos.y >= rect.end.y - EDGE_RING_PX
+			var on_x_edge := near_left or near_right
+			var on_y_edge := near_top or near_bottom
+			var source_id: int
+			if on_x_edge and on_y_edge:
+				source_id = KosenFloorTileset.CORNER_SOURCE_ID
+			elif on_x_edge or on_y_edge:
+				source_id = KosenFloorTileset.EDGE_SOURCE_ID
+			else:
+				source_id = KosenFloorTileset.pick_interior_source_id(i, j)
+			tile_map.set_cell(Vector2i(i, j), source_id, Vector2i.ZERO)
+
+
+func draw_ground_border(ci: CanvasItem) -> void:
 	ci.draw_rect(bounds, BORDER, false, 3.0)
