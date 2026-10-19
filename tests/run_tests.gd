@@ -34,6 +34,7 @@ func _initialize() -> void:
 	await test_main_scene_and_movement()
 	await test_lab_and_pause()
 	await test_camera_framing()
+	await load("res://tests/test_camera_preset.gd").new().run(ck, root)
 	await load("res://tests/test_arena_sorting.gd").new().run(ck, root)
 	var debug_store_tests = load("res://tests/test_debug_store.gd").new()
 	debug_store_tests.run(ck)
@@ -481,7 +482,7 @@ func test_lab_and_pause() -> void:
 	ck("lab zoom: wheel up -> native 1x on the camera", lab.zoom_index == 1 and player.camera.zoom == Vector2.ONE)
 	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
 	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
-	ck("lab zoom: wheel down clamps at the wide baseline", lab.zoom_index == 0 and is_equal_approx(player.camera.zoom.x, WorldScale.CAMERA_BASE_ZOOM))
+	ck("lab zoom: wheel down clamps at the wide baseline", lab.zoom_index == 0 and is_equal_approx(player.camera.zoom.x, CameraPreset.zoom_for(CameraPreset.WIDE)))
 	for i in 6:
 		_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
 	ck("lab zoom: wheel up clamps at 4x", lab.zoom_index == 4 and player.camera.zoom == Vector2(4, 4))
@@ -552,10 +553,10 @@ func test_camera_framing() -> void:
 	var arena := main.get_node("TrainingArena") as TrainingArena
 	var player := main.get_node("TrainingArena/Player") as PlayerController
 	var cam := player.camera
-	var base := WorldScale.CAMERA_BASE_ZOOM
+	var base := CameraPreset.zoom_for(CameraPreset.WIDE)  # the wide preset, read from the preset table
 
 	# baseline zoom at scene start
-	ck("camera: CAMERA_BASE_ZOOM is 1/SCALE", is_equal_approx(base, 1.0 / WorldScale.SCALE))
+	ck("camera: the wide preset in the table is 1/SCALE and the default preset is wide", is_equal_approx(base, 1.0 / WorldScale.SCALE) and is_equal_approx(float(CameraPreset.TABLE[CameraPreset.WIDE]["zoom"]), 1.0 / WorldScale.SCALE) and CameraPreset.DEFAULT_ID == CameraPreset.WIDE and CameraPreset.active_id() == "wide")
 	ck("camera: baseline zoom equals 1/SCALE within 1e-6 at scene start", absf(cam.zoom.x - 1.0 / WorldScale.SCALE) < 1e-6 and absf(cam.zoom.y - 1.0 / WorldScale.SCALE) < 1e-6, "zoom=%s expected %.6f" % [cam.zoom, 1.0 / WorldScale.SCALE])
 
 	# visible rect = pre-scale view * SCALE, and it fits inside the arena
@@ -574,8 +575,9 @@ func test_camera_framing() -> void:
 	ck("camera: limited area is at least as large as the visible rect (no void can show)", (cam.limit_right - cam.limit_left) >= view.x and (cam.limit_bottom - cam.limit_top) >= view.y)
 
 	# lab zoom list and labels
-	ck("lab zoom list is [baseline, 1, 2, 3, 4]", AnimationLab.ZOOMS.size() == 5 and AnimationLab.ZOOMS[0] == base and AnimationLab.ZOOMS.slice(1) == [1.0, 2.0, 3.0, 4.0], str(AnimationLab.ZOOMS))
-	ck("lab zoom labels: 'wide 0.44x' then 1x..4x", AnimationLab.zoom_label(0) == "wide 0.44x" and AnimationLab.zoom_label(1) == "1x" and AnimationLab.zoom_label(2) == "2x" and AnimationLab.zoom_label(3) == "3x" and AnimationLab.zoom_label(4) == "4x", AnimationLab.zoom_label(0))
+	var zl := AnimationLab.zoom_list(base)
+	ck("lab zoom list is [baseline, 1, 2, 3, 4]", zl.size() == 5 and zl[0] == base and zl.slice(1) == [1.0, 2.0, 3.0, 4.0], str(zl))
+	ck("lab zoom labels: 'wide 0.44x' then 1x..4x", AnimationLab.zoom_label(0, base) == "wide 0.44x" and AnimationLab.zoom_label(1, base) == "1x" and AnimationLab.zoom_label(2, base) == "2x" and AnimationLab.zoom_label(3, base) == "3x" and AnimationLab.zoom_label(4, base) == "4x", AnimationLab.zoom_label(0, base))
 
 	# opening the lab must not change the camera; the panel shows the real zoom
 	var zoom_value := lab._value_labels["zoom"] as Label

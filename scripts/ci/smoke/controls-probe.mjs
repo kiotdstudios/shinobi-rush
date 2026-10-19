@@ -58,6 +58,7 @@ try {
   const zoomNow = async () => (await state()).zoom;
   const near = (v, want) => Number.isFinite(v) && Math.abs(v - want) < 0.005;
   const zs = await state();
+  rec('camera-preset-default-is-wide', zs.camera_preset === 'wide', `no ?camera= parameter: state.camera_preset=${JSON.stringify(zs.camera_preset)}, expected "wide"`);
   rec('camera-baseline-at-start', near(zs.zoom, BASE_ZOOM) && Math.abs(zs.view_w - 2880) < 2 && Math.abs(zs.view_h - 1620) < 2,
     `expected zoom ~${BASE_ZOOM.toFixed(4)} and view 2880x1620; got zoom=${zs.zoom}, view=${zs.view_w}x${zs.view_h}`);
 
@@ -110,6 +111,30 @@ try {
   await tap('Tab');
   const zClosed = await zoomNow();
   rec('lab-close-restores-baseline', near(zClosed, BASE_ZOOM), `after Tab (lab closed) zoom=${zClosed}, expected ~${BASE_ZOOM.toFixed(4)}`);
+
+  // Camera preset from the URL (PROVISIONAL close-combat framing). The default run above stays wide; here each query gets a fresh page.
+  // close = 0.175 x 720 / figure height; the 108 px placeholder gives 1.1667 (126 px = 17.5 % of the viewport), view 1097.1 x 617.1.
+  await page.goto('about:blank'); // free the CPU of the finished page before booting another copy of the game
+  const CLOSE_ZOOM = (0.175 * 720) / 108;
+  const cameraPage = async (query, tag) => {
+    const p = await context.newPage();
+    p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
+    p.on('pageerror', (e) => consoleMsgs.push({ type: 'pageerror', text: String(e) }));
+    try {
+      await p.goto(server.url + query, { waitUntil: 'load' });
+      await p.waitForFunction(() => window.__SHINOBI_READY__ === true && window.__SHINOBI_STATE__ && typeof window.__SHINOBI_STATE__.camera_preset === 'string',
+        null, { timeout: 120000, polling: 250 });
+      const s = await p.evaluate(() => ({ ...window.__SHINOBI_STATE__ }));
+      await p.screenshot({ path: path.join(outDir, `probe-camera-${tag}.png`) });
+      return s;
+    } finally { await p.close(); }
+  };
+  const sc = await cameraPage('?camera=close', 'close');
+  rec('camera-close-via-query', sc.camera_preset === 'close' && near(sc.zoom, CLOSE_ZOOM) && Math.abs(sc.view_w - 1280 / CLOSE_ZOOM) < 2 && Math.abs(sc.view_h - 720 / CLOSE_ZOOM) < 2,
+    `?camera=close expected preset=close zoom ~${CLOSE_ZOOM.toFixed(4)} view ${(1280 / CLOSE_ZOOM).toFixed(1)}x${(720 / CLOSE_ZOOM).toFixed(1)}; got preset=${sc.camera_preset} zoom=${sc.zoom} view=${sc.view_w}x${sc.view_h}`);
+  const sg = await cameraPage('?camera=bogus', 'bogus');
+  rec('camera-garbage-falls-back-to-wide', sg.camera_preset === 'wide' && near(sg.zoom, BASE_ZOOM) && Math.abs(sg.view_w - 2880) < 2 && Math.abs(sg.view_h - 1620) < 2,
+    `?camera=bogus expected preset=wide zoom ~${BASE_ZOOM.toFixed(4)} view 2880x1620; got preset=${sg.camera_preset} zoom=${sg.zoom} view=${sg.view_w}x${sg.view_h}`);
 } catch (e) {
   rec('probe-exception', false, String(e.message ?? e).split('\n')[0]);
 }

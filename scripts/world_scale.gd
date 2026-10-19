@@ -8,8 +8,9 @@ extends RefCounted
 ## 108 / 48: new standing height over the old 48 px placeholder height.
 const SCALE := 2.25
 
-## Gameplay camera zoom: the inverse of SCALE shows the same amount of arena as before the scale pass
-## (visible world rect = viewport * SCALE). Follows SCALE automatically.
+## Zoom of the `wide` camera preset (the default; see CameraPreset, which is what the game reads): the inverse
+## of SCALE shows the same amount of arena as before the scale pass (visible world rect = viewport * SCALE).
+## Follows SCALE automatically. Prototype baseline, not final.
 const CAMERA_BASE_ZOOM := 1.0 / SCALE
 ## Extra world drawn/visible above the top arena bound so a standing figure at the top wall is not cut off.
 const CAMERA_HEADROOM := BODY_HEIGHT
