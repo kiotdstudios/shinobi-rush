@@ -17,5 +17,5 @@ for action,e in m['animations'].items():
 assert m['animations']['idle']['frames']['SW'][0]==m['animations']['idle']['frames']['SW'][1]
 assert len(m['animations']['idle']['frames']['SW'])==16
 assert len(m['animations']['sprint']['frames']['NW'])==11
-assert count==559
-print('PASS559exact PNGs,RGBA128,binaryalpha,all direction counts,source hashes,idleSWholds,sprintNWloop')
+assert count==sum(q['count'] for entry in provenance.values() for q in entry['directions'].values())
+print('PASS',count,'exact PNGs,RGBA128,binaryalpha,all direction counts,source hashes,idleSWholds,sprintNWloop')
