@@ -15,6 +15,10 @@ Relative layers: weapon behind=-1, body=0, weapon front=1, primary-hand occluder
 Primary right-hand mount is curated per frame. Existing off-hand support gestures remain in the shared body; check off-hand clearance when introducing a different compatible hilt.
 
 ## Timing and events — recommendations, not gameplay approval
+Main21324af landed during art delivery. Aki's authoritative AttackDef IDs map `light_attack_1` → `light1`, `light_attack_2` → `light2`, `light_attack_3` → `light3`. These descriptive art IDs are not installed into the runtime manifest. Do not rename gameplay IDs to match the art study.
+
+Current gameplay startup/active/recovery windows in60Hz reference frames: light1=5/4/9 (0.300s), light2=6/4/11 (0.350s), light3=9/5/15 (~0.483s). The uniform24FPS art study does NOT match all these contact windows; Aki must retime body/weapon tracks together against the authoritative AttackDef windows before gameplay acceptance. Keep the placeholder/baked path until that mapping is verified. Half-speed inspection is an owner review preference, not a requested gameplay slowdown.
+
 All clips have8 timeline frames at proposed24FPS. Playback is0.5× by default in art review only. Aki must map the data to the actual combat configuration, including hit-stop, movement and cancel behavior.
 
 | Clip | Contact | Suggested active | Transition ready | Optional cancel |

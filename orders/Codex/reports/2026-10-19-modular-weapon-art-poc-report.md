@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-19-modular-weapon-art-poc.md
 - Date: 2026-10-19
 - Final status: REVIEW — art delivered; owner visual acceptance and Aki integration pending
-- Commit / PR: Prepared before implementation commit; follow-up will record links.
+- Commit / PR: Art45cbf25; https://github.com/kiotdstudios/shinobi-rush/pull/33. Superseded draft31 closed with source branch preserved.
 
 ## Work completed
 Finished the current eight-frame SE katana finisher and retained the complete 24-frame fully drawn three-hit combo for comparison. Stopped broader combat generation as requested. Produced one 24-frame weaponless SE body combo and two separate swords, with per-frame primary-hand anchors, clockwise orientation, front/behind draw order and hand occluders. Both swords reuse exactly the same body files. Exported independent light/heavy trails and hit spark. Supplied source receipts, half-speed GIFs, contact sheet, synchronized browser comparison and Aki integration notes/order.
@@ -43,6 +43,10 @@ PixelLab body edits shifted transparent padding. Restored original placement usi
 None. Visual acceptance will determine whether the proof expands.
 
 ## Outstanding work / next steps
+Main21324af (Aki combat milestone) landed during handoff and was merged without conflict. Integration notes now map descriptive art names to gameplay light1/light2/light3 and record authoritative timing. The broad newly queued art request is held at REVIEW under the owner's narrower proof restriction. No Aki runtime implementation was authored or changed by Codex.
+
+Post-integration checks before the handoff follow-up commit: Godot import PASS; the same validate-resources command PASS (34scripts,6scenes,0failures); `../godot-4.7.2/Godot_v4.7.2-stable_win64_console.exe --headless --path . --script res://tests/run_tests.gd` PASS (534passed,0failed); order validator and git diff --check PASS. Expected negative-fixture diagnostics occur in the native suite; final exit code0. Art/production assets unchanged by the merge.
+
 Aki owns engine attachment/layer implementation, frame-event/hitbox/movement synchronization, attack-family profiles, fallback preservation and live gameplay validation. Engineering order is queued; no work in Aki's controller/state machine or Kiro's camera was performed. Keep current katana reference functional during migration. Do not convert847 frames or expand directions/types before proof acceptance.
 
 Live deployment: not applicable — opt-in art/preview only, no runtime integration or live-game changes. Commit/push and reviewed PR handoff are the art delivery. The full modular game system is not marked DONE.

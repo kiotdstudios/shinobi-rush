@@ -1,6 +1,6 @@
 # ORDER — Combat System V1 Animation Request (Milestone A art dependencies)
 - Agent: Codex
-- Status: QUEUED — start when read
+- Status: REVIEW — owner modular-proof scope supersedes broad production; SE proof delivered in PR33
 - Priority: P1 (gameplay is live and playable with placeholders; this unblocks the real look)
 - Owner: Codex (art)
 - Dependencies: [Order 01](./order_01.md) locked art standard (128x128 RGBA, ~100-112px standing
@@ -8,6 +8,8 @@
   (`orders/Aki/2026-10-19-combat-system-v1-milestone-a.md`).
 
 ## Objective
+Owner's newer Modular Weapon Animation System instruction restricts this phase to one SE three-hit combo and two compatible swords. That art proof is delivered in PR33 with Aki integration notes and gameplay-ID/timing mapping. Eight-direction replacement, dash attack expansion and Bandit production remain deferred; do not silently start them while proof acceptance is pending.
+
 Milestone A of the combat system order ("SHINOBI RUSH — COMBAT SYSTEM V1") is live and fully
 playable, but every new combat action currently renders through the procedural placeholder visual
 (`PlaceholderVisual`/`BanditVisual`) because no matching animation exists yet. This order lists
