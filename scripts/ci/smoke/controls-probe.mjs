@@ -53,13 +53,15 @@ try {
   await sleep(200);
   await shot('01-start');
 
-  // Camera framing: the gameplay baseline is the wide view (zoom 1/2.25, visible world 2880x1620 in a 1280x720 viewport).
-  const BASE_ZOOM = 1 / 2.25;
+  // Camera framing: the gameplay baseline was retuned 2026-10-18 (orders/Aki/2026-10-18-camera-scale-validation.md)
+  // to match the owner's locked reference screenshot (player ~20% of viewport height). New baseline:
+  // zoom 144/108 = 1.333, visible world 960x540 in a 1280x720 viewport.
+  const BASE_ZOOM = 144 / 108;
   const zoomNow = async () => (await state()).zoom;
   const near = (v, want) => Number.isFinite(v) && Math.abs(v - want) < 0.005;
   const zs = await state();
-  rec('camera-baseline-at-start', near(zs.zoom, BASE_ZOOM) && Math.abs(zs.view_w - 2880) < 2 && Math.abs(zs.view_h - 1620) < 2,
-    `expected zoom ~${BASE_ZOOM.toFixed(4)} and view 2880x1620; got zoom=${zs.zoom}, view=${zs.view_w}x${zs.view_h}`);
+  rec('camera-baseline-at-start', near(zs.zoom, BASE_ZOOM) && Math.abs(zs.view_w - 960) < 2 && Math.abs(zs.view_h - 540) < 2,
+    `expected zoom ~${BASE_ZOOM.toFixed(4)} and view 960x540; got zoom=${zs.zoom}, view=${zs.view_w}x${zs.view_h}`);
 
   const dxOver = async (keys, settleMs, windowMs) => {
     for (const k of keys) await page.keyboard.down(k);
