@@ -15,10 +15,10 @@ Implemented the gameplay-side event producer (`DebugTelemetry`, new autoload) th
   - **Gamepad**: buttons, axis motion (reuses `DebugStore.record_axis`'s deadzone 0.05 / delta 0.1 / sign-flip throttle), connect/disconnect via `Input.joy_connection_changed`. DualSense/real hardware not independently verified — same caveat Kiro's own report carries for the browser side.
   - **Movement/state**: lazily finds the player (`get_first_node_in_group("player")`), connects to `PlayerController.state_changed`, records position/state/8-point facing snapshots.
   - **Interaction / combat**: `record_interaction()` / `record_combat()` helpers, fully implemented and unit-tested, but currently have no in-game caller — the prototype only has movement implemented (`player_controller.gd`: "Combat, jump, dodge etc. are reserved actions with no behavior yet"). Ready for whoever builds those systems; no fake gameplay was invented to produce traffic.
-  - **Warnings/errors**: explicit `record_warning()`/`record_error()`, plus `force_test_error()` (bound to F10) for acceptance criterion #4 — a deterministic, safe, caught test error. Godot 4 has no global exception hook, so this file never claims a full crash dump; real unhandled errors are only visible if they reach the browser console (Kiro's path) or an explicit call here.
+  - **Warnings/errors**: explicit `record_warning()`/`record_error()`, plus `force_test_error()` (bound to Ctrl+Alt+X) for acceptance criterion #4 — a deterministic, safe, caught test error. Godot 4 has no global exception hook, so this file never claims a full crash dump; real unhandled errors are only visible if they reach the browser console (Kiro's path) or an explicit call here.
 - New on-screen overlay (`scripts/debug/debug_telemetry_overlay.gd` + `scenes/debug/debug_telemetry_overlay.tscn`), spawned dynamically by `DebugTelemetry` (same pattern Kiro used for the debug panel — not placed in `main.tscn`). Bottom-left band, positioned to avoid Kiro's top-right panel and the existing top-left `DebugHud`. Shows last input/action, player snapshot, error count, recent events (compact or verbose), filterable by type.
-- New input actions (keyboard-only, F6/F10/F11/F12 — verified against every existing `physical_keycode` in `project.godot`, no collisions): `dbg_toggle_telemetry_hud`, `dbg_force_test_error`, `dbg_telemetry_filter_cycle`, `dbg_telemetry_verbosity_cycle`.
-- Found and fixed a real bug during testing: the overlay's auto-show logic would silently override a manual F6 hide every frame (the user-hidden state was never tracked) — fixed with an explicit `_user_hidden` flag.
+- New input actions (keyboard-only, Ctrl+Alt+H/G/B/X — verified against every existing `physical_keycode` in `project.godot`, no collisions): `dbg_toggle_telemetry_hud`, `dbg_force_test_error`, `dbg_telemetry_filter_cycle`, `dbg_telemetry_verbosity_cycle`.
+- Found and fixed a real bug during testing: the overlay's auto-show logic would silently override a manual Ctrl+Alt+H hide every frame (the user-hidden state was never tracked) — fixed with an explicit `_user_hidden` flag.
 
 ## Files changed
 - `scripts/debug/debug_telemetry.gd` (new)
@@ -46,7 +46,7 @@ No files under `scripts/web/**` or `scripts/ui/debug_panel.gd` were touched, per
 
 ## Issues encountered
 - First test run failed because the global GDScript class cache hadn't been built yet (`godot --headless --import` must run before `--script res://tests/run_tests.gd`, matching `godot_ci.py`'s own step order) — not a code bug, just a missing step on my first local run.
-- Two real bugs found and fixed during test-writing (see Work completed): the overlay's F6-hide-gets-overridden bug, and `get_node()`/`get_tree()` calls in `_sync_session()` / `_player_snapshot()` / `_current_scene_name()` throwing when the node isn't inside the scene tree (now guarded with `is_inside_tree()` checks; harmless in the real game since the autoload is always in the tree, but it made the unit tests noisy and was worth guarding properly anyway).
+- Two real bugs found and fixed during test-writing (see Work completed): the overlay's Ctrl+Alt+H-hide-gets-overridden bug, and `get_node()`/`get_tree()` calls in `_sync_session()` / `_player_snapshot()` / `_current_scene_name()` throwing when the node isn't inside the scene tree (now guarded with `is_inside_tree()` checks; harmless in the real game since the autoload is always in the tree, but it made the unit tests noisy and was worth guarding properly anyway).
 - `record_interaction()` / `record_combat()` have no real caller yet — the prototype has no combat/interaction/NPC gameplay implemented (confirmed via repo-wide search, nothing under those names exists outside the player/movement/debug scripts). This is a known, expected gap, not something I should fabricate behavior to paper over.
 - No dedicated CPU/memory profiling run was done under *sustained* play (acceptance criterion #6's "inspect memory/CPU under sustained play" is only partially covered — by the flood-safety numbers and the controls-probe parity check, not a long-running profiler session).
 
@@ -58,3 +58,46 @@ No files under `scripts/web/**` or `scripts/ui/debug_panel.gd` were touched, per
 1. Open PR from `aki/debug-input-telemetry-producer` → `main`, referencing this order.
 2. Coordinate with Kiro / project owner on review and merge (order explicitly forbids writing to `main` directly).
 3. After merge: update/verify the live Web test build per `orders/README.md`'s deployment sequence, re-run the browser smoke probes against the deployed build, and only then move this order to DONE with a follow-up report note.
+
+## Post-merge update (2026-10-18, after PR #13 merge)
+
+**Key rebind:** Kiro flagged that bare F6/F10/F11/F12 collide with browser-reserved keys (devtools/fullscreen/
+help in some browsers). Rebound all four actions to **Ctrl+Alt+H/G/B/X** (`dbg_toggle_telemetry_hud`=H,
+`dbg_telemetry_filter_cycle`=G, `dbg_telemetry_verbosity_cycle`=B, `dbg_force_test_error`=X) — verified against
+every existing `physical_keycode`+modifier combo in `project.godot`, no collisions. Updated HUD help text and
+doc comments to match. Committed `4ff949a`, merged `main` in (resolved clean, only `tests/run_tests.gd`
+overlap), pushed `72bb86d`, CI green, merged via PR #13 at `0f940721cb73f41821bf7c1659a6f75d15fc691b`.
+
+**Live-build verification against `https://kiotdstudios.github.io/shinobi-rush/` (real Playwright/CDP session,
+not headless-export-only) — ALL PASSED:**
+- Confirmed live `build-info.json` reports `commit_sha: 0f940721cb73f41821bf7c1659a6f75d15fc691b`, matching the
+  actual deployed commit — this resolves the earlier "GITHUB_SHA unset locally" gap noted above; the real CI
+  deploy does stamp the SHA correctly.
+- All four new keyboard combos (Ctrl+Alt+H/G/B) confirmed working live via canvas pixel/byte diffs (overlay
+  toggling, filter cycling, verbosity cycling all visibly changed the rendered canvas).
+- F7 downloadable telemetry log confirmed working live: produced
+  `shinobi-debug-20261019-002720-0f94072.jsonl` (9809 bytes) — filename correctly embeds the live commit SHA.
+- Zero console errors observed during the live session.
+
+**Sustained CPU/memory profiling (answers the open question above — this closes gap #4 under "Issues
+encountered"):** ran a 3-minute profiling pass against the live build (CDP `Performance.getMetrics` +
+`performance.memory`, sampled every 10s, continuous movement input + periodic Ctrl+Alt+G presses to exercise
+the telemetry path under load). Result: JS heap stable at ~48.1MB tab total / ~10-11MB used throughout the full
+3 minutes, no growth, no leak. Chrome main-thread `TaskDuration` tracked near 100% of wall time throughout,
+which is the expected/normal signature of an unthrottled continuously-rendering game in headless Chromium, not
+a leak or regression signal.
+
+**Hardware/engine limitations (explicit, per project owner's standing ask to be honest about untested paths):**
+- **No real gamepad hardware** (e.g. DualSense) was available in this environment to verify controller input
+  capture end-to-end; gamepad button/axis code was reviewed and unit-tested (deadzone/throttle reuse from
+  `DebugStore`) but not run against physical hardware. Consistent with Kiro's own prior caveat on the same gap.
+- **Godot 4 has no global GDScript exception hook** — `force_test_error()` is a deliberate, safe, caught test
+  error for the acceptance criterion; a genuine *unhandled* engine-level crash will not appear in this
+  telemetry stream, only in the browser console (Kiro's path) if it reaches that far.
+- Ctrl+Alt+<key> layout/OS/browser variations (e.g. some non-US keyboard layouts, some Linux window managers
+  reserving Ctrl+Alt combos) were not exhaustively tested across every OS/browser combination — only verified
+  on the environment used for this session's live checks.
+
+This closes both open questions from the original report: a sustained profiling pass was run (see above, no
+regression found), and no stub wiring for `record_interaction`/`record_combat` was added (still correctly
+dormant, no gameplay systems exist yet to call them).

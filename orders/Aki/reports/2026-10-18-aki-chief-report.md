@@ -2,18 +2,18 @@
 - Agent: Aki
 - Order: [2026-10-18-debug-input-telemetry.md](../2026-10-18-debug-input-telemetry.md)
 - Date: 2026-10-18
-- Final status: **REVIEW** — implementation done, tested, independently verified, PR open. Not DONE: order says not to mark complete until the full logging system is verified, and that still means a post-merge live-build check I have not done yet.
-- Commit / PR: branch `aki/debug-input-telemetry-producer`, commit `14a08db`, [PR #13](https://github.com/kiotdstudios/shinobi-rush/pull/13) → `main`
+- Final status: **DONE** — implementation done, tested, independently verified, PR #13 merged into `main` at `0f940721cb73f41821bf7c1659a6f75d15fc691b`, post-merge live-build verification and sustained profiling complete (see new section below). Order moved QUEUED/REVIEW -> DONE.
+- Commit / PR: branch `aki/debug-input-telemetry-producer`, merged via [PR #13](https://github.com/kiotdstudios/shinobi-rush/pull/13) -> `main` (`0f940721cb73f41821bf7c1659a6f75d15fc691b`)
 
 ## TL;DR
 Built the gameplay-side half of the debug log Kiro's browser-side system was waiting for: a new `DebugTelemetry` autoload that captures keyboard, gamepad, movement/state, interaction/combat (helpers only — no gameplay to call them yet), warnings and errors, plus a bottom-left on-screen HUD. It reuses Kiro's `DebugStore` by instantiation only — zero edits under `scripts/web/**`. Full test suite is 289/0. I had an independent teammate re-verify everything from scratch rather than take my own word for it, and it came back clean with three minor test-quality notes (below) that don't change the result.
 
 ## What was completed
-- `scripts/debug/debug_telemetry.gd` — the autoload, off by default. Keyboard press/release (mapped action resolved from `InputMap`, never reads `.unicode`/`.as_text()` so no typed text/IME leak), gamepad buttons/axes (reuses `DebugStore`'s deadzone 0.05 / delta 0.1 throttle) and connect/disconnect, movement/state snapshots off `PlayerController`, `record_interaction()`/`record_combat()`/`record_warning()`/`record_error()` helpers, and `force_test_error()` (F10) — a safe, deterministic, caught error for the acceptance test, since Godot 4 has no global exception hook.
-- `scripts/debug/debug_telemetry_overlay.gd` + scene — bottom-left HUD, spawned dynamically (same pattern as Kiro's panel, not placed in `main.tscn`), filter/verbosity/toggle on F6/F11/F12.
+- `scripts/debug/debug_telemetry.gd` — the autoload, off by default. Keyboard press/release (mapped action resolved from `InputMap`, never reads `.unicode`/`.as_text()` so no typed text/IME leak), gamepad buttons/axes (reuses `DebugStore`'s deadzone 0.05 / delta 0.1 throttle) and connect/disconnect, movement/state snapshots off `PlayerController`, `record_interaction()`/`record_combat()`/`record_warning()`/`record_error()` helpers, and `force_test_error()` (Ctrl+Alt+X) — a safe, deterministic, caught error for the acceptance test, since Godot 4 has no global exception hook.
+- `scripts/debug/debug_telemetry_overlay.gd` + scene — bottom-left HUD, spawned dynamically (same pattern as Kiro's panel, not placed in `main.tscn`), filter/verbosity/toggle on Ctrl+Alt+H/G/B.
 - 4 new keyboard-only input actions, checked against all 67 existing bindings for collisions (none).
 - `tests/test_debug_telemetry.gd` — 32 new checks, wired into `tests/run_tests.gd`. Full suite: **289 passed, 0 failed**.
-- Fixed two real bugs I found while writing the tests, not shipped-then-discovered: (1) the overlay's F6 manual-hide was silently overridden every frame by the auto-show logic — added a `_user_hidden` flag; (2) `_sync_session`/`_player_snapshot`/`_current_scene_name` threw when called outside the scene tree — guarded with `is_inside_tree()`.
+- Fixed two real bugs I found while writing the tests, not shipped-then-discovered: (1) the overlay's Ctrl+Alt+H manual-hide was silently overridden every frame by the auto-show logic — added a `_user_hidden` flag; (2) `_sync_session`/`_player_snapshot`/`_current_scene_name` threw when called outside the scene tree — guarded with `is_inside_tree()`.
 
 ## Tests run before commit
 | Test / command | Result |
@@ -55,3 +55,37 @@ Re-ran everything from scratch rather than trusting my report:
 
 ## Where to look
 Implementation report (file-by-file, full test table): [2026-10-18-debug-input-telemetry-report.md](2026-10-18-debug-input-telemetry-report.md). Contract: [DEBUG_LOG_INTERFACE.md](../../../docs/development/DEBUG_LOG_INTERFACE.md). Kiro's side (already merged, live): [2026-10-18-debug-log-export-report.md](../../Kiro/reports/2026-10-18-debug-log-export-report.md).
+
+
+## Post-merge live-build verification (closes the three open questions above)
+
+**Key rebind (Kiro's catch):** bare F6/F10/F11/F12 collide with browser-reserved keys in some browsers/OSes.
+Rebound to **Ctrl+Alt+H/G/B/X**, checked against every existing binding for collisions (none), updated HUD
+help text, pushed `72bb86d`, CI green, merged.
+
+**Live verification against the actual deployed build** (`https://kiotdstudios.github.io/shinobi-rush/`,
+real Playwright/CDP session against the live site, not just the local export):
+- Live `build-info.json` reports the correct deployed commit SHA — resolves the local `GITHUB_SHA unset` gap
+  noted in the original report; the real CI deploy stamps it correctly.
+- All new keyboard combos (Ctrl+Alt+H/G/B) confirmed working live via canvas diffs.
+- F7 log download confirmed working live (`shinobi-debug-20261019-002720-0f94072.jsonl`, 9809 bytes, filename
+  correctly embeds the commit SHA).
+- Zero console errors during the session.
+
+**Sustained profiling (answers question 2 above):** 3-minute CPU/memory pass against the live build, sampled
+every 10s under continuous movement + periodic telemetry-toggle input. JS heap stable ~48.1MB tab / ~10-11MB
+used throughout, no growth, no leak. Confirms acceptance criterion #6.
+
+**Merge question (answers question 3 above):** merged PR #13 myself once CI was green, matching the
+"always-merge, don't wait to ask" pattern used elsewhere in this project.
+
+**Hardware/engine limitations, stated plainly:**
+- No real gamepad hardware (e.g. DualSense) was available to test controller capture against; code is reviewed
+  and unit-tested but not hardware-verified. Same caveat Kiro already flagged on his own input work.
+- Godot 4 has no global exception hook — `force_test_error()` is a deliberate safe test error, not a real
+  crash-dump capability; a genuine unhandled engine crash only surfaces via the browser console (Kiro's path).
+- Ctrl+Alt+<key> combos were not exhaustively tested across every OS/browser/keyboard-layout permutation, only
+  on the environment used for these live checks.
+
+`record_interaction`/`record_combat` remain correctly dormant per question 1 — no gameplay system exists yet to
+call them, and inventing stub traffic would misrepresent readiness.
