@@ -123,10 +123,22 @@ func _ready() -> void:
 		rear.position = ArenaSort.rear_position(b[0], b[1])
 		add_child(rear)
 	_build_bounds_walls()
+	_spawn_bandit()
 	for p in get_tree().get_nodes_in_group("player"):
 		p.global_position = spawn.global_position
 		if p.has_method("reset_camera"):
 			p.reset_camera()
+
+
+## One Basic Bandit for combat validation (see the combat order): spawned a short walk from the
+## player's own spawn point so a fresh run can immediately test movement-to-attack chaining, dodging
+## and combos against a live target.
+func _spawn_bandit() -> void:
+	var packed := load("res://scenes/enemy/bandit.tscn") as PackedScene
+	var bandit := packed.instantiate()
+	bandit.name = "Bandit"
+	bandit.position = spawn.position + Vector2(260, 0)
+	add_child(bandit)
 
 
 func get_bounds() -> Rect2:
