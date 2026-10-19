@@ -1,7 +1,7 @@
 # ORDER — Combat Art Pack V1
 - Agent: Codex
 - Owner: Codex; collaborator: Aki (gameplay timing and integration)
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1
 - Branch/PR: codex/combat-art-pack-v1
 - Dependencies: Aki's combat configuration and animation event contract
@@ -23,3 +23,6 @@ Inventory delivered to Aki before generation. Coordinate frame events/FPS with g
 
 ## Handoff / Notes
 Inventory complete against ce81f6d. No combat configuration exists on this main snapshot. Proposed IDs require Aki confirmation before runtime binding; production event indices remain unset until clips are inspected and gameplay timings agreed.
+
+## Owner scope revision — modular proof first
+Owner stopped full-pack expansion after the current sword animation. The southeast finisher is completed as a native128 comparison reference, with eight unique frames and no baked trail; the full southeast three-hit comparison contains24 frames. Further directions and weapon types are deferred until the modular proof passes. Existing queued generation results are source experiments only, not production-approved assets. New work: orders/Codex/2026-10-19-modular-weapon-art-poc.md on codex/modular-weapon-art-poc. This order is not marked DONE because the original eight-direction pack was not delivered.
