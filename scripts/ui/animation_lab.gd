@@ -42,8 +42,7 @@ var stands: Array[Stand] = []
 var overlay: LabOverlay
 var _spin_timer: float = 0.0
 var _spin_dir: int = 0
-var _status: Label
-var _metrics: Label
+var _hud: Node  ## sibling DebugHud; sprite status/metrics feed into its diagnostics panel instead of drawing our own overlapping labels.
 var _panel: PanelContainer
 var _value_labels: Dictionary = {}
 var _toggle_buttons: Dictionary = {}
@@ -187,6 +186,7 @@ func _ready() -> void:
 	arena = player.get_parent() as Node2D
 	_build_world()
 	_build_ui()
+	_hud = get_parent().get_node_or_null("DebugHud")
 	var first := lib.first_valid()
 	if first != null:
 		sel_index = lib.sets.find(first)
@@ -299,8 +299,6 @@ func _build_ui() -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 5
 	add_child(layer)
-	_status = _label(layer, Vector2(12, 170), 15)
-	_metrics = _label(layer, Vector2(12, 192), 12)
 	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, 8), Vector2(150, 26), toggle_lab)
 	_panel = PanelContainer.new()
 	_panel.position = Vector2(930, 40)
@@ -376,21 +374,22 @@ func _row(box: Node, key: String, title: String, prev_cb: Callable, next_cb: Cal
 
 
 func _refresh_ui() -> void:
-	if _status == null:
+	if _value_labels.is_empty():
 		return
 	var s := current_set()
-	_status.text = SpriteLibrary.status_line(s)
-	_status.add_theme_color_override("font_color", Color("#ff6b6b") if (s != null and not s.is_valid()) else Color.WHITE)
-	var parts: Array[String] = []
-	if s != null:
-		parts.append("%s | frame %dx%d | anchor (%d,%d) | anims %d/%d | frames %d | load %.1f ms" % [
-			s.id, s.frame_size.x, s.frame_size.y, int(s.foot_anchor.x), int(s.foot_anchor.y),
-			s.anims_loaded, s.anim_order.size(), s.frames_loaded, s.load_ms])
-	parts.append("Texture mem: %.2f MB" % (Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) / 1048576.0))
-	if s != null and not s.is_valid():
-		for i in mini(s.errors.size(), 3):
-			parts.append("! " + s.errors[i])
-	_metrics.text = "\n".join(parts)
+	if _hud != null:
+		var status_text := SpriteLibrary.status_line(s)
+		var color := Color("#ff6b6b") if (s != null and not s.is_valid()) else Color.WHITE
+		var parts: Array[String] = []
+		if s != null:
+			parts.append("%s | frame %dx%d | anchor (%d,%d) | anims %d/%d | frames %d | load %.1f ms" % [
+				s.id, s.frame_size.x, s.frame_size.y, int(s.foot_anchor.x), int(s.foot_anchor.y),
+				s.anims_loaded, s.anim_order.size(), s.frames_loaded, s.load_ms])
+		if s != null and not s.is_valid():
+			for i in mini(s.errors.size(), 3):
+				parts.append("! " + s.errors[i])
+		var zoom_text := "Zoom: %s" % zoom_label(zoom_index, _baseline())
+		_hud.set_sprite_status(zoom_text, status_text, "\n".join(parts), color)
 	_value_labels["set"].text = s.id if s != null else "none (placeholder)"
 	_value_labels["anim"].text = anim_id if anim_id != "" else "-"
 	_value_labels["dir"].text = current_dir_name() + (" (auto)" if dir_mode != DirMode.FIXED else "")
