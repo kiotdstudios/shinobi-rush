@@ -8,9 +8,14 @@ extends RefCounted
 ## 108 / 48: new standing height over the old 48 px placeholder height.
 const SCALE := 2.25
 
-## Gameplay camera zoom: the inverse of SCALE shows the same amount of arena as before the scale pass
-## (visible world rect = viewport * SCALE). Follows SCALE automatically.
-const CAMERA_BASE_ZOOM := 1.0 / SCALE
+## Gameplay camera zoom — RETUNED 2026-10-18 (P0 camera/scale reference match, orders/Aki/2026-10-18-camera-scale-validation.md).
+## Owner supplied a locked reference screenshot: measured player height there is ~205px of a 1024px-tall
+## image = ~20.0% of viewport height. Target on a 1280x720 viewport: 0.20 * 720 = 144px. BODY_HEIGHT (108px)
+## is the native on-screen size at zoom 1.0, so the zoom that reproduces the reference proportion is
+## 144 / 108 = 1.333. This replaces the old 1.0/SCALE derivation (which produced a far more zoomed-out view
+## than the reference); it is no longer tied to SCALE and is Aki/Orcha-tunable pending owner approval of the
+## validation scene.
+const CAMERA_BASE_ZOOM := 144.0 / 108.0  # 108 == BODY_HEIGHT, declared below; literal to avoid const ordering issues
 ## Extra world drawn/visible above the top arena bound so a standing figure at the top wall is not cut off.
 const CAMERA_HEADROOM := BODY_HEIGHT
 ## Extra world drawn/visible below the bottom arena bound so the feet and ground shadow of a figure at the
