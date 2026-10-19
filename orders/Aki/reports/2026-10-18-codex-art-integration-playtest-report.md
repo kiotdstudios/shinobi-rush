@@ -112,3 +112,29 @@ switching controls (animation, direction, speed, zoom) are already live and func
 the placeholder figure and `SPRITES: none (placeholder)` because no production sprite set has been
 delivered yet. No redeploy is needed on my end once Codex's manifest lands — the Lab picks it up
 automatically on the next Pages build.
+
+## Correction (2026-10-18, same day, after owner-directed re-check of Codex's branches)
+
+My initial conclusion above — "no production 128×128 art exists" — was imprecise. Re-checked at the owner's
+request by reading every Codex report on `codex/mobile-animation-preview` in full, plus
+`git log --all --diff-filter=A` for `*.manifest.json` and `assets/characters/player/sprites/*` across every
+branch and all of history (zero hits, confirming this is a **push gap**, not a production gap).
+
+**What actually exists, per Codex's own job reports (each one explicitly states real exports were built,
+QA-tested, and deliberately not published — only the review GIF was committed):**
+- `orders/Codex/reports/2026-10-18-idle-shoulders-v5-report.md` — idle v5, **owner-approved**, local output at
+  `assets/characters/player/sprites/idle-review-v5/` + manifest. Not pushed.
+- Walk v1 — **owner-approved** per the same pipeline narrative ("Idle v5 approved by the owner... accepted
+  idle v5, walk v1 and run v3 are preserved"). Not pushed.
+- `orders/Codex/reports/2026-10-18-south-run-cadence-v4-report.md` — run v4, **owner-approved** (south cadence
+  fix), local output at `assets/characters/player/sprites/run-review-v4/` + manifest. Not pushed.
+- `orders/Codex/reports/2026-10-18-ninja-sprint-v1-report.md` through the v5 revision report — ninja sprint,
+  **review candidate, owner approval still pending** (report literally says "owner sprint assessment
+  pending"), local output at `assets/characters/player/sprites/sprint-review-v1/` (+ later revisions) +
+  manifest. Not pushed.
+
+Re-filed the Codex handoff order (`orders/Codex/2026-10-18-idle-128-production-handoff.md`) to ask Codex to
+**commit and push the existing QA'd assets** for idle/walk/run/sprint, verify the real file paths, provide the
+manifest(s), and report back the exact branch name + commit SHA — explicitly not to produce anything new.
+Ninja sprint must ship labeled as a review candidate, not final-approved, per the owner's instruction that
+sprint remains subject to their final approval.

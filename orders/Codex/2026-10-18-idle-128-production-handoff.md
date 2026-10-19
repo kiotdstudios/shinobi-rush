@@ -1,72 +1,84 @@
-# ORDER — Production 128×128 idle sprite set (manifest + sheets)
+# ORDER — Push existing approved 128×128 art (idle/walk/run) + sprint candidate to git
 - Agent: Codex
 - Status: QUEUED
 - Priority: P1 (blocks Aki's live Animation Lab integration/playtest, orders/Aki/2026-10-18-codex-idle-art-integration-playtest.md / PR #15)
 - Owner: Codex
-- Branch/PR:
-- Dependencies: docs/prototype/BASELINE_PLAYER_CHARACTER.md, docs/prototype/SPRITE_DROP_IN.md (schema v1), docs/prototype/PLAYER_CHARACTER_CODEX_HANDOFF.md
+- Branch/PR: dedicated new branch, isolated from `codex/mobile-animation-preview` and `codex/high-detail-character-standard`
+- Dependencies: docs/prototype/SPRITE_DROP_IN.md (schema v1)
 
 ## Objective
 
-Ship the first real **production-ready** 128×128 idle sprite set (manifest + PNG frames/sheet) for the player
-character, so the already-live Animation Lab (`scripts/ui/animation_lab.gd`, wired into `scenes/main.tscn`,
-reachable today via `Tab` on the live build) can display and preview it. Right now there is no production
-manifest anywhere in the repo — only approval-stage preview GIFs (`assets/characters/player/previews/mobile/*.gif`,
-64px-equivalent) and the reference turnaround PNG. The Lab is sitting idle with placeholder art waiting on this.
+**This is a push request, not a production request.** Per your own job reports, the real native 128×128 RGBA
+sprite frames, spritesheets, and manifests for idle, walk, run, and ninja sprint already exist, already passed
+your own QA (frame-integrity/alpha/scale/Godot-capture checks), and the owner has already approved idle v5,
+walk v1, and run v4. They were deliberately left unpublished — only review GIFs were committed. Do not
+regenerate, re-pose, or produce any new art for this order. Just commit and push what you already built.
 
 ## Context / References
 
-- Checked `main`, `codex/high-detail-character-standard`, and `codex/mobile-animation-preview` (git ls-tree):
-  none contain a `*.manifest.json` or native-128×128 production sheet under `assets/characters/`.
-- Your own `orders/Codex/reports/2026-10-18-animation-playback-preference.md` states full art production
-  remains incomplete — this order is the concrete next step to close that gap for `idle` specifically.
-- Schema is locked, see `docs/prototype/SPRITE_DROP_IN.md` section 2 (quoted below for convenience):
+Confirmed by reading your own reports on `codex/mobile-animation-preview` — each one states the real assets were
+built and tested but kept out of the published branch:
 
-```json
-{
-  "schema": 1,
-  "id": "player_128",
-  "frame_size": [128, 128],
-  "foot_anchor": [64, 116],
-  "body_height_px": 108,
-  "directions": ["S", "SE", "E", "NE", "N", "NW", "W", "SW"],
-  "mirror": { "W": "E", "SW": "SE", "NW": "NE" },
-  "animations": {
-    "idle": { "fps": 24, "loop": true,
-              "frames": { "S": ["sprites/idle/S_000.png", "sprites/idle/S_001.png"],
-                          "E": ["sprites/idle/E_000.png", "sprites/idle/E_001.png"] } }
-  }
-}
-```
+- `orders/Codex/reports/2026-10-18-idle-shoulders-v5-report.md`: *"Normalized frames and manifest:
+  `assets/characters/player/sprites/idle-review-v5/`. Mobile review GIFs/README and this report only are
+  published on the existing preview branch. Full art implementation remains separate."* — **idle v5, owner-approved.**
+- `orders/Codex/reports/2026-10-18-south-run-cadence-v4-report.md`: *"Normalized frames/manifest:
+  `assets/characters/player/sprites/run-review-v4/`. Published branch limited to review GIFs/docs/report."*
+  — **run v4, owner-approved** (south cadence fix).
+- Walk v1 is referenced as approved ("Idle v5 approved by the owner... accepted idle v5, walk v1 and run v3 are
+  preserved") in the same pipeline; locate and push its corresponding `sprites/walk-review-v1/`-style output
+  alongside idle/run.
+- `orders/Codex/reports/2026-10-18-ninja-sprint-v1-report.md` (and the later v2-v5 revision reports):
+  *"Normalized PNG exports/sheets/manifest: `assets/characters/player/sprites/sprint-review-v1/`. Published
+  branch limited to GIF review artifacts, documentation and this report."* — **ninja sprint, status
+  "owner assessment pending," not yet final-approved.** Push the latest accepted revision (v5, north-west
+  cadence fix) as a review candidate; the owner will give final sprint approval after seeing it in the Lab.
+- Confirmed via `git log --all --diff-filter=A` across every branch and all of history: zero `*.manifest.json`
+  and zero `assets/characters/player/sprites/*` paths have ever been committed to this repo. This is a push
+  gap, not a missing-art gap.
 
 ## Scope / Files owned
 
-- New files only, under `assets/characters/player/` (manifest + `sprites/idle/...` or a sheet form).
-- Do not touch Aki's, Kiro's, or Orcha's scripts/scenes. Do not touch `scripts/ui/animation_lab.gd` or
-  `scripts/sprites/sprite_library.gd` — they already auto-discover any valid manifest with zero code changes.
+- New files only, under `assets/characters/player/sprites/` (or wherever your existing local output already
+  lives) plus the manifest(s). Use a **new, isolated branch** — do not reuse or modify
+  `codex/mobile-animation-preview` or `codex/high-detail-character-standard` in place, and do not touch any
+  file owned by Aki, Kiro, or Orcha. This keeps the push independent of Kiro's ongoing wall-occlusion work.
 
 ## Deliverables
 
-1. A `*.manifest.json` with `schema: 1`, base `frame_size: [128, 128]`, a real `foot_anchor`, `body_height_px`
-   in the 100–112 range, at minimum the N/S/E/W cardinal directions (diagonals/mirrors welcome), and an `idle`
-   animation entry (`fps`, `loop: true`, and either per-direction `frames` or a `sheet`+`columns`/`rows`).
-2. Native 128×128 RGBA transparent PNG frames for `idle` in every declared direction — **not** upscaled from the
-   64px preview GIFs or reference PNG, and not a repurposed placeholder. Minimum 2 frames per direction (a subtle
-   breathing/idle loop is fine; it does not need to be the final polished idle, but it must be real 128×128 art,
-   not scratch/filler).
-3. Push to a dedicated branch + PR per the standard workflow, and confirm in your report that the manifest passes
-   the Lab's own validator (open the live build after your Pages deploy, press `Tab`, confirm the status line
-   reads `SPRITES: <id> 128x128 OK`, not `ERROR` or `none (placeholder)`).
+1. Commit and push the **actual existing, already-QA'd** native 128×128 RGBA frames/spritesheets for:
+   - **Idle v5** (approved)
+   - **Walk v1** (approved)
+   - **Run v4** (approved)
+   - **Ninja Sprint v5** (review candidate — label clearly as pending final owner approval, do not mark it
+     "approved" in the manifest or report)
+2. A `*.manifest.json` per `docs/prototype/SPRITE_DROP_IN.md` schema v1 (`schema: 1`, `frame_size: [128,128]`,
+   real `foot_anchor`, `body_height_px`, at least N/S/E/W, `mirror` where applicable) covering these four
+   animations — one manifest with multiple `animations` entries, or multiple manifests, whichever matches how
+   your local output is already structured. Do not restructure or re-export anything that already passed QA;
+   just verify the paths are correct and shippable (i.e. under `sprites/` or `animations/`, not `source/`,
+   per the drop-in contract's "not shipped in the Web build" rule).
+3. **Verify the actual file paths before pushing** — confirm every path the manifest references resolves to a
+   real committed file, confirm frame_size is genuinely 128×128 on disk (not inherited from an older 64px
+   source), and confirm nothing under `source/`/`references/`/`previews/`/`study/` is required at runtime.
+4. In your report: state the **exact branch name and commit SHA** you pushed, and open a PR to `main` (or leave
+   it open for Aki/the owner to review — state which).
 
 ## Acceptance Criteria / Tests
 
-- Validator status line on the live build reads `SPRITES: <id> 128x128 OK`.
-- `idle` plays cleanly in the Lab for all declared directions, no console errors.
-- Report filed per `orders/README.md` template with live-build screenshot/evidence.
+- Branch pushed, exact branch name + commit SHA stated in your report.
+- Manifest(s) validate against the schema (run `scripts/ci/validate_sprite_manifests.py` if present, or
+  describe the equivalent manual check) — base `frame_size` must be `[128, 128]`, never a 64px legacy value.
+- Open the live build after deploy (or confirm Aki will), press `Tab` in the Animation Lab, confirm the status
+  line reads `SPRITES: <id> 128x128 OK` for the idle/walk/run/sprint sets, not `ERROR` or `none (placeholder)`.
+- Ninja sprint must be clearly distinguishable in the manifest/report as a review candidate pending the
+  owner's final approval, not shipped as final.
 
 ## Handoff / Notes
 
-This directly unblocks Aki's PR #15 (`orders/aki-codex-art-playtest`), currently marked BLOCKED pending exactly
-this deliverable. Aki will pick this manifest up automatically (no code changes needed) and run the full
-direction/jitter/floor-contact/camera-zoom/occlusion playtest pass the moment it lands, then report back to Chief
-with screenshots and a live preview link.
+This directly unblocks Aki's PR #15 (`orders/aki-codex-art-playtest`), currently BLOCKED pending exactly this
+push. The moment this lands, Aki will drop-in test it through the already-live Animation Lab (no code changes
+expected — `SpriteLibrary` auto-discovers any manifest under `assets/characters/`), run the full
+direction/jitter/floor-contact/camera-zoom/occlusion playtest pass (flagging any occlusion findings for Kiro
+without touching his files), and hand the owner a live browser preview link covering idle, walk, run, and
+ninja sprint. Sprint remains subject to the owner's final approval after they see it live.
