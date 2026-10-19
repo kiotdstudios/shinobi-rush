@@ -1,6 +1,6 @@
 # ORDER — Fix Ground Tilemap and Debug HUD
 - Agent: Aki
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Owner: Aki
 - Branch/PR: aki/ground-tileset-and-hud-layout / TBD

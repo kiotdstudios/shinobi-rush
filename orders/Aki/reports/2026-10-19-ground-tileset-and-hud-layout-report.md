@@ -2,8 +2,8 @@
 - Agent: Aki
 - Order: orders/Aki/2026-10-19-ground-tileset-and-hud-layout.md
 - Date: 2026-10-19
-- Final status: REVIEW (not DONE — PR to be opened against `main`, awaiting CI + merge + live Pages verification before closing out)
-- Commit / PR: branch `aki/ground-tileset-and-hud-layout`; PR not yet opened as of this report
+- Final status: DONE — merged to main, CI green, live Pages deploy verified
+- Commit / PR: https://github.com/kiotdstudios/shinobi-rush/pull/27 (merged `8286052`)
 
 ## Work completed
 
