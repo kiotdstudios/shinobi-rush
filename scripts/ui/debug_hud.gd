@@ -3,7 +3,7 @@ extends CanvasLayer
 ## No fake gameplay stats. Also owns the tiny pause toggle (runs while paused).
 
 const REFRESH := 0.1
-const LEGEND := "Keyboard: WASD move | Shift sprint | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | Options pause\nReserved (no behavior yet): arrows aim, J light, K heavy, Space dodge, F jump, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays"
+const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | Options pause\nReserved (no behavior yet): arrows aim, J light, K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays"
 
 var _info: Label
 var _paused: Label
@@ -15,7 +15,7 @@ func _ready() -> void:
 	# Translucent backing so HUD text stays readable over bright blocks (the lab status lines sit inside it).
 	var back := ColorRect.new()
 	back.position = Vector2(6, 4)
-	back.size = Vector2(530, 246)
+	back.size = Vector2(530, 282)  ## +2 lines (Direction, Zoom) vs the original 4-line info block
 	back.color = Color(0, 0, 0, 0.45)
 	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(back)
@@ -56,7 +56,8 @@ func _process(delta: float) -> void:
 		_player = get_tree().get_first_node_in_group("player") as PlayerController
 		if _player == null:
 			return
-	_info.text = "State: %s\nSpeed: %d px/s\nPos: (%d, %d)\nFPS: %d" % [
+	_info.text = "State: %s\nSpeed: %d px/s\nPos: (%d, %d)\nDirection: %s\nZoom: %.2fx\nFPS: %d" % [
 		_player.get_state_name(), int(_player.velocity.length()),
 		int(_player.global_position.x), int(_player.global_position.y),
+		SpriteSet.dir_name(_player.facing8), _player.camera.zoom.x,
 		int(Engine.get_frames_per_second())]

@@ -267,6 +267,25 @@ func anim_frame_size(anim_id: String) -> Vector2i:
 	return animations[anim_id]["frame_size"] if animations.has(anim_id) else frame_size
 
 
+## Playback length of one cycle of `anim_id` in seconds (frame count / fps), 0.0 if unknown. Used to
+## time one-shot actions (dodge, jump) so they run for exactly as long as the authored animation.
+func anim_duration(anim_id: String) -> float:
+	if not animations.has(anim_id):
+		return 0.0
+	var def: Dictionary = animations[anim_id]
+	var fps: float = def["fps"]
+	if fps <= 0.0:
+		return 0.0
+	var n := 0
+	if def["kind"] == "frames":
+		for dn: String in (def["frames"] as Dictionary):
+			n = (def["frames"][dn] as Array).size()
+			break
+	else:
+		n = int(def["frame_count"])
+	return float(n) / fps if n > 0 else 0.0
+
+
 static func file_exists(path: String) -> bool:
 	return FileAccess.file_exists(path) or FileAccess.file_exists(path + ".import")
 

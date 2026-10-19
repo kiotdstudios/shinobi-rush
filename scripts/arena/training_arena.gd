@@ -9,10 +9,14 @@ extends Node2D
 ## Playable world rectangle; the camera limits come from this.
 @export var bounds: Rect2 = WorldScale.ARENA_BOUNDS
 
-const GROUND_A := Color("#4b5d44")
-const GROUND_B := Color("#556a4c")
+const GROUND_A := Color("#4b5d44")  ## fallback fill if the ground texture ever fails to load
+const GROUND_TILE_SHADE := Color(0, 0, 0, 0.14)  ## subtle checker darkening over the stone texture (keeps the grid legible)
 const GRID_LINE := Color(0, 0, 0, 0.18)
 const BORDER := Color("#d9c27a")
+
+## Kosen courtyard stone tile (PixelLab), 64x64, tiled across the ground rect. Replaces the flat
+## GROUND_A fill now that real ground art exists; GROUND_A stays as the clear-colour fallback.
+const GROUND_TEXTURE: Texture2D = preload("res://assets/environment/kosen_courtyard/stone_tile_64.png")
 
 ## Each block: [bottom-centre position, footprint size (w, depth), height in px].
 ## Provisional prototype values scaled by WorldScale.SCALE; not balance.
@@ -143,7 +147,11 @@ func _build_bounds_walls() -> void:
 
 func draw_ground(ci: CanvasItem) -> void:
 	# Ground continues above the top wall (head room) and below the bottom wall (foot room) so the camera never shows void.
-	ci.draw_rect(bounds.grow_individual(0, WorldScale.CAMERA_HEADROOM, 0, WorldScale.CAMERA_FOOTROOM), GROUND_A)
+	var ground_rect := bounds.grow_individual(0, WorldScale.CAMERA_HEADROOM, 0, WorldScale.CAMERA_FOOTROOM)
+	if GROUND_TEXTURE != null:
+		ci.draw_texture_rect(GROUND_TEXTURE, ground_rect, true)
+	else:
+		ci.draw_rect(ground_rect, GROUND_A)
 	var hx := tile_size.x * 0.5
 	var hy := tile_size.y * 0.5
 	var lines := PackedVector2Array()
@@ -156,7 +164,7 @@ func draw_ground(ci: CanvasItem) -> void:
 				continue
 			var pts := PackedVector2Array([c + Vector2(0, -hy), c + Vector2(hx, 0), c + Vector2(0, hy), c + Vector2(-hx, 0)])
 			if (i + j) % 2 == 0:
-				ci.draw_colored_polygon(pts, GROUND_B)
+				ci.draw_colored_polygon(pts, GROUND_TILE_SHADE)
 			for k in 4:
 				lines.append(pts[k])
 				lines.append(pts[(k + 1) % 4])
