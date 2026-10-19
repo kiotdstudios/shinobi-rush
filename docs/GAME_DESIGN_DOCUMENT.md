@@ -211,3 +211,17 @@ Starting outpost/tutorial → forest approach (basic bandits) → fork between m
 
 ## Canonical world map
 The evolving Kōsen forest topology and potential unlockable shortcut are maintained in [`world/maps/README.md`](../world/maps/README.md). Update that diagram whenever the biome expands; it is the source of truth for route connectivity.
+
+
+## Owner-approved gameplay camera and scale — October 19, 2026
+
+**LOCKED composition target:** The owner-supplied close-up faux-isometric combat screenshot is the visual reference for Shinobi Rush's normal gameplay camera distance, relative player/enemy/environment scale, and immediate-combat visual density. This is **not** an instruction to recreate the screenshot's shrine level or replace Kōsen's own designs. The previous wide-field arena framing is superseded wherever it conflicts.
+
+- Fixed three-quarter 2D faux-isometric view; follow the player across a larger-than-screen, interconnected map rather than zooming out to show the entire village.
+- Provisional visual-comparison target: the visible standing player should occupy approximately **16–19% of viewport height** at gameplay zoom (~115–137 px on a 720 px viewport), subject to measurement and owner approval. **128×128 RGBA remains the native sprite frame standard**, not a mandated on-screen height.
+- Scale bandits and architecture relative to the player; preserve pixel clarity, foot anchors, collision, Y-sort, and environmental occlusion.
+- First milestone: a playable camera-and-scale test scene using actual Codex art, one bandit, Kōsen gate architecture and representative props, with a 1280×720 side-by-side comparison, measured zoom and player height, and owner sign-off **before full-map environment art production**.
+- Aki owns gameplay validation and Kiro owns camera/occlusion integration; coordinate rather than overwriting parallel work.
+- The MVP map topology and rules in world/maps/MVP_WORLD_MAP.md remain unchanged.
+
+**Detailed authoritative camera acceptance criteria:** [Camera and Art Direction](visuals/CAMERA_AND_ART_DIRECTION.md).
