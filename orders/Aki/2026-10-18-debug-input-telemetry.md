@@ -1,6 +1,6 @@
 # ORDER — Implement in-game debug input and interaction telemetry
 - Agent: Aki
-- Status: REVIEW
+- Status: DONE — PR #13 merged into main at 0f940721cb73f41821bf7c1659a6f75d15fc691b. Key rebind (F6/F10/F11/F12 -> Ctrl+Alt+H/G/B/X) applied per Kiro's flag. Post-merge live-build verification and 3-min sustained CPU/memory profiling both passed, no leak. Hardware/engine limitations documented (no real gamepad hardware, no global GDScript exception hook, Ctrl+Alt layout variations not exhaustively tested). See orders/Aki/reports/2026-10-18-aki-chief-report.md and orders/Aki/reports/2026-10-18-debug-input-telemetry-report.md for full detail.
 - Priority: P0
 - Owner: Aki (runtime gameplay instrumentation)
 - Collaborator: Kiro (browser capture/export/QA)
