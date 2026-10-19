@@ -71,15 +71,16 @@ try {
     await shot(keys.includes('ShiftLeft') ? '03-sprint' : '02-walk');
     for (const k of keys.slice().reverse()) await page.keyboard.up(k);
     await sleep(600);
-    return { a, b, dx: b.x - a.x };
+    const ticks = b.physics_frame - a.physics_frame;
+    return { a, b, dx: b.x - a.x, speed: ticks > 0 ? (b.x - a.x) * 60 / ticks : NaN };
   };
   const noEffect = (w) => Math.abs(w.dx) < 0.5 ? ' - HOOKS EXIST BUT INPUT HAD NO EFFECT (x did not change; keyboard events not reaching the game or movement broken)' : '';
-  const walk = await dxOver(['KeyD'], 100, 500); // ~600 ms hold
-  rec('move-right', walk.dx > 20 && walk.b.state === 'MOVE', `dx ${walk.dx.toFixed(1)} over 500 ms (KeyD held ~600 ms), state=${walk.b.state}${noEffect(walk)}`);
+  const walk = await dxOver(['KeyD'], 300, 700); // settle then measure using simulation-frame timestamps
+  rec('move-right', walk.dx > 20 && walk.b.state === 'MOVE', `dx ${walk.dx.toFixed(1)} over a700ms sample (KeyD held ~1000ms), state=${walk.b.state}${noEffect(walk)}`);
   // come back (same distance budget) so the sprint run does not hit the arena edge
   await dxOver(['KeyA'], 100, 500);
-  const sprint = await dxOver(['ShiftLeft', 'KeyD'], 100, 500);
-  rec('sprint-faster', sprint.dx > walk.dx * 1.2 && sprint.b.sprinting === true, `sprint dx ${sprint.dx.toFixed(1)} vs walk dx ${walk.dx.toFixed(1)}; state=${sprint.b.state}, sprinting=${sprint.b.sprinting}${noEffect(sprint)}`);
+  const sprint = await dxOver(['ShiftLeft', 'KeyD'], 300, 700);
+  rec('sprint-faster', sprint.dx > 20 && sprint.speed > walk.speed * 1.2 && sprint.b.sprinting === true, `sprint ${sprint.speed.toFixed(1)}px/physics-sec vs walk ${walk.speed.toFixed(1)}px/physics-sec; state=${sprint.b.state}, sprinting=${sprint.b.sprinting}${noEffect(sprint)}`);
 
   // walk into the wall: hold W until the position stops changing (3 equal samples), then require it moved first
   const startY = (await state()).y;
@@ -112,10 +113,21 @@ try {
   const zClosed = await zoomNow();
   rec('lab-close-restores-baseline', near(zClosed, BASE_ZOOM), `after Tab (lab closed) zoom=${zClosed}, expected ~${BASE_ZOOM.toFixed(4)}`);
 
+  // Actual accepted one-shot assets must also load in the in-game review lab.
+  if ((await state()).sprite_set_id === 'player_128') {
+    await tap('Tab');
+    for (const target of ['jump', 'dodge']) {
+      for (let i = 0; i < 8 && (await state()).lab_animation !== target; i++) await tap('Period');
+      rec(`lab-${target}-available`, (await state()).lab_animation === target, `selected ${(await state()).lab_animation}`);
+      await shot(`lab-${target}`);
+    }
+    await tap('Tab');
+  }
+
   // Camera preset from the URL (PROVISIONAL close-combat framing). The default run above stays wide; here each query gets a fresh page.
-  // close = 0.175 x 720 / figure height; the 108 px placeholder gives 1.1667 (126 px = 17.5 % of the viewport), view 1097.1 x 617.1.
+  // close uses the loaded figure height, including real sprite sets rather than only the placeholder.
   await page.goto('about:blank'); // free the CPU of the finished page before booting another copy of the game
-  const CLOSE_ZOOM = (0.175 * 720) / 108;
+
   const cameraPage = async (query, tag) => {
     const p = await context.newPage();
     p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
@@ -130,6 +142,10 @@ try {
     } finally { await p.close(); }
   };
   const sc = await cameraPage('?camera=close', 'close');
+  const figureHeight = Number(sc.figure_height_px);
+  const nativeFraction = figureHeight / 720;
+  const CLOSE_ZOOM = nativeFraction >= 0.16 && nativeFraction <= 0.19 ? 1 : Math.min(4, Math.max(0.25, (0.175 * 720) / figureHeight));
+  rec('camera-figure-height', Number.isFinite(figureHeight) && figureHeight > 0, `loaded figure height=${figureHeight}px`);
   rec('camera-close-via-query', sc.camera_preset === 'close' && near(sc.zoom, CLOSE_ZOOM) && Math.abs(sc.view_w - 1280 / CLOSE_ZOOM) < 2 && Math.abs(sc.view_h - 720 / CLOSE_ZOOM) < 2,
     `?camera=close expected preset=close zoom ~${CLOSE_ZOOM.toFixed(4)} view ${(1280 / CLOSE_ZOOM).toFixed(1)}x${(720 / CLOSE_ZOOM).toFixed(1)}; got preset=${sc.camera_preset} zoom=${sc.zoom} view=${sc.view_w}x${sc.view_h}`);
   const sg = await cameraPage('?camera=bogus', 'bogus');

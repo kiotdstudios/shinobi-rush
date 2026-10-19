@@ -193,7 +193,7 @@ func _ready() -> void:
 	elif not lib.sets.is_empty():
 		sel_index = 0
 	_select_set(sel_index)
-	_set_lab(not lib.sets.is_empty())
+	_set_lab(false)  # Loading real art must not auto-open the lab or change Tab toggle semantics.
 	_refresh_ui()
 
 

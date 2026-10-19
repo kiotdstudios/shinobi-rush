@@ -38,6 +38,7 @@ func _process(delta: float) -> void:
 		if _player == null:
 			return
 	_state.frame = Engine.get_process_frames()
+	_state.physics_frame = Engine.get_physics_frames()
 	_state.x = _player.global_position.x
 	_state.y = _player.global_position.y
 	_state.state = _player.get_state_name()
@@ -48,6 +49,13 @@ func _process(delta: float) -> void:
 	_state.view_w = framing.view_w
 	_state.view_h = framing.view_h
 	_state.camera_preset = CameraPreset.active_id()
+	_state.figure_height_px = _player.figure_height_px()
+	_state.sprite_set_id = _player.visual.sprite_set.id if _player.visual.sprite_set != null else "placeholder"
+	var scene := get_tree().current_scene
+	var lab := scene.get_node_or_null("AnimationLab") as AnimationLab if scene != null else null
+	if lab != null:
+		_state.lab_open = lab.lab_on
+		_state.lab_animation = lab.anim_id
 
 
 ## Select the camera preset from the page's query string (web only caller). Invalid or missing -> default.

@@ -452,7 +452,9 @@ func test_lab_and_pause() -> void:
 	var lab := main.get_node("AnimationLab") as AnimationLab
 	var hud := main.get_node("DebugHud")
 	var player := main.get_node("TrainingArena/Player") as PlayerController
-	ck("lab: a valid set is present, gameplay visual uses it", player.visual.sprite_set == lib.sets[0] and lab.lab_on and lab.stands[0].visible)
+	ck("lab: real art is selected without opening the panel", player.visual.sprite_set == lib.sets[0] and not lab.lab_on and not lab.stands[0].visible)
+	_press(lab, "dbg_toggle_lab")
+	ck("lab: explicit open shows the selected art stand", lab.lab_on and lab.stands[0].visible)
 	var base := _snap(lab)
 
 	# playback speed: clamps at both ends and reaches the stand's AnimatedSprite2D.speed_scale
@@ -581,10 +583,9 @@ func test_camera_framing() -> void:
 
 	# opening the lab must not change the camera; the panel shows the real zoom
 	var zoom_value := lab._value_labels["zoom"] as Label
-	ck("lab: open at scene start with the baseline zoom and the 'wide 0.44x' label", lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x", "%s idx=%d" % [zoom_value.text, lab.zoom_index])
+	ck("lab: closed at scene start with baseline zoom and label", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x", "%s idx=%d" % [zoom_value.text, lab.zoom_index])
 	_press(lab, "dbg_toggle_lab")
-	_press(lab, "dbg_toggle_lab")
-	ck("lab: toggling closed and open leaves the camera at baseline", lab.lab_on and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x")
+	ck("lab: opening explicitly leaves the camera at baseline", lab.lab_on and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x")
 
 	# Z cycles 1x, 2x, 3x, 4x and wraps to baseline; label and camera agree at every step
 	var seen: Array[float] = []

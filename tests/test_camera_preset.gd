@@ -225,6 +225,7 @@ func test_scene(tree_root: Node) -> void:
 	# ---- close: computed from the figure height of the active visual (108 px set -> 1.1667)
 	main = await _boot(tree_root, "close", [set108, set120])
 	lab = main.get_node("AnimationLab") as AnimationLab
+	_press(lab, "dbg_toggle_lab")  # Lab now starts closed even with loaded art.
 	player = main.get_node("TrainingArena/Player") as PlayerController
 	cam = player.camera
 	zoom_label = lab._value_labels["zoom"] as Label
@@ -290,6 +291,7 @@ func test_scene(tree_root: Node) -> void:
 	# ---- a plain number (?camera=2)
 	main = await _boot(tree_root, 2.0, [set108])
 	lab = main.get_node("AnimationLab") as AnimationLab
+	_press(lab, "dbg_toggle_lab")  # Lab now starts closed even with loaded art.
 	player = main.get_node("TrainingArena/Player") as PlayerController
 	ck.call("camera scene: a numeric preset (2) sets zoom 2.0, id 'custom', label 'custom 2.00x'", player.camera.zoom.x == 2.0 and CameraPreset.active_id() == "custom" and (lab._value_labels["zoom"] as Label).text == "custom 2.00x" and (lab._value_labels["preset"] as Label).text == "custom", "%s %s" % [player.camera.zoom, (lab._value_labels["zoom"] as Label).text])
 	_press(lab, AnimationLab.PRESET_ACTION)
