@@ -2,9 +2,7 @@ class_name SpriteActor
 extends Node2D
 ## Draws one SpriteSet animation with the foot anchor on this node's origin (the ground-contact
 ## point). The sprite sits in a pivot at the origin; horizontal mirroring scales the pivot by -1, so
-## the anchor never moves when frames, animations or flips change. The shadow stays fixed.
-
-const SHADOW := Color(0, 0, 0, 0.35)
+## the anchor never moves when frames, animations or flips change.
 
 var sprite: AnimatedSprite2D
 var set_ref: SpriteSet
@@ -32,16 +30,6 @@ func _init() -> void:
 ## Local position of the sprite's top-left so that `anchor` lies on the origin.
 static func sprite_position(anchor: Vector2) -> Vector2:
 	return -anchor
-
-
-func _draw() -> void:
-	if sprite.sprite_frames == null:
-		return
-	var pts := PackedVector2Array()
-	for k in 16:
-		var a := TAU * k / 16.0
-		pts.append(Vector2(cos(a) * 15.0 * WorldScale.SCALE, sin(a) * 6.0 * WorldScale.SCALE))
-	draw_colored_polygon(pts, SHADOW)
 
 
 ## Show (set, anim, desired direction). `freeze` shows frame 0 without advancing (static idle).

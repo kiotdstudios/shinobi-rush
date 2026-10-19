@@ -126,7 +126,7 @@ class CommitIdStrictnessTests(unittest.TestCase):
     def test_cli_exits_2_for_an_empty_expect_sha_and_an_empty_commit_sha(self):
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(godot_ci.main(["check-export", "--dir", str(self.d), "--kind", "game", "--expect-sha", ""]), 2)
-            self.assertEqual(godot_ci.main(["check-export", "--dir", str(self.d), "--kind", "game", "--expect-sha", SHA]), 0)
+            self.assertEqual(godot_ci.main(["check-export", "--dir", str(self.d), "--kind", "game", "--expect-sha", SHA, "--project", str(self.tmp)]), 0)
             project = self.tmp / "proj"
             project.mkdir()
             (project / "project.godot").write_text("config_version=5\n")
