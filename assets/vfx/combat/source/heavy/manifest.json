@@ -1,0 +1,95 @@
+{
+ "app": "PixelLab VFX Creator",
+ "name": "Shinobi Rush sword trail heavy V1",
+ "fps": 24,
+ "frame_ms": 42,
+ "frames": 9,
+ "loop": false,
+ "canvas": {
+  "w": 72,
+  "h": 81
+ },
+ "anchor": {
+  "kind": "origin",
+  "x": 31,
+  "y": 40
+ },
+ "clips": [
+  {
+   "name": "whole",
+   "title": "the whole effect, no sprite",
+   "depth": "both",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 8,
+   "frame": {
+    "w": 68,
+    "h": 75
+   },
+   "sheets": [
+    {
+     "file": "whole.png",
+     "first_frame": 0,
+     "frames": 8,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -30,
+    "y": -37
+   }
+  },
+  {
+   "name": "front",
+   "title": "everything in front of the sprite",
+   "depth": "front",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 8,
+   "frame": {
+    "w": 68,
+    "h": 75
+   },
+   "sheets": [
+    {
+     "file": "front.png",
+     "first_frame": 0,
+     "frames": 8,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -30,
+    "y": -37
+   }
+  },
+  {
+   "name": "part-swing_slash",
+   "title": "the swing slash part",
+   "part": "swing_slash",
+   "depth": "front",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 8,
+   "frame": {
+    "w": 68,
+    "h": 75
+   },
+   "sheets": [
+    {
+     "file": "part-swing_slash.png",
+     "first_frame": 0,
+     "frames": 8,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -30,
+    "y": -37
+   }
+  }
+ ]
+}

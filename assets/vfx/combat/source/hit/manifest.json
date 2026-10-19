@@ -1,0 +1,95 @@
+{
+ "app": "PixelLab VFX Creator",
+ "name": "Shinobi Rush hit spark V1",
+ "fps": 24,
+ "frame_ms": 42,
+ "frames": 5,
+ "loop": false,
+ "canvas": {
+  "w": 30,
+  "h": 28
+ },
+ "anchor": {
+  "kind": "origin",
+  "x": 14,
+  "y": 14
+ },
+ "clips": [
+  {
+   "name": "whole",
+   "title": "the whole effect, no sprite",
+   "depth": "both",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 4,
+   "frame": {
+    "w": 26,
+    "h": 24
+   },
+   "sheets": [
+    {
+     "file": "whole.png",
+     "first_frame": 0,
+     "frames": 4,
+     "columns": 2,
+     "rows": 2
+    }
+   ],
+   "offset": {
+    "x": -12,
+    "y": -12
+   }
+  },
+  {
+   "name": "front",
+   "title": "everything in front of the sprite",
+   "depth": "front",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 4,
+   "frame": {
+    "w": 26,
+    "h": 24
+   },
+   "sheets": [
+    {
+     "file": "front.png",
+     "first_frame": 0,
+     "frames": 4,
+     "columns": 2,
+     "rows": 2
+    }
+   ],
+   "offset": {
+    "x": -12,
+    "y": -12
+   }
+  },
+  {
+   "name": "part-hit_star",
+   "title": "the hit star part",
+   "part": "hit_star",
+   "depth": "front",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 4,
+   "frame": {
+    "w": 26,
+    "h": 24
+   },
+   "sheets": [
+    {
+     "file": "part-hit_star.png",
+     "first_frame": 0,
+     "frames": 4,
+     "columns": 2,
+     "rows": 2
+    }
+   ],
+   "offset": {
+    "x": -12,
+    "y": -12
+   }
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shinobi Rush — combat VFX inspection</title>
+<style>body{margin:24px;background:#151b20;color:#e7edef;font:16px system-ui}header{position:sticky;top:0;background:#151b20;padding:12px 0}button,input{font:inherit}main{display:flex;flex-wrap:wrap;gap:16px}article{background:#243039;padding:16px;border-radius:8px}canvas{width:256px;height:256px;image-rendering:pixelated;background:repeating-conic-gradient(#34404a 0% 25%,#29343d 0% 50%) 50%/24px 24px}output{font-variant-numeric:tabular-nums}label{display:inline-block;margin:8px}p{max-width:65ch}</style>
+<header><h1>Combat VFX inspection</h1><p>Independent effects; character attack production and Aki timing agreement are pending.</p>
+<button id="pause">Pause</button><button id="reset">Restart clock</button>
+<label>Speed <input id="speed" type="range" min="0.25" max="1.5" step="0.25" value="1"><output id="rate">1×</output></label>
+<output id="clock">0.000s</output></header><main></main><p id="status">Loading transparent PNG frames…</p>
+<script type="module">
+const base='../../../../vfx/combat/';
+const m=await fetch(base+'combat_vfx.json').then(r=>{if(!r.ok)throw Error('Manifest HTTP '+r.status);return r.json()});
+const cards=[];let time=0,last=performance.now(),running=true;
+for(const [name,e] of Object.entries(m.effects)){
+ const card=document.createElement('article');const title=document.createElement('h2');title.textContent=name;card.append(title);
+ const c=document.createElement('canvas');c.width=c.height=128;card.append(c);const info=document.createElement('p');card.append(info);document.querySelector('main').append(card);
+ const images=await Promise.all(e.frames.map(path=>new Promise((resolve,reject)=>{const im=new Image;im.onload=()=>resolve(im);im.onerror=()=>reject(Error('Missing '+path));im.src=base+path})));
+ cards.push({e,c,info,images});
+}
+document.querySelector('#status').textContent='All '+cards.reduce((n,c)=>n+c.images.length,0)+' PNGs loaded. Fixed pivot [64,64]; nearest-neighbor display. Preview loops include a 0.5s review pause; runtime clips are one-shots.';
+document.querySelector('#pause').onclick=()=>{running=!running;document.querySelector('#pause').textContent=running?'Pause':'Play'};
+document.querySelector('#reset').onclick=()=>time=0;
+function tick(now){if(running)time+=(now-last)/1000*Number(document.querySelector('#speed').value);last=now;
+ document.querySelector('#rate').textContent=document.querySelector('#speed').value+'×';document.querySelector('#clock').textContent=time.toFixed(3)+'s';
+ for(const {e,c,info,images} of cards){const duration=images.length/e.fps,local=time%(duration+0.5),frame=Math.floor(local*e.fps),ctx=c.getContext('2d');ctx.clearRect(0,0,128,128);ctx.imageSmoothingEnabled=false;if(frame<images.length)ctx.drawImage(images[frame],0,0);info.textContent=frame<images.length?`Frame ${frame+1}/${images.length} · ${(frame/e.fps).toFixed(3)}s · ${e.fps} FPS`:'Review pause';}requestAnimationFrame(tick);
+}requestAnimationFrame(tick);
+</script></html>

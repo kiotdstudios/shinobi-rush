@@ -1,0 +1,61 @@
+{
+  "status": "work_in_progress_not_production",
+  "character_id": "2b5a8809-cf01-46a4-8e85-0602dda701a2",
+  "inventory_handoff_pr": "https://github.com/kiotdstudios/shinobi-rush/pull/31",
+  "aki_notification": "https://github.com/kiotdstudios/shinobi-rush/pull/20#issuecomment-6278121326",
+  "timing_status": "awaiting_aki_configuration",
+  "ready_pose_jobs": {
+    "SE": "23da1372-a4ed-4818-bd9c-68e053bcb961",
+    "N": "fe4ad8df-0284-4291-934c-2487ad5c679e",
+    "S": "75afa4e8-47e5-463d-88ab-5f3469aa5a1a",
+    "E": "a8cd2edf-adb4-4074-8c5a-9bd2f8350c4a",
+    "NE": "0a4a84b2-f61b-4c90-8f9a-352a952e284c",
+    "NW": "8d92fde4-5335-4fdd-be76-0946a96dc7ad",
+    "W": "5289fdda-0dba-43cc-b42d-75a4e7357e74",
+    "SW": "f02d885f-685a-48df-b842-b882fc53f59d"
+  },
+  "animation_jobs": {
+    "light_attack_1_SE_pilot": {
+      "job_id": "14f9620c-c8a3-4e17-bbf1-104fa2129ece",
+      "group_id": "792b26eb-9739-498b-9e91-2ff313e6747b",
+      "name": "combat-light-1-se-pilot-v1",
+      "frame_count_requested": 12,
+      "keep_first_frame": true,
+      "generated_canvas": [
+        128,
+        152
+      ],
+      "note": "Inspect body scale and motion before normalizing. Do not shrink anatomy to fit weapon. Reference frame may be excluded from playback.",
+      "review": "REJECTED: baked trail at5, excessive ending hold, first reference duplicated"
+    },
+    "light_attack_1_SE_pilot_v2": {
+      "job_id": "0a41688f-48d2-402f-a0a3-df105a05c2f8",
+      "group_id": "3548210c-6c0e-4714-949a-7c7ec1103aa2",
+      "name": "combat-light-1-se-pilot-v2",
+      "frame_count_requested": 12,
+      "keep_first_frame": false,
+      "review": "pending"
+    }
+  },
+  "controlled_pose_jobs": {
+    "cardinals": {
+      "job_id": "e858fad1-d243-4f27-bdfe-35f09a70d079",
+      "directions": [
+        "N",
+        "E",
+        "W",
+        "S"
+      ]
+    },
+    "diagonals": {
+      "job_id": "a3fb2732-cf8b-4e68-af4d-aac77784a4b3",
+      "directions": [
+        "SE",
+        "NE",
+        "NW",
+        "SW"
+      ]
+    }
+  },
+  "trail_removal_job": "08bf118a-7388-447b-b863-cfbb4272fd5e"
+}
