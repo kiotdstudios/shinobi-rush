@@ -1,6 +1,6 @@
 # ORDER — Investigate player disappearing beneath arena wall (deferred)
 - **Agent:** Kiro
-- **Status:** QUEUED — DEFERRED; do not start until Kiro's currently active eight workflows/tasks have finished and their integration is reviewed.
+- **Status:** REVIEW (2026-10-18): defect found and fixed; PR open, not merged; live build not yet verified. Report: orders/Kiro/reports/2026-10-18-wall-occlusion-report.md
 - **Priority:** P2 (reassess after current work completes)
 - **Owner:** Kiro
 - **Source:** Owner's playable browser screenshot, 2026-10-18 (player near the center-right obstacle, partially covered by the brown placeholder wall/block).
@@ -25,3 +25,6 @@ Owner can now launch and play the Godot bootstrap build. In the screenshot, the 
 
 ## Note
 Owner approves Codex's current idle character art and intends to authorize Codex to continue. **This order does not assign Codex work or alter art assets.**
+
+## Status log
+- 2026-10-18: investigation closed as DEFECT (east-side draw order, H1+H2). Fix on branch kiro/wall-occlusion, PR: https://github.com/kiotdstudios/shinobi-rush/pulls?q=head%3Akiro%2Fwall-occlusion (REVIEW, not merged).
