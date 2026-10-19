@@ -555,14 +555,14 @@ func test_camera_framing() -> void:
 	var base := WorldScale.CAMERA_BASE_ZOOM
 
 	# baseline zoom at scene start
-	ck("camera: CAMERA_BASE_ZOOM is the P0 reference-matched 144/108 value", is_equal_approx(base, 144.0 / 108.0))
-	ck("camera: baseline zoom equals 144/108 within 1e-6 at scene start", absf(cam.zoom.x - 144.0 / 108.0) < 1e-6 and absf(cam.zoom.y - 144.0 / 108.0) < 1e-6, "zoom=%s expected %.6f" % [cam.zoom, 144.0 / 108.0])
+	ck("camera: CAMERA_BASE_ZOOM is 1/SCALE", is_equal_approx(base, 1.0 / WorldScale.SCALE))
+	ck("camera: baseline zoom equals 1/SCALE within 1e-6 at scene start", absf(cam.zoom.x - 1.0 / WorldScale.SCALE) < 1e-6 and absf(cam.zoom.y - 1.0 / WorldScale.SCALE) < 1e-6, "zoom=%s expected %.6f" % [cam.zoom, 1.0 / WorldScale.SCALE])
 
 	# visible rect = pre-scale view * SCALE, and it fits inside the arena
 	var vp := root.get_visible_rect().size
 	var view := vp / cam.zoom.x
 	ck("camera: viewport is the 1280x720 base size", vp == Vector2(1280, 720), str(vp))
-	ck("camera: visible world rect at baseline is 960x540 (P0 reference-matched zoom 1.333)", view.is_equal_approx(Vector2(960, 540)), "view=%s" % view)
+	ck("camera: visible world rect at baseline is 2880x1620 (= pre-scale 1280x720 times SCALE)", view.is_equal_approx(Vector2(1280, 720) * WorldScale.SCALE) and view.is_equal_approx(Vector2(2880, 1620)), "view=%s" % view)
 	ck("camera: visible rect fits inside ARENA_BOUNDS", view.x <= WorldScale.ARENA_BOUNDS.size.x and view.y <= WorldScale.ARENA_BOUNDS.size.y, "view=%s bounds=%s" % [view, WorldScale.ARENA_BOUNDS.size])
 
 	# camera limits equal the arena bounds (CAMERA_HEADROOM above the top, CAMERA_FOOTROOM below the bottom)
@@ -575,14 +575,14 @@ func test_camera_framing() -> void:
 
 	# lab zoom list and labels
 	ck("lab zoom list is [baseline, 1, 2, 3, 4]", AnimationLab.ZOOMS.size() == 5 and AnimationLab.ZOOMS[0] == base and AnimationLab.ZOOMS.slice(1) == [1.0, 2.0, 3.0, 4.0], str(AnimationLab.ZOOMS))
-	ck("lab zoom labels: 'wide 1.33x' then 1x..4x", AnimationLab.zoom_label(0) == "wide 1.33x" and AnimationLab.zoom_label(1) == "1x" and AnimationLab.zoom_label(2) == "2x" and AnimationLab.zoom_label(3) == "3x" and AnimationLab.zoom_label(4) == "4x", AnimationLab.zoom_label(0))
+	ck("lab zoom labels: 'wide 0.44x' then 1x..4x", AnimationLab.zoom_label(0) == "wide 0.44x" and AnimationLab.zoom_label(1) == "1x" and AnimationLab.zoom_label(2) == "2x" and AnimationLab.zoom_label(3) == "3x" and AnimationLab.zoom_label(4) == "4x", AnimationLab.zoom_label(0))
 
 	# opening the lab must not change the camera; the panel shows the real zoom
 	var zoom_value := lab._value_labels["zoom"] as Label
-	ck("lab: open at scene start with the baseline zoom and the 'wide 1.33x' label", lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 1.33x", "%s idx=%d" % [zoom_value.text, lab.zoom_index])
+	ck("lab: open at scene start with the baseline zoom and the 'wide 0.44x' label", lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x", "%s idx=%d" % [zoom_value.text, lab.zoom_index])
 	_press(lab, "dbg_toggle_lab")
 	_press(lab, "dbg_toggle_lab")
-	ck("lab: toggling closed and open leaves the camera at baseline", lab.lab_on and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 1.33x")
+	ck("lab: toggling closed and open leaves the camera at baseline", lab.lab_on and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x")
 
 	# Z cycles 1x, 2x, 3x, 4x and wraps to baseline; label and camera agree at every step
 	var seen: Array[float] = []
@@ -592,7 +592,7 @@ func test_camera_framing() -> void:
 		seen.append(cam.zoom.x)
 		labels.append(zoom_value.text)
 	ck("lab: Z cycles 1,2,3,4, baseline, 1 on the camera", seen.size() == 6 and seen[0] == 1.0 and seen[1] == 2.0 and seen[2] == 3.0 and seen[3] == 4.0 and is_equal_approx(seen[4], base) and seen[5] == 1.0, str(seen))
-	ck("lab: panel label matches the real zoom at every step", str(labels) == str(["1x", "2x", "3x", "4x", "wide 1.33x", "1x"]), str(labels))
+	ck("lab: panel label matches the real zoom at every step", str(labels) == str(["1x", "2x", "3x", "4x", "wide 0.44x", "1x"]), str(labels))
 
 	# opening while zoomed keeps the zoom; closing restores baseline
 	_press(lab, "dbg_zoom_cycle")  # 1x -> 2x
@@ -608,7 +608,7 @@ func test_camera_framing() -> void:
 	# __SHINOBI_STATE__ framing fields (WebBridge is inert outside the browser, so test the publisher's helper + source)
 	var bridge_script := load("res://scripts/web/web_bridge.gd")
 	var fr: Dictionary = bridge_script.camera_framing(cam.zoom.x, vp)
-	ck("state: camera_framing publishes zoom/view_w/view_h at baseline", absf(fr["zoom"] - base) < 1e-6 and absf(fr["view_w"] - 960.0) < 0.01 and absf(fr["view_h"] - 540.0) < 0.01, str(fr))
+	ck("state: camera_framing publishes zoom/view_w/view_h at baseline", absf(fr["zoom"] - base) < 1e-6 and absf(fr["view_w"] - 2880.0) < 0.01 and absf(fr["view_h"] - 1620.0) < 0.01, str(fr))
 	var fr2: Dictionary = bridge_script.camera_framing(2.0, Vector2(1280, 720))
 	ck("state: camera_framing at 2x gives a 640x360 view", fr2 == {"zoom": 2.0, "view_w": 640.0, "view_h": 360.0}, str(fr2))
 	var src := FileAccess.get_file_as_string("res://scripts/web/web_bridge.gd")

@@ -8,14 +8,12 @@ extends RefCounted
 ## 108 / 48: new standing height over the old 48 px placeholder height.
 const SCALE := 2.25
 
-## Gameplay camera zoom — RETUNED 2026-10-18 (P0 camera/scale reference match, orders/Aki/2026-10-18-camera-scale-validation.md).
-## Owner supplied a locked reference screenshot: measured player height there is ~205px of a 1024px-tall
-## image = ~20.0% of viewport height. Target on a 1280x720 viewport: 0.20 * 720 = 144px. BODY_HEIGHT (108px)
-## is the native on-screen size at zoom 1.0, so the zoom that reproduces the reference proportion is
-## 144 / 108 = 1.333. This replaces the old 1.0/SCALE derivation (which produced a far more zoomed-out view
-## than the reference); it is no longer tied to SCALE and is Aki/Orcha-tunable pending owner approval of the
-## validation scene.
-const CAMERA_BASE_ZOOM := 144.0 / 108.0  # 108 == BODY_HEIGHT, declared below; literal to avoid const ordering issues
+## Gameplay camera zoom. KEPT AT THE EXISTING PROTOTYPE BASELINE (Kiro's wide-camera work) per the
+## 2026-10-19 owner-locked doc (docs/visuals/CAMERA_AND_ART_DIRECTION.md, "Camera conflict resolution"):
+## this shared constant is not where the new close-combat framing target gets validated — that happens in
+## an isolated validation scene/preset (orders/Aki/2026-10-18-camera-scale-validation.md) so the live
+## gameplay baseline and Kiro's active camera/occlusion work are not disturbed before owner approval.
+const CAMERA_BASE_ZOOM := 1.0 / SCALE
 ## Extra world drawn/visible above the top arena bound so a standing figure at the top wall is not cut off.
 const CAMERA_HEADROOM := BODY_HEIGHT
 ## Extra world drawn/visible below the bottom arena bound so the feet and ground shadow of a figure at the
@@ -23,6 +21,14 @@ const CAMERA_HEADROOM := BODY_HEIGHT
 const CAMERA_FOOTROOM := 24.0
 ## World-space captions are sized so they stay at least this many SCREEN pixels tall.
 const MIN_CAPTION_SCREEN_PX := 8.0
+
+## P0 camera/scale VALIDATION-ONLY zoom (orders/Aki/2026-10-18-camera-scale-validation.md). NOT the shared
+## gameplay baseline (see CAMERA_BASE_ZOOM above) — applied only by the validation scene's own camera
+## override, per the owner-locked 2026-10-19 doc's "configurable camera preset or isolated comparison
+## scene" guidance. Derived from the owner-locked target band of 16-19% of viewport height for the
+## standing player (docs/visuals/CAMERA_AND_ART_DIRECTION.md): midpoint 17.5% of 720px = 126px;
+## BODY_HEIGHT (108px) is the native on-screen size at zoom 1.0, so zoom = 126 / 108 = 1.1667.
+const VALIDATION_CAMERA_ZOOM := 126.0 / 108.0
 
 
 ## Font size (in the caller's local units) that renders at least MIN_CAPTION_SCREEN_PX on screen.

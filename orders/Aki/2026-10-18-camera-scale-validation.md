@@ -35,3 +35,12 @@ Owner approval of camera distance/character prominence/environment proportions b
 
 ## Handoff / Notes
 Reversible: zoom constant and arena additions are easily revertible; no MVP-scale content shipped yet.
+
+## Revision note (2026-10-19)
+Owner pushed docs/visuals/CAMERA_AND_ART_DIRECTION.md + docs/GAME_DESIGN_DOCUMENT.md directly to main
+mid-task, locking the target at 16-19% viewport height and explicitly requiring an isolated validation
+scene/preset rather than editing the shared WorldScale.CAMERA_BASE_ZOOM or scripts/arena/training_arena.gd.
+Reworked accordingly: new scenes/validation/camera_scale_validation.tscn + script compose the existing,
+unmodified training_arena.tscn + player.tscn and apply a validation-only WorldScale.VALIDATION_CAMERA_ZOOM
+(1.1667, landing at 18.1% measured). Full detail in orders/Aki/reports/2026-10-18-camera-scale-validation-report.md.
+Not merged to main. Status REVIEW, awaiting owner sign-off.
