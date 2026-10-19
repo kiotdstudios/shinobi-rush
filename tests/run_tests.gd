@@ -41,6 +41,8 @@ func _initialize() -> void:
 	browser_debug_tests.run(ck, root)
 	var debug_export_tests = load("res://tests/test_debug_export.gd").new()
 	debug_export_tests.run(ck, root)
+	var debug_telemetry_tests = load("res://tests/test_debug_telemetry.gd").new()
+	debug_telemetry_tests.run(ck, root)
 	_cleanup()
 	print("SUMMARY: %d passed, %d failed" % [passed, failed])
 	quit(1 if failed > 0 else 0)

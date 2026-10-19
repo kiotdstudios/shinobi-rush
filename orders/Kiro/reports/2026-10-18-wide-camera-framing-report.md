@@ -2,7 +2,7 @@
 - Agent: Kiro
 - Order: [orders/Kiro/2026-10-18-restore-wide-camera-framing.md](../2026-10-18-restore-wide-camera-framing.md)
 - Date: 2026-10-18
-- Final status: REVIEW (pushed to PR #12 and tested locally; PR CI results are on the PR checks page; live build not yet verified; DONE is set only by the orchestrator after the live build is verified)
+- Final status: DONE (set by the orchestrator on 2026-10-18 after the merge and the live verification; see "Live verification" at the end of this report). Status when this report was written by the workflow: REVIEW (pushed to PR #12 and tested locally; live build not yet verified).
 - Commit / PR: PR [#12](https://github.com/kiotdstudios/shinobi-rush/pull/12), branch `fix/restore-wide-camera-framing`. Pushed commits: `4ec5757` (fix), `b7b1752` (tests), `c2baa65` (foot room), `0754d0b` (docs, order, report), plus the review-fix commit that follows it (see `git log` on the branch). Live URL for the later check: https://kiotdstudios.github.io/shinobi-rush/ (serves `main`; not checked by this report).
 
 ## Work completed
@@ -129,7 +129,7 @@ All checks successful, 7 passed, 2 skipped (deploy jobs, main only), 0 failing.
 | Option D (larger viewport) effect | ASSUMED | reasoning about `canvas_items` stretch, not measured |
 | 60 FPS on a real GPU, gamepad input | ASSUMED / not tested | software rendering ran at about 3 to 5 fps |
 | PR CI green on head `10b68b0` | VERIFIED | `gh pr checks 12`: all successful, 0 failing (table above) |
-| Deployed live build shows the wide view | NOT YET VERIFIED | the orchestrator verifies after merge |
+| Deployed live build shows the wide view | VERIFIED (added by the orchestrator after the merge; was NOT YET VERIFIED when the workflow wrote this) | see "Live verification" below |
 
 ## Coordination note for Orcha (camera director, PR #5 order)
 The integration points to test against are:
@@ -138,3 +138,12 @@ The integration points to test against are:
 - The camera limits include `CAMERA_HEADROOM` above and `CAMERA_FOOTROOM` below the arena; director clamping should use the same limits.
 - `__SHINOBI_STATE__` publishes `zoom`, `view_w` and `view_h`, and `controls-probe.mjs` asserts the baseline; camera telemetry and probes can reuse them.
 - World-space captions depend on the zoom, so zoom changes redraw them.
+
+## Live verification (added by the orchestrator after the merge; the sections above were written by the workflow)
+- **Merge:** PR #12 merged 2026-10-18T21:12:21Z as merge commit 9a467eac4ab2620deaa4afca765c4d583b3e2ec0. `git diff --stat 707f7be 9a467ea` is empty, so the merged tree is the reviewed and CI-tested head.
+- **CI on the merge commit:** Godot CI run 39166792014, all six jobs success (in-engine tests 270 passed 0 failed; pre-deploy smoke 11/11; controls probe 10/10 including the four camera checks; debug probe 26 PASS; post-deploy smoke on the live URL 11/11). Repository checks 39166792064 and Pipeline self-test 39166792005 also success.
+- **Live build:** https://kiotdstudios.github.io/shinobi-rush/build-info.json reported `commit_sha` 9a467eac4ab2620deaa4afca765c4d583b3e2ec0, run 39166792014, built 2026-10-18T21:12:56Z. (PR #9, docs only, deployed afterwards as 3d25e98, run 39167838751.)
+- **Spawn view** (1280x720, no input, 8 s after the ready flag, no debug flag), screenshot opened: state `zoom` 0.4444, `view_w` 2880, `view_h` 1620; the same five obstacles at the same pixel boxes as the pre-scale build d651078; mean RGB difference to it 2.97 outside the HUD panel and hint text (the PR-head capture had 2.85; live versus PR-head capture 0.32); what differs is the smaller figure (48 px against 57 px), its shadow and the captions.
+- **Real keys on the deployed build** (7 of 7 PASS, 0 console errors in that run): Tab keeps the baseline; six Z presses give 1, 2, 3, 4, 0.4444, 1; closing the lab from zoom 2 restores 0.4444; sprinting to the north wall (y -1098) and the south wall (y 1125) leaves the head and the feet inside the frame with no void; screenshots opened. The residuals listed under Issues are visible as described (caption clipped by a few px at the wall, HUD panel or hint text over the figure).
+- **Still open:** the owner choice on sprite filtering and the figure size (questions in this report); real GPU frame rate; production art.
+- Details and the full list of what was and was not verified: [chief report](2026-10-18-chief-camera-framing.md).
