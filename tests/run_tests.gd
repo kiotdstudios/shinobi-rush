@@ -34,6 +34,7 @@ func _initialize() -> void:
 	await test_main_scene_and_movement()
 	await test_lab_and_pause()
 	await test_camera_framing()
+	await load("res://tests/test_arena_sorting.gd").new().run(ck, root)
 	var debug_store_tests = load("res://tests/test_debug_store.gd").new()
 	debug_store_tests.run(ck)
 	var browser_debug_tests = load("res://tests/test_browser_debug.gd").new()

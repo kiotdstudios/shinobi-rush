@@ -160,6 +160,14 @@ Codex adds art as a sprite set: a `*.manifest.json` plus PNGs under `assets/char
 - **Lab zoom and the camera.** The animation lab's zoom (`Z` / wheel / L-stick click) still sets `player.camera.zoom` directly (absolute), from `ZOOMS = [CAMERA_BASE_ZOOM, 1, 2, 3, 4]`. Index 0 is the gameplay baseline ("wide 0.44x" in the panel); `1x` to `4x` are native 1:1 pixel steps. Opening the lab does not change the camera, cycling wraps back to the baseline, and closing the lab (`Tab`) restores the baseline. When Orcha's camera director lands, lab zoom must go through the director, or be disabled while the director is active, so the two never fight over the camera. Integration points to test against: `WorldScale.CAMERA_BASE_ZOOM`, `AnimationLab.ZOOMS`/`zoom_label()`, and the `zoom`, `view_w`, `view_h` fields of `__SHINOBI_STATE__`.
 - **WebBridge smoke-test contract.** The `__SHINOBI_READY__` and `__SHINOBI_STATE__` WebBridge hooks are the stable contract the smoke tests rely on. Aki's telemetry must not rename or remove them; add new hooks next to them instead.
 
+### Props with several faces: depth sorting
+The arena y-sorts its children by each node's global y (same `z_index`, ties go to tree order). Rule for a prop that draws more than one face in this three-quarter view (front, east face, roof):
+- A prop's origin is its ground contact (bottom-centre of the front face). The player's origin is his feet, so both compare as ground contact.
+- Godot 4.7 has no per-node `y_sort_origin`, and a y-sort-disabled child is sorted as ONE item with its parent. A prop cannot give one face a different key from inside a single node.
+- So split the prop into separately sorted siblings under the same y-sorted parent, same `z_index`: the front piece is keyed at the front edge (`Block`, with the collider); the east face and roof are a second node `BlockRear` keyed at the back edge (position y minus depth, no collider), drawn with the same pixels via a transform.
+- Result: feet.y greater than the back edge draws the player over the east face and roof; greater than the front edge also over the front face. North of the back edge he is hidden, as he should be.
+- Never draw the player over all walls. Keep the pair together if you wrap props in a container. The pure rule lives in `scripts/arena/arena_sort.gd` and is tested in `tests/test_arena_sorting.gd`.
+- Codex, Aki and Orcha: build new props the same way and keep sprite anchors at the feet.
 ## What finishes Order 01
 
 Stage 2 is delivered by a pull request (placeholder art only). The order is finished when all of these are true, verified by a person reading the evidence (not by this document):
