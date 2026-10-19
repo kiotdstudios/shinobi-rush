@@ -1,6 +1,6 @@
 # ORDER — Combat System V1 — Milestone A (Offensive Combat)
 - Agent: Aki
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P0 — Core Gameplay
 - Owner: Aki
 - Branch/PR: aki/combat-v1-milestone-a / (PR TBD)
