@@ -3,7 +3,7 @@
 - Order: [orders/Kiro/2026-10-18-deferred-wall-occlusion-investigation.md](../2026-10-18-deferred-wall-occlusion-investigation.md)
 - Date: 2026-10-18
 - Final status: REVIEW (fix and tests done locally and in CI; PR not merged; live build not yet checked)
-- Commit / PR: branch `kiro/wall-occlusion`; fix commit `d028790` (parent `3d25e98`), merge of `origin/main` `5970c30` as `026fa6d`; PR link: see the PR for this branch (number added in the order Status log).
+- Commit / PR: branch `kiro/wall-occlusion`; fix commit `d028790` (parent `3d25e98`), merge of `origin/main` `5970c30` as `026fa6d`; PR [#17](https://github.com/kiotdstudios/shinobi-rush/pull/17), head `f248cee` at opening.
 
 ## Work completed
 Diagnosis (VERIFIED by execution, headless Chromium + SwiftShader, Godot 4.7.2 Web export, 216 cells in the reproduction matrix, 56 flagged):
@@ -73,4 +73,4 @@ None for this PR. (Optional: do you want the east-wedge collider follow-up?)
 | Test hook | not shipped; local evidence only |
 
 ## Commit / PR
-Fix `d028790`, merge `026fa6d`; PR number in the order Status log. Not merged.
+Fix `d028790`, merge `026fa6d`; PR #17. Not merged.
