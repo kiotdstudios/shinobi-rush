@@ -1,7 +1,7 @@
 # ORDER — Aki: integrate and playtest Codex-approved idle artwork
 
 - **Agent:** Aki
-- **Status:** QUEUED — begin only after P0 telemetry PR #13 is reviewed/merged or explicitly paused by owner; do not disrupt P0
+- **Status:** BLOCKED — Animation Lab confirmed already live in the deployed build (`scenes/main.tscn` -> `scripts/ui/animation_lab.gd`, reachable via Tab) with every control requested (anim/direction/speed/zoom) already built; no production 128x128 idle manifest/sheet exists in the repo yet (checked main + both Codex branches). Handoff request filed at `orders/Codex/2026-10-18-idle-128-production-handoff.md`. See `orders/Aki/reports/2026-10-18-codex-art-integration-playtest-report.md` for full detail. Resume the moment Codex delivers the manifest.
 - **Priority:** P1
 - **Owner:** Aki (runtime integration and test); **Codex retains ownership of art assets**; Kiro retains deployment/camera fixes
 - **Scope:** Temporary, reversible Godot art integration / browser playtest; dedicated branch and PR
