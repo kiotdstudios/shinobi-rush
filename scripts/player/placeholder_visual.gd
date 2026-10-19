@@ -37,12 +37,6 @@ func set_pose(dir8: Vector2, sprinting: bool, moving: bool) -> void:
 func _draw() -> void:
 	# Procedural figure is authored at its native size and scaled to the ~108 px standard (WorldScale).
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * WorldScale.FIGURE_SCALE)
-	# Elliptical ground shadow (fixed under the feet).
-	var shadow := PackedVector2Array()
-	for k in 16:
-		var a := TAU * k / 16.0
-		shadow.append(Vector2(cos(a) * 15.0, sin(a) * 6.0))
-	draw_colored_polygon(shadow, SHADOW)
 	# Facing indicator on the ground, projected 2:1.
 	var f := Vector2(_dir.x * 22.0, _dir.y * 11.0)
 	var side := Vector2(-_dir.y * 5.0, _dir.x * 2.5)
