@@ -1,15 +1,21 @@
 class_name PlayerController
 extends CharacterBody2D
-## Top-down (three-quarter view) movement: walk / sprint with acceleration and friction.
-## Origin = feet. Dodge (Space) and jump (F) are one-shot actions that run alongside movement:
-## momentum is never zeroed on entry or exit, so a run carries straight through into the action and
-## straight back out of it. Combat etc. remain reserved with no behavior yet.
+## Top-down (three-quarter view) movement: walk / sprint with acceleration and friction, plus the
+## katana combat state machine (combat order "SHINOBI RUSH — COMBAT SYSTEM V1", Milestone A).
+## Origin = feet. Dodge (Space), jump (F) and the light-attack combo (J) are all one-shot/extended
+## actions that share this single controller and its one `velocity`: none of them fight each other or
+## the base locomotion for ownership. Momentum is never zeroed on entry or exit of any action, so a
+## run carries straight through into the action and straight back out of it.
+## Block/parry/posture (Milestone B) are not implemented yet.
 
 signal state_changed(new_state: State)
 ## The camera baseline zoom was recomputed (preset switched, or the figure height changed with the sprite set).
 signal camera_baseline_changed(zoom: float)
 
-enum State { IDLE, MOVE, SPRINT, DODGE, JUMP }
+enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK }
+## Phase of the current attack (LIGHT1/LIGHT2/LIGHT3/DASH_ATTACK states only). Startup/active/recovery
+## lengths come from the matching AttackDef in `_attack_table` (see combat order's frame table).
+enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 
 ## Provisional prototype values (px/s, px/s^2), handoff values scaled by WorldScale.SCALE.
 ## Not balance: Aki/Orcha re-tune.
@@ -29,17 +35,24 @@ enum State { IDLE, MOVE, SPRINT, DODGE, JUMP }
 ## position, never to this body's position, so collision and the arena's Y-sort (which keys off this
 ## node's own global_position.y) are completely unaffected by being airborne.
 @export var jump_visual_height: float = 34.0
-## Input buffer window (seconds) for dodge/jump: a press up to this long before the action becomes
-## legal (i.e. while the previous dodge/jump is still finishing) is remembered and fires the instant
-## it's allowed, instead of being dropped.
+## Input buffer window (seconds) for dodge/jump/attack: a press up to this long before the action
+## becomes legal (i.e. while the previous action is still finishing) is remembered and fires the
+## instant it's allowed, instead of being dropped.
 @export var input_buffer_window: float = 0.12
-## Used only when the active sprite set has no "dodge"/"jump" animation to time against (placeholder visual).
+## Used only when the active sprite set has no matching action animation to time against (placeholder visual).
 @export var dodge_fallback_duration: float = 0.5
 @export var jump_fallback_duration: float = 0.6
 ## Seconds between dirt-puff bursts while running on the ground (SPRINT uses a shorter interval,
 ## see `_update_footsteps()`), roughly matched to footstep cadence.
 @export var footstep_interval_walk: float = 0.28
 @export var footstep_interval_sprint: float = 0.18
+## Dash attack is available during the last stretch of an active dodge (seconds of `_action_timer`
+## remaining counts as "late") -- order section 4: "available during an approved late-dodge ... window".
+@export var dash_attack_late_window: float = 0.08
+## Dash attack is also available for a short beat after a dodge ends outright -- order section 4:
+## "... or post-dodge window". Expires fast enough that it never swallows a deliberate plain light1
+## thrown a beat after the dodge has fully resolved.
+@export var dash_attack_post_grace: float = 0.15
 
 var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
@@ -50,6 +63,17 @@ var _action_duration: float = 0.0  ## total authored length of the current/last 
 var _dodge_buffer: float = 0.0  ## seconds left that a buffered dodge press is still eligible to fire
 var _jump_buffer: float = 0.0  ## seconds left that a buffered jump press is still eligible to fire
 var _footstep_timer: float = 0.0  ## seconds left until the next running dirt-puff burst
+
+## -- Combat (Milestone A) --
+var _attack_table: Dictionary = {}  ## built once in _ready() from AttackDef.build_table()
+var _attack_phase: AttackPhase = AttackPhase.STARTUP
+var _attack_timer: float = 0.0  ## seconds left in the current attack phase
+var _attack_def: AttackDef = null  ## tuning for the attack currently in progress (null when none)
+var _combo_index: int = 0  ## 0 = no combo in progress; else 1/2/3 = which light hit is active
+var _attack_buffer: float = 0.0  ## seconds left that a buffered attack_light press is still eligible
+var _hit_targets: Array = []  ## enemies already damaged by the current swing (each swing hits once)
+var _dash_grace_timer: float = 0.0  ## seconds left of the post-dodge dash-attack window
+var _hitstop_timer: float = 0.0  ## local-only pause (not Engine.time_scale): see _physics_process top
 
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
@@ -76,20 +100,51 @@ func _ready() -> void:
 		camera.limit_right = int(b.end.x)
 		camera.limit_bottom = int(b.end.y + WorldScale.CAMERA_FOOTROOM)  # foot room: feet and shadow at the bottom wall are not cut off
 	visual.set_pose(facing8, false, false)
+	_attack_table = AttackDef.build_table()
 
 
 func _physics_process(delta: float) -> void:
 	var prev_state := state
+
+	# Local hitstop: pause this body's own velocity/position integration only -- NOT Engine.time_scale
+	# (the order explicitly forbids a global freeze that would also stall input buffering/timers).
+	# Buffers/attack timers resume ticking the instant this expires, so the hit feels like a punchy
+	# freeze-frame without desyncing combo/cancel windows.
+	if _hitstop_timer > 0.0:
+		_hitstop_timer = maxf(_hitstop_timer - delta, 0.0)
+		return
+
 	_dodge_buffer = maxf(_dodge_buffer - delta, 0.0)
 	_jump_buffer = maxf(_jump_buffer - delta, 0.0)
+	_attack_buffer = maxf(_attack_buffer - delta, 0.0)
+	_dash_grace_timer = maxf(_dash_grace_timer - delta, 0.0)
 	if Input.is_action_just_pressed("dodge"):
 		_dodge_buffer = input_buffer_window
 	if Input.is_action_just_pressed("jump"):
 		_jump_buffer = input_buffer_window
+	if Input.is_action_just_pressed("attack_light"):
+		_attack_buffer = input_buffer_window
 
 	var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
 	var target_speed := sprint_speed if sprinting else walk_speed
+
+	if _is_attack_state(state):
+		_process_attack_state(delta, input)
+		if state != prev_state:
+			state_changed.emit(state)
+		return
+
+	# Late-dodge dash-attack trigger: pressing attack while still inside a dodge's last stretch cancels
+	# the remainder of the dodge straight into a dash attack (order: "available during an approved
+	# late-dodge ... window") instead of waiting for the dodge to finish.
+	if state == State.DODGE and _attack_buffer > 0.0 and _action_timer <= dash_attack_late_window:
+		_attack_buffer = 0.0
+		_begin_attack("dash_attack", input)
+		move_and_slide()
+		if state != prev_state:
+			state_changed.emit(state)
+		return
 
 	var still_acting := false
 	if state == State.DODGE or state == State.JUMP:
@@ -117,11 +172,20 @@ func _physics_process(delta: float) -> void:
 			state_changed.emit(state)
 		return
 
+	# A dodge that just finished this frame opens the short post-dodge dash-attack grace window
+	# (order: "... or post-dodge window"). Reached exactly once per dodge, since the still_acting
+	# branch above returns early on every frame the dodge is still in progress.
+	if state == State.DODGE:
+		_dash_grace_timer = dash_attack_post_grace
+
 	# Not mid-action this frame (either never was, or the action just finished above with velocity
-	# already correct) -> a buffered dodge/jump takes priority over plain locomotion, then plain
+	# already correct) -> a buffered attack/dodge/jump takes priority over plain locomotion, then plain
 	# locomotion, then idle decay. Exactly one of the three branches below runs.
-	if _dodge_buffer > 0.0 or _jump_buffer > 0.0:
-		if _dodge_buffer >= _jump_buffer:
+	if _attack_buffer > 0.0 or _dodge_buffer > 0.0 or _jump_buffer > 0.0:
+		if _attack_buffer >= _dodge_buffer and _attack_buffer >= _jump_buffer:
+			_attack_buffer = 0.0
+			_begin_attack("dash_attack" if _dash_grace_timer > 0.0 else "light1", input)
+		elif _dodge_buffer >= _jump_buffer:
 			_dodge_buffer = 0.0
 			_begin_dodge(input)
 		else:
@@ -139,6 +203,8 @@ func _physics_process(delta: float) -> void:
 	_update_jump_lift()
 	if state == State.DODGE or state == State.JUMP:
 		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)
+	elif _is_attack_state(state):
+		visual.play_action(_attack_def.id, facing8)
 	else:
 		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
 	if prev_state == State.JUMP and state != State.JUMP:
@@ -172,6 +238,140 @@ func _begin_jump() -> void:
 	_action_timer = _action_duration
 	visual.play_action("jump", facing8)
 	dust.burst(global_position, 1.5)
+
+
+## Begin a fresh attack (light1, or a dash attack triggered from/near a dodge). `input`, when given
+## and non-zero, re-aims the swing to the currently-held movement direction (so running into the
+## attack button throws the hit the way you're moving, per "run -> attack" chaining) -- combo
+## continuations call `_begin_attack` with Vector2.ZERO and skip this, keeping the chain's facing
+## locked once it has started (see `_begin_next_combo_attack`).
+## Velocity is never reset: `lunge` is ADDED to whatever velocity the player already had, exactly like
+## a dodge's burst, so momentum from a run or a dodge carries straight into the swing.
+func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
+	if input != Vector2.ZERO:
+		facing = input.normalized()
+		facing8 = _snap8(facing)
+	_attack_def = _attack_table[attack_id]
+	_combo_index = int(attack_id.substr(5)) if attack_id.begins_with("light") else 0
+	state = _state_for_attack_id(attack_id)
+	_attack_phase = AttackPhase.STARTUP
+	_attack_timer = _attack_def.startup
+	_hit_targets.clear()
+	velocity += facing8 * _attack_def.lunge
+	visual.play_action(attack_id, facing8)
+
+
+## Advance to the next hit in the light combo (wraps light3 -> light1, there is no light4), keeping
+## the current facing8 locked rather than re-aiming from input -- order: "chain attacks without
+## returning to idle", not "re-aim every hit of the chain".
+func _begin_next_combo_attack() -> void:
+	var next_index := _combo_index + 1
+	if next_index > 3:
+		next_index = 1
+	_begin_attack("light%d" % next_index)
+
+
+## Per-physics-frame update while `state` is one of the attack states. Startup/active/recovery timing,
+## one-hit-per-swing registration, the combo-continue window, and the dodge-cancel-from-recovery window
+## all live here.
+func _process_attack_state(delta: float, input: Vector2) -> void:
+	_attack_timer -= delta
+	# Weighty swordplay: velocity bleeds off toward 0 through the whole swing instead of being steered
+	# by input or snapped to zero outright -- deliberate deceleration, never a hard reset.
+	velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+
+	if _attack_phase == AttackPhase.ACTIVE:
+		_check_attack_hits()
+
+	if _attack_phase == AttackPhase.RECOVERY:
+		var elapsed := _attack_def.recovery - maxf(_attack_timer, 0.0)
+		# Dodge-cancel: once recovery has committed past `dodge_cancel_from`, a fresh/buffered dodge
+		# press interrupts the remaining recovery outright (order: "Interrupt...with a dodge").
+		if elapsed >= _attack_def.dodge_cancel_from and _dodge_buffer > 0.0:
+			_dodge_buffer = 0.0
+			_begin_dodge(input)
+			move_and_slide()
+			return
+		# Combo continuation: a fresh/buffered attack press within `combo_window` of recovery starting
+		# cuts the remaining recovery short and begins the next hit (order: "chain attacks without
+		# returning to idle"). dash_attack's combo_window is 0 -- it never chains this way.
+		if _attack_def.combo_window > 0.0 and elapsed <= _attack_def.combo_window and _attack_buffer > 0.0:
+			_attack_buffer = 0.0
+			_begin_next_combo_attack()
+			move_and_slide()
+			return
+
+	if _attack_timer <= 0.0:
+		_advance_attack_phase()
+		if not _is_attack_state(state):
+			# The attack just ended: pick the state up where locomotion already is this instant (order:
+			# "continue running immediately after an attack ends" -- never a forced idle frame).
+			var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
+			if input != Vector2.ZERO:
+				state = State.SPRINT if sprinting else State.MOVE
+			else:
+				state = State.IDLE
+			move_and_slide()
+			visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
+			return
+
+	move_and_slide()
+	visual.play_action(_attack_def.id, facing8)
+
+
+## STARTUP -> ACTIVE -> RECOVERY -> (ends the attack). Only the final step can change `state` away
+## from an attack state; the caller checks `_is_attack_state(state)` right after calling this.
+func _advance_attack_phase() -> void:
+	match _attack_phase:
+		AttackPhase.STARTUP:
+			_attack_phase = AttackPhase.ACTIVE
+			_attack_timer = _attack_def.active
+		AttackPhase.ACTIVE:
+			_attack_phase = AttackPhase.RECOVERY
+			_attack_timer = _attack_def.recovery
+		AttackPhase.RECOVERY:
+			_combo_index = 0
+			state = State.IDLE  # placeholder; overwritten by the caller based on current input
+
+
+## Manual geometric hit check (not Area2D/collision layers): reach + forward-arc test around facing8,
+## against every node in the "enemy" group, each swing hitting a given enemy at most once. Chosen for
+## direct testability (pure math) and because it satisfies "hitboxes register accurately in every
+## supported direction" by construction -- the arc is defined in the same facing8 every other system uses.
+func _check_attack_hits() -> void:
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if enemy in _hit_targets:
+			continue
+		if not (enemy.has_method("take_damage") and enemy.has_method("is_alive")):
+			continue
+		if not enemy.is_alive():
+			continue
+		var to_enemy: Vector2 = enemy.global_position - global_position
+		var dist := to_enemy.length()
+		if dist <= 0.0 or dist > _attack_def.reach:
+			continue
+		var angle_diff := rad_to_deg(absf(facing8.angle_to(to_enemy)))
+		if angle_diff > _attack_def.arc_half_angle_deg:
+			continue
+		_hit_targets.append(enemy)
+		enemy.take_damage(_attack_def.damage, to_enemy.normalized(), _attack_def.knockback, _attack_def.hitstop_ms)
+		_hitstop_timer = maxf(_hitstop_timer, _attack_def.hitstop_ms / 1000.0)
+
+
+func _state_for_attack_id(attack_id: String) -> State:
+	match attack_id:
+		"light1":
+			return State.LIGHT1
+		"light2":
+			return State.LIGHT2
+		"light3":
+			return State.LIGHT3
+		_:
+			return State.DASH_ATTACK
+
+
+static func _is_attack_state(s: State) -> bool:
+	return s == State.LIGHT1 or s == State.LIGHT2 or s == State.LIGHT3 or s == State.DASH_ATTACK
 
 
 ## Periodic dirt-puff bursts while running on the ground (MOVE/SPRINT only). Timer resets to 0 by the

@@ -123,10 +123,27 @@ func _ready() -> void:
 		rear.position = ArenaSort.rear_position(b[0], b[1])
 		add_child(rear)
 	_build_bounds_walls()
+	_spawn_bandit()
 	for p in get_tree().get_nodes_in_group("player"):
 		p.global_position = spawn.global_position
 		if p.has_method("reset_camera"):
 			p.reset_camera()
+
+
+## One Basic Bandit for combat validation (see the combat order): spawned a short walk from the
+## player's own spawn point so a fresh run can immediately test movement-to-attack chaining, dodging
+## and combos against a live target. Offset diagonally (not purely +x) on purpose: the CI controls
+## probe (scripts/ci/smoke/controls-probe.mjs) walks the player due right from this same spawn point
+## to measure plain movement, and due up to find the arena wall -- a bandit sitting directly on
+## either of those two axes would physically block the probe's player, not a gameplay bug but a
+## false "movement broken" CI failure. The 200px y-offset clears the probe's lane with a wide
+## margin (FOOTPRINT half-height is ~13.5px) while keeping the enemy a comparable short walk away.
+func _spawn_bandit() -> void:
+	var packed := load("res://scenes/enemy/bandit.tscn") as PackedScene
+	var bandit := packed.instantiate()
+	bandit.name = "Bandit"
+	bandit.position = spawn.position + Vector2(230, 200)
+	add_child(bandit)
 
 
 func get_bounds() -> Rect2:
