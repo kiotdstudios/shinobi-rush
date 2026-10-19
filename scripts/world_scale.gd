@@ -21,6 +21,13 @@ const CAMERA_FOOTROOM := 24.0
 const MIN_CAPTION_SCREEN_PX := 8.0
 
 
+## Snap a direction to one of 8 unit-ish headings (diagonals normalized). Shared by PlayerController
+## and enemies so both facing systems agree on the same 8-way grid.
+static func snap8(dir: Vector2) -> Vector2:
+	var idx := int(roundf(dir.angle() / (PI / 4.0)))
+	return Vector2.from_angle(idx * (PI / 4.0)).snapped(Vector2(0.01, 0.01))
+
+
 ## Font size (in the caller's local units) that renders at least MIN_CAPTION_SCREEN_PX on screen.
 ## `base` is the size wanted at zoom 1; `local_scale` is any extra scale applied while drawing.
 static func caption_font_size(base: int, zoom: float, local_scale: float = 1.0) -> int:
