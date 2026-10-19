@@ -2,9 +2,9 @@
 - Agent: Codex
 - Order: Order01 / owner request to push actual animations
 - Date: 2026-10-19
-- Status: REVIEW - asset package validated; publication in progress
+- Status: REVIEW - actual runtime assets published
 - Branch: codex/player-128-runtime-assets
-- Commit / PR: pending
+- Commit / PR: 55dc1825e2f4ec9962418cccf3455088447848fb / https://github.com/kiotdstudios/shinobi-rush/pull/23
 
 ## Work completed
 Delivered actual transparent PNG runtime art rather than GIF previews.559unique PNG files: approved idle v5 (120unique; SW8poses held2ticks), walk v1 (128), approved run v3 (160), sprint v5 for gameplay testing (151; NW11poses). Runtime manifest player_128.manifest.json uses schema1 and matches the existing sprite drop-in contract.128x128RGBA, foot anchor[64,116], body104px. Eight original directions; no mirroring. Source pixels retained exactly.12poses/sec default matches owner half-speed review; authored24fps metadata retained. IdleSW double holds use repeated path references to existing8PNG files, preserving approved timing without creating filler files. Runv4 south candidate excluded because owner explicitly requested approved run.
@@ -29,3 +29,8 @@ None.
 
 ## Remaining work
 Review/merge/in-game transition and performance checks, then verify deployed build. JumpNE no-kick correction and dodge remain separate visual review candidates and are not shipped as accepted runtime animations. Full Order01 remains incomplete. Live deployment: not yet updated by this unmerged asset PR; no live verification claimed.
+
+Publication verification: GitHub branch refs updated without force; PR23 contains564changed files. Runtime manifest fetched back successfully. Published idle/S_000.png blob SHA913bff84086f20ef4799748ba401aab68713d9a1 matches uploaded exact PNG. No combined commit statuses were reported at first check; CI/deployment are not claimed passed.
+
+## CI / integration handoff after publication
+GitHub Actions run39220440077: asset/order validation and Godot4.7.2 import/validate/test/Web export PASS. Browser smoke itself PASS: correct build SHA, engine start, visible/nonblank canvas, input effect, zero fatal console messages. Subsequent controls probe FAIL on lab-close-restores-baseline (zoom1 instead0.4444) and camera-close-via-query (zoom1.211538 for104px art versus hardcoded1.1667 expectation corresponding108px). Movement and sprint speed checks PASS, no browser error/pageerror. Overall godot-ci-gate remains FAIL because of those camera checks. No merge/deploy performed; gameplay/camera owner must resolve or review these checks. These are not PNG/manifest validation failures. Log: https://github.com/kiotdstudios/shinobi-rush/actions/runs/39220440077/job/117954448864
