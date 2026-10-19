@@ -61,6 +61,32 @@ func set_pose(dir8: Vector2, sprinting: bool, moving: bool) -> void:
 	_apply()
 
 
+## One-shot action override (dodge, jump): shows `aid` facing `dir8` regardless of the normal
+## idle/run/sprint chain. Returns false (no sprite set, or the animation is missing) so the caller
+## can fall back to the placeholder's canned motion. Call every physics frame while the action is
+## active; show_animation() is cheap when the (set, anim, dir) key is unchanged.
+func play_action(aid: String, dir8: Vector2) -> bool:
+	if sprite_set == null or not sprite_set.animations.has(aid):
+		return false
+	var shown := actor.show_animation(sprite_set, aid, SpriteSet.dir_name(dir8), false)
+	actor.visible = shown
+	placeholder.visible = not shown
+	if shown:
+		last_anim = aid
+		last_dir = actor.dir + (" (flip)" if actor.flip else "")
+	return shown
+
+
+## Seconds `aid` plays for one cycle (frame count / fps from the manifest), or `fallback` if the
+## current sprite set has no such animation (placeholder visual: there is no authored timing).
+func action_duration(aid: String, fallback: float) -> float:
+	if sprite_set != null and sprite_set.animations.has(aid):
+		var d := sprite_set.anim_duration(aid)
+		if d > 0.0:
+			return d
+	return fallback
+
+
 func _apply() -> void:
 	if sprite_set == null:
 		return
