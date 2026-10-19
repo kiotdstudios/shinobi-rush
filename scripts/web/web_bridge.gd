@@ -18,6 +18,8 @@ func _ready() -> void:
 	if not active:
 		return
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# ?camera=wide|close|<number>: autoloads are ready before the main scene, so the player already sees it.
+	apply_camera_query(str(JavaScriptBridge.eval("window.location.search", true)))
 	_window = JavaScriptBridge.get_interface("window")
 	_state = JavaScriptBridge.create_object("Object")
 	_window.__SHINOBI_STATE__ = _state
@@ -45,6 +47,12 @@ func _process(delta: float) -> void:
 	_state.zoom = framing.zoom
 	_state.view_w = framing.view_w
 	_state.view_h = framing.view_h
+	_state.camera_preset = CameraPreset.active_id()
+
+
+## Select the camera preset from the page's query string (web only caller). Invalid or missing -> default.
+static func apply_camera_query(query: String) -> void:
+	CameraPreset.set_active(CameraPreset.parse_query(query))
 
 
 ## Camera framing published in __SHINOBI_STATE__: zoom and the visible world size (viewport / zoom).

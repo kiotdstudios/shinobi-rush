@@ -5,8 +5,12 @@ extends Node
 ## The status line and metrics stay on screen even when the lab is hidden.
 
 const SPEEDS: Array[float] = [0.25, 0.5, 1.0, 1.5, 2.0]
-## Index 0 is the gameplay baseline (wide view); the rest are native 1:1 pixel steps.
-const ZOOMS: Array[float] = [WorldScale.CAMERA_BASE_ZOOM, 1.0, 2.0, 3.0, 4.0]
+## Native 1:1 pixel steps. The zoom list is [active preset baseline] + these (see zoom_list); a baseline that
+## already equals 1.0 is not repeated.
+const NATIVE_ZOOMS: Array[float] = [1.0, 2.0, 3.0, 4.0]
+## Camera preset switch (wide <-> close). The action is registered at runtime so project.godot stays untouched.
+const PRESET_ACTION := "dbg_camera_preset"
+const PRESET_KEY := KEY_N
 ## Stands sit LEFT of the spawn so they stay clear of the lab panel (screen right) at 1x-2x zoom.
 ## Provisional prototype values scaled by WorldScale.SCALE (stands far enough apart for the 128 px frames).
 const STAND_OFFSETS: Array[Vector2] = WorldScale.STAND_OFFSETS
@@ -16,7 +20,7 @@ const OVERLAYS: Array = [
 	["iso", "1 iso grid"], ["square", "2 square grid"], ["anchor", "3 anchor"],
 	["footprint", "4 footprint"], ["ruler", "5 height ruler"], ["bbox", "6 frame box"],
 ]
-const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom | 1-6 overlays"
+const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom | N camera preset | 1-6 overlays"
 
 enum DirMode { FOLLOW, FIXED, SPIN }
 
@@ -151,6 +155,7 @@ func _build_actions() -> void:
 		"dbg_anim_step": step_once,
 		"dbg_compare": toggle_compare,
 		"dbg_zoom_cycle": cycle_zoom,
+		PRESET_ACTION: cycle_preset,
 		"dbg_overlay_iso_grid": func() -> void: toggle_overlay("iso"),
 		"dbg_overlay_square_grid": func() -> void: toggle_overlay("square"),
 		"dbg_overlay_anchor": func() -> void: toggle_overlay("anchor"),
@@ -160,13 +165,25 @@ func _build_actions() -> void:
 	}
 
 
+## Register the preset action once (plain N, no modifier) unless project.godot already defines it.
+static func _ensure_preset_action() -> void:
+	if InputMap.has_action(PRESET_ACTION):
+		return
+	InputMap.add_action(PRESET_ACTION)
+	var ev := InputEventKey.new()
+	ev.physical_keycode = PRESET_KEY
+	InputMap.action_add_event(PRESET_ACTION, ev)
+
+
 func _ready() -> void:
+	_ensure_preset_action()
 	_build_actions()
 	lib = SpriteLibrary.get_instance()
 	player = get_tree().get_first_node_in_group("player") as PlayerController
 	if player == null:
 		push_warning("AnimationLab: no player found")
 		return
+	player.camera_baseline_changed.connect(_on_baseline_changed)
 	arena = player.get_parent() as Node2D
 	_build_world()
 	_build_ui()
@@ -308,6 +325,8 @@ func _build_ui() -> void:
 		var b := _button(grid, o[1], Vector2.ZERO, Vector2(160, 24), func() -> void: toggle_overlay(key))
 		b.toggle_mode = true
 		_toggle_buttons[key] = b
+	# After the overlay grid so the existing rows keep their indices (tests address them by position).
+	_row(box, "preset", "Cam preset  N", func() -> void: cycle_preset(), func() -> void: cycle_preset())
 	var help := Label.new()
 	help.text = KEYS_HELP
 	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -379,7 +398,8 @@ func _refresh_ui() -> void:
 	_value_labels["speed"].text = "%sx" % str(SPEEDS[speed_index])
 	_value_labels["pause"].text = "PAUSED" if anim_paused else "playing"
 	_value_labels["compare"].text = "ON (first two sets)" if compare else "off"
-	_value_labels["zoom"].text = zoom_label(zoom_index)
+	_value_labels["zoom"].text = zoom_label(zoom_index, _baseline())
+	_value_labels["preset"].text = CameraPreset.active_id()
 	for k: String in _toggle_buttons:
 		_toggle_buttons[k].button_pressed = overlay_on[k]
 	_lab_button.text = "Lab: ON (Tab)" if lab_on else "Lab: off (Tab)"
@@ -446,22 +466,62 @@ func toggle_compare() -> void:
 	_refresh_ui()
 
 
-## "wide 0.44x" for the baseline, "1x".."4x" (native pixels) for the rest.
-static func zoom_label(i: int) -> String:
+## Baseline of the active preset for the current figure (the wide default before a player exists).
+func _baseline() -> float:
+	return player.camera_baseline if player != null else CameraPreset.zoom_for(CameraPreset.active())
+
+
+## Index 0 is the gameplay baseline (active preset); the rest are native 1:1 pixel steps. A baseline that
+## already equals 1.0 (close preset snapped to pixel-exact) is not listed twice.
+static func zoom_list(baseline: float) -> Array[float]:
+	var out: Array[float] = [baseline]
+	for z in NATIVE_ZOOMS:
+		if not is_equal_approx(z, baseline):
+			out.append(z)
+	return out
+
+
+## "wide 0.44x" / "close 1.17x" for the baseline, "1x".."4x" (native pixels) for the rest.
+static func zoom_label(i: int, baseline: float, spec: Variant = null) -> String:
+	var zl := zoom_list(baseline)
 	if i == 0:
-		return "wide %.2fx" % ZOOMS[0]
-	return "%dx" % int(ZOOMS[i])
+		return CameraPreset.label_for(CameraPreset.active() if spec == null else spec, baseline)
+	return "%dx" % int(zl[clampi(i, 0, zl.size() - 1)])
 
 
 func cycle_zoom() -> void:
-	set_zoom_index((zoom_index + 1) % ZOOMS.size())
+	set_zoom_index((zoom_index + 1) % zoom_list(_baseline()).size())
 
 
 func set_zoom_index(i: int) -> void:
-	zoom_index = clampi(i, 0, ZOOMS.size() - 1)
+	var zl := zoom_list(_baseline())
+	zoom_index = clampi(i, 0, zl.size() - 1)
 	if player != null:
-		player.camera.zoom = Vector2.ONE * ZOOMS[zoom_index]
+		player.camera.zoom = Vector2.ONE * zl[zoom_index]
 	_refresh_ui()
+
+
+## Switch the active camera preset (wide -> close -> wide). Back to the baseline, like closing the lab.
+func cycle_preset() -> void:
+	CameraPreset.set_active(CameraPreset.next_id(CameraPreset.active()))
+	if player != null:
+		player.refresh_camera_baseline()
+	set_zoom_index(0)
+
+
+## The baseline changed under us (sprite set with another body height): keep the camera where it is and
+## re-point the index at it; if the current zoom is no longer in the list, fall back to the baseline.
+func _on_baseline_changed(_zoom: float) -> void:
+	if player == null:
+		return
+	var zl := zoom_list(_baseline())
+	var cur := player.camera.zoom.x
+	var idx := 0
+	for i in zl.size():
+		if is_equal_approx(zl[i], cur):
+			idx = i
+			break
+	set_zoom_index(idx)
 
 
 func toggle_overlay(key: String) -> void:

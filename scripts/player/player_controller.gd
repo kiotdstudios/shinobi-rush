@@ -4,6 +4,8 @@ extends CharacterBody2D
 ## Origin = feet. Combat, jump, dodge etc. are reserved actions with no behavior yet.
 
 signal state_changed(new_state: State)
+## The camera baseline zoom was recomputed (preset switched, or the figure height changed with the sprite set).
+signal camera_baseline_changed(zoom: float)
 
 enum State { IDLE, MOVE, SPRINT }
 
@@ -18,6 +20,7 @@ enum State { IDLE, MOVE, SPRINT }
 var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
 var facing8: Vector2 = Vector2.DOWN  ## facing snapped to 8 directions
+var camera_baseline: float = WorldScale.CAMERA_BASE_ZOOM  ## zoom of the active CameraPreset for the current figure
 
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
@@ -30,7 +33,9 @@ func _ready() -> void:
 	(feet.shape as RectangleShape2D).size = WorldScale.FOOTPRINT
 	feet.position = Vector2(0, -WorldScale.FOOTPRINT.y * 0.5)
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
-	camera.zoom = Vector2.ONE * WorldScale.CAMERA_BASE_ZOOM  # single source of truth (player.tscn has no literal)
+	camera_baseline = baseline_zoom()  # single source of truth: the active CameraPreset (player.tscn has no literal)
+	camera.zoom = Vector2.ONE * camera_baseline
+	visual.sprite_set_changed.connect(func(_s: SpriteSet) -> void: refresh_camera_baseline())
 	camera.position_smoothing_enabled = true
 	camera.position_smoothing_speed = camera_smoothing_speed
 	var arena := get_parent()
@@ -61,6 +66,26 @@ func _physics_process(delta: float) -> void:
 		state = new_state
 		state_changed.emit(state)
 	visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
+
+
+## Height of the standing figure in world px: the loaded sprite set's `body_height_px`, else the placeholder.
+func figure_height_px() -> float:
+	return CameraPreset.figure_height_px(visual.sprite_set)
+
+
+## Baseline zoom of the active preset for the current figure.
+func baseline_zoom() -> float:
+	return CameraPreset.zoom_for(CameraPreset.active(), figure_height_px())
+
+
+## Recompute the baseline (preset switched, or the sprite set changed the figure height). The camera follows
+## only while it sits on the old baseline, so a lab zoom step (1x..4x) is never overwritten.
+func refresh_camera_baseline() -> void:
+	var old := camera_baseline
+	camera_baseline = baseline_zoom()
+	if is_equal_approx(camera.zoom.x, old):
+		camera.zoom = Vector2.ONE * camera_baseline
+	camera_baseline_changed.emit(camera_baseline)
 
 
 func reset_camera() -> void:
