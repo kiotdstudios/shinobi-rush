@@ -31,7 +31,8 @@ class Ground extends Node2D:
 		arena.draw_ground(self)
 
 
-## PLACEHOLDER block: top face plus front and right side faces (three-quarter look).
+## PLACEHOLDER block, front piece: the front face and its caption, y-sorted at the front edge (the node position).
+## The east face and roof are drawn by the sibling BlockRear (see ArenaSort for the draw-order rule).
 class Block extends StaticBody2D:
 	var footprint: Vector2
 	var height: float
@@ -60,12 +61,8 @@ class Block extends StaticBody2D:
 	func _draw() -> void:
 		_drawn_zoom = _camera_zoom()
 		var w := footprint.x * 0.5
-		var d := footprint.y
 		var h := height
-		var s := d * 0.5
 		draw_colored_polygon(PackedVector2Array([Vector2(-w, -h), Vector2(w, -h), Vector2(w, 0), Vector2(-w, 0)]), Color("#6b5b4a"))
-		draw_colored_polygon(PackedVector2Array([Vector2(w, 0), Vector2(w + s, -d), Vector2(w + s, -d - h), Vector2(w, -h)]), Color("#4e4237"))
-		draw_colored_polygon(PackedVector2Array([Vector2(-w, -h), Vector2(w, -h), Vector2(w + s, -h - d), Vector2(-w + s, -h - d)]), Color("#9a8670"))
 		# Fit the label to the front face: shrink the font until "PLACEHOLDER" is not wider than the face.
 		var font := ThemeDB.fallback_font
 		# Zoomed out (zoom < 1) the font floor rises so the caption stays >= 8 screen px.
@@ -77,13 +74,41 @@ class Block extends StaticBody2D:
 		draw_string(font, Vector2(-w + 3, -h * 0.5), "PLACEHOLDER", HORIZONTAL_ALIGNMENT_LEFT, -1, fsize, Color(1, 1, 1, 0.6))
 
 
+## PLACEHOLDER block, rear piece: the east face and the roof (three-quarter look). It is a SIBLING of Block, not a
+## child, so it gets its own y-sort key at the back edge (ArenaSort.rear_position); no collider. The polygons keep
+## the coordinates they had when Block drew them, shifted down by the depth to undo the node offset.
+class BlockRear extends Node2D:
+	var footprint: Vector2
+	var height: float
+
+	func _init(size: Vector2, h: float) -> void:
+		footprint = size
+		height = h
+
+	func _draw() -> void:
+		var w := footprint.x * 0.5
+		var d := footprint.y
+		var h := height
+		var s := d * 0.5
+		draw_set_transform(Vector2(0.0, d))
+		draw_colored_polygon(PackedVector2Array([Vector2(w, 0), Vector2(w + s, -d), Vector2(w + s, -d - h), Vector2(w, -h)]), Color("#4e4237"))
+		draw_colored_polygon(PackedVector2Array([Vector2(-w, -h), Vector2(w, -h), Vector2(w + s, -h - d), Vector2(-w + s, -h - d)]), Color("#9a8670"))
+
+
 func _ready() -> void:
 	y_sort_enabled = true
 	add_child(Ground.new(self))
-	for b: Array in BLOCKS:
+	for i in BLOCKS.size():
+		var b: Array = BLOCKS[i]
 		var block := Block.new(b[1], b[2])
+		block.name = "Block%d" % i
 		block.position = b[0]
 		add_child(block)
+		# Rear piece right after its Block: its own key (back edge), same parent and z_index as the player.
+		var rear := BlockRear.new(b[1], b[2])
+		rear.name = "BlockRear%d" % i
+		rear.position = ArenaSort.rear_position(b[0], b[1])
+		add_child(rear)
 	_build_bounds_walls()
 	for p in get_tree().get_nodes_in_group("player"):
 		p.global_position = spawn.global_position
