@@ -33,3 +33,5 @@ None.
 Owner visual review; full Order01 incomplete. Live deployment: not applicable to review-only GIFs; this does not claim game integration or deployed Web testing.
 
 Final pre-publication checks: north final12-pose contact inspected (back view retained), normalization96unique128RGBA/binaryalpha/no clipping PASS. Seven other dodge directions unchanged from tested second batch. Final north Godot capture12poses PASS, no runtime errors other than session certificate warning. Jump half-speed GIF24frames2000ms; dodge12frames1000ms, both800x1880 and infinite review loop, no ellipse shadows. New review files are linked from current-production-review.md.
+
+Final publication: asset commit55dc1825e2f4ec9962418cccf3455088447848fb; preview/report follow-up3bb4013c413ff347ef0cdd6261a51051197cc87b; https://github.com/kiotdstudios/shinobi-rush/pull/23. Both published preview blobs fetched via GitHub connector and their Git blob hashes match local decoded/verified GIF bytes. No new live build claimed.
