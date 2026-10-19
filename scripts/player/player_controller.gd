@@ -1,8 +1,9 @@
 class_name PlayerController
 extends CharacterBody2D
 ## Top-down (three-quarter view) movement: walk / sprint with acceleration and friction.
-## Origin = feet. Dodge (Space) and jump (F) are one-shot actions that lock out movement input for
-## the authored length of their animation. Combat etc. remain reserved with no behavior yet.
+## Origin = feet. Dodge (Space) and jump (F) are one-shot actions that run alongside movement:
+## momentum is never zeroed on entry or exit, so a run carries straight through into the action and
+## straight back out of it. Combat etc. remain reserved with no behavior yet.
 
 signal state_changed(new_state: State)
 ## The camera baseline zoom was recomputed (preset switched, or the figure height changed with the sprite set).
@@ -17,8 +18,21 @@ enum State { IDLE, MOVE, SPRINT, DODGE, JUMP }
 @export var acceleration: float = WorldScale.ACCELERATION
 @export var friction: float = WorldScale.FRICTION
 @export var camera_smoothing_speed: float = 8.0
-## Dodge is a quick burst along the facing direction, decaying by `friction` like normal movement.
+## Dodge is a quick burst along the dodge direction; velocity then eases (at `dodge_recovery_accel`,
+## not the generic ground `friction`) toward whatever speed current input calls for, or to a stop if none.
 @export var dodge_speed: float = WorldScale.SPRINT_SPEED * 1.6
+@export var dodge_recovery_accel: float = WorldScale.ACCELERATION * 1.5
+## Air control: fraction of normal ground `acceleration` used to steer velocity while airborne.
+## Momentum itself is never reset on jump entry/exit; this only lets input bend an already-moving arc.
+@export var air_control_mult: float = 0.6
+## Visual-only peak height (px) of the jump arc. Purely cosmetic: applied to PlayerVisual's local
+## position, never to this body's position, so collision and the arena's Y-sort (which keys off this
+## node's own global_position.y) are completely unaffected by being airborne.
+@export var jump_visual_height: float = 34.0
+## Input buffer window (seconds) for dodge/jump: a press up to this long before the action becomes
+## legal (i.e. while the previous dodge/jump is still finishing) is remembered and fires the instant
+## it's allowed, instead of being dropped.
+@export var input_buffer_window: float = 0.12
 ## Used only when the active sprite set has no "dodge"/"jump" animation to time against (placeholder visual).
 @export var dodge_fallback_duration: float = 0.5
 @export var jump_fallback_duration: float = 0.6
@@ -27,7 +41,10 @@ var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
 var facing8: Vector2 = Vector2.DOWN  ## facing snapped to 8 directions
 var camera_baseline: float = WorldScale.CAMERA_BASE_ZOOM  ## zoom of the active CameraPreset for the current figure
-var _action_timer: float = 0.0  ## seconds left in the current dodge/jump; input is locked out until it hits 0
+var _action_timer: float = 0.0  ## seconds left in the current dodge/jump; 0 when not acting
+var _action_duration: float = 0.0  ## total authored length of the current/last action, for progress math
+var _dodge_buffer: float = 0.0  ## seconds left that a buffered dodge press is still eligible to fire
+var _jump_buffer: float = 0.0  ## seconds left that a buffered jump press is still eligible to fire
 
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
@@ -56,48 +73,105 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if state == State.DODGE or state == State.JUMP:
-		_action_timer -= delta
-		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
-		move_and_slide()
-		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)  # no-op on the placeholder visual (no dodge/jump frames); it just keeps its last pose
-		if _action_timer <= 0.0:
-			state = State.IDLE
-			state_changed.emit(state)
-		return
+	var prev_state := state
+	_dodge_buffer = maxf(_dodge_buffer - delta, 0.0)
+	_jump_buffer = maxf(_jump_buffer - delta, 0.0)
 	if Input.is_action_just_pressed("dodge"):
-		_start_action(State.DODGE, "dodge", dodge_fallback_duration)
-		velocity = facing8 * dodge_speed
-		return
+		_dodge_buffer = input_buffer_window
 	if Input.is_action_just_pressed("jump"):
-		_start_action(State.JUMP, "jump", jump_fallback_duration)
-		return
+		_jump_buffer = input_buffer_window
+
 	var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
 	var target_speed := sprint_speed if sprinting else walk_speed
-	if input != Vector2.ZERO:
+
+	var still_acting := false
+	if state == State.DODGE or state == State.JUMP:
+		_action_timer -= delta
+		if state == State.JUMP:
+			# Momentum is never zeroed: with no input the arc simply continues; with input it bends
+			# (at a reduced, "air control" rate) toward the new heading instead of snapping to it.
+			if input != Vector2.ZERO:
+				velocity = velocity.move_toward(input * target_speed, acceleration * air_control_mult * delta)
+		else:  # DODGE
+			# Dedicated curve: the initial burst (set on trigger) eases toward whatever speed current
+			# input calls for (0 if none) at `dodge_recovery_accel`, not the generic ground `friction`.
+			velocity = velocity.move_toward(input * target_speed, dodge_recovery_accel * delta)
+		if input != Vector2.ZERO:
+			facing = input.normalized()
+			facing8 = _snap8(facing)
+		still_acting = _action_timer > 0.0
+
+	if still_acting:
+		move_and_slide()
+		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)
+		_update_jump_lift()
+		if state != prev_state:
+			state_changed.emit(state)
+		return
+
+	# Not mid-action this frame (either never was, or the action just finished above with velocity
+	# already correct) -> a buffered dodge/jump takes priority over plain locomotion, then plain
+	# locomotion, then idle decay. Exactly one of the three branches below runs.
+	if _dodge_buffer > 0.0 or _jump_buffer > 0.0:
+		if _dodge_buffer >= _jump_buffer:
+			_dodge_buffer = 0.0
+			_begin_dodge(input)
+		else:
+			_jump_buffer = 0.0
+			_begin_jump()
+	elif input != Vector2.ZERO:
 		velocity = velocity.move_toward(input * target_speed, acceleration * delta)
 		facing = input.normalized()
 		facing8 = _snap8(facing)
+		state = State.SPRINT if sprinting else State.MOVE
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+		state = State.IDLE
 	move_and_slide()
-	var new_state := State.IDLE
-	if input != Vector2.ZERO:
-		new_state = State.SPRINT if sprinting else State.MOVE
-	if new_state != state:
-		state = new_state
+	_update_jump_lift()
+	if state == State.DODGE or state == State.JUMP:
+		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)
+	else:
+		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
+	if state != prev_state:
 		state_changed.emit(state)
-	visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
 
 
-## Begin a one-shot dodge/jump: locks out movement input for the authored animation length (or
-## `fallback_duration` on the placeholder visual, which has no timing to read), then returns to IDLE.
-func _start_action(s: State, aid: String, fallback_duration: float) -> void:
-	state = s
-	_action_timer = visual.action_duration(aid, fallback_duration)
-	state_changed.emit(state)
-	visual.play_action(aid, facing8)
+## Begin a dodge: direction comes from current input if any is held, else the last facing (order:
+## "directional dodging based on current input or last facing direction"). Velocity jumps straight to
+## the burst speed in that direction -- there is no separate "stop, then dodge" step.
+func _begin_dodge(input: Vector2) -> void:
+	var dir := input.normalized() if input != Vector2.ZERO else facing8
+	facing8 = _snap8(dir)
+	if input != Vector2.ZERO:
+		facing = input.normalized()
+	state = State.DODGE
+	_action_duration = visual.action_duration("dodge", dodge_fallback_duration)
+	_action_timer = _action_duration
+	velocity = facing8 * dodge_speed
+	visual.play_action("dodge", facing8)
+
+
+## Begin a jump. `velocity` is intentionally left untouched: whatever horizontal momentum the player
+## already had carries straight into the air (order: "do not reset movement velocity when entering or
+## exiting the jump state").
+func _begin_jump() -> void:
+	state = State.JUMP
+	_action_duration = visual.action_duration("jump", jump_fallback_duration)
+	_action_timer = _action_duration
+	visual.play_action("jump", facing8)
+
+
+## Visual-only elevation arc for the current jump (0 outside JUMP). Applied to PlayerVisual's local
+## position -- never to this body's position -- so the logical ground position used for collision and
+## the arena's Y-sort (keyed off this node's own global_position.y, see arena_sort.gd) never moves.
+func _update_jump_lift() -> void:
+	if state != State.JUMP or _action_duration <= 0.0:
+		visual.position.y = 0.0
+		return
+	var progress := clampf(1.0 - (_action_timer / _action_duration), 0.0, 1.0)
+	visual.position.y = -jump_visual_height * sin(progress * PI)
 
 
 ## Height of the standing figure in world px: the loaded sprite set's `body_height_px`, else the placeholder.
