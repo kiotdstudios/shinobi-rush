@@ -168,6 +168,8 @@ The arena y-sorts its children by each node's global y (same `z_index`, ties go 
 - Result: feet.y greater than the back edge draws the player over the east face and roof; greater than the front edge also over the front face. North of the back edge he is hidden, as he should be.
 - Never draw the player over all walls. Keep the pair together if you wrap props in a container. The pure rule lives in `scripts/arena/arena_sort.gd` and is tested in `tests/test_arena_sorting.gd`.
 - Codex, Aki and Orcha: build new props the same way and keep sprite anchors at the feet.
+- Sprite width: at the east contact the front face still draws over sprite pixels more than about 25 px west of the anchor. A 128x128 frame whose body extends wider than about 25 px each side of the foot anchor can be clipped by a few px there. The real production frame extents are not measured yet; check them when Codex's first sprites land.
+
 ## What finishes Order 01
 
 Stage 2 is delivered by a pull request (placeholder art only). The order is finished when all of these are true, verified by a person reading the evidence (not by this document):
