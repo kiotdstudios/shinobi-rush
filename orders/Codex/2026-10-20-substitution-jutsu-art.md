@@ -3,7 +3,7 @@
 - Owner: Codex (art)
 - Status: REVIEW
 - Priority: P1
-- Branch/PR: codex/substitution-jutsu-art
+- Branch/PR: codex/substitution-jutsu-art — https://github.com/kiotdstudios/shinobi-rush/pull/37
 - Dependencies: current summoning rolling smoke visual language; Aki gameplay integration
 
 ## Objective

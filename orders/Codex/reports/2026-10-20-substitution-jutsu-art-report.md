@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-20-substitution-jutsu-art.md
 - Date:2026-10-20
 - Final status: REVIEW — art ready; visual acceptance and Aki integration pending
-- Commit / PR: Report prepared before implementation commit; links recorded in follow-up.
+- Commit / PR: Art6f3939762ac91d0002d70de07baefb934499478a; https://github.com/kiotdstudios/shinobi-rush/pull/37. Committed/pushed for review.
 
 ## Work completed
 Created original128px log reveal/tumble/contact/bounce/settle animation with bark ridges, branch stub and cut growth rings. Separate departure rolling smoke, curling ribbon wisps and arrival wisps preserve the current summoning smoke pixel scale/palette. Departure/arrival reuse23 exact summoning frames with faster substitution timing; this reuse is intentional, not a claim of newly generated billows. No character/log/smoke/terrain/shadow pixels baked across layers.
