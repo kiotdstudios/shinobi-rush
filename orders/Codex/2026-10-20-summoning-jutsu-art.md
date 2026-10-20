@@ -3,7 +3,7 @@
 - Owner: Codex (art)
 - Status: REVIEW
 - Priority: P1
-- Branch/PR: codex/summoning-jutsu-art
+- Branch/PR: codex/summoning-jutsu-art — https://github.com/kiotdstudios/shinobi-rush/pull/36
 - Dependencies: approved128px player; no runtime controller dependency
 
 ## Objective

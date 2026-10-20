@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-20-summoning-jutsu-art.md
 - Date: 2026-10-20
 - Final status: REVIEW — art preview ready for owner visual acceptance
-- Commit / PR: Report prepared before implementation commit; links added in follow-up.
+- Commit / PR: Art6dd886ef4bef557f4ecb20d96b59b9d86dec27da; standalone subclips c8cd9f6. https://github.com/kiotdstudios/shinobi-rush/pull/36. Committed/pushed for visual review.
 
 ## Work completed
 Created one SE summoning sequence: quick hand signs, a raised-arm windup, forceful ONE-palm ground contact with the other hand held off the ground, large black ink contract spreading on the ground, and delayed white smoke. Nothing summoned yet. Three independent transparent animation clips and timing/pivot metadata allow separate playback/replacement.
