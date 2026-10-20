@@ -3,7 +3,7 @@
 - Owner: Codex (art)
 - Status: REVIEW
 - Priority: P1
-- Branch/PR: codex/stylized-running-jutsu
+- Branch/PR: codex/stylized-running-jutsu — https://github.com/kiotdstudios/shinobi-rush/pull/35
 - Dependencies: approved128px sprint, no controller dependency
 
 ## Objective

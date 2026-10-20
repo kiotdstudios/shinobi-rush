@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-19-stylized-running-jutsu.md
 - Date: 2026-10-19
 - Final status: REVIEW — tested art preview ready; owner visual acceptance pending
-- Commit / PR: Prepared before implementation commit; links added in follow-up.
+- Commit / PR: Art1c3818524e5eb0a8cd7f9c72afafe1a84979e772; https://github.com/kiotdstudios/shinobi-rush/pull/35. Committed and pushed; final visual review pending.
 
 ## Work completed
 Created a short SE running-hand-sign to lightning-thrust loop, intended-speed and half-speed GIFs, labeled contact sheet and phone-friendly synchronized browser review. Two contrasted sign silhouettes, two single-frame faint hand multiples, separation into a brief charged sprint, explosive thrust, sharp impact and electrical follow-through. The character keeps sprinting throughout; there are no idle/standing frames. Preserved approved player appearance, native128×128 body, pixel scale and foot origin[64,116].
