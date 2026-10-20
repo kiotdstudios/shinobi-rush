@@ -43,6 +43,13 @@ for im in fx:
  assert not np.any(a[[0,-1],:,3]) and not np.any(a[:,[0,-1],3])
 for i,im in enumerate(fx):im.save(ROOT/f'lightning/charge_{i:02}.png')
 for i,im in enumerate(smears):im.save(ROOT/f'motion/multiple_{i:02}.png')
+dynamic={}
+for layer in ['back','front']:
+ sheet=Image.open(SRC/f'dynamic-{layer}.png').convert('RGBA');assert sheet.size==(512,384)
+ dynamic[layer]=[sheet.crop(((i%4)*128,(i//4)*128,(i%4+1)*128,(i//4+1)*128)) for i in range(12)]
+ for i,im in enumerate(dynamic[layer]):
+  assert set(np.unique(np.array(im)[:,:,3]))<={0,255}
+  im.save(ROOT/f'lightning/dynamic_{layer}_{i:02}.png')
 
 def beat(i):
  if i<9:return 'running',None,None,None
@@ -85,18 +92,28 @@ for i in range(50):
  assert not np.any(a[[0,-1],:,3]) and not np.any(a[:,[0,-1],3])
  rel=f'body/SE_{i:03}.png';body.save(ROOT/rel)
  body_canvas=Image.new('RGBA',(192,192));body_canvas.alpha_composite(body,(32,32))
- canvas=body_canvas.copy()
+ canvas=Image.new('RGBA',(192,192))
+ extra=None;mount=None
+ if electric is not None:
+  extra=2+(i-16)%5 if 16<=i<23 else {15:0,23:7,24:8,25:9,26:10,27:11,28:10,29:0}.get(i)
+  mount=[(38 if key==2 else 105)+delta[0]-32,(69 if key==2 else 81)+delta[1]-32]
+  if extra is not None:canvas.alpha_composite(dynamic['back'][extra],tuple(mount))
+ canvas.alpha_composite(body_canvas)
  if multiple is not None:canvas.alpha_composite(shift(smears[multiple],delta),(32,32))
  hand=None
  if electric is not None:
   hand=[(38 if key==2 else 105)+delta[0],(69 if key==2 else 81)+delta[1]]
   assert body.getpixel(tuple(hand))[3]==255,(i,'lightning anchor outside hand',hand)
   canvas.alpha_composite(fx[electric],tuple(hand)) #32px body offset cancels32px effect pivot
+  if extra is not None:canvas.alpha_composite(dynamic['front'][extra],tuple(mount))
  assert not np.any(np.array(canvas)[[0,-1],:,3]) and not np.any(np.array(canvas)[:,[0,-1],3])
  frame={'index':i,'stage':stage,'duration_ms':1000/30,'body':rel,
   'sprint_source':f'../../sprites/production/sprint/SE_{phase:03}.png','sprint_phase':phase,
   'upper_pose':key,'upper_registration_px':delta,'motion':None if multiple is None else f'motion/multiple_{multiple:02}.png',
   'lightning':None if electric is None else f'lightning/charge_{electric:02}.png',
+  'dynamic_back':None if extra is None else f'lightning/dynamic_back_{extra:02}.png',
+  'dynamic_front':None if extra is None else f'lightning/dynamic_front_{extra:02}.png',
+  'dynamic_pivot':[64,64],'dynamic_offset_px':mount,
   'lightning_pivot':[32,32],'lightning_hand_px':hand,'body_sha256':hashlib.sha256((ROOT/rel).read_bytes()).hexdigest()}
  frames.append(frame);renders.append(canvas);body_renders.append(body_canvas)
 

@@ -3,7 +3,7 @@
  const root='../../study/running-jutsu/';
  const meta=await fetch(root+'jutsu_review.json').then(r=>{if(!r.ok)throw Error(r.status);return r.json()});
  const cache=new Map();
- const paths=[...new Set(meta.frames.flatMap(f=>[f.body,f.motion,f.lightning]).filter(Boolean))];
+ const paths=[...new Set(meta.frames.flatMap(f=>[f.body,f.motion,f.lightning,f.dynamic_back,f.dynamic_front]).filter(Boolean))];
  await Promise.all(paths.map(path=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{cache.set(path,im);resolve()};im.onerror=()=>reject(Error(path));im.src=root+path})));
  const $=id=>document.getElementById(id);
  const state={ready:true,frame:0,playing:true,speed:1,loops:0,loaded:cache.size};window.jutsuReviewState=state;
@@ -12,8 +12,10 @@
   const f=meta.frames[state.frame];
   for(const c of contexts){c.imageSmoothingEnabled=false;c.clearRect(0,0,192,192);c.drawImage(cache.get(f.body),32,32)}
   const c=contexts[0];
+  if(f.dynamic_back&&$('lightning').checked){c.clearRect(0,0,192,192);c.drawImage(cache.get(f.dynamic_back),...f.dynamic_offset_px);c.drawImage(cache.get(f.body),32,32)}
   if(f.motion&&$('multiples').checked){const [x,y]=f.upper_registration_px;c.drawImage(cache.get(f.motion),32+x,32+y)}
   if(f.lightning&&$('lightning').checked){const [x,y]=f.lightning_hand_px;c.drawImage(cache.get(f.lightning),x,y)}
+  if(f.dynamic_front&&$('lightning').checked)c.drawImage(cache.get(f.dynamic_front),...f.dynamic_offset_px);
   if($('anchors').checked)for(const ctx of contexts){ctx.fillStyle='#58e0bf';ctx.fillRect(94,148,5,1);ctx.fillRect(96,146,1,5)}
   $('clock').textContent=`${(state.frame/30).toFixed(3)}s / 1.667s · ${f.stage.replaceAll('_',' ')} · frame ${state.frame+1}/50 · sprint ${f.sprint_phase+1}/20`;
   $('scrub').value=state.frame;$('play').textContent=state.playing?'Pause':'Play';

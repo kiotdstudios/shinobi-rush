@@ -27,3 +27,5 @@ No idle poses, stable scale/foot origin, lower-body running throughout, sharp pi
 Dedicated isolated art preview, not a runtime combat implementation. Existing modular sword proof PR33 remains separate. New owner request takes priority over broad combat-art expansion pending proof acceptance.
 
 Corrected motion-reference version delivered; see reports/2026-10-19-stylized-running-jutsu-report.md. Final visual acceptance remains with the owner.
+
+Owner requested more dynamic VFX: added longer trailing lightning, gathering sparks, speed ribbons and larger impact; see reports/2026-10-19-running-jutsu-dynamic-vfx-report.md. Same body and timing.

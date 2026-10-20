@@ -55,6 +55,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -76,6 +83,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -97,6 +111,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -118,6 +139,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -139,6 +167,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -160,6 +195,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -181,6 +223,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -202,6 +251,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -223,6 +279,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -244,6 +307,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -265,6 +335,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -286,6 +363,13 @@
       ],
       "motion": "motion/multiple_00.png",
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -307,6 +391,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -328,6 +419,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -349,6 +447,13 @@
       ],
       "motion": "motion/multiple_01.png",
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -370,6 +475,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_00.png",
+      "dynamic_back": "lightning/dynamic_back_00.png",
+      "dynamic_front": "lightning/dynamic_front_00.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        6,
+        39
+      ],
       "lightning_pivot": [
         32,
         32
@@ -394,6 +509,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_02.png",
+      "dynamic_back": "lightning/dynamic_back_02.png",
+      "dynamic_front": "lightning/dynamic_front_02.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        6,
+        39
+      ],
       "lightning_pivot": [
         32,
         32
@@ -418,6 +543,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_03.png",
+      "dynamic_back": "lightning/dynamic_back_03.png",
+      "dynamic_front": "lightning/dynamic_front_03.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        6,
+        39
+      ],
       "lightning_pivot": [
         32,
         32
@@ -442,6 +577,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_04.png",
+      "dynamic_back": "lightning/dynamic_back_04.png",
+      "dynamic_front": "lightning/dynamic_front_04.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        6,
+        41
+      ],
       "lightning_pivot": [
         32,
         32
@@ -466,6 +611,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_05.png",
+      "dynamic_back": "lightning/dynamic_back_05.png",
+      "dynamic_front": "lightning/dynamic_front_05.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        6,
+        41
+      ],
       "lightning_pivot": [
         32,
         32
@@ -490,6 +645,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_02.png",
+      "dynamic_back": "lightning/dynamic_back_06.png",
+      "dynamic_front": "lightning/dynamic_front_06.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        6,
+        39
+      ],
       "lightning_pivot": [
         32,
         32
@@ -514,6 +679,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_03.png",
+      "dynamic_back": "lightning/dynamic_back_02.png",
+      "dynamic_front": "lightning/dynamic_front_02.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        6,
+        39
+      ],
       "lightning_pivot": [
         32,
         32
@@ -538,6 +713,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_04.png",
+      "dynamic_back": "lightning/dynamic_back_03.png",
+      "dynamic_front": "lightning/dynamic_front_03.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        6,
+        39
+      ],
       "lightning_pivot": [
         32,
         32
@@ -562,6 +747,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_06.png",
+      "dynamic_back": "lightning/dynamic_back_07.png",
+      "dynamic_front": "lightning/dynamic_front_07.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        73,
+        49
+      ],
       "lightning_pivot": [
         32,
         32
@@ -586,6 +781,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_08.png",
+      "dynamic_back": "lightning/dynamic_back_08.png",
+      "dynamic_front": "lightning/dynamic_front_08.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        73,
+        49
+      ],
       "lightning_pivot": [
         32,
         32
@@ -610,6 +815,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_09.png",
+      "dynamic_back": "lightning/dynamic_back_09.png",
+      "dynamic_front": "lightning/dynamic_front_09.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        73,
+        50
+      ],
       "lightning_pivot": [
         32,
         32
@@ -634,6 +849,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_10.png",
+      "dynamic_back": "lightning/dynamic_back_10.png",
+      "dynamic_front": "lightning/dynamic_front_10.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        73,
+        50
+      ],
       "lightning_pivot": [
         32,
         32
@@ -658,6 +883,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_11.png",
+      "dynamic_back": "lightning/dynamic_back_11.png",
+      "dynamic_front": "lightning/dynamic_front_11.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        73,
+        50
+      ],
       "lightning_pivot": [
         32,
         32
@@ -682,6 +917,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_10.png",
+      "dynamic_back": "lightning/dynamic_back_10.png",
+      "dynamic_front": "lightning/dynamic_front_10.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        73,
+        52
+      ],
       "lightning_pivot": [
         32,
         32
@@ -706,6 +951,16 @@
       ],
       "motion": null,
       "lightning": "lightning/charge_00.png",
+      "dynamic_back": "lightning/dynamic_back_00.png",
+      "dynamic_front": "lightning/dynamic_front_00.png",
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": [
+        6,
+        40
+      ],
       "lightning_pivot": [
         32,
         32
@@ -730,6 +985,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -751,6 +1013,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -772,6 +1041,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -793,6 +1069,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -814,6 +1097,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -835,6 +1125,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -856,6 +1153,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -877,6 +1181,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -898,6 +1209,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -919,6 +1237,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -940,6 +1265,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -961,6 +1293,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -982,6 +1321,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -1003,6 +1349,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -1024,6 +1377,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -1045,6 +1405,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -1066,6 +1433,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -1087,6 +1461,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -1108,6 +1489,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
@@ -1129,6 +1517,13 @@
       ],
       "motion": null,
       "lightning": null,
+      "dynamic_back": null,
+      "dynamic_front": null,
+      "dynamic_pivot": [
+        64,
+        64
+      ],
+      "dynamic_offset_px": null,
       "lightning_pivot": [
         32,
         32
