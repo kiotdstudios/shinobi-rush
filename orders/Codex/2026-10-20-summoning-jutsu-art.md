@@ -25,3 +25,5 @@ One hand visibly contacts ground; other hand stays off ground. Seal large and le
 Art-only delivery. Future summon should appear at smoke/contract ground anchor; no creature/object is included. Final visual review required.
 
 Independent clips and full/half-speed previews delivered. See reports/2026-10-20-summoning-jutsu-art-report.md for tests and integration notes.
+
+Owner smoke revision: replace expanding circles with rolling, shaded billows and fluid breakup. Delivered29 native25FPS smoke frames, independent pivot/timing and refreshed normal/half-speed previews; see reports/2026-10-20-summoning-fluid-smoke-report.md. Body and contract unchanged.

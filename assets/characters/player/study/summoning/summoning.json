@@ -33,16 +33,17 @@
     ],
     "smoke": [
       28,
-      -59
+      -11
     ]
   },
   "duration_ms": 2600,
+  "timeline_tick_ms": 10,
   "events_ms": {
     "palm_slam": 450,
     "contract_full": 700,
     "smoke_start": 1100,
-    "spawn_under_smoke": 1450,
-    "smoke_clear": 1940
+    "spawn_under_smoke": 1740,
+    "smoke_clear": 2260
   },
   "clips": {
     "body": {
@@ -125,7 +126,7 @@
       ],
       "pivot": [
         128,
-        208
+        160
       ],
       "frames": [
         "smoke/000.png",
@@ -139,21 +140,55 @@
         "smoke/008.png",
         "smoke/009.png",
         "smoke/010.png",
-        "smoke/011.png"
+        "smoke/011.png",
+        "smoke/012.png",
+        "smoke/013.png",
+        "smoke/014.png",
+        "smoke/015.png",
+        "smoke/016.png",
+        "smoke/017.png",
+        "smoke/018.png",
+        "smoke/019.png",
+        "smoke/020.png",
+        "smoke/021.png",
+        "smoke/022.png",
+        "smoke/023.png",
+        "smoke/024.png",
+        "smoke/025.png",
+        "smoke/026.png",
+        "smoke/027.png",
+        "smoke/028.png"
       ],
       "duration_ms": [
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70,
-        70
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
       ],
       "loop": false,
       "z": "above_actor",
@@ -218,421 +253,2085 @@
       -7
     ],
     "content": null,
-    "suggested_reveal_ms": 1940
+    "suggested_reveal_ms": 2260
   },
   "timeline": [
     {
       "index": 0,
       "time_ms": 0,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_000.png",
       "contract": null,
       "smoke": null
     },
     {
       "index": 1,
-      "time_ms": 50,
-      "duration_ms": 50,
+      "time_ms": 10,
+      "duration_ms": 10,
       "body": "body/SE_000.png",
       "contract": null,
       "smoke": null
     },
     {
       "index": 2,
-      "time_ms": 100,
-      "duration_ms": 50,
-      "body": "body/SE_001.png",
+      "time_ms": 20,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
       "contract": null,
       "smoke": null
     },
     {
       "index": 3,
-      "time_ms": 150,
-      "duration_ms": 50,
-      "body": "body/SE_001.png",
+      "time_ms": 30,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
       "contract": null,
       "smoke": null
     },
     {
       "index": 4,
-      "time_ms": 200,
-      "duration_ms": 50,
+      "time_ms": 40,
+      "duration_ms": 10,
       "body": "body/SE_000.png",
       "contract": null,
       "smoke": null
     },
     {
       "index": 5,
-      "time_ms": 250,
-      "duration_ms": 50,
-      "body": "body/SE_001.png",
+      "time_ms": 50,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
       "contract": null,
       "smoke": null
     },
     {
       "index": 6,
-      "time_ms": 300,
-      "duration_ms": 50,
-      "body": "body/SE_002.png",
+      "time_ms": 60,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
       "contract": null,
       "smoke": null
     },
     {
       "index": 7,
-      "time_ms": 350,
-      "duration_ms": 50,
-      "body": "body/SE_002.png",
+      "time_ms": 70,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
       "contract": null,
       "smoke": null
     },
     {
       "index": 8,
-      "time_ms": 400,
-      "duration_ms": 50,
-      "body": "body/SE_002.png",
+      "time_ms": 80,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
       "contract": null,
       "smoke": null
     },
     {
       "index": 9,
+      "time_ms": 90,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 10,
+      "time_ms": 100,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 11,
+      "time_ms": 110,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 12,
+      "time_ms": 120,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 13,
+      "time_ms": 130,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 14,
+      "time_ms": 140,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 15,
+      "time_ms": 150,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 16,
+      "time_ms": 160,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 17,
+      "time_ms": 170,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 18,
+      "time_ms": 180,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 19,
+      "time_ms": 190,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 20,
+      "time_ms": 200,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 21,
+      "time_ms": 210,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 22,
+      "time_ms": 220,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 23,
+      "time_ms": 230,
+      "duration_ms": 10,
+      "body": "body/SE_000.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 24,
+      "time_ms": 240,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 25,
+      "time_ms": 250,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 26,
+      "time_ms": 260,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 27,
+      "time_ms": 270,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 28,
+      "time_ms": 280,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 29,
+      "time_ms": 290,
+      "duration_ms": 10,
+      "body": "body/SE_001.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 30,
+      "time_ms": 300,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 31,
+      "time_ms": 310,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 32,
+      "time_ms": 320,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 33,
+      "time_ms": 330,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 34,
+      "time_ms": 340,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 35,
+      "time_ms": 350,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 36,
+      "time_ms": 360,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 37,
+      "time_ms": 370,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 38,
+      "time_ms": 380,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 39,
+      "time_ms": 390,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 40,
+      "time_ms": 400,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 41,
+      "time_ms": 410,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 42,
+      "time_ms": 420,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 43,
+      "time_ms": 430,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 44,
+      "time_ms": 440,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": null,
+      "smoke": null
+    },
+    {
+      "index": 45,
       "time_ms": 450,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_003.png",
       "contract": "contract/000.png",
       "smoke": null
     },
     {
-      "index": 10,
+      "index": 46,
+      "time_ms": 460,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/000.png",
+      "smoke": null
+    },
+    {
+      "index": 47,
+      "time_ms": 470,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/000.png",
+      "smoke": null
+    },
+    {
+      "index": 48,
+      "time_ms": 480,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/000.png",
+      "smoke": null
+    },
+    {
+      "index": 49,
+      "time_ms": 490,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/000.png",
+      "smoke": null
+    },
+    {
+      "index": 50,
       "time_ms": 500,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_003.png",
       "contract": "contract/001.png",
       "smoke": null
     },
     {
-      "index": 11,
+      "index": 51,
+      "time_ms": 510,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/001.png",
+      "smoke": null
+    },
+    {
+      "index": 52,
+      "time_ms": 520,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/001.png",
+      "smoke": null
+    },
+    {
+      "index": 53,
+      "time_ms": 530,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/001.png",
+      "smoke": null
+    },
+    {
+      "index": 54,
+      "time_ms": 540,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/001.png",
+      "smoke": null
+    },
+    {
+      "index": 55,
       "time_ms": 550,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_003.png",
       "contract": "contract/002.png",
       "smoke": null
     },
     {
-      "index": 12,
+      "index": 56,
+      "time_ms": 560,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/002.png",
+      "smoke": null
+    },
+    {
+      "index": 57,
+      "time_ms": 570,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/002.png",
+      "smoke": null
+    },
+    {
+      "index": 58,
+      "time_ms": 580,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/002.png",
+      "smoke": null
+    },
+    {
+      "index": 59,
+      "time_ms": 590,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/002.png",
+      "smoke": null
+    },
+    {
+      "index": 60,
       "time_ms": 600,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_003.png",
       "contract": "contract/003.png",
       "smoke": null
     },
     {
-      "index": 13,
+      "index": 61,
+      "time_ms": 610,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/003.png",
+      "smoke": null
+    },
+    {
+      "index": 62,
+      "time_ms": 620,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/003.png",
+      "smoke": null
+    },
+    {
+      "index": 63,
+      "time_ms": 630,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/003.png",
+      "smoke": null
+    },
+    {
+      "index": 64,
+      "time_ms": 640,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/003.png",
+      "smoke": null
+    },
+    {
+      "index": 65,
       "time_ms": 650,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_003.png",
       "contract": "contract/004.png",
       "smoke": null
     },
     {
-      "index": 14,
+      "index": 66,
+      "time_ms": 660,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/004.png",
+      "smoke": null
+    },
+    {
+      "index": 67,
+      "time_ms": 670,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/004.png",
+      "smoke": null
+    },
+    {
+      "index": 68,
+      "time_ms": 680,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/004.png",
+      "smoke": null
+    },
+    {
+      "index": 69,
+      "time_ms": 690,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/004.png",
+      "smoke": null
+    },
+    {
+      "index": 70,
       "time_ms": 700,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_003.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 15,
+      "index": 71,
+      "time_ms": 710,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 72,
+      "time_ms": 720,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 73,
+      "time_ms": 730,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 74,
+      "time_ms": 740,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 75,
       "time_ms": 750,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_003.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 16,
+      "index": 76,
+      "time_ms": 760,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 77,
+      "time_ms": 770,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 78,
+      "time_ms": 780,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 79,
+      "time_ms": 790,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 80,
       "time_ms": 800,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_003.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 17,
+      "index": 81,
+      "time_ms": 810,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 82,
+      "time_ms": 820,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 83,
+      "time_ms": 830,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 84,
+      "time_ms": 840,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 85,
       "time_ms": 850,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_003.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 18,
+      "index": 86,
+      "time_ms": 860,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 87,
+      "time_ms": 870,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 88,
+      "time_ms": 880,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 89,
+      "time_ms": 890,
+      "duration_ms": 10,
+      "body": "body/SE_003.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 90,
       "time_ms": 900,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_002.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 19,
+      "index": 91,
+      "time_ms": 910,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 92,
+      "time_ms": 920,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 93,
+      "time_ms": 930,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 94,
+      "time_ms": 940,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 95,
       "time_ms": 950,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_002.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 20,
+      "index": 96,
+      "time_ms": 960,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 97,
+      "time_ms": 970,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 98,
+      "time_ms": 980,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 99,
+      "time_ms": 990,
+      "duration_ms": 10,
+      "body": "body/SE_002.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 100,
       "time_ms": 1000,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 21,
+      "index": 101,
+      "time_ms": 1010,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 102,
+      "time_ms": 1020,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 103,
+      "time_ms": 1030,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 104,
+      "time_ms": 1040,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 105,
       "time_ms": 1050,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 22,
+      "index": 106,
+      "time_ms": 1060,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 107,
+      "time_ms": 1070,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 108,
+      "time_ms": 1080,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 109,
+      "time_ms": 1090,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 110,
       "time_ms": 1100,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/000.png"
     },
     {
-      "index": 23,
-      "time_ms": 1150,
-      "duration_ms": 50,
+      "index": 111,
+      "time_ms": 1110,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/000.png"
     },
     {
-      "index": 24,
-      "time_ms": 1200,
-      "duration_ms": 50,
+      "index": 112,
+      "time_ms": 1120,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/000.png"
+    },
+    {
+      "index": 113,
+      "time_ms": 1130,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/000.png"
+    },
+    {
+      "index": 114,
+      "time_ms": 1140,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/001.png"
     },
     {
-      "index": 25,
-      "time_ms": 1250,
-      "duration_ms": 50,
+      "index": 115,
+      "time_ms": 1150,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/001.png"
+    },
+    {
+      "index": 116,
+      "time_ms": 1160,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/001.png"
+    },
+    {
+      "index": 117,
+      "time_ms": 1170,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/001.png"
+    },
+    {
+      "index": 118,
+      "time_ms": 1180,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/002.png"
     },
     {
-      "index": 26,
-      "time_ms": 1300,
-      "duration_ms": 50,
+      "index": 119,
+      "time_ms": 1190,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/002.png"
     },
     {
-      "index": 27,
-      "time_ms": 1350,
-      "duration_ms": 50,
+      "index": 120,
+      "time_ms": 1200,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/002.png"
+    },
+    {
+      "index": 121,
+      "time_ms": 1210,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/002.png"
+    },
+    {
+      "index": 122,
+      "time_ms": 1220,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/003.png"
     },
     {
-      "index": 28,
-      "time_ms": 1400,
-      "duration_ms": 50,
+      "index": 123,
+      "time_ms": 1230,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/003.png"
+    },
+    {
+      "index": 124,
+      "time_ms": 1240,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/003.png"
+    },
+    {
+      "index": 125,
+      "time_ms": 1250,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/003.png"
+    },
+    {
+      "index": 126,
+      "time_ms": 1260,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/004.png"
     },
     {
-      "index": 29,
-      "time_ms": 1450,
-      "duration_ms": 50,
+      "index": 127,
+      "time_ms": 1270,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/004.png"
+    },
+    {
+      "index": 128,
+      "time_ms": 1280,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/004.png"
+    },
+    {
+      "index": 129,
+      "time_ms": 1290,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/004.png"
+    },
+    {
+      "index": 130,
+      "time_ms": 1300,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/005.png"
     },
     {
-      "index": 30,
-      "time_ms": 1500,
-      "duration_ms": 50,
+      "index": 131,
+      "time_ms": 1310,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/005.png"
     },
     {
-      "index": 31,
-      "time_ms": 1550,
-      "duration_ms": 50,
+      "index": 132,
+      "time_ms": 1320,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/005.png"
+    },
+    {
+      "index": 133,
+      "time_ms": 1330,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/005.png"
+    },
+    {
+      "index": 134,
+      "time_ms": 1340,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/006.png"
     },
     {
-      "index": 32,
-      "time_ms": 1600,
-      "duration_ms": 50,
+      "index": 135,
+      "time_ms": 1350,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/006.png"
+    },
+    {
+      "index": 136,
+      "time_ms": 1360,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/006.png"
+    },
+    {
+      "index": 137,
+      "time_ms": 1370,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/006.png"
+    },
+    {
+      "index": 138,
+      "time_ms": 1380,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/007.png"
     },
     {
-      "index": 33,
-      "time_ms": 1650,
-      "duration_ms": 50,
+      "index": 139,
+      "time_ms": 1390,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/007.png"
     },
     {
-      "index": 34,
-      "time_ms": 1700,
-      "duration_ms": 50,
+      "index": 140,
+      "time_ms": 1400,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/007.png"
+    },
+    {
+      "index": 141,
+      "time_ms": 1410,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/007.png"
+    },
+    {
+      "index": 142,
+      "time_ms": 1420,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/008.png"
     },
     {
-      "index": 35,
-      "time_ms": 1750,
-      "duration_ms": 50,
+      "index": 143,
+      "time_ms": 1430,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/008.png"
+    },
+    {
+      "index": 144,
+      "time_ms": 1440,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/008.png"
+    },
+    {
+      "index": 145,
+      "time_ms": 1450,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/008.png"
+    },
+    {
+      "index": 146,
+      "time_ms": 1460,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/009.png"
     },
     {
-      "index": 36,
-      "time_ms": 1800,
-      "duration_ms": 50,
+      "index": 147,
+      "time_ms": 1470,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/009.png"
+    },
+    {
+      "index": 148,
+      "time_ms": 1480,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/009.png"
+    },
+    {
+      "index": 149,
+      "time_ms": 1490,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/009.png"
+    },
+    {
+      "index": 150,
+      "time_ms": 1500,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/010.png"
     },
     {
-      "index": 37,
-      "time_ms": 1850,
-      "duration_ms": 50,
+      "index": 151,
+      "time_ms": 1510,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/010.png"
     },
     {
-      "index": 38,
-      "time_ms": 1900,
-      "duration_ms": 50,
+      "index": 152,
+      "time_ms": 1520,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/010.png"
+    },
+    {
+      "index": 153,
+      "time_ms": 1530,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/010.png"
+    },
+    {
+      "index": 154,
+      "time_ms": 1540,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": "smoke/011.png"
     },
     {
-      "index": 39,
+      "index": 155,
+      "time_ms": 1550,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/011.png"
+    },
+    {
+      "index": 156,
+      "time_ms": 1560,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/011.png"
+    },
+    {
+      "index": 157,
+      "time_ms": 1570,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/011.png"
+    },
+    {
+      "index": 158,
+      "time_ms": 1580,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/012.png"
+    },
+    {
+      "index": 159,
+      "time_ms": 1590,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/012.png"
+    },
+    {
+      "index": 160,
+      "time_ms": 1600,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/012.png"
+    },
+    {
+      "index": 161,
+      "time_ms": 1610,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/012.png"
+    },
+    {
+      "index": 162,
+      "time_ms": 1620,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/013.png"
+    },
+    {
+      "index": 163,
+      "time_ms": 1630,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/013.png"
+    },
+    {
+      "index": 164,
+      "time_ms": 1640,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/013.png"
+    },
+    {
+      "index": 165,
+      "time_ms": 1650,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/013.png"
+    },
+    {
+      "index": 166,
+      "time_ms": 1660,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/014.png"
+    },
+    {
+      "index": 167,
+      "time_ms": 1670,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/014.png"
+    },
+    {
+      "index": 168,
+      "time_ms": 1680,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/014.png"
+    },
+    {
+      "index": 169,
+      "time_ms": 1690,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/014.png"
+    },
+    {
+      "index": 170,
+      "time_ms": 1700,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/015.png"
+    },
+    {
+      "index": 171,
+      "time_ms": 1710,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/015.png"
+    },
+    {
+      "index": 172,
+      "time_ms": 1720,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/015.png"
+    },
+    {
+      "index": 173,
+      "time_ms": 1730,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/015.png"
+    },
+    {
+      "index": 174,
+      "time_ms": 1740,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/016.png"
+    },
+    {
+      "index": 175,
+      "time_ms": 1750,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/016.png"
+    },
+    {
+      "index": 176,
+      "time_ms": 1760,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/016.png"
+    },
+    {
+      "index": 177,
+      "time_ms": 1770,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/016.png"
+    },
+    {
+      "index": 178,
+      "time_ms": 1780,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/017.png"
+    },
+    {
+      "index": 179,
+      "time_ms": 1790,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/017.png"
+    },
+    {
+      "index": 180,
+      "time_ms": 1800,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/017.png"
+    },
+    {
+      "index": 181,
+      "time_ms": 1810,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/017.png"
+    },
+    {
+      "index": 182,
+      "time_ms": 1820,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/018.png"
+    },
+    {
+      "index": 183,
+      "time_ms": 1830,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/018.png"
+    },
+    {
+      "index": 184,
+      "time_ms": 1840,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/018.png"
+    },
+    {
+      "index": 185,
+      "time_ms": 1850,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/018.png"
+    },
+    {
+      "index": 186,
+      "time_ms": 1860,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/019.png"
+    },
+    {
+      "index": 187,
+      "time_ms": 1870,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/019.png"
+    },
+    {
+      "index": 188,
+      "time_ms": 1880,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/019.png"
+    },
+    {
+      "index": 189,
+      "time_ms": 1890,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/019.png"
+    },
+    {
+      "index": 190,
+      "time_ms": 1900,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/020.png"
+    },
+    {
+      "index": 191,
+      "time_ms": 1910,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/020.png"
+    },
+    {
+      "index": 192,
+      "time_ms": 1920,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/020.png"
+    },
+    {
+      "index": 193,
+      "time_ms": 1930,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/020.png"
+    },
+    {
+      "index": 194,
+      "time_ms": 1940,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/021.png"
+    },
+    {
+      "index": 195,
       "time_ms": 1950,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
-      "smoke": null
+      "smoke": "smoke/021.png"
     },
     {
-      "index": 40,
+      "index": 196,
+      "time_ms": 1960,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/021.png"
+    },
+    {
+      "index": 197,
+      "time_ms": 1970,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/021.png"
+    },
+    {
+      "index": 198,
+      "time_ms": 1980,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/022.png"
+    },
+    {
+      "index": 199,
+      "time_ms": 1990,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/022.png"
+    },
+    {
+      "index": 200,
       "time_ms": 2000,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
-      "smoke": null
+      "smoke": "smoke/022.png"
     },
     {
-      "index": 41,
+      "index": 201,
+      "time_ms": 2010,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/022.png"
+    },
+    {
+      "index": 202,
+      "time_ms": 2020,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/023.png"
+    },
+    {
+      "index": 203,
+      "time_ms": 2030,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/023.png"
+    },
+    {
+      "index": 204,
+      "time_ms": 2040,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/023.png"
+    },
+    {
+      "index": 205,
       "time_ms": 2050,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
-      "smoke": null
+      "smoke": "smoke/023.png"
     },
     {
-      "index": 42,
+      "index": 206,
+      "time_ms": 2060,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/024.png"
+    },
+    {
+      "index": 207,
+      "time_ms": 2070,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/024.png"
+    },
+    {
+      "index": 208,
+      "time_ms": 2080,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/024.png"
+    },
+    {
+      "index": 209,
+      "time_ms": 2090,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/024.png"
+    },
+    {
+      "index": 210,
       "time_ms": 2100,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
-      "smoke": null
+      "smoke": "smoke/025.png"
     },
     {
-      "index": 43,
+      "index": 211,
+      "time_ms": 2110,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/025.png"
+    },
+    {
+      "index": 212,
+      "time_ms": 2120,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/025.png"
+    },
+    {
+      "index": 213,
+      "time_ms": 2130,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/025.png"
+    },
+    {
+      "index": 214,
+      "time_ms": 2140,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/026.png"
+    },
+    {
+      "index": 215,
       "time_ms": 2150,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
-      "smoke": null
+      "smoke": "smoke/026.png"
     },
     {
-      "index": 44,
+      "index": 216,
+      "time_ms": 2160,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/026.png"
+    },
+    {
+      "index": 217,
+      "time_ms": 2170,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/026.png"
+    },
+    {
+      "index": 218,
+      "time_ms": 2180,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/027.png"
+    },
+    {
+      "index": 219,
+      "time_ms": 2190,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/027.png"
+    },
+    {
+      "index": 220,
       "time_ms": 2200,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
-      "smoke": null
+      "smoke": "smoke/027.png"
     },
     {
-      "index": 45,
+      "index": 221,
+      "time_ms": 2210,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/027.png"
+    },
+    {
+      "index": 222,
+      "time_ms": 2220,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/028.png"
+    },
+    {
+      "index": 223,
+      "time_ms": 2230,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/028.png"
+    },
+    {
+      "index": 224,
+      "time_ms": 2240,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/028.png"
+    },
+    {
+      "index": 225,
       "time_ms": 2250,
-      "duration_ms": 50,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": "smoke/028.png"
+    },
+    {
+      "index": 226,
+      "time_ms": 2260,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 46,
+      "index": 227,
+      "time_ms": 2270,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 228,
+      "time_ms": 2280,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 229,
+      "time_ms": 2290,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 230,
       "time_ms": 2300,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 47,
+      "index": 231,
+      "time_ms": 2310,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 232,
+      "time_ms": 2320,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 233,
+      "time_ms": 2330,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 234,
+      "time_ms": 2340,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 235,
       "time_ms": 2350,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 48,
+      "index": 236,
+      "time_ms": 2360,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 237,
+      "time_ms": 2370,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 238,
+      "time_ms": 2380,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 239,
+      "time_ms": 2390,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 240,
       "time_ms": 2400,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 49,
+      "index": 241,
+      "time_ms": 2410,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 242,
+      "time_ms": 2420,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 243,
+      "time_ms": 2430,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 244,
+      "time_ms": 2440,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 245,
       "time_ms": 2450,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 50,
+      "index": 246,
+      "time_ms": 2460,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 247,
+      "time_ms": 2470,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 248,
+      "time_ms": 2480,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 249,
+      "time_ms": 2490,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 250,
       "time_ms": 2500,
-      "duration_ms": 50,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": null
     },
     {
-      "index": 51,
+      "index": 251,
+      "time_ms": 2510,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 252,
+      "time_ms": 2520,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 253,
+      "time_ms": 2530,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 254,
+      "time_ms": 2540,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 255,
       "time_ms": 2550,
-      "duration_ms": 50,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 256,
+      "time_ms": 2560,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 257,
+      "time_ms": 2570,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 258,
+      "time_ms": 2580,
+      "duration_ms": 10,
+      "body": "body/SE_004.png",
+      "contract": "contract/005.png",
+      "smoke": null
+    },
+    {
+      "index": 259,
+      "time_ms": 2590,
+      "duration_ms": 10,
       "body": "body/SE_004.png",
       "contract": "contract/005.png",
       "smoke": null
