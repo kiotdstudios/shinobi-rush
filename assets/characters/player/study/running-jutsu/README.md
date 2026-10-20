@@ -1,0 +1,13 @@
+# Stylized running jutsu — SE art review
+
+The1.667-second loop uses two strong hand-sign silhouettes (crossed forearms / hands meeting), two33ms hand-multiple overlays, dramatic separation, a233ms upper-body charge hold,33ms thrust,33ms impact and electrical follow-through. No literal named hand signs or generated in-between filler. The legs continue the approved20-phase12FPS sprint throughout; every opaque lower-body pixel at y>=80 matches the corresponding production sprint frame byte-for-byte, as does all background except the explicit empty right margin used by the spear-hand. Head/upper-body placement follows the measured sprint bob. Foot origin[64,116], native128×128 RGBA body, same approved design/pixel scale.
+
+`jutsu_review.json` is opt-in art timing data, not a runtime manifest. Its50 timeline samples at30Hz reuse four upper-body drawings and the existing sprint; they are not50 newly generated character poses. Explicit phase/pose/overlay references preserve intentional holds. Body PNGs and64×64 lightning are binary alpha. The two separate128px hand-multiple overlays deliberately use crisp90/120-alpha copies for faint repeated hand positions. There is no interpolated blur or floor shadow.
+
+The near arm sweeps backward behind the hip during the charge, matching the owner's animated reference; that SAME near arm then thrusts forward across the chest. There is no raised charge hand. Per-frame native coordinates in `lightning_hand_px` follow its bob and snap. Lightning's pivot is[32,32]; composite at `hand - pivot`. Preview body offset[32,32] on192×192 overflow canvas cancels the effect pivot; the player's own canvas remains128. No lightning is baked into body frames. Motion overlays use `upper_registration_px` and are independently removable.
+
+PixelLab Pro edited four key poses from approved SE sprint0. PixelLab exact workbench drew the hand multiples and lightning from authored recipes; Python only registers, cuts existing art, composites, exports and validates. See source receipts/recipes and `source/build_preview.py`. The two landmark checks agree on key-pose registration; no body rescaling or bounding-box recentering.
+
+Review: `../../previews/running-jutsu/index.html`, intended-speed and half-speed GIFs, and labeled contact sheet. Speed1× is the intended extraordinary-speed rhythm;0.5× is inspection only. GIF timing is cumulatively rounded to10ms (1670ms); PNG/JSON/browser retain exact1666.667ms timing.
+
+This is an isolated art deliverable: no production manifest, controller, camera, damage, movement or gameplay timing changes. SE only for review; runtime integration and additional directions are separate work.
