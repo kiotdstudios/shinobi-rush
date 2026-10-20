@@ -3,6 +3,8 @@
 One SE review: fast hand signs, forceful ONE-palm ground slam, oversized black ink contract spreading from contact, then delayed smoke. All original character art remains128×128 at approved scale; crouch compresses the pose rather than resizing the character. Fixed foot/root[64,116]. One measured16px padding correction applies equally to all four generated body poses; no per-pose recentering or scaling. Original idle is reused for recovery end.
 
 Three separate transparent clips in `summoning.json` (opt-in art data, not a runtime manifest):
+The character data also supplies independent `hand_signs` and `ground_slam` subclips sharing the same PNGs. The standalone slam contacts the ground150ms after it starts; its GIF is ground-slam-only.gif. It does not require replaying the signs.
+
 - `body/`:4 distinct key poses plus original idle; timed frame references include intentional contact holds. No ink or smoke baked into the character.
 - `contract/`:6 unique256×256 ground frames, black ink only, pivot[128,128]. More than225px wide, flattened into the ground plane. Hold last frame after reveal; no baked terrain, glow or shadow.
 - `smoke/`:12 unique256×256 frames at70ms, pivot[128,208]. Cartoon white smoke grows, billows and separates, ending with an intentional fully clear frame. No character, contract, creature or object baked in.

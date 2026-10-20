@@ -43,4 +43,6 @@ Initial smoke peak had two identical samples; uniqueness check caught it. Redrew
 None. Future summoned content is deliberately empty.
 
 ## Outstanding work / next steps
+Follow-up before delivery: added independently triggerable hand_signs and ground_slam subclips sharing original body PNGs, plus ground-slam-only.gif. Re-ran build.py PASS and decoded standalone slam4frames/1200ms; independent contact150ms. Main timeline/art unchanged.
+
 Owner visual review. Other directions, summoned creature/object, collisions and gameplay event integration remain outside this art-preview request. All three clips can be retimed independently via supplied data. Live deployment: not applicable — isolated art/preview only, no runtime manifest or controller integration. Commit/push via reviewed art PR; no live-game change is claimed.

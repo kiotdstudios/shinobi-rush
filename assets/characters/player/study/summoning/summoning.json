@@ -158,6 +158,58 @@
       "loop": false,
       "z": "above_actor",
       "last_frame_clear": true
+    },
+    "hand_signs": {
+      "frame_size": [
+        128,
+        128
+      ],
+      "steps": [
+        {
+          "frame": "body/SE_000.png",
+          "duration_ms": 100
+        },
+        {
+          "frame": "body/SE_001.png",
+          "duration_ms": 80
+        },
+        {
+          "frame": "body/SE_000.png",
+          "duration_ms": 60
+        },
+        {
+          "frame": "body/SE_001.png",
+          "duration_ms": 60
+        }
+      ],
+      "loop": false
+    },
+    "ground_slam": {
+      "frame_size": [
+        128,
+        128
+      ],
+      "steps": [
+        {
+          "frame": "body/SE_002.png",
+          "duration_ms": 150
+        },
+        {
+          "frame": "body/SE_003.png",
+          "duration_ms": 450
+        },
+        {
+          "frame": "body/SE_002.png",
+          "duration_ms": 100
+        },
+        {
+          "frame": "body/SE_004.png",
+          "duration_ms": 500
+        }
+      ],
+      "contact_at_ms": 150,
+      "contact_frame": "body/SE_003.png",
+      "loop": false
     }
   },
   "future_summon": {

@@ -50,6 +50,8 @@ meta={'id':'summoning_jutsu_se_art_review','status':'art_review','direction':'SE
  'contract':{'frame_size':[256,256],'pivot':[128,128],'frames':[f'contract/{i:03}.png' for i in range(6)],'duration_ms':[50,50,50,50,50,100],'hold_last':True,'z':'ground_below_actor'},
  'smoke':{'frame_size':[256,256],'pivot':[128,208],'frames':[f'smoke/{i:03}.png' for i in range(12)],'duration_ms':[70]*12,'loop':False,'z':'above_actor','last_frame_clear':True}},
  'future_summon':{'ground_anchor_relative_to_actor':[-4,-7],'content':None,'suggested_reveal_ms':1940},'timeline':timeline,'runtime_integrated':False}
+meta['clips']['hand_signs']={'frame_size':[128,128],'steps':[{'frame':f'body/SE_{i:03}.png','duration_ms':ms} for i,ms in steps[:4]],'loop':False}
+meta['clips']['ground_slam']={'frame_size':[128,128],'steps':[{'frame':f'body/SE_{i:03}.png','duration_ms':ms} for i,ms in [(2,150),(3,450),(2,100),(4,500)]],'contact_at_ms':150,'contact_frame':'body/SE_003.png','loop':False}
 (ROOT/'summoning.json').write_text(json.dumps(meta,indent=2)+'\n')
 def exportgif(name,images,ms,scale=2):
  out=[]
@@ -57,6 +59,10 @@ def exportgif(name,images,ms,scale=2):
   bg=matte.copy();bg.alpha_composite(im);out.append(bg.convert('RGB').resize((640,512),Image.Resampling.NEAREST))
  out[0].save(PRE/name,save_all=True,append_images=out[1:],duration=ms,loop=0,disposal=2,optimize=False)
 exportgif('summoning.gif',renders,50);exportgif('summoning-half-speed.gif',renders,100)
+slam=[]
+for idx in [2,3,2,4]:
+ c=Image.new('RGBA',(320,256));c.alpha_composite(body[idx],(96,40));slam.append(c)
+exportgif('ground-slam-only.gif',slam,[150,450,100,500])
 for layer,ims,offset,durations in [('body',body,(96,40),200),('contract',seal,(28,21),[50,50,50,50,50,650]),('smoke',smoke,(28,-59),70)]:
  if layer=='body':ims=[body[body_index(i*50)] for i in range(52)];durations=50
  canvases=[]
