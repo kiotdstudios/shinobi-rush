@@ -1,0 +1,14 @@
+'use strict';(async()=>{
+const root='../../../../vfx/substitution/',m=await fetch(root+'substitution.json').then(r=>r.json()),p=m.preview,$=id=>document.getElementById(id),cache=new Map();
+const paths=[...new Set(p.timeline.flatMap(f=>[f.log,f.departure,f.ribbons,f.arrival]).filter(Boolean)),p.old_player,p.rear_player];await Promise.all(paths.map(path=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{cache.set(path,im);resolve()};im.onerror=()=>reject(Error(path));im.src=root+path})));
+const s={ready:true,current:0,playing:true,speed:1,loops:0,loaded:cache.size};window.substitutionReviewState=s;let time=0,last=performance.now();const c=$('preview').getContext('2d');
+function draw(){const f=p.timeline[s.current];c.clearRect(0,0,448,256);c.imageSmoothingEnabled=false;c.fillStyle='#18242b';c.font='12px system-ui';c.fillText('OLD POSITION / LOG',24,20);c.fillText('ATTACKER',188,20);c.fillText('BEHIND ATTACKER',288,20);c.strokeStyle='#79453f';c.lineWidth=2;c.strokeRect(218,136,24,54);c.fillStyle='#79453f';c.beginPath();c.moveTo(204,163);c.lineTo(216,157);c.lineTo(216,169);c.fill();
+if(f.player_old_visible&&$('player').checked)c.drawImage(cache.get(p.old_player),36,74);
+if(f.log&&$('log').checked)c.drawImage(cache.get(f.log),...p.offsets.log);
+if(f.player_rear_visible&&$('player').checked)c.drawImage(cache.get(p.rear_player),262,74);
+for(const key of ['departure','ribbons','arrival'])if(f[key]&&$(key).checked)c.drawImage(cache.get(f[key]),...p.offsets[key]);
+$('clock').textContent=`${(f.time_ms/1000).toFixed(2)}s / 1.40s · ${f.time_ms<200?'before evade':f.time_ms<280?'success / outgoing conceal':'rear reappearance / log reveal'} · frame${s.current+1}/140`;$('scrub').value=s.current;$('play').textContent=s.playing?'Pause':'Play';}
+$('play').onclick=()=>{s.playing=!s.playing;last=performance.now();draw()};$('restart').onclick=()=>{time=0;s.current=0;last=performance.now();draw()};$('step').onclick=()=>{s.playing=false;s.current=(s.current+1)%140;time=s.current*10;draw()};$('scrub').oninput=e=>{s.playing=false;s.current=Number(e.target.value);time=s.current*10;draw()};$('speed').onchange=e=>{s.speed=Number(e.target.value);last=performance.now()};for(const key of ['log','departure','ribbons','arrival','player'])$(key).onchange=draw;
+$('status').textContent=`Loaded ${cache.size} transparent PNGs. Log, departure, arrival and curling smoke remain independent. Same rolling smoke pixels as summoning.`;
+function tick(now){const dt=Math.min(100,now-last);last=now;if(s.playing){time+=dt*s.speed;if(time>=1400){s.loops+=Math.floor(time/1400);time%=1400}const n=Math.min(139,Math.floor(time/10));if(n!==s.current){s.current=n;draw()}}requestAnimationFrame(tick)}draw();requestAnimationFrame(tick);
+})().catch(e=>{document.getElementById('status').textContent='Failed: '+e.message;console.error(e)});

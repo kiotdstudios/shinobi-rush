@@ -1,0 +1,140 @@
+[
+  {
+    "clip": "departure",
+    "frame": 0,
+    "summoning_frame": 12,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 1,
+    "summoning_frame": 15,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 2,
+    "summoning_frame": 16,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 3,
+    "summoning_frame": 17,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 4,
+    "summoning_frame": 18,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 5,
+    "summoning_frame": 19,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 6,
+    "summoning_frame": 20,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 7,
+    "summoning_frame": 21,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 8,
+    "summoning_frame": 22,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 9,
+    "summoning_frame": 23,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 10,
+    "summoning_frame": 24,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 11,
+    "summoning_frame": 25,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 12,
+    "summoning_frame": 26,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 13,
+    "summoning_frame": 27,
+    "exact": true
+  },
+  {
+    "clip": "departure",
+    "frame": 14,
+    "summoning_frame": 28,
+    "exact": true
+  },
+  {
+    "clip": "arrival",
+    "frame": 0,
+    "summoning_frame": 21,
+    "exact": true
+  },
+  {
+    "clip": "arrival",
+    "frame": 1,
+    "summoning_frame": 22,
+    "exact": true
+  },
+  {
+    "clip": "arrival",
+    "frame": 2,
+    "summoning_frame": 23,
+    "exact": true
+  },
+  {
+    "clip": "arrival",
+    "frame": 3,
+    "summoning_frame": 24,
+    "exact": true
+  },
+  {
+    "clip": "arrival",
+    "frame": 4,
+    "summoning_frame": 25,
+    "exact": true
+  },
+  {
+    "clip": "arrival",
+    "frame": 5,
+    "summoning_frame": 26,
+    "exact": true
+  },
+  {
+    "clip": "arrival",
+    "frame": 6,
+    "summoning_frame": 27,
+    "exact": true
+  },
+  {
+    "clip": "arrival",
+    "frame": 7,
+    "summoning_frame": 28,
+    "exact": true
+  }
+]
