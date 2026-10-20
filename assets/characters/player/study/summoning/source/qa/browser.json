@@ -1,0 +1,279 @@
+{
+  "result": "PASS",
+  "frames": [
+    {
+      "frame": 0,
+      "partial": 0,
+      "opaque": 2626
+    },
+    {
+      "frame": 1,
+      "partial": 0,
+      "opaque": 2626
+    },
+    {
+      "frame": 2,
+      "partial": 0,
+      "opaque": 2636
+    },
+    {
+      "frame": 3,
+      "partial": 0,
+      "opaque": 2636
+    },
+    {
+      "frame": 4,
+      "partial": 0,
+      "opaque": 2626
+    },
+    {
+      "frame": 5,
+      "partial": 0,
+      "opaque": 2636
+    },
+    {
+      "frame": 6,
+      "partial": 0,
+      "opaque": 3001
+    },
+    {
+      "frame": 7,
+      "partial": 0,
+      "opaque": 3001
+    },
+    {
+      "frame": 8,
+      "partial": 0,
+      "opaque": 3001
+    },
+    {
+      "frame": 9,
+      "partial": 0,
+      "opaque": 2825
+    },
+    {
+      "frame": 10,
+      "partial": 0,
+      "opaque": 3222
+    },
+    {
+      "frame": 11,
+      "partial": 0,
+      "opaque": 4036
+    },
+    {
+      "frame": 12,
+      "partial": 0,
+      "opaque": 5378
+    },
+    {
+      "frame": 13,
+      "partial": 0,
+      "opaque": 7148
+    },
+    {
+      "frame": 14,
+      "partial": 0,
+      "opaque": 8325
+    },
+    {
+      "frame": 15,
+      "partial": 0,
+      "opaque": 8325
+    },
+    {
+      "frame": 16,
+      "partial": 0,
+      "opaque": 8325
+    },
+    {
+      "frame": 17,
+      "partial": 0,
+      "opaque": 8325
+    },
+    {
+      "frame": 18,
+      "partial": 0,
+      "opaque": 8906
+    },
+    {
+      "frame": 19,
+      "partial": 0,
+      "opaque": 8906
+    },
+    {
+      "frame": 20,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 21,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 22,
+      "partial": 0,
+      "opaque": 8761
+    },
+    {
+      "frame": 23,
+      "partial": 0,
+      "opaque": 8761
+    },
+    {
+      "frame": 24,
+      "partial": 0,
+      "opaque": 10536
+    },
+    {
+      "frame": 25,
+      "partial": 0,
+      "opaque": 15417
+    },
+    {
+      "frame": 26,
+      "partial": 0,
+      "opaque": 15417
+    },
+    {
+      "frame": 27,
+      "partial": 0,
+      "opaque": 22709
+    },
+    {
+      "frame": 28,
+      "partial": 0,
+      "opaque": 25878
+    },
+    {
+      "frame": 29,
+      "partial": 0,
+      "opaque": 27647
+    },
+    {
+      "frame": 30,
+      "partial": 0,
+      "opaque": 27647
+    },
+    {
+      "frame": 31,
+      "partial": 0,
+      "opaque": 26817
+    },
+    {
+      "frame": 32,
+      "partial": 0,
+      "opaque": 24615
+    },
+    {
+      "frame": 33,
+      "partial": 0,
+      "opaque": 24615
+    },
+    {
+      "frame": 34,
+      "partial": 0,
+      "opaque": 18491
+    },
+    {
+      "frame": 35,
+      "partial": 0,
+      "opaque": 13312
+    },
+    {
+      "frame": 36,
+      "partial": 0,
+      "opaque": 9874
+    },
+    {
+      "frame": 37,
+      "partial": 0,
+      "opaque": 9874
+    },
+    {
+      "frame": 38,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 39,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 40,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 41,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 42,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 43,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 44,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 45,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 46,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 47,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 48,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 49,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 50,
+      "partial": 0,
+      "opaque": 8484
+    },
+    {
+      "frame": 51,
+      "partial": 0,
+      "opaque": 8484
+    }
+  ],
+  "independentLayers": true,
+  "delayedSmoke": true,
+  "clearSmoke": true,
+  "groundAnchor": true,
+  "controls": true,
+  "layout": {
+    "width": 390,
+    "viewport": 390,
+    "canvas": {
+      "w": 354,
+      "h": 283.1875
+    }
+  },
+  "errors": []
+}

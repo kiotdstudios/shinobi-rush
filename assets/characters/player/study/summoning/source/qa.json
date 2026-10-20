@@ -1,0 +1,24 @@
+{
+  "result": "PASS",
+  "body_frames": 5,
+  "contract_frames": 6,
+  "smoke_frames": 12,
+  "binary_alpha": true,
+  "clear_smoke_terminator": true,
+  "no_composite_clipping": true,
+  "contract_bounds": [
+    11,
+    66,
+    249,
+    192
+  ],
+  "palm_alpha": 255,
+  "runtime_changes": false,
+  "body_sha256": {
+    "SE_000.png": "27225a9457ead4edc9a22af84a416412cb548a13e7acc27ce20c3c6890cc4fe5",
+    "SE_001.png": "c9db41ddf9a6b466bc6ebed668fc648eed8518ef14540877ebbe52ab35119b2e",
+    "SE_002.png": "203176b4f2e800a476f4ae45e63171f3159c36fd8cdc05ada90621729ebea8ad",
+    "SE_003.png": "12af01d14af38b8a9dcffc307d52aefce6d4fd91bf47b17721e7c6d5ead90ab8",
+    "SE_004.png": "6cada12ce56d34132ae5d5942cd2b71c0b282d58c06850f65bd82d1bc05fb80b"
+  }
+}
