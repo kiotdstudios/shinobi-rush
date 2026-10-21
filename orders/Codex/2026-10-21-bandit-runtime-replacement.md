@@ -1,10 +1,10 @@
 # ORDER — Replace the in-game bandit placeholder
 
 - Agent: Codex
-- Status: IN_PROGRESS
+- Status: DONE — merged PR45, live build98add79 verified in Chromium
 - Priority: P1
 - Owner: Codex, explicitly assigned runtime art binding by the owner in chat
-- Branch/PR: `codex/bandit-runtime`, PR pending
+- Branch/PR: `codex/bandit-runtime`, https://github.com/kiotdstudios/shinobi-rush/pull/45 (merged)
 - Dependencies: Corrected sprint-arms-v3 bandit art from PR38/f1fed19; latest main63bbd6c
 
 ## Objective
