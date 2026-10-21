@@ -1,0 +1,839 @@
+{
+  "rotations": {
+    "south": {
+      "native_size": [
+        128,
+        128
+      ],
+      "source_foot_anchor": [
+        64,
+        117
+      ]
+    },
+    "south-east": {
+      "native_size": [
+        128,
+        128
+      ],
+      "source_foot_anchor": [
+        67,
+        119
+      ]
+    },
+    "east": {
+      "native_size": [
+        128,
+        128
+      ],
+      "source_foot_anchor": [
+        65,
+        118
+      ]
+    },
+    "north-east": {
+      "native_size": [
+        128,
+        128
+      ],
+      "source_foot_anchor": [
+        67,
+        117
+      ]
+    },
+    "north": {
+      "native_size": [
+        128,
+        128
+      ],
+      "source_foot_anchor": [
+        64,
+        117
+      ]
+    },
+    "north-west": {
+      "native_size": [
+        128,
+        128
+      ],
+      "source_foot_anchor": [
+        60,
+        117
+      ]
+    },
+    "west": {
+      "native_size": [
+        128,
+        128
+      ],
+      "source_foot_anchor": [
+        63,
+        118
+      ]
+    },
+    "south-west": {
+      "native_size": [
+        128,
+        128
+      ],
+      "source_foot_anchor": [
+        61,
+        119
+      ]
+    }
+  },
+  "clips": [
+    {
+      "animation": "idle",
+      "direction": "S",
+      "source_canvas": [
+        128,
+        128
+      ],
+      "fixed_translation": [
+        0,
+        -1
+      ],
+      "frame_count": 4,
+      "frames": [
+        "sprites/idle/S_000.png",
+        "sprites/idle/S_001.png",
+        "sprites/idle/S_002.png",
+        "sprites/idle/S_003.png"
+      ],
+      "pixel_sha256": [
+        "73b63435b50cc6b0c089ed9cf5af64546e7212acfb3cb10197bc27456117155b",
+        "fb020afd9c72edd8f7d01ba5784ac79000e851f58695dd17dbc51455d813c0eb",
+        "e6b7edef44ceb7a298fabcb184c4a0fd2d932fd99370866d75564026ab5b2ee2",
+        "7857c416237d07328f170f0641fa54b6202e9e1abedb86d110d323d2d70da9eb"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "idle",
+      "direction": "SE",
+      "source_canvas": [
+        128,
+        128
+      ],
+      "fixed_translation": [
+        -3,
+        -3
+      ],
+      "frame_count": 4,
+      "frames": [
+        "sprites/idle/SE_000.png",
+        "sprites/idle/SE_001.png",
+        "sprites/idle/SE_002.png",
+        "sprites/idle/SE_003.png"
+      ],
+      "pixel_sha256": [
+        "4bba40cdb54ecf00147432e783cd23623b7ba89af06430fab2432a0c3f67af76",
+        "aaddb83ceb95be49429563694122c60aadf5ef3c347e08ebe3ff1505b8d0956d",
+        "0a6783fae52c91f721113b91f18cbe3936242d0deb1ed0a57b53f92ff18699fe",
+        "ce09c83a7aea1d2e7cfe4b14b2aab795fb57073c009c5102f89d8909545018ea"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "idle",
+      "direction": "E",
+      "source_canvas": [
+        128,
+        128
+      ],
+      "fixed_translation": [
+        -1,
+        -2
+      ],
+      "frame_count": 4,
+      "frames": [
+        "sprites/idle/E_000.png",
+        "sprites/idle/E_001.png",
+        "sprites/idle/E_002.png",
+        "sprites/idle/E_003.png"
+      ],
+      "pixel_sha256": [
+        "852f2613926b99c1c864e7cae6fc2d9e92fea1b2d35e4aff631d527c9f1d3f61",
+        "677d974a5dcf63cba9f6ad1e7e82100270749fd2aa009012a010f0fd6f56db04",
+        "d3f6a31f702de7b40f3be0c1ef6466b579ccdc95ea88fdc2ff53ee1f1a87e4a1",
+        "2035c50d386832f10c26abaf1295d0cacade6ea0c5076ef974b5789051501f15"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "idle",
+      "direction": "NE",
+      "source_canvas": [
+        128,
+        128
+      ],
+      "fixed_translation": [
+        -3,
+        -1
+      ],
+      "frame_count": 4,
+      "frames": [
+        "sprites/idle/NE_000.png",
+        "sprites/idle/NE_001.png",
+        "sprites/idle/NE_002.png",
+        "sprites/idle/NE_003.png"
+      ],
+      "pixel_sha256": [
+        "139749a2bd755c4640fc07d2e6c0ac171c3c2e43e9024af58bb744a5551e3bb5",
+        "8484f010e20df02c33e0b02534c3129b1315d426fe382ea038a76f7d722dbfda",
+        "1a30ff09dc6ea316334885b561641fa639405b3beb6d3a5afc4d8daca9553f81",
+        "30ab0842150daaa60599df7c9c252167581c5a6990a1bca6e3298e877598abcf"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "idle",
+      "direction": "N",
+      "source_canvas": [
+        128,
+        128
+      ],
+      "fixed_translation": [
+        0,
+        -1
+      ],
+      "frame_count": 4,
+      "frames": [
+        "sprites/idle/N_000.png",
+        "sprites/idle/N_001.png",
+        "sprites/idle/N_002.png",
+        "sprites/idle/N_003.png"
+      ],
+      "pixel_sha256": [
+        "53f0ef3adeae907aa106fa1a1dfd16b46d0e2896cea25c5f573a1673bbba6fbb",
+        "3ddf746cfc2d68e3b1a000fde7ac953315eca16552b6c201754f66fdd53cb53a",
+        "d32bca90283dd7d7e0180a89116243a39e44ffa6e03db89c9260e6c77df26a18",
+        "c02180d1617e52909301af9510b865c03033c80a4b00ffd3d3f69447d4bcc337"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "idle",
+      "direction": "NW",
+      "source_canvas": [
+        128,
+        128
+      ],
+      "fixed_translation": [
+        4,
+        -1
+      ],
+      "frame_count": 4,
+      "frames": [
+        "sprites/idle/NW_000.png",
+        "sprites/idle/NW_001.png",
+        "sprites/idle/NW_002.png",
+        "sprites/idle/NW_003.png"
+      ],
+      "pixel_sha256": [
+        "2a82e9e74ef7375532f5f4fb4556602168ea6e1c4bbacb5048fb4e42b9b18b07",
+        "f90592e9854a9a63a77fff2a17b5a476d930bc18f73ad61fcba47b35aa3fa230",
+        "9daa19a9b68079df849755322aceac67b04b7716d9ca8ac09543b85bd18c4222",
+        "c5a84489372b59963e09356da3eaef149f6bcecc4e24828020ea11d98e3799c1"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "idle",
+      "direction": "W",
+      "source_canvas": [
+        128,
+        128
+      ],
+      "fixed_translation": [
+        1,
+        -2
+      ],
+      "frame_count": 4,
+      "frames": [
+        "sprites/idle/W_000.png",
+        "sprites/idle/W_001.png",
+        "sprites/idle/W_002.png",
+        "sprites/idle/W_003.png"
+      ],
+      "pixel_sha256": [
+        "d990949e87ab79117504edbcebb15fa01ebec1a41b1700ebc91d16bfc70ec514",
+        "acc201c31e14818c6ea98b85a888194975d139098a46deeecb1eaa7d03785dc8",
+        "c406c711f502c0ba6c876d68d8132d61d9c83589ca73c29be7780a78f77c560f",
+        "5fe6012b4b13573efec7b7daf01e2145eaf8ddb4ad16e2dcbfc0d33cde9a5f6d"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "idle",
+      "direction": "SW",
+      "source_canvas": [
+        128,
+        128
+      ],
+      "fixed_translation": [
+        3,
+        -3
+      ],
+      "frame_count": 4,
+      "frames": [
+        "sprites/idle/SW_000.png",
+        "sprites/idle/SW_001.png",
+        "sprites/idle/SW_002.png",
+        "sprites/idle/SW_003.png"
+      ],
+      "pixel_sha256": [
+        "e2e3abc1f87bb4a1aeffd70cfc10679ca99627ff03afa9d6927f59fa5da4d7e2",
+        "aa74d764b50a00d3c5a98bf98c0ce3d428232a9102062856b26e11a8a631b6e8",
+        "d41a835fbd0640d17d88f69d0e5f4dcca34af2cdf605a0922457b98909a86e44",
+        "78061701710946ed3a2b3af1948437b6b4cd61073c09382a8b0a58e20960ca48"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "run",
+      "direction": "S",
+      "source_canvas": [
+        128,
+        128
+      ],
+      "fixed_translation": [
+        0,
+        -1
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/run/S_000.png",
+        "sprites/run/S_001.png",
+        "sprites/run/S_002.png",
+        "sprites/run/S_003.png",
+        "sprites/run/S_004.png",
+        "sprites/run/S_005.png",
+        "sprites/run/S_006.png",
+        "sprites/run/S_007.png"
+      ],
+      "pixel_sha256": [
+        "35827c19203d9f94f9ccc91bc54b0294fe1cc660829b94edc8bad50c802753e4",
+        "9864555e60380f4a03163dd12e1d718e5aae805e94920dca5cdf43dde3d990d1",
+        "900fbba346a47f6d4bd33113b343b1435008bfa5cea9e7d1210052bef4c4971e",
+        "1ba75a5da2e0a1743e9c9fc64be1a72c005c74d03b5a02d2f83e5dcab237eb6e",
+        "9ebdcab3621272da629aa2285d805bfb7c75497314cce6bee9ba70fe269eb81f",
+        "ec5cc6293406138176fb32dea2af2eda786645f2f6dc1db7c30c99f7d92bf083",
+        "4567cb32d48477a9da331aa7dedc62cd01d8944bc9a815e6f822f29483282624",
+        "fd58c69b0892c3fd49b6120782eb1ada8724744bf7bf43a0a3fda468d4d49890"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "run",
+      "direction": "SE",
+      "source_canvas": [
+        164,
+        164
+      ],
+      "fixed_translation": [
+        -21,
+        -19
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/run/SE_000.png",
+        "sprites/run/SE_001.png",
+        "sprites/run/SE_002.png",
+        "sprites/run/SE_003.png",
+        "sprites/run/SE_004.png",
+        "sprites/run/SE_005.png",
+        "sprites/run/SE_006.png",
+        "sprites/run/SE_007.png"
+      ],
+      "pixel_sha256": [
+        "f8825355f88b873f085b37ec199fb273c659c317cdf115f3ea64a31ffb662eba",
+        "023e9ca6ae2795398285d2afa40cbc1dba5bc6dc67e8fd4db431b9ec9ff2eaee",
+        "09944934600494f13fa50af3c6ce9cc91c1d9a0be93ee51e58e079c1c7dc2a03",
+        "4053480821850de8be7bb79550c9163659b6e367fcede45c52d477e0cd194304",
+        "f6d46b781384893b182dd38767135178b4b3ff80eeb5836f4a7e5716d184cc1d",
+        "021a86febcd744733aa16856b7022539160b44fc2fae6b36197b2793b7e91a6f",
+        "bf89ac8cf199d72d3aa6c1fdabbaa7d77c027ee9a3182c5d14f7f7bbff23b7a8",
+        "3431e17847d2bad266aa11067bbde1ce16c78570614021dd16f9ccf0211c7be5"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "run",
+      "direction": "E",
+      "source_canvas": [
+        160,
+        160
+      ],
+      "fixed_translation": [
+        -17,
+        -18
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/run/E_000.png",
+        "sprites/run/E_001.png",
+        "sprites/run/E_002.png",
+        "sprites/run/E_003.png",
+        "sprites/run/E_004.png",
+        "sprites/run/E_005.png",
+        "sprites/run/E_006.png",
+        "sprites/run/E_007.png"
+      ],
+      "pixel_sha256": [
+        "17ed3cb6477c34de6ae561857e2e517179c56d835ce9bad6d709d2560bb042b6",
+        "4d9e93a245b5b5dc2744b00c9119d2fbcd4a640a91646f1c900b21c5b0d3dea0",
+        "5be02f36a7a9014332a5ec5f5ba33fcee1e5f26fee0596c5f83b065464b2215a",
+        "1f2231653f118f97f21b1003b57a9c2bbf49bbd5cd3bb09d5f96d06b5772158f",
+        "ff296f85f5ec776a30269913267048df9a819e386fcb7580dcd82b72640e6c11",
+        "6afd4dabd26b63a8e8671319cf95cebb80918b790f21e4282305f2a5c496faf1",
+        "7870d97651894cb9c47a5dcde465c5d06b13b7744f49a88bb98043bcdf925743",
+        "a6a9957a0aca0d762e1e424ceecc0a5758fdb4d0f74cf75e12e919c975106dfd"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "run",
+      "direction": "NE",
+      "source_canvas": [
+        152,
+        152
+      ],
+      "fixed_translation": [
+        -15,
+        -13
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/run/NE_000.png",
+        "sprites/run/NE_001.png",
+        "sprites/run/NE_002.png",
+        "sprites/run/NE_003.png",
+        "sprites/run/NE_004.png",
+        "sprites/run/NE_005.png",
+        "sprites/run/NE_006.png",
+        "sprites/run/NE_007.png"
+      ],
+      "pixel_sha256": [
+        "44a158a8639aadf6dcc582afa79d2c9d646c52ba5017fdee4dfe25eee7f60cbe",
+        "53fd3ca7e36dc6895e674697fc2d6a38a8841d7b0919aa0b2645926b9b07d254",
+        "859995c69e5a8a1772b147976cb02def23ff29f7f80ac78ae4125d8751103322",
+        "15f5d4a7ff1005bd40ca9c64d7350d67766d10ab89655ec1e590cd8ce6a27186",
+        "89752997dba175c7ae2cea4b7da2b05250c0d3cfc1632e0817c685443251cc44",
+        "82cc040b473114f569d2b0d725ff9143159fb0cd8763b50a47058126e6d177e5",
+        "f5300d6bcff9047a0c412cd2ffba7c36be774ab84f93acb6937b8a529e3b8961",
+        "5e4a3b6dc95f702dc2b314f3358c1e270391977686976acf8be26501abb0fbd9"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "run",
+      "direction": "N",
+      "source_canvas": [
+        160,
+        160
+      ],
+      "fixed_translation": [
+        -16,
+        -17
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/run/N_000.png",
+        "sprites/run/N_001.png",
+        "sprites/run/N_002.png",
+        "sprites/run/N_003.png",
+        "sprites/run/N_004.png",
+        "sprites/run/N_005.png",
+        "sprites/run/N_006.png",
+        "sprites/run/N_007.png"
+      ],
+      "pixel_sha256": [
+        "e5fdb5bb3458a20d7cdb9b4bfb6bbe9c53f00c0b5415ccafc9e477e75df0521c",
+        "faf0d488ff7e970e45d74aaa7a4ca8ae650c27c266eedeae2e8411d18f4ee9d5",
+        "e12b7c0c127b705af1974be5204a67ae07aca5b6b5bb40be9ec9ffdcfe4a122d",
+        "584e2e88622d2e6d23d227a1f8f05f8f402af7e81d1ae1c7c107a5fa4b34e5da",
+        "c7f970699d1223e5b8bf271ec67059d0b5a3f5caaff591affcbb1499350c3160",
+        "2775c328e3b08f3aacb53253ca2b1dc557b1c463c87b2de4790827e75b442b63",
+        "17419a42e6cc902ed6c7718fefb0b6cf30850e7edf6e8946cd21ead033890e0d",
+        "3acdb4cbdbf37b2ef6c9831f66e3cff5a90e9b52458211062d483c233536cd02"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "run",
+      "direction": "NW",
+      "source_canvas": [
+        152,
+        152
+      ],
+      "fixed_translation": [
+        -8,
+        -13
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/run/NW_000.png",
+        "sprites/run/NW_001.png",
+        "sprites/run/NW_002.png",
+        "sprites/run/NW_003.png",
+        "sprites/run/NW_004.png",
+        "sprites/run/NW_005.png",
+        "sprites/run/NW_006.png",
+        "sprites/run/NW_007.png"
+      ],
+      "pixel_sha256": [
+        "ee8fd8b070b0c8ce75b64d8ae061b379ec81e54ba71f715ee6aaaac19d82f2e2",
+        "11520b3c3eefb1732d6ff0ba8d3c0a849183873b8439b7bcfb32e3e005a00778",
+        "88e191ec85b1ca7599ab82b38933c9f83a8364189598e818316e0465ff80fcb4",
+        "6f889b0d5226350656773892d80f96d7178dc73f3faa2a91a9be43f76e8f9165",
+        "47d6618272915d0a1c799e1edbe4d2b4b42a0667b123222a980936f256f8f963",
+        "a934405324ae065c53aa0cbd4de5efb22fc420bb90d49ab2bd1de6ca9f1ac20b",
+        "a25582b8c4bbc041287447f79c6d50a39d71f9a03fa1d72aea7101e539a697fb",
+        "8742a6675b1d2133a8ade27809c9726dec4cb0cd87c0ad85525ac8b9bdfcdf15"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "run",
+      "direction": "W",
+      "source_canvas": [
+        160,
+        160
+      ],
+      "fixed_translation": [
+        -15,
+        -18
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/run/W_000.png",
+        "sprites/run/W_001.png",
+        "sprites/run/W_002.png",
+        "sprites/run/W_003.png",
+        "sprites/run/W_004.png",
+        "sprites/run/W_005.png",
+        "sprites/run/W_006.png",
+        "sprites/run/W_007.png"
+      ],
+      "pixel_sha256": [
+        "098bec4c478a9cec9242f96ffb26a0385ce9d683ab3bcfba7a8fc721867c20c8",
+        "583704ffba7b0e51df996da1cc36a9478527474a5cff30b98620d36f54e4d133",
+        "197378b0667effcbd1ae7ad5e9d9484856653602770ab75ac3012c5192bd21cf",
+        "7a97ac2f319f9cfde8290f05d3ae844d769c1f7c7e3a06866753ac508967940a",
+        "e54997d522a95260a65a019243cb866135e13b0f3fd99479902adcbe4f8e06d6",
+        "ccee13cd2a2dce56ec6c005100b3f8294195a3ea84e5901d9c44e4dad9f6695d",
+        "5194254b93526cf352f0dfac57038e30be45d9f3098a2d309b8f90efeab89f2c",
+        "5178087310c9eefa185d9a5e39d0d4c56705b9e4821ed09f5ad5384b18fb7c2c"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "run",
+      "direction": "SW",
+      "source_canvas": [
+        164,
+        164
+      ],
+      "fixed_translation": [
+        -15,
+        -21
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/run/SW_000.png",
+        "sprites/run/SW_001.png",
+        "sprites/run/SW_002.png",
+        "sprites/run/SW_003.png",
+        "sprites/run/SW_004.png",
+        "sprites/run/SW_005.png",
+        "sprites/run/SW_006.png",
+        "sprites/run/SW_007.png"
+      ],
+      "pixel_sha256": [
+        "13cf9b97ce8ecf6a9e502ffce0ead427cf75782288ec86815e88aedbf82c4adb",
+        "30ae51ac4b3766b0bab46e1875a3b0dd1b96f7787657cd31895249ca29f07e67",
+        "14d725f7832ff8e3c9c60cc6161525f479c0ea2293d503a6e16950bfacca7ebf",
+        "3f7e56840ab823c665968a7378ab1e3a372802f57e4129c475c3a0c4a22707fd",
+        "149e0c0278e1f528729447707a5f0742a245a0086950fda24d2e90097e922037",
+        "e3d47daa3f18ec2048c7d2c9ca7d2659ef2ccf56537566f12e14d012a98f8ff2",
+        "802f8521c9916ce7a8a063a532dfcbdd002da7f1d4770f593e6b00f06f2827e1",
+        "acb9a088642cc11faa37c7dcb8f317ce79b2e87e30ffebb3294cdb2eb1c27f04"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "sprint",
+      "direction": "S",
+      "source_canvas": [
+        168,
+        168
+      ],
+      "fixed_translation": [
+        -20,
+        -21
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/sprint/S_000.png",
+        "sprites/sprint/S_001.png",
+        "sprites/sprint/S_002.png",
+        "sprites/sprint/S_003.png",
+        "sprites/sprint/S_004.png",
+        "sprites/sprint/S_005.png",
+        "sprites/sprint/S_006.png",
+        "sprites/sprint/S_007.png"
+      ],
+      "pixel_sha256": [
+        "4d0c24b6da207da661eaadaf95d898d11bf1a4fd96a362f1375755b00d8669e3",
+        "90a2e91d2bd9e752acb70a400c00c154917136f13819bcdad8eb5c49ada562d8",
+        "629041c3d41549e43e3ce0973818bee3554534f14bd83a97cb6806f5618cc59c",
+        "035fc4ccbb7cb3ae3ba8a2676ca23b41700401dd29d01d79456c0b74419d08cb",
+        "cc43c6121c3fe034585b7a278733ddfd9adc53a62277d33717137714f4de786b",
+        "3301487265f7ff37eb1bf39d5c72ade15dcddc8326f733fdb48b7ea306ac34b0",
+        "66717a70263779c8b9d21052060a157a66bffdbaeff52949cc3e7b55e32f062a",
+        "469502466c49a508e038c731b8ba062f69b656586ee9ead865f427549b8943cf"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "sprint",
+      "direction": "SE",
+      "source_canvas": [
+        164,
+        164
+      ],
+      "fixed_translation": [
+        -21,
+        -21
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/sprint/SE_000.png",
+        "sprites/sprint/SE_001.png",
+        "sprites/sprint/SE_002.png",
+        "sprites/sprint/SE_003.png",
+        "sprites/sprint/SE_004.png",
+        "sprites/sprint/SE_005.png",
+        "sprites/sprint/SE_006.png",
+        "sprites/sprint/SE_007.png"
+      ],
+      "pixel_sha256": [
+        "2007556ea9e40cf597abb70329a6a65c96195d4e1d402210c39a4ab8af32c428",
+        "d763a706fa6841f7362e8471ead05a4660bc581389be90d9b09354e27d02a29c",
+        "8f8d379e441f8bef4d4b41c64d022f7f6434f9b84a6d9ada1ccdd2b412fa5a1a",
+        "c28c6a079bf4cdb29e04f61ad709165524a0cfcf12c034d9a9b08c9759c7e124",
+        "88539ee951ae52fb4046c3f89046e7d160bee3f29c7d32b098f6e5d6544ea4a9",
+        "dcb7c22c7f3d8fe3b96d3ae3230c870f8fd8c81d0edcb352973f0dfb69f1a138",
+        "d50576c3b82d125113b2c3f71e521a363da68243c0eae2d8e843729e47d4d908",
+        "1a40d6e98b082825401ec3c79c9ce251881db8cea5e9acfa08d3765a454565c7"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "sprint",
+      "direction": "E",
+      "source_canvas": [
+        160,
+        160
+      ],
+      "fixed_translation": [
+        -17,
+        -18
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/sprint/E_000.png",
+        "sprites/sprint/E_001.png",
+        "sprites/sprint/E_002.png",
+        "sprites/sprint/E_003.png",
+        "sprites/sprint/E_004.png",
+        "sprites/sprint/E_005.png",
+        "sprites/sprint/E_006.png",
+        "sprites/sprint/E_007.png"
+      ],
+      "pixel_sha256": [
+        "d27d083fa0f25b4f9af74e776611405a9fee431a71d0e76f4bd3c06b9aeb7f65",
+        "ac5d2f7258d0a3e2f05b262fecc9f7e1f435b4d8a291687fdde15ee2bce3786c",
+        "83f3f8803107b66082bbbd0e747efe5ca6d2d019f906655374817fa1b888257f",
+        "467d7ec60fb8cfa978f87193ff319a4c24240b0f11710fda2c5c40d9d135104d",
+        "1e1a5da2ab7fa9c7499da783ed9d90b4bde935741b77e4f18a9b494747a3d46c",
+        "62124c014e82cd37b6424706dea8ea3fe2a199bf1f2ea7ece0914e25a10a79e7",
+        "78a70dc6850f0a4a5f5b517e16c2400b61d2c43de5e4cfc77375ac2d46501e1c",
+        "3d5a33b8ab0ce0ca48708f1414ac02411d66f3993e4788f050d5b3cb4a9e34c3"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "sprint",
+      "direction": "NE",
+      "source_canvas": [
+        152,
+        152
+      ],
+      "fixed_translation": [
+        -15,
+        -13
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/sprint/NE_000.png",
+        "sprites/sprint/NE_001.png",
+        "sprites/sprint/NE_002.png",
+        "sprites/sprint/NE_003.png",
+        "sprites/sprint/NE_004.png",
+        "sprites/sprint/NE_005.png",
+        "sprites/sprint/NE_006.png",
+        "sprites/sprint/NE_007.png"
+      ],
+      "pixel_sha256": [
+        "53a4a7d8dbd6831f089fb5dd273e79e62d02eebd4ea44a8df1c43d695998d18d",
+        "ea0adf585e3b260acad8f3b86c7539094686e6f5f6aeb6d19309aab0c5ca7a26",
+        "e134d38564925d064564b333fe35b666d6d88972a75b944989d9e822a1dcc7ae",
+        "8b6adb291ceeec95639cdaf910a3b34c0262846c17b467893731fd6a5f0bcac7",
+        "fba3642a6db5bd927f33aaae03ba76c52f686333203d8ffd6befd80de243faba",
+        "29541ff8141f1011535d1d36173373b8697e6a67ba7dbbf2a8e5b50c52171bcf",
+        "fd4adeb3557844eee79a3991503a2b72a31077c5c4e67d65699436d0cb0e8037",
+        "6892edbb29840381b4d587b09924a652dc414a801142d1363b5d9e1f5ebec15c"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "sprint",
+      "direction": "N",
+      "source_canvas": [
+        160,
+        160
+      ],
+      "fixed_translation": [
+        -16,
+        -17
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/sprint/N_000.png",
+        "sprites/sprint/N_001.png",
+        "sprites/sprint/N_002.png",
+        "sprites/sprint/N_003.png",
+        "sprites/sprint/N_004.png",
+        "sprites/sprint/N_005.png",
+        "sprites/sprint/N_006.png",
+        "sprites/sprint/N_007.png"
+      ],
+      "pixel_sha256": [
+        "ca3f046812964c70e34a38c95174c59fc6fbb1d7188a91c19d73ab9ff2e3283d",
+        "41f2fc4f476c14b70f148287462a5e5adf8d9a4180d041b8d664be95490f1748",
+        "0beb73a714e5fa2a347b237a341c1c3c335d72cdb1696566a3b01e4e3235ce2f",
+        "61535433dd3009c41d05a008e57ee7522461e966d73ce5ba550130819c935fe4",
+        "fe6efe9a5b900e1cb5a08475683bd182baa89f53283c95a0617702e90a2bc261",
+        "8480a93e5b9b1bf2e3f83c2a34394a4a41b6e73732ae1c5f8882b7eb8a84a7af",
+        "a835bcdbfb5fe4576842c014190a452741c2df8297f8d9fbd380b213426220be",
+        "d1c679f90f3c3bbb8e44283da34f811ff438d9bc248fb702a26563964b51c5c2"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "sprint",
+      "direction": "NW",
+      "source_canvas": [
+        152,
+        152
+      ],
+      "fixed_translation": [
+        -8,
+        -13
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/sprint/NW_000.png",
+        "sprites/sprint/NW_001.png",
+        "sprites/sprint/NW_002.png",
+        "sprites/sprint/NW_003.png",
+        "sprites/sprint/NW_004.png",
+        "sprites/sprint/NW_005.png",
+        "sprites/sprint/NW_006.png",
+        "sprites/sprint/NW_007.png"
+      ],
+      "pixel_sha256": [
+        "72d88822fe8be30844cc1b9d35e7595be664b059e700c9138653c2f22a89de1e",
+        "f7c868981c4861dbdd2a2bc22b689afe59b9f069b14d4ee077230618602a519f",
+        "a6c612e8dbb27ffaa3b2ee4e568e8d77bfa977d11a93c34b823f0649b9524569",
+        "c3b71bdaa17421c7a086e4c890f468606b2fbb9d34d5d5c692963ccb4fcbe060",
+        "ccd76ca82202d3cdda9d35795263377ba6887913efc14e097f445a47180f06f8",
+        "c2edccd748cafb7ecf5af2039332361329d4fb4bc369172fd3278ced5178304c",
+        "54479686b5d9247007b9d84273dcb65e4b82658bb9ab989e24a5c6cdbca1048c",
+        "cd59f931e8aecef25248ef897ef8196fca398ed832d1b0632cfbcfb855e8683f"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "sprint",
+      "direction": "W",
+      "source_canvas": [
+        160,
+        160
+      ],
+      "fixed_translation": [
+        -15,
+        -18
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/sprint/W_000.png",
+        "sprites/sprint/W_001.png",
+        "sprites/sprint/W_002.png",
+        "sprites/sprint/W_003.png",
+        "sprites/sprint/W_004.png",
+        "sprites/sprint/W_005.png",
+        "sprites/sprint/W_006.png",
+        "sprites/sprint/W_007.png"
+      ],
+      "pixel_sha256": [
+        "b687495dec6a9563e5cb800baf97793673d2146e6aa22622584552c396c1529b",
+        "df33a00bcd494743ab1cda84cd027aaffce42da1ee65de693ff46658c411474b",
+        "99d4c693bafe5762897fe6929abe2e6d321ae70db153d64187801214ee1f494e",
+        "203d32e93f82ce19a0b5f8e860d70a5c104928d7af58cc9e85547877bb36cfeb",
+        "c24ae453b8847a2b87241036fdf56fa66c6ce0d3f48143d3a12359a38ae4e629",
+        "1a536a480099e32f70008f93d0630a716be9d91fe2083ed7c25a737d73e45ed2",
+        "377eaf8ee4142d12f339229a619a91e6fe1ca1563227c845423519e51c8496b1",
+        "5101cc6b72f9b49bf86902cb792f2e1aec1123b4df06281e6fabee500170c1da"
+      ],
+      "issues": []
+    },
+    {
+      "animation": "sprint",
+      "direction": "SW",
+      "source_canvas": [
+        164,
+        164
+      ],
+      "fixed_translation": [
+        -15,
+        -21
+      ],
+      "frame_count": 8,
+      "frames": [
+        "sprites/sprint/SW_000.png",
+        "sprites/sprint/SW_001.png",
+        "sprites/sprint/SW_002.png",
+        "sprites/sprint/SW_003.png",
+        "sprites/sprint/SW_004.png",
+        "sprites/sprint/SW_005.png",
+        "sprites/sprint/SW_006.png",
+        "sprites/sprint/SW_007.png"
+      ],
+      "pixel_sha256": [
+        "d54bd9f98319dbf56fb622541f3be9ff1f672233072114385582219ed5558549",
+        "13f27da5cd1327ebd5b8be2b306091dfb0e2dca9e9958a0cd096fad4d6e435c0",
+        "a5b68f90287e953281a3605ca7c7f5156fdba55f114b4ff5f2f61c2e96790b2b",
+        "5c84f46e732d051cac8890db897472407cd2d24890838ecb9ab84f199438567e",
+        "f89f1445626d564de55b934c34f96b85483313db3c26957e07ead8043a7e271a",
+        "79866959a5753017ec899bfbbcd48ada370d9f135c145bdf6e1270f12d0e4995",
+        "abe2d92ebed36f56056a3cf2b600dc321f4fd1f5cc287dddf5147f9e671d0155",
+        "cd8cfef3fa3b697bae4bba2bcbbe7af599f0e881af18ba7fd0a6eea43146cb2f"
+      ],
+      "issues": []
+    }
+  ],
+  "pending": []
+}

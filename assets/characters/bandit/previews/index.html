@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Shinobi Rush — Bandit animation review</title>
+<style>body{background:#142129;color:#f1eee5;font:16px system-ui;margin:0;padding:20px}main{max-width:1100px;margin:auto}h1{font-size:24px}button,select,input{font:inherit;padding:8px;background:#263b43;color:inherit;border:1px solid #70868a;border-radius:5px}label{display:inline-flex;gap:8px;align-items:center;margin:6px}canvas{image-rendering:pixelated;background:#34494b;width:min(100%,384px);height:auto}#grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}article{background:#1e3038;padding:10px;border-radius:8px}article p{margin:4px}#scrub{width:min(60vw,460px)}a{color:#9fe9dd}.note{color:#bed0d0}output{font-variant-numeric:tabular-nums}</style>
+<main><h1>Red-scarf bandit</h1><p>128 × 128 · plain cloth headband · idle, regular run, ninja sprint</p>
+<label>Animation <select id="action"><option>idle</option><option>run</option><option>sprint</option></select></label>
+<label>Direction <select id="direction"><option>SE</option><option>S</option><option>E</option><option>NE</option><option>N</option><option>NW</option><option>W</option><option>SW</option></select></label>
+<label>Speed <select id="speed"><option value="0.5">½ speed</option><option value="1">Normal</option><option value="0.25">¼ speed</option></select></label>
+<button id="play">Pause</button><button id="reset">Restart clock</button><label><input type="checkbox" id="all">All eight directions</label>
+<label>Size <select id="zoom"><option value="128">Native</option><option value="155">Game close</option><option value="256">2×</option><option value="384" selected>3×</option></select></label>
+<p><output id="clock">Loading…</output></p><label>Frame <input id="scrub" type="range" min="0" max="7" value="0"></label>
+<div id="grid"></div><p class="note">Shared timer and frame controls. Pixel art is shown with nearest-neighbor scaling. Art review only; enemy gameplay integration is separate.</p>
+<p><a href="bandit-SE-normal.gif">Normal-speed comparison GIF</a> · <a href="bandit-SE-half.gif">Half-speed comparison GIF</a> · <a href="turnaround.png">Eight-view turnaround</a></p></main><script type="module" src="review.js"></script></html>

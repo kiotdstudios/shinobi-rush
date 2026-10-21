@@ -1,0 +1,38 @@
+{
+  "character_id": "cc675e30-2723-4145-b03f-c0d245294305",
+  "idle_group": "038d319d-66b8-43a9-a2e5-5e13cc0eba80",
+  "run_group": "e491cd61-d8ae-4b68-ae4e-71c2d5ec4b65",
+  "creation": {
+    "content": [
+      {
+        "type": "text",
+        "text": "id: cc675e30-2723-4145-b03f-c0d245294305\nname: Shinobi Rush red-scarf bandit\nmode: pro (25 generations, 8 directions)\nbody: humanoid\nsize: 128x128px\nview: low top-down\nstyle character: 2b5a8809-cf01-46a4-8e85-0602dda701a2\nstatus: processing (~3-5 min)\n\nhint: get_character(character_id=\"cc675e30-2723-4145-b03f-c0d245294305\")"
+      }
+    ],
+    "isError": false
+  },
+  "idle": {
+    "content": [
+      {
+        "type": "text",
+        "text": "character: cc675e30-2723-4145-b03f-c0d245294305\nanimation: breathing-idle\nmode: template\ndirections: south, east, north, west (4 jobs)\njob_ids: south=90c52d5f-dd0b-4a3c-a141-65a625da38c1, east=4cc7be93-f39d-4283-8ff5-30c4a763d4fc, north=6f39938c-e78b-4726-9301-c5d19c145c56, west=3c9feb39-1cfa-4f2b-8546-553ef47190fc\ngroup: 038d319d-66b8-43a9-a2e5-5e13cc0eba80\ncost: 4 generations (1/dir x 4)\neta: ~2-4 min\nadd more directions to this group: animate_character(character_id=\"cc675e30-2723-4145-b03f-c0d245294305\", template_animation_id=\"breathing-idle\", animation_group_id=\"038d319d-66b8-43a9-a2e5-5e13cc0eba80\", directions=[...])\n\nhint: get_character(character_id=\"cc675e30-2723-4145-b03f-c0d245294305\")\nif poor: delete_animation(character_id=\"cc675e30-2723-4145-b03f-c0d245294305\", animation_type=\"...\") then retry with mode=\"v3\""
+      }
+    ],
+    "isError": false
+  },
+  "run": {
+    "content": [
+      {
+        "type": "text",
+        "text": "character: cc675e30-2723-4145-b03f-c0d245294305\nanimation: running-8-frames\nmode: template\ndirections: south, south-east, east (3 jobs)\njob_ids: south=6d94690e-7bb0-4704-9ca6-6ef16d002bc4, south-east=8f5f2327-d006-47df-aed7-58cdb360543e, east=22d3dde6-e31c-48fd-b9c7-7bdf9d8591d2\ngroup: e491cd61-d8ae-4b68-ae4e-71c2d5ec4b65\ncost: up to 6 generations (2/dir x 3 at most). On a 128x128 canvas this 8-frame clip runs in up to 2 batches per direction, 1 generation per batch, charged as each batch finishes\neta: ~2-10 min per batch, one batch at a time (up to 2 per direction)\nadd more directions to this group: animate_character(character_id=\"cc675e30-2723-4145-b03f-c0d245294305\", template_animation_id=\"running-8-frames\", animation_group_id=\"e491cd61-d8ae-4b68-ae4e-71c2d5ec4b65\", directions=[...])\n\nhint: get_character(character_id=\"cc675e30-2723-4145-b03f-c0d245294305\")\nif poor: delete_animation(character_id=\"cc675e30-2723-4145-b03f-c0d245294305\", animation_type=\"...\") then retry with mode=\"v3\""
+      }
+    ],
+    "isError": false
+  },
+  "sprint_group": "60917857-d5b0-4d16-8841-158e1bcf6f30",
+  "final_provenance": {
+    "idle": "breathing-idle, all eight directions",
+    "run": "running-8-frames south; custom v3 other seven directions",
+    "sprint": "custom PixMiniMax all eight directions; northwest pose revision"
+  }
+}
