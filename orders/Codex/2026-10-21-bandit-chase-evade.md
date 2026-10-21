@@ -1,6 +1,6 @@
 # ORDER — Bandit locomotion continuity, chase and ninja evade
 - Agent / Owner: Codex (owner explicitly assigns behavior integration in current request)
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
 - Branch: codex/bandit-chase-evade
 - Dependencies: approved bandit 128px idle/run/sprint already on main
@@ -19,3 +19,6 @@ Detect/run/sprint/idle; gait phase retained through turns; evades approaching or
 
 ## Handoff
 Kunai work remains paused. Existing run source frame ordering retained after audit; no duplicate PNGs. Runtime restarting and threshold chatter fixed without changing player SpriteActor behavior.
+
+## Verified delivery
+PR https://github.com/kiotdstudios/shinobi-rush/pull/52 merged fa85e9399c019f627ceb806f6805f427ed68554f. All CI/deploy jobs passed; independent public-build SHA/hash smoke and actual-keyboard bandit feature probe passed. Full evidence/status in reports/2026-10-21-bandit-chase-evade-report.md. Live: https://kiotdstudios.github.io/shinobi-rush/?camera=close&v=fa85e93

@@ -2,7 +2,7 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-21-bandit-chase-evade.md; direct owner request
 - Date: 2026-10-21
-- Final status: REVIEW — locally tested, awaiting PR integration and deployed verification
+- Final status: DONE — merged, deployed and independently live-tested
 - Commit / PR: implementation7fd035c776a1f214f4aa8ea6235f15ef2f372f81; https://github.com/kiotdstudios/shinobi-rush/pull/52. Original report written before implementation commit.
 
 ## Work completed
@@ -52,3 +52,17 @@ PR/CI/review, merge, Pages deployment, live SHA and actual-keyboard smoke verifi
 
 ## Integration retest before merge-update commit
 Main advanced to111182a (Aki HUD live zoom readout). Merged without committing, preserving both HUD legend and zoom. Re-ran `python scripts/ci/godot_ci.py tests --project . --log-dir build/bandit-chase-merged`:642 passed,0 failed. Exported fresh `../bandit-chase-merged-web`, finalized using current premerge implementation identifier, ran `node scripts/ci/smoke/smoke.mjs --serve-dir ../bandit-chase-merged-web --out-dir build/bandit-merged-smoke --label bandit-chase-merged`:PASS,0 fatal errors. Local artifacts still use base identifiers for uncommitted sources; deployed SHA must be independently checked after integration.
+
+## Verified live delivery — 2026-10-21 11:08 UTC
+PR52 merged after all checks were green and merge state clean, using expected head9f9216ac93f3de7c52ed8a08b592f779b9414cb8. Live merge SHA **fa85e9399c019f627ceb806f6805f427ed68554f**.
+
+- PR: https://github.com/kiotdstudios/shinobi-rush/pull/52
+- Main CI/deploy: https://github.com/kiotdstudios/shinobi-rush/actions/runs/39589013113 — import/tests/export, predeploy browser, Pages deploy, postdeploy live smoke and gate all success. Repository checks and pipeline self-test also success.
+- Public build-info.json independently reports the exact merge SHA.
+- `node scripts/ci/smoke/smoke.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha fa85e9399c019f627ceb806f6805f427ed68554f --out-dir build/bandit-live-smoke --label bandit-live`: PASS;9 served files hash-verified, nonblank rendered game, actual movement/dodge/attack keys,0 fatal errors.
+- `node scripts/ci/smoke/bandit-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/bandit-live-feature`: all9 feature checks PASS again on the public game, including L toggle/unlock, evasion on target lock and on unlocked approach, sprint/run/idle seen,0 browser errors.
+- Live screenshot inspected: correct approved player/red-scarf bandit, Aki zoom readout retained, controls legend includes L/R3. Public browser tab requested in Codex; app returned queued (no claim it is already visible).
+- Evidence: docs/visuals/bandit-chase-evade/live-{feature-probe.json,smoke.json,gameplay.png}.
+- Test URL: https://kiotdstudios.github.io/shinobi-rush/?camera=close&v=fa85e93
+
+No remaining deployment or test blockers. Source-art loop-seam observation above remains an explicit art-quality limitation, not a deployment failure. Kunai work stays paused. This final evidence/status update is a report-only follow-up commit on the delivery branch; it changes no runtime source.
