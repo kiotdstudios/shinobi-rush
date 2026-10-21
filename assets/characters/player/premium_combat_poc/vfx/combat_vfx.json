@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "id": "combat_vfx_v1",
+  "frame_size": [
+    128,
+    128
+  ],
+  "pivot": [
+    64,
+    64
+  ],
+  "index_base": 0,
+  "timing_status": "visual_proposal_pending_aki",
+  "effects": {
+    "sword_trail_light": {
+      "fps": 24,
+      "frame_count": 8,
+      "loop": false,
+      "pivot": [
+        64,
+        64
+      ],
+      "frames": [
+        "frames/sword_trail_light/000.png",
+        "frames/sword_trail_light/001.png",
+        "frames/sword_trail_light/002.png",
+        "frames/sword_trail_light/003.png",
+        "frames/sword_trail_light/004.png",
+        "frames/sword_trail_light/005.png",
+        "frames/sword_trail_light/006.png",
+        "frames/sword_trail_light/007.png"
+      ],
+      "sha256": [
+        "a9d4f36a15d726b9e752827dab7c602223ec6859c9cfd5ad3c89e711a702b7da",
+        "3f59631159e9315e54a3e620f88496a8eea9d9872836226e3bc8c22a94d5c855",
+        "242b497d87ed6d89158e67599334ba787e94b1e99fbb9f1cd749f865cd6a5d0e",
+        "17357713706497baae0db6d7fd9c10a2c22a7deab21bb814a1c93d4acdb3d8f8",
+        "626f96b764f19913b92de39da819d17c110ff78c42024bae6da102f41cf0b1c9",
+        "ebd67af62ee2f12fba9467b272324c99081dfa23991c04cfd66ddc6b92c82c3e",
+        "bd3b07ad8d97f40d77b0a09e788d2974dbab0e7a8445aa5042730c095998b1b5",
+        "5b5c69a461d34f11f6ab7dc9ef80a55f5707adef34ac77c0b7631383221ccf32"
+      ],
+      "pixellab_effect_id": "8fb6fc5b-ab01-494a-b20a-6738b3662d6f",
+      "source_clip_offset": [
+        -19,
+        -23
+      ],
+      "attachment": "sword_hand_socket",
+      "trigger": "gameplay_contact_event",
+      "independent_of_player_sprite": true
+    },
+    "sword_trail_heavy": {
+      "fps": 24,
+      "frame_count": 8,
+      "loop": false,
+      "pivot": [
+        64,
+        64
+      ],
+      "frames": [
+        "frames/sword_trail_heavy/000.png",
+        "frames/sword_trail_heavy/001.png",
+        "frames/sword_trail_heavy/002.png",
+        "frames/sword_trail_heavy/003.png",
+        "frames/sword_trail_heavy/004.png",
+        "frames/sword_trail_heavy/005.png",
+        "frames/sword_trail_heavy/006.png",
+        "frames/sword_trail_heavy/007.png"
+      ],
+      "sha256": [
+        "ddb860f4d3528cfb546c142be9ac2f4deda8646da93b6cb3a02cd29e84ef092b",
+        "7ab3e4b5a48158b5344e91e5d6e73b745f05ad21cbe4f9a5208c96dc9ba2560a",
+        "4b543260a7f39584df210a83fc8747fc44532eabefd9cc8f8e14c2737caf2499",
+        "2fce4e55524597649b52abcdef3bc8b4449ca8309ea77b6bc1110c52f5288830",
+        "6bb244f074ae77d1a6c5fb1e8b8fb6e569e3cb848dbb34f56abea185a9daeece",
+        "3a6953b1040482065a0130367a1d48b7c7e2d5b98255a49b277c53fae721b7db",
+        "d4666c37dcc8f0caf74b7c68c6fb5205e5424d71ac97e84236257815fd9c00d0",
+        "cc23104960b32153a1062b477702cd606623ea6c1de3b23cb5a8eec3fbbac8c2"
+      ],
+      "pixellab_effect_id": "6af28e69-c08d-4c00-874a-1bfbac08853c",
+      "source_clip_offset": [
+        -30,
+        -37
+      ],
+      "attachment": "sword_hand_socket",
+      "trigger": "gameplay_contact_event",
+      "independent_of_player_sprite": true
+    },
+    "hit_spark": {
+      "fps": 24,
+      "frame_count": 4,
+      "loop": false,
+      "pivot": [
+        64,
+        64
+      ],
+      "frames": [
+        "frames/hit_spark/000.png",
+        "frames/hit_spark/001.png",
+        "frames/hit_spark/002.png",
+        "frames/hit_spark/003.png"
+      ],
+      "sha256": [
+        "d14d48e4994ce17bf9f39bbe7059a8abd8fe0939a89bad814f179e097987e852",
+        "da4d22f7bc275d281ea43bf221464991758c9ec075500688bd3bcec571210446",
+        "a81a921abf69d25f01d9da6f2c18ae8c70e3c3c7e4d7125d45ed5e02ebfd0c47",
+        "8a32970c0fd44f316c25e660a2c00854f685b2eb486b78e3d967b5c5b728c4b4"
+      ],
+      "pixellab_effect_id": "b6950469-32c8-4584-8478-9b2165948349",
+      "source_clip_offset": [
+        -12,
+        -12
+      ],
+      "attachment": "world_contact_point",
+      "trigger": "gameplay_contact_event",
+      "independent_of_player_sprite": true
+    }
+  }
+}

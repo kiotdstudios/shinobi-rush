@@ -1,10 +1,10 @@
 # ORDER — Premium Combat Animation Pack V1 (Reference-Driven)
 
 - **Agent:** Codex
-- **Status:** IN_PROGRESS — Phase1 existing-art audit started; SE proof reuses modular sword work, no paid generation initiated
+- **Status:** REVIEW — Phase1 SE layered art proof delivered; owner look/feel review before8-direction expansion. Later phases remain outstanding.
 - **Priority:** P0
 - **Owner:** Codex — production art and animation
-- **Branch/PR:** Create dedicated art branches/PRs for staged deliveries; this order enters via its own order-only PR.
+- **Branch/PR:** `codex/premium-combat-poc` / https://github.com/kiotdstudios/shinobi-rush/pull/42
 - **Dependencies:** Approved baseline player art and existing player_128 animation manifest; coordinate frame events with Aki's Combat Fluidity Overhaul V1. **Do not interrupt or duplicate Codex's already ongoing Chidori work**; start this after its current committed deliverable or report a resource conflict.
 
 ## Objective
@@ -66,3 +66,11 @@ Deliver production-quality, responsive, faux-isometric combat art that makes Shi
 **Orcha:** Lightning Clone Substitution prototype.
 **Kiro:** no work assigned.
 No unapproved gameplay refactor, camera changes, mass map production, paid API usage, or unauthorized modification of other agents' work.
+
+## Phase1 delivery — 2026-10-20
+
+- SE run→light1→light2→light3→dodge→dash proof,58 timed poses, two separately attached swords, independent trails/sparks. Existing weaponless art reused; dash explicitly a hybrid pose study, not dedicated new production art.
+- Source/metadata: `assets/characters/player/premium_combat_poc/premium_combat.art.json`; Aki handoff beside it in `INTEGRATION_NOTES.md`.
+- Preview: `assets/characters/player/previews/premium-combat-poc/index.html`; normal/half/close-half GIFs and contact sheet beside it.
+- Tests: Python file/hash/alpha/socket/timing validation,116 sword composites; Godot4.7.2 import and texture fixture; Chromium desktop1280×900/mobile390×844 controls, contact markers, layers, native/close, reload; no missing assets or JS errors. See `orders/Codex/reports/2026-10-20-premium-combat-se-proof-report.md`.
+- Runtime event/tuning agreement remains Aki's integration task. Live deployment not applicable to opt-in art proof. No controller/camera edits, new generation, or847-frame conversion.

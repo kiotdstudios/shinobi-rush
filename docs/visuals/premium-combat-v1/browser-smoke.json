@@ -1,0 +1,26 @@
+{
+  "url": "http://127.0.0.1:8778/assets/characters/player/previews/premium-combat-poc/index.html",
+  "engine": "Playwright Chromium",
+  "results": [
+    {
+      "viewport": "1280x900 desktop",
+      "status": "PASS",
+      "loaded_images": 73,
+      "controls": "all six actions; pause/play/step; shared bodies; layer toggles; normal/half; native/close; reload",
+      "contact_events": 4,
+      "errors": [],
+      "missing": [],
+      "reload_ms": 57
+    },
+    {
+      "viewport": "390x844 touch",
+      "status": "PASS",
+      "loaded_images": 73,
+      "controls": "all six actions; pause/play/step; shared bodies; layer toggles; normal/half; native/close; reload",
+      "contact_events": 4,
+      "errors": [],
+      "missing": [],
+      "reload_ms": 47
+    }
+  ]
+}

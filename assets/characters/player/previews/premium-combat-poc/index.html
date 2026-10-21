@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shinobi Rush · SE combat art proof</title>
+<style>
+:root{color-scheme:dark;font:15px system-ui;background:#101821;color:#e5edf2}body{max-width:1000px;margin:auto;padding:18px}h1{font-size:24px;margin:6px 0}p{color:#b9cbd8;line-height:1.5}button,select{font:inherit;padding:8px;border:1px solid #506475;border-radius:6px;background:#223341;color:white}label{display:inline-flex;gap:6px;align-items:center}nav{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}.panels{display:flex;gap:14px;flex-wrap:wrap}figure{margin:0;background:#1b2935;padding:12px;border-radius:10px}canvas{display:block;background:repeating-conic-gradient(#25313b 0 25%,#2a3944 0 50%) 0/16px 16px;image-rendering:pixelated;max-width:100%;height:auto}figcaption{margin:8px 0;color:#ffd17b}#readout{font:14px ui-monospace,monospace;color:#ffd17b;min-height:44px}input[type=range]{width:100%}a{color:#8cdbff}.links{display:flex;gap:18px;flex-wrap:wrap}details{margin-top:18px}#status{font-size:13px}summary{cursor:pointer}
+</style>
+<h1>SE combat · layered art proof</h1>
+<p>Run → three-hit combo → dodge → dash attack. Both swords use the same body poses. Half speed is selected for inspection.</p>
+<nav><button id="pause">Pause</button><button id="restart">Restart</button><button id="step">Next pose</button>
+<label>Speed <select id="speed"><option value=".25">¼×</option><option value=".5" selected>½×</option><option value="1">Normal 1×</option></select></label>
+<label>Action <select id="action"><option value="sequence">Full sequence</option></select></label>
+<label>Scale <select id="zoom"><option value="1">Native 1×</option><option value="1.2115384615384615" selected>Close camera 1.212×</option><option value="2">Inspect 2×</option><option value="3">Inspect 3×</option></select></label></nav>
+<nav><label><input type="checkbox" id="body" checked>Body</label><label><input type="checkbox" id="weapon" checked>Sword</label><label><input type="checkbox" id="vfx" checked>VFX</label><label><input type="checkbox" id="anchors">Anchors</label></nav>
+<div id="readout">Loading…</div><input id="scrub" aria-label="Animation time" type="range" min="0" max="2583" step="1" value="0">
+<div class="panels"><figure><figcaption>Katana</figcaption><canvas id="katana" width="256" height="224"></canvas></figure><figure><figcaption>Straight sword · shared body</figcaption><canvas id="straight_sword" width="256" height="224"></canvas></figure></div>
+<p id="status">Loading transparent source assets…</p>
+<div class="links"><a href="sequence-half.gif">Half-speed GIF</a><a href="sequence-close-half.gif">Close-camera half-speed GIF</a><a href="sequence-normal.gif">Normal GIF</a><a href="contact-sheet.png">Contact sheet</a><a href="../../premium_combat_poc/premium_combat.art.json">Frame / socket / event data</a></div>
+<details><summary>Prototype scope and integration notes</summary><p>Reused weaponless combo and locomotion art; dash is a hybrid pose study. Timing follows the audited gameplay configuration, pending Aki’s event adapter. No controller or camera changes. Full recoveries play here to expose every pose; gameplay can branch at legal combo/cancel windows. No idle separator is inserted.</p><p>Close scale follows the existing CameraPreset formula for the 104px figure: 126px at a 720px viewport (17.5%). This cropped art preview is not a game-camera approval or a live combat build. The 256×224 stage provides weapon/VFX clearance; body PNGs stay 128×128.</p></details>
+<script type="module" src="review.js"></script></html>
