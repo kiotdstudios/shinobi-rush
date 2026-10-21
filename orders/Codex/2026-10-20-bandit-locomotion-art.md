@@ -3,7 +3,7 @@
 - Owner: Codex (art)
 - Status: REVIEW
 - Priority: P1
-- Branch/PR: codex/bandit-locomotion — https://github.com/kiotdstudios/shinobi-rush/pull/38; art commit e211daeb02bf461c1754daf8e91fe4c299660aa7
+- Branch/PR: codex/bandit-locomotion — https://github.com/kiotdstudios/shinobi-rush/pull/38; latest sprint revision31848d5ba6d7efff44497635cb173cd2c7f4d67b (initial art e211dae)
 - Dependencies: owner appearance reference; approved128px game style; Aki enemy integration
 
 ## Objective

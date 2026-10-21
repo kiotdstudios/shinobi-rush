@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-20-bandit-locomotion-art.md
 - Date: 2026-10-20
 - Final status: REVIEW — corrected eight-direction sprint ready for owner inspection
-- Commit / PR: Revision commit pending at report creation; updates existing PR38 on codex/bandit-locomotion.
+- Commit / PR: Revision31848d5ba6d7efff44497635cb173cd2c7f4d67b pushed to https://github.com/kiotdstudios/shinobi-rush/pull/38; PR returned to ready-for-review. Owner visual acceptance pending.
 
 ## Work completed
 Replaced all64 sprint frames in S/SE/E/NE/N/NW/W/SW. V1 hands bent/clasped at lower back; rejected text-only v2 reached forward or sideways. Final bandit_sprint_v3 uses explicitly posed custom start frames, retaining independently trailing arms, rearward shoulder/elbow/wrist lines, forward lean and continuous running legs. South uses low foreshortened trailing hands rather than raised hands. Rear diagonals use separate extended arms instead of a hand against the waist. No logos, floor shadow or redesign.

@@ -3,7 +3,7 @@
 - Owner: Aki (runtime); Codex (art)
 - Status: QUEUED
 - Priority: P1
-- Branch/PR: Codex art https://github.com/kiotdstudios/shinobi-rush/pull/38 (e211daeb02bf461c1754daf8e91fe4c299660aa7); runtime branch chosen by Aki
+- Branch/PR: Codex art https://github.com/kiotdstudios/shinobi-rush/pull/38 (latest sprint correction31848d5ba6d7efff44497635cb173cd2c7f4d67b); runtime branch chosen by Aki
 - Dependencies: Codex bandit art PR reviewed/accepted and integrated
 
 ## Objective
@@ -22,4 +22,5 @@ Explicit enemy-only sprite binding, idle/approach mapping to idle/run, sprint su
 Player still uses player_128, bandit uses its own art; eight directions/nearest filtering/common root and body scale correct. Inspect actor transitions at close gameplay zoom, stable collision/foot position, no feet sliding at runtime velocity, correct Y sorting, no missing textures/errors, hit/death fallback intact. Browser live smoke-test after integration and report build URL/SHA.
 
 ## Handoff / Notes
+Use latest sprint-arms-v3 art revision, not the rejected v1 clasped-arm frames. Current visual review: assets/characters/bandit/previews/sprint-v3-all-directions-half.gif and sprint-v3-before-after-half.gif. Owner visual acceptance pending.
 Art preview defaults to half-speed for inspection; proposed metadata speeds do not alter authoritative gameplay movement. Owner visual acceptance remains separate from import checks. Do not expand to attacks/hit/death art under this locomotion order.
