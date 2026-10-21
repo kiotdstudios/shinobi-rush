@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "id": "ninja_evade",
+  "frame_size": [
+    192,
+    192
+  ],
+  "anchor": [
+    96,
+    96
+  ],
+  "fps": 30,
+  "loop": false,
+  "duration_seconds": 0.2,
+  "orientation": "right; runtime rotates to evade vector",
+  "layer": "separate body overlay",
+  "frames": [
+    "streak_000.png",
+    "streak_001.png",
+    "streak_002.png",
+    "streak_003.png",
+    "streak_004.png",
+    "streak_005.png"
+  ],
+  "source": "built-in image_gen; fixed-grid nearest sampling, alpha threshold100, six grayscale values",
+  "shadow_baked": false
+}

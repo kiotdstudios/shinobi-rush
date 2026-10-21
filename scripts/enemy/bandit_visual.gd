@@ -7,7 +7,9 @@ const ART_PATH := "res://assets/characters/bandit/bandit_128.art.json"
 static var _art_set: SpriteSet
 static var _art_checked := false
 
-@export_enum("run", "sprint") var approach_animation: String = "run"
+@export_enum("auto", "run", "sprint") var approach_animation: String = "auto"
+var streak: AnimatedSprite2D
+var _last_evade := 0
 var actor: SpriteActor
 
 const CLOTH := Color("#5a3a2a")
@@ -29,6 +31,16 @@ func _ready() -> void:
 		_art_set = SpriteSet.parse(FileAccess.get_file_as_string(ART_PATH), ART_PATH)
 		if not _art_set.is_valid():
 			push_warning("Bandit art unavailable: " + _art_set.first_error())
+	streak = AnimatedSprite2D.new()
+	streak.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	streak.sprite_frames = SpriteFrames.new()
+	streak.sprite_frames.set_animation_loop("default", false)
+	streak.sprite_frames.set_animation_speed("default", 30.0)
+	for i in 6:
+		streak.sprite_frames.add_frame("default", load("res://assets/vfx/ninja_evade/streak_%03d.png" % i))
+	streak.position = Vector2(0, -48)
+	streak.visible = false
+	add_child(streak)
 	_process(0.0)
 
 
@@ -37,12 +49,33 @@ func _process(_delta: float) -> void:
 		return
 	actor.visible = _art_set != null and _art_set.is_valid() and bandit.state != Bandit.State.DEAD
 	if actor.visible:
-		var moving := bandit.state == Bandit.State.APPROACH and bandit.velocity.length_squared() > 1.0
+		var moving := bandit.state in [Bandit.State.APPROACH, Bandit.State.EVADE] and bandit.velocity.length_squared() > 1.0
 		# Knockback is not a running cycle. Keep the struck pose through hurt/hitstop.
 		if bandit.state != Bandit.State.HIT_REACT or actor.set_ref == null:
-			actor.show_animation(_art_set, approach_animation if moving else "idle", SpriteSet.dir_name(bandit.facing8))
+			var action := "idle"
+			if moving:
+				action = ("sprint" if bandit.is_sprinting else "run") if approach_animation == "auto" else approach_animation
+			# Preserve gait phase across octant and run/sprint changes; idle still starts deliberately.
+			var preserve := moving and actor.anim_id in ["run", "sprint"]
+			var phase := 0.0
+			if preserve:
+				phase = (actor.sprite.frame + actor.sprite.frame_progress) / float(actor.sprite.sprite_frames.get_frame_count(actor.sprite.animation))
+			actor.show_animation(_art_set, action, SpriteSet.dir_name(bandit.facing8))
+			if preserve:
+				var frame := phase * actor.sprite.sprite_frames.get_frame_count(actor.sprite.animation)
+				actor.sprite.set_frame_and_progress(int(frame), frame - floorf(frame))
 		actor.set_playback(1.0, bandit._hitstop_timer > 0.0 or bandit.state == Bandit.State.HIT_REACT)
 		actor.modulate = Bandit.HIT_FLASH if bandit._hit_flash_timer > 0.0 else Color.WHITE
+	if streak != null:
+		if bandit.evade_count != _last_evade:
+			_last_evade = bandit.evade_count
+			streak.rotation = bandit.velocity.angle()
+			streak.visible = true
+			streak.play("default")
+			streak.set_frame_and_progress(0, 0.0)
+		if bandit.state != Bandit.State.EVADE:
+			streak.visible = false
+		streak.speed_scale = 0.0 if bandit._hitstop_timer > 0.0 else 1.0
 	queue_redraw()
 
 
