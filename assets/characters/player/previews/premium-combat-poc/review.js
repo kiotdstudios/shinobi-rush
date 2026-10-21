@@ -3,11 +3,13 @@ async function json(url){const r=await fetch(url);if(!r.ok)throw Error(`${url}: 
 const manifest=await json(new URL('premium_combat.art.json',root));
 const vmurl=new URL(manifest.vfx.manifest,root),vm=await json(vmurl),images=new Map();
 async function load(url){const k=String(url);if(!images.has(k))images.set(k,new Promise((ok,fail)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=()=>fail(Error('Missing '+k));im.src=k;}));return images.get(k);}
-const clips={};
-for(const [name,a] of Object.entries(manifest.animations)){
- clips[name]={...a,name,frames:await Promise.all(a.frames.map(async f=>({...f,image:await load(new URL(f.body_frame,root))})))};
- const o=document.createElement('option');o.value=name;o.textContent=name;el('action').append(o);
+const runtimeManifest=await json(new URL('runtime-chain.art.json',root)),profiles={};
+for(const [profile,data] of Object.entries({authored:manifest,runtime:runtimeManifest})){
+ const loaded={};for(const [name,a] of Object.entries(data.animations))loaded[name]={...a,name,frames:await Promise.all(a.frames.map(async f=>({...f,image:await load(new URL(f.body_frame,root))})))};
+ profiles[profile]=loaded;
 }
+let clips=profiles.runtime;
+for(const name of Object.keys(clips)){const o=document.createElement('option');o.value=name;o.textContent=name;el('action').append(o);}
 const weapons={},effects={};
 for(const [id,s] of Object.entries(manifest.weapons))weapons[id]={...s,image:await load(new URL(s.texture,root))};
 for(const [id,s] of Object.entries(vm.effects))effects[id]={...s,images:await Promise.all(s.frames.map(p=>load(new URL(p,vmurl))))};
@@ -16,6 +18,7 @@ const duration=()=>selected.reduce((sum,a)=>sum+a.duration_ms,0);
 function setPlay(on){playing=on;el('pause').textContent=on?'Pause':'Play';}
 el('pause').onclick=()=>setPlay(!playing);el('restart').onclick=()=>{time=0;};
 el('action').onchange=()=>{selected=el('action').value==='sequence'?Object.values(clips):[clips[el('action').value]];time=0;el('scrub').max=duration();};
+el('profile').onchange=()=>{clips=profiles[el('profile').value];el('action').onchange();};
 el('scrub').oninput=()=>{setPlay(false);time=Number(el('scrub').value);};
 el('step').onclick=()=>{setPlay(false);if(current)time=(current.globalStart+current.frame.start_ms+current.frame.duration_ms+0.001)%duration();};
 function zoom(){for(const id of Object.keys(weapons))el(id).style.width=`${256*Number(el('zoom').value)}px`;}
@@ -35,8 +38,8 @@ function draw(id,state,t){const ctx=el(id).getContext('2d'),f=state.frame,w=weap
  if(el('anchors').checked){ctx.fillStyle='#61e1ff';ctx.fillRect(124,164,9,1);ctx.fillRect(128,160,1,9);ctx.fillStyle='#ff6c89';ctx.fillRect(63+f.right_hand_px[0],47+f.right_hand_px[1],3,3);}
 }
 window.premiumCombatSeek=(ms)=>{setPlay(false);time=Math.max(0,ms)%duration();};
-Object.defineProperty(window,'premiumCombatState',{get:()=>current?{ready:true,animation:current.a.name,frame:current.frame.frame_index,phase:current.frame.phase,local_ms:current.local,time_ms:time%duration(),playing,speed:Number(el('speed').value),loaded_images:images.size,body_by_weapon:Object.fromEntries(Object.keys(weapons).map(id=>[id,current.frame.body_frame])),duration_ms:duration(),events:current.a.events,close_scale:manifest.close_camera.screen_scale}:null});
-el('status').textContent=`Loaded ${images.size} unique transparent assets · 58 body/weapon poses · SE · independent 24FPS effects. Timing pending Aki.`;
+Object.defineProperty(window,'premiumCombatState',{get:()=>current?{ready:true,profile:el('profile').value,animation:current.a.name,frame:current.frame.frame_index,phase:current.frame.phase,local_ms:current.local,time_ms:time%duration(),playing,speed:Number(el('speed').value),loaded_images:images.size,body_by_weapon:Object.fromEntries(Object.keys(weapons).map(id=>[id,current.frame.body_frame])),duration_ms:duration(),events:current.a.events,close_scale:manifest.close_camera.screen_scale}:null});
+el('status').textContent=`Loaded ${images.size} unique transparent assets · two timing profiles · SE · independent 24FPS effects. Runtime-chain profile follows merged Aki baseline; gameplay adapter pending.`;
 function tick(now){if(playing)time+=Math.min(now-last,100)*Number(el('speed').value);last=now;const t=time%duration();current=locate(t);const {a,frame:f,local}=current;el('scrub').value=t;
  const events=a.events.filter(e=>e.time_ms<=local).map(e=>e.name).join(' · ');
  el('readout').textContent=`${(t/1000).toFixed(3)}s / ${(duration()/1000).toFixed(3)}s · ${a.name} · ${f.phase} · pose ${f.frame_index+1}/${a.frame_count} · hold ${f.duration_ms.toFixed(1)}ms · ${Number(el('speed').value)}×\n${events}`;

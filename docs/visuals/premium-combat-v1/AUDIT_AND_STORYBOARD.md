@@ -45,3 +45,11 @@ Proposed light1 hold study using body indices0,2,4,5,6,7:41.667,41.667,33.333,33
 No MP4/MOV/WebM found in this thread's remote-attachment directory during audit. No reference video was viewed in this checkpoint. Use only the Chief order's documented early-sequence observations (rapid approach, white impacts, circular arcs, yellow sparks) until an actual recording is accessible. Do not infer source-game authored frame counts or exact original timing from53.4s/30fps recording metadata.
 
 Next: assemble the SE run→three-hit combo→dodge→dash proof, using separate body/weapon/VFX layers and two compatible swords, exact frame holds and proposed event markers. Render contact sheet plus1×/actual-close/half-speed previews; inspect mount continuity and silhouette/contact readability before requesting owner look/feel approval. Eight-direction expansion waits for that approval. Existing Chidori, Orcha's Lightning Clone and Aki gameplay remain separate; no duplicate jutsu generation. Follow Chief's no-paid-generation-without-owner-authorization rule if reuse proves insufficient.
+
+## Follow-up findings after proof delivery
+
+Phase1 proof is now delivered in PR42. Aki PR43 merged as main63bbd6c16f449d77d3e14e5a4c1afedb80864380. Existing four ground AttackDef timings are unchanged; Aki added aerial attack and hitstop-safe buffering/diagnostics. No new confirmed art-event adapter was found. Aerial art remains a later gap, not a reason to change the current offensive proof's scope.
+
+Added a runtime-chain comparison using legal combo/recovery/dodge branches. The approved runtime run/dodge rate is12FPS; dodge is12frames and1000ms, distinct from the first study's300ms proposed dodge. Actual comparison metadata and integration notes now distinguish both profiles. No controller changes or live-art binding.
+
+A deeper legacy workspace search found normalized baked-weapon candidates: light1 in S/SE/E/N/NW/W/SW, light2 in S/NW, dash inSE (8frames each,128RGBA). They are all marked CANDIDATE_VISUAL_REVIEW_REQUIRED and remain workspace-only; no claim of accepted directional production coverage. PR33 separately supplies weaponless SE light1–3. See directional-source-inventory.json before commissioning new frames. Remaining raw/queued jobs are not normalized/approved modular coverage.

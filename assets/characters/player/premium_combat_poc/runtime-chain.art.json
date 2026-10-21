@@ -1,0 +1,1539 @@
+{
+  "schema": "shinobi_premium_combat_art_poc_v1",
+  "status": "art_review_not_runtime_integration",
+  "directions": [
+    "SE"
+  ],
+  "frame_size": [
+    128,
+    128
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "body_height_px": 104,
+  "authored_fps": 24,
+  "default_review_speed": 0.5,
+  "index_base": 0,
+  "timing_status": "snapshot_compatible_review_no_hitstop_pending_aki_adapter",
+  "root_motion": "gameplay_owned_no_baked_translation",
+  "close_camera": {
+    "viewport": [
+      1280,
+      720
+    ],
+    "world_body_height": 104,
+    "texture_body_height": 104,
+    "camera_zoom": 1.2115384615384615,
+    "texture_scale": 1,
+    "screen_scale": 1.2115384615384615,
+    "note": "Source formula: CameraPreset.close_zoom(104) with loaded player manifest. SpriteActor uses native pixels, no body rescaling. Numerical camera approval remains provisional."
+  },
+  "mount_contract": {
+    "name": "right_hand",
+    "coordinates": "native_body_pixels_top_left_origin",
+    "blade_axis_local": [
+      1,
+      0
+    ],
+    "angle_units": "degrees_clockwise_y_down",
+    "interpolation": "step",
+    "relative_z": {
+      "behind": -1,
+      "body": 0,
+      "front": 1,
+      "hand_occluder": 2,
+      "vfx": 3
+    },
+    "hand_occluder": "Reuse the body texture region; no additional body library."
+  },
+  "weapons": {
+    "katana": {
+      "label": "Curved katana",
+      "texture": "weapons/katana.png",
+      "size": [
+        64,
+        64
+      ],
+      "grip_pivot_px": [
+        14,
+        32
+      ],
+      "native_pixel_scale": 1,
+      "handedness": "one",
+      "family": "one_handed_sword_poc",
+      "sha256": "5c46e35d282b57f23142cfce421e015c3007fa757127cd0631ecbccf7803e2d5"
+    },
+    "straight_sword": {
+      "label": "Straight sword",
+      "texture": "weapons/straight_sword.png",
+      "size": [
+        64,
+        64
+      ],
+      "grip_pivot_px": [
+        14,
+        32
+      ],
+      "native_pixel_scale": 1,
+      "handedness": "one",
+      "family": "one_handed_sword_poc",
+      "sha256": "677d9f14ad4aa9e15e1b6a4a405853c4bb4e7322308ed23d6b8dd4ff40592304"
+    }
+  },
+  "provenance": {
+    "modular_commit": "2e5717d6e844de0a94c954a520aad131f3162873",
+    "gameplay_snapshot": "63bbd6c16f449d77d3e14e5a4c1afedb80864380",
+    "method": "existing PNG reuse and timing/compositing only; no paid API calls"
+  },
+  "animations": {
+    "run": {
+      "direction": "SE",
+      "frame_count": 9,
+      "fps": 12,
+      "loop": false,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "../sprites/production/run/SE_002.png",
+          "body_sha256": "8463057063efd1a8ec0f724c53fc6a97c148e0f2864adc8bee3227b253ece943",
+          "source_pose": 2,
+          "right_hand_px": [
+            44,
+            63
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            42,
+            61,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "approach",
+          "pose_role": "locomotion",
+          "start_ms": 0
+        },
+        {
+          "frame_index": 1,
+          "body_frame": "../sprites/production/run/SE_003.png",
+          "body_sha256": "067893fbf566910181c940df22b3bbf9cc6a8dc4464c18c2df6be0fe50502e75",
+          "source_pose": 3,
+          "right_hand_px": [
+            43,
+            55
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            41,
+            53,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "approach",
+          "pose_role": "locomotion",
+          "start_ms": 83.33333333333333
+        },
+        {
+          "frame_index": 2,
+          "body_frame": "../sprites/production/run/SE_004.png",
+          "body_sha256": "c1c5e7a0418ac81635335db3b9ec35416f6e973f6fef09a8e752b11510fb3cb7",
+          "source_pose": 4,
+          "right_hand_px": [
+            44,
+            64
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            42,
+            62,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "approach",
+          "pose_role": "locomotion",
+          "start_ms": 166.66666666666666
+        },
+        {
+          "frame_index": 3,
+          "body_frame": "../sprites/production/run/SE_005.png",
+          "body_sha256": "389e1dee04044525cfe2d5426157985ab91fee843369407b7c59797751840117",
+          "source_pose": 5,
+          "right_hand_px": [
+            47,
+            71
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            69,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "approach",
+          "pose_role": "locomotion",
+          "start_ms": 250.0
+        },
+        {
+          "frame_index": 4,
+          "body_frame": "../sprites/production/run/SE_006.png",
+          "body_sha256": "67546eff6dca6db8847dd2111494205498b1c604074e7517bc969ea88ed60110",
+          "source_pose": 6,
+          "right_hand_px": [
+            50,
+            66
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            48,
+            64,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "approach",
+          "pose_role": "locomotion",
+          "start_ms": 333.3333333333333
+        },
+        {
+          "frame_index": 5,
+          "body_frame": "../sprites/production/run/SE_007.png",
+          "body_sha256": "2c5c58032035ea6d8874d8350e223f88293ea60a7dd5ec10afd39401bc8171c4",
+          "source_pose": 7,
+          "right_hand_px": [
+            56,
+            60
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            54,
+            58,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "approach",
+          "pose_role": "locomotion",
+          "start_ms": 416.66666666666663
+        },
+        {
+          "frame_index": 6,
+          "body_frame": "../sprites/production/run/SE_008.png",
+          "body_sha256": "acd5d8161707be35063bf15cf2408402cd8df13b3115e654504161c0f7574df2",
+          "source_pose": 8,
+          "right_hand_px": [
+            46,
+            75
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            44,
+            73,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "approach",
+          "pose_role": "locomotion",
+          "start_ms": 499.99999999999994
+        },
+        {
+          "frame_index": 7,
+          "body_frame": "../sprites/production/run/SE_009.png",
+          "body_sha256": "f5870d3bf01b230bec13e19191993402963fb5632856a17ae51cb25999b95dc2",
+          "source_pose": 9,
+          "right_hand_px": [
+            44,
+            67
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            42,
+            65,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "approach",
+          "pose_role": "locomotion",
+          "start_ms": 583.3333333333333
+        },
+        {
+          "frame_index": 8,
+          "body_frame": "../sprites/production/run/SE_010.png",
+          "body_sha256": "980abe9364d0f6f280720f9b5c8c231c87b8b3a6e5ff6f7b35bc9912eee423b8",
+          "source_pose": 10,
+          "right_hand_px": [
+            44,
+            63
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            42,
+            61,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "approach",
+          "pose_role": "locomotion",
+          "start_ms": 666.6666666666666
+        }
+      ],
+      "events": [],
+      "duration_ms": 750.0,
+      "source": "existing approved unarmed locomotion; new proposed socket track",
+      "source_action_duration_ms": 750.0,
+      "playback_exit": "complete"
+    },
+    "light1": {
+      "direction": "SE",
+      "frame_count": 5,
+      "fps": 24,
+      "loop": false,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "body/light_attack_1/SE_002.png",
+          "body_sha256": "7b07cc50d8208d1b9e23be92aef5427c8378d564ac882b5cb6075c73eaf4b55d",
+          "right_hand_px": [
+            91,
+            43
+          ],
+          "weapon_angle_deg": -155,
+          "weapon_layer": "behind",
+          "hand_occlusion_rect": [
+            89,
+            41,
+            5,
+            5
+          ],
+          "source_pose": 2,
+          "duration_ms": 41.666666666666664,
+          "phase": "startup",
+          "pose_role": "anticipation",
+          "contact": false,
+          "start_ms": 0
+        },
+        {
+          "frame_index": 1,
+          "body_frame": "body/light_attack_1/SE_003.png",
+          "body_sha256": "a96f4764c032b73442f558b86c15932be0323ba93aadabe752a7ace4ba456558",
+          "right_hand_px": [
+            91,
+            43
+          ],
+          "weapon_angle_deg": -155,
+          "weapon_layer": "behind",
+          "hand_occlusion_rect": [
+            89,
+            41,
+            5,
+            5
+          ],
+          "source_pose": 3,
+          "duration_ms": 41.666666666666664,
+          "phase": "startup",
+          "pose_role": "anticipation",
+          "contact": false,
+          "start_ms": 41.666666666666664
+        },
+        {
+          "frame_index": 2,
+          "body_frame": "body/light_attack_1/SE_004.png",
+          "body_sha256": "1f774ca3b396ca8483dedf419496a6d7cc2a0d0a0f546338abdb9231b72b1c54",
+          "right_hand_px": [
+            97,
+            59
+          ],
+          "weapon_angle_deg": -75,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            95,
+            57,
+            5,
+            5
+          ],
+          "source_pose": 4,
+          "duration_ms": 33.333333333333336,
+          "phase": "active",
+          "pose_role": "impact extreme / omitted transition",
+          "contact": true,
+          "start_ms": 83.33333333333333
+        },
+        {
+          "frame_index": 3,
+          "body_frame": "body/light_attack_1/SE_005.png",
+          "body_sha256": "f1d62eb21c49b4c70042e977a0ace7fa34aa102d84bc2115c76fd19d7bf5bd51",
+          "right_hand_px": [
+            46,
+            81
+          ],
+          "weapon_angle_deg": 122,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            44,
+            79,
+            5,
+            5
+          ],
+          "source_pose": 5,
+          "duration_ms": 33.333333333333336,
+          "phase": "active",
+          "pose_role": "impact extreme / omitted transition",
+          "contact": false,
+          "start_ms": 116.66666666666666
+        },
+        {
+          "frame_index": 4,
+          "body_frame": "body/light_attack_1/SE_006.png",
+          "body_sha256": "67be78bbdfd8e0a55e2a5e3617430f46e533ab1b7b76934d9ccb127c468819fe",
+          "right_hand_px": [
+            46,
+            81
+          ],
+          "weapon_angle_deg": 124,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            44,
+            79,
+            5,
+            5
+          ],
+          "source_pose": 6,
+          "duration_ms": 50.0,
+          "phase": "recovery",
+          "pose_role": "overshoot / transition",
+          "contact": false,
+          "start_ms": 150.0
+        }
+      ],
+      "source": "PR33 light_attack_1; retimed body/weapon pairs",
+      "trail_effect": "sword_trail_light",
+      "duration_ms": 200.0,
+      "phases_ms": {
+        "startup": [
+          0,
+          83.33333333333334
+        ],
+        "active": [
+          83.33333333333334,
+          150.0
+        ],
+        "recovery": [
+          150.0,
+          200.0
+        ]
+      },
+      "hitbox_active_ms": [
+        83.33333333333334,
+        150.0
+      ],
+      "contact_ms": 83.33333333333334,
+      "combo_window_ms": [
+        150.0,
+        200.0
+      ],
+      "dodge_cancel_ms": null,
+      "transition_ready_ms": 150.0,
+      "events": [
+        {
+          "name": "attack_start",
+          "time_ms": 0
+        },
+        {
+          "name": "hit_active",
+          "time_ms": 83.33333333333334
+        },
+        {
+          "name": "hit_contact",
+          "time_ms": 83.33333333333334
+        },
+        {
+          "name": "recovery",
+          "time_ms": 150.0
+        }
+      ],
+      "contact_frames": [
+        2
+      ],
+      "hitbox_active_frames": [
+        2,
+        3
+      ],
+      "transition_ready_frames": [
+        4
+      ],
+      "cancel_window_recommendation": "Use exact dodge_cancel_ms; opening can fall inside a held image. Do not dispatch solely from frame changes.",
+      "source_action_duration_ms": 300.0,
+      "source_timing": {
+        "phases_ms": {
+          "startup": [
+            0,
+            83.33333333333334
+          ],
+          "active": [
+            83.33333333333334,
+            150.0
+          ],
+          "recovery": [
+            150.0,
+            300.0
+          ]
+        },
+        "hitbox_active_ms": [
+          83.33333333333334,
+          150.0
+        ],
+        "combo_window_ms": [
+          150.0,
+          266.6666666666667
+        ],
+        "dodge_cancel_ms": [
+          200.0,
+          300.0
+        ],
+        "transition_ready_ms": 150.0
+      },
+      "playback_exit": "combo"
+    },
+    "light2": {
+      "direction": "SE",
+      "frame_count": 5,
+      "fps": 24,
+      "loop": false,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "body/light_attack_2/SE_000.png",
+          "body_sha256": "745d4adc04c8a793f52fc32a2515902f240b78e0d5063a6a9ccc687b7d79cd5b",
+          "right_hand_px": [
+            53,
+            82
+          ],
+          "weapon_angle_deg": 139,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            51,
+            80,
+            5,
+            5
+          ],
+          "source_pose": 0,
+          "duration_ms": 100,
+          "phase": "startup",
+          "pose_role": "anticipation",
+          "contact": false,
+          "start_ms": 0
+        },
+        {
+          "frame_index": 1,
+          "body_frame": "body/light_attack_2/SE_001.png",
+          "body_sha256": "3c3930946f6659b2601ce019ab73738a07a74c1cfc5564eff20b4e9b0ecb99e7",
+          "right_hand_px": [
+            98,
+            59
+          ],
+          "weapon_angle_deg": -64,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            96,
+            57,
+            5,
+            5
+          ],
+          "source_pose": 1,
+          "duration_ms": 33.333333333333336,
+          "phase": "active",
+          "pose_role": "impact extreme / omitted transition",
+          "contact": true,
+          "start_ms": 100
+        },
+        {
+          "frame_index": 2,
+          "body_frame": "body/light_attack_2/SE_002.png",
+          "body_sha256": "fb75ab932e03759299e5cfcce099256c89a4830a3c822fac14bf1fbf9fd1ec50",
+          "right_hand_px": [
+            90,
+            46
+          ],
+          "weapon_angle_deg": -75,
+          "weapon_layer": "behind",
+          "hand_occlusion_rect": [
+            88,
+            44,
+            5,
+            5
+          ],
+          "source_pose": 2,
+          "duration_ms": 33.333333333333336,
+          "phase": "active",
+          "pose_role": "impact extreme / omitted transition",
+          "contact": false,
+          "start_ms": 133.33333333333334
+        },
+        {
+          "frame_index": 3,
+          "body_frame": "body/light_attack_2/SE_003.png",
+          "body_sha256": "e6e3e4093c13b1e71aa928e1b041a4ca6f66f6a32f9e875608c645d40c21b186",
+          "right_hand_px": [
+            90,
+            47
+          ],
+          "weapon_angle_deg": -71,
+          "weapon_layer": "behind",
+          "hand_occlusion_rect": [
+            88,
+            45,
+            5,
+            5
+          ],
+          "source_pose": 3,
+          "duration_ms": 36.666666666666664,
+          "phase": "recovery",
+          "pose_role": "overshoot / transition",
+          "contact": false,
+          "start_ms": 166.66666666666669
+        },
+        {
+          "frame_index": 4,
+          "body_frame": "body/light_attack_2/SE_004.png",
+          "body_sha256": "8d2afb3b072924c69c3cce0d2048d4080f33947b714cb68b7514aa8d14351c9a",
+          "right_hand_px": [
+            91,
+            48
+          ],
+          "weapon_angle_deg": -69,
+          "weapon_layer": "behind",
+          "hand_occlusion_rect": [
+            89,
+            46,
+            5,
+            5
+          ],
+          "source_pose": 4,
+          "duration_ms": 13.333333333333314,
+          "phase": "recovery",
+          "pose_role": "overshoot / transition",
+          "contact": false,
+          "start_ms": 203.33333333333334
+        }
+      ],
+      "source": "PR33 light_attack_2; retimed body/weapon pairs",
+      "trail_effect": "sword_trail_light",
+      "duration_ms": 216.66666666666666,
+      "phases_ms": {
+        "startup": [
+          0,
+          100.0
+        ],
+        "active": [
+          100.0,
+          166.66666666666669
+        ],
+        "recovery": [
+          166.66666666666669,
+          216.66666666666666
+        ]
+      },
+      "hitbox_active_ms": [
+        100.0,
+        166.66666666666669
+      ],
+      "contact_ms": 100.0,
+      "combo_window_ms": [
+        166.66666666666669,
+        216.66666666666666
+      ],
+      "dodge_cancel_ms": null,
+      "transition_ready_ms": 166.66666666666669,
+      "events": [
+        {
+          "name": "attack_start",
+          "time_ms": 0
+        },
+        {
+          "name": "hit_active",
+          "time_ms": 100.0
+        },
+        {
+          "name": "hit_contact",
+          "time_ms": 100.0
+        },
+        {
+          "name": "recovery",
+          "time_ms": 166.66666666666669
+        }
+      ],
+      "contact_frames": [
+        1
+      ],
+      "hitbox_active_frames": [
+        1,
+        2
+      ],
+      "transition_ready_frames": [
+        3,
+        4
+      ],
+      "cancel_window_recommendation": "Use exact dodge_cancel_ms; opening can fall inside a held image. Do not dispatch solely from frame changes.",
+      "source_action_duration_ms": 350.0,
+      "source_timing": {
+        "phases_ms": {
+          "startup": [
+            0,
+            100.0
+          ],
+          "active": [
+            100.0,
+            166.66666666666669
+          ],
+          "recovery": [
+            166.66666666666669,
+            350.0
+          ]
+        },
+        "hitbox_active_ms": [
+          100.0,
+          166.66666666666669
+        ],
+        "combo_window_ms": [
+          166.66666666666669,
+          300.0
+        ],
+        "dodge_cancel_ms": [
+          233.33333333333337,
+          350.0
+        ],
+        "transition_ready_ms": 166.66666666666669
+      },
+      "playback_exit": "combo"
+    },
+    "light3": {
+      "direction": "SE",
+      "frame_count": 6,
+      "fps": 24,
+      "loop": false,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "body/light_attack_3/SE_000.png",
+          "body_sha256": "a5fb2259f35819582bf676e213b9e31e84c71eafb1082130f13f542fc3008892",
+          "right_hand_px": [
+            88,
+            46
+          ],
+          "weapon_angle_deg": -84,
+          "weapon_layer": "behind",
+          "hand_occlusion_rect": [
+            86,
+            44,
+            5,
+            5
+          ],
+          "source_pose": 0,
+          "duration_ms": 75,
+          "phase": "startup",
+          "pose_role": "anticipation",
+          "contact": false,
+          "start_ms": 0
+        },
+        {
+          "frame_index": 1,
+          "body_frame": "body/light_attack_3/SE_001.png",
+          "body_sha256": "4c6dc1298fd103ab44b5a6be167d531cb761f704111b2f96986a65096656c999",
+          "right_hand_px": [
+            94,
+            65
+          ],
+          "weapon_angle_deg": -71,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            92,
+            63,
+            5,
+            5
+          ],
+          "source_pose": 1,
+          "duration_ms": 75,
+          "phase": "startup",
+          "pose_role": "anticipation",
+          "contact": false,
+          "start_ms": 75
+        },
+        {
+          "frame_index": 2,
+          "body_frame": "body/light_attack_3/SE_002.png",
+          "body_sha256": "755dd1e300a17642c9dbd6173ab71cc272ee75c3c59e9edf04e38e5697f35f4c",
+          "right_hand_px": [
+            47,
+            85
+          ],
+          "weapon_angle_deg": 132,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            83,
+            5,
+            5
+          ],
+          "source_pose": 2,
+          "duration_ms": 41.666666666666664,
+          "phase": "active",
+          "pose_role": "impact extreme / omitted transition",
+          "contact": true,
+          "start_ms": 150
+        },
+        {
+          "frame_index": 3,
+          "body_frame": "body/light_attack_3/SE_003.png",
+          "body_sha256": "032c99e341dba37e6213cfb24c7641ea02357e3b049b2f8e8bbf00e73b052977",
+          "right_hand_px": [
+            47,
+            83
+          ],
+          "weapon_angle_deg": 130,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            81,
+            5,
+            5
+          ],
+          "source_pose": 3,
+          "duration_ms": 41.666666666666664,
+          "phase": "active",
+          "pose_role": "impact extreme / omitted transition",
+          "contact": false,
+          "start_ms": 191.66666666666666
+        },
+        {
+          "frame_index": 4,
+          "body_frame": "body/light_attack_3/SE_004.png",
+          "body_sha256": "77ba7bf3c472957bfab76cb05c38379fd41e7abb602d18fe07804b42947dda95",
+          "right_hand_px": [
+            47,
+            82
+          ],
+          "weapon_angle_deg": 131,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            80,
+            5,
+            5
+          ],
+          "source_pose": 4,
+          "duration_ms": 62.5,
+          "phase": "recovery",
+          "pose_role": "overshoot / transition",
+          "contact": false,
+          "start_ms": 233.33333333333331
+        },
+        {
+          "frame_index": 5,
+          "body_frame": "body/light_attack_3/SE_005.png",
+          "body_sha256": "ecd5a23ced8e5c18ed295477850eeb2422300aa87e38d5451b8e3259c4f9224c",
+          "right_hand_px": [
+            47,
+            81
+          ],
+          "weapon_angle_deg": 131,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            79,
+            5,
+            5
+          ],
+          "source_pose": 5,
+          "duration_ms": 54.166666666666686,
+          "phase": "recovery",
+          "pose_role": "overshoot / transition",
+          "contact": false,
+          "start_ms": 295.8333333333333
+        }
+      ],
+      "source": "PR33 light_attack_3; retimed body/weapon pairs",
+      "trail_effect": "sword_trail_heavy",
+      "duration_ms": 350.0,
+      "phases_ms": {
+        "startup": [
+          0,
+          150.0
+        ],
+        "active": [
+          150.0,
+          233.33333333333334
+        ],
+        "recovery": [
+          233.33333333333334,
+          350.0
+        ]
+      },
+      "hitbox_active_ms": [
+        150.0,
+        233.33333333333334
+      ],
+      "contact_ms": 150.0,
+      "combo_window_ms": [
+        233.33333333333334,
+        350.0
+      ],
+      "dodge_cancel_ms": [
+        333.33333333333337,
+        350.0
+      ],
+      "transition_ready_ms": 233.33333333333334,
+      "events": [
+        {
+          "name": "attack_start",
+          "time_ms": 0
+        },
+        {
+          "name": "hit_active",
+          "time_ms": 150.0
+        },
+        {
+          "name": "hit_contact",
+          "time_ms": 150.0
+        },
+        {
+          "name": "recovery",
+          "time_ms": 233.33333333333334
+        },
+        {
+          "name": "cancel_open",
+          "time_ms": 333.33333333333337
+        }
+      ],
+      "contact_frames": [
+        2
+      ],
+      "hitbox_active_frames": [
+        2,
+        3
+      ],
+      "transition_ready_frames": [
+        4,
+        5
+      ],
+      "cancel_window_recommendation": "Use exact dodge_cancel_ms; opening can fall inside a held image. Do not dispatch solely from frame changes.",
+      "source_action_duration_ms": 483.33333333333337,
+      "source_timing": {
+        "phases_ms": {
+          "startup": [
+            0,
+            150.0
+          ],
+          "active": [
+            150.0,
+            233.33333333333334
+          ],
+          "recovery": [
+            233.33333333333334,
+            483.33333333333337
+          ]
+        },
+        "hitbox_active_ms": [
+          150.0,
+          233.33333333333334
+        ],
+        "combo_window_ms": [
+          233.33333333333334,
+          383.33333333333337
+        ],
+        "dodge_cancel_ms": [
+          333.33333333333337,
+          483.33333333333337
+        ],
+        "transition_ready_ms": 233.33333333333334
+      },
+      "playback_exit": "dodge_cancel"
+    },
+    "dodge": {
+      "direction": "SE",
+      "frame_count": 12,
+      "fps": 12,
+      "loop": false,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "../sprites/production/dodge/SE_000.png",
+          "body_sha256": "6bccfc580af6aed17dfb79e34731b86c298b9149be99e60d6901a5bd5dc82f92",
+          "source_pose": 0,
+          "right_hand_px": [
+            47,
+            76
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            74,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 0
+        },
+        {
+          "frame_index": 1,
+          "body_frame": "../sprites/production/dodge/SE_001.png",
+          "body_sha256": "ec96891921e8e7f591dfe41008dd9b65b5df392f8228122d566bff0cbde0dd9a",
+          "source_pose": 1,
+          "right_hand_px": [
+            47,
+            77
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            75,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 83.33333333333333
+        },
+        {
+          "frame_index": 2,
+          "body_frame": "../sprites/production/dodge/SE_002.png",
+          "body_sha256": "566df95cd7f8313b3a9d415f874b1a253024745b550b4d88d94fb6affb1ffc19",
+          "source_pose": 2,
+          "right_hand_px": [
+            49,
+            76
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            47,
+            74,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 166.66666666666666
+        },
+        {
+          "frame_index": 3,
+          "body_frame": "../sprites/production/dodge/SE_003.png",
+          "body_sha256": "1cb8a6981407103be2c9771f993eef51a8a85de26761d77e038f3709150a9ecb",
+          "source_pose": 3,
+          "right_hand_px": [
+            69,
+            79
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            67,
+            77,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 250.0
+        },
+        {
+          "frame_index": 4,
+          "body_frame": "../sprites/production/dodge/SE_004.png",
+          "body_sha256": "6b021288ed15fb5477d7b828e3c813435e9d5b5a3d94e124565dd69c087c74d9",
+          "source_pose": 4,
+          "right_hand_px": [
+            68,
+            79
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            66,
+            77,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 333.3333333333333
+        },
+        {
+          "frame_index": 5,
+          "body_frame": "../sprites/production/dodge/SE_005.png",
+          "body_sha256": "ff229fc287f6b5b7adcd1f52260364578c97689e62d6baea33bfb9e814dbba50",
+          "source_pose": 5,
+          "right_hand_px": [
+            68,
+            79
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            66,
+            77,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 416.66666666666663
+        },
+        {
+          "frame_index": 6,
+          "body_frame": "../sprites/production/dodge/SE_006.png",
+          "body_sha256": "baf3ab3aa388bca3eafbebb94d2d0cb4ab73162cb50ff77d962b891bd6a926e4",
+          "source_pose": 6,
+          "right_hand_px": [
+            68,
+            79
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            66,
+            77,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 499.99999999999994
+        },
+        {
+          "frame_index": 7,
+          "body_frame": "../sprites/production/dodge/SE_007.png",
+          "body_sha256": "c40d6bb6e64981583be7e569bdb8119c791d4d16e0a233faf1f0f934b733312a",
+          "source_pose": 7,
+          "right_hand_px": [
+            54,
+            77
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            52,
+            75,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 583.3333333333333
+        },
+        {
+          "frame_index": 8,
+          "body_frame": "../sprites/production/dodge/SE_008.png",
+          "body_sha256": "cc52e8b266c4644cdf952e549d24e6cdecf460ecebadd2d7ca91a36275c4e1e0",
+          "source_pose": 8,
+          "right_hand_px": [
+            47,
+            70
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            68,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 666.6666666666666
+        },
+        {
+          "frame_index": 9,
+          "body_frame": "../sprites/production/dodge/SE_009.png",
+          "body_sha256": "9724ce136b985974f50c35b0f649b69b20b0d6f5213e03224f76c70bec975470",
+          "source_pose": 9,
+          "right_hand_px": [
+            45,
+            68
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            43,
+            66,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 750.0
+        },
+        {
+          "frame_index": 10,
+          "body_frame": "../sprites/production/dodge/SE_010.png",
+          "body_sha256": "be5612b96235952c316086ec150d808d5b90c2c3981b746b28ff23cd910d26a8",
+          "source_pose": 10,
+          "right_hand_px": [
+            44,
+            76
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            42,
+            74,
+            5,
+            5
+          ],
+          "duration_ms": 83.33333333333333,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 833.3333333333334
+        },
+        {
+          "frame_index": 11,
+          "body_frame": "../sprites/production/dodge/SE_011.png",
+          "body_sha256": "0781a1c7e5422fafb09fe830b67ec157239faa2cff270c86c4a50d7a1a6581c8",
+          "source_pose": 11,
+          "right_hand_px": [
+            49,
+            80
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            47,
+            78,
+            5,
+            5
+          ],
+          "duration_ms": 3.3333333333332575,
+          "phase": "reposition",
+          "pose_role": "locomotion",
+          "start_ms": 916.6666666666667
+        }
+      ],
+      "events": [],
+      "duration_ms": 920.0,
+      "source": "existing approved unarmed locomotion; new proposed socket track",
+      "source_action_duration_ms": 1000,
+      "playback_exit": "late_dodge_dash"
+    },
+    "dash_attack": {
+      "direction": "SE",
+      "frame_count": 7,
+      "fps": 24,
+      "loop": false,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "../sprites/production/dodge/SE_002.png",
+          "body_sha256": "566df95cd7f8313b3a9d415f874b1a253024745b550b4d88d94fb6affb1ffc19",
+          "source_pose": 2,
+          "right_hand_px": [
+            49,
+            76
+          ],
+          "weapon_angle_deg": 10,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            47,
+            74,
+            5,
+            5
+          ],
+          "duration_ms": 50,
+          "phase": "startup",
+          "pose_role": "anticipation",
+          "source_action": "dodge",
+          "contact": false,
+          "start_ms": 0
+        },
+        {
+          "frame_index": 1,
+          "body_frame": "../sprites/production/dodge/SE_003.png",
+          "body_sha256": "1cb8a6981407103be2c9771f993eef51a8a85de26761d77e038f3709150a9ecb",
+          "source_pose": 3,
+          "right_hand_px": [
+            69,
+            79
+          ],
+          "weapon_angle_deg": 10,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            67,
+            77,
+            5,
+            5
+          ],
+          "duration_ms": 50,
+          "phase": "startup",
+          "pose_role": "anticipation",
+          "source_action": "dodge",
+          "contact": false,
+          "start_ms": 50
+        },
+        {
+          "frame_index": 2,
+          "body_frame": "../sprites/production/dodge/SE_004.png",
+          "body_sha256": "6b021288ed15fb5477d7b828e3c813435e9d5b5a3d94e124565dd69c087c74d9",
+          "source_pose": 4,
+          "right_hand_px": [
+            68,
+            79
+          ],
+          "weapon_angle_deg": 12,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            66,
+            77,
+            5,
+            5
+          ],
+          "duration_ms": 41.666666666666664,
+          "phase": "active",
+          "pose_role": "impact extreme / omitted transition",
+          "source_action": "dodge",
+          "contact": true,
+          "start_ms": 100
+        },
+        {
+          "frame_index": 3,
+          "body_frame": "body/light_attack_1/SE_004.png",
+          "body_sha256": "1f774ca3b396ca8483dedf419496a6d7cc2a0d0a0f546338abdb9231b72b1c54",
+          "right_hand_px": [
+            97,
+            59
+          ],
+          "weapon_angle_deg": -75,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            95,
+            57,
+            5,
+            5
+          ],
+          "source_pose": 4,
+          "duration_ms": 41.666666666666664,
+          "phase": "active",
+          "pose_role": "impact extreme / omitted transition",
+          "contact": false,
+          "source_action": "light1",
+          "start_ms": 141.66666666666666
+        },
+        {
+          "frame_index": 4,
+          "body_frame": "body/light_attack_1/SE_005.png",
+          "body_sha256": "f1d62eb21c49b4c70042e977a0ace7fa34aa102d84bc2115c76fd19d7bf5bd51",
+          "right_hand_px": [
+            46,
+            81
+          ],
+          "weapon_angle_deg": 122,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            44,
+            79,
+            5,
+            5
+          ],
+          "source_pose": 5,
+          "duration_ms": 65,
+          "phase": "recovery",
+          "pose_role": "overshoot / transition",
+          "contact": false,
+          "source_action": "light1",
+          "start_ms": 183.33333333333331
+        },
+        {
+          "frame_index": 5,
+          "body_frame": "body/light_attack_1/SE_006.png",
+          "body_sha256": "67be78bbdfd8e0a55e2a5e3617430f46e533ab1b7b76934d9ccb127c468819fe",
+          "right_hand_px": [
+            46,
+            81
+          ],
+          "weapon_angle_deg": 124,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            44,
+            79,
+            5,
+            5
+          ],
+          "source_pose": 6,
+          "duration_ms": 75,
+          "phase": "recovery",
+          "pose_role": "overshoot / transition",
+          "contact": false,
+          "source_action": "light1",
+          "start_ms": 248.33333333333331
+        },
+        {
+          "frame_index": 6,
+          "body_frame": "body/light_attack_1/SE_007.png",
+          "body_sha256": "41b391ef83b6ee602cc5c6219f2f678d64c700f639592ad56ad23b38dcd4deba",
+          "right_hand_px": [
+            46,
+            81
+          ],
+          "weapon_angle_deg": 122,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            44,
+            79,
+            5,
+            5
+          ],
+          "source_pose": 7,
+          "duration_ms": 76.66666666666667,
+          "phase": "recovery",
+          "pose_role": "overshoot / transition",
+          "contact": false,
+          "source_action": "light1",
+          "start_ms": 323.3333333333333
+        }
+      ],
+      "source": "hybrid proof: existing SE dodge lean plus light1 cut; dedicated dash body remains production follow-up",
+      "trail_effect": "sword_trail_light",
+      "prototype_reuse": true,
+      "duration_ms": 400.0,
+      "phases_ms": {
+        "startup": [
+          0,
+          100.0
+        ],
+        "active": [
+          100.0,
+          183.33333333333334
+        ],
+        "recovery": [
+          183.33333333333334,
+          400.0
+        ]
+      },
+      "hitbox_active_ms": [
+        100.0,
+        183.33333333333334
+      ],
+      "contact_ms": 100.0,
+      "combo_window_ms": null,
+      "dodge_cancel_ms": [
+        250.0,
+        400.0
+      ],
+      "transition_ready_ms": 183.33333333333334,
+      "events": [
+        {
+          "name": "attack_start",
+          "time_ms": 0
+        },
+        {
+          "name": "hit_active",
+          "time_ms": 100.0
+        },
+        {
+          "name": "hit_contact",
+          "time_ms": 100.0
+        },
+        {
+          "name": "recovery",
+          "time_ms": 183.33333333333334
+        },
+        {
+          "name": "cancel_open",
+          "time_ms": 250.0
+        }
+      ],
+      "contact_frames": [
+        2
+      ],
+      "hitbox_active_frames": [
+        2,
+        3
+      ],
+      "transition_ready_frames": [
+        4,
+        5,
+        6
+      ],
+      "cancel_window_recommendation": "Use exact dodge_cancel_ms; opening can fall inside a held image. Do not dispatch solely from frame changes.",
+      "source_action_duration_ms": 400.0,
+      "source_timing": {
+        "phases_ms": {
+          "startup": [
+            0,
+            100.0
+          ],
+          "active": [
+            100.0,
+            183.33333333333334
+          ],
+          "recovery": [
+            183.33333333333334,
+            400.0
+          ]
+        },
+        "hitbox_active_ms": [
+          100.0,
+          183.33333333333334
+        ],
+        "combo_window_ms": null,
+        "dodge_cancel_ms": [
+          250.0,
+          400.0
+        ],
+        "transition_ready_ms": 183.33333333333334
+      },
+      "playback_exit": "complete"
+    }
+  },
+  "sequence": [
+    "run",
+    "light1",
+    "light2",
+    "light3",
+    "dodge",
+    "dash_attack"
+  ],
+  "sequence_policy": "Runtime snapshot legal branch demonstration; action timers and movement remain Aki-owned. Attack source phase/window endpoints describe full definitions even when playback branches early.",
+  "vfx": {
+    "manifest": "vfx/combat_vfx.json",
+    "fps": 24,
+    "independent": true,
+    "trigger": "proposed hit_contact; illustrative world contact is socket + sword-axis 32px",
+    "event_api": "adapter proposal only; Aki must confirm event names and dispatch semantics"
+  },
+  "id": "se_runtime_snapshot_chain",
+  "profile_notes": {
+    "run": "Nine existing approach poses at approved12FPS:750ms.",
+    "light1": "Chain at200ms, inside current150\u2013266.667ms combo interval.",
+    "light2": "Chain at216.667ms, inside current166.667\u2013300ms combo interval.",
+    "light3": "Dodge at350ms, after current333.333ms dodge-cancel boundary.",
+    "dodge": "Use approved12-frame/12FPS1000ms action; dash at920ms when80ms remains.",
+    "dash_attack": "Full400ms; no combo continuation.",
+    "scope": "Pose/timing preview only. No enemy, collision, hitstop, movement, damage or event adapter installed."
+  }
+}

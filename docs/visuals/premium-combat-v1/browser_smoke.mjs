@@ -10,7 +10,7 @@ try{
   const page=await context.newPage(),errors=[],missing=[];
   page.on('pageerror',e=>errors.push(String(e)));page.on('response',r=>{if(r.status()>=400)missing.push([r.status(),r.url()]);});
   await page.goto(url);await page.waitForFunction(()=>window.premiumCombatState?.ready);
-  let state=await page.evaluate(()=>window.premiumCombatState);assert.equal(state.speed,.5);assert.equal(state.loaded_images,73);
+  let state=await page.evaluate(()=>window.premiumCombatState);assert.equal(state.speed,.5);assert.equal(state.loaded_images,74);assert.equal(state.profile,'runtime');
   await page.locator('#pause').click();
   for(const name of ['run','light1','light2','light3','dodge','dash_attack']){
    await page.selectOption('#action',name);await page.waitForFunction(n=>window.premiumCombatState.animation===n,name);
@@ -23,6 +23,12 @@ try{
    assert((await page.locator('#readout').textContent()).includes('hit_contact'));
   }
   await page.selectOption('#action','sequence');await page.evaluate(()=>window.premiumCombatSeek(0));
+  for(const [time,name] of [[950.001,'light2'],[1166.668,'light3'],[1516.668,'dodge'],[2436.668,'dash_attack']]){
+   await page.evaluate(t=>window.premiumCombatSeek(t),time);await page.waitForFunction(n=>window.premiumCombatState.animation===n,name);
+  }
+  await page.selectOption('#profile','authored');await page.waitForFunction(()=>Math.abs(window.premiumCombatState.duration_ms-2583.333333)<.01);
+  await page.selectOption('#profile','runtime');await page.waitForFunction(()=>Math.abs(window.premiumCombatState.duration_ms-2836.666667)<.01);
+  await page.evaluate(()=>window.premiumCombatSeek(0));
   await page.selectOption('#speed','1');await page.locator('#pause').click();
   const t0=await page.evaluate(()=>window.premiumCombatState.time_ms);await page.waitForTimeout(120);const t1=await page.evaluate(()=>window.premiumCombatState.time_ms);assert(t1>t0);
   await page.locator('#pause').click();await page.selectOption('#speed','.5');
@@ -37,7 +43,7 @@ try{
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'horizontal page overflow');
   const start=performance.now();await page.reload();await page.waitForFunction(()=>window.premiumCombatState?.ready);const reload_ms=performance.now()-start;
   assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);
-  results.push({viewport:mobile?'390x844 touch':'1280x900 desktop',status:'PASS',loaded_images:state.loaded_images,controls:'all six actions; pause/play/step; shared bodies; layer toggles; normal/half; native/close; reload',contact_events:4,errors,missing,reload_ms:Math.round(reload_ms)});
+  results.push({viewport:mobile?'390x844 touch':'1280x900 desktop',status:'PASS',loaded_images:state.loaded_images,controls:'all six actions; legal runtime transitions; two timing profiles; pause/play/step; shared bodies; layer toggles; normal/half; native/close; reload',contact_events:4,errors,missing,reload_ms:Math.round(reload_ms)});
   await context.close();
  }
  await writeFile('docs/visuals/premium-combat-v1/browser-smoke.json',JSON.stringify({url,engine:'Playwright Chromium',results},null,2)+'\n');console.log(JSON.stringify(results,null,2));

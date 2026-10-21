@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "source": "63bbd6c16f449d77d3e14e5a4c1afedb80864380",
+  "played_poses": 44,
+  "composites": 88,
+  "total_ms": 2836.666666666667,
+  "timeline": [
+    {
+      "action": "run",
+      "start_ms": 0,
+      "played_ms": 750.0,
+      "exit": "complete"
+    },
+    {
+      "action": "light1",
+      "start_ms": 750.0,
+      "played_ms": 200.0,
+      "exit": "combo"
+    },
+    {
+      "action": "light2",
+      "start_ms": 950.0,
+      "played_ms": 216.66666666666666,
+      "exit": "combo"
+    },
+    {
+      "action": "light3",
+      "start_ms": 1166.6666666666667,
+      "played_ms": 350.0,
+      "exit": "dodge_cancel"
+    },
+    {
+      "action": "dodge",
+      "start_ms": 1516.6666666666667,
+      "played_ms": 920.0,
+      "exit": "late_dodge_dash"
+    },
+    {
+      "action": "dash_attack",
+      "start_ms": 2436.666666666667,
+      "played_ms": 400.0,
+      "exit": "complete"
+    }
+  ],
+  "meaning": "Legal branch timing in art preview; no runtime adapter, movement or hitstop simulation."
+}
