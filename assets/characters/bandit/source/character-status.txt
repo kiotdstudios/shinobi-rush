@@ -6,7 +6,8 @@ directions: 8 (south, east, north, west, south-east, north-east, north-west, sou
 size: 128x128px
 view: low top-down
 style: , ,
-group: a3918cfb-2ea2-4c11-ba9f-2029e5802561 (1 state)
+group: a3918cfb-2ea2-4c11-ba9f-2029e5802561 (2 states)
+  state: Sprint straight-arm key poses (completed) — bc949fa1-7738-4bd8-b4aa-6de553c13e48
 
 rotations:
   south: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/rotations/south.png?t=1792540188
@@ -18,7 +19,25 @@ rotations:
   north-west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/rotations/north-west.png?t=1792540188
   south-west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/rotations/south-west.png?t=1792540188
 
-animations (3 groups, 24 total):
+animations (5 groups, 40 total):
+  bandit_sprint_v3 — 8 dir (north-east, south, north-west, south-west, west, east, north, south-east), 8f 2026-10-21 [type=custom-Animate this supplied ninja-sp] [group: 569bb5c5-1a3b-463a-bee4-bf4f3b1ac26c]
+    north-east: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/bc25a820-6d12-4d05-94f1-52b637cf6fbf/north-east/{i}.png?t=1792550440194 (i=0..7)
+    south: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/392ffe6e-5d93-4805-81b2-95934560ba3c/south/{i}.png?t=1792550439643 (i=0..7)
+    north-west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/2480296e-a3e8-4c58-970d-756076e913e1/north-west/{i}.png?t=1792550389669 (i=0..7)
+    south-west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/64766d20-7718-4bac-aaa9-9fc022c52569/south-west/{i}.png?t=1792550029895 (i=0..7)
+    west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/03393677-e232-4d89-8100-8abb5966c312/west/{i}.png?t=1792550024467 (i=0..7)
+    east: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/85bf8c11-f059-4481-a3d8-7a646c1963a4/east/{i}.png?t=1792550021457 (i=0..7)
+    north: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/61fa8f00-48fc-4212-829b-a16d037ca26c/north/{i}.png?t=1792550010476 (i=0..7)
+    south-east: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/ec5e6687-90f4-45bf-9d31-ff2f0fe2ad6f/south-east/{i}.png?t=1792549939981 (i=0..7)
+  bandit_sprint_v2 — 8 dir (south-east, north-west, east, south-west, north-east, south, west, north), 8f 2026-10-21 [type=custom-Ninja sprint facing southeast.] [group: a44f597b-db2a-4949-9fef-1ce2e85beccc]
+    south-east: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/9669ce9c-56ac-4cab-a0ce-40bb60a6c703/south-east/{i}.png?t=1792545986791 (i=0..7)
+    north-west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/02fd50fd-09a1-423b-8ecb-a62a92f8113d/north-west/{i}.png?t=1792545841407 (i=0..7)
+    east: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/b0990bfa-aee3-493c-b845-3c3d35acaf6a/east/{i}.png?t=1792545840997 (i=0..7)
+    south-west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/89b87af0-1245-4cf4-aa89-4f6e82922358/south-west/{i}.png?t=1792545839267 (i=0..7)
+    north-east: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/81985ecb-b960-4469-9300-4a12b38cb94c/north-east/{i}.png?t=1792545821476 (i=0..7)
+    south: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/022e2a39-6928-479f-8a72-3559e4ac5849/south/{i}.png?t=1792545814613 (i=0..7)
+    west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/496bad84-2562-4377-806d-ccacdbbec9a8/west/{i}.png?t=1792545812434 (i=0..7)
+    north: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/afb7a807-0210-450c-99f3-63378ccddd95/north/{i}.png?t=1792545767558 (i=0..7)
   bandit_run_v1 — 8 dir (south-west, north-west, west, north-east, north, south-east, east, south), 8f 2026-10-21 [type=custom-Seamless in-place REGULAR RUN ] [group: e491cd61-d8ae-4b68-ae4e-71c2d5ec4b65]
     south-west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/155d32b8-0781-4ade-b890-5a62167b5006/south-west/{i}.png?t=1792541431848 (i=0..7)
     north-west: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/5a3b6bea-b7cc-4382-8b9f-e47fbe5be08a/north-west/{i}.png?t=1792541418289 (i=0..7)
@@ -47,9 +66,14 @@ animations (3 groups, 24 total):
     south: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/07fed030-fb1b-44b7-bb72-f0e79f41c473/south/{i}.png?t=1792540296639 (i=0..3)
     east: https://backblaze.pixellab.ai/file/pixellab-characters/06c9f74e-0f14-4e32-885f-9555014bf0cc/cc675e30-2723-4145-b03f-c0d245294305/animations/1f077c2d-9ed0-4a76-a531-6952045daff9/east/{i}.png?t=1792540262669 (i=0..3)
 
+failed jobs (1):
+  custom-Looping ninja sprint facing SO(south-east): cancelled (stopped by the user, not a failure)
+
 download: https://api.pixellab.ai/mcp/characters/cc675e30-2723-4145-b03f-c0d245294305/download
+  (bundles all 2 states in the group, one <state-name>/ folder each — this one is 'Idle/')
 spritesheet: https://api.pixellab.ai/mcp/characters/cc675e30-2723-4145-b03f-c0d245294305/spritesheet (this state only — one uniform-grid sheet PNG + layout JSON, zipped; cells pivot-centred)
 
 available_animations: backflip, breathing-idle, cross-punch, crouched-walking, crouching, drinking, falling-back-death, fight-stance-idle-8-frames, fireball, flying-kick, front-flip, getting-up, high-kick, hurricane-kick, jumping-1, jumping-2, lead-jab, leg-sweep, picking-up, pull-heavy-object, pushing, roundhouse-kick, running-4-frames, running-6-frames, running-8-frames, running-jump, running-slide, sad-walk, scary-walk, surprise-uppercut, taking-punch, throw-object, two-footed-jump, walk, walk-1, walk-2, walking, walking-10, walking-2, walking-3, walking-4, walking-4-frames, walking-5, walking-6, walking-6-frames, walking-7, walking-8, walking-8-frames, walking-9
 
 actions: animate_character(character_id="cc675e30-2723-4145-b03f-c0d245294305", ...) | create_character_state(character_id="cc675e30-2723-4145-b03f-c0d245294305", ...) | delete_animation(character_id="cc675e30-2723-4145-b03f-c0d245294305", animation_group_id="<group>") | delete_character(character_id="cc675e30-2723-4145-b03f-c0d245294305")
+hint: get_character(character_id="bc949fa1-7738-4bd8-b4aa-6de553c13e48") to view sibling state

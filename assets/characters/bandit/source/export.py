@@ -5,7 +5,7 @@ import zipfile,json,io,hashlib,sys
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1];SRC=ROOT/'source'
 NAMES={'south':'S','south-east':'SE','east':'E','north-east':'NE','north':'N','north-west':'NW','west':'W','south-west':'SW'}
-ACTIONS={'idle':'bandit_idle_v1','run':'bandit_run_v1','sprint':'bandit_sprint_v1'}
+ACTIONS={'idle':'bandit_idle_v1','run':'bandit_run_v1','sprint':'bandit_sprint_v3'}
 z=zipfile.ZipFile(SRC/'character.zip');data=json.loads(z.read('metadata.json'));state=next(s for s in data['states'] if s['character']['id']=='cc675e30-2723-4145-b03f-c0d245294305');frames=state['frames']
 def read(path):return Image.open(io.BytesIO(z.read(path))).convert('RGBA')
 anchors={};records=[];pending=[];rotations={}
@@ -19,7 +19,7 @@ for direction,label in NAMES.items():
  assert np.count_nonzero(np.array(out)[:,:,3])==np.count_nonzero(a[:,:,3]),('rotation clips',direction)
  dest=ROOT/f'rotations/{label}.png';dest.parent.mkdir(exist_ok=True);out.save(dest);rotations[label]=str(dest.relative_to(ROOT)).replace('\\','/')
 manifest={'schema':1,'id':'bandit_128','frame_size':[128,128],'foot_anchor':[64,116],'body_height_px':104,'directions':list(NAMES.values()),
- 'status':'art_review','default_playback_speed':0.5,'shadow_baked':False,'logo_policy':'plain cloth headband; no symbols/logos/emblems','runtime_integrated':False,'animations':{}}
+ 'status':'art_review','art_revision':'sprint-arms-v3','default_playback_speed':0.5,'shadow_baked':False,'logo_policy':'plain cloth headband; no symbols/logos/emblems','runtime_integrated':False,'animations':{}}
 for action,source_name in ACTIONS.items():
  animation={'fps':4 if action=='idle' else 12,'authored_fps':8 if action=='idle' else 24,'loop':True,'status':'art_review','frames':{}}
  for direction,label in NAMES.items():

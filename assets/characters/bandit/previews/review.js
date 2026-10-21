@@ -1,7 +1,7 @@
 const $=id=>document.getElementById(id);
-const manifest=await fetch('../bandit_128.art.json').then(r=>{if(!r.ok)throw Error(r.status);return r.json()});
+const manifest=await fetch('../bandit_128.art.json?v=sprint-arms-v3').then(r=>{if(!r.ok)throw Error(r.status);return r.json()});
 const cache=new Map();
-await Promise.all(Object.values(manifest.animations).flatMap(a=>Object.values(a.frames).flat()).map(async path=>{const im=new Image();im.src='../'+path;await im.decode();cache.set(path,im)}));
+await Promise.all(Object.values(manifest.animations).flatMap(a=>Object.values(a.frames).flat()).map(async path=>{const im=new Image();im.src='../'+path+'?v=sprint-arms-v3';await im.decode();cache.set(path,im)}));
 let elapsed=0,previous=performance.now(),playing=true,cards=[];
 function build(){cards=[];$('grid').replaceChildren();const a=manifest.animations[$('action').value];const dirs=$('all').checked?manifest.directions:[$('direction').value];
 for(const dir of dirs){const article=document.createElement('article'),label=document.createElement('p'),canvas=document.createElement('canvas');label.textContent=`${$('action').value} · ${dir}`;canvas.width=128;canvas.height=128;article.append(label,canvas);$('grid').append(article);cards.push({canvas,dir,frames:a.frames[dir]??[]})}

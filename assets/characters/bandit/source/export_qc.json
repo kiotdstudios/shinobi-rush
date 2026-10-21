@@ -566,12 +566,12 @@
       "animation": "sprint",
       "direction": "S",
       "source_canvas": [
-        168,
-        168
+        132,
+        160
       ],
       "fixed_translation": [
-        -20,
-        -21
+        -2,
+        -17
       ],
       "frame_count": 8,
       "frames": [
@@ -585,14 +585,14 @@
         "sprites/sprint/S_007.png"
       ],
       "pixel_sha256": [
-        "4d0c24b6da207da661eaadaf95d898d11bf1a4fd96a362f1375755b00d8669e3",
-        "90a2e91d2bd9e752acb70a400c00c154917136f13819bcdad8eb5c49ada562d8",
-        "629041c3d41549e43e3ce0973818bee3554534f14bd83a97cb6806f5618cc59c",
-        "035fc4ccbb7cb3ae3ba8a2676ca23b41700401dd29d01d79456c0b74419d08cb",
-        "cc43c6121c3fe034585b7a278733ddfd9adc53a62277d33717137714f4de786b",
-        "3301487265f7ff37eb1bf39d5c72ade15dcddc8326f733fdb48b7ea306ac34b0",
-        "66717a70263779c8b9d21052060a157a66bffdbaeff52949cc3e7b55e32f062a",
-        "469502466c49a508e038c731b8ba062f69b656586ee9ead865f427549b8943cf"
+        "c896f9c0009d5fc599feb69489561bfa13dce9228f57704455b5cb8ffe4cfb8a",
+        "81a30f24ec946f7903ed52d41b4876b578b37e3a77f783540f3108d056599d6d",
+        "16dee9c09609aa122f0473b04c00c00a471bbdb7e3b53f69917888093a6e6661",
+        "bb0522065d155ff90f8edee5e5510feac8ec457fa4690f3e80597bfda8226fc2",
+        "88910f25297d51f7ecd14cb077329394e6c1b634631689d899605eb6a550666c",
+        "610d56e9c59f5af748f8e8800b6bd94ddcb5bdbcad5919af10c4c2dc3c62fe96",
+        "2709a7bf7bb0e11037a6c26ad40d2dd81ed4854ca29934c2ef694823165ec621",
+        "19c64b5072b1c7ae8460811c75439d9d2351c10ae79dd43f4031443902876500"
       ],
       "issues": []
     },
@@ -600,12 +600,12 @@
       "animation": "sprint",
       "direction": "SE",
       "source_canvas": [
-        164,
-        164
+        132,
+        160
       ],
       "fixed_translation": [
-        -21,
-        -21
+        -5,
+        -19
       ],
       "frame_count": 8,
       "frames": [
@@ -619,14 +619,14 @@
         "sprites/sprint/SE_007.png"
       ],
       "pixel_sha256": [
-        "2007556ea9e40cf597abb70329a6a65c96195d4e1d402210c39a4ab8af32c428",
-        "d763a706fa6841f7362e8471ead05a4660bc581389be90d9b09354e27d02a29c",
-        "8f8d379e441f8bef4d4b41c64d022f7f6434f9b84a6d9ada1ccdd2b412fa5a1a",
-        "c28c6a079bf4cdb29e04f61ad709165524a0cfcf12c034d9a9b08c9759c7e124",
-        "88539ee951ae52fb4046c3f89046e7d160bee3f29c7d32b098f6e5d6544ea4a9",
-        "dcb7c22c7f3d8fe3b96d3ae3230c870f8fd8c81d0edcb352973f0dfb69f1a138",
-        "d50576c3b82d125113b2c3f71e521a363da68243c0eae2d8e843729e47d4d908",
-        "1a40d6e98b082825401ec3c79c9ce251881db8cea5e9acfa08d3765a454565c7"
+        "b11868c9b4c4ea29d5663d7258a177c5233bc840b59fdd4847baa61beaa2cf92",
+        "3731e17707ac17438195b14334c5f14a0a7c5cba35a724c03164c3ebd4d19452",
+        "b815e201e98e0bb0e2f95334f18bcc4f554bc327c43daf602237e9d537303426",
+        "18d28d8ecc349cedb82abca20364ddbb7236e17c8b8c2dafbc9802cf7d01ce02",
+        "09d50a2377905408deac2a7c96b869be740e1445802f469ad202e83454514089",
+        "bc3f5a690cf61f694750632e93398de1dc006f295099b8085ee430a8252adb36",
+        "e8d188ec28db8efbf69e32009aa0c524b500304b9d9cbbbdc90dafeda719f160",
+        "7595cbd1fbaa41f4dcad5dc0a9eb164291b4cc08ae77321db7605b1d90b7be76"
       ],
       "issues": []
     },
@@ -634,12 +634,12 @@
       "animation": "sprint",
       "direction": "E",
       "source_canvas": [
-        160,
-        160
+        128,
+        180
       ],
       "fixed_translation": [
-        -17,
-        -18
+        -1,
+        -28
       ],
       "frame_count": 8,
       "frames": [
@@ -653,14 +653,14 @@
         "sprites/sprint/E_007.png"
       ],
       "pixel_sha256": [
-        "d27d083fa0f25b4f9af74e776611405a9fee431a71d0e76f4bd3c06b9aeb7f65",
-        "ac5d2f7258d0a3e2f05b262fecc9f7e1f435b4d8a291687fdde15ee2bce3786c",
-        "83f3f8803107b66082bbbd0e747efe5ca6d2d019f906655374817fa1b888257f",
-        "467d7ec60fb8cfa978f87193ff319a4c24240b0f11710fda2c5c40d9d135104d",
-        "1e1a5da2ab7fa9c7499da783ed9d90b4bde935741b77e4f18a9b494747a3d46c",
-        "62124c014e82cd37b6424706dea8ea3fe2a199bf1f2ea7ece0914e25a10a79e7",
-        "78a70dc6850f0a4a5f5b517e16c2400b61d2c43de5e4cfc77375ac2d46501e1c",
-        "3d5a33b8ab0ce0ca48708f1414ac02411d66f3993e4788f050d5b3cb4a9e34c3"
+        "9ff6fe98bc74fd866afbf005087e275b894e086dc060d845177792b321be49c3",
+        "bb50129cf8edd65bb84a1c1b3a1455adbd016a2c999dda8bf9912d360297087c",
+        "b4a69717b1ab0a85c6ae017dd0bc3bb6951de6f135c97c886fec6fd00c0194d2",
+        "d444e5347c8fa2625fbbfae2434d6e16e423fca2fcbc052cf42e3218c2d35d0d",
+        "9ce9ff1d35bc6266dce5e28e6d69bbd8786695f50143605a4948258b580ab896",
+        "baaac1094d89dedc094ffc7c4d9a7491bc5e6cc45f2b65c98e3ffa81f0fb7a74",
+        "7369a49724029ffded7bd4fad50ec52be60b625bdd34ec6799aed24f439d5481",
+        "372e8be82ade1adb17c93d1445540627b528a2515fe7a064fe78e4e7fec894d1"
       ],
       "issues": []
     },
@@ -668,11 +668,11 @@
       "animation": "sprint",
       "direction": "NE",
       "source_canvas": [
-        152,
+        128,
         152
       ],
       "fixed_translation": [
-        -15,
+        -3,
         -13
       ],
       "frame_count": 8,
@@ -687,14 +687,14 @@
         "sprites/sprint/NE_007.png"
       ],
       "pixel_sha256": [
-        "53a4a7d8dbd6831f089fb5dd273e79e62d02eebd4ea44a8df1c43d695998d18d",
-        "ea0adf585e3b260acad8f3b86c7539094686e6f5f6aeb6d19309aab0c5ca7a26",
-        "e134d38564925d064564b333fe35b666d6d88972a75b944989d9e822a1dcc7ae",
-        "8b6adb291ceeec95639cdaf910a3b34c0262846c17b467893731fd6a5f0bcac7",
-        "fba3642a6db5bd927f33aaae03ba76c52f686333203d8ffd6befd80de243faba",
-        "29541ff8141f1011535d1d36173373b8697e6a67ba7dbbf2a8e5b50c52171bcf",
-        "fd4adeb3557844eee79a3991503a2b72a31077c5c4e67d65699436d0cb0e8037",
-        "6892edbb29840381b4d587b09924a652dc414a801142d1363b5d9e1f5ebec15c"
+        "456d4c78305ee0d76f803451daa5b20f9ff3fc83e14140c5a8ddbb3c5aca9e12",
+        "fb10a3db7ecde980a9587392acb2f8328f08bdfd1c2b27bfdd1d4ab0c1f721a0",
+        "7449734e7b7ff4c58bedeaeb3e9451e9305ccee6dcf44c05c4df28cb07e65d34",
+        "9a9d01c897ed87969f4b856a0a6c6234e165c1f6642faab22cb6518aee799a54",
+        "bc997e1b1c677e482cbfb8f147d557bc442f190e24d62d06414ed6ca254ba755",
+        "97a340d8f87bdfb642a8eefae2d3ed6fe5af8e47c864ceda8da7597da54cd802",
+        "421d9f90df46cabdfbe8d2dd8034d258840637d4e13896ba2241069fe237e44b",
+        "38201abbceacb75dedca185a0d423d4fb7eb7141b259dd10b4dbdbcdf9bb4c9a"
       ],
       "issues": []
     },
@@ -702,12 +702,12 @@
       "animation": "sprint",
       "direction": "N",
       "source_canvas": [
-        160,
-        160
+        128,
+        168
       ],
       "fixed_translation": [
-        -16,
-        -17
+        0,
+        -21
       ],
       "frame_count": 8,
       "frames": [
@@ -721,14 +721,14 @@
         "sprites/sprint/N_007.png"
       ],
       "pixel_sha256": [
-        "ca3f046812964c70e34a38c95174c59fc6fbb1d7188a91c19d73ab9ff2e3283d",
-        "41f2fc4f476c14b70f148287462a5e5adf8d9a4180d041b8d664be95490f1748",
-        "0beb73a714e5fa2a347b237a341c1c3c335d72cdb1696566a3b01e4e3235ce2f",
-        "61535433dd3009c41d05a008e57ee7522461e966d73ce5ba550130819c935fe4",
-        "fe6efe9a5b900e1cb5a08475683bd182baa89f53283c95a0617702e90a2bc261",
-        "8480a93e5b9b1bf2e3f83c2a34394a4a41b6e73732ae1c5f8882b7eb8a84a7af",
-        "a835bcdbfb5fe4576842c014190a452741c2df8297f8d9fbd380b213426220be",
-        "d1c679f90f3c3bbb8e44283da34f811ff438d9bc248fb702a26563964b51c5c2"
+        "dfd1bd2d592437ff1b428b03b09cea363a23cf5b8c3ec197337dec3f4106abd7",
+        "56a5334ad31a74bcd3c285d1c64c63f62ab9f2b7dca54b9f2c2b6457befc86c9",
+        "97dbc710d7f38628825d4bae970e164ea3c0b73fb0ecb05692b60f10739738da",
+        "0dcc155858deb6da79b942d46dafbc45addb21cafd4b2047835e68387df41a85",
+        "4caadf4ee4f0ff1f9b8e35f2d2a185e4c4aacde87ea14be12f17d576c03eef01",
+        "a2045ec6f27a0cb7d68225185b3e3fd37407eedd0902be1a5cca79cd8bf458fb",
+        "1b34d9618015cf222fcd5f4ee4908ee3489f00d90a42fc5ffcfc6535c75d1f49",
+        "83fc52c61c303341e03fb184fc6806e286c9aa0f0519fe90c97a2e626c2618f2"
       ],
       "issues": []
     },
@@ -736,12 +736,12 @@
       "animation": "sprint",
       "direction": "NW",
       "source_canvas": [
-        152,
-        152
+        128,
+        164
       ],
       "fixed_translation": [
-        -8,
-        -13
+        4,
+        -19
       ],
       "frame_count": 8,
       "frames": [
@@ -755,14 +755,14 @@
         "sprites/sprint/NW_007.png"
       ],
       "pixel_sha256": [
-        "72d88822fe8be30844cc1b9d35e7595be664b059e700c9138653c2f22a89de1e",
-        "f7c868981c4861dbdd2a2bc22b689afe59b9f069b14d4ee077230618602a519f",
-        "a6c612e8dbb27ffaa3b2ee4e568e8d77bfa977d11a93c34b823f0649b9524569",
-        "c3b71bdaa17421c7a086e4c890f468606b2fbb9d34d5d5c692963ccb4fcbe060",
-        "ccd76ca82202d3cdda9d35795263377ba6887913efc14e097f445a47180f06f8",
-        "c2edccd748cafb7ecf5af2039332361329d4fb4bc369172fd3278ced5178304c",
-        "54479686b5d9247007b9d84273dcb65e4b82658bb9ab989e24a5c6cdbca1048c",
-        "cd59f931e8aecef25248ef897ef8196fca398ed832d1b0632cfbcfb855e8683f"
+        "19cd87ad89fea3119ca781a47a0c5ec6107f980f752a7853bccb319f6f9acfd8",
+        "d2bc01abf1958e6c24b09100ac2ad7068fba3aa3065d8001349ecd2e7b7f2d8b",
+        "c1cf4afb5d76aec0bd5732393295ebb646d5232c38037e24ede7c4008b19493f",
+        "fd8aec010398b4c56741bdacfa29c3e0d9ccf732cee229e7817aec300834f1f7",
+        "9ffbb69efb3c3b36224ae595eb9fb823ccaa1090ecfa398f4371393dab3ef8a3",
+        "490c4d3dd4d9127641024d9aa85c5a0da878f7af380f7da49db63db150415dc1",
+        "d0da2e4ce78d2209a0c8aed2a05aa0e2d7c420374e8d8036e100723df3192191",
+        "98fa84d047eda08be704ce40823fabfe78ccd8ae57dc70f9fc72d9d495946c4b"
       ],
       "issues": []
     },
@@ -770,12 +770,12 @@
       "animation": "sprint",
       "direction": "W",
       "source_canvas": [
-        160,
-        160
+        152,
+        180
       ],
       "fixed_translation": [
-        -15,
-        -18
+        -11,
+        -28
       ],
       "frame_count": 8,
       "frames": [
@@ -789,14 +789,14 @@
         "sprites/sprint/W_007.png"
       ],
       "pixel_sha256": [
-        "b687495dec6a9563e5cb800baf97793673d2146e6aa22622584552c396c1529b",
-        "df33a00bcd494743ab1cda84cd027aaffce42da1ee65de693ff46658c411474b",
-        "99d4c693bafe5762897fe6929abe2e6d321ae70db153d64187801214ee1f494e",
-        "203d32e93f82ce19a0b5f8e860d70a5c104928d7af58cc9e85547877bb36cfeb",
-        "c24ae453b8847a2b87241036fdf56fa66c6ce0d3f48143d3a12359a38ae4e629",
-        "1a536a480099e32f70008f93d0630a716be9d91fe2083ed7c25a737d73e45ed2",
-        "377eaf8ee4142d12f339229a619a91e6fe1ca1563227c845423519e51c8496b1",
-        "5101cc6b72f9b49bf86902cb792f2e1aec1123b4df06281e6fabee500170c1da"
+        "5475b8162b89947d6ce6da1190cc84d140447ad5a405ede6f7302798b1eda179",
+        "082a4f0694779ff48fc03264369c8476fd141a805a9c829542f8669f8c0d6fbc",
+        "e5a0f164059f91fafe26682141c2291adab129df81733d2c107e1d745844028f",
+        "8449f25eba90609e77251038ebf3e69d5033a0c282d9a5a1d956c416646c95cd",
+        "98db9070d1c14c2ab3aea87aca4fe64f75f7f283b2d28280c3e6ef80ba3d840e",
+        "88b18cb17b479a2cda35c2bf52bce65a10585e673016b5638b2f6f083e907ed0",
+        "fddb6810c26581edfdd6ec8f5746a2a3694ece940c961f26b56c65de2ab22fc3",
+        "662bec49254359379f0adf055bb67e53e0517e22da5ea01ab52febb0fd1233f0"
       ],
       "issues": []
     },
@@ -804,11 +804,11 @@
       "animation": "sprint",
       "direction": "SW",
       "source_canvas": [
-        164,
+        140,
         164
       ],
       "fixed_translation": [
-        -15,
+        -3,
         -21
       ],
       "frame_count": 8,
@@ -823,14 +823,14 @@
         "sprites/sprint/SW_007.png"
       ],
       "pixel_sha256": [
-        "d54bd9f98319dbf56fb622541f3be9ff1f672233072114385582219ed5558549",
-        "13f27da5cd1327ebd5b8be2b306091dfb0e2dca9e9958a0cd096fad4d6e435c0",
-        "a5b68f90287e953281a3605ca7c7f5156fdba55f114b4ff5f2f61c2e96790b2b",
-        "5c84f46e732d051cac8890db897472407cd2d24890838ecb9ab84f199438567e",
-        "f89f1445626d564de55b934c34f96b85483313db3c26957e07ead8043a7e271a",
-        "79866959a5753017ec899bfbbcd48ada370d9f135c145bdf6e1270f12d0e4995",
-        "abe2d92ebed36f56056a3cf2b600dc321f4fd1f5cc287dddf5147f9e671d0155",
-        "cd8cfef3fa3b697bae4bba2bcbbe7af599f0e881af18ba7fd0a6eea43146cb2f"
+        "e92784d7c1e1bbad84e3cc8f85a0055a381f3c44780344041cf77e8ea7793f62",
+        "2bab74d98b87b012a6f53a77f55b9c3c23f685153449708e179ad7d42b7976fd",
+        "f0e7ac332af5d4ddb4959ec4725b0efa993cc8091ca72b399b5048ea4c752e36",
+        "a0438b6d99cbb8edfd80febbe07fd5f0a91811390fb640a40ae0264322eb8928",
+        "028865cf72f58ad57da2b397fda58cea3adecc5874d948d8ac2660e214e0150d",
+        "fd7bfbb6a7ea4a34cc56be65da1923e3e2dd9c63696bb5dab6b670d4e0d71687",
+        "3c200772111cbc41606d75be844530f8ff2e5fc3d9dbc24c53d6ba581fcd0e5f",
+        "fb2b2dbdf804761fa6fa9294b09e521d5c588d4ecc5179a9b54d425fa61efbbb"
       ],
       "issues": []
     }

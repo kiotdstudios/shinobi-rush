@@ -1,5 +1,7 @@
 # Red-scarf bandit locomotion — Aki handoff
 
+Use latest PR38 revision tagged sprint-arms-v3 in art JSON. All64 sprint frames replace the rejected bent/clasped-arm version. Versioned sprint-v3-all-directions-half.gif and sprint-v3-before-after-half.gif are the current visual review references. Idle/run PNGs are unchanged. Owner acceptance of revised arm poses remains pending.
+
 Owner supplied a new masked/topknot/red-scarf bandit design and explicitly prohibited logos. Headband is plain deep-red cloth without a metal emblem plate. Deliver requested idle, regular pumping-arm run and forward-leaning arms-back ninja sprint in S/SE/E/NE/N/NW/W/SW. No new hit/death/attack clips implied by this locomotion request.
 
 Native128×128 RGBA, common foot/root[64,116], target standing body scale104px, no floor shadow/terrain/blur. Actual per-clip frame counts and timings live in bandit_128.art.json. Regular run and sprint are distinct silhouettes, not playback-speed aliases. Source canvases may include generator padding; exports use one fixed translation per clip, never frame-by-frame bounding-box recentering or body scaling.

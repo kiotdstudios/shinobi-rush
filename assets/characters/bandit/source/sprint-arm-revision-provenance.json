@@ -1,0 +1,27 @@
+{
+  "keyPoseState": {
+    "content": [
+      {
+        "type": "text",
+        "text": "id: bc949fa1-7738-4bd8-b4aa-6de553c13e48\nsource: cc675e30-2723-4145-b03f-c0d245294305\nedit: NINJA SPRINT KEY POSE. Same bandit identity, costume, scale, and each original facing direction. Full body in an athletic RUNNING stride, torso leaning forward along travel. BOTH arms fully extended BACKWARDS at the SHOULDERS, elbows nearly straight. Both upper arms and forearms point opposite travel in one continuous line. Two separate relaxed hands trail past the hips on their own sides, visibly clear of the belt/back. Hands never touch each other or the body. Arms trail behind like the scarf tails, never sideways like airplane wings and never forward in front of chest. Strong readable forward lean and rearward straight-arm silhouette. Preserve plain cloth headband/no logos, mask, ponytail, red scarf, charcoal outfit, wraps, pouches, sandals; transparent background, no floor shadow. Keep whole figure inside native128px canvas.\ncost: ~10-25 generations (tier by canvas size)\nstatus: processing (~30-90s)\nnote: linked via group_id, inherits skeleton for animations\n\nhint: get_character(character_id=\"bc949fa1-7738-4bd8-b4aa-6de553c13e48\")"
+      }
+    ],
+    "isError": false
+  },
+  "firstV3": {
+    "content": [
+      {
+        "type": "text",
+        "text": "character: cc675e30-2723-4145-b03f-c0d245294305\nanimation: pixminimax custom (Animate the supplied sprint pose into a seamless in-place ninja run. Keep the EXACT rearward arm arrangement from this keyframe, both elbows extended and hands trailing behind shoulders. Preserve forward torso lean and southeast facing throughout. Animate alternating running legs, subtle torso bounce and scarf flutter. Keep costume, scale, body center and camera fixed. Eight distinct poses forming one full left/right stride, transparent background, no standing or turning.)\ndirections: south-east (1 jobs)\njob_ids: south-east=739cb0dd-7e8b-4946-be2a-4ba5b5b4508d\ngroup: 569bb5c5-1a3b-463a-bee4-bf4f3b1ac26c\nframes: 8 (reference stripped, keep_first_frame=false)\ncanvas: south-east 128x160 (generated at this size; with custom frames the stored canvas is re-measured around the motion)\ncost: 1 generation (1/dir x 1)\neta: ~1 min/direction\n\nhint: get_character(character_id=\"cc675e30-2723-4145-b03f-c0d245294305\")\nadd more directions to this group: animate_character(character_id=\"cc675e30-2723-4145-b03f-c0d245294305\", action_description=\"Animate the supplied sprint pose into a seamless in-place ninja run. Keep the EXACT rearward arm arrangement from this keyframe, both elbows extended and hands trailing behind shoulders. Preserve forward torso lean and southeast facing throughout. Animate alternating running legs, subtle torso bounce and scarf flutter. Keep costume, scale, body center and camera fixed. Eight distinct poses forming one full left/right stride, transparent background, no standing or turning.\", mode=\"pixminimax\", animation_group_id=\"569bb5c5-1a3b-463a-bee4-bf4f3b1ac26c\", directions=[...])"
+      }
+    ],
+    "isError": false
+  },
+  "finalGroup": "569bb5c5-1a3b-463a-bee4-bf4f3b1ac26c",
+  "rejectedV2": "a44f597b-db2a-4949-9fef-1ce2e85beccc",
+  "keyPoseSources": {
+    "SE": "Built-in image_gen; bandit v1 appearance plus approved player SE sprint pose. Native guide sampled nearest into128 and alpha threshold128 before PixelLab animation.",
+    "S_NE_NW": "Built-in image_gen;2x2 bandit appearance grid plus corresponding approved player sprint pose grid. Equal cells sampled nearest to128, alpha threshold128; no per-pose fitting.",
+    "E_N_W_SW": "PixelLab character state bc949fa1-7738-4bd8-b4aa-6de553c13e48, exact original character/costume palette. See references/key-pose-urls.json."
+  }
+}

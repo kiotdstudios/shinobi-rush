@@ -21,6 +21,7 @@
     "SW"
   ],
   "status": "art_review",
+  "art_revision": "sprint-arms-v3",
   "default_playback_speed": 0.5,
   "shadow_baked": false,
   "logo_policy": "plain cloth headband; no symbols/logos/emblems",

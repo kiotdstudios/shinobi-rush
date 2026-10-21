@@ -29,6 +29,7 @@ Checkout: .tools/bandit-production, branch codex/bandit-locomotion, base21324afb
 | python scripts/ci/validate_orders.py; git diff --cached --check | PASS: order structure validated; trailing whitespace from API style line trimmed, then staged whitespace check passed. |
 
 ## Issues encountered
+Owner follow-up rejected sprint arm posing. Reinspection confirms bent elbows and hands together at the lower back in multiple directions; the prior sprint visual acceptance was incorrect. The file/import checks above do not prove correct anatomy. PR38 returned to draft while separately trailing straight-arm replacements are generated and reviewed. See the sprint-arm revision report for current status.
 Template run batches changed size, facing and costume details. Replaced all except the consistent south run with custom full-cycle generation. First v3 sprints failed to hold arms back; replaced with PixMiniMax, with a further northwest pose correction. All rejected versions excluded from final source index and shipped loops. Southeast run required a fixed two-pixel vertical translation for headroom; no body scaling. urllib HTTP403 avoided with curl; transient TLS download retried. Phone scrubber initially overflowed and was fixed/retested. Initial CLI gh was unavailable; use GitHub connector for PR creation.
 
 ## Questions for project owner
