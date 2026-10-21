@@ -1,0 +1,264 @@
+{
+  "schema": 1,
+  "id": "bandit_128",
+  "frame_size": [
+    128,
+    128
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "body_height_px": 104,
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "status": "owner_requested_runtime_locomotion",
+  "art_revision": "sprint-arms-v3",
+  "default_playback_speed": 0.5,
+  "shadow_baked": false,
+  "logo_policy": "plain cloth headband; no symbols/logos/emblems",
+  "runtime_integrated": true,
+  "animations": {
+    "idle": {
+      "fps": 4,
+      "authored_fps": 8,
+      "loop": true,
+      "status": "owner_requested_runtime_locomotion",
+      "frames": {
+        "S": [
+          "sprites/idle/S_000.png",
+          "sprites/idle/S_001.png",
+          "sprites/idle/S_002.png",
+          "sprites/idle/S_003.png"
+        ],
+        "SE": [
+          "sprites/idle/SE_000.png",
+          "sprites/idle/SE_001.png",
+          "sprites/idle/SE_002.png",
+          "sprites/idle/SE_003.png"
+        ],
+        "E": [
+          "sprites/idle/E_000.png",
+          "sprites/idle/E_001.png",
+          "sprites/idle/E_002.png",
+          "sprites/idle/E_003.png"
+        ],
+        "NE": [
+          "sprites/idle/NE_000.png",
+          "sprites/idle/NE_001.png",
+          "sprites/idle/NE_002.png",
+          "sprites/idle/NE_003.png"
+        ],
+        "N": [
+          "sprites/idle/N_000.png",
+          "sprites/idle/N_001.png",
+          "sprites/idle/N_002.png",
+          "sprites/idle/N_003.png"
+        ],
+        "NW": [
+          "sprites/idle/NW_000.png",
+          "sprites/idle/NW_001.png",
+          "sprites/idle/NW_002.png",
+          "sprites/idle/NW_003.png"
+        ],
+        "W": [
+          "sprites/idle/W_000.png",
+          "sprites/idle/W_001.png",
+          "sprites/idle/W_002.png",
+          "sprites/idle/W_003.png"
+        ],
+        "SW": [
+          "sprites/idle/SW_000.png",
+          "sprites/idle/SW_001.png",
+          "sprites/idle/SW_002.png",
+          "sprites/idle/SW_003.png"
+        ]
+      }
+    },
+    "run": {
+      "fps": 12,
+      "authored_fps": 24,
+      "loop": true,
+      "status": "owner_requested_runtime_locomotion",
+      "frames": {
+        "S": [
+          "sprites/run/S_000.png",
+          "sprites/run/S_001.png",
+          "sprites/run/S_002.png",
+          "sprites/run/S_003.png",
+          "sprites/run/S_004.png",
+          "sprites/run/S_005.png",
+          "sprites/run/S_006.png",
+          "sprites/run/S_007.png"
+        ],
+        "SE": [
+          "sprites/run/SE_000.png",
+          "sprites/run/SE_001.png",
+          "sprites/run/SE_002.png",
+          "sprites/run/SE_003.png",
+          "sprites/run/SE_004.png",
+          "sprites/run/SE_005.png",
+          "sprites/run/SE_006.png",
+          "sprites/run/SE_007.png"
+        ],
+        "E": [
+          "sprites/run/E_000.png",
+          "sprites/run/E_001.png",
+          "sprites/run/E_002.png",
+          "sprites/run/E_003.png",
+          "sprites/run/E_004.png",
+          "sprites/run/E_005.png",
+          "sprites/run/E_006.png",
+          "sprites/run/E_007.png"
+        ],
+        "NE": [
+          "sprites/run/NE_000.png",
+          "sprites/run/NE_001.png",
+          "sprites/run/NE_002.png",
+          "sprites/run/NE_003.png",
+          "sprites/run/NE_004.png",
+          "sprites/run/NE_005.png",
+          "sprites/run/NE_006.png",
+          "sprites/run/NE_007.png"
+        ],
+        "N": [
+          "sprites/run/N_000.png",
+          "sprites/run/N_001.png",
+          "sprites/run/N_002.png",
+          "sprites/run/N_003.png",
+          "sprites/run/N_004.png",
+          "sprites/run/N_005.png",
+          "sprites/run/N_006.png",
+          "sprites/run/N_007.png"
+        ],
+        "NW": [
+          "sprites/run/NW_000.png",
+          "sprites/run/NW_001.png",
+          "sprites/run/NW_002.png",
+          "sprites/run/NW_003.png",
+          "sprites/run/NW_004.png",
+          "sprites/run/NW_005.png",
+          "sprites/run/NW_006.png",
+          "sprites/run/NW_007.png"
+        ],
+        "W": [
+          "sprites/run/W_000.png",
+          "sprites/run/W_001.png",
+          "sprites/run/W_002.png",
+          "sprites/run/W_003.png",
+          "sprites/run/W_004.png",
+          "sprites/run/W_005.png",
+          "sprites/run/W_006.png",
+          "sprites/run/W_007.png"
+        ],
+        "SW": [
+          "sprites/run/SW_000.png",
+          "sprites/run/SW_001.png",
+          "sprites/run/SW_002.png",
+          "sprites/run/SW_003.png",
+          "sprites/run/SW_004.png",
+          "sprites/run/SW_005.png",
+          "sprites/run/SW_006.png",
+          "sprites/run/SW_007.png"
+        ]
+      }
+    },
+    "sprint": {
+      "fps": 12,
+      "authored_fps": 24,
+      "loop": true,
+      "status": "owner_requested_runtime_locomotion",
+      "frames": {
+        "S": [
+          "sprites/sprint/S_000.png",
+          "sprites/sprint/S_001.png",
+          "sprites/sprint/S_002.png",
+          "sprites/sprint/S_003.png",
+          "sprites/sprint/S_004.png",
+          "sprites/sprint/S_005.png",
+          "sprites/sprint/S_006.png",
+          "sprites/sprint/S_007.png"
+        ],
+        "SE": [
+          "sprites/sprint/SE_000.png",
+          "sprites/sprint/SE_001.png",
+          "sprites/sprint/SE_002.png",
+          "sprites/sprint/SE_003.png",
+          "sprites/sprint/SE_004.png",
+          "sprites/sprint/SE_005.png",
+          "sprites/sprint/SE_006.png",
+          "sprites/sprint/SE_007.png"
+        ],
+        "E": [
+          "sprites/sprint/E_000.png",
+          "sprites/sprint/E_001.png",
+          "sprites/sprint/E_002.png",
+          "sprites/sprint/E_003.png",
+          "sprites/sprint/E_004.png",
+          "sprites/sprint/E_005.png",
+          "sprites/sprint/E_006.png",
+          "sprites/sprint/E_007.png"
+        ],
+        "NE": [
+          "sprites/sprint/NE_000.png",
+          "sprites/sprint/NE_001.png",
+          "sprites/sprint/NE_002.png",
+          "sprites/sprint/NE_003.png",
+          "sprites/sprint/NE_004.png",
+          "sprites/sprint/NE_005.png",
+          "sprites/sprint/NE_006.png",
+          "sprites/sprint/NE_007.png"
+        ],
+        "N": [
+          "sprites/sprint/N_000.png",
+          "sprites/sprint/N_001.png",
+          "sprites/sprint/N_002.png",
+          "sprites/sprint/N_003.png",
+          "sprites/sprint/N_004.png",
+          "sprites/sprint/N_005.png",
+          "sprites/sprint/N_006.png",
+          "sprites/sprint/N_007.png"
+        ],
+        "NW": [
+          "sprites/sprint/NW_000.png",
+          "sprites/sprint/NW_001.png",
+          "sprites/sprint/NW_002.png",
+          "sprites/sprint/NW_003.png",
+          "sprites/sprint/NW_004.png",
+          "sprites/sprint/NW_005.png",
+          "sprites/sprint/NW_006.png",
+          "sprites/sprint/NW_007.png"
+        ],
+        "W": [
+          "sprites/sprint/W_000.png",
+          "sprites/sprint/W_001.png",
+          "sprites/sprint/W_002.png",
+          "sprites/sprint/W_003.png",
+          "sprites/sprint/W_004.png",
+          "sprites/sprint/W_005.png",
+          "sprites/sprint/W_006.png",
+          "sprites/sprint/W_007.png"
+        ],
+        "SW": [
+          "sprites/sprint/SW_000.png",
+          "sprites/sprint/SW_001.png",
+          "sprites/sprint/SW_002.png",
+          "sprites/sprint/SW_003.png",
+          "sprites/sprint/SW_004.png",
+          "sprites/sprint/SW_005.png",
+          "sprites/sprint/SW_006.png",
+          "sprites/sprint/SW_007.png"
+        ]
+      }
+    }
+  },
+  "runtime_binding": "scripts/enemy/bandit_visual.gd: explicit SpriteSet.parse, excluded from player discovery"
+}

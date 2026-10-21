@@ -39,6 +39,8 @@ func _initialize() -> void:
 	await load("res://tests/test_camera_impact.gd").new().run(ck, root)
 	await load("res://tests/test_arena_sorting.gd").new().run(ck, root)
 	await load("res://tests/test_combat.gd").new().run(ck, root)
+	await load("res://tests/test_jump.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_art.gd").new().run(ck, root)
 	var debug_store_tests = load("res://tests/test_debug_store.gd").new()
 	debug_store_tests.run(ck)
 	var browser_debug_tests = load("res://tests/test_browser_debug.gd").new()
@@ -474,7 +476,7 @@ func test_jump_and_dodge_chaining() -> void:
 		await physics_frame
 		jump_frames += 1
 		min_v_during_jump = minf(min_v_during_jump, player.velocity.length())
-	ck("velocity never collapses toward 0 while airborne with input held", min_v_during_jump > run_speed * 0.5, str(min_v_during_jump))
+	ck("velocity never collapses toward 0 while airborne with input held", min_v_during_jump > player.jump_air_speed_cap * 0.9, str(min_v_during_jump))
 	ck("landing resumes MOVE immediately with input held (no idle frame)", player.state == PlayerController.State.MOVE, player.get_state_name())
 	Input.action_release("move_right")
 

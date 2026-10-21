@@ -31,6 +31,15 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## Air control: fraction of normal ground `acceleration` used to steer velocity while airborne.
 ## Momentum itself is never reset on jump entry/exit; this only lets input bend an already-moving arc.
 @export var air_control_mult: float = 0.6
+## Horizontal air-speed cap (px/s) for JUMP / AIR_ATTACK. The jump lasts as long as its art (2.0 s), and
+## the air has no ground friction, so without a cap a sprint jump coasted ~1200 px (owner: "jumping
+## launches player super far"). Anything faster on entry (sprint, dodge burst) is braked down to this
+## at `jump_air_brake` -- smoothly, never snapped. ~0.4 x walk speed => at most ~330 px over a full jump.
+@export var jump_air_speed_cap: float = WorldScale.WALK_SPEED * 0.4
+## Deceleration (px/s^2) applied to speed above the cap on jump entry (no stacking of dodge/sprint speed).
+@export var jump_air_brake: float = WorldScale.ACCELERATION * 1.5
+## Gentle air drag (px/s^2) when no direction is held, so a released jump settles instead of gliding.
+@export var jump_air_drag: float = WorldScale.ACCELERATION * 0.25
 ## Visual-only peak height (px) of the jump arc. Purely cosmetic: applied to PlayerVisual's local
 ## position, never to this body's position, so collision and the arena's Y-sort (which keys off this
 ## node's own global_position.y) are completely unaffected by being airborne.
@@ -168,8 +177,7 @@ func _physics_process(delta: float) -> void:
 		if state == State.JUMP:
 			# Momentum is never zeroed: with no input the arc simply continues; with input it bends
 			# (at a reduced, "air control" rate) toward the new heading instead of snapping to it.
-			if input != Vector2.ZERO:
-				velocity = velocity.move_toward(input * target_speed, acceleration * air_control_mult * delta)
+			_air_move(input, delta)
 		else:  # DODGE
 			# Dedicated curve: the initial burst (set on trigger) eases toward whatever speed current
 			# input calls for (0 if none) at `dodge_recovery_accel`, not the generic ground `friction`.
@@ -228,6 +236,19 @@ func _physics_process(delta: float) -> void:
 	_update_footsteps(delta)
 	if state != prev_state:
 		state_changed.emit(state)
+
+
+## Shared horizontal air motion for JUMP and AIR_ATTACK: speed above `jump_air_speed_cap` is braked to
+## the cap, held input steers toward `input * cap` at the air-control rate, and with no input a light
+## drag settles the arc. Never applies an impulse, never zeroes velocity in one frame.
+func _air_move(input: Vector2, delta: float) -> void:
+	var speed := velocity.length()
+	if speed > jump_air_speed_cap:
+		velocity = velocity.normalized() * move_toward(speed, jump_air_speed_cap, jump_air_brake * delta)
+	if input != Vector2.ZERO:
+		velocity = velocity.move_toward(input * jump_air_speed_cap, acceleration * air_control_mult * delta)
+	else:
+		velocity = velocity.move_toward(Vector2.ZERO, jump_air_drag * delta)
 
 
 ## Begin a dodge: direction comes from current input if any is held, else the last facing (order:
@@ -300,9 +321,7 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 	# there is nothing to brake against: the jump arc's momentum is kept and input bends it at the
 	# same air-control rate as a plain jump.
 	if airborne:
-		if input != Vector2.ZERO:
-			var air_target := sprint_speed if Input.is_action_pressed("sprint") else walk_speed
-			velocity = velocity.move_toward(input * air_target, acceleration * air_control_mult * delta)
+		_air_move(input, delta)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 
