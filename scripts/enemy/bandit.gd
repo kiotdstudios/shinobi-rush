@@ -8,7 +8,7 @@ extends CharacterBody2D
 ## BanditVisual explicitly binds Codex's red-scarf idle/run/sprint art. Dedicated combat/death
 ## clips remain future art; hurt freezes/flashes the current pose, death retains its fallback.
 
-enum State { IDLE, APPROACH, HIT_REACT, DEAD }
+enum State { IDLE, APPROACH, HIT_REACT, DEAD, EVADE }
 
 const SKIN := Color("#8a4a3a")
 const CLOTH := Color("#4a3a2a")
@@ -17,7 +17,17 @@ const HIT_FLASH := Color(1.0, 0.25, 0.2, 0.9)
 @export var max_hp: float = 60.0
 @export var detect_radius: float = 420.0
 @export var combat_distance: float = 130.0  ## approach stops at roughly this range from the player
-@export var move_speed: float = 160.0
+@export var move_speed: float = 320.0
+@export var chase_speed: float = 470.0
+@export var evade_speed: float = 640.0
+@export var evade_duration: float = 0.20
+@export var evade_cooldown: float = 1.25
+var is_sprinting := false
+var evade_count := 0
+var _evade_timer := 0.0
+var _evade_cooldown := 0.0
+var _evade_side := 1.0
+var _holding_distance := false
 @export var hit_react_duration: float = 0.22
 @export var hit_flash_duration: float = 0.12
 
@@ -51,8 +61,20 @@ func _physics_process(delta: float) -> void:
 		return  # local hitstop only: this entity's movement pauses, global timers/input elsewhere are untouched
 
 	_hit_flash_timer = maxf(_hit_flash_timer - delta, 0.0)
+	_evade_cooldown = maxf(_evade_cooldown - delta, 0.0)
 
 	if state == State.DEAD:
+		return
+	if state == State.EVADE:
+		var remaining := minf(delta, _evade_timer)
+		var burst_velocity := velocity
+		velocity *= remaining / maxf(delta, 0.00001)
+		move_and_slide()
+		velocity = burst_velocity
+		_evade_timer -= delta
+		if _evade_timer <= 0.0 or get_slide_collision_count() > 0:
+			state = State.APPROACH
+			velocity = Vector2.ZERO
 		return
 
 	if state == State.HIT_REACT:
@@ -77,15 +99,59 @@ func _physics_process(delta: float) -> void:
 		state = State.APPROACH
 
 	if state == State.APPROACH:
-		if dist > combat_distance:
+		if _should_evade(to_player) and _begin_evade(to_player):
+			_evade_timer -= delta
+			move_and_slide()
+			return
+		if dist > combat_distance + 24.0:
+			_holding_distance = false
+		elif dist <= combat_distance:
+			_holding_distance = true
+		if not _holding_distance:
 			var dir := to_player.normalized()
-			velocity = dir * move_speed
+			if dist > 250.0:
+				is_sprinting = true
+			elif dist < 185.0:
+				is_sprinting = false
+			velocity = dir * (chase_speed if is_sprinting else move_speed)
 			facing8 = WorldScale.snap8(dir)
 		else:
+			is_sprinting = false
 			velocity = velocity.move_toward(Vector2.ZERO, move_speed * 4.0 * delta)
 			facing8 = WorldScale.snap8(to_player.normalized())
 	move_and_slide()
 	visual.queue_redraw()
+
+
+func _should_evade(to_player: Vector2) -> bool:
+	if _evade_cooldown > 0.0 or to_player.length() > 260.0 or to_player.length_squared() < 1.0:
+		return false
+	var lock := _player.get_node_or_null("LockOn")
+	if lock != null and lock.is_targeted(self):
+		return true
+	var body := _player as CharacterBody2D
+	return body != null and body.velocity.dot(-to_player.normalized()) > 100.0
+
+
+func _begin_evade(to_player: Vector2) -> bool:
+	var away := -to_player.normalized()
+	var tangent := Vector2(-away.y, away.x)
+	for side: float in [_evade_side, -_evade_side]:
+		var direction := (tangent * side + away * 0.35).normalized()
+		# Test the complete burst, including the existing body collider. Never teleport through walls.
+		if test_move(global_transform, direction * evade_speed * evade_duration):
+			continue
+		velocity = direction * evade_speed
+		facing8 = WorldScale.snap8(direction)
+		state = State.EVADE
+		is_sprinting = true
+		_holding_distance = false
+		_evade_timer = evade_duration
+		_evade_cooldown = evade_cooldown
+		_evade_side = -side
+		evade_count += 1
+		return true
+	return false
 
 
 ## Called by the player's attack hit-check. `knockback_dir` should already be normalized.
