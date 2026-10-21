@@ -12,7 +12,7 @@ signal state_changed(new_state: State)
 ## The camera baseline zoom was recomputed (preset switched, or the figure height changed with the sprite set).
 signal camera_baseline_changed(zoom: float)
 
-enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK }
+enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK, AIR_ATTACK }
 ## Phase of the current attack (LIGHT1/LIGHT2/LIGHT3/DASH_ATTACK states only). Startup/active/recovery
 ## lengths come from the matching AttackDef in `_attack_table` (see combat order's frame table).
 enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
@@ -106,10 +106,20 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	var prev_state := state
 
+	# Presses are captured EVERY physics tick, including hitstop ticks (Milestone A fluidity order:
+	# "buffered inputs must survive hitstop"). Before this, a press landing inside the 3-4 tick
+	# freeze was silently dropped.
+	if Input.is_action_just_pressed("dodge"):
+		_dodge_buffer = input_buffer_window
+	if Input.is_action_just_pressed("jump"):
+		_jump_buffer = input_buffer_window
+	if Input.is_action_just_pressed("attack_light"):
+		_attack_buffer = input_buffer_window
+
 	# Local hitstop: pause this body's own velocity/position integration only -- NOT Engine.time_scale
-	# (the order explicitly forbids a global freeze that would also stall input buffering/timers).
-	# Buffers/attack timers resume ticking the instant this expires, so the hit feels like a punchy
-	# freeze-frame without desyncing combo/cancel windows.
+	# (the order forbids a global freeze). Buffers do not decay while frozen, so a press made just
+	# before or during the freeze is still live the instant it ends, and attack/cancel windows resume
+	# exactly where they stopped.
 	if _hitstop_timer > 0.0:
 		_hitstop_timer = maxf(_hitstop_timer - delta, 0.0)
 		return
@@ -118,12 +128,6 @@ func _physics_process(delta: float) -> void:
 	_jump_buffer = maxf(_jump_buffer - delta, 0.0)
 	_attack_buffer = maxf(_attack_buffer - delta, 0.0)
 	_dash_grace_timer = maxf(_dash_grace_timer - delta, 0.0)
-	if Input.is_action_just_pressed("dodge"):
-		_dodge_buffer = input_buffer_window
-	if Input.is_action_just_pressed("jump"):
-		_jump_buffer = input_buffer_window
-	if Input.is_action_just_pressed("attack_light"):
-		_attack_buffer = input_buffer_window
 
 	var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
@@ -142,6 +146,18 @@ func _physics_process(delta: float) -> void:
 		_attack_buffer = 0.0
 		_begin_attack("dash_attack", input)
 		move_and_slide()
+		if state != prev_state:
+			state_changed.emit(state)
+		return
+
+	# Aerial attack: an attack press while airborne swings without ending the jump. The jump arc and
+	# its timer keep running underneath (AIR_ATTACK), so the player lands on schedule and rolls
+	# straight back into locomotion: run -> jump -> aerial attack -> land -> run.
+	if state == State.JUMP and _attack_buffer > 0.0:
+		_attack_buffer = 0.0
+		_begin_attack("air_attack", input)
+		move_and_slide()
+		_update_jump_lift()
 		if state != prev_state:
 			state_changed.emit(state)
 		return
@@ -276,9 +292,19 @@ func _begin_next_combo_attack() -> void:
 ## all live here.
 func _process_attack_state(delta: float, input: Vector2) -> void:
 	_attack_timer -= delta
-	# Weighty swordplay: velocity bleeds off toward 0 through the whole swing instead of being steered
-	# by input or snapped to zero outright -- deliberate deceleration, never a hard reset.
-	velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+	var airborne := state == State.AIR_ATTACK
+	if airborne:
+		_action_timer -= delta  # the jump keeps ticking underneath the swing
+	# Weighty swordplay: on the ground velocity bleeds off toward 0 through the swing instead of being
+	# steered by input or snapped to zero -- deliberate deceleration, never a hard reset. In the air
+	# there is nothing to brake against: the jump arc's momentum is kept and input bends it at the
+	# same air-control rate as a plain jump.
+	if airborne:
+		if input != Vector2.ZERO:
+			var air_target := sprint_speed if Input.is_action_pressed("sprint") else walk_speed
+			velocity = velocity.move_toward(input * air_target, acceleration * air_control_mult * delta)
+	else:
+		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 
 	if _attack_phase == AttackPhase.ACTIVE:
 		_check_attack_hits()
@@ -287,7 +313,7 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 		var elapsed := _attack_def.recovery - maxf(_attack_timer, 0.0)
 		# Dodge-cancel: once recovery has committed past `dodge_cancel_from`, a fresh/buffered dodge
 		# press interrupts the remaining recovery outright (order: "Interrupt...with a dodge").
-		if elapsed >= _attack_def.dodge_cancel_from and _dodge_buffer > 0.0:
+		if not airborne and elapsed >= _attack_def.dodge_cancel_from and _dodge_buffer > 0.0:
 			_dodge_buffer = 0.0
 			_begin_dodge(input)
 			move_and_slide()
@@ -304,6 +330,15 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 	if _attack_timer <= 0.0:
 		_advance_attack_phase()
 		if not _is_attack_state(state):
+			if airborne and _action_timer > 0.0:
+				# Swing finished while still in the air: hand back to the jump arc, momentum intact.
+				state = State.JUMP
+				move_and_slide()
+				_update_jump_lift()
+				return
+			if airborne:
+				visual.position.y = 0.0
+				dust.burst(global_position, 1.2)  # landed out of the swing
 			# The attack just ended: pick the state up where locomotion already is this instant (order:
 			# "continue running immediately after an attack ends" -- never a forced idle frame).
 			var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
@@ -316,6 +351,8 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 			return
 
 	move_and_slide()
+	if airborne:
+		_update_jump_lift()
 	visual.play_action(_attack_def.id, facing8)
 
 
@@ -366,12 +403,14 @@ func _state_for_attack_id(attack_id: String) -> State:
 			return State.LIGHT2
 		"light3":
 			return State.LIGHT3
+		"air_attack":
+			return State.AIR_ATTACK
 		_:
 			return State.DASH_ATTACK
 
 
 static func _is_attack_state(s: State) -> bool:
-	return s == State.LIGHT1 or s == State.LIGHT2 or s == State.LIGHT3 or s == State.DASH_ATTACK
+	return s == State.LIGHT1 or s == State.LIGHT2 or s == State.LIGHT3 or s == State.DASH_ATTACK or s == State.AIR_ATTACK
 
 
 ## Periodic dirt-puff bursts while running on the ground (MOVE/SPRINT only). Timer resets to 0 by the
@@ -391,7 +430,7 @@ func _update_footsteps(delta: float) -> void:
 ## position -- never to this body's position -- so the logical ground position used for collision and
 ## the arena's Y-sort (keyed off this node's own global_position.y, see arena_sort.gd) never moves.
 func _update_jump_lift() -> void:
-	if state != State.JUMP or _action_duration <= 0.0:
+	if (state != State.JUMP and state != State.AIR_ATTACK) or _action_duration <= 0.0:
 		visual.position.y = 0.0
 		return
 	var progress := clampf(1.0 - (_action_timer / _action_duration), 0.0, 1.0)
@@ -424,6 +463,33 @@ func reset_camera() -> void:
 
 func get_state_name() -> String:
 	return State.keys()[state]
+
+
+## Which transitions are legal RIGHT NOW. One source of truth for the dev overlay and the tests; the
+## live logic in _physics_process/_process_attack_state applies the same rules.
+func cancel_eligibility() -> Dictionary:
+	var e := {"combo": false, "dodge_cancel": false, "dash_attack": false, "air_attack": false}
+	if _is_attack_state(state) and _attack_phase == AttackPhase.RECOVERY and _attack_def != null:
+		var elapsed := _attack_def.recovery - maxf(_attack_timer, 0.0)
+		e.combo = _attack_def.combo_window > 0.0 and elapsed <= _attack_def.combo_window
+		e.dodge_cancel = state != State.AIR_ATTACK and elapsed >= _attack_def.dodge_cancel_from
+	e.dash_attack = (state == State.DODGE and _action_timer <= dash_attack_late_window) or _dash_grace_timer > 0.0
+	e.air_attack = state == State.JUMP
+	return e
+
+
+## Dev-diagnostics snapshot (state, attack phase, combo index, live buffers, cancel permissions).
+func debug_snapshot() -> Dictionary:
+	return {
+		"state": get_state_name(),
+		"phase": AttackPhase.keys()[_attack_phase] if _is_attack_state(state) else "-",
+		"combo": _combo_index,
+		"attack_buffer": _attack_buffer,
+		"dodge_buffer": _dodge_buffer,
+		"jump_buffer": _jump_buffer,
+		"hitstop": _hitstop_timer,
+		"cancel": cancel_eligibility(),
+	}
 
 
 ## Snap a direction to one of 8 unit-ish headings (diagonals normalized).

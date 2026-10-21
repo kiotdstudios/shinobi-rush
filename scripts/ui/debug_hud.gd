@@ -22,6 +22,7 @@ var _player_info: Label
 var _diag_panel: PanelContainer
 var _diag_camera_sprite: Label
 var _diag_perf: Label
+var _diag_combat: Label
 var _paused: Label
 var _timer: float = 0.0
 var _player: PlayerController
@@ -62,6 +63,7 @@ func _ready() -> void:
 	diag_header.add_theme_color_override("font_color", Color("#ffd27a"))
 	_diag_camera_sprite = _make_label(diag_box, 13)
 	_diag_perf = _make_label(diag_box, 13)
+	_diag_combat = _make_label(diag_box, 13)
 
 	# ---- Controls legend: bottom-left, anchored (stays bottom-left at any resolution). ----
 	var legend_panel := PanelContainer.new()
@@ -165,6 +167,12 @@ func _process(delta: float) -> void:
 		_player.get_state_name(), int(_player.velocity.length()),
 		int(_player.global_position.x), int(_player.global_position.y),
 		SpriteSet.dir_name(_player.facing8)]
+	if _diag_combat != null and _diag_panel.visible:
+		var d := _player.debug_snapshot()
+		var c: Dictionary = d.cancel
+		_diag_combat.text = "Combat: %s/%s combo %d\nBuf atk %.2f dodge %.2f jump %.2f\nCancel: combo %s dodge %s dash %s air %s\nHitstop %.3f" % [
+			d.state, d.phase, d.combo, d.attack_buffer, d.dodge_buffer, d.jump_buffer,
+			c.combo, c.dodge_cancel, c.dash_attack, c.air_attack, d.hitstop]
 	if _diag_perf != null and _diag_panel.visible:
 		_diag_perf.text = "FPS: %d\nTexture mem: %.2f MB" % [
 			int(Engine.get_frames_per_second()),
