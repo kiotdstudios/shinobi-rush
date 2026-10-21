@@ -3,7 +3,7 @@
 - Order: `orders/Kiro/2026-10-20-combat-camera-feedback-animation.md`
 - Date: 2026-10-21
 - Final status: REVIEW. The PR is open and NOT merged; the order is NOT DONE. Nothing calls the module yet (Aki wires the documented call), and the deployed build has not been checked (after the merge the orchestrator does that).
-- Commit / PR: branch `kiro/combat-camera-impact`, PR #TBD. Code verified on commit `e2b3114` (step-1 commit `7537ac8`, the probe checks `2d4a604`, `origin/main` 91eb294 merged in two steps, docs). The module, lab, web-bridge, test and probe files are byte-identical (empty `git diff`) to the first export commit `2d4a604`, on which the telemetry cases and the screenshot pairs below were measured; the local export and the controls probe were re-run on `e2b3114` after the second merge of main. Later commits only change the order status, this report and the PR number.
+- Commit / PR: branch `kiro/combat-camera-impact`, PR #50 (https://github.com/kiotdstudios/shinobi-rush/pull/50). Code verified on commit `e2b3114` (step-1 commit `7537ac8`, the probe checks `2d4a604`, `origin/main` 91eb294 merged in two steps, docs). The module, lab, web-bridge, test and probe files are byte-identical (empty `git diff`) to the first export commit `2d4a604`, on which the telemetry cases and the screenshot pairs below were measured; the local export and the controls probe were re-run on `e2b3114` after the second merge of main. Later commits only change the order status, this report and the PR number.
 
 Labels: VERIFIED = I ran it and read the output. ASSUMED = reasoned or derived, not run. Evidence files are local to the build machine (`C:\tmp\shinobi-order01\camfx\evidence\`) and are not in the PR.
 
@@ -147,4 +147,4 @@ Peaks stay inside the order's bands (light 2.5 in 2-3, heavy 5.0 in 4-6), each e
 
 ## Where to look
 - Guide and contract: `docs/development/CAMERA_IMPACT.md`; module `scripts/camera/camera_impact.gd`; tests `tests/test_camera_impact.gd`; probe `scripts/ci/smoke/controls-probe.mjs`.
-- Order: `orders/Kiro/2026-10-20-combat-camera-feedback-animation.md`. PR: #TBD.
+- Order: `orders/Kiro/2026-10-20-combat-camera-feedback-animation.md`. PR: [#50](https://github.com/kiotdstudios/shinobi-rush/pull/50).

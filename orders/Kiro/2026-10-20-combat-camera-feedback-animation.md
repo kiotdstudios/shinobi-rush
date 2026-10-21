@@ -4,7 +4,7 @@
 - **Priority:** P1
 - **Owner:** Kiro, camera animation only
 - **Dependencies:** Existing close-camera implementation; Aki's combat hit events.
-- **Branch/PR:** kiro/combat-camera-impact = PR #TBD
+- **Branch/PR:** kiro/combat-camera-impact = PR #50 (https://github.com/kiotdstudios/shinobi-rush/pull/50)
 
 ## Objective
 In parallel with Codex's combat sprites and Orcha's Lightning Clone, implement **one standalone procedural camera-impact animation** for confirmed sword hits. Do not duplicate sprite/VFX work. Keep this small because Kiro has limited remaining execution budget.
@@ -30,4 +30,4 @@ Camera returns to baseline with no residual displacement or zoom; repeated event
 
 ## Status log
 - 2026-10-21 Kiro: QUEUED -> IN_PROGRESS. Audit: no camera shake and no `Camera2D.offset` use exists in `scripts/`; the confirmed-hit site is `PlayerController._check_attack_hits()`. Measured that Godot 4.7.2 adds `Camera2D.offset` after the limit clamp, so the module clamps itself. Wrote `scripts/camera/camera_impact.gd`, lab demo keys `7 8 9 0` (H / G / B would have turned two existing key-collision tests red), `?camera_impact=off|reduced|on` and the `cfx_*` telemetry; 96 new in-engine checks, red under three temporary mutations (12, 23 and 5 checks failed). The optional zoom pulse is left out (measured: +1.5 % zoom moves the view 9.6 screen px at the east limit, more than the 5 px kick).
-- 2026-10-21 Kiro: IN_PROGRESS -> REVIEW. Local Web export of e2b3114 (main 91eb294 merged): controls probe 22/22 PASS (16 existing + 6 new); light 2.500 px and heavy 5.000 px at the wide and the close preset; a slow-kick screenshot pair matched the published offset to 0.04 px (close) and 0.26 px (wide) and the world returned pixel-identical; whole suite 722 passed, 0 failed. Parameter guide and the event contract for Aki: `docs/development/CAMERA_IMPACT.md`. Report: `orders/Kiro/reports/2026-10-20-combat-camera-feedback-report.md`. PR #TBD open. NOT merged and NOT DONE: nothing calls the module yet (Aki wires the documented call at the confirmed-hit site) and the orchestrator verifies the deployed build.
+- 2026-10-21 Kiro: IN_PROGRESS -> REVIEW. Local Web export of e2b3114 (main 91eb294 merged): controls probe 22/22 PASS (16 existing + 6 new); light 2.500 px and heavy 5.000 px at the wide and the close preset; a slow-kick screenshot pair matched the published offset to 0.04 px (close) and 0.26 px (wide) and the world returned pixel-identical; whole suite 722 passed, 0 failed. Parameter guide and the event contract for Aki: `docs/development/CAMERA_IMPACT.md`. Report: `orders/Kiro/reports/2026-10-20-combat-camera-feedback-report.md`. PR #50 (https://github.com/kiotdstudios/shinobi-rush/pull/50) open. NOT merged and NOT DONE: nothing calls the module yet (Aki wires the documented call at the confirmed-hit site) and the orchestrator verifies the deployed build.
