@@ -1,7 +1,7 @@
 # ORDER — Premium Combat Animation Pack V1 (Reference-Driven)
 
 - **Agent:** Codex
-- **Status:** QUEUED
+- **Status:** IN_PROGRESS — Phase1 existing-art audit started; SE proof reuses modular sword work, no paid generation initiated
 - **Priority:** P0
 - **Owner:** Codex — production art and animation
 - **Branch/PR:** Create dedicated art branches/PRs for staged deliveries; this order enters via its own order-only PR.
