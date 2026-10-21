@@ -624,6 +624,12 @@ func _frame_stats(cam: Camera2D) -> Vector3:
 ## advance()). Camera2D.set_offset() runs the engine's camera update once more, which advances the position smoothing one extra
 ## step for the rendered view, so a clamp computed from the centre read BEFORE the write over-estimates the room while the
 ## camera glides into its pin and shows void at the screen edge. After EVERY frame the rendered view must be inside the limits.
+## Frame-rate independence: the telemetry peak is per effect (a hit that starts a new effect while none is running resets it), and a
+## hit that lands on a pinned camera shrinks to about 0, so at the end of the walk the peak belongs to that last, empty effect and
+## says nothing about the kicks (the chain of effects only stays alive when 7 frames take less than 120 ms, i.e. above about 58 FPS).
+## So neither check below reads the peak at the end. "The kicks were really played" uses the largest offset actually WRITTEN on any
+## frame (`max_written`, at least 3 screen px), and the peak is compared with the written offset on EVERY frame (the peak only
+## resets before the first write of an effect, so while an effect runs it is never below what was written, at any cadence).
 func test_walking_into_wall(tree_root: Node, preset: String) -> void:
 	var tree := tree_root.get_tree()
 	CameraImpact.reset_all()
@@ -641,6 +647,7 @@ func test_walking_into_wall(tree_root: Node, preset: String) -> void:
 	var worst_void := -INF
 	var max_written := 0.0
 	var mismatch := 0.0
+	var peak_short := 0.0  # most by which the offset written on any frame exceeded the telemetry peak (must stay ~0)
 	var hits := 0
 	var frames := 0
 	var pin_frame := -1
@@ -657,6 +664,7 @@ func test_walking_into_wall(tree_root: Node, preset: String) -> void:
 		worst_void = maxf(worst_void, s.x)
 		max_written = maxf(max_written, s.y)
 		mismatch = maxf(mismatch, s.z)
+		peak_short = maxf(peak_short, s.y - CameraImpact.peak_px)
 		if cam.limit_right - _view_rect(cam).end.x <= 0.001:
 			pinned += 1
 			if pin_frame < 0:
@@ -669,13 +677,14 @@ func test_walking_into_wall(tree_root: Node, preset: String) -> void:
 		worst_void = maxf(worst_void, s.x)
 		max_written = maxf(max_written, s.y)
 		mismatch = maxf(mismatch, s.z)
+		peak_short = maxf(peak_short, s.y - CameraImpact.peak_px)
 	var post := _snap(player)
-	print("CFX_MOVING preset=%s zoom=%.4f frames=%d hits=%d pin_frame=%d worst_void=%.5f max_offset_px=%.3f peak_px=%.3f" % [preset, cam.zoom.x, frames, hits, pin_frame, worst_void, max_written, CameraImpact.peak_px])
-	var info := "worst void=%s world px, pinned from frame %d of %d, %d hits, peak %s px" % [worst_void, pin_frame, frames, hits, CameraImpact.peak_px]
-	ck.call("impact moving camera (%s): a heavy hit every 7th frame while the player walks into the east wall never shows void on any frame" % preset, worst_void <= 0.01 and pin_frame >= 0 and hits >= 10 and CameraImpact.peak_px >= 3.0, info)
+	print("CFX_MOVING preset=%s zoom=%.4f frames=%d hits=%d pin_frame=%d worst_void=%.5f max_offset_px=%.3f peak_short=%.5f last_peak_px=%.3f" % [preset, cam.zoom.x, frames, hits, pin_frame, worst_void, max_written, peak_short, CameraImpact.peak_px])
+	var info := "worst void=%s world px, pinned from frame %d of %d, %d hits, largest written offset %s px" % [worst_void, pin_frame, frames, hits, max_written]
+	ck.call("impact moving camera (%s): a heavy hit every 7th frame while the player walks into the east wall never shows void on any frame" % preset, worst_void <= 0.01 and pin_frame >= 0 and hits >= 10 and max_written >= 3.0, info)
 	var settled: bool = cam.offset == Vector2.ZERO and not CameraImpact.telemetry()["cfx_active"] and absf(cam.zoom.x - player.camera_baseline) < 1e-6
 	var untouched: bool = post["limits"] == pre["limits"] and post["smooth"] == pre["smooth"] and post["speed"] == pre["speed"] and post["base"] == pre["base"]
-	ck.call("impact moving camera (%s): afterwards the offset is exactly ZERO, zoom == baseline, limits and smoothing untouched, and the published offset was the written one on every frame" % preset, settled and untouched and mismatch <= 1e-4 and CameraImpact.peak_px >= max_written - 1e-4, "offset=%s zoom=%s baseline=%s mismatch=%s peak=%s written=%s" % [cam.offset, cam.zoom.x, player.camera_baseline, mismatch, CameraImpact.peak_px, max_written])
+	ck.call("impact moving camera (%s): afterwards the offset is exactly ZERO, zoom == baseline, limits and smoothing untouched, and on every frame the published offset was the written one and the telemetry peak was not below it" % preset, settled and untouched and mismatch <= 1e-4 and peak_short <= 1e-4, "offset=%s zoom=%s baseline=%s mismatch=%s peak_short=%s written=%s" % [cam.offset, cam.zoom.x, player.camera_baseline, mismatch, peak_short, max_written])
 
 	# ---- clean up
 	main.queue_free()
