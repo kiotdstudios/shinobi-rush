@@ -52,4 +52,6 @@ static func build_table() -> Dictionary:
 	t["light2"] = AttackDef.new("light2", 6, 4, 11, 13.0, 100.0, 40.0, 100.0, 45.0, 170.0, 8, 4)
 	t["light3"] = AttackDef.new("light3", 9, 5, 15, 20.0, 110.0, 45.0, 60.0, 75.0, 260.0, 9, 6)
 	t["dash_attack"] = AttackDef.new("dash_attack", 6, 5, 13, 16.0, 120.0, 35.0, 320.0, 55.0, 220.0, 0, 4)
+	# Aerial attack (thrown mid-jump): quick, no lunge so jump momentum is untouched, no combo chain.
+	t["air_attack"] = AttackDef.new("air_attack", 5, 4, 10, 11.0, 95.0, 50.0, 0.0, 40.0, 150.0, 0, 0)
 	return t
