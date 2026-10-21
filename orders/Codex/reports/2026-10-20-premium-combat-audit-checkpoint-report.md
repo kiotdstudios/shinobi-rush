@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-20-premium-combat-animation-pack-v1.md
 - Date: 2026-10-20
 - Final status: IN_PROGRESS — inventory checkpoint complete; Phase1 prototype not yet delivered
-- Commit / PR: Pending at report creation
+- Commit / PR:789ff832147b8f0be2f8c86c4eaa049a1d5c5dd9 pushed; https://github.com/kiotdstudios/shinobi-rush/pull/42 (draft Phase1 checkpoint)
 
 ## Work completed
 Fetched and read Chief's latest P0 order from order branch3b33918; marked IN_PROGRESS in dedicated codex/premium-combat-poc checkout. Audited actual production manifest, modular sword metadata/art, VFX, local legacy dash candidate and recent bandit art. Documented reuse/gaps, SE pose storyboard and timing/event interface mismatch. No new paid generation, sprite changes or runtime changes.
