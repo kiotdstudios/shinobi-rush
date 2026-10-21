@@ -36,6 +36,7 @@ func _initialize() -> void:
 	await test_lab_and_pause()
 	await test_camera_framing()
 	await load("res://tests/test_camera_preset.gd").new().run(ck, root)
+	await load("res://tests/test_camera_impact.gd").new().run(ck, root)
 	await load("res://tests/test_arena_sorting.gd").new().run(ck, root)
 	await load("res://tests/test_combat.gd").new().run(ck, root)
 	await load("res://tests/test_jump.gd").new().run(ck, root)
