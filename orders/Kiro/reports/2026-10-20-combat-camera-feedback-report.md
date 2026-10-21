@@ -3,7 +3,7 @@
 - Order: `orders/Kiro/2026-10-20-combat-camera-feedback-animation.md`
 - Date: 2026-10-21
 - Final status: REVIEW. The PR is open and NOT merged; the order is NOT DONE. Nothing calls the module yet (Aki wires the documented call), and the deployed build has not been checked (after the merge the orchestrator does that).
-- Commit / PR: branch `kiro/combat-camera-impact`, PR #TBD (head TBD). Code verified on commit `2d4a604` (step-1 commit `7537ac8` + `origin/main` 63bbd6c merged + the probe checks); later commits only add docs, the order status and this report.
+- Commit / PR: branch `kiro/combat-camera-impact`, PR #TBD. Code verified on commit `e2b3114` (step-1 commit `7537ac8`, the probe checks `2d4a604`, `origin/main` 91eb294 merged in two steps, docs). The module, lab, web-bridge, test and probe files are byte-identical (empty `git diff`) to the first export commit `2d4a604`, on which the telemetry cases and the screenshot pairs below were measured; the local export and the controls probe were re-run on `e2b3114` after the second merge of main. Later commits only change the order status, this report and the PR number.
 
 Labels: VERIFIED = I ran it and read the output. ASSUMED = reasoned or derived, not run. Evidence files are local to the build machine (`C:\tmp\shinobi-order01\camfx\evidence\`) and are not in the PR.
 
@@ -30,19 +30,20 @@ Final `git diff --stat origin/main...HEAD` is in the PR; only allowed files.
 ## Tests run before commit
 | Test / command / manual steps | Result | Evidence |
 | --- | --- | --- |
-| `godot_ci.py import` and `validate-resources` on the final tree | VERIFIED exit 0; 36 scripts, 6 scenes, 0 failures | `evidence/logs/export1/` |
+| `godot_ci.py import` and `validate-resources` on the final tree | VERIFIED exit 0; 38 scripts, 6 scenes, 0 failures | `evidence/logs/export2/` |
 | `godot_ci.py tests` baseline, clean main 9826590 | VERIFIED 534 passed, 0 failed (the brief guessed 493) | `evidence/logs/tests0.out.txt` |
 | `godot_ci.py tests` with the module, before merging PR #43 | VERIFIED 630 passed, 0 failed (+96) | `evidence/logs/final1/` |
-| `godot_ci.py tests` on the final tree (PR #43 merged in) | VERIFIED 644 passed, 0 failed, 43 s; 96 `impact` checks PASS; only the pre-existing intentional `t_badsheet` warning. Baseline for main 63bbd6c is 548 = 644 - 96 (ASSUMED, derived: PR #43 added 14) | `evidence/logs/final2/tests-builtin.log` |
-| RED PROOF 1: `LIGHT_PEAK_PX` 2.5 -> 7.0 | VERIFIED 618 passed, 12 FAILED (defaults/bands, light peak, exact single impulse, sub-linear stacking, trace table, scene light peak, telemetry peak, 200 ms frame, ...) | `evidence/logs/mut1d/` |
-| RED PROOF 2: the final zero offset never written (residual displacement) | VERIFIED 607 passed, 23 FAILED (every scene check that needs offset == ZERO and the camera back exactly) | `evidence/logs/mut2/` |
-| RED PROOF 3: edge clamp bypassed | VERIFIED 625 passed, 5 FAILED (the four limits and the 3 px room case, each shows 11.25 world px of void) | `evidence/logs/mut3/` |
+| `godot_ci.py tests` after merging PR #43 (main 63bbd6c) | VERIFIED 644 passed, 0 failed | `evidence/logs/final2/tests-builtin.log` |
+| `godot_ci.py tests` on the final tree (main 91eb294 merged: PRs #43, #45, #47) | VERIFIED 722 passed, 0 failed; 96 `impact` checks PASS; only the pre-existing intentional `t_badsheet` warning. Baseline for main 91eb294 is 626 = 722 - 96 (ASSUMED, derived, not run on a clean main) | `evidence/logs/final4-tests/tests-builtin.log` |
+| RED PROOF 1: `LIGHT_PEAK_PX` 2.5 -> 7.0 | VERIFIED on the 630-check tree of step 1: 618 passed, 12 FAILED (defaults/bands, light peak, exact single impulse, sub-linear stacking, trace table, scene light peak, telemetry peak, 200 ms frame, ...) | `evidence/logs/mut1d/` |
+| RED PROOF 2: the final zero offset never written (residual displacement) | VERIFIED (same tree): 607 passed, 23 FAILED (every scene check that needs offset == ZERO and the camera back exactly) | `evidence/logs/mut2/` |
+| RED PROOF 3: edge clamp bypassed | VERIFIED (same tree): 625 passed, 5 FAILED (the four limits and the 3 px room case, each shows 11.25 world px of void) | `evidence/logs/mut3/` |
 | Restore after the mutations | VERIFIED file hash identical to the verified clean copy, `grep MUTATION` in `scripts/` and `tests/` = 0 | step-1 notes |
-| ONE local Web export of `2d4a604` like CI: `import`, `validate-resources`, `export` (GITHUB_SHA = commit), `finalize-export`, `check-export` | VERIFIED all exit 0, 38 MiB, `build-info.json` commit `2d4a604` | `evidence/logs/export1/` |
-| `node --check scripts/ci/smoke/controls-probe.mjs`, then the probe against that export | VERIFIED syntax OK; 22/22 PASS (16 existing + 6 new), 0 console errors, 96 s | `evidence/probe1/run.log` |
-| Telemetry of every demo case in the browser (table below) | VERIFIED | `evidence/verify-cases.log` |
-| Baseline vs mid-effect screenshot pair, wide and close, plus `after` == `baseline` (below) | VERIFIED | `evidence/pair-close/`, `evidence/pair-wide/` |
-| The paste-ready snippet for Aki applied to a throwaway copy of the final tree (outside the repo): import, then the whole suite | VERIFIED imports without errors, 644 passed, 0 failed | `evidence/logs/snippet/` |
+| ONE local Web export of `e2b3114` like CI: `import`, `validate-resources`, `export` (GITHUB_SHA = commit), `finalize-export`, `check-export` (an earlier export of `2d4a604` was built the same way, exit 0, and is the one the cases and pairs below were measured on) | VERIFIED all exit 0, 38 MiB, `build-info.json` commit `e2b3114`, 1007 sprite PNG import records in the PCK | `evidence/logs/export2/`, `evidence/logs/export1/` |
+| `node --check scripts/ci/smoke/controls-probe.mjs`, then the probe against the export of `e2b3114` | VERIFIED syntax OK; 22/22 PASS (16 existing + 6 new), 0 console errors, 102 s. The same probe on the export of `2d4a604` was 22/22 too (96 s) | `evidence/probe2/run.log`, `evidence/probe1/run.log` |
+| Telemetry of every demo case in the browser (table below), export of `2d4a604` | VERIFIED | `evidence/verify-cases.log` |
+| Baseline vs mid-effect screenshot pair, wide and close, plus `after` == `baseline` (below), export of `2d4a604` | VERIFIED | `evidence/pair-close/`, `evidence/pair-wide/` |
+| The paste-ready snippet for Aki applied to a throwaway copy of the final tree (main 91eb294 + this PR, outside the repo): import, then the whole suite | VERIFIED imports without errors, 722 passed, 0 failed | `evidence/logs/snippet/` |
 | Not run locally on purpose (CI runs them): `smoke.mjs`, `debug-probe.mjs`, the occlusion matrix | CI | PR checks |
 
 ### Browser telemetry (local export, software-GL Chromium, 3 to 11 FPS, 5 to 6 rendered frames per effect)
@@ -104,7 +105,7 @@ Peaks stay inside the order's bands (light 2.5 in 2-3, heavy 5.0 in 4-6), each e
 - **The brief's demo keys `H G B Shift+G` break existing tests.** VERIFIED by running them: 3 failures (`dt: new actions do not reuse any existing key`, `bd: dbg_* keys do not collide with each other`, plus my own digit check) because the repo's key-collision tests compare physical keys only and `H G B` are the telemetry HUD's Ctrl+Alt chords. Used the digits `7 8 9 0` next to the overlay digits 1-6.
 - **Godot 4.7.2 applies `Camera2D.offset` after the limit clamp** (VERIFIED, measured): an unclamped kick east at the east limit showed 12 px of void. The module clamps; consequence: no camera kick toward a wall while the camera is pinned there (deliberate, matches the order's "no clipping at screen edges").
 - **Three hits can land in one frame at low FPS.** At 5 FPS the burst's later hits fire in the same frame and stack as a root-sum-square (3.536 px for two lights); at 60 FPS they are 40 ms apart (trace table). The cap holds either way.
-- **`origin/main` moved (PR #43, Aki's Combat Fluidity Milestone A) while I worked.** Merged without conflicts (no file overlap). Aki's confirmed-hit site moved from lines 357-358 to 394-395 of `player_controller.gd` (same code); PR #43 adds `air_attack` (hitstop 40 ms = light). The contract was re-checked against it.
+- **`origin/main` moved twice while I worked** (PR #43 Aki's Combat Fluidity Milestone A; then PRs #45 and #47: the bandit art and the jump launch fix). Both merged without conflicts; `tests/run_tests.gd` (the one shared file) auto-merged next to the other agents' include lines. Aki's confirmed-hit site moved from lines 357-358 to 394-395 and then to 413-414 of `player_controller.gd` (same code, search for `enemy.take_damage(`); PR #43 adds `air_attack` (hitstop 40 ms = light). The contract and the snippet were re-checked against the final main. I forgot `godot_ci.py import` once after the second merge: the new bandit PNGs were not imported yet, so the first test run failed with 96 "cannot load" engine errors; after the import it is 722 passed, 0 failed (my slip, not a code defect).
 - **`process_priority = 1` on `WebBridge`** is a small semantic change: it publishes the state last in the frame. The other fields are read after the other nodes' `_process` instead of before. Harmless for the probes (they wait on state), but note it.
 - **Wide-zoom screenshot error up to 0.26 px** (above): texture minification with a nearest filter, not a module defect (ASSUMED).
 - **Tooling:** earlier mutation runs "timed out after 900 s" three times in unrelated existing tests while the same run later finished in 39 s, and the wall clock jumped about an hour between two tool calls; I treat these as host stalls (another agent runs Godot test jobs on the same machine), not code. Everything in this report was re-run clean afterwards.
@@ -112,7 +113,7 @@ Peaks stay inside the order's bands (light 2.5 in 2-3, heavy 5.0 in 4-6), each e
 
 ## Findings about other agents' work and hazards
 - **Single writer of `Camera2D.offset`.** The module writes exactly zero when an effect ends, so a second writer (for example Orcha's future camera director) would be erased. Documented in the guide and the handoff; the director should send impulses through `CameraImpact` or agree on one combined writer with Kiro first.
-- **Aki's integration is a contract only.** One call per confirmed contact next to `enemy.take_damage(...)`; the snippet was proved to compile and to leave Aki's whole suite green (644 passed) on a throwaway copy. With today's attack table only `light3` (75 ms) counts as heavy under the suggested `hitstop_ms >= 70` rule.
+- **Aki's integration is a contract only.** One call per confirmed contact next to `enemy.take_damage(...)`; the snippet was proved to compile and to leave Aki's whole suite green (722 passed) on a throwaway copy of the final tree. With today's attack table only `light3` (75 ms) counts as heavy under the suggested `hitstop_ms >= 70` rule.
 - **Hitstop** is a local per-entity timer, so the effect keeps ticking during it (VERIFIED in-engine: "real frames during local hitstop").
 
 ## Judgment calls the chief may overturn
@@ -140,7 +141,7 @@ Peaks stay inside the order's bands (light 2.5 in 2-3, heavy 5.0 in 4-6), each e
 
 ## Outstanding work / next steps
 1. Independent review, then the orchestrator merges; verify the deployed build (`?camera_impact=...`, lab keys `7 8 9 0`, `cfx_*` telemetry, controls probe).
-2. The orchestrator hands the event contract (`docs/development/CAMERA_IMPACT.md`, section "Event contract for Aki") to Aki; Aki adds the five lines at `player_controller.gd` lines 394-395.
+2. The orchestrator hands the event contract (`docs/development/CAMERA_IMPACT.md`, section "Event contract for Aki") to Aki; Aki adds the five lines after `enemy.take_damage(...)` in `_check_attack_hits()` (`player_controller.gd` lines 413-414 on main 91eb294).
 3. Playtest on a real GPU at 60 FPS and tune the constants (one at a time, inside the order's bands).
 4. Chief report and index entry are the orchestrator's job; this job does not write them and does not set the order to DONE.
 
