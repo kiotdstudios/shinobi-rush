@@ -5,9 +5,8 @@ extends CharacterBody2D
 ## hit-react, die. Attacking/blocking/parry-reacting/guard-break are Milestone B additions (the order
 ## explicitly scopes "enemy attack telegraphs" to Milestone B) -- this bandit does not yet hit back.
 ##
-## PLACEHOLDER visual: no Codex art exists for an enemy yet (see the Codex animation request this
-## order produced). Drawn procedurally so gameplay (detection, approach, HP, hit-react, death) is
-## fully testable and playable without blocking on art.
+## BanditVisual explicitly binds Codex's red-scarf idle/run/sprint art. Dedicated combat/death
+## clips remain future art; hurt freezes/flashes the current pose, death retains its fallback.
 
 enum State { IDLE, APPROACH, HIT_REACT, DEAD }
 
