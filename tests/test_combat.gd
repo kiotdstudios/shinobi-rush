@@ -332,7 +332,7 @@ func test_air_attack_land_run(tree_root: Node) -> void:
 		if player.state == PlayerController.State.MOVE and saw_air:
 			break
 	ck.call("air attack: attack during JUMP enters AIR_ATTACK", saw_air)
-	ck.call("air attack: jump momentum survives the swing (no velocity collapse)", min_vx > player.walk_speed * 0.7, str(min_vx))
+	ck.call("air attack: jump momentum survives the swing (no velocity collapse)", min_vx > player.jump_air_speed_cap * 0.9, str(min_vx))
 	ck.call("air attack: no IDLE anywhere through jump -> air attack -> land", not saw_idle)
 	ck.call("air attack: lands straight back into MOVE (still running)", player.state == PlayerController.State.MOVE, player.get_state_name())
 	ck.call("air attack: jump visual lift reset on landing", is_zero_approx(player.visual.position.y), str(player.visual.position.y))
