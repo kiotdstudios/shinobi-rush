@@ -4,7 +4,7 @@
 - Date:2026-10-21
 - Order: `orders/Codex/2026-10-21-kunai-reference-combat.md`
 - Final status: REVIEW for initial art checkpoint; broader request IN_PROGRESS, input clarification pending
-- Commit / PR: Not committed when this pre-commit report was written
+- Commit / PR: b94f7443204cfb917b1f40f492ea4e5eaf3479bf, pushed; https://github.com/kiotdstudios/shinobi-rush/pull/48 (draft). This is a follow-up report-only update; original report preceded implementation commit.
 
 ## Work completed
 Read/inspected actual owner ZIP overview, first-six-second sheet and all six detailed sheets (180recorded frames). Decoded the53.40s720×480 H.264 MP4 across its duration using local ffmpeg via imageio-ffmpeg; container average29.93FPS/nominal30tbr. Studied approach, contact silhouettes/arcs/sparks, launch/recovery and camera follow/reframing. Documented source observations and adaptation to compact kunai/taijutsu, distinguishing capture frames from authored keys/engine/contact/input timing. ZIP/JPEG contents treated as reference data, no attachment-sourced instructions executed. Source receipts include size/SHA256; source video/ZIP are not redistributed in the repo.
@@ -35,3 +35,7 @@ Generated transparent output had low-opacity stray pixels; thresholded alpha bef
 Required clarification pending from async question: does throwing replace the block/parry input while retaining melee, or replace sword attacks? Current game has no shield action. Equipment binding for all required frames, full kunai combo, throw bodies/projectile/VFX/input, enemy kunai combat and dynamic camera remain outstanding. Preserve the current player/bandit; expand after reviewing the concrete new SE motion/weapon look. No paid third-party generation API used.
 
 Live deployment: not applicable to this opt-in art/study checkpoint. New kunai is not equipped in the live game yet. Separately completed bandit replacement is merged/live verified at98add79 (PR45).
+
+## Publication verification
+
+Fetched published raw GitHub half/close-half/normal attack GIFs and player/bandit attachment PNG after push: all HTTP200/image types correct,32441/26098/32441/16190bytes. Prefix `https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/kunai-combat-reference/docs/visuals/kunai-reference/`. Artifact is a review proof, not a live-game weapon/throw implementation. PR48 is attached; a briefly mistaken PR46 task attachment was removed without changing that unrelated PR.

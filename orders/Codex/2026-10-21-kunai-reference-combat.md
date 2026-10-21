@@ -4,7 +4,7 @@
 - Status: IN_PROGRESS — reference study/shared kunai/first SE one-handed attack pilot delivered; throw mapping awaits owner clarification
 - Priority: P1
 - Owner: Codex art; runtime/camera changes coordinated through existing owners and review
-- Branch/PR: `codex/kunai-combat-reference`, PR pending
+- Branch/PR: `codex/kunai-combat-reference`, https://github.com/kiotdstudios/shinobi-rush/pull/48 (draft art/reference checkpoint)
 - Dependencies: Owner MP4/ZIP reference; current player/bandit128px designs; clarify “instead of a shield” throw mapping
 
 ## Objective
