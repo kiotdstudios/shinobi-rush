@@ -27,10 +27,10 @@ CameraImpact.impulse(dir, peak_px, duration_ms)      # custom strength; peak in 
 - `dir`: world-space direction attacker to target, any length (it is normalised inside), `Vector2.ZERO` allowed (counted, no movement).
 - When: ONCE per CONFIRMED contact, right after the hit is accepted (after `enemy.take_damage(...)`). Never per active frame, never on a whiff or on startup/recovery frames.
 - Return value: none. The call cannot fail; it is a silent no-op in every unusable case (see above), so combat code and headless combat tests may call it freely. In a test with a player and camera in the tree the first call adds one child node `CameraImpact` under the `Camera2D`.
-- Suggested mapping: `heavy_hit` when `_attack_def.hitstop_ms >= 70.0`, else `light_hit`. With today's table (main 63bbd6c: light1 40 ms, light2 45, light3 75, dash_attack 55, air_attack 40) only `light3` is heavy; tune the threshold or call `impulse` per attack in playtest.
+- Suggested mapping: `heavy_hit` when `_attack_def.hitstop_ms >= 70.0`, else `light_hit`. With today's table (main 91eb294: light1 40 ms, light2 45, light3 75, dash_attack 55, air_attack 40) only `light3` is heavy; tune the threshold or call `impulse` per attack in playtest.
 
 ### Paste-ready snippet
-The confirm site is `PlayerController._check_attack_hits()` in `scripts/player/player_controller.gd` (lines 394-395 on main 63bbd6c). Add the marked lines right after them; `to_enemy` is already in scope and is not normalised, which is fine:
+The confirm site is `PlayerController._check_attack_hits()` in `scripts/player/player_controller.gd` (lines 413-414 on main 91eb294; the numbers move with every combat PR, so search for `enemy.take_damage(`). Add the marked lines right after them; `to_enemy` is already in scope and is not normalised, which is fine:
 ```gdscript
 		_hit_targets.append(enemy)
 		enemy.take_damage(_attack_def.damage, to_enemy.normalized(), _attack_def.knockback, _attack_def.hitstop_ms)
@@ -41,7 +41,7 @@ The confirm site is `PlayerController._check_attack_hits()` in `scripts/player/p
 		else:
 			CameraImpact.light_hit(to_enemy)
 ```
-(An if/else on purpose: a one-line ternary of two calls trips GDScript's STANDALONE_TERNARY warning.) Checked by applying exactly these lines to a throwaway copy of main 63bbd6c plus this PR, outside the repo: the project imports without errors and the whole suite stays at 644 passed, 0 failed (Aki's combat tests then run the call on every hit). A sweep that hits three enemies in one frame makes three calls; the combine rule turns three light hits into 4.33 px (2.5 x sqrt 3) and the cap holds the rest. For exactly one kick per swing, call once per swing instead (for example after the loop, with `facing8`).
+(An if/else on purpose: a one-line ternary of two calls trips GDScript's STANDALONE_TERNARY warning.) Checked by applying exactly these lines to a throwaway copy of main 91eb294 plus this PR, outside the repo: the project imports without errors and the whole suite stays at 722 passed, 0 failed (Aki's combat tests then run the call on every hit). A sweep that hits three enemies in one frame makes three calls; the combine rule turns three light hits into 4.33 px (2.5 x sqrt 3) and the cap holds the rest. For exactly one kick per swing, call once per swing instead (for example after the loop, with `facing8`).
 
 ### What Aki must NOT do
 - Never write `camera.offset`, `camera.zoom`, `camera.position`, the limits or the smoothing for combat feedback. `CameraImpact` is the single writer of `Camera2D.offset` (it writes exactly zero when an effect ends); zoom belongs to `CameraPreset` and the lab.
