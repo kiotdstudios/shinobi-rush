@@ -64,6 +64,16 @@ func _process(delta: float) -> void:
 	_state.cfx_offset_y = cfx["cfx_offset_y"]
 	_state.cfx_peak_px = cfx["cfx_peak_px"]
 	_state.cfx_count = cfx["cfx_count"]
+	var lock := _player.get_node_or_null("LockOn") as PlayerLockOn
+	_state.target_locked = lock != null and lock.valid_target()
+	var enemy := get_tree().get_first_node_in_group("enemy") as Bandit
+	if enemy != null:
+		_state.bandit_state = enemy.get_state_name()
+		_state.bandit_x = enemy.global_position.x
+		_state.bandit_y = enemy.global_position.y
+		_state.bandit_evades = enemy.evade_count
+		_state.bandit_animation = (enemy.visual as BanditVisual).actor.anim_id
+		_state.bandit_frame = (enemy.visual as BanditVisual).actor.sprite.frame
 	var scene := get_tree().current_scene
 	var lab := scene.get_node_or_null("AnimationLab") as AnimationLab if scene != null else null
 	if lab != null:
