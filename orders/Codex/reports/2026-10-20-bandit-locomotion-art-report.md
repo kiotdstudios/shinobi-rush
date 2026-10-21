@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-20-bandit-locomotion-art.md
 - Date: 2026-10-20
 - Final status: REVIEW — art ready for owner review; runtime integration assigned to Aki
-- Commit / PR: Implementation commit and PR pending at report creation; follow-up will record links.
+- Commit / PR: Art commit e211daeb02bf461c1754daf8e91fe4c299660aa7; https://github.com/kiotdstudios/shinobi-rush/pull/38 (open for review, pushed).
 
 ## Work completed
 Created the owner's masked, topknot, tattered red-scarf bandit with a plain red cloth headband and no logos. Eight design views and 24 animation clips: four-frame idle and eight-frame regular run/ninja sprint per direction. 160 native128×128 transparent motion PNGs plus eight rotations, fixed root[64,116], body scale comparable to approved player. Separate authored/proposed half-speed FPS metadata.

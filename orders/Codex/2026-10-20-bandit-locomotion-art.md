@@ -3,7 +3,7 @@
 - Owner: Codex (art)
 - Status: REVIEW
 - Priority: P1
-- Branch/PR: codex/bandit-locomotion
+- Branch/PR: codex/bandit-locomotion — https://github.com/kiotdstudios/shinobi-rush/pull/38; art commit e211daeb02bf461c1754daf8e91fe4c299660aa7
 - Dependencies: owner appearance reference; approved128px game style; Aki enemy integration
 
 ## Objective
@@ -22,4 +22,5 @@ New assets/characters/bandit/ art/source/metadata and previews. No player sprite
 No logos or marks on headband/clothes; distinct bandit identity; stable size/root/direction; breathing idle without body sway; run has alternating arm/leg action; sprint arms stay back with forward momentum/scarf follow-through. No baked floor shadow/background, duplicated/missing frames, clipping or blurred/interpolated pixels. Export at128 without shrinking to hide overflow. Audit all directions and loop timing; Godot import, browser/mobile review and order/whitespace checks before commit.
 
 ## Handoff / Notes
+All24 clips/160motion frames exported; native RGBA/timing/uniqueness checks, Godot160texture load, resource validation, desktop/phone browser review controls and order/whitespace checks passed. See reports/2026-10-20-bandit-locomotion-art-report.md. Owner visual acceptance pending. Live deployment not applicable: runtime binding remains Aki-owned.
 Latest owner instruction resolves the earlier Bandit-design approval dependency in combat-v1-animation-request. Only requested locomotion states are authorized in this art phase. Enemy gameplay integration remains Aki-owned.

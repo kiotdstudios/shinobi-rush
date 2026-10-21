@@ -3,7 +3,7 @@
 - Owner: Aki (runtime); Codex (art)
 - Status: QUEUED
 - Priority: P1
-- Branch/PR: Codex art branch codex/bandit-locomotion; runtime branch chosen by Aki
+- Branch/PR: Codex art https://github.com/kiotdstudios/shinobi-rush/pull/38 (e211daeb02bf461c1754daf8e91fe4c299660aa7); runtime branch chosen by Aki
 - Dependencies: Codex bandit art PR reviewed/accepted and integrated
 
 ## Objective
