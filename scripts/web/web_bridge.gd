@@ -1,7 +1,7 @@
 extends Node
 ## Autoload. Inert outside Web builds. In Web: sets window.__SHINOBI_READY__ after the first
 ## rendered frames and publishes window.__SHINOBI_STATE__ ~10 Hz for the browser smoke test.
-## Read-only: never affects gameplay.
+## Read-only: never affects gameplay. The only things it applies are the boot-time URL options ?camera= and ?camera_impact=.
 
 const PUBLISH_INTERVAL := 0.1
 
@@ -18,8 +18,13 @@ func _ready() -> void:
 	if not active:
 		return
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Publish after every default-priority node has processed this frame, so cfx_offset_* is the offset about to be rendered.
+	process_priority = 1
 	# ?camera=wide|close|<number>: autoloads are ready before the main scene, so the player already sees it.
-	apply_camera_query(str(JavaScriptBridge.eval("window.location.search", true)))
+	var search := str(JavaScriptBridge.eval("window.location.search", true))
+	apply_camera_query(search)
+	# ?camera_impact=off|reduced|on (hit kick); without it "reduced" when the browser asks for reduced motion.
+	apply_camera_impact_query(search, bool(JavaScriptBridge.eval("!!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)", true)))
 	_window = JavaScriptBridge.get_interface("window")
 	_state = JavaScriptBridge.create_object("Object")
 	_window.__SHINOBI_STATE__ = _state
@@ -51,6 +56,14 @@ func _process(delta: float) -> void:
 	_state.camera_preset = CameraPreset.active_id()
 	_state.figure_height_px = _player.figure_height_px()
 	_state.sprite_set_id = _player.visual.sprite_set.id if _player.visual.sprite_set != null else "placeholder"
+	var cfx := CameraImpact.telemetry()  # camera hit kick (screen px); additive fields
+	_state.cfx_enabled = cfx["cfx_enabled"]
+	_state.cfx_scale = cfx["cfx_scale"]
+	_state.cfx_active = cfx["cfx_active"]
+	_state.cfx_offset_x = cfx["cfx_offset_x"]
+	_state.cfx_offset_y = cfx["cfx_offset_y"]
+	_state.cfx_peak_px = cfx["cfx_peak_px"]
+	_state.cfx_count = cfx["cfx_count"]
 	var scene := get_tree().current_scene
 	var lab := scene.get_node_or_null("AnimationLab") as AnimationLab if scene != null else null
 	if lab != null:
@@ -61,6 +74,12 @@ func _process(delta: float) -> void:
 ## Select the camera preset from the page's query string (web only caller). Invalid or missing -> default.
 static func apply_camera_query(query: String) -> void:
 	CameraPreset.set_active(CameraPreset.parse_query(query))
+
+
+## Select the hit-kick mode from the page's query string (web only caller): the URL wins, else the browser's reduced-motion
+## preference, else on. Garbage in the URL means "on".
+static func apply_camera_impact_query(query: String, prefers_reduced_motion: bool = false) -> void:
+	CameraImpact.apply_mode(CameraImpact.boot_mode(query, prefers_reduced_motion))
 
 
 ## Camera framing published in __SHINOBI_STATE__: zoom and the visible world size (viewport / zoom).

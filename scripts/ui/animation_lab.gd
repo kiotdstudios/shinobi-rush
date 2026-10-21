@@ -11,6 +11,15 @@ const NATIVE_ZOOMS: Array[float] = [1.0, 2.0, 3.0, 4.0]
 ## Camera preset switch (wide <-> close). The action is registered at runtime so project.godot stays untouched.
 const PRESET_ACTION := "dbg_camera_preset"
 const PRESET_KEY := KEY_N
+## Camera-impact demo (CameraImpact): 7 light, 8 heavy, 9 burst of three, 0 the heavy kick stretched to CameraImpact.SLOW_MS so
+## it can be watched. Registered at runtime like N (project.godot stays untouched) and only active while the lab is open. They
+## kick along the player's facing, as a real hit would along attacker -> target. Digits, because H/G/B share their physical key
+## with the telemetry HUD's Ctrl+Alt+H/G/B (the repo's key-collision tests compare physical keys only).
+const IMPACT_ACTIONS: Dictionary = {
+	"dbg_camera_impact_light": KEY_7, "dbg_camera_impact_heavy": KEY_8,
+	"dbg_camera_impact_burst": KEY_9, "dbg_camera_impact_slow": KEY_0,
+}
+const BURST_GAP_S := 0.04  ## the burst: three light hits this far apart
 ## Stands sit LEFT of the spawn so they stay clear of the lab panel (screen right) at 1x-2x zoom.
 ## Provisional prototype values scaled by WorldScale.SCALE (stands far enough apart for the 128 px frames).
 const STAND_OFFSETS: Array[Vector2] = WorldScale.STAND_OFFSETS
@@ -20,7 +29,7 @@ const OVERLAYS: Array = [
 	["iso", "1 iso grid"], ["square", "2 square grid"], ["anchor", "3 anchor"],
 	["footprint", "4 footprint"], ["ruler", "5 height ruler"], ["bbox", "6 frame box"],
 ]
-const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom | N camera preset | 1-6 overlays"
+const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom | N camera preset | 1-6 overlays | 7 8 9 0 camera kick: light heavy burst slow"
 
 enum DirMode { FOLLOW, FIXED, SPIN }
 
@@ -155,6 +164,10 @@ func _build_actions() -> void:
 		"dbg_compare": toggle_compare,
 		"dbg_zoom_cycle": cycle_zoom,
 		PRESET_ACTION: cycle_preset,
+		"dbg_camera_impact_light": func() -> void: impact_demo("light"),
+		"dbg_camera_impact_heavy": func() -> void: impact_demo("heavy"),
+		"dbg_camera_impact_burst": func() -> void: impact_demo("burst"),
+		"dbg_camera_impact_slow": func() -> void: impact_demo("slow"),
 		"dbg_overlay_iso_grid": func() -> void: toggle_overlay("iso"),
 		"dbg_overlay_square_grid": func() -> void: toggle_overlay("square"),
 		"dbg_overlay_anchor": func() -> void: toggle_overlay("anchor"),
@@ -174,8 +187,20 @@ static func _ensure_preset_action() -> void:
 	InputMap.action_add_event(PRESET_ACTION, ev)
 
 
+## Register the camera-impact demo actions once unless they already exist.
+static func _ensure_impact_actions() -> void:
+	for action: String in IMPACT_ACTIONS:
+		if InputMap.has_action(action):
+			continue
+		InputMap.add_action(action)
+		var ev := InputEventKey.new()
+		ev.physical_keycode = IMPACT_ACTIONS[action]
+		InputMap.action_add_event(action, ev)
+
+
 func _ready() -> void:
 	_ensure_preset_action()
+	_ensure_impact_actions()
 	_build_actions()
 	lib = SpriteLibrary.get_instance()
 	player = get_tree().get_first_node_in_group("player") as PlayerController
@@ -325,12 +350,27 @@ func _build_ui() -> void:
 		_toggle_buttons[key] = b
 	# After the overlay grid so the existing rows keep their indices (tests address them by position).
 	_row(box, "preset", "Cam preset  N", func() -> void: cycle_preset(), func() -> void: cycle_preset())
+	_impact_row(box)
 	var help := Label.new()
 	help.text = KEYS_HELP
 	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help.custom_minimum_size = Vector2(320, 0)
 	help.add_theme_font_size_override("font_size", 10)
 	box.add_child(help)
+
+
+## "Cam kick  7 8 9 0": light, heavy, burst of three, slow heavy (the buttons do what the keys do).
+func _impact_row(box: Node) -> void:
+	var h := HBoxContainer.new()
+	box.add_child(h)
+	var t := Label.new()
+	t.text = "Cam kick  7 8 9 0"
+	t.custom_minimum_size = Vector2(112, 0)
+	t.add_theme_font_size_override("font_size", 11)
+	h.add_child(t)
+	for k: Array in [["light", "L"], ["heavy", "H"], ["burst", "x3"], ["slow", "S"]]:
+		var kind: String = k[0]
+		_button(h, k[1], Vector2.ZERO, Vector2(34, 24), func() -> void: impact_demo(kind))
 
 
 func _label(parent: Node, pos: Vector2, size: int) -> Label:
@@ -528,6 +568,23 @@ func toggle_overlay(key: String) -> void:
 	_refresh_ui()
 
 
+## Camera-impact demo (keys 7 8 9 0 and the "Cam kick" buttons): "light", "heavy", "burst" (three light hits BURST_GAP_S apart)
+## or "slow" (the heavy kick stretched to CameraImpact.SLOW_MS: same peak, only the duration changes).
+func impact_demo(kind: String) -> void:
+	var dir := player.facing8 if player != null else Vector2.DOWN
+	match kind:
+		"light":
+			CameraImpact.light_hit(dir)
+		"heavy":
+			CameraImpact.heavy_hit(dir)
+		"slow":
+			CameraImpact.impulse(dir, CameraImpact.HEAVY_PEAK_PX, CameraImpact.SLOW_MS)
+		"burst":
+			CameraImpact.light_hit(dir)
+			for i in [1, 2]:
+				get_tree().create_timer(i * BURST_GAP_S).timeout.connect(func() -> void: CameraImpact.light_hit(dir))
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if player == null:
 		return
@@ -539,6 +596,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	for a: String in _actions:
 		if event.is_action_pressed(a):
+			if IMPACT_ACTIONS.has(a) and not lab_on:
+				continue  # the camera-kick demo keys only work while the lab is open
 			(_actions[a] as Callable).call()
 			get_viewport().set_input_as_handled()
 			return
