@@ -4,7 +4,7 @@
 - Order: `orders/Codex/2026-10-20-premium-combat-animation-pack-v1.md`
 - Date:2026-10-20
 - Final status: REVIEW — follow-up concrete timing/layer proof; eight-direction production and runtime integration not complete.
-- Commit / PR: Not committed when report written; https://github.com/kiotdstudios/shinobi-rush/pull/42. Tested implementation SHA follows in report-only update.
+- Commit / PR: `52618ae053be151ca106d270ff87f5afcc41d2d8`, pushed to `codex/premium-combat-poc`; https://github.com/kiotdstudios/shinobi-rush/pull/42 remains open/ready/unmerged. This SHA entry is a follow-up report-only update; original report preceded implementation commit.
 
 ## Work completed / files changed
 
@@ -39,3 +39,7 @@ Source video unavailable locally, no source-video timing claim. No paid generati
 None required for this timing comparison. Review the concrete SE look/feel before8-direction expansion as Chief's Phase1 requires. Continue with Aki event API/tuning coordination and dedicated offensive directional art after that gate. Defensive/aerial/bandit combat are later milestones.
 
 Live deployment: not applicable; opt-in art review harness/metadata, no runtime-selected art or controller change. PR42 remains the review artifact. New public GIF links will be verified after push; no live game update claimed.
+
+## Publication verification
+
+After push, fetched raw GitHub `runtime-chain-half.gif` and `runtime-chain-normal.gif`: both HTTP200, image/gif,1204233bytes. Public prefix `https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/premium-combat-poc/assets/characters/player/previews/premium-combat-poc/`. PR42 description updated with both timing profiles, phone GIF links, latest test evidence and limits. No main merge or live game deployment claimed.
