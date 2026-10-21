@@ -5,10 +5,20 @@ extends RefCounted
 ##     no hit, light, heavy, three rapid hits, one 200 ms frame, the edge clamp at all four limits and with a little room left,
 ##     a lab zoom step, a preset switch mid-effect, disabled / reduced / freed, bad inputs, telemetry, the lab keys and buttons,
 ##     and one run on real frames during local hitstop.
-## After every case the camera is exactly where it was: offset ZERO, zoom == baseline, position, smoothing, limits and
-## get_screen_center_position() unchanged. Every scene test restores the preset and the module's static state.
+## (c) moving camera, real frames: the player WALKS into the east wall at close and at wide with the helper in its normal
+##     automatic mode and a heavy hit every 7th frame; the rendered view must stay inside the limits on every single frame.
+## After every case in (b) the camera is exactly where it was: offset ZERO, zoom == baseline, position, smoothing, limits and
+## get_screen_center_position() unchanged; after (c) the offset is ZERO, the zoom is on the baseline, limits and smoothing are
+## unchanged. Every scene test restores the preset and the module's static state.
+## NOTE: the manual advance(TICK) cases in (b) do not reproduce the engine's frame order (a coroutine resumed at process_frame
+## runs BEFORE the camera's own update, and a still camera has no smoothing step), so the moving-camera case (c) is the one that
+## guards the edge clamp.
 
 const TICK := 1.0 / 60.0
+const WALK_PX := 5.0  ## world px the scripted player walks per frame (a brisk walk)
+const WALK_HIT_EVERY := 7  ## frames between two heavy hits while walking
+const WALK_MAX_FRAMES := 800  ## safety stop of the walk
+const WALK_PINNED_FRAMES := 40  ## the walk ends this many frames after the view first sits on the east limit
 
 var ck: Callable
 
@@ -21,6 +31,8 @@ func run(p_ck: Callable, tree_root: Node) -> void:
 	test_trace_table()
 	test_units_clamp_and_modes()
 	await test_scene(tree_root)
+	await test_walking_into_wall(tree_root, CameraPreset.CLOSE)
+	await test_walking_into_wall(tree_root, CameraPreset.WIDE)
 	CameraPreset.set_active(CameraPreset.DEFAULT_ID)
 	CameraImpact.reset_all()
 
@@ -590,6 +602,80 @@ func test_scene(tree_root: Node) -> void:
 	ck.call("impact lab: key 9 starts a burst - one hit at once, three in total, peak under the cap, settled at exactly zero", immediate and CameraImpact.count == c4 + 3 and CameraImpact.peak_px <= CameraImpact.MAX_TOTAL_PX + 1e-4 and CameraImpact.peak_px >= 2.0 and cam.offset == Vector2.ZERO and CameraImpact.telemetry()["cfx_active"] == false, "count=%d peak=%s" % [CameraImpact.count, CameraImpact.peak_px])
 	_free_runner(cam)
 	ck.call("impact lab: opening and using the lab left the camera where it was", _snap(player) == pre)
+
+	# ---- clean up
+	main.queue_free()
+	await tree.process_frame
+	CameraPreset.set_active(CameraPreset.DEFAULT_ID)
+	CameraImpact.reset_all()
+
+
+# ------------------------------------------------------------------ (c) a MOVING camera on real frames
+## (void past the limits in world px, |offset| the camera really has in screen px, gap between the published and the written
+## offset in screen px) of the frame that was just rendered.
+func _frame_stats(cam: Camera2D) -> Vector3:
+	var written := cam.offset * cam.zoom.x
+	var shown := CameraImpact.telemetry()
+	return Vector3(_void_px(cam), written.length(), (written - Vector2(shown["cfx_offset_x"], shown["cfx_offset_y"])).length())
+
+
+## The player walks east at WALK_PX per frame, starting 400 world px before the point where the view reaches the east limit,
+## with a heavy hit toward the wall every WALK_HIT_EVERY frames. The helper runs in its normal AUTOMATIC mode (nobody calls
+## advance()). Camera2D.set_offset() runs the engine's camera update once more, which advances the position smoothing one extra
+## step for the rendered view, so a clamp computed from the centre read BEFORE the write over-estimates the room while the
+## camera glides into its pin and shows void at the screen edge. After EVERY frame the rendered view must be inside the limits.
+func test_walking_into_wall(tree_root: Node, preset: String) -> void:
+	var tree := tree_root.get_tree()
+	CameraImpact.reset_all()
+	var main := await _boot(tree_root, preset)
+	var player := main.get_node("TrainingArena/Player") as PlayerController
+	var arena := main.get_node("TrainingArena") as TrainingArena
+	var cam := player.camera
+	player.collision_mask = 0  # nothing may block or push the scripted walk
+	for e in tree.get_nodes_in_group("enemy"):
+		e.queue_free()
+	await tree.process_frame
+	var half_x := cam.get_viewport().get_visible_rect().size.x / cam.zoom.x * 0.5
+	var x_stop := arena.get_bounds().end.x - 24.0  # the walk stays inside the arena: the camera is pinned long before this
+	var pre := await _settle(tree_root, player, Vector2(cam.limit_right - half_x - 400.0, 135.0))
+	var worst_void := -INF
+	var max_written := 0.0
+	var mismatch := 0.0
+	var hits := 0
+	var frames := 0
+	var pin_frame := -1
+	var pinned := 0
+	while frames < WALK_MAX_FRAMES and pinned < WALK_PINNED_FRAMES:
+		if frames % WALK_HIT_EVERY == 0:
+			CameraImpact.heavy_hit(Vector2.RIGHT)
+			hits += 1
+		var at := player.global_position
+		at.x = minf(at.x + WALK_PX, x_stop)
+		player.global_position = at
+		await tree.process_frame
+		var s := _frame_stats(cam)
+		worst_void = maxf(worst_void, s.x)
+		max_written = maxf(max_written, s.y)
+		mismatch = maxf(mismatch, s.z)
+		if cam.limit_right - _view_rect(cam).end.x <= 0.001:
+			pinned += 1
+			if pin_frame < 0:
+				pin_frame = frames
+		frames += 1
+	var give_up := Time.get_ticks_msec() + 5000
+	while CameraImpact.telemetry()["cfx_active"] and Time.get_ticks_msec() < give_up:
+		await tree.process_frame
+		var s := _frame_stats(cam)
+		worst_void = maxf(worst_void, s.x)
+		max_written = maxf(max_written, s.y)
+		mismatch = maxf(mismatch, s.z)
+	var post := _snap(player)
+	print("CFX_MOVING preset=%s zoom=%.4f frames=%d hits=%d pin_frame=%d worst_void=%.5f max_offset_px=%.3f peak_px=%.3f" % [preset, cam.zoom.x, frames, hits, pin_frame, worst_void, max_written, CameraImpact.peak_px])
+	var info := "worst void=%s world px, pinned from frame %d of %d, %d hits, peak %s px" % [worst_void, pin_frame, frames, hits, CameraImpact.peak_px]
+	ck.call("impact moving camera (%s): a heavy hit every 7th frame while the player walks into the east wall never shows void on any frame" % preset, worst_void <= 0.01 and pin_frame >= 0 and hits >= 10 and CameraImpact.peak_px >= 3.0, info)
+	var settled: bool = cam.offset == Vector2.ZERO and not CameraImpact.telemetry()["cfx_active"] and absf(cam.zoom.x - player.camera_baseline) < 1e-6
+	var untouched: bool = post["limits"] == pre["limits"] and post["smooth"] == pre["smooth"] and post["speed"] == pre["speed"] and post["base"] == pre["base"]
+	ck.call("impact moving camera (%s): afterwards the offset is exactly ZERO, zoom == baseline, limits and smoothing untouched, and the published offset was the written one on every frame" % preset, settled and untouched and mismatch <= 1e-4 and CameraImpact.peak_px >= max_written - 1e-4, "offset=%s zoom=%s baseline=%s mismatch=%s peak=%s written=%s" % [cam.offset, cam.zoom.x, player.camera_baseline, mismatch, CameraImpact.peak_px, max_written])
 
 	# ---- clean up
 	main.queue_free()

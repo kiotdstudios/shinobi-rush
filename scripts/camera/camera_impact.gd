@@ -10,7 +10,9 @@ extends Node
 ##     pushed along dir (KICK_SIGN) and eases back.
 ##  2. Peak and duration are SCREEN px and ms. Camera2D.offset is in WORLD px (before zoom), so the module converts with the
 ##     CURRENT zoom. Godot 4.7.2 adds the offset AFTER smoothing and AFTER the limit clamp (measured), so the module clamps it
-##     itself: the view never leaves the camera limits (a kick toward a wall shrinks to the room that is left).
+##     itself: the view never leaves the camera limits (a kick toward a wall shrinks to the room that is left). The clamp is
+##     repeated from the centre the engine reports AFTER the write, because writing the offset advances the camera smoothing once
+##     more for the rendered frame; without that a MOVING camera showed void as it glided into a wall.
 ##  3. Everything is a pure function of the time since each impulse started: no integration, no drift, no randomness, any
 ##     frame rate. The effect ends at EXACTLY Vector2.ZERO and the zoom is never touched, so it stays on the preset baseline.
 ##  4. Several impulses combine with a cap (MAX_TOTAL_PX): same-direction hits do not add linearly, opposite hits cancel.
@@ -256,18 +258,33 @@ func advance(delta: float) -> void:
 	if camera.limit_enabled:
 		lim = Rect2(camera.limit_left, camera.limit_top, camera.limit_right - camera.limit_left, camera.limit_bottom - camera.limit_top)
 	var left := clampf(delta, 0.0, MAX_FRAME_S) if is_finite(delta) else 0.0
-	var shown := Vector2.ZERO
+	var raw := Vector2.ZERO  # offset of the last sub-step before the edge clamp, world px
+	var world := Vector2.ZERO  # the same after the clamp: what is written to the camera
+	var peak_before := peak_px  # telemetry peak up to the sub-step before the last one
 	while true:
 		var step := minf(left, TICK_S)
 		_clock += step
 		left -= step
-		shown = clamp_to_limits(sample(_list, _clock) * settings.effective() / zoom, center, half, lim) * zoom
-		peak_px = maxf(peak_px, shown.length())
+		raw = sample(_list, _clock) * settings.effective() / zoom
+		world = clamp_to_limits(raw, center, half, lim)
+		peak_before = peak_px
+		peak_px = maxf(peak_px, (world * zoom).length())
 		_drop_finished()
 		if left <= 1.0e-6:
 			break
-	camera.offset = shown / zoom  # exactly ZERO once the last impulse is over
-	_shown = shown
+	camera.offset = world  # exactly ZERO once the last impulse is over
+	if camera.limit_enabled:
+		# Writing the offset makes Camera2D run its camera update once more (set_offset -> _update_scroll -> get_camera_transform,
+		# which advances the position smoothing one extra step for the rendered view and then restores the smoothing state; the
+		# engine has a FIXME about it). On a MOVING camera the view is thus one frame of travel closer to a wall than the centre
+		# read above and the first clamp over-estimates the room. Clamp again from the centre the engine reports now; writing the
+		# corrected value repeats the same update, so this second pass is exact.
+		var fixed := clamp_to_limits(raw, camera.get_screen_center_position() - camera.offset, half, lim)
+		if fixed != world:
+			world = fixed
+			camera.offset = world
+			peak_px = maxf(peak_before, (world * zoom).length())  # the peak of what was finally written, not of the first pass
+	_shown = world * zoom
 	_live = not _list.is_empty()
 	if not _live:
 		set_process(false)
