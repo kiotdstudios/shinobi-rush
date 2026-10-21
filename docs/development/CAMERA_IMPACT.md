@@ -10,7 +10,7 @@ Module: `scripts/camera/camera_impact.gd` (`class_name CameraImpact`). Tests: `t
 One procedural camera kick per confirmed hit. It writes `Camera2D.offset` and nothing else (never position, smoothing, limits, zoom or preset), eases back, and ends at exactly `Vector2.ZERO`.
 
 - Envelope: a linear rise to EXACTLY the peak within one 60 Hz tick (16.7 ms: a kick, not a ramp), then a quadratic ease-out `(1 - u)^2` to EXACTLY zero at the duration (zero slope there). It is a pure function of the time since each impulse started: no integration, no drift, no randomness, any frame rate.
-- Units: peak and duration are SCREEN px and ms. `Camera2D.offset` is in WORLD px (before zoom), so the module divides by the CURRENT zoom every frame. 5 screen px = 11.25 world px at the wide zoom (0.4444) and 4.13 world px at the close zoom of the 104 px art (1.2115). The kick looks the same size at either preset, at the lab's 1x-4x steps and across a preset switch.
+- Units: peak and duration are SCREEN px and ms. `Camera2D.offset` is in WORLD px (before zoom), so the module divides by the CURRENT zoom every frame. 5 screen px = 11.25 world px at the wide zoom (0.4444) and 4.13 world px at the close zoom of the 104 px art (1.2115). The kick looks the same size at either preset, at the lab's zoom steps (tested at the 1x step) and across a preset switch.
 - Direction: along `dir` = attacker to target (the camera is pushed toward what was hit, `KICK_SIGN` +1). A zero direction is counted and moves nothing.
 - Several impulses combine into one offset: the magnitude-weighted mean direction times the root-sum-square of the magnitudes (so same-direction hits do NOT add linearly, opposite hits cancel, one hit is exact), never longer than `MAX_TOTAL_PX`. At most `MAX_ACTIVE` impulses are alive; the oldest is dropped.
 - Runtime: the first call creates ONE small helper node `CameraImpact` under the player's `Camera2D` (found through the `player` group), so no scene or controller needs an edit. It runs on frame time (`PROCESS_MODE_ALWAYS`): local hitstop (a per-entity timer, not `Engine.time_scale`) and pause do not freeze a kick half way. When nothing is alive its `_process` is off.
@@ -74,7 +74,7 @@ Switches (not tunables): `CameraImpact.settings.enabled` (true) and `.scale` (1.
 
 ### Tuning procedure
 1. Run the game, press `Tab` (lab) and use `7` light, `8` heavy, `9` burst of three lights 40 ms apart, `0` slow heavy (5 px for 1500 ms: the direction and distance are visible; it kicks along the player's facing). The lab panel row "Cam kick  7 8 9 0" has buttons for the same four.
-2. Judge strength with real hits at 60 FPS on a real GPU once the contract is wired. The CI browser renders 4 to 9 FPS and cannot show an 80 ms effect; use the telemetry there (below).
+2. Judge strength with real hits at 60 FPS on a real GPU once the contract is wired. The CI browser renders only a few FPS (3 to 11 measured) and cannot show an 80 ms effect; use the telemetry there (below).
 3. Change one constant at a time: peak first (strength), then duration (snappy against floaty), then the cap. Heavy should be clearly stronger than light and never read as a camera bug.
 4. Stay inside the order's bands unless the owner agrees. `tests/test_camera_impact.gd` pins the defaults to the bands on purpose: change the band tests and this table together, never only the constant.
 5. Check `?camera_impact=reduced` (everything x0.5; heavy 2.5 px) still reads as a hit but is calm.
@@ -104,7 +104,7 @@ Lab keys (the lab must be open, `Tab`): `7` light, `8` heavy, `9` burst of three
 
 Browser checks must read the telemetry, never sample the live trace: wait for `cfx_count` to increase, then for `cfx_active == false`, then read `cfx_peak_px` and assert `cfx_offset_x == cfx_offset_y == 0` and `zoom` equal to the preset baseline.
 
-Measured on a local Web export (software-GL Chromium, 4 to 9 FPS): light 2.500 px, heavy 5.000 px at both the wide (0.4444) and the close (1.2115) preset; burst of three at 5 FPS 3.536 px (two hits landed in the same frame); `reduced` 1.250 and 2.500 px; `off` leaves `cfx_count` and `cfx_peak_px` at 0. A slow-kick screenshot pair matched the published offset to 0.04 px at close and 0.26 px at wide, and the world returned pixel-identical to the baseline afterwards. See the job report for the full table.
+Measured on a local Web export (software-GL Chromium, 3 to 11 FPS): light 2.500 px, heavy 5.000 px at both the wide (0.4444) and the close (1.2115) preset; burst of three at 5 FPS 3.536 px (two hits landed in the same frame); `reduced` 1.250 and 2.500 px; `off` leaves `cfx_count` and `cfx_peak_px` at 0. A slow-kick screenshot pair matched the published offset to 0.04 px at close and 0.26 px at wide, and the world returned pixel-identical to the baseline afterwards. See the job report for the full table.
 
 ## Trace table (deterministic, from the in-engine test)
 
@@ -137,4 +137,4 @@ The tests were shown to go red under three temporary mutations of the production
 
 ## Not verified
 
-Real GPU rendering, the 60 FPS feel of the numbers above and Aki's integration (the contract is documented, not wired). The browser checks run on software GL at 4 to 9 FPS and read telemetry.
+Real GPU rendering, the 60 FPS feel of the numbers above and Aki's integration (the contract is documented, not wired). The browser checks run on software GL at only a few FPS and read telemetry.
