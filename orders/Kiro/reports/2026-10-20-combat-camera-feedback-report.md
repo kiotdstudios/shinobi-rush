@@ -22,7 +22,7 @@ Kept small, as the chief asked: one module, its tests, a parameter guide, an eve
 - **Zoom pulse: left out.** VERIFIED by measurement (Godot 4.7.2 headless, real main scene): at the east limit a +1.5 % zoom moves the view centre 7.81 world px = 9.6 screen px at 1.2115, toward the wall, more than the whole 5 px kick, and `refresh_camera_baseline()` cannot follow a pulsed zoom. The offset-only effect keeps `zoom == camera_baseline` by construction.
 
 ## Files changed
-Final `git diff --stat origin/main...HEAD` is in the PR; only allowed files. 
+`git diff --stat origin/main...HEAD` at the time of writing: 13 files, +1315 / -5, only allowed files, no screenshots or capture files.
 - New: `scripts/camera/camera_impact.gd` (+ `.uid`), `tests/test_camera_impact.gd` (+ `.uid`), `docs/development/CAMERA_IMPACT.md`, this report.
 - Edited: `scripts/ui/animation_lab.gd` (demo actions, button row, help line), `scripts/web/web_bridge.gd` (URL option, seven state fields, `process_priority = 1`), `tests/run_tests.gd` (one include line), `scripts/ci/smoke/controls-probe.mjs` (six new checks), `docs/development/GODOT_PROJECT_HANDOFF.md` (+1 bullet), `docs/prototype/TESTING.md` (+1 line), the order file (status log).
 - Decisions: digits `7 8 9 0` instead of the brief's `H G B Shift+G` (see Issues); `process_priority = 1` on WebBridge so the published offset is the one about to be rendered. Not touched: `scripts/player/**`, `scripts/combat/**`, `scripts/enemy/**`, sprites, arena, `project.godot`, presets, occlusion, follow, other agents' orders.
