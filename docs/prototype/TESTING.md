@@ -54,6 +54,7 @@ templates installed. CI uses `scripts/ci/godot_ci.py export`, then `finalize-exp
 - [ ] Camera preset (PROVISIONAL): no parameter = `wide` (state `camera_preset` is `wide`). Open the page with `?camera=close`
       for the close-combat framing (zoom about 1.17, the standing placeholder figure about 126 px = 17.5 % of 720);
       `?camera=2` gives a custom zoom 2; `?camera=<garbage>` falls back to `wide`. In the lab, `N` switches presets.
+- [ ] Camera impact (hit kick, nothing calls it yet): with the lab open (`Tab`) keys `7` light, `8` heavy, `9` burst, `0` slow heavy nudge the view 2-5 screen px along the facing and it returns exactly; `?camera_impact=off` disables them, `?camera_impact=reduced` halves them (`docs/development/CAMERA_IMPACT.md`).
 - [ ] Walking into a block or the arena edge stops the player; the player passes in front of and behind blocks.
 - [ ] `Esc` shows PAUSED and freezes movement; `Esc` again resumes.
 - [ ] With a sprite set: `Tab` opens the lab; set, animation, direction, speed, pause/step, compare (any two sets), zoom and the
