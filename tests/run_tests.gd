@@ -39,6 +39,7 @@ func _initialize() -> void:
 	await load("res://tests/test_arena_sorting.gd").new().run(ck, root)
 	await load("res://tests/test_combat.gd").new().run(ck, root)
 	await load("res://tests/test_jump.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_art.gd").new().run(ck, root)
 	var debug_store_tests = load("res://tests/test_debug_store.gd").new()
 	debug_store_tests.run(ck)
 	var browser_debug_tests = load("res://tests/test_browser_debug.gd").new()
