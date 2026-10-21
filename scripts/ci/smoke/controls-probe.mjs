@@ -3,7 +3,8 @@
 // Drop into scripts/ci/smoke/ next to smoke.mjs (it reuses lib/serve.mjs).
 //   node controls-probe.mjs --serve-dir <export dir> --out-dir <evidence dir>
 // Reads window.__SHINOBI_STATE__ ({frame,x,y,state,sprinting,fps}, published ~10 Hz by the WebBridge autoload) and proves
-// that REAL key input moves the player: walk right, sprint faster, a wall stops the player. Exit 0 = all passed, 1 = a check failed.
+// that REAL key input moves the player: walk right, sprint faster, a wall stops the player. It also drives the camera-impact lab demo keys
+// and reads the cfx_* telemetry. Exit 0 = all passed, 1 = a check failed.
 // Timing is wall-clock based and tolerant: software-rendered CI browsers run the game at only a few FPS.
 import { chromium } from 'playwright';
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -151,6 +152,58 @@ try {
   const sg = await cameraPage('?camera=bogus', 'bogus');
   rec('camera-garbage-falls-back-to-wide', sg.camera_preset === 'wide' && near(sg.zoom, BASE_ZOOM) && Math.abs(sg.view_w - 2880) < 2 && Math.abs(sg.view_h - 1620) < 2,
     `?camera=bogus expected preset=wide zoom ~${BASE_ZOOM.toFixed(4)} view 2880x1620; got preset=${sg.camera_preset} zoom=${sg.zoom} view=${sg.view_w}x${sg.view_h}`);
+
+  // Camera hit kick (CameraImpact): lab demo keys Digit7 light / Digit8 heavy / Digit9 burst of three, telemetry cfx_* in SCREEN px. A fresh page per
+  // query starts at the spawn (idle, facing down, room on every side), so the edge clamp cannot cut a kick. The game runs at 4 to 9 FPS here, so an
+  // 80-140 ms effect spans 0 or 1 rendered frames: never sample the live offset. Wait on cfx_count, then on cfx_active false, and read cfx_peak_px
+  // (the game samples it on 60 Hz sub-steps, so it is the same at any frame rate).
+  const kickRun = async (query, plan) => {
+    const p = await context.newPage();
+    p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
+    p.on('pageerror', (e) => consoleMsgs.push({ type: 'pageerror', text: String(e) }));
+    const st = () => p.evaluate(() => ({ ...window.__SHINOBI_STATE__ }));
+    const press = async (key) => { await p.keyboard.down(key); await sleep(120); await p.keyboard.up(key); };
+    const runs = [];
+    try {
+      await p.goto(server.url + query, { waitUntil: 'load' });
+      await p.waitForFunction(() => window.__SHINOBI_READY__ === true && typeof window.__SHINOBI_STATE__?.cfx_count === 'number',
+        null, { timeout: 120000, polling: 250 });
+      await p.mouse.click(640, 400);
+      await press('Tab'); // the demo keys only work while the lab is open
+      await p.waitForFunction(() => window.__SHINOBI_STATE__.lab_open === true, null, { timeout: 60000, polling: 100 });
+      for (const [key, hits] of plan) {
+        const before = await st();
+        await press(key);
+        if (hits > 0) {
+          await p.waitForFunction(([n]) => { const s = window.__SHINOBI_STATE__; return s.cfx_count >= n && s.cfx_active === false; },
+            [before.cfx_count + hits], { timeout: 60000, polling: 100 });
+        } else { // effect disabled: there is nothing to wait for, so let 8 published frames pass instead
+          await p.waitForFunction(([f]) => window.__SHINOBI_STATE__.frame >= f, [before.frame + 8], { timeout: 60000, polling: 100 });
+        }
+        runs.push({ before, after: await st() });
+      }
+    } finally { await p.close(); }
+    return runs;
+  };
+  const kick = (r) => `count ${r.before.cfx_count}->${r.after.cfx_count}, peak ${Number(r.after.cfx_peak_px).toFixed(3)} px, active=${r.after.cfx_active}, offset (${r.after.cfx_offset_x}, ${r.after.cfx_offset_y}), zoom ${r.before.zoom} -> ${r.after.zoom}`;
+  // `hits` impulses counted, peak in [lo, hi] screen px, the effect over, offset exactly 0 and the zoom untouched on the preset baseline
+  const kickOk = (r, hits, lo, hi, baseline) => r.after.cfx_count === r.before.cfx_count + hits
+    && r.after.cfx_peak_px >= lo && r.after.cfx_peak_px <= hi && r.after.cfx_active === false
+    && r.after.cfx_offset_x === 0 && r.after.cfx_offset_y === 0 && r.after.zoom === r.before.zoom && near(r.after.zoom, baseline);
+  const [kl, kh, kb] = await kickRun('', [['Digit7', 1], ['Digit8', 1], ['Digit9', 3]]);
+  rec('camera-impact-light', kickOk(kl, 1, 2, 3, BASE_ZOOM), `wide, order band 2-3 screen px: ${kick(kl)}`);
+  rec('camera-impact-heavy', kickOk(kh, 1, 4, 6, BASE_ZOOM), `wide, order band 4-6 screen px: ${kick(kh)}`);
+  rec('camera-impact-burst-capped', kickOk(kb, 3, 2, 6, BASE_ZOOM), `wide, three light hits: the peak stays at or under the 6 px cap: ${kick(kb)}`);
+  const [cl, ch] = await kickRun('?camera=close', [['Digit7', 1], ['Digit8', 1]]);
+  rec('camera-impact-close-zoom', kickOk(cl, 1, 2, 3, CLOSE_ZOOM) && kickOk(ch, 1, 4, 6, CLOSE_ZOOM),
+    `close zoom ~${CLOSE_ZOOM.toFixed(4)}, same bands in screen px: light ${kick(cl)}; heavy ${kick(ch)}`);
+  const koff = await kickRun('?camera_impact=off', [['Digit7', 0], ['Digit8', 0], ['Digit9', 0]]);
+  const fo = koff[2].after;
+  rec('camera-impact-off', koff[0].before.cfx_enabled === false && fo.cfx_enabled === false && fo.cfx_count === 0 && fo.cfx_peak_px === 0
+    && fo.cfx_active === false && fo.cfx_offset_x === 0 && fo.cfx_offset_y === 0,
+    `?camera_impact=off, keys 7 8 9 pressed: enabled=${fo.cfx_enabled}, count=${fo.cfx_count}, peak=${fo.cfx_peak_px}, active=${fo.cfx_active}, offset (${fo.cfx_offset_x}, ${fo.cfx_offset_y})`);
+  const [kr] = await kickRun('?camera_impact=reduced', [['Digit8', 1]]);
+  rec('camera-impact-reduced', kr.after.cfx_scale === 0.5 && kickOk(kr, 1, 2, 3, BASE_ZOOM), `?camera_impact=reduced halves the heavy kick (5 -> 2.5 px), scale=${kr.after.cfx_scale}: ${kick(kr)}`);
 } catch (e) {
   rec('probe-exception', false, String(e.message ?? e).split('\n')[0]);
 }
