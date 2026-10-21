@@ -4,7 +4,7 @@
 - Order: `orders/Codex/2026-10-20-premium-combat-animation-pack-v1.md`
 - Date:2026-10-20
 - Final status: REVIEW — concrete Phase1 art proof complete for owner visual review; complete combat pack is not DONE.
-- Commit / PR: Implementation not committed when this report was written; https://github.com/kiotdstudios/shinobi-rush/pull/42. SHA to follow after tested commit.
+- Commit / PR: Implementation `c38a5dd3f5326ab9cfd97dadff56c68f87db04d3`, pushed to `codex/premium-combat-poc`; https://github.com/kiotdstudios/shinobi-rush/pull/42 marked ready for review. This SHA entry is a follow-up report-only update; original report was written before implementation commit.
 
 ## Work completed
 
@@ -51,3 +51,7 @@ No runtime regression observed in affected preview controls/imports. Gameplay in
 Review the concrete SE look/feel, including hybrid dash and finishing rotation. Chief's Phase1 deliverable4 requires owner approval before8-direction expansion; this is a milestone review, not a request to commit broken work. After approval, coordinate Aki's exact event API/tuning, author dedicated dash refinements and expand offensive directions. Defense/aerial/bandit combat remain later phases. No main merge or eight-direction approval claimed.
 
 Live deployment: not applicable. Opt-in art/metadata and a separate review harness do not alter the selected player library or live combat. The actual game has not been updated by this milestone. Review files are published through PR42 and raw GitHub GIF links for phone access, independent of localhost.
+
+## Publication verification
+
+After pushing `c38a5dd`, fetched the published raw GitHub native-half, normal, close-half GIFs and contact PNG: all HTTP200 with correct image/gif or image/png types,572856/572856/717195/145990bytes respectively. URL prefix `https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/codex/premium-combat-poc/assets/characters/player/previews/premium-combat-poc/`; files `sequence-half.gif`, `sequence-normal.gif`, `sequence-close-half.gif`, `contact-sheet.png`. These are verified public art review assets, not a deployed game build. Local interactive preview was opened through the Codex browser panel. PR42 confirmed open, ready for review, unmerged. Final staged whitespace check passed before implementation commit.
