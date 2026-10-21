@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-21-bandit-chase-evade.md; direct owner request
 - Date: 2026-10-21
 - Final status: REVIEW — locally tested, awaiting PR integration and deployed verification
-- Commit / PR: Not committed yet; report written before implementation commit.
+- Commit / PR: implementation7fd035c776a1f214f4aa8ea6235f15ef2f372f81; https://github.com/kiotdstudios/shinobi-rush/pull/52. Original report written before implementation commit.
 
 ## Work completed
 Paused kunai work. Audited every bandit run frame and all160 existing body PNGs. Corrected bandit-local gait restarts across direction/action changes; added near-distance hysteresis, regular run and fast arms-back pursuit. Detected player is pursued at470px/s (near320), versus previous160. Existing idle/run/sprint are all actively selected.
@@ -49,3 +49,6 @@ None.
 
 ## Outstanding work / next steps
 PR/CI/review, merge, Pages deployment, live SHA and actual-keyboard smoke verification. Do not mark DONE before those complete. Optional future art refinement: authored transition poses for rough source run seams; no frame omission or synthetic interpolation applied here. Kunai remains paused.
+
+## Integration retest before merge-update commit
+Main advanced to111182a (Aki HUD live zoom readout). Merged without committing, preserving both HUD legend and zoom. Re-ran `python scripts/ci/godot_ci.py tests --project . --log-dir build/bandit-chase-merged`:642 passed,0 failed. Exported fresh `../bandit-chase-merged-web`, finalized using current premerge implementation identifier, ran `node scripts/ci/smoke/smoke.mjs --serve-dir ../bandit-chase-merged-web --out-dir build/bandit-merged-smoke --label bandit-chase-merged`:PASS,0 fatal errors. Local artifacts still use base identifiers for uncommitted sources; deployed SHA must be independently checked after integration.
