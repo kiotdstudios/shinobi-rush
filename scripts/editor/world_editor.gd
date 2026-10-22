@@ -25,6 +25,9 @@ var tab: Button
 var status: Label
 var clear_button: Button
 var snap_button: Button
+var save_button: Button
+var _note := ""
+var _note_until := 0
 var overlay: Node2D
 var _tool_buttons: Dictionary = {}
 var _palette_buttons: Dictionary = {}
@@ -111,6 +114,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			set_open(not open)
 			get_viewport().set_input_as_handled()
 			return
+		if open and event.keycode == KEY_S and event.ctrl_pressed:
+			save_now()
+			get_viewport().set_input_as_handled()
+			return
 		if open and (event.keycode == KEY_DELETE or event.keycode == KEY_BACKSPACE) and not selected.is_empty():
 			delete_selected()
 			get_viewport().set_input_as_handled()
@@ -170,6 +177,31 @@ func release() -> void:
 	else:
 		placed.move(selected, _drag_origin, true)  # dropped somewhere illegal: snap back
 	_refresh()
+
+
+## Explicit save: writes the layout to the game's save slot (it also autosaves on every edit) and says so.
+func save_now() -> bool:
+	var ok := placed.save()
+	_flash("SAVED  %d objects" % placed.objects.size() if ok else "SAVE FAILED")
+	return ok
+
+
+## Hand the layout over as a file (web: browser download; desktop: copied to the clipboard).
+func download_layout() -> void:
+	var json := placed.to_json_string()
+	if OS.has_feature("web"):
+		JavaScriptBridge.download_buffer(json.to_utf8_buffer(), "shinobi_world_layout.json", "application/json")
+		_flash("DOWNLOADED shinobi_world_layout.json")
+	else:
+		DisplayServer.clipboard_set(json)
+		_flash("Layout copied to clipboard")
+
+
+func _flash(text: String) -> void:
+	_note = text
+	_note_until = Time.get_ticks_msec() + 2500
+	_refresh()
+	get_tree().create_timer(2.6).timeout.connect(_refresh)
 
 
 func delete_selected() -> void:
@@ -468,6 +500,32 @@ func _build_ui() -> void:
 	del.pressed.connect(delete_selected)
 	ib.add_child(del)
 
+	# save row
+	var saves := HBoxContainer.new()
+	saves.add_theme_constant_override("separation", 6)
+	outer.add_child(saves)
+	save_button = Button.new()
+	save_button.text = "SAVE  (Ctrl+S)"
+	save_button.focus_mode = Control.FOCUS_NONE
+	save_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	save_button.custom_minimum_size = Vector2(0, 38)
+	_skin(save_button, "tool")
+	save_button.add_theme_stylebox_override("normal", _sbox(ACCENT, Color("#ffa05a"), 1, 8))
+	save_button.add_theme_stylebox_override("hover", _sbox(Color("#ff8a2e"), Color.WHITE, 1, 8))
+	save_button.add_theme_stylebox_override("pressed", _sbox(Color("#cc5500"), Color.WHITE, 2, 8))
+	save_button.add_theme_color_override("font_color", Color("#0a0a0a"))
+	save_button.add_theme_color_override("font_hover_color", Color("#0a0a0a"))
+	save_button.pressed.connect(save_now)
+	saves.add_child(save_button)
+	var dl := Button.new()
+	dl.text = "DOWNLOAD"
+	dl.tooltip_text = "Download the layout as a .json file"
+	dl.focus_mode = Control.FOCUS_NONE
+	dl.custom_minimum_size = Vector2(0, 38)
+	_skin(dl)
+	dl.pressed.connect(download_layout)
+	saves.add_child(dl)
+
 	# options
 	var opts := HBoxContainer.new()
 	opts.add_theme_constant_override("separation", 6)
@@ -606,4 +664,4 @@ func _refresh() -> void:
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
 	var what := "Placing: %s" % str(PlacedObjects.CATALOG[place_id].label) if tool == "place" else ("Erase mode" if tool == "erase" else "Select / move")
 	count_label.text = "%d objects" % placed.objects.size()
-	status.text = what
+	status.text = _note if Time.get_ticks_msec() < _note_until else what

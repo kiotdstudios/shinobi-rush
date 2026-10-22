@@ -227,7 +227,7 @@ try {
     'vision_player_in', 'vision_cone', 'vision_range', 'vision_close', 'vision_fov_deg', 'vision_facing_x', 'vision_facing_y', 'vision_mismatch', 'vision_capped',
     'vision_nodes', 'vision_origin_x', 'vision_origin_y'];
   const VISION_CATS = ['not_alert', 'suspicious', 'detected', 'lost_sight', 'searching', 'returning'];
-  const VISION_BUTTON = { x: 1027, y: 21 }; // centre of "Bandit vision: off (F2)" (942, 8, 170x26 in the 1280x720 viewport)
+  const VISION_BUTTON = { x: 1027, y: 3 }; // the tab's coloured lip: "Bandit vision" is a binder tab (x 942..1112) hanging from the top edge, only y 0..7 shows at rest, y 0..26 once popped down
   const visionOpen = async (query) => {
     const p = await context.newPage();
     p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
@@ -328,6 +328,22 @@ try {
     const q1 = await vq.until(visionIsOff);
     rec('vision-url-on-then-off-leaves-nothing', !!q0 && !!q1 && offOk(q1, q0.vision_nodes - 1), `F2 after ?vision=1: ${vsum(q1)} (expect zero geometry and nodes=${q0 ? q0.vision_nodes - 1 : '?'}, one less than ON)`);
   } finally { await vq.p.close(); }
+  // Proximity "power level" sense debug overlay toggle (owner 2026-10-22: "make sure the intelligence
+  // vision have a toggle on and off like the bandit vision"). F3, separate from the Bandit vision's F2.
+  const sv = await visionOpen('');
+  try {
+    const sv0 = await sv.st();
+    rec('sense-vision-default-off', sv0.sense_vision_on === false && Number.isInteger(sv0.sense_vision_nodes) && sv0.sense_vision_nodes > 10,
+      `no toggle pressed: sense_vision_on=${sv0.sense_vision_on} sense_vision_views=${sv0.sense_vision_views} sense_vision_nodes=${sv0.sense_vision_nodes}`);
+    await sv.p.keyboard.down('F3'); await sleep(120); await sv.p.keyboard.up('F3');
+    const sv1 = await sv.until(() => window.__SHINOBI_STATE__.sense_vision_on === true);
+    rec('sense-vision-key-toggles-on', !!sv1 && sv1.sense_vision_on === true && sv1.sense_vision_views >= 1,
+      `F3: sense_vision_on=${sv1 ? sv1.sense_vision_on : '?'} sense_vision_views=${sv1 ? sv1.sense_vision_views : '?'}`);
+    await sv.p.keyboard.down('F3'); await sleep(120); await sv.p.keyboard.up('F3');
+    const sv2 = await sv.until(() => window.__SHINOBI_STATE__.sense_vision_on === false);
+    rec('sense-vision-key-toggles-off', !!sv2 && sv2.sense_vision_on === false && sv2.sense_vision_nodes === sv0.sense_vision_nodes,
+      `F3 again: sense_vision_on=${sv2 ? sv2.sense_vision_on : '?'} sense_vision_nodes=${sv2 ? sv2.sense_vision_nodes : '?'} (expect back to ${sv0.sense_vision_nodes})`);
+  } finally { await sv.p.close(); }
 } catch (e) {
   rec('probe-exception', false, String(e.message ?? e).split('\n')[0]);
 }

@@ -156,8 +156,11 @@ func _test_patrol() -> void:
 	ck.call("robber patrol: walks its loop (moved far from home)", moved > 150.0, "%.0f px" % moved)
 	ck.call("robber patrol: reaches more than one patrol point in 10 s", visited.size() >= 2, str(visited.keys()))
 	ck.call("robber patrol: stays PATROL while the player is far away", states.keys() == ["PATROL"], str(states.keys()))
-	ck.call("robber patrol: patrol speed is a walk, not a chase", max_speed <= float(bandit.profile.patrol_speed) + 1.0, "%.0f" % max_speed)
-	ck.call("robber patrol: uses both moving and standing animations (no mannequin idle)", anims.has("run") and anims.has("idle"), str(anims.keys()))
+	# Owner 2026-10-22 ("bandits are in the woods running around looking for players, naruto running")
+	# supersedes the original "patrol speed is a walk" criterion from the Level 1 robber arena order --
+	# an authored patrol loop is now walked at chase_speed (sprint), not profile.patrol_speed (walk).
+	ck.call("robber patrol: naruto-running between waypoints is a sprint, not a walk (owner 2026-10-22)", max_speed <= bandit.chase_speed + 1.0 and max_speed > float(bandit.profile.patrol_speed) * 1.5, "%.0f" % max_speed)
+	ck.call("robber patrol: uses both moving and standing animations (no mannequin idle)", anims.has("sprint") and anims.has("idle"), str(anims.keys()))
 	ck.call("robber patrol: faces several directions (look-around + travel), never a fixed pose", facings.size() >= 3, str(facings.size()))
 	ck.call("robber patrol: big direction changes cost a stop-to-turn beat", bandit.turn_pauses >= 1, str(bandit.turn_pauses))
 	ck.call("robber patrol: does not see a player 1300 px away", not bandit.sees_player)
@@ -377,8 +380,29 @@ func _test_search_and_return() -> void:
 		if s == "PATROL":
 			break
 	ck.call("robber search: loses the player -> SEARCH -> RETURN -> PATROL", seq == ["APPROACH", "SEARCH", "RETURN", "PATROL"], str(seq))
-	ck.call("robber search: once back on patrol it is near its patrol loop", bandit.global_position.distance_to(WorldScale.BANDIT_HOME) < 600.0)
+	# Owner 2026-10-22 ("I want the logic for all enemies to stay in their new area") supersedes the
+	# original "once back on patrol it is near its patrol loop" criterion -- RETURN no longer marches
+	# the Bandit back to WorldScale.BANDIT_HOME; it adopts wherever it gave up (near last_seen) as its
+	# new home instead, so it should now be FAR from the original authored home and sitting on top of it.
+	ck.call("robber search: home updates to the new area instead of the original spawn", bandit.home.distance_to(WorldScale.BANDIT_HOME) > 200.0 and bandit.global_position.distance_to(bandit.home) < 10.0, "home=%s pos=%s orig=%s" % [bandit.home, bandit.global_position, WorldScale.BANDIT_HOME])
 	ck.call("robber search: the intent log recorded the transitions", bandit.intent_log.size() >= 3 and "SEARCH" in "".join(bandit.intent_log))
+	# Owner follow-up 2026-10-22, same day: "I do not want there to be a home position; bandit's new
+	# home is the last seen location and he continues his search." The PATROL that follows RETURN must
+	# free-roam near the settle point, NEVER walk back toward the original authored patrol loop (which
+	# sits 200+ px away, per the assertion above) -- that is the exact bug this instruction corrected.
+	var settle_point := bandit.global_position
+	var saw_sprint := false
+	var farthest_from_settle := 0.0
+	var closest_to_old_loop := INF
+	for i in 180:
+		await tree.physics_frame
+		if bandit.is_sprinting:
+			saw_sprint = true
+		farthest_from_settle = max(farthest_from_settle, bandit.global_position.distance_to(settle_point))
+		closest_to_old_loop = min(closest_to_old_loop, bandit.global_position.distance_to(WorldScale.BANDIT_HOME))
+	ck.call("robber search: never walks back toward the original authored patrol loop once settled", closest_to_old_loop > 150.0, "closest to old home over 3s of roaming: %.0f px" % closest_to_old_loop)
+	ck.call("robber search: free-roams near the new settle point (bounded by roam_radius), not standing frozen", saw_sprint and farthest_from_settle > 5.0 and farthest_from_settle < bandit.roam_radius * 2.5, "farthest from settle point: %.0f px (roam_radius=%.0f)" % [farthest_from_settle, bandit.roam_radius])
+	ck.call("robber search: _ever_disengaged is permanently set after the first RETURN", bandit._ever_disengaged)
 
 
 func _test_leash_and_profile() -> void:

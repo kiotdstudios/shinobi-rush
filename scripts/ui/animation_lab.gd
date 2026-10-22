@@ -61,6 +61,7 @@ var _value_labels: Dictionary = {}
 var _toggle_buttons: Dictionary = {}
 var _lab_button: Button
 var vision: BanditVisionToggle  ## Bandit vision debug overlay switch (key F2 + the always-visible button), default OFF
+var sense_vision: SenseVisionToggle  ## proximity "power level" sense overlay switch (key F3 + button), default OFF
 var _timer: float = 0.0
 var _actions: Dictionary = {}
 
@@ -342,12 +343,18 @@ func _build_ui() -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 5
 	add_child(layer)
-	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, 8), Vector2(150, 26), toggle_lab)
+	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, DockTab.REST_Y), Vector2(150, 26), toggle_lab)
+	DockTab.style(_lab_button, Color("#3DDC84"))
 	# Bandit vision overlay (debug, default OFF): its key and its always-visible button next to the Lab button.
 	vision = BanditVisionToggle.new()
 	vision.name = "BanditVisionToggle"
 	add_child(vision)
 	vision.build_button(layer)
+	# Proximity "power level" sense overlay (debug, default OFF): same pattern, button to the left of it.
+	sense_vision = SenseVisionToggle.new()
+	sense_vision.name = "SenseVisionToggle"
+	add_child(sense_vision)
+	sense_vision.build_button(layer)
 	_panel = PanelContainer.new()
 	_panel.position = Vector2(930, 40)
 	_panel.custom_minimum_size = Vector2(340, 0)
@@ -488,6 +495,7 @@ func toggle_lab() -> void:
 
 func _set_lab(on: bool) -> void:
 	lab_on = on
+	DockTab.set_active(_lab_button, on)
 	if not on:
 		if zoom_index != 0:
 			set_zoom_index(0)  # closing the lab restores the gameplay baseline
