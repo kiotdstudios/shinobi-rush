@@ -84,6 +84,16 @@ try {
   const sprint = await dxOver(['ShiftLeft', 'KeyD'], 300, 700);
   rec('sprint-faster', sprint.dx > 20 && sprint.speed > walk.speed * 1.2 && sprint.b.sprinting === true, `sprint ${sprint.speed.toFixed(1)}px/physics-sec vs walk ${walk.speed.toFixed(1)}px/physics-sec; state=${sprint.b.state}, sprinting=${sprint.b.sprinting}${noEffect(sprint)}`);
 
+  // Proximity "power level" sense telemetry (owner: "when naruto running and near enemy ... player will
+  // auto detect and pull their kunai out"): published fields exist with sane types/values regardless of
+  // whether the real training-arena bandit happens to be in range right now (that is a gameplay event,
+  // not something this smoke probe forces -- see tests/test_proximity_sense.gd for the behavioral checks).
+  const sense = sprint.b;
+  rec('player-sense-telemetry', typeof sense.player_kunai_drawn === 'boolean' && Number.isFinite(sense.player_sense_radius) && sense.player_sense_radius > 0,
+    `player_kunai_drawn=${sense.player_kunai_drawn} (bool) player_sense_radius=${sense.player_sense_radius}`);
+  rec('bandit-sense-telemetry', typeof sense.bandit_senses_player === 'boolean' && Number.isFinite(sense.bandit_sense_radius) && sense.bandit_sense_radius > 0,
+    `bandit_senses_player=${sense.bandit_senses_player} (bool) bandit_sense_radius=${sense.bandit_sense_radius}`);
+
   // walk into the wall: hold W until the position stops changing (3 equal samples), then require it moved first
   const startY = (await state()).y;
   await page.keyboard.down('KeyW');

@@ -27,8 +27,12 @@ const TAUNT_TEXT := "Hand over your ryo!"
 const TAUNT_TIME := 2.4
 const EYE_OFFSET := Vector2(0, -13.5)  ## sight/attack rays run at collider height, like the walls' footprints
 const LOG_MAX := 40
-
 @export var intelligence_level: int = 1
+## Sense stat (owner: "the higher the stat the bigger the circle") -- NOT `intelligence_level` above,
+## which selects the AI tuning profile. This one only widens the omnidirectional proximity-detection
+## circle used while `is_sprinting` (its own "naruto running"), see ProximitySense/sense_radius().
+## PROVISIONAL PROTOTYPE value, not balance.
+@export var intelligence: int = 5
 @export var max_hp: float = 60.0
 @export var detect_radius: float = 420.0  ## legacy: kept for tuning panels; sight now comes from the profile
 @export var combat_distance: float = 130.0  ## approach stops at roughly this range from the player
@@ -58,6 +62,7 @@ var profile: Dictionary = {}
 var nav: ArenaNav = null
 var home: Vector2 = Vector2.ZERO
 var sees_player := false
+var senses_player := false  ## proximity "power level" sense (ProximitySense); distance-only, no cone/LOS
 var player_hits_landed := 0
 var swings_thrown := 0
 var overcommits := 0
@@ -224,11 +229,20 @@ func _physics_process(delta: float) -> void:
 func _update_perception() -> void:
 	if _player == null or not is_instance_valid(_player):
 		sees_player = false
+		senses_player = false
 		return
 	var chasing := state in [State.NOTICE, State.APPROACH, State.THREATEN, State.ATTACK, State.REPOSITION, State.RETREAT]
 	sees_player = can_see(_player.global_position, not chasing)
 	if sees_player:
 		last_seen = _player.global_position
+	# Proximity "power level" sense while naruto-running (is_sprinting): distance-only, no facing cone,
+	# no line of sight -- a sprinting body is felt/loud, not just seen (see ProximitySense). Owner:
+	# "when naruto running and near enemy ... player will auto detect and pull their kunai out" --
+	# the symmetric case for the Bandit: it auto-notices a nearby player even outside its sight cone.
+	senses_player = is_sprinting and global_position.distance_to(_player.global_position) <= sense_radius()
+	if senses_player and state in [State.PATROL, State.IDLE, State.SEARCH, State.RETURN]:
+		last_seen = _player.global_position
+		_enter(State.NOTICE, "sensed: proximity (intelligence %d)" % intelligence)
 
 
 ## Range + (optionally) facing cone + clear line of sight. Walls block detection exactly like they
@@ -257,6 +271,11 @@ func line_clear_to(target: Vector2) -> bool:
 		excluded.append((_player as CollisionObject2D).get_rid())
 	q.exclude = excluded
 	return space.intersect_ray(q).is_empty()
+
+
+## World-px radius of the proximity "power level" sense (see `senses_player`/`_update_perception`).
+func sense_radius() -> float:
+	return ProximitySense.radius_for(intelligence)
 
 
 # ---------------------------------------------------------------------------------- states

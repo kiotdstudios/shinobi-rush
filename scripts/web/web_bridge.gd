@@ -90,6 +90,8 @@ func _process(delta: float) -> void:
 	_state.vision_origin_y = vis["vision_origin_y"]
 	var lock := _player.get_node_or_null("LockOn") as PlayerLockOn
 	_state.target_locked = lock != null and lock.valid_target()
+	_state.player_kunai_drawn = _player.kunai_drawn
+	_state.player_sense_radius = _player.sense_radius()
 	var enemy := get_tree().get_first_node_in_group("enemy") as Bandit
 	if enemy != null:
 		_state.bandit_state = enemy.get_state_name()
@@ -101,6 +103,8 @@ func _process(delta: float) -> void:
 		_state.bandit_level = enemy.intelligence_level
 		_state.bandit_intent = enemy.get_intent()
 		_state.bandit_sees = enemy.sees_player
+		_state.bandit_senses_player = enemy.senses_player
+		_state.bandit_sense_radius = enemy.sense_radius()
 		_state.bandit_flickers = enemy.flicker_count
 		_state.bandit_swings = enemy.swings_thrown
 		_state.bandit_hits_landed = enemy.player_hits_landed
