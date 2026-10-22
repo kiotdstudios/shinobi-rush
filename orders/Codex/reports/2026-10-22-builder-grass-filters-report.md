@@ -53,3 +53,6 @@ Main104e9b490bd622ae8b3b3798274ae2f7e5c4c80d(PR95) merged cleanly. No Codex edit
 
 ## HUD restyle integration before commit
 Main41781fe2a45945445265a35ae3ef4fe430ef9a98(PR88) changes builder scrollbar/card styling and HUD. One insertion conflict resolved by preserving both set_type_filter and _fat_scrollbar. Gutter/card styles and scoped wheel guard preserved. Full suite build/builder-style-tests1361PASS/zero failures; fresh export/finalization ../builder-style-web PASS; builder-style-browser all17PASS/zeroerrors including save/reload and top/bottom/header wheel isolation. Updated evidence before merge commit. Main confirmed unchanged at commit time.
+
+## Orcha leash integration before merge commit
+Main7a1ec5094512e7d66e17ec1dd0fa0db3dbd73e34(PR96) merged cleanly; builder files unchanged. Full suite build/builder-leash-tests1365PASS/zero failures; fresh export/finalize ../builder-leash-web PASS; smoke.mjs --serve-dir ../builder-leash-web --out-dir build/builder-leash-smoke --label builder-leash PASS9hashes,rendered canvas,real keyboard effect26.550%,zero fatal errors. Existing17builder checks from unchanged UI remain valid; repeat on public deployment planned.

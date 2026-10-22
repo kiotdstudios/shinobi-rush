@@ -89,6 +89,15 @@ var facing8: Vector2 = Vector2.DOWN
 var profile: Dictionary = {}
 var nav: ArenaNav = null
 var home: Vector2 = Vector2.ZERO
+## Owner 2026-10-22 (second follow-up, same day): "bandit now moves to another ... home ... instead of
+## that being his now home area" -- the chase leash (see _tick_approach) must be measured from where
+## THIS chase started, not the stale `home` left over from a PREVIOUS disengage. Using `home` meant a
+## Bandit that had already roamed away from its last give-up point, then started a brand new chase,
+## would hit the leash almost immediately (it was already most of the way to `chase_leash` from the old
+## point before the chase even began) and give up near the OLD area again, never actually following the
+## player deep into wherever it ran this time. Set fresh on every genuinely new engagement (see `_enter`'s
+## State.APPROACH case); `home` is untouched by this and still only updated on RETURN.
+var _chase_origin: Vector2 = Vector2.ZERO
 var sees_player := false
 var senses_player := false  ## proximity "power level" sense (ProximitySense); distance-only, no cone/LOS
 var locked_target: Node2D = null  ## non-null while actively engaged (see ENGAGED_STATES/is_locked_on())
@@ -363,6 +372,7 @@ func _enter(next: State, reason: String = "") -> void:
 			locked_target = _player  ## owner: "enemies should auto engage lock onto players"
 			if prev in [State.PATROL, State.NOTICE, State.IDLE, State.SEARCH, State.RETURN]:
 				engagement_count += 1
+				_chase_origin = global_position  ## fresh engagement: leash measures from HERE, not stale `home`
 		State.THREATEN:
 			_threaten_timer = float(profile.threaten_time) if prev == State.APPROACH else float(profile.rethreaten_time)
 			if _first_contact_pending:
@@ -528,9 +538,12 @@ func _tick_approach(delta: float) -> void:
 		if _lose_timer > float(profile.lose_sight_time):
 			_enter(State.SEARCH, "lost sight")
 			return
-	# The leash only gives up a chase the Bandit has lost sight of; while the player is in view it keeps coming
-	# (owner 2026-10-22: "he stops the chase though I'm in his vision").
-	if not sees_player and home.distance_to(global_position) > float(profile.chase_leash):
+	# The leash only gives up a chase the Bandit has lost sight of; while the player is in view it keeps
+	# coming (owner 2026-10-22: "he stops the chase though I'm in his vision"). When it does need to
+	# fire, it measures from where THIS chase started (_chase_origin), never a stale `home` left by a
+	# PREVIOUS disengage the Bandit has since roamed away from (owner 2026-10-22, second correction:
+	# "he goes back to the last home area instead of that being his now home area").
+	if not sees_player and _chase_origin.distance_to(global_position) > float(profile.chase_leash):
 		_enter(State.RETURN, "chase leash")
 		return
 	var to_player := _player.global_position - global_position
