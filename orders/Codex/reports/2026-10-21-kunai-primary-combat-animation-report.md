@@ -2,7 +2,7 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-21-kunai-primary-combat-animation.md
 - Date:2026-10-21
-- Final status: REVIEW — southeast proof locally tested; integration/live verification pending; owner look/feel gate remains before direction expansion.
+- Final status: REVIEW — southeast proof merged and independently live-verified; owner look/feel gate remains before direction expansion.
 - Commit / PR: implementation6fb6d19e13814f3cd093ee277b907c871d08ec7f; original report written BEFORE implementation commit. Reuses PR48 study branch/history; audited PR33/42 notes and changed-asset inventory.
 
 ## Work completed
@@ -53,3 +53,17 @@ Merged origin/main91cd0b1 (Aki responsive0.85s jump/progress-resume and Kiro lab
 
 ## Protected integration follow-up
 PR63 all head checks passed, but GitHub merge returned405:2 of2 required status checks expected. Ruleset Agent Rules25328492 requires GitHub Actions15368 contexts validate-orders-and-project and godot-ci-gate with strict up-to-date policy; both head contexts are successful. Base advanced from91cd0b1 to5c0d8e0 with Kiro chief-report docs only. Updating branch to exact base through a normal merge and rerunning required CI, with no rules/check bypass or synthetic statuses. Staged diff confirms no scripts/scenes/assets/tests change; git diff check used before this documentation-only integration commit.
+
+## Live-verified first delivery — 2026-10-22 03:16 UTC (owner local date2026-10-21)
+- PR63: https://github.com/kiotdstudios/shinobi-rush/pull/63, merged with expected head e86d231d2791729c2debd614a31dd39d4e5a076e after repeated required CI passed. Strict-base update resolved the initial405; protections unchanged.
+- Live merge SHA: **ccd3e7869d885a3c1b9000ecb160b3d1b5a73d1d**.
+- Main CI: https://github.com/kiotdstudios/shinobi-rush/actions/runs/39715310919 — import/tests/export, predeploy browser, Pages deployment, live smoke and gate all successful. Public build-info.json independently matched exact SHA.
+- `node scripts/ci/smoke/smoke.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha ccd3e7869d885a3c1b9000ecb160b3d1b5a73d1d --out-dir build/kunai-live-game-smoke --label kunai-proof-live-game`:PASS,9 served files hash-verified, real game render/input,0 fatal errors.
+- `node scripts/ci/smoke/kunai-proof-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/kunai-live-proof`:all12 checks PASS; default half speed, all7 actions, persistent weapon, pause/step/normal/half, clip selector, rear/front contact/VFX, scrub,0 browser errors.
+- Live screenshot inspected: correct SE player and layered compact kunai, finisher contact and independent swipe, functioning timer/controls/2x inspection. Browser tab requested in Codex; tool returned queued, not evidence it is already visible.
+- Proof: https://kiotdstudios.github.io/shinobi-rush/?kunai=proof&v=ccd3e78
+- Half GIF: https://raw.githubusercontent.com/kiotdstudios/shinobi-rush/ccd3e7869d885a3c1b9000ecb160b3d1b5a73d1d/docs/visuals/kunai-primary/kunai-sequence-half.gif
+- Evidence copied to docs/visuals/kunai-primary/live-{proof-probe.json,proof.png,game-smoke.json}. PR48 automatically marked merged through included ancestry; no duplicate active implementation.
+
+### Remaining gate / scope
+The first SE proof is delivered, not the full eight-direction/defensive/aerial pack. Order remains REVIEW for owner look/feel approval before expansion. Ordinary gameplay melee still uses Aki's existing path; binding this layered kunai art belongs to Aki after approval. New P1 jump/air_attack art depends on approved kunai style and follows this P0 proof. Chidori remains separate. No deployment/test blocker remains for this first proof. Final evidence/status update is a report-only follow-up commit; runtime deployed SHA above is unchanged.

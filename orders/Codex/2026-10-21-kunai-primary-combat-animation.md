@@ -1,6 +1,6 @@
 # CODEX — P0 Kunai-First Combat Animation
 
-- **Status:** IN_PROGRESS � southeast proof; audited PRs 33/42/48
+- **Status:** REVIEW — southeast proof live; owner approval required before eight directions
 - **Date:** 2026-10-21
 - **Owner direction:** Make Naruto-inspired kunai, not sword, the basic/default shinobi weapon.
 
@@ -22,3 +22,6 @@ Kunai is clearly the default melee weapon; three distinct legible strikes; stabl
 
 ## Dependencies / status
 Codex art only, Aki gameplay integration. Existing Chidori task is separate and should not be silently discarded; flag schedule conflicts. PR #40's sword-first order is superseded and should not be merged as a second active P0. PR #48 can serve as implementation base if appropriate.
+
+## First delivery verified
+PR63 merged ccd3e7869d885a3c1b9000ecb160b3d1b5a73d1d after green required checks; Pages deployment and independent exact-SHA live smoke plus12-check proof probe passed. Review: https://kiotdstudios.github.io/shinobi-rush/?kunai=proof&v=ccd3e78 . Report: reports/2026-10-21-kunai-primary-combat-animation-report.md . Eight-direction and gameplay-binding work remains behind the explicit owner look/feel gate.
