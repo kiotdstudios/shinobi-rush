@@ -1,14 +1,14 @@
 class_name PlacedObjects
 extends Node
-## The player-editable layer of the arena: trees, walls and other built objects placed with the World Builder
-## (WorldEditor). Every object is solid (player + bandit nav) and is saved to disk so a layout survives restarts.
+## The player-editable layer of the arena: trees, walls and decorative grass.
+## Solid props block player/bandit navigation; grass is passable. Layouts survive restarts.
 ## To add a new buildable thing, add ONE row to CATALOG (and an id to CATEGORIES so it shows in the panel).
 ##   kind "block": a placeholder box (TrainingArena.Block/BlockRear) with `footprint` (w, depth) and `height`.
 ##   kind "tree":  one of the five Codex blossom trees (index into blossom_trees.art.json); solid trunk base only.
 const SAVE_PATH := "user://world_builder_layout.json"
-## v3 saves list EVERY object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
+## v4 adds editable grass to v3 saves, which list EVERY solid object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
-const SAVE_VERSION := 3
+const SAVE_VERSION := 4
 const CATALOG := {
 	"tree_1": {"label": "Tiered tree", "kind": "tree", "tree": 0},
 	"tree_2": {"label": "Windswept tree", "kind": "tree", "tree": 1},
@@ -19,9 +19,22 @@ const CATALOG := {
 	"wall_v": {"label": "Wall (deep)", "kind": "block", "footprint": Vector2(90, 270), "height": 150.0},
 	"rock": {"label": "Rock", "kind": "block", "footprint": Vector2(120, 110), "height": 110.0},
 	"crate": {"label": "Crate", "kind": "block", "footprint": Vector2(108, 108), "height": 108.0},
+	"grass9_corner_top": {"label": "Corner Top", "kind": "grass", "tall": false},
+	"grass9_edge_ne": {"label": "Edge Ne", "kind": "grass", "tall": false},
+	"grass9_corner_right": {"label": "Corner Right", "kind": "grass", "tall": false},
+	"grass9_edge_nw": {"label": "Edge Nw", "kind": "grass", "tall": false},
+	"grass9_center": {"label": "Center", "kind": "grass", "tall": false},
+	"grass9_edge_se": {"label": "Edge Se", "kind": "grass", "tall": false},
+	"grass9_corner_left": {"label": "Corner Left", "kind": "grass", "tall": false},
+	"grass9_edge_sw": {"label": "Edge Sw", "kind": "grass", "tall": false},
+	"grass9_corner_bottom": {"label": "Corner Bottom", "kind": "grass", "tall": false},
+	"grass_tall_00": {"label": "Tall grass 1", "kind": "grass", "tall": true},
+	"grass_tall_01": {"label": "Tall grass 2", "kind": "grass", "tall": true},
+	"grass_tall_02": {"label": "Tall grass 3", "kind": "grass", "tall": true},
+	"grass_tall_03": {"label": "Tall grass 4", "kind": "grass", "tall": true},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]]]
+const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 
@@ -45,6 +58,7 @@ var autosave := true
 ## Each entry: {"id": String, "pos": Vector2, "nodes": Array[Node]}
 var objects: Array[Dictionary] = []
 var _serial := 0
+var hidden_types: Dictionary = {}
 
 
 static func tree_info(index: int) -> Dictionary:
@@ -56,7 +70,7 @@ static func tree_info(index: int) -> Dictionary:
 
 static func footprint_of(id: String) -> Vector2:
 	var def := def_of(id)
-	return WorldScale.TREE_TRUNK_FOOTPRINT if def.kind == "tree" else def.footprint
+	return Vector2(72, 36) if def.kind == "grass" else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind == "tree" else def.footprint
 
 
 ## The solid ground rectangle (BLOCKS convention: bottom-centre `pos`, extends `depth` upward).
@@ -68,6 +82,8 @@ static func footprint_rect(id: String, pos: Vector2) -> Rect2:
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
 static func hit_rect(id: String, pos: Vector2) -> Rect2:
 	var def := def_of(id)
+	if def.kind == "grass":
+		return Rect2(pos - Vector2(56, 136 if def.tall else 84), Vector2(112, 160 if def.tall else 112))
 	if def.kind == "tree":
 		return Rect2(pos.x - 110.0, pos.y - 330.0, 220.0, 350.0)
 	var fp: Vector2 = def.footprint
@@ -80,6 +96,8 @@ func can_place(id: String, pos: Vector2) -> bool:
 	var rect := footprint_rect(id, pos).grow(8.0)
 	if not arena.bounds.encloses(rect):
 		return false
+	if def_of(id).kind == "grass":
+		return true
 	var actors: Array[Node] = []
 	actors.append_array(get_tree().get_nodes_in_group("player"))
 	actors.append_array(get_tree().get_nodes_in_group("enemy"))
@@ -95,7 +113,14 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	var def := def_of(id)
 	var nodes: Array[Node] = []
 	_serial += 1
-	if def.kind == "block":
+	if def.kind == "grass":
+		var field := arena.get_node_or_null("WindGrassField") as WindGrassField
+		if field == null:
+			return {}
+		var sprite := field.make_editable_sprite(id, pos)
+		arena.add_child(sprite)
+		nodes = [sprite]
+	elif def.kind == "block":
 		var fp: Vector2 = def.footprint
 		var front := TrainingArena.Block.new(fp, float(def.height))
 		front.name = "PlacedBlock%d" % _serial
@@ -114,6 +139,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		nodes = [tree, _make_trunk(pos)]
 	var obj := {"id": id, "pos": pos, "nodes": nodes}
 	objects.append(obj)
+	_apply_visibility(obj)
 	if commit:
 		_changed()
 	return obj
@@ -158,11 +184,47 @@ func adopt_grove() -> int:
 	return n
 
 
+## Original field becomes the same editable objects as newly placed grass.
+func adopt_grass() -> int:
+	var field := arena.get_node_or_null("WindGrassField") as WindGrassField
+	if field == null:
+		return 0
+	field.ground.clear()
+	field.tall.clear()
+	for tile: Dictionary in field.initial_tiles:
+		add(tile.id, tile.pos, false)
+	return field.initial_tiles.size()
+
+
+static func type_of(id: String) -> String:
+	var def := def_of(id)
+	return "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Walls & blocks"
+
+
+func type_visible(id: String) -> bool:
+	return not bool(hidden_types.get(type_of(id), false))
+
+
+func _apply_visibility(obj: Dictionary) -> void:
+	for n: Node in obj.nodes:
+		if is_instance_valid(n) and n is CanvasItem:
+			(n as CanvasItem).visible = type_visible(obj.id)
+
+
+func set_type_visible(category: String, shown: bool) -> void:
+	hidden_types[category] = not shown
+	for obj in objects:
+		if type_of(obj.id) == category:
+			_apply_visibility(obj)
+
+
 func remove(obj: Dictionary, commit := true) -> void:
 	if not objects.has(obj):
 		return
 	objects.erase(obj)
 	var def := def_of(obj.id)
+	if def.kind == "grass":
+		(arena.get_node("WindGrassField") as WindGrassField).removed_editable(obj.id)
 	for n: Node in obj.nodes:
 		if not is_instance_valid(n):
 			continue
@@ -186,30 +248,42 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 		(nodes[0] as Node2D).position = pos
 		(nodes[1] as Node2D).position = ArenaSort.rear_position(pos, def.footprint)
 	else:
-		(nodes[0] as Node2D).position = pos
-		(nodes[1] as Node2D).position = pos
+		for n: Node2D in nodes:
+			n.position = pos
 	if commit:
 		_changed()
 
 
 ## Topmost object under a world point: the solid base wins over the (larger) picture so crowded trees stay pickable.
 func hit_test(point: Vector2) -> Dictionary:
-	for i in range(objects.size() - 1, -1, -1):
-		var o := objects[i]
-		if footprint_rect(o.id, o.pos).grow(10.0).has_point(point):
-			return o
-	for i in range(objects.size() - 1, -1, -1):
-		var o := objects[i]
+	# Solid props win before grass; hiding a type lets the owner pick what is underneath it.
+	for picture: bool in [false, true]:
+		for i in range(objects.size() - 1, -1, -1):
+			var o := objects[i]
+			if not type_visible(o.id) or def_of(o.id).kind == "grass":
+				continue
+			var rect := hit_rect(o.id, o.pos) if picture else footprint_rect(o.id, o.pos).grow(10.0)
+			if rect.has_point(point):
+				return o
+	var closest: Dictionary = {}
+	var distance := INF
+	for o in objects:
+		if def_of(o.id).kind != "grass" or not type_visible(o.id):
+			continue
 		if hit_rect(o.id, o.pos).has_point(point):
-			return o
-	return {}
+			var d := point.distance_squared_to(o.pos)
+			if d < distance:
+				distance = d
+				closest = o
+	return closest
 
 
 ## BLOCKS-style entries [pos, footprint, height] for the bandit nav.
 func obstacles() -> Array:
 	var out: Array = []
 	for o in objects:
-		out.append([o.pos, footprint_of(o.id), 0.0])
+		if def_of(o.id).kind != "grass":
+			out.append([o.pos, footprint_of(o.id), 0.0])
 	return out
 
 
@@ -248,6 +322,8 @@ func load_dict(data: Dictionary) -> int:
 	if int(data.get("version", 1)) < 3:
 		for i in WorldScale.BLOCKS.size():
 			add("base_%d" % i, WorldScale.BLOCKS[i][0], false)
+	if int(data.get("version", 1)) < 4:
+		adopt_grass()
 	var made := 0
 	var spawn := Vector2(0, 135)
 	if arena != null and arena.has_node("Spawn"):
@@ -260,7 +336,7 @@ func load_dict(data: Dictionary) -> int:
 		var id := str(item.id)
 		var pos := Vector2(float(item.x), float(item.y))
 		var rect := footprint_rect(id, pos)
-		if not arena.bounds.encloses(rect) or rect.grow(60.0).has_point(spawn):
+		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind != "grass" and rect.grow(60.0).has_point(spawn)):
 			continue
 		if not add(id, pos, false).is_empty():
 			made += 1
