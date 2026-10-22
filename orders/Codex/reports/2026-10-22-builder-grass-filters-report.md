@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-22-builder-grass-filters.md
 - Date: 2026-10-22 America/New_York
-- Status: IN_PROGRESS — tested implementation, PR/publication pending
-- Commit / PR: not committed; report created before implementation commit
+- Status: DONE — integrated, published and live verified
+- Commit / PR: initial e210457; PR https://github.com/kiotdstudios/shinobi-rush/pull/93; reviewed head78575ff608d246580314335982eba2f3d709bf0d; merged runtime028b46e11236b508a3bde6836c9a8bbdf961fc90. Report created before implementation commit.
 
 ## Work completed
 Direct owner request authorizes this job in Aki-owned builder code. Added nine grass terrain entries and four tall accents, native thumbnails and placement ghosts. Starting247ground/111tall tiles now use the same editable object model as new placements. Shared original wind materials/anchors/nearest filtering preserve the approved look. Grass adds no solid bodies or nav obstacles. Snap uses existing72x36 isometric grid; Snap Off remains free placement.
@@ -56,3 +56,13 @@ Main41781fe2a45945445265a35ae3ef4fe430ef9a98(PR88) changes builder scrollbar/car
 
 ## Orcha leash integration before merge commit
 Main7a1ec5094512e7d66e17ec1dd0fa0db3dbd73e34(PR96) merged cleanly; builder files unchanged. Full suite build/builder-leash-tests1365PASS/zero failures; fresh export/finalize ../builder-leash-web PASS; smoke.mjs --serve-dir ../builder-leash-web --out-dir build/builder-leash-smoke --label builder-leash PASS9hashes,rendered canvas,real keyboard effect26.550%,zero fatal errors. Existing17builder checks from unchanged UI remain valid; repeat on public deployment planned.
+
+## Final live delivery (supersedes pending notes above)
+Completed2026-10-22T20:39:56Z (16:39 America/New_York). PR93 merged with required checks; no bypass. Exact published runtime028b46e11236b508a3bde6836c9a8bbdf961fc90. Workflow39849344461 build,pre-deploy browser,Pages publication,post-deploy live smoke and gate all confirmed success.
+Live builder: https://kiotdstudios.github.io/shinobi-rush/?editor=1&v=028b46e
+- builder-grass-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/builder-grass-live: all17PASS,zeroerrors. Real wheel at list top/bottom/header leaves zoom fixed; outside zoom works. Actual palette placement,select,drag,Delete,checkbox filters,reveal,Ctrl+S and reload persistence pass.
+- smoke.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 028b46e11236b508a3bde6836c9a8bbdf961fc90 --out-dir build/builder-live-smoke --label builder-live: PASS exact public SHA,nine file hashes,rendered canvas,keyboard effect29.422%,zero fatal errors,four nonfatal engine warnings.
+- Opened public builder in Codex browser,clicked Trees/Walls off,observed palette and world change,scrolled to Tall grass with world zoom unchanged,restored asset visibility and retained tab.
+Preserved live-palette.png,live-proof.json and live-smoke.json in docs/visuals/builder-grass/.
+Final automated suite1365PASS/zero failed. No unresolved implementation failures. Incoming Orcha order formatting cleaned (trailing whitespace/EOF/control character) during integration; no runtime change.
+This report/order/evidence follow-up does not represent a second runtime deployment. Remaining recommendations: mobile hardware performance benchmarking; inherited F3 overlap remains separate. No owner decision needed for completed builder delivery. Other queued art orders are separate.

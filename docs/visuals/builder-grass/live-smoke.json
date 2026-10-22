@@ -1,0 +1,86 @@
+{
+  "label": "builder-live",
+  "mode": "deployed",
+  "baseUrl": "https://kiotdstudios.github.io/shinobi-rush/",
+  "verdict": "PASS",
+  "exitCode": 0,
+  "reason": "",
+  "durationMs": 36178,
+  "checks": [
+    {
+      "name": "webgl2-available",
+      "status": "pass",
+      "detail": "WebGL 2.0 (OpenGL ES 3.0 Chromium); ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+    },
+    {
+      "name": "build-info",
+      "status": "pass",
+      "detail": "kind=game (expected game), commit=028b46e11236b508a3bde6836c9a8bbdf961fc90 (expected 028b46e11236b508a3bde6836c9a8bbdf961fc90), attempts=1"
+    },
+    {
+      "name": "served-files-match-build",
+      "status": "pass",
+      "detail": "9 files verified by sha256"
+    },
+    {
+      "name": "page-load",
+      "status": "pass",
+      "detail": "HTTP 200 text/html; charset=utf-8"
+    },
+    {
+      "name": "engine-start",
+      "status": "pass",
+      "detail": "status overlay removed after 20752 ms"
+    },
+    {
+      "name": "canvas-visible",
+      "status": "pass",
+      "detail": "1280x720 css px, drawing buffer 1280x720"
+    },
+    {
+      "name": "ready-hook",
+      "status": "pass",
+      "detail": "window.__SHINOBI_READY__ === true"
+    },
+    {
+      "name": "canvas-not-blank",
+      "status": "pass",
+      "detail": "distinct colours=335, dominant colour #334444 covers 15.9%"
+    },
+    {
+      "name": "input-effect",
+      "status": "pass",
+      "detail": "29.422% of sampled pixels changed after KeyD:500,Space:100,KeyJ:100 (needs >= 0.10%)"
+    },
+    {
+      "name": "engine-evidence",
+      "status": "pass",
+      "detail": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support. | Compatibility renderer confirmed"
+    },
+    {
+      "name": "no-fatal-console",
+      "status": "pass",
+      "detail": "7 events, 4 warning(s), 0 fatal"
+    }
+  ],
+  "environment": {
+    "node": "v24.19.0",
+    "playwright": "1.64.1",
+    "browser": "156.0.8078.4",
+    "platform": "win32",
+    "github_run_id": null,
+    "github_sha": null
+  },
+  "config": {
+    "canvas_selector": "canvas",
+    "settle_ms": 3000,
+    "input_sequence": [
+      "KeyD:500",
+      "Space:100",
+      "KeyJ:100"
+    ],
+    "require_input_effect": true,
+    "require_ready_hook": true,
+    "startup_timeout_ms": 90000
+  }
+}
