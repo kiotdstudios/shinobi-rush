@@ -649,6 +649,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	if player == null:
 		return
 	if event is InputEventMouseButton and event.pressed:
+		# Builder wheel input belongs to its scroll area, including when that area is at a limit.
+		var hovered := get_viewport().gui_get_hovered_control()
+		while hovered != null:
+			if hovered.is_in_group("world_builder_ui"):
+				return
+			hovered = hovered.get_parent_control()
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			set_zoom_index(zoom_index + 1)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:

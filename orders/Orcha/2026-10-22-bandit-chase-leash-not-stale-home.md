@@ -1,4 +1,4 @@
-﻿# ORDER -- Bandit: chase leash must measure from where THIS chase started, not a stale prior home
+# ORDER -- Bandit: chase leash must measure from where THIS chase started, not a stale prior home
 - Agent: Orcha
 - Status: DONE
 - Priority: P0 (bug fix -- the "no home position" order shipped minutes earlier had a second gap)
@@ -62,7 +62,7 @@ home area instead of that being his now home area."
 
 ## Reconciliation Note (added post-rebase)
 Aki independently shipped a COMPLEMENTARY fix for a DIFFERENT owner complaint in the same window
-(PR #89, ki/chase-leash-fix: 
+(PR #89, aki/chase-leash-fix:
 ot sees_player and home.distance_to(...), owner quote he stops the
 chase though I'm in his vision). Both fixes are needed and do not conflict in intent: Aki's gates the
 leash on visibility (never give up while the player is in view), mine fixes WHICH point distance is
@@ -77,4 +77,3 @@ assertion).
   measured from the right reference point) are two independent bugs in the same original feature --
   both are now fixed; there is no remaining known gap in this area.
 - No new owner questions. This closes the loop the owner flagged.
-

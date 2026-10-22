@@ -18,6 +18,9 @@ var sample_ground: TileMapLayer
 var sample_tall: TileMapLayer
 var status: Label
 var _state: JavaScriptObject
+var initial_tiles: Array[Dictionary] = []
+var edited_ground := 0
+var edited_tall := 0
 
 func _ready() -> void:
 	y_sort_enabled = true
@@ -27,6 +30,11 @@ func _ready() -> void:
 	tall = _layer("GrassTallBlades", WindGrassTileset.build_tall(tall_wind), FIELD_ORIGIN)
 	for patch: Rect2i in PATCHES:
 		_paint(ground, tall, patch)
+	for layer: TileMapLayer in [ground, tall]:
+		for cell: Vector2i in layer.get_used_cells():
+			var index := layer.get_cell_source_id(cell)
+			var id := "grass_tall_%02d" % index if layer == tall else "grass9_" + WindGrassTileset.ROLES[index]
+			initial_tiles.append({"id": id, "pos": layer.position + layer.map_to_local(cell)})
 	var query := str(JavaScriptBridge.eval("window.location.search", true)) if OS.has_feature("web") else ""
 	review_mode = "grass=review" in query or "--grass-review" in OS.get_cmdline_user_args()
 	if OS.has_feature("web"):
@@ -82,10 +90,38 @@ func advance(delta: float) -> void:
 func phase() -> int:
 	return int(floor(fmod(clock,6.0) * 24.0 + 0.00001)) % 144
 
+func ground_count() -> int:
+	return ground.get_used_cells().size() + edited_ground
+
+func tall_count() -> int:
+	return tall.get_used_cells().size() + edited_tall
+
+## Shared animated material keeps editable sprites synchronized with the original field.
+func make_editable_sprite(id: String, pos: Vector2) -> Sprite2D:
+	var is_tall := id.begins_with("grass_tall_")
+	var sprite := Sprite2D.new()
+	sprite.texture = load(WindGrassTileset.DIR + id + ".png") as Texture2D
+	sprite.centered = false
+	sprite.offset = -Vector2(56, 136 if is_tall else 84)
+	sprite.position = pos
+	sprite.material = tall_wind if is_tall else ground_wind
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	if is_tall:
+		edited_tall += 1
+	else:
+		edited_ground += 1
+	return sprite
+
+func removed_editable(id: String) -> void:
+	if id.begins_with("grass_tall_"):
+		edited_tall -= 1
+	else:
+		edited_ground -= 1
+
 func _process(delta: float) -> void:
 	advance(0.0 if paused else delta * speed)
 	if status != null:
-		status.text = "GRASS | %03d/144 | %.2fx | wind %.1f | %d terrain / %d tall tiles" % [phase(),speed,strength,ground.get_used_cells().size(),tall.get_used_cells().size()]
+		status.text = "GRASS | %03d/144 | %.2fx | wind %.1f | %d terrain / %d tall tiles" % [phase(),speed,strength,ground_count(),tall_count()]
 	if _state != null:
 		_state.ready = true
 		_state.phase = phase()
@@ -96,8 +132,8 @@ func _process(delta: float) -> void:
 		_state.paused = paused
 		_state.review = review_mode
 		_state.selected = selected
-		_state.ground_cells = ground.get_used_cells().size()
-		_state.tall_cells = tall.get_used_cells().size()
+		_state.ground_cells = ground_count()
+		_state.tall_cells = tall_count()
 		_state.roles = ground.tile_set.get_source_count()
 		_state.sample_cells = sample_ground.get_used_cells().size() if sample_ground != null else 0
 

@@ -35,7 +35,8 @@ func run(ck: Callable, root: Node) -> void:
 	var base_trees := grove.trees.size()
 	var base_objs := placed.objects.size()
 	var nb := WorldScale.BLOCKS.size()
-	ck.call("builder: the five starting trees and every placeholder wall are editable objects", base_trees == 5 and base_objs == 5 + nb)
+	var grass_total := (arena.get_node("WindGrassField") as WindGrassField).initial_tiles.size()
+	ck.call("builder: the five starting trees and every placeholder wall are editable objects", base_trees == 5 and base_objs == 5 + nb + grass_total)
 	# a placeholder wall: pick, move (collision + nav follow), delete
 	var wb: Array = WorldScale.BLOCKS[1]
 	var wb_mid: Vector2 = (wb[0] as Vector2) + Vector2(0, -float((wb[1] as Vector2).y) * 0.5)
@@ -80,7 +81,7 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().process_frame
 	await root.get_tree().physics_frame
 	await root.get_tree().physics_frame
-	ck.call("builder: reset brings the five starting trees back in place", placed.objects.size() == 5 + nb and grove.trees.size() == 5 and _solid_at(arena, orig_pos + Vector2(0, -20)) and not arena.nav.is_walkable(orig_pos + Vector2(0, -20)))
+	ck.call("builder: reset brings the five starting trees back in place", placed.objects.size() == 5 + nb + grass_total and grove.trees.size() == 5 and _solid_at(arena, orig_pos + Vector2(0, -20)) and not arena.nav.is_walkable(orig_pos + Vector2(0, -20)))
 	editor.set_open(false)
 	base_trees = grove.trees.size()
 	base_objs = placed.objects.size()
@@ -139,6 +140,49 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().physics_frame
 	ck.call("builder: delete removes the tree, its collision and its art node", placed.objects.size() == base_objs + 1 and grove.trees.size() == base_trees and not _solid_at(arena, tree_pos + Vector2(0, -20)) and arena.nav.is_walkable(tree_pos + Vector2(0, -20)))
 
+	# Decorative grass uses shared wind but never becomes a physics/nav obstacle.
+	var field := arena.get_node("WindGrassField") as WindGrassField
+	ck.call("builder grass: all original terrain and tall accents are editable", grass_total == 358 and field.ground_count() == 247 and field.tall_count() == 111 and field.ground.get_used_cells().is_empty())
+	var nav_before := placed.obstacles().size()
+	var g := placed.add("grass9_center", Vector2(-420, 850))
+	var tall := placed.add("grass_tall_00", Vector2(-540, 850))
+	await root.get_tree().physics_frame
+	ck.call("builder grass: uses original wind material and ground anchors", (g.nodes[0] as Sprite2D).material == field.ground_wind and (g.nodes[0] as Sprite2D).offset == Vector2(-56, -84) and (tall.nodes[0] as Sprite2D).offset == Vector2(-56, -136))
+	ck.call("builder grass: no collision or nav obstacle added", placed.obstacles().size() == nav_before and not _solid_at(arena, Vector2(-420, 830)) and placed.can_place("grass9_center", player.global_position))
+	editor.set_tool("select")
+	editor.press(g.pos)
+	editor.drag_to(Vector2(-360, 900))
+	editor.release()
+	ck.call("builder grass: select and drag moves art on the floor grid", editor.selected == g and g.pos == editor.snapped_pos(Vector2(-360, 900)) and (g.nodes[0] as Node2D).position == g.pos)
+	editor.snap = 0
+	ck.call("builder grass: snap off allows free positioning", editor.snapped_pos(Vector2(123, 456)) == Vector2(123, 456))
+	editor.snap = 30
+	var layout_before := placed.to_json_string()
+	editor.set_type_filter("Grass", false)
+	ck.call("builder filters: hides palette, art and picking without deleting layout", not (g.nodes[0] as CanvasItem).visible and not (editor._category_sections["Grass"] as Control).visible and placed.hit_test(g.pos) != g and placed.to_json_string() == layout_before and editor.selected.is_empty())
+	editor.set_type_filter("Trees", false)
+	ck.call("builder filters: hidden solids retain collision/nav", not placed.type_visible("tree_1") and not arena.nav.is_walkable(WorldScale.TREE_POSITIONS[0] + Vector2(0, -20)))
+	editor.set_type_filter("Grass", true)
+	editor.set_type_filter("Trees", true)
+	ck.call("builder filters: reveal restores art and picking", (g.nodes[0] as CanvasItem).visible and placed.hit_test(g.pos) == g)
+	editor.press(g.pos)
+	editor.release()
+	editor.delete_selected()
+	ck.call("builder grass: delete removes only the picked tile", field.ground_count() == 247 and field.tall_count() == 112 and placed.objects.has(tall))
+	placed.remove(tall)
+	# A v4 save records starting-grass deletion instead of reseeding it on reload.
+	var original_grass: Dictionary = {}
+	for obj in placed.objects:
+		if obj.id == "grass9_center":
+			original_grass = obj
+			break
+	placed.remove(original_grass)
+	var edited_layout := placed.to_dict()
+	placed.load_dict(edited_layout)
+	ck.call("builder grass: v4 reload preserves deletions and counts", field.ground_count() == 246 and field.tall_count() == 111 and placed.objects.size() == (edited_layout.items as Array).size())
+	# Existing checks below start from the full original meadow again.
+	placed.add(original_grass.id, original_grass.pos)
+
 	# explicit save button
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(placed.save_path))
 	ck.call("builder: save button exists and Save writes the layout file", editor.save_button != null and editor.save_now() and FileAccess.file_exists(placed.save_path) and "SAVED" in editor.status.text)
@@ -152,7 +196,7 @@ func run(ck: Callable, root: Node) -> void:
 	var made := placed.load_saved()
 	ck.call("builder: load restores the same layout", made == (snapshot.items as Array).size() and JSON.stringify(placed.to_dict()) == JSON.stringify(snapshot))
 	made = placed.load_dict({"version": 1, "items": [{"id": "nope", "x": 0, "y": 0}, {"id": "rock", "x": "a", "y": 1}, {"id": "rock", "x": 0, "y": 135}, {"id": "rock", "x": -600, "y": 560}]})
-	ck.call("builder: load skips unknown ids, bad numbers and objects on the spawn (v1 save also gets the starting trees)", made == 1 and placed.objects.size() == 6 + nb)
+	ck.call("builder: load skips unknown ids, bad numbers and objects on the spawn (v1 save also gets the starting trees)", made == 1 and placed.objects.size() == 6 + nb + grass_total)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(placed.save_path))
 	placed.clear_all()
 	editor.set_open(false)
