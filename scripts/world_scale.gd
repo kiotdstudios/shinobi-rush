@@ -65,4 +65,14 @@ const BLOCKS: Array = [
 	[Vector2(-270, 450), Vector2(360, 90), 90.0],
 	[Vector2(540, 405), Vector2(108, 108), 108.0],
 	[Vector2(0, -585), Vector2(450, 90), 162.0],
+	# Level 1 Bandit arena (PLACEHOLDER collision blockers; art pass later). Two long walls at x=900 leave a
+	# 280 px choke point at y -80..200, with open routes north (above y -600) and south (below y 740);
+	# the two rocks east of them break line of sight and give the Bandit's patrol its far-side territory.
+	[Vector2(900, -80), Vector2(90, 520), 150.0],   # 5: north wall
+	[Vector2(900, 740), Vector2(90, 540), 150.0],   # 6: south wall
+	[Vector2(1180, 90), Vector2(120, 110), 110.0],  # 7: rock covering the choke's east mouth
+	[Vector2(1500, -330), Vector2(130, 110), 110.0],  # 8: rock inside the patrol area
 ]
+## Where the Level 1 Bandit lives: far east of the player's spawn, behind the walls above.
+const BANDIT_HOME := Vector2(1300, -130)
+const BANDIT_PATROL: Array[Vector2] = [Vector2(1250, -200), Vector2(1650, -200), Vector2(1650, 60), Vector2(1380, 60)]

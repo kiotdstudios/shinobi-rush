@@ -11,6 +11,9 @@ extends CharacterBody2D
 signal state_changed(new_state: State)
 ## The camera baseline zoom was recomputed (preset switched, or the figure height changed with the sprite set).
 signal camera_baseline_changed(zoom: float)
+## An enemy attack connected (Level 1 Bandit order). There is deliberately no player HP/death here:
+## the locked RPG/death rules are untouched; this only counts the hit and gives a short readable reaction.
+signal hit_taken(damage: float, from_dir: Vector2)
 
 enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK, AIR_ATTACK }
 ## Phase of the current attack (LIGHT1/LIGHT2/LIGHT3/DASH_ATTACK states only). Startup/active/recovery
@@ -88,6 +91,12 @@ var _attack_buffer: float = 0.0  ## seconds left that a buffered attack_light pr
 var _hit_targets: Array = []  ## enemies already damaged by the current swing (each swing hits once)
 var _dash_grace_timer: float = 0.0  ## seconds left of the post-dodge dash-attack window
 var _hitstop_timer: float = 0.0  ## local-only pause (not Engine.time_scale): see _physics_process top
+var hits_taken: int = 0  ## enemy hits that landed on the player (read by tests / web smoke state)
+var hit_flash_timer: float = 0.0
+var _hit_invuln: float = 0.0  ## brief grace after a hit so one combo cannot chain-stun the player
+const HIT_INVULN_TIME := 0.45
+const HIT_FLASH_TIME := 0.18
+const HIT_TINT := Color(1.0, 0.45, 0.4, 1.0)
 
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
@@ -119,6 +128,10 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var prev_state := state
+	_hit_invuln = maxf(_hit_invuln - delta, 0.0)
+	if hit_flash_timer > 0.0:
+		hit_flash_timer = maxf(hit_flash_timer - delta, 0.0)
+		visual.modulate = HIT_TINT if hit_flash_timer > 0.0 else Color.WHITE
 
 	# Presses are captured EVERY physics tick, including hitstop ticks (Milestone A fluidity order:
 	# "buffered inputs must survive hitstop"). Before this, a press landing inside the 3-4 tick
@@ -498,6 +511,25 @@ func refresh_camera_baseline() -> void:
 	if is_equal_approx(camera.zoom.x, old):
 		camera.zoom = Vector2.ONE * camera_baseline
 	camera_baseline_changed.emit(camera_baseline)
+
+
+## True while the current action is a real evasion: a dodge, or airborne (jump / air attack).
+func is_evading_melee() -> bool:
+	return state == State.DODGE or state == State.JUMP or state == State.AIR_ATTACK
+
+
+## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely; a
+## hit that lands only tints the figure and adds a small shove -- control is never taken away.
+func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0) -> bool:
+	if is_evading_melee() or _hit_invuln > 0.0:
+		return false
+	hits_taken += 1
+	_hit_invuln = HIT_INVULN_TIME
+	hit_flash_timer = HIT_FLASH_TIME
+	visual.modulate = HIT_TINT
+	velocity += from_dir.normalized() * shove
+	hit_taken.emit(damage, from_dir)
+	return true
 
 
 func reset_camera() -> void:
