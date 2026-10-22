@@ -8,7 +8,9 @@ const SPEEDS: Array[float] = [0.25, 0.5, 1.0, 1.5, 2.0]
 ## Lab zoom steps. The zoom list is [active preset baseline] + these (see zoom_list); a baseline that already equals
 ## one of them is not repeated. Whole steps (1x 2x 3x 4x) are native 1:1 pixels; half steps (1.5x 2.5x 3.5x) and
 ## quarter steps (1.25x 1.75x 2.25x 2.75x 3.25x 3.75x) are NOT pixel-exact with the nearest-neighbour filter.
-const NATIVE_ZOOMS: Array[float] = [1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0]
+## Owner: no zoom past 1.500 (the old list ran to 4.0).
+const ZOOM_CEILING := 1.5
+const NATIVE_ZOOMS: Array[float] = [1.0, 1.25, 1.5]
 ## Camera preset switch (wide <-> close). The action is registered at runtime so project.godot stays untouched.
 const PRESET_ACTION := "dbg_camera_preset"
 const PRESET_KEY := KEY_N
@@ -589,7 +591,8 @@ func set_zoom_index(i: int) -> void:
 
 ## Switch the active camera preset (wide -> close -> wide). Back to the baseline, like closing the lab.
 func cycle_preset() -> void:
-	CameraPreset.set_active(CameraPreset.next_id(CameraPreset.active()))
+	# Owner: the game camera is permanently locked to the wide baseline (0.665); presets no longer switch.
+	CameraPreset.set_active(CameraPreset.DEFAULT_ID)
 	if player != null:
 		player.refresh_camera_baseline()
 	set_zoom_index(0)
