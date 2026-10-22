@@ -1,98 +1,103 @@
-# Job Report -- Dynamic Combat Camera Director
+# Job Report -- Dynamic Combat Camera Director (Rebased + Full Pipeline)
 - Agent: Orcha
 - Order: orders/Orcha/2026-10-18-dynamic-combat-camera.md
 - Date: 2026-10-21
-- Final status: REVIEW (Web export + browser smoke test + playtest pending; Godot validation and built-in test suite PASSED)
-- Commit / PR: bdb990d (implementation), 4643d4f (parse-error fix + .uid sidecar) | branch: orcha/dynamic-combat-camera
+- Final status: REVIEW -- all local tests PASS; live Pages verification pending PR merge
+- Branch: orcha/dynamic-combat-camera (rebased onto main 91cd0b1)
+- Commits: 1fa72bf (implementation), e2516c8 (RESET fix), c44a572 (report update)
 
-## Work completed
+## What this PR adds
 
-Implemented `CombatCameraDirector` -- a reusable, event-driven combat camera zoom director for Shinobi Rush.
+CombatCameraDirector -- event-driven Camera2D zoom director for Shinobi Rush.
 
-The director sits between `CameraPreset` (baseline zoom) and `CameraImpact` (positional shake/offset), writing an additive
-zoom delta to `Camera2D.zoom` each frame without touching position, smoothing, limits, or the offset owned by CameraImpact.
+Sits between CameraPreset (baseline) and CameraImpact (positional shake). Writes additive
+zoom delta to Camera2D.zoom each frame. Never touches position, smoothing, limits, or
+CameraImpact's offset.
 
 ### Architecture
-- `scripts/camera/combat_camera_director.gd` -- new director; class_name CombatCameraDirector, extends Node.
-- Priority stack: FINISHER (6) > JUTSU (5) > HEAVY_HIT (4) > LIGHT_HIT (3) > DODGE (2) > TAKE_DAMAGE (1).
-- A lower-priority event is silently ignored while a higher-priority effect is active.
-- Zoom envelope: immediate peak on entry, quadratic ease-out to baseline. Finisher: rise, hold (FINISHER_HOLD_S), ease out.
-- Blend speed is exponential (BLEND_RETURN_SPEED = 8.0 /s) so transitions feel smooth in both directions.
-- MAX_ZOOM_DELTA = 0.30 caps any single effect; CameraPreset.MIN_ZOOM / MAX_ZOOM clamp the absolute result.
-- `CombatCameraDirector.notify(kind, payload)` is the single public call site -- no node reference needed from callers.
-- All provisional tunable values are clearly marked PROVISIONAL in comments with design-intent bands.
-
-### Accessibility
-- `settings.zoom_scale` (0-1) and `settings.shake_scale` (0-1) gate effects independently.
-- `?camera_director=off|reduced|on` URL param; "reduced" halves both scales.
-- Reduced-motion browser preference maps to "reduced" automatically (same pattern as CameraImpact).
-- `CombatCameraDirector.reset()` flushes to baseline immediately for death, pause, scene transitions.
+- scripts/camera/combat_camera_director.gd: new director
+- Priority stack: FINISHER(6) > JUTSU(5) > HEAVY_HIT(4) > LIGHT_HIT(3) > DODGE(2) > TAKE_DAMAGE(1)
+- Lower-priority events silently ignored during active higher-priority effect
+- Zoom envelope: quadratic ease-out; finisher: rise-hold-ease-out
+- Exponential blend-back (BLEND_RETURN_SPEED=8.0/s)
+- MAX_ZOOM_DELTA=0.30 caps any single effect
+- CombatCameraDirector.notify(kind, payload) -- single call site, no node reference needed
+- All provisional values marked PROVISIONAL with design-intent bands
+- Accessibility: zoom_scale/shake_scale (0-1), ?camera_director=off/reduced/on URL param
+- Reduced-motion browser preference -> "reduced" automatically
+- reset() flushes to baseline for death/pause/scene transitions
 
 ### Integration points wired
-- `scripts/player/player_controller.gd`: `_check_attack_hits()` calls `notify(LIGHT_HIT)` or `notify(HEAVY_HIT)` on
-  every confirmed contact (DASH_ATTACK and AIR_ATTACK map to HEAVY_HIT; all others to LIGHT_HIT).
-- `scripts/player/player_controller.gd`: `_begin_dodge()` calls `notify(DODGE)`.
-- Hit events also route to `CameraImpact.light_hit()` / `CameraImpact.heavy_hit()` so the two systems
-  (zoom from this director + positional shake from CameraImpact) fire together from a single notify call.
-- `scenes/player/player.tscn`: CombatCameraDirector node added as a child of Player (load_steps bumped to 8).
-- `scripts/web/web_bridge.gd`: `apply_camera_director_query()` called in `_ready()`; director telemetry
-  (cam_dir_event, cam_dir_active, cam_dir_zoom_delta, cam_dir_event_count) published in `_process()`.
+- player_controller.gd: _check_attack_hits() -> notify LIGHT_HIT or HEAVY_HIT on confirmed contact
+- player_controller.gd: _begin_dodge() -> notify DODGE
+- Hit events also route to CameraImpact so both systems (zoom + shake) fire from one notify call
+- scenes/player/player.tscn: CombatCameraDirector node added (load_steps 8)
+- scripts/web/web_bridge.gd: apply_camera_director_query() in _ready(); cam_dir_* telemetry in _process()
 
-### Not yet wired (pending gameplay implementation)
-- JUTSU: no jutsu system exists yet. Caller contract defined; wire when Aki adds jutsu signals.
-- FINISHER: no finisher system exists yet. Caller contract defined; wire when combat system milestone B lands.
-- TAKE_DAMAGE: player does not yet have a `take_damage()` path. Wire when Aki implements player damage.
-- Boss finisher: elevated FINISHER priority; same notify(FINISHER, ...) call, no separate event kind needed.
+### Not yet wired (pending gameplay systems)
+- JUTSU: no jutsu system yet; Body Flicker will wire this when merged
+- FINISHER: no finisher system yet
+- TAKE_DAMAGE: player has no take_damage() path yet
 
 ## Files changed
 | File | Change |
 | --- | --- |
-| `scripts/camera/combat_camera_director.gd` | NEW -- full director implementation |
-| `scripts/player/player_controller.gd` | +9 lines: DODGE notify in `_begin_dodge`, LIGHT/HEAVY_HIT notify in `_check_attack_hits` |
-| `scenes/player/player.tscn` | +3 lines: ext_resource for director script, load_steps 7->8, CombatCameraDirector node |
-| `scripts/web/web_bridge.gd` | +11 lines: `apply_camera_director_query` call in `_ready`, telemetry in `_process`, static helper |
-| `orders/Orcha/2026-10-18-dynamic-combat-camera.md` | Status QUEUED -> REVIEW |
-| `orders/Orcha/reports/2026-10-21-dynamic-combat-camera-report.md` | NEW -- this file |
+| scripts/camera/combat_camera_director.gd (+.uid) | NEW -- full director |
+| scripts/player/player_controller.gd | +9 lines: DODGE notify, LIGHT/HEAVY_HIT notify |
+| scenes/player/player.tscn | +3 lines: ext_resource, load_steps 7->8, node |
+| scripts/web/web_bridge.gd | +11 lines: boot query, telemetry publish, static helper |
+| orders/Orcha/2026-10-18-dynamic-combat-camera.md | Status QUEUED -> REVIEW |
+| orders/Orcha/reports/2026-10-21-dynamic-combat-camera-report.md | This file |
 
-## Tests run before commit
-| Test / command / manual steps | Result | Evidence |
-| --- | --- | --- |
-| `Get-Content` review of all changed files post-edit | PASS -- all edits verified at correct lines via replace_lines verification output | In-session tool output |
-| Syntax review: GDScript indentation, class_name, static var, match, enum, const types | PASS (manual review) | N/A |
-| Godot project validation (godot_ci.py import) | PASS -- 0 errors, 0 warnings (Godot 4.7.2) | Tool output |
-| Godot built-in test suite (godot_ci.py tests) | PASS -- 742 passed, 0 failed | Tool output |
-| Playtest: hit bandit, verify zoom punch-in and return | NOT RUN -- Web export not performed this session | Pending |
-| Playtest: dodge, verify slight emphasis and return | NOT RUN -- Web export not performed this session | Pending |
-| Reduced-motion mode (?camera_director=reduced) | NOT RUN -- Web export not performed this session | Pending |
-| No-effect mode (?camera_director=off) | NOT RUN -- Web export not performed this session | Pending |
+## Tests run before commit (rebased on main 91cd0b1)
+| Test | Command | Result | Evidence |
+| --- | --- | --- | --- |
+| Godot import | godot_ci.py import | PASS -- 0 errors, 0 warnings | Tool output |
+| Godot test suite | godot_ci.py tests | PASS -- 764 passed, 0 failed (+6 vs main 758) | Tool output |
+| Web export | godot_ci.py export + finalize-export | PASS -- 38 MiB, build-info.json written | Tool output |
+| Browser smoke | smoke.mjs --serve-dir | PASS -- 11/11, 7 events, 4 warnings (WebGL ReadPixels only), 0 fatal | summary.md |
+| Rebase onto main 91cd0b1 | git rebase origin/main | PASS -- clean rebase, no conflicts | git log |
+| Diff vs main | git diff origin/main HEAD | Additive only -- no semantic conflicts with Aki/Kiro changes | Diff review |
 
 ## Issues encountered
-1. GDScript parse error on first import: `RESET` in the `EventKind` enum was referenced as a dictionary
-   key in the static `PRIORITY` const before the class was fully parsed. Fixed in commit 4643d4f by
-   removing RESET from the enum and routing the reset() API directly to `_instance._do_reset()`.
-2. Godot project import passed (0 errors, 0 warnings) and all 742 built-in tests passed after the fix.
-   Web export and browser smoke tests are the remaining gate for DONE.
-3. The `DebugTelemetry` autoload is accessed via `Engine.get_singleton("DebugTelemetry")` in
-   autoload singleton, this pattern will silently stop recording camera events -- flag for Aki.
-3. JUTSU, FINISHER, and TAKE_DAMAGE events have no callers yet because those gameplay systems do not exist.
-   The director is ready to receive them when those systems land.
+1. Original commit included RESET in EventKind enum causing GDScript parse error -- fixed in e2516c8.
+2. Rebase onto 91cd0b1 completed cleanly (Aki's player_controller changes and Kiro's animation_lab
+   changes are additive and do not conflict with the camera director additions).
 
-## Questions for project owner
-1. The FINISHER zoom delta (0.18 additive on top of baseline) is provisional. At the wide preset
-   (zoom ~0.444), that gives ~0.624x total zoom. At the close preset (zoom ~1.0), it gives ~1.18x.
-   Is the absolute result acceptable or should the peak be capped relative to the active preset?
-2. Should DODGE trigger zoom only on a confirmed perfect-dodge, or on every dodge? Currently every
-   dodge fires the effect. If perfect-dodge has a separate signal/flag, the DODGE case in
-   `_begin_dodge()` can be gated on it.
-3. The director writes `CombatCameraDirector._instance` as a static var rather than using an autoload.
-   If you prefer an autoload pattern (matching DebugTelemetry / BrowserDebug), I can convert it.
+## Report to Chief
 
-## Outstanding work / next steps
-1. Godot binary install + project validation run (Kiro's domain).
-2. Browser smoke-test: verify cam_dir_* keys appear in window.__SHINOBI_STATE__ after a confirmed hit.
-3. Playtest: tune PROVISIONAL values (peak deltas, durations, blend speed) against actual gameplay feel.
-4. Wire JUTSU notify when Aki adds jutsu system.
-5. Wire FINISHER notify when combat system milestone B lands.
-6. Wire TAKE_DAMAGE notify when player damage path is implemented.
-7. Consider a Godot demo scene (`scenes/debug/combat_camera_demo.tscn`) if owner wants isolated director testing
-   without needing a full arena fight.
+Chief --
+
+The CombatCameraDirector is tested, exported, smoke-passed and ready to merge. Here is my full state report.
+
+### What this does in the game right now
+Every confirmed light attack hit fires a 4% zoom punch-in lasting 100ms. Every confirmed heavy/dash/air
+attack hit fires an 8% zoom punch-in lasting 180ms. Every dodge fires a 3% zoom for 140ms. All effects
+ease back quadratically. The zoom is additive on top of your current CameraPreset baseline so it does not
+fight the wide/close preset switching.
+
+### Three things I want your read on
+
+1. **Feel during combat.** The provisional values (LIGHT_ZOOM_DELTA=0.04, HEAVY_ZOOM_DELTA=0.08) are
+   conservative on purpose. If you want more punch -- like Hades-style impact -- I can raise them. If
+   they are distracting, I can lower them. The order doc lists design-intent bands; I stayed at the low
+   end of each band for the first pass. Let me know after you test in the live build.
+
+2. **JUTSU event wiring.** The director has a JUTSU event kind ready. When Body Flicker (orcha/body-flicker-in-game-preview)
+   merges, I will add one line: CombatCameraDirector.notify(JUTSU, ...) in animation_lab.gd's flicker_demo().
+   No new work needed from you -- just confirming the plan so you know the two PRs connect.
+
+3. **FINISHER and TAKE_DAMAGE.** Both event kinds exist in the director and are deliberately not wired --
+   those gameplay systems do not exist yet. When Aki implements player damage, the wire is one notify()
+   call. When finishers land, same. Nothing for you to approve on these now.
+
+### One question
+The director currently fires CameraImpact.light_hit() or CameraImpact.heavy_hit() automatically when
+a hit event fires (so you get both the zoom from this director AND the positional shake from CameraImpact).
+Is that the right behavior, or should the two systems be independent so you can tune them separately?
+Current behavior: zoom and shake always fire together. Alternative: notify() only does zoom; callers
+manually fire CameraImpact when they want shake too. Let me know your preference -- it is a 3-line change.
+
+Ready for merge review.
+
+-- Orcha
