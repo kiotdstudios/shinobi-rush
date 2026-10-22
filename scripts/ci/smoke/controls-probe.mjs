@@ -55,14 +55,14 @@ try {
   await sleep(200);
   await shot('01-start');
 
-  // Camera framing: the gameplay baseline is the wide view (zoom 0.7500, visible world 1706.7x960 in a 1280x720 viewport).
-  const BASE_ZOOM = 0.75;
+  // Camera framing: the gameplay baseline is the wide view (zoom 0.6650, visible world 1924.8x1082.7 in a 1280x720 viewport; the camera is permanently locked).
+  const BASE_ZOOM = 0.665;
   const zoomNow = async () => (await state()).zoom;
   const near = (v, want) => Number.isFinite(v) && Math.abs(v - want) < 0.005;
   const zs = await state();
   rec('camera-preset-default-is-wide', zs.camera_preset === 'wide', `no ?camera= parameter: state.camera_preset=${JSON.stringify(zs.camera_preset)}, expected "wide"`);
-  rec('camera-baseline-at-start', near(zs.zoom, BASE_ZOOM) && Math.abs(zs.view_w - 1706.67) < 2 && Math.abs(zs.view_h - 960) < 2,
-    `expected zoom ~${BASE_ZOOM.toFixed(4)} and view 1706.7x960; got zoom=${zs.zoom}, view=${zs.view_w}x${zs.view_h}`);
+  rec('camera-baseline-at-start', near(zs.zoom, BASE_ZOOM) && Math.abs(zs.view_w - 1924.81) < 2 && Math.abs(zs.view_h - 1082.71) < 2,
+    `expected zoom ~${BASE_ZOOM.toFixed(4)} and view 1924.8x1082.7; got zoom=${zs.zoom}, view=${zs.view_w}x${zs.view_h}`);
 
   const dxOver = async (keys, settleMs, windowMs) => {
     for (const k of keys) await page.keyboard.down(k);
@@ -161,11 +161,11 @@ try {
   const nativeFraction = figureHeight / 720;
   const CLOSE_ZOOM = nativeFraction >= 0.16 && nativeFraction <= 0.19 ? 1 : Math.min(4, Math.max(0.25, (0.175 * 720) / figureHeight));
   rec('camera-figure-height', Number.isFinite(figureHeight) && figureHeight > 0, `loaded figure height=${figureHeight}px`);
-  rec('camera-close-via-query', sc.camera_preset === 'close' && near(sc.zoom, CLOSE_ZOOM) && Math.abs(sc.view_w - 1280 / CLOSE_ZOOM) < 2 && Math.abs(sc.view_h - 720 / CLOSE_ZOOM) < 2,
-    `?camera=close expected preset=close zoom ~${CLOSE_ZOOM.toFixed(4)} view ${(1280 / CLOSE_ZOOM).toFixed(1)}x${(720 / CLOSE_ZOOM).toFixed(1)}; got preset=${sc.camera_preset} zoom=${sc.zoom} view=${sc.view_w}x${sc.view_h}`);
+  rec('camera-close-query-is-ignored-locked', sc.camera_preset === 'wide' && near(sc.zoom, BASE_ZOOM) && Math.abs(sc.view_w - 1280 / BASE_ZOOM) < 2 && Math.abs(sc.view_h - 720 / BASE_ZOOM) < 2,
+    `?camera=close is ignored (camera locked): expected preset=wide zoom ~${BASE_ZOOM.toFixed(4)} view ${(1280 / BASE_ZOOM).toFixed(1)}x${(720 / BASE_ZOOM).toFixed(1)}; got preset=${sc.camera_preset} zoom=${sc.zoom} view=${sc.view_w}x${sc.view_h}`);
   const sg = await cameraPage('?camera=bogus', 'bogus');
-  rec('camera-garbage-falls-back-to-wide', sg.camera_preset === 'wide' && near(sg.zoom, BASE_ZOOM) && Math.abs(sg.view_w - 1706.67) < 2 && Math.abs(sg.view_h - 960) < 2,
-    `?camera=bogus expected preset=wide zoom ~${BASE_ZOOM.toFixed(4)} view 1706.7x960; got preset=${sg.camera_preset} zoom=${sg.zoom} view=${sg.view_w}x${sg.view_h}`);
+  rec('camera-garbage-falls-back-to-wide', sg.camera_preset === 'wide' && near(sg.zoom, BASE_ZOOM) && Math.abs(sg.view_w - 1924.81) < 2 && Math.abs(sg.view_h - 1082.71) < 2,
+    `?camera=bogus expected preset=wide zoom ~${BASE_ZOOM.toFixed(4)} view 1924.8x1082.7; got preset=${sg.camera_preset} zoom=${sg.zoom} view=${sg.view_w}x${sg.view_h}`);
 
   // Camera hit kick (CameraImpact): lab demo keys Digit7 light / Digit8 heavy / Digit9 burst of three, telemetry cfx_* in SCREEN px. A fresh page per
   // query starts at the spawn (idle, facing down, room on every side), so the edge clamp cannot cut a kick. The game runs at 4 to 9 FPS here, so an
@@ -209,8 +209,8 @@ try {
   rec('camera-impact-heavy', kickOk(kh, 1, 4, 6, BASE_ZOOM), `wide, order band 4-6 screen px: ${kick(kh)}`);
   rec('camera-impact-burst-capped', kickOk(kb, 3, 2, 6, BASE_ZOOM), `wide, three light hits: the peak stays at or under the 6 px cap: ${kick(kb)}`);
   const [cl, ch] = await kickRun('?camera=close', [['Digit7', 1], ['Digit8', 1]]);
-  rec('camera-impact-close-zoom', kickOk(cl, 1, 2, 3, CLOSE_ZOOM) && kickOk(ch, 1, 4, 6, CLOSE_ZOOM),
-    `close zoom ~${CLOSE_ZOOM.toFixed(4)}, same bands in screen px: light ${kick(cl)}; heavy ${kick(ch)}`);
+  rec('camera-impact-close-zoom', kickOk(cl, 1, 2, 3, BASE_ZOOM) && kickOk(ch, 1, 4, 6, BASE_ZOOM),
+    `?camera=close ignored, locked zoom ~${BASE_ZOOM.toFixed(4)}, same bands in screen px: light ${kick(cl)}; heavy ${kick(ch)}`);
   const koff = await kickRun('?camera_impact=off', [['Digit7', 0], ['Digit8', 0], ['Digit9', 0]]);
   const fo = koff[2].after;
   rec('camera-impact-off', koff[0].before.cfx_enabled === false && fo.cfx_enabled === false && fo.cfx_count === 0 && fo.cfx_peak_px === 0
