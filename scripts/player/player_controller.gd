@@ -70,6 +70,10 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## "... or post-dodge window". Expires fast enough that it never swallows a deliberate plain light1
 ## thrown a beat after the dodge has fully resolved.
 @export var dash_attack_post_grace: float = 0.15
+## Sense stat (owner: "the higher the stat the bigger the circle"): widens the omnidirectional
+## proximity-detection radius used while SPRINTing ("naruto running"), see ProximitySense/sense_radius().
+## PROVISIONAL PROTOTYPE value, not balance.
+@export var intelligence: int = 5
 
 var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
@@ -97,6 +101,10 @@ var _hit_invuln: float = 0.0  ## brief grace after a hit so one combo cannot cha
 const HIT_INVULN_TIME := 0.45
 const HIT_FLASH_TIME := 0.18
 const HIT_TINT := Color(1.0, 0.45, 0.4, 1.0)
+
+## -- Proximity sense ("naruto running" auto-detect) --
+var sensed_enemy: Node2D = null  ## nearest enemy inside the sense circle this frame while SPRINTing, else null
+var kunai_drawn: bool = false  ## true the instant `sensed_enemy` is non-null (read by tests / web smoke state)
 
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
@@ -128,6 +136,10 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var prev_state := state
+	# Cleared every frame, only re-populated below in the plain-SPRINT locomotion branch: sensing is a
+	# fresh, every-frame read, never a sticky flag that survives into dodge/attack/jump/idle frames.
+	sensed_enemy = null
+	kunai_drawn = false
 	_hit_invuln = maxf(_hit_invuln - delta, 0.0)
 	if hit_flash_timer > 0.0:
 		hit_flash_timer = maxf(hit_flash_timer - delta, 0.0)
@@ -241,6 +253,12 @@ func _physics_process(delta: float) -> void:
 		facing = input.normalized()
 		facing8 = _snap8(facing)
 		state = State.SPRINT if sprinting else State.MOVE
+		if state == State.SPRINT:
+			# Proximity "power level" sense: omnidirectional, no facing cone, no line-of-sight -- a
+			# sprinting body is felt/loud, not just seen (see ProximitySense). Owner: "when naruto
+			# running and near enemy ... player will auto detect and pull their kunai out".
+			sensed_enemy = ProximitySense.nearest_in_radius(global_position, sense_radius(), "enemy", get_tree(), self)
+			kunai_drawn = is_instance_valid(sensed_enemy)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 		state = State.IDLE
@@ -254,6 +272,10 @@ func _physics_process(delta: float) -> void:
 		visual.play_action(_attack_def.id, facing8)
 	else:
 		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
+		if kunai_drawn:
+			# Cosmetic overlay only: falls back silently to the normal sprint pose until an "kunai_ready"
+			# animation exists in the active sprite set (PlayerVisual.play_action/has_action contract).
+			visual.play_action("kunai_ready", facing8)
 	if prev_state == State.JUMP and state != State.JUMP:
 		dust.burst(global_position, 1.2)  # landing kicks up a bit less dirt than the takeoff did
 	_update_footsteps(delta)
@@ -534,6 +556,11 @@ func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0) -> bool:
 
 func reset_camera() -> void:
 	camera.reset_smoothing()
+
+## World-px radius of the proximity "power level" sense (see `_update_proximity_sense` note in
+## _physics_process): how far away a nearby enemy is auto-detected while sprinting ("naruto running").
+func sense_radius() -> float:
+	return ProximitySense.radius_for(intelligence)
 
 
 func get_state_name() -> String:
