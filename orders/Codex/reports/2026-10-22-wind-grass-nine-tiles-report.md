@@ -71,3 +71,7 @@ PR85 initial required checks passed, but merge was rejected because main advance
 ## Editable-tree integration before commit
 
 Main advanced again to0406774f28030714af8b500a8001888a55f00f21 (PR86 editable starting trees/builder panel). Clean merge, no grass code conflicts. Repeated full tests:1287passed/zero failed (build/grass-builder2-tests); fresh export/finalization ../wind-grass-builder2-web passed; all15 grass browser checks passed (build/grass-builder2-proof); normal smoke passed9file hashes,real keyboard response,rendered canvas,zero fatal console errors (build/grass-builder2-smoke). No editor source altered by Codex. Pending new required checks and public publication.
+
+## Reference-only integration before commit
+
+All checks for7ec73b3passed, including requiredgate. Main advanced to15effbafb33a5545b23df892f92e27abb95dad33 (PR84), adding only docs/visuals/walls/reference-stone-mockup.png and orders/Codex/2026-10-22-real-wall-art.md. Clean merge; runtime tree unchanged, so existing1287tests/browser/export evidence applies without rerunning identical runtime. Reviewed new queued wall-art brief; current direct-owner grass delivery remains higher priority until publication completes. No bypass of required checks.
