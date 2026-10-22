@@ -40,6 +40,7 @@ func _initialize() -> void:
 	await load("res://tests/test_arena_sorting.gd").new().run(ck, root)
 	await load("res://tests/test_combat.gd").new().run(ck, root)
 	await load("res://tests/test_jump.gd").new().run(ck, root)
+	await load("res://tests/test_health_flicker.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_art.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_chase.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_robber.gd").new().run(ck, root)
@@ -535,12 +536,12 @@ func test_jump_and_dodge_chaining() -> void:
 	var r3: Array = await _tap.call("dodge", PlayerController.State.DODGE, 8)
 	ck("dodge fires directly from MOVE (no idle detour)", r3[0] and not r3[1], str(r3))
 	var burst_v := player.velocity.length()
-	ck("dodge produces a real velocity burst, not just an animation", burst_v > player.walk_speed * 1.3, str(burst_v))
+	ck("dodge is a Body Flicker: an instant displacement, no lunge or slide (velocity stays 0)", burst_v == 0.0 and player.flicker_count >= 1, "v=%s" % burst_v)
 	var dodge_frames := 0
 	while player.state == PlayerController.State.DODGE and dodge_frames < 60:
 		await physics_frame
 		dodge_frames += 1
-	ck("dodge actually displaces the player through the world", player.global_position.x > dodge_start_x + 10.0, str(player.global_position.x - dodge_start_x))
+	ck("dodge actually displaces the player through the world", player.global_position.x > dodge_start_x + player.flicker_distance * 0.9, str(player.global_position.x - dodge_start_x))
 	ck("dodge recovery blends back into MOVE immediately with input held", player.state == PlayerController.State.MOVE, player.get_state_name())
 	Input.action_release("move_right")
 

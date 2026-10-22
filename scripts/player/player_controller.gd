@@ -14,6 +14,8 @@ signal camera_baseline_changed(zoom: float)
 ## An enemy attack connected (Level 1 Bandit order). There is deliberately no player HP/death here:
 ## the locked RPG/death rules are untouched; this only counts the hit and gives a short readable reaction.
 signal hit_taken(damage: float, from_dir: Vector2)
+signal health_changed(current: float, maximum: float)
+signal downed  ## health reached 0 (the player is restored to full right after; there is no death screen yet)
 ## Currency changed (spent, or stolen by an enemy via lose_ryo() -- see Bandit._steal_ryo/is_worth_robbing).
 ## No player death/HP system exists here (locked RPG rules); this only tracks the stat.
 signal ryo_changed(new_amount: int)
@@ -33,6 +35,12 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## Dodge is a quick burst along the dodge direction; velocity then eases (at `dodge_recovery_accel`,
 ## not the generic ground `friction`) toward whatever speed current input calls for, or to a stop if none.
 @export var dodge_speed: float = WorldScale.SPRINT_SPEED * 1.6
+## Body Flicker dodge: the body vanishes, is displaced `flicker_distance` px along the dodge heading in
+## one step (stopped by walls), and reappears; no sliding. Invulnerable for the whole `flicker_duration`.
+@export var flicker_distance: float = 150.0
+@export var flicker_duration: float = 0.30
+@export var flicker_vanish_at: float = 0.04  ## seconds after the press that the body disappears (and moves)
+@export var flicker_reappear_at: float = 0.16
 @export var dodge_recovery_accel: float = WorldScale.ACCELERATION * 1.5
 ## Air control: fraction of normal ground `acceleration` used to steer velocity while airborne.
 ## Momentum itself is never reset on jump entry/exit; this only lets input bend an already-moving arc.
@@ -102,6 +110,13 @@ var _attack_buffer: float = 0.0  ## seconds left that a buffered attack_light pr
 var _hit_targets: Array = []  ## enemies already damaged by the current swing (each swing hits once)
 var _dash_grace_timer: float = 0.0  ## seconds left of the post-dodge dash-attack window
 var _hitstop_timer: float = 0.0  ## local-only pause (not Engine.time_scale): see _physics_process top
+const MAX_HEALTH := 100.0
+var max_health: float = MAX_HEALTH
+var health: float = MAX_HEALTH
+var times_downed: int = 0
+var _flicker_hidden: bool = false
+var _flicker_moved: bool = false
+var flicker_count: int = 0
 var hits_taken: int = 0  ## enemy hits that landed on the player (read by tests / web smoke state)
 var hit_flash_timer: float = 0.0
 var _hit_invuln: float = 0.0  ## brief grace after a hit so one combo cannot chain-stun the player
@@ -139,6 +154,10 @@ func _ready() -> void:
 		camera.limit_bottom = int(b.end.y + WorldScale.CAMERA_FOOTROOM)  # foot room: feet and shadow at the bottom wall are not cut off
 	visual.set_pose(facing8, false, false)
 	_attack_table = AttackDef.build_table()
+	var bar := HealthBar.new()
+	bar.name = "HealthBar"
+	add_child(bar)
+	bar.bind(self)
 
 
 func _physics_process(delta: float) -> void:
@@ -218,7 +237,9 @@ func _physics_process(delta: float) -> void:
 		else:  # DODGE
 			# Dedicated curve: the initial burst (set on trigger) eases toward whatever speed current
 			# input calls for (0 if none) at `dodge_recovery_accel`, not the generic ground `friction`.
-			velocity = velocity.move_toward(input * target_speed, dodge_recovery_accel * delta)
+			# Body Flicker: no lunge or slide. The displacement is a single step (see _flicker_step).
+			velocity = Vector2.ZERO
+			_flicker_step()
 		if input != Vector2.ZERO:
 			facing = input.normalized()
 			facing8 = _snap8(facing)
@@ -226,9 +247,7 @@ func _physics_process(delta: float) -> void:
 
 	if still_acting:
 		move_and_slide()
-		if state == State.DODGE:
-			visual.play_action("dodge", facing8)
-		else:
+		if state == State.JUMP:
 			_play_jump_visual()
 		_update_jump_lift()
 		_footstep_timer = 0.0
@@ -241,6 +260,7 @@ func _physics_process(delta: float) -> void:
 	# branch above returns early on every frame the dodge is still in progress.
 	if state == State.DODGE:
 		_dash_grace_timer = dash_attack_post_grace
+		_end_flicker_visual()
 
 	# Not mid-action this frame (either never was, or the action just finished above with velocity
 	# already correct) -> a buffered attack/dodge/jump takes priority over plain locomotion, then plain
@@ -312,10 +332,49 @@ func _begin_dodge(input: Vector2) -> void:
 	if input != Vector2.ZERO:
 		facing = input.normalized()
 	state = State.DODGE
-	_action_duration = visual.action_duration("dodge", dodge_fallback_duration)
+	_action_duration = flicker_duration
 	_action_timer = _action_duration
-	velocity = facing8 * dodge_speed
-	visual.play_action("dodge", facing8)
+	velocity = Vector2.ZERO
+	_flicker_moved = false
+	_flicker_hidden = false
+	flicker_count += 1
+	_flicker_from = global_position
+	_flicker_dir = facing8.normalized()
+	visual.set_pose(facing8, false, false)
+	# Depart burst at the start point now; the arrival burst is timed to the reappearance.
+	_flicker_fx_pending = true
+
+
+var _flicker_from: Vector2 = Vector2.ZERO
+var _flicker_dir: Vector2 = Vector2.DOWN
+var _flicker_fx_pending: bool = false
+
+
+## Per-tick Body Flicker driver (called while State.DODGE): vanish + displace at `flicker_vanish_at`,
+## reappear at `flicker_reappear_at`. Collision is respected by move_and_collide, so a wall just
+## shortens the jump.
+func _flicker_step() -> void:
+	var elapsed := _action_duration - _action_timer
+	if not _flicker_moved and elapsed >= flicker_vanish_at:
+		_flicker_moved = true
+		_flicker_hidden = true
+		visual.visible = false
+		move_and_collide(_flicker_dir * flicker_distance)
+		var arrive_delay := maxf(flicker_reappear_at - elapsed, 0.0)
+		if _flicker_fx_pending:
+			_flicker_fx_pending = false
+			BodyFlickerFx.spawn(get_parent(), _flicker_from, global_position, _flicker_dir, arrive_delay)
+	if _flicker_hidden and elapsed >= flicker_reappear_at:
+		_flicker_hidden = false
+		visual.visible = true
+		visual.set_pose(facing8, false, false)
+
+
+## Safety net: the body is never left invisible once the dodge state is over.
+func _end_flicker_visual() -> void:
+	if _flicker_hidden:
+		_flicker_hidden = false
+		visual.visible = true
 
 
 ## Begin a jump. `velocity` is intentionally left untouched: whatever horizontal momentum the player
@@ -337,6 +396,7 @@ func _begin_jump() -> void:
 ## Velocity is never reset: `lunge` is ADDED to whatever velocity the player already had, exactly like
 ## a dodge's burst, so momentum from a run or a dodge carries straight into the swing.
 func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
+	_end_flicker_visual()
 	if input != Vector2.ZERO:
 		facing = input.normalized()
 		facing8 = _snap8(facing)
@@ -558,7 +618,22 @@ func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0) -> bool:
 	visual.modulate = HIT_TINT
 	velocity += from_dir.normalized() * shove
 	hit_taken.emit(damage, from_dir)
+	health = maxf(health - maxf(damage, 0.0), 0.0)
+	health_changed.emit(health, max_health)
+	if health <= 0.0:
+		times_downed += 1
+		downed.emit()
+		restore_health(max_health)
 	return true
+
+
+## Adds health (clamped to max_health). Returns the amount actually restored.
+func restore_health(amount: float) -> float:
+	var before := health
+	health = clampf(health + maxf(amount, 0.0), 0.0, max_health)
+	if health != before:
+		health_changed.emit(health, max_health)
+	return health - before
 
 
 func reset_camera() -> void:
