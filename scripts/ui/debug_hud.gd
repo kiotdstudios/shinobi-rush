@@ -12,7 +12,7 @@ extends CanvasLayer
 ## Also owns the tiny pause toggle (runs while paused).
 
 const REFRESH := 0.1
-const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | L lock on/off | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | R3 lock on/off | Options pause\nReserved (no behavior yet): arrows aim, K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nF1: toggle technical diagnostics (camera/sprite/FPS/texture mem)"
+const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | L lock on/off | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | R3 lock on/off | Options pause\nReserved (no behavior yet): arrows aim, K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nF1: toggle technical diagnostics (camera/sprite/FPS/texture mem)\nF2 / top-right button: Bandit vision (debug, default OFF) shows what the Bandit's AI can see | ?vision=1 starts it on"
 
 const DIAG_ACTION := "dbg_toggle_diagnostics"
 const DIAG_KEY := KEY_F1

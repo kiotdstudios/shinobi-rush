@@ -1,7 +1,7 @@
 extends Node
 ## Autoload. Inert outside Web builds. In Web: sets window.__SHINOBI_READY__ after the first
 ## rendered frames and publishes window.__SHINOBI_STATE__ ~10 Hz for the browser smoke test.
-## Read-only: never affects gameplay. The only things it applies are the boot-time URL options ?camera= and ?camera_impact=.
+## Read-only: never affects gameplay. The only things it applies are the boot-time URL options ?camera=, ?camera_impact= and ?vision=.
 
 const PUBLISH_INTERVAL := 0.1
 
@@ -25,6 +25,8 @@ func _ready() -> void:
 	apply_camera_query(search)
 	# ?camera_impact=off|reduced|on (hit kick); without it "reduced" when the browser asks for reduced motion.
 	apply_camera_impact_query(search, bool(JavaScriptBridge.eval("!!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)", true)))
+	# ?vision=1 starts the Bandit vision debug overlay ON (default OFF); the switch itself lives in BanditVisionToggle.
+	BanditVisionToggle.apply_query(search)
 	_window = JavaScriptBridge.get_interface("window")
 	_state = JavaScriptBridge.create_object("Object")
 	_window.__SHINOBI_STATE__ = _state
@@ -64,6 +66,25 @@ func _process(delta: float) -> void:
 	_state.cfx_offset_y = cfx["cfx_offset_y"]
 	_state.cfx_peak_px = cfx["cfx_peak_px"]
 	_state.cfx_count = cfx["cfx_count"]
+	var vis := BanditVisionToggle.telemetry()  # Bandit vision debug overlay (additive; zeros / empty while OFF)
+	_state.vision_on = vis["vision_on"]
+	_state.vision_bandits = vis["vision_bandits"]
+	_state.vision_points = vis["vision_points"]
+	_state.vision_rays = vis["vision_rays"]
+	_state.vision_ms = vis["vision_ms"]
+	_state.vision_state = vis["vision_state"]
+	_state.vision_ai_state = vis["vision_ai_state"]
+	_state.vision_sees = vis["vision_sees"]
+	_state.vision_can_see = vis["vision_can_see"]
+	_state.vision_player_in = vis["vision_player_in"]
+	_state.vision_cone = vis["vision_cone"]
+	_state.vision_range = vis["vision_range"]
+	_state.vision_close = vis["vision_close"]
+	_state.vision_fov_deg = vis["vision_fov_deg"]
+	_state.vision_facing_x = vis["vision_facing_x"]
+	_state.vision_facing_y = vis["vision_facing_y"]
+	_state.vision_mismatch = vis["vision_mismatch"]
+	_state.vision_capped = vis["vision_capped"]
 	var lock := _player.get_node_or_null("LockOn") as PlayerLockOn
 	_state.target_locked = lock != null and lock.valid_target()
 	var enemy := get_tree().get_first_node_in_group("enemy") as Bandit

@@ -57,6 +57,7 @@ var _panel: PanelContainer
 var _value_labels: Dictionary = {}
 var _toggle_buttons: Dictionary = {}
 var _lab_button: Button
+var vision: BanditVisionToggle  ## Bandit vision debug overlay switch (key F2 + the always-visible button), default OFF
 var _timer: float = 0.0
 var _actions: Dictionary = {}
 
@@ -326,6 +327,11 @@ func _build_ui() -> void:
 	layer.layer = 5
 	add_child(layer)
 	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, 8), Vector2(150, 26), toggle_lab)
+	# Bandit vision overlay (debug, default OFF): its key and its always-visible button next to the Lab button.
+	vision = BanditVisionToggle.new()
+	vision.name = "BanditVisionToggle"
+	add_child(vision)
+	vision.build_button(layer)
 	_panel = PanelContainer.new()
 	_panel.position = Vector2(930, 40)
 	_panel.custom_minimum_size = Vector2(340, 0)
