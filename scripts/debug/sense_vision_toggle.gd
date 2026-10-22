@@ -18,7 +18,7 @@ const ACTION := "dbg_sense_vision"
 const KEY := KEY_F3
 const QUERY_KEY := "sense_vision"
 ## Left of the Bandit vision button (942,8 w170), 8 px gap, same row, clear of the lab panel (y >= 40).
-const BUTTON_POS := Vector2(764, 8)
+const BUTTON_POS := Vector2(764, DockTab.REST_Y)
 const BUTTON_SIZE := Vector2(170, 26)
 const TIP := "Debug: draw the invisible proximity 'power level' sense circle (intelligence stat) for the Player and every Bandit. Default off. F3 toggles it; ?sense_vision=1 in the URL starts it on."
 
@@ -75,6 +75,7 @@ func build_button(layer: Node) -> Button:
 	button.focus_mode = Control.FOCUS_NONE
 	button.add_theme_font_size_override("font_size", 12)
 	button.tooltip_text = TIP
+	DockTab.style(button, Color("#4DA3FF"))
 	button.toggled.connect(_on_button_toggled)
 	layer.add_child(button)
 	_sync_button()
@@ -91,6 +92,7 @@ func _sync_button() -> void:
 		return
 	button.set_pressed_no_signal(on)
 	button.text = "Sense vision: ON (F3)" if on else "Sense vision: off (F3)"
+	DockTab.set_active(button, on)
 
 
 func _attach_overlay() -> void:
