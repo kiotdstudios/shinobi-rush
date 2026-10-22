@@ -93,6 +93,8 @@ func _process(delta: float) -> void:
 	var lock := _player.get_node_or_null("LockOn") as PlayerLockOn
 	_state.target_locked = lock != null and lock.valid_target()
 	_state.player_kunai_drawn = _player.kunai_drawn
+	_state.player_attack_anim = _player.visual.last_anim
+	_state.player_weapon_visible = _player.visual.weapon_visible()  ## owner 2026-10-22: "wire it to the controller"
 	_state.player_sense_radius = _player.sense_radius()
 	_state.player_ryo = _player.ryo
 	var sv := SenseVisionToggle.telemetry()  # proximity sense debug overlay (additive; zeros/false while OFF)
