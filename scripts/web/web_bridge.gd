@@ -85,6 +85,9 @@ func _process(delta: float) -> void:
 	_state.vision_facing_y = vis["vision_facing_y"]
 	_state.vision_mismatch = vis["vision_mismatch"]
 	_state.vision_capped = vis["vision_capped"]
+	_state.vision_nodes = vis["vision_nodes"]
+	_state.vision_origin_x = vis["vision_origin_x"]
+	_state.vision_origin_y = vis["vision_origin_y"]
 	var lock := _player.get_node_or_null("LockOn") as PlayerLockOn
 	_state.target_locked = lock != null and lock.valid_target()
 	var enemy := get_tree().get_first_node_in_group("enemy") as Bandit

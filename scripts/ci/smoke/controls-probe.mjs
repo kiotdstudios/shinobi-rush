@@ -4,7 +4,8 @@
 //   node controls-probe.mjs --serve-dir <export dir> --out-dir <evidence dir>
 // Reads window.__SHINOBI_STATE__ ({frame,x,y,state,sprinting,fps}, published ~10 Hz by the WebBridge autoload) and proves
 // that REAL key input moves the player: walk right, sprint faster, a wall stops the player. It also drives the camera-impact lab demo keys
-// and reads the cfx_* telemetry. Exit 0 = all passed, 1 = a check failed.
+// and reads the cfx_* telemetry. It also toggles the Bandit vision debug overlay (F2, its button, ?vision=1) and reads the vision_* telemetry.
+// Exit 0 = all passed, 1 = a check failed.
 // Timing is wall-clock based and tolerant: software-rendered CI browsers run the game at only a few FPS.
 import { chromium } from 'playwright';
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -207,6 +208,116 @@ try {
     `?camera_impact=off, keys 7 8 9 pressed: enabled=${fo.cfx_enabled}, count=${fo.cfx_count}, peak=${fo.cfx_peak_px}, active=${fo.cfx_active}, offset (${fo.cfx_offset_x}, ${fo.cfx_offset_y})`);
   const [kr] = await kickRun('?camera_impact=reduced', [['Digit8', 1]]);
   rec('camera-impact-reduced', kr.after.cfx_scale === 0.5 && kickOk(kr, 1, 2, 3, BASE_ZOOM), `?camera_impact=reduced halves the heavy kick (5 -> 2.5 px), scale=${kr.after.cfx_scale}: ${kick(kr)}`);
+
+  // Bandit vision debug overlay (BanditVisionToggle / BanditVisionOverlay): default OFF, toggled by F2, by the always-visible button left of "Lab (Tab)"
+  // and started by ?vision=1. Telemetry only: every wait is on the published state, never on a sleep (the game runs at 4 to 9 FPS here).
+  // vision_nodes is the scene tree's node count: ON must add exactly the one overlay node and OFF must take it away again, which is how
+  // "OFF leaves no geometry behind" is proven on the real export. The overlay numbers are compared with the Bandit's own (bandit_*) of the SAME publish.
+  const VISION_FIELDS = ['vision_on', 'vision_bandits', 'vision_points', 'vision_rays', 'vision_ms', 'vision_state', 'vision_ai_state', 'vision_sees', 'vision_can_see',
+    'vision_player_in', 'vision_cone', 'vision_range', 'vision_close', 'vision_fov_deg', 'vision_facing_x', 'vision_facing_y', 'vision_mismatch', 'vision_capped',
+    'vision_nodes', 'vision_origin_x', 'vision_origin_y'];
+  const VISION_CATS = ['not_alert', 'suspicious', 'detected', 'lost_sight', 'searching', 'returning'];
+  const VISION_BUTTON = { x: 1027, y: 21 }; // centre of "Bandit vision: off (F2)" (942, 8, 170x26 in the 1280x720 viewport)
+  const visionOpen = async (query) => {
+    const p = await context.newPage();
+    p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
+    p.on('pageerror', (e) => consoleMsgs.push({ type: 'pageerror', text: String(e) }));
+    await p.goto(server.url + query, { waitUntil: 'load' });
+    await p.waitForFunction(() => window.__SHINOBI_READY__ === true && typeof window.__SHINOBI_STATE__?.vision_on === 'boolean',
+      null, { timeout: 120000, polling: 250 });
+    await p.mouse.click(640, 400); // canvas keyboard focus (no game action uses the mouse)
+    const st = () => p.evaluate(() => ({ ...window.__SHINOBI_STATE__ }));
+    const until = async (pred, arg) => { // the first published state that satisfies pred, or null after 30 s
+      try { await p.waitForFunction(pred, arg, { timeout: 30000, polling: 100 }); return await st(); } catch (e) { return null; }
+    };
+    const key = async () => { await p.keyboard.down('F2'); await sleep(120); await p.keyboard.up('F2'); };
+    const click = async () => { await p.mouse.click(VISION_BUTTON.x, VISION_BUTTON.y, { delay: 80 }); await p.mouse.move(640, 400); }; // move away: no tooltip popup node
+    return { p, st, until, key, click };
+  };
+  const visionIsOn = () => window.__SHINOBI_STATE__.vision_on === true && window.__SHINOBI_STATE__.vision_points > 0;
+  const visionIsOff = () => window.__SHINOBI_STATE__.vision_on === false;
+  const onOk = (s, base) => !!s && s.vision_on === true && s.vision_bandits === 1 && s.vision_points >= 8 && s.vision_rays >= 8 && s.vision_nodes === base + 1;
+  const offOk = (s, base) => !!s && s.vision_on === false && s.vision_bandits === 0 && s.vision_points === 0 && s.vision_rays === 0 && s.vision_state === '' && s.vision_nodes === base;
+  const vsum = (s) => (s ? `on=${s.vision_on} bandits=${s.vision_bandits} points=${s.vision_points} rays=${s.vision_rays} nodes=${s.vision_nodes}` : 'timed out waiting for the published state');
+  const vp = await visionOpen('');
+  try {
+    const f0 = (await vp.st()).frame;
+    const v0 = (await vp.until(([want]) => window.__SHINOBI_STATE__.frame >= want, [f0 + 6])) ?? (await vp.st()); // a few published frames after READY: the scene has settled
+    const missing = VISION_FIELDS.filter((f) => !(f in v0));
+    const base = v0.vision_nodes;
+    rec('vision-default-off', missing.length === 0 && offOk(v0, base) && Number.isInteger(base) && base > 10,
+      `no ?vision= parameter: all ${VISION_FIELDS.length} vision_* fields present (missing: ${missing.join(',') || 'none'}); ${vsum(v0)}`);
+    // F2 on, F2 off
+    await vp.key();
+    const k1 = await vp.until(visionIsOn);
+    await vp.p.screenshot({ path: path.join(outDir, 'probe-vision-on.png') });
+    await vp.key();
+    const k2 = await vp.until(visionIsOff);
+    rec('vision-key-toggles-on-off', onOk(k1, base) && offOk(k2, base), `F2: ON ${vsum(k1)} (expect bandits=1, nodes=${base + 1}); F2 again: OFF ${vsum(k2)} (expect zero geometry, nodes=${base})`);
+    // the always-visible button on, button off (the same switch)
+    await vp.click();
+    const b1 = await vp.until(visionIsOn);
+    await vp.click();
+    const b2 = await vp.until(visionIsOff);
+    rec('vision-button-toggles-on-off', onOk(b1, base) && offOk(b2, base), `button click: ON ${vsum(b1)}; click again: OFF ${vsum(b2)}`);
+    // live: ON for >= 20 published frames while the Bandit patrols; every sample compares the overlay with the AI's own numbers of the same publish
+    await vp.key();
+    await vp.until(visionIsOn);
+    const samples = [];
+    let lastFrame = -1;
+    while (samples.length < 80 && !(samples.length >= 20 && Math.hypot(samples[samples.length - 1].bandit_x - samples[0].bandit_x, samples[samples.length - 1].bandit_y - samples[0].bandit_y) > 30)) {
+      const s = await vp.st();
+      if (s.frame !== lastFrame) { samples.push(s); lastFrame = s.frame; } else { await sleep(60); }
+    }
+    const issues = [];
+    let worstOrigin = 0;
+    for (const s of samples) {
+      const bad = [];
+      if (s.vision_ai_state !== s.bandit_state) bad.push(`overlay state ${s.vision_ai_state} vs AI ${s.bandit_state}`);
+      if (s.vision_sees !== s.bandit_sees) bad.push(`overlay sees ${s.vision_sees} vs AI ${s.bandit_sees}`);
+      if (s.vision_can_see !== s.vision_player_in) bad.push(`polygon contains player ${s.vision_player_in} vs can_see ${s.vision_can_see}`);
+      const off = Math.hypot(s.vision_origin_x - s.bandit_x, s.vision_origin_y - s.bandit_y);
+      worstOrigin = Math.max(worstOrigin, off);
+      if (!(off < 0.01)) bad.push(`polygon apex ${off.toFixed(3)} px from the Bandit`);
+      if (s.vision_on !== true || s.vision_mismatch !== 0 || s.vision_capped !== false) bad.push(`on=${s.vision_on} mismatch=${s.vision_mismatch} capped=${s.vision_capped}`);
+      if (!VISION_CATS.includes(s.vision_state)) bad.push(`unknown category ${JSON.stringify(s.vision_state)}`);
+      if (!(s.vision_range > s.vision_close && s.vision_close > 0 && s.vision_fov_deg > 0 && s.vision_fov_deg < 360 && s.vision_points >= 8)) bad.push(`range ${s.vision_range} close ${s.vision_close} fov ${s.vision_fov_deg} points ${s.vision_points}`);
+      if (bad.length) issues.push(`frame ${s.frame}: ${bad.join('; ')}`);
+    }
+    const first = samples[0] ?? {};
+    const last = samples[samples.length - 1] ?? {};
+    const moved = samples.length ? Math.hypot(last.bandit_x - first.bandit_x, last.bandit_y - first.bandit_y) : 0;
+    const cats = [...new Set(samples.map((s) => `${s.bandit_state}/${s.vision_state}`))].join(',');
+    rec('vision-follows-and-agrees-with-ai', samples.length >= 20 && moved > 30 && issues.length === 0,
+      `${samples.length} published frames, Bandit moved ${moved.toFixed(0)} px, states ${cats}; ${issues.length} disagreements${issues.length ? ': ' + issues.slice(0, 3).join(' | ') : ''}; ` +
+      `polygon apex vs Bandit worst ${worstOrigin.toFixed(4)} px; last sample cone=${last.vision_cone} range=${last.vision_range} ${last.vision_rays} rays ${last.vision_ms} ms/rebuild`);
+    await vp.key();
+    const stepOff = await vp.until(visionIsOff);
+    // repeated toggling through the key and the button, alternating: every ON has exactly one overlay node, every OFF has none, the end state is the start state
+    const cycleBad = [];
+    const CYCLES = 12;
+    for (let i = 0; i < CYCLES; i++) {
+      const press = i % 2 === 0 ? vp.key : vp.click;
+      await press();
+      const on = await vp.until(visionIsOn);
+      await press();
+      const off = await vp.until(visionIsOff);
+      if (!onOk(on, base) || on.vision_mismatch !== 0) cycleBad.push(`#${i} ${i % 2 === 0 ? 'key' : 'button'} ON ${vsum(on)}`);
+      if (!offOk(off, base)) cycleBad.push(`#${i} ${i % 2 === 0 ? 'key' : 'button'} OFF ${vsum(off)}`);
+    }
+    const fin = await vp.st();
+    rec('vision-repeat-toggle-stable', offOk(stepOff, base) && cycleBad.length === 0 && offOk(fin, base),
+      `${CYCLES} ON/OFF cycles alternating F2 and the button (${CYCLES * 2} toggles): ${cycleBad.length} bad states${cycleBad.length ? ': ' + cycleBad.slice(0, 3).join(' | ') : ''}; after the last OFF ${vsum(fin)} (start nodes=${base})`);
+  } finally { await vp.p.close(); }
+  // ?vision=1 starts ON with the Bandit drawn; F2 then switches it OFF and takes the overlay node away
+  const vq = await visionOpen('?vision=1');
+  try {
+    const q0 = await vq.until(visionIsOn);
+    rec('vision-url-starts-on', !!q0 && q0.vision_on === true && q0.vision_bandits === 1 && q0.vision_points >= 8 && VISION_CATS.includes(q0.vision_state), `?vision=1: ${vsum(q0)}, state ${q0 ? q0.vision_state : '?'}`);
+    await vq.key();
+    const q1 = await vq.until(visionIsOff);
+    rec('vision-url-on-then-off-leaves-nothing', !!q0 && !!q1 && offOk(q1, q0.vision_nodes - 1), `F2 after ?vision=1: ${vsum(q1)} (expect zero geometry and nodes=${q0 ? q0.vision_nodes - 1 : '?'}, one less than ON)`);
+  } finally { await vq.p.close(); }
 } catch (e) {
   rec('probe-exception', false, String(e.message ?? e).split('\n')[0]);
 }

@@ -886,9 +886,17 @@ func _test_cost() -> void:
 func _test_telemetry_and_web() -> void:
 	var keys: Array = BanditVisionToggle.telemetry().keys()
 	keys.sort()
-	var want: Array = ["vision_ai_state", "vision_bandits", "vision_can_see", "vision_capped", "vision_close", "vision_cone", "vision_facing_x", "vision_facing_y", "vision_fov_deg", "vision_mismatch", "vision_ms", "vision_on", "vision_player_in", "vision_points", "vision_range", "vision_rays", "vision_sees", "vision_state"]
+	var want: Array = ["vision_ai_state", "vision_bandits", "vision_can_see", "vision_capped", "vision_close", "vision_cone", "vision_facing_x", "vision_facing_y", "vision_fov_deg", "vision_mismatch", "vision_ms", "vision_nodes", "vision_on", "vision_origin_x", "vision_origin_y", "vision_player_in", "vision_points", "vision_range", "vision_rays", "vision_sees", "vision_state"]
 	want.sort()
-	ck.call("vision state: telemetry() has exactly the 18 documented vision_* keys, always", keys == want, str(keys))
+	ck.call("vision state: telemetry() has exactly the 21 documented vision_* keys, always", keys == want, str(keys))
+	# vision_nodes = the live scene-tree node count (the browser run uses it to prove OFF leaves nothing behind). Same frame, so nothing else can change.
+	tog.set_on(false)
+	var n_off: int = BanditVisionToggle.telemetry()["vision_nodes"]
+	tog.set_on(true)
+	var n_on: int = BanditVisionToggle.telemetry()["vision_nodes"]
+	tog.set_on(false)
+	var n_off2: int = BanditVisionToggle.telemetry()["vision_nodes"]
+	ck.call("vision state: vision_nodes is the live node count; ON adds exactly the one overlay node and OFF takes it away again", n_off > 10 and n_on == n_off + 1 and n_off2 == n_off and n_off == int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), "off %d, on %d, off again %d" % [n_off, n_on, n_off2])
 	var src := FileAccess.get_file_as_string("res://scripts/web/web_bridge.gd")
 	var all_pub := true
 	for k: String in want:
@@ -912,6 +920,7 @@ func _test_telemetry_and_web() -> void:
 	var reg: BanditVisionRegion = ov.views[0]["region"]
 	ck.call("vision state: ON publishes the live numbers (bandit count, polygon size, rays, mode, range, fov, close sense)", t["vision_on"] == true and t["vision_bandits"] == 1 and t["vision_points"] == reg.points.size() and reg.points.size() > 20 and t["vision_rays"] > 20 and t["vision_cone"] == reg.use_cone and is_equal_approx(float(t["vision_range"]), reg.reach) and is_equal_approx(float(t["vision_fov_deg"]), 110.0) and is_equal_approx(float(t["vision_close"]), 150.0) and float(t["vision_ms"]) >= 0.0)
 	ck.call("vision state: ...the AI's own State name, facing and sees flag come from the same rebuild", t["vision_ai_state"] == bandit.get_state_name() and is_equal_approx(float(t["vision_facing_x"]), bandit.facing8.x) and is_equal_approx(float(t["vision_facing_y"]), bandit.facing8.y) and t["vision_sees"] == bandit.sees_player)
+	ck.call("vision state: ...and the polygon's apex (vision_origin_x/y) is the Bandit's position at that rebuild, which the browser run compares with bandit_x/y", is_equal_approx(float(t["vision_origin_x"]), bandit.global_position.x) and is_equal_approx(float(t["vision_origin_y"]), bandit.global_position.y) and reg.origin == bandit.global_position)
 	ck.call("vision state: ...and the overlay's category text and the polygon / can_see answers about the player", t["vision_state"] in BanditVisionOverlay.KEYS and t["vision_player_in"] == reg.contains(player.global_position) and t["vision_can_see"] == bandit.can_see(player.global_position, reg.use_cone))
 	ck.call("vision state: the view carries what the label shows - intelligence level, the real State name, category text, notice progress", int(ov.views[0]["level"]) == bandit.intelligence_level and ov.views[0]["state_name"] == "APPROACH" and ov.views[0]["cat_text"] == "PLAYER DETECTED" and float(ov.views[0]["notice"]) == 0.0 and t["vision_capped"] == false)
 	tog.set_on(false)

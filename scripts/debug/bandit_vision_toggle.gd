@@ -174,17 +174,21 @@ static func reset_all() -> void:
 
 
 ## Additive fields for `window.__SHINOBI_STATE__` (WebBridge copies them). All keys are always present; the numbers are
-## zero and the strings empty while the overlay is OFF or there is no Bandit. The Bandit fields describe the FIRST drawn
-## Bandit, taken in the same rebuild as the polygon: vision_ai_state is the AI's own State name, vision_sees its own
-## `sees_player`, vision_can_see its `can_see(player, vision_cone)` at that instant, vision_player_in whether the drawn polygon
-## contains the player, vision_state the overlay's category (not_alert, suspicious, detected, lost_sight, searching, returning).
+## zero and the strings empty while the overlay is OFF or there is no Bandit, except `vision_nodes`, which is always the live
+## node count of the scene tree (so a browser test can prove that OFF leaves no node behind and ON adds exactly one). The
+## Bandit fields describe the FIRST drawn Bandit, taken in the same rebuild as the polygon: vision_ai_state is the AI's own
+## State name, vision_sees its own `sees_player`, vision_can_see its `can_see(player, vision_cone)` at that instant,
+## vision_player_in whether the drawn polygon contains the player, vision_state the overlay's category (not_alert, suspicious,
+## detected, lost_sight, searching, returning). vision_origin_x/y is the polygon's apex (the Bandit's position at the rebuild),
+## which a browser test compares with bandit_x/y of the same publish to prove the overlay is not a frame behind.
 static func telemetry() -> Dictionary:
 	var d := {
 		"vision_on": false, "vision_bandits": 0, "vision_points": 0, "vision_rays": 0, "vision_ms": 0.0,
 		"vision_state": "", "vision_ai_state": "", "vision_sees": false, "vision_can_see": false,
 		"vision_player_in": false, "vision_cone": false, "vision_range": 0.0, "vision_close": 0.0,
 		"vision_fov_deg": 0.0, "vision_facing_x": 0.0, "vision_facing_y": 0.0, "vision_mismatch": 0,
-		"vision_capped": false,
+		"vision_capped": false, "vision_nodes": int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)),
+		"vision_origin_x": 0.0, "vision_origin_y": 0.0,
 	}
 	var t := _instance
 	if t == null or not is_instance_valid(t):
@@ -214,4 +218,6 @@ static func telemetry() -> Dictionary:
 	d["vision_fov_deg"] = reg.fov_deg
 	d["vision_facing_x"] = reg.facing.x
 	d["vision_facing_y"] = reg.facing.y
+	d["vision_origin_x"] = reg.origin.x
+	d["vision_origin_y"] = reg.origin.y
 	return d
