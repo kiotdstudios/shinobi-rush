@@ -27,6 +27,8 @@ func _ready() -> void:
 	apply_camera_impact_query(search, bool(JavaScriptBridge.eval("!!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)", true)))
 	# ?vision=1 starts the Bandit vision debug overlay ON (default OFF); the switch itself lives in BanditVisionToggle.
 	BanditVisionToggle.apply_query(search)
+	# ?sense_vision=1 starts the proximity sense debug overlay ON (default OFF); switch in SenseVisionToggle.
+	SenseVisionToggle.apply_query(search)
 	_window = JavaScriptBridge.get_interface("window")
 	_state = JavaScriptBridge.create_object("Object")
 	_window.__SHINOBI_STATE__ = _state
@@ -92,6 +94,11 @@ func _process(delta: float) -> void:
 	_state.target_locked = lock != null and lock.valid_target()
 	_state.player_kunai_drawn = _player.kunai_drawn
 	_state.player_sense_radius = _player.sense_radius()
+	_state.player_ryo = _player.ryo
+	var sv := SenseVisionToggle.telemetry()  # proximity sense debug overlay (additive; zeros/false while OFF)
+	_state.sense_vision_on = sv["sense_vision_on"]
+	_state.sense_vision_views = sv["sense_vision_views"]
+	_state.sense_vision_nodes = sv["sense_vision_nodes"]
 	var enemy := get_tree().get_first_node_in_group("enemy") as Bandit
 	if enemy != null:
 		_state.bandit_state = enemy.get_state_name()
@@ -105,6 +112,8 @@ func _process(delta: float) -> void:
 		_state.bandit_sees = enemy.sees_player
 		_state.bandit_senses_player = enemy.senses_player
 		_state.bandit_sense_radius = enemy.sense_radius()
+		_state.bandit_locked_on = enemy.is_locked_on()
+		_state.bandit_stolen_ryo = enemy.stolen_ryo
 		_state.bandit_flickers = enemy.flicker_count
 		_state.bandit_swings = enemy.swings_thrown
 		_state.bandit_hits_landed = enemy.player_hits_landed

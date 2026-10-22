@@ -156,8 +156,11 @@ func _test_patrol() -> void:
 	ck.call("robber patrol: walks its loop (moved far from home)", moved > 150.0, "%.0f px" % moved)
 	ck.call("robber patrol: reaches more than one patrol point in 10 s", visited.size() >= 2, str(visited.keys()))
 	ck.call("robber patrol: stays PATROL while the player is far away", states.keys() == ["PATROL"], str(states.keys()))
-	ck.call("robber patrol: patrol speed is a walk, not a chase", max_speed <= float(bandit.profile.patrol_speed) + 1.0, "%.0f" % max_speed)
-	ck.call("robber patrol: uses both moving and standing animations (no mannequin idle)", anims.has("run") and anims.has("idle"), str(anims.keys()))
+	# Owner 2026-10-22 ("bandits are in the woods running around looking for players, naruto running")
+	# supersedes the original "patrol speed is a walk" criterion from the Level 1 robber arena order --
+	# an authored patrol loop is now walked at chase_speed (sprint), not profile.patrol_speed (walk).
+	ck.call("robber patrol: naruto-running between waypoints is a sprint, not a walk (owner 2026-10-22)", max_speed <= bandit.chase_speed + 1.0 and max_speed > float(bandit.profile.patrol_speed) * 1.5, "%.0f" % max_speed)
+	ck.call("robber patrol: uses both moving and standing animations (no mannequin idle)", anims.has("sprint") and anims.has("idle"), str(anims.keys()))
 	ck.call("robber patrol: faces several directions (look-around + travel), never a fixed pose", facings.size() >= 3, str(facings.size()))
 	ck.call("robber patrol: big direction changes cost a stop-to-turn beat", bandit.turn_pauses >= 1, str(bandit.turn_pauses))
 	ck.call("robber patrol: does not see a player 1300 px away", not bandit.sees_player)
@@ -377,7 +380,11 @@ func _test_search_and_return() -> void:
 		if s == "PATROL":
 			break
 	ck.call("robber search: loses the player -> SEARCH -> RETURN -> PATROL", seq == ["APPROACH", "SEARCH", "RETURN", "PATROL"], str(seq))
-	ck.call("robber search: once back on patrol it is near its patrol loop", bandit.global_position.distance_to(WorldScale.BANDIT_HOME) < 600.0)
+	# Owner 2026-10-22 ("I want the logic for all enemies to stay in their new area") supersedes the
+	# original "once back on patrol it is near its patrol loop" criterion -- RETURN no longer marches
+	# the Bandit back to WorldScale.BANDIT_HOME; it adopts wherever it gave up (near last_seen) as its
+	# new home instead, so it should now be FAR from the original authored home and sitting on top of it.
+	ck.call("robber search: home updates to the new area instead of the original spawn", bandit.home.distance_to(WorldScale.BANDIT_HOME) > 200.0 and bandit.global_position.distance_to(bandit.home) < 10.0, "home=%s pos=%s orig=%s" % [bandit.home, bandit.global_position, WorldScale.BANDIT_HOME])
 	ck.call("robber search: the intent log recorded the transitions", bandit.intent_log.size() >= 3 and "SEARCH" in "".join(bandit.intent_log))
 
 

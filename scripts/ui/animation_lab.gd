@@ -61,6 +61,7 @@ var _value_labels: Dictionary = {}
 var _toggle_buttons: Dictionary = {}
 var _lab_button: Button
 var vision: BanditVisionToggle  ## Bandit vision debug overlay switch (key F2 + the always-visible button), default OFF
+var sense_vision: SenseVisionToggle  ## proximity "power level" sense overlay switch (key F3 + button), default OFF
 var _timer: float = 0.0
 var _actions: Dictionary = {}
 
@@ -348,6 +349,11 @@ func _build_ui() -> void:
 	vision.name = "BanditVisionToggle"
 	add_child(vision)
 	vision.build_button(layer)
+	# Proximity "power level" sense overlay (debug, default OFF): same pattern, button to the left of it.
+	sense_vision = SenseVisionToggle.new()
+	sense_vision.name = "SenseVisionToggle"
+	add_child(sense_vision)
+	sense_vision.build_button(layer)
 	_panel = PanelContainer.new()
 	_panel.position = Vector2(930, 40)
 	_panel.custom_minimum_size = Vector2(340, 0)
