@@ -227,7 +227,7 @@ try {
     'vision_player_in', 'vision_cone', 'vision_range', 'vision_close', 'vision_fov_deg', 'vision_facing_x', 'vision_facing_y', 'vision_mismatch', 'vision_capped',
     'vision_nodes', 'vision_origin_x', 'vision_origin_y'];
   const VISION_CATS = ['not_alert', 'suspicious', 'detected', 'lost_sight', 'searching', 'returning'];
-  const VISION_BUTTON = { x: 1027, y: 3 }; // the tab's coloured lip: "Bandit vision" is a binder tab (x 942..1112) hanging from the top edge, only y 0..7 shows at rest, y 0..26 once popped down
+  const VISION_BUTTON = { x: 1027, y: 718 }; // "Bandit vision" is a binder tab (x 942..1112) on the BOTTOM edge: sticks out (y 694..720) while OFF, tucks to a 3 px sliver (y 717..720) while ON; y 718 is inside the tab in both states
   const visionOpen = async (query) => {
     const p = await context.newPage();
     p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
@@ -241,7 +241,7 @@ try {
       try { await p.waitForFunction(pred, arg, { timeout: 30000, polling: 100 }); return await st(); } catch (e) { return null; }
     };
     const key = async () => { await p.keyboard.down('F2'); await sleep(120); await p.keyboard.up('F2'); };
-    const click = async () => { await p.mouse.click(VISION_BUTTON.x, VISION_BUTTON.y, { delay: 80 }); await p.mouse.move(640, 400); }; // move away: no tooltip popup node
+    const click = async () => { await p.mouse.move(VISION_BUTTON.x, VISION_BUTTON.y); await p.waitForTimeout(500); await p.mouse.click(VISION_BUTTON.x, VISION_BUTTON.y, { delay: 80 }); await p.mouse.move(640, 400); }; // move away: no tooltip popup node
     return { p, st, until, key, click };
   };
   const visionIsOn = () => window.__SHINOBI_STATE__.vision_on === true && window.__SHINOBI_STATE__.vision_points > 0;
