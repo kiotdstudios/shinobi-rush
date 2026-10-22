@@ -12,8 +12,8 @@ ROOT = Path(__file__).resolve().parents[2]
 INBOX = ROOT / "orders" / "Orcha"
 TITLE = "[Orcha Watcher] Queued orders"
 MARKER = "<!-- orcha-order-watcher-v1 -->"
-STATUS_RE = re.compile(r"^\\s*(?:[-*]\\s*)?(?:\\*\\*)?status(?:\\*\\*)?\\s*:\\s*(?:\\*\\*)?([A-Z_]+)", re.I | re.M)
-PRIORITY_RE = re.compile(r"^\\s*(?:[-*]\\s*)?(?:\\*\\*)?priority(?:\\*\\*)?\\s*:\\s*(?:\\*\\*)?(P[012])", re.I | re.M)
+STATUS_RE = re.compile(r"^\s*(?:[-*]\s*)?(?:\*\*)?status(?:\*\*)?\s*:\s*(?:\*\*)?([A-Z_]+)", re.I | re.M)
+PRIORITY_RE = re.compile(r"^\s*(?:[-*]\s*)?(?:\*\*)?priority(?:\*\*)?\s*:\s*(?:\*\*)?(P[012])", re.I | re.M)
 API = "https://api.github.com"
 
 
