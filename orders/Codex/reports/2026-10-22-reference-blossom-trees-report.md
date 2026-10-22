@@ -57,3 +57,16 @@ None required to deliver this requested art. Wind/leaf density can be adjusted a
 Finish recording animation preview, write final pre-commit results, integrate through required PR checks, deploy and verify exact public SHA, rerun live proof, then update this report with evidence. Live deployment pending; no public-update claim yet.
 
 Preview assembly: python docs/visuals/blossom-trees/package_previews.py PASS; 96-frame/4second weeping-sway-96.gif and separate16-frame foliage-tumble.gif. Captured source PNGs remain local build evidence; delivered GIF/evidence JSON are versioned. Asset exporter rerun after metadata clarification preserved pixel checksums. No tests or browser errors remain.
+
+## Latest-main integration retest before merge commit
+
+Aki's courtyard floor PR #75 landed during this job. Integrated main `661ba9e4efadfe875cc9cd5e87342c6662718248` with a normal merge, without conflicts or changing his floor code. The tree scene remains one additive node.
+
+- `python scripts/ci/godot_ci.py import --project . --log-dir build/trees-integrated-import`: PASS.
+- `python scripts/ci/godot_ci.py tests --project . --log-dir build/trees-integrated-tests`: PASS1193 assertions, zero failures.
+- `python scripts/ci/godot_ci.py export --project . --out ../blossom-trees-integrated-web --log-dir build/trees-integrated-export`: PASS.
+- `python scripts/ci/godot_ci.py finalize-export --project . --out ../blossom-trees-integrated-web --kind game --commit-sha 661ba9e4efadfe875cc9cd5e87342c6662718248`: PASS39MiB.
+- `node scripts/ci/smoke/trees-proof-probe.mjs --serve-dir ../blossom-trees-integrated-web --out-dir build/trees-integrated-browser`: PASS all16 checks, zero errors. Updated preserved screenshot/probe evidence reflects this floor. The 96-frame GIF remains the earlier full-cycle tree rendering; only its floor background differs.
+- Final resource walker `build/trees-validate-final`:59 scripts,8 scenes,zero failures. Order and sprite-manifest validators PASS.
+
+Initial implementation commit: `7495c41491b872b0c016327f858387e379de11ec`. Integration/PR/live SHA to follow. These tests precede the integration commit.

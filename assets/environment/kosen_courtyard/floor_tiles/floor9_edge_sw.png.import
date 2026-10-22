@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://giyuuqdcp734"
-path="res://.godot/imported/floor_rune_cloud.png-fba848dd15243fb992eabc07556a0bd0.ctex"
+uid="uid://detxlygtkkpwp"
+path="res://.godot/imported/floor9_edge_sw.png-2da98d93b39581ef065ee0f03fed024f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_rune_cloud.png"
-dest_files=["res://.godot/imported/floor_rune_cloud.png-fba848dd15243fb992eabc07556a0bd0.ctex"]
+source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor9_edge_sw.png"
+dest_files=["res://.godot/imported/floor9_edge_sw.png-2da98d93b39581ef065ee0f03fed024f.ctex"]
 
 [params]
 
