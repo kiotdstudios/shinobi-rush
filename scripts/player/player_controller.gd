@@ -274,6 +274,7 @@ func _begin_dodge(input: Vector2) -> void:
 	_action_timer = _action_duration
 	velocity = facing8 * dodge_speed
 	visual.play_action("dodge", facing8)
+	CombatCameraDirector.notify(CombatCameraDirector.EventKind.DODGE, {"dir": facing8})
 
 
 ## Begin a jump. `velocity` is intentionally left untouched: whatever horizontal momentum the player
@@ -430,6 +431,11 @@ func _check_attack_hits() -> void:
 		_hit_targets.append(enemy)
 		enemy.take_damage(_attack_def.damage, to_enemy.normalized(), _attack_def.knockback, _attack_def.hitstop_ms)
 		_hitstop_timer = maxf(_hitstop_timer, _attack_def.hitstop_ms / 1000.0)
+		## Notify the combat camera director on confirmed hit (light vs heavy by state).
+		var cam_kind := CombatCameraDirector.EventKind.HEAVY_HIT \
+			if state == State.DASH_ATTACK or state == State.AIR_ATTACK \
+			else CombatCameraDirector.EventKind.LIGHT_HIT
+		CombatCameraDirector.notify(cam_kind, {"dir": to_enemy.normalized(), "target_pos": enemy.global_position})
 
 
 func _state_for_attack_id(attack_id: String) -> State:

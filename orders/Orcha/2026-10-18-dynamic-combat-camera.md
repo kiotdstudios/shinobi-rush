@@ -1,6 +1,6 @@
 # ORDER — Dynamic combat camera director
 - Agent: Orcha
-- Status: QUEUED
+- Status: REVIEW
 - Priority: P1
 - Owner: Orcha (camera system implementation)
 - Collaborators: Aki (combat triggers), Codex (animation/VFX markers), Kiro (browser tests/deploy)
