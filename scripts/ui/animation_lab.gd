@@ -20,6 +20,9 @@ const IMPACT_ACTIONS: Dictionary = {
 	"dbg_camera_impact_light": KEY_7, "dbg_camera_impact_heavy": KEY_8,
 	"dbg_camera_impact_burst": KEY_9, "dbg_camera_impact_slow": KEY_0,
 }
+## Body Flicker demo key (Y -- "flash step"). Registered at runtime. B is taken (Ctrl+Alt+B = telemetry HUD).
+const FLICKER_ACTION := "dbg_body_flicker"
+const FLICKER_KEY := KEY_Y  ## Y = "flash step" mnemonic; B/Ctrl+Alt+B already taken by telemetry HUD
 const BURST_GAP_S := 0.04  ## the burst: three light hits this far apart
 ## Stands sit LEFT of the spawn so they stay clear of the lab panel (screen right) at 1x-2x zoom.
 ## Provisional prototype values scaled by WorldScale.SCALE (stands far enough apart for the 128 px frames).
@@ -30,7 +33,7 @@ const OVERLAYS: Array = [
 	["iso", "1 iso grid"], ["square", "2 square grid"], ["anchor", "3 anchor"],
 	["footprint", "4 footprint"], ["ruler", "5 height ruler"], ["bbox", "6 frame box"],
 ]
-const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom (half steps are not pixel-exact) | N camera preset | 1-6 overlays | 7 8 9 0 camera kick: light heavy burst slow"
+const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom (half/quarter steps are not pixel-exact) | N camera preset | 1-6 overlays | 7 8 9 0 camera kick: light heavy burst slow | Y body flicker normal (0.5x via button)"
 
 enum DirMode { FOLLOW, FIXED, SPIN }
 
@@ -169,6 +172,8 @@ func _build_actions() -> void:
 		"dbg_camera_impact_heavy": func() -> void: impact_demo("heavy"),
 		"dbg_camera_impact_burst": func() -> void: impact_demo("burst"),
 		"dbg_camera_impact_slow": func() -> void: impact_demo("slow"),
+		FLICKER_ACTION: func() -> void: flicker_demo(1.0),
+		## half-speed flicker is button-only (no second key; avoids key-collision with the normal B action)
 		"dbg_overlay_iso_grid": func() -> void: toggle_overlay("iso"),
 		"dbg_overlay_square_grid": func() -> void: toggle_overlay("square"),
 		"dbg_overlay_anchor": func() -> void: toggle_overlay("anchor"),
@@ -199,9 +204,20 @@ static func _ensure_impact_actions() -> void:
 		InputMap.action_add_event(action, ev)
 
 
+static func _ensure_flicker_action() -> void:
+	if not InputMap.has_action(FLICKER_ACTION):
+		InputMap.add_action(FLICKER_ACTION)
+		var ev := InputEventKey.new()
+		ev.physical_keycode = FLICKER_KEY
+		InputMap.action_add_event(FLICKER_ACTION, ev)
+	## Half-speed is triggered by the UI button only (no second key, to avoid key-collision tests).
+
+
+
 func _ready() -> void:
 	_ensure_preset_action()
 	_ensure_impact_actions()
+	_ensure_flicker_action()
 	_build_actions()
 	lib = SpriteLibrary.get_instance()
 	player = get_tree().get_first_node_in_group("player") as PlayerController
@@ -352,6 +368,7 @@ func _build_ui() -> void:
 	# After the overlay grid so the existing rows keep their indices (tests address them by position).
 	_row(box, "preset", "Cam preset  N", func() -> void: cycle_preset(), func() -> void: cycle_preset())
 	_impact_row(box)
+	_flicker_row(box)
 	var help := Label.new()
 	help.text = KEYS_HELP
 	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -372,6 +389,18 @@ func _impact_row(box: Node) -> void:
 	for k: Array in [["light", "L"], ["heavy", "H"], ["burst", "x3"], ["slow", "S"]]:
 		var kind: String = k[0]
 		_button(h, k[1], Vector2.ZERO, Vector2(34, 24), func() -> void: impact_demo(kind))
+
+## "Body Flicker  B / Shift+B": normal-speed and half-speed triggers for the VFX demo.
+func _flicker_row(box: Node) -> void:
+	var h := HBoxContainer.new()
+	box.add_child(h)
+	var t := Label.new()
+	t.text = "Body Flicker  B"
+	t.custom_minimum_size = Vector2(112, 0)
+	t.add_theme_font_size_override("font_size", 11)
+	h.add_child(t)
+	_button(h, "Normal", Vector2.ZERO, Vector2(56, 24), func() -> void: flicker_demo(1.0))
+	_button(h, "0.5x", Vector2.ZERO, Vector2(44, 24), func() -> void: flicker_demo(0.5))
 
 
 func _label(parent: Node, pos: Vector2, size: int) -> Label:
@@ -453,8 +482,10 @@ func toggle_lab() -> void:
 
 func _set_lab(on: bool) -> void:
 	lab_on = on
-	if not on and zoom_index != 0:
-		set_zoom_index(0)  # closing the lab restores the gameplay baseline
+	if not on:
+		if zoom_index != 0:
+			set_zoom_index(0)  # closing the lab restores the gameplay baseline
+		BodyFlickerDemo.safe_cleanup()  ## ensure no stuck invisible player if lab closes mid-flicker
 	if _panel != null:
 		_panel.visible = on
 		overlay.visible = on
@@ -588,6 +619,15 @@ func impact_demo(kind: String) -> void:
 			for i in [1, 2]:
 				get_tree().create_timer(i * BURST_GAP_S).timeout.connect(func() -> void: CameraImpact.light_hit(dir))
 
+
+## Body Flicker visual demo (B key or button). Only fires while the lab is open.
+## speed_scale: 1.0 = normal (~417 ms total), 0.5 = half speed (~834 ms).
+func flicker_demo(speed_scale: float = 1.0) -> void:
+	if not lab_on or player == null:
+		return
+	BodyFlickerDemo.trigger(player, speed_scale)
+	## Fire the JUTSU camera event so the director zooms in on the effect
+	CombatCameraDirector.notify(CombatCameraDirector.EventKind.JUTSU, {"target_pos": player.global_position})
 
 func _unhandled_input(event: InputEvent) -> void:
 	if player == null:
