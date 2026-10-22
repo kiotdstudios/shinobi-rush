@@ -12,7 +12,7 @@ extends CanvasLayer
 ## Also owns the tiny pause toggle (runs while paused).
 
 const REFRESH := 0.1
-const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | Options pause\nReserved (no behavior yet): arrows aim, K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nF1: toggle technical diagnostics (camera/sprite/FPS/texture mem)"
+const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | L lock on/off | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | R3 lock on/off | Options pause\nReserved (no behavior yet): arrows aim, K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nF1: toggle technical diagnostics (camera/sprite/FPS/texture mem)"
 
 const DIAG_ACTION := "dbg_toggle_diagnostics"
 const DIAG_KEY := KEY_F1
@@ -163,10 +163,13 @@ func _process(delta: float) -> void:
 		_player = get_tree().get_first_node_in_group("player") as PlayerController
 		if _player == null:
 			return
-	_player_info.text = "State: %s\nSpeed: %d px/s\nPos: (%d, %d)\nDirection: %s" % [
+	# Live camera zoom (exact value, 4 decimals) so a zoom worth locking can be read off the screen.
+	var cam := get_viewport().get_camera_2d()
+	var zoom_text := "n/a" if cam == null else "%.4f (%s)" % [cam.zoom.x, CameraPreset.active_id()]
+	_player_info.text = "State: %s\nSpeed: %d px/s\nPos: (%d, %d)\nZoom: %s\nDirection: %s" % [
 		_player.get_state_name(), int(_player.velocity.length()),
 		int(_player.global_position.x), int(_player.global_position.y),
-		SpriteSet.dir_name(_player.facing8)]
+		zoom_text, SpriteSet.dir_name(_player.facing8)]
 	if _diag_combat != null and _diag_panel.visible:
 		var d := _player.debug_snapshot()
 		var c: Dictionary = d.cancel

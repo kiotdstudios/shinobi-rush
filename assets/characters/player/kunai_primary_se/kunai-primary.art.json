@@ -1,0 +1,1480 @@
+{
+  "schema": "shinobi_kunai_se_art_proof_v1",
+  "status": "owner_review_required_before_eight_directions",
+  "direction": "SE",
+  "frame_size": [
+    128,
+    128
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "body_height_px": 104,
+  "weapon": {
+    "texture": "res://assets/weapons/kunai/black_kunai.png",
+    "grip_pivot_px": [
+      25,
+      31
+    ],
+    "independent": true,
+    "default_melee_in_this_proof": true
+  },
+  "vfx": {
+    "frames": [
+      "res://assets/characters/player/kunai_primary_se/vfx/swipe_000.png",
+      "res://assets/characters/player/kunai_primary_se/vfx/swipe_001.png",
+      "res://assets/characters/player/kunai_primary_se/vfx/swipe_002.png",
+      "res://assets/characters/player/kunai_primary_se/vfx/swipe_003.png",
+      "res://assets/characters/player/kunai_primary_se/vfx/swipe_004.png",
+      "res://assets/characters/player/kunai_primary_se/vfx/swipe_005.png"
+    ],
+    "fps": 30,
+    "independent": true
+  },
+  "animations": {
+    "guard": {
+      "duration_ms": 400,
+      "loop": true,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "res://assets/characters/player/kunai_poc/body/SE_000.png",
+          "body_sha256": "7bdbc856c35f76e42840aefe2f89b5bf815dd0dbf6fd9eace61ba45df9aafc59",
+          "right_hand_px": [
+            64,
+            72
+          ],
+          "weapon_angle_deg": 135,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            62,
+            70,
+            5,
+            5
+          ],
+          "start_ms": 0,
+          "duration_ms": 400,
+          "phase": "guard",
+          "contact": false,
+          "swipe_frame": -1
+        }
+      ]
+    },
+    "light1": {
+      "duration_ms": 300,
+      "loop": false,
+      "authored_fps": 24,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "res://assets/characters/player/kunai_poc/body/SE_000.png",
+          "body_sha256": "7bdbc856c35f76e42840aefe2f89b5bf815dd0dbf6fd9eace61ba45df9aafc59",
+          "right_hand_px": [
+            64,
+            72
+          ],
+          "weapon_angle_deg": 135,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            62,
+            70,
+            5,
+            5
+          ],
+          "start_ms": 0,
+          "duration_ms": 41.666666666666664,
+          "phase": "startup",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 1,
+          "body_frame": "res://assets/characters/player/kunai_poc/body/SE_001.png",
+          "body_sha256": "da2c06ffa6237b2e75ed47b4d1f05ee9f4d8b0f6804368fc65f7521431586fd2",
+          "right_hand_px": [
+            45,
+            62
+          ],
+          "weapon_angle_deg": -150,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            43,
+            60,
+            5,
+            5
+          ],
+          "start_ms": 41.666666666666664,
+          "duration_ms": 41.666666666666664,
+          "phase": "startup",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 2,
+          "body_frame": "res://assets/characters/player/kunai_poc/body/SE_002.png",
+          "body_sha256": "553e851cca58b47d2cc72b559ee2cdf43a0ca034657314132a7762fd4a831764",
+          "right_hand_px": [
+            96,
+            70
+          ],
+          "weapon_angle_deg": 15,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            94,
+            68,
+            5,
+            5
+          ],
+          "start_ms": 83.33333333333333,
+          "duration_ms": 33.333333333333336,
+          "phase": "active",
+          "contact": true,
+          "swipe_frame": 2
+        },
+        {
+          "frame_index": 3,
+          "body_frame": "res://assets/characters/player/kunai_poc/body/SE_003.png",
+          "body_sha256": "4f3fdce6c583e12ce4f7a20fe0522677156c13e96d3c183914534fa7917bc4df",
+          "right_hand_px": [
+            108,
+            70
+          ],
+          "weapon_angle_deg": 25,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            106,
+            68,
+            5,
+            5
+          ],
+          "start_ms": 116.66666666666666,
+          "duration_ms": 33.333333333333336,
+          "phase": "active",
+          "contact": false,
+          "swipe_frame": 3
+        },
+        {
+          "frame_index": 4,
+          "body_frame": "res://assets/characters/player/kunai_poc/body/SE_004.png",
+          "body_sha256": "c7a2c7a89deb67c5b95d95c2cccd63f533bac810ef88e2f064acd59221d888a2",
+          "right_hand_px": [
+            57,
+            67
+          ],
+          "weapon_angle_deg": 115,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            55,
+            65,
+            5,
+            5
+          ],
+          "start_ms": 150.0,
+          "duration_ms": 75,
+          "phase": "recovery",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 5,
+          "body_frame": "res://assets/characters/player/kunai_poc/body/SE_005.png",
+          "body_sha256": "7db63818d0a884f0046b110bb957a36348c18813ff68a7d573482d6a74849185",
+          "right_hand_px": [
+            65,
+            73
+          ],
+          "weapon_angle_deg": 135,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            63,
+            71,
+            5,
+            5
+          ],
+          "start_ms": 225.0,
+          "duration_ms": 75,
+          "phase": "recovery",
+          "contact": false,
+          "swipe_frame": -1
+        }
+      ],
+      "contact_frames": [
+        2
+      ],
+      "hitbox_active_frames": [
+        2,
+        3
+      ],
+      "transition_ready_frames": [
+        4,
+        5
+      ]
+    },
+    "light2": {
+      "duration_ms": 350.00000000000006,
+      "loop": false,
+      "authored_fps": 24,
+      "frames": [
+        {
+          "frame_index": 0,
+          "source_frame": 0,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light2/SE_000.png",
+          "right_hand_px": [
+            71,
+            62
+          ],
+          "weapon_angle_deg": 145,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            69,
+            60,
+            5,
+            5
+          ],
+          "start_ms": 0,
+          "duration_ms": 50,
+          "contact": false,
+          "phase": "startup",
+          "root_registration_px": [
+            0,
+            -1
+          ],
+          "body_sha256": "dd69f632e352003f08b11183a5be98a5e0bc02ef122c298dfd58e28fc67dcf76",
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 1,
+          "source_frame": 1,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light2/SE_001.png",
+          "right_hand_px": [
+            59,
+            63
+          ],
+          "weapon_angle_deg": 155,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            57,
+            61,
+            5,
+            5
+          ],
+          "start_ms": 50,
+          "duration_ms": 50,
+          "contact": false,
+          "phase": "startup",
+          "root_registration_px": [
+            0,
+            -1
+          ],
+          "body_sha256": "8dc0b96f4616c3144d001111a755698c03187ea293532a8d469da556074cb202",
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 2,
+          "source_frame": 2,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light2/SE_002.png",
+          "right_hand_px": [
+            92,
+            90
+          ],
+          "weapon_angle_deg": 110,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            90,
+            88,
+            5,
+            5
+          ],
+          "start_ms": 100,
+          "duration_ms": 33.333333333333336,
+          "contact": true,
+          "phase": "active",
+          "root_registration_px": [
+            0,
+            0
+          ],
+          "body_sha256": "820a5287f32bdb0e68b100dd4729700fa3c9a1f598da514af2bc2f27c8e870ae",
+          "swipe_frame": 2
+        },
+        {
+          "frame_index": 3,
+          "source_frame": 3,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light2/SE_003.png",
+          "right_hand_px": [
+            89,
+            80
+          ],
+          "weapon_angle_deg": 125,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            87,
+            78,
+            5,
+            5
+          ],
+          "start_ms": 133.33333333333334,
+          "duration_ms": 33.333333333333336,
+          "contact": false,
+          "phase": "active",
+          "root_registration_px": [
+            0,
+            4
+          ],
+          "body_sha256": "80b26f56bc7741ef82f4b88205bff67d3ed415d2c6edf441bfb926fb893e2e44",
+          "swipe_frame": 3
+        },
+        {
+          "frame_index": 4,
+          "source_frame": 4,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light2/SE_004.png",
+          "right_hand_px": [
+            62,
+            79
+          ],
+          "weapon_angle_deg": 145,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            60,
+            77,
+            5,
+            5
+          ],
+          "start_ms": 166.66666666666669,
+          "duration_ms": 91.66666666666667,
+          "contact": false,
+          "phase": "recovery",
+          "root_registration_px": [
+            0,
+            4
+          ],
+          "body_sha256": "62a78a02e80a246d56f2bd2ad3d0d136962f753f7c6cd4f6ced8cf79a6e80d5d",
+          "swipe_frame": 4
+        },
+        {
+          "frame_index": 5,
+          "source_frame": 5,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light2/SE_005.png",
+          "right_hand_px": [
+            64,
+            79
+          ],
+          "weapon_angle_deg": 145,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            62,
+            77,
+            5,
+            5
+          ],
+          "start_ms": 258.33333333333337,
+          "duration_ms": 91.66666666666667,
+          "contact": false,
+          "phase": "recovery",
+          "root_registration_px": [
+            0,
+            4
+          ],
+          "body_sha256": "5d9aeeb6b4a842dce2baba1bd0a723da8d596021ef6a12f4dd7ed9cb82a5df1b",
+          "swipe_frame": -1
+        }
+      ],
+      "contact_frames": [
+        2
+      ],
+      "hitbox_active_frames": [
+        2,
+        3
+      ],
+      "transition_ready_frames": [
+        4,
+        5
+      ]
+    },
+    "light3": {
+      "duration_ms": 483.3333333333333,
+      "loop": false,
+      "authored_fps": 24,
+      "frames": [
+        {
+          "frame_index": 0,
+          "source_frame": 0,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light3/SE_000.png",
+          "right_hand_px": [
+            52,
+            67
+          ],
+          "weapon_angle_deg": 145,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            50,
+            65,
+            5,
+            5
+          ],
+          "start_ms": 0,
+          "duration_ms": 75,
+          "contact": false,
+          "phase": "startup",
+          "root_registration_px": [
+            0,
+            -2
+          ],
+          "body_sha256": "c11f63948ab252dbc09163b33e101809d58462731683aa96e30a4f377f03ddda",
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 1,
+          "source_frame": 1,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light3/SE_001.png",
+          "right_hand_px": [
+            38,
+            73
+          ],
+          "weapon_angle_deg": 155,
+          "weapon_layer": "behind",
+          "hand_occlusion_rect": [
+            36,
+            71,
+            5,
+            5
+          ],
+          "start_ms": 75,
+          "duration_ms": 75,
+          "contact": false,
+          "phase": "startup",
+          "root_registration_px": [
+            0,
+            -2
+          ],
+          "body_sha256": "977c30ad10968dc67d9ac42768f0e26d4b6f7f04d30d0cba95e2ab471b10dc06",
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 2,
+          "source_frame": 2,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light3/SE_002.png",
+          "right_hand_px": [
+            78,
+            67
+          ],
+          "weapon_angle_deg": 100,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            76,
+            65,
+            5,
+            5
+          ],
+          "start_ms": 150,
+          "duration_ms": 41.666666666666664,
+          "contact": true,
+          "phase": "active",
+          "root_registration_px": [
+            0,
+            -3
+          ],
+          "body_sha256": "c8baeac515e1dad3e72d553fe29df5d46653242b084c6717ebd8963d6a034234",
+          "swipe_frame": 2
+        },
+        {
+          "frame_index": 3,
+          "source_frame": 3,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light3/SE_003.png",
+          "right_hand_px": [
+            107,
+            85
+          ],
+          "weapon_angle_deg": 70,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            105,
+            83,
+            5,
+            5
+          ],
+          "start_ms": 191.66666666666666,
+          "duration_ms": 41.666666666666664,
+          "contact": false,
+          "phase": "active",
+          "root_registration_px": [
+            0,
+            3
+          ],
+          "body_sha256": "79ef0ad23d9194aa54ea388757a12831d11a997af60c18e4d967738dbc4bbffd",
+          "swipe_frame": 3
+        },
+        {
+          "frame_index": 4,
+          "source_frame": 4,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light3/SE_004.png",
+          "right_hand_px": [
+            85,
+            83
+          ],
+          "weapon_angle_deg": 100,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            83,
+            81,
+            5,
+            5
+          ],
+          "start_ms": 233.33333333333331,
+          "duration_ms": 125,
+          "contact": false,
+          "phase": "recovery",
+          "root_registration_px": [
+            0,
+            3
+          ],
+          "body_sha256": "905f16566c1be7368c59a9749b49b8971ab90a92c4e640c4b39af58107458f6f",
+          "swipe_frame": 4
+        },
+        {
+          "frame_index": 5,
+          "source_frame": 5,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/light3/SE_005.png",
+          "right_hand_px": [
+            53,
+            89
+          ],
+          "weapon_angle_deg": 110,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            51,
+            87,
+            5,
+            5
+          ],
+          "start_ms": 358.3333333333333,
+          "duration_ms": 125,
+          "contact": false,
+          "phase": "recovery",
+          "root_registration_px": [
+            0,
+            3
+          ],
+          "body_sha256": "99ab8a323099fadcc012e5b8bec8cb07fa0b2c5412ab5b2da25de3845a8ca3b6",
+          "swipe_frame": -1
+        }
+      ],
+      "contact_frames": [
+        2
+      ],
+      "hitbox_active_frames": [
+        2,
+        3
+      ],
+      "transition_ready_frames": [
+        4,
+        5
+      ]
+    },
+    "dodge": {
+      "duration_ms": 1000.0000000000001,
+      "loop": false,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_000.png",
+          "right_hand_px": [
+            49,
+            74
+          ],
+          "weapon_angle_deg": 120,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            47,
+            72,
+            5,
+            5
+          ],
+          "start_ms": 0,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 1,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_001.png",
+          "right_hand_px": [
+            46,
+            77
+          ],
+          "weapon_angle_deg": 100,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            44,
+            75,
+            5,
+            5
+          ],
+          "start_ms": 83.33333333333333,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 2,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_002.png",
+          "right_hand_px": [
+            44,
+            77
+          ],
+          "weapon_angle_deg": 70,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            42,
+            75,
+            5,
+            5
+          ],
+          "start_ms": 166.66666666666666,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 3,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_003.png",
+          "right_hand_px": [
+            85,
+            68
+          ],
+          "weapon_angle_deg": 45,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            83,
+            66,
+            5,
+            5
+          ],
+          "start_ms": 250.0,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 4,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_004.png",
+          "right_hand_px": [
+            85,
+            68
+          ],
+          "weapon_angle_deg": 45,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            83,
+            66,
+            5,
+            5
+          ],
+          "start_ms": 333.3333333333333,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 5,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_005.png",
+          "right_hand_px": [
+            85,
+            68
+          ],
+          "weapon_angle_deg": 45,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            83,
+            66,
+            5,
+            5
+          ],
+          "start_ms": 416.66666666666663,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 6,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_006.png",
+          "right_hand_px": [
+            85,
+            68
+          ],
+          "weapon_angle_deg": 45,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            83,
+            66,
+            5,
+            5
+          ],
+          "start_ms": 499.99999999999994,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 7,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_007.png",
+          "right_hand_px": [
+            68,
+            79
+          ],
+          "weapon_angle_deg": 100,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            66,
+            77,
+            5,
+            5
+          ],
+          "start_ms": 583.3333333333333,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 8,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_008.png",
+          "right_hand_px": [
+            47,
+            75
+          ],
+          "weapon_angle_deg": 120,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            73,
+            5,
+            5
+          ],
+          "start_ms": 666.6666666666666,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 9,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_009.png",
+          "right_hand_px": [
+            45,
+            71
+          ],
+          "weapon_angle_deg": 120,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            43,
+            69,
+            5,
+            5
+          ],
+          "start_ms": 750.0,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 10,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_010.png",
+          "right_hand_px": [
+            51,
+            78
+          ],
+          "weapon_angle_deg": 130,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            49,
+            76,
+            5,
+            5
+          ],
+          "start_ms": 833.3333333333334,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 11,
+          "body_frame": "res://assets/characters/player/sprites/production/dodge/SE_011.png",
+          "right_hand_px": [
+            50,
+            78
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            48,
+            76,
+            5,
+            5
+          ],
+          "start_ms": 916.6666666666667,
+          "duration_ms": 83.33333333333333,
+          "phase": "dodge",
+          "contact": false,
+          "swipe_frame": -1
+        }
+      ]
+    },
+    "dash_attack": {
+      "duration_ms": 399.99999999999994,
+      "loop": false,
+      "authored_fps": 24,
+      "frames": [
+        {
+          "frame_index": 0,
+          "source_frame": 0,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/dash_attack/SE_000.png",
+          "right_hand_px": [
+            38,
+            77
+          ],
+          "weapon_angle_deg": 150,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            36,
+            75,
+            5,
+            5
+          ],
+          "start_ms": 0,
+          "duration_ms": 50,
+          "contact": false,
+          "phase": "startup",
+          "root_registration_px": [
+            0,
+            1
+          ],
+          "body_sha256": "1caef18ac7eaf5665d36e8bf1164ade2adcf58b84bf762d71d25d5b7891d5f6e",
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 1,
+          "source_frame": 1,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/dash_attack/SE_001.png",
+          "right_hand_px": [
+            58,
+            72
+          ],
+          "weapon_angle_deg": 20,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            56,
+            70,
+            5,
+            5
+          ],
+          "start_ms": 50,
+          "duration_ms": 50,
+          "contact": false,
+          "phase": "startup",
+          "root_registration_px": [
+            0,
+            2
+          ],
+          "body_sha256": "dc532370a771b643b0c1cc433e4d00904c1a725e253748dc59a8282175395b6c",
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 2,
+          "source_frame": 2,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/dash_attack/SE_002.png",
+          "right_hand_px": [
+            118,
+            77
+          ],
+          "weapon_angle_deg": 20,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            116,
+            75,
+            5,
+            5
+          ],
+          "start_ms": 100,
+          "duration_ms": 83.33333333333333,
+          "contact": true,
+          "phase": "active",
+          "root_registration_px": [
+            0,
+            1
+          ],
+          "body_sha256": "48e36a2db7a8633c5bfae18d538c77e1ee6c58d4934d1581622300cfea46df58",
+          "swipe_frame": 2
+        },
+        {
+          "frame_index": 3,
+          "source_frame": 4,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/dash_attack/SE_003.png",
+          "right_hand_px": [
+            52,
+            71
+          ],
+          "weapon_angle_deg": 120,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            50,
+            69,
+            5,
+            5
+          ],
+          "start_ms": 183.33333333333331,
+          "duration_ms": 108.33333333333333,
+          "contact": false,
+          "phase": "recovery",
+          "root_registration_px": [
+            0,
+            5
+          ],
+          "body_sha256": "e78b059bcae6bd16fd2c181f321a1450454ad67b02c1ce605dbc59d204a77ba5",
+          "swipe_frame": 4
+        },
+        {
+          "frame_index": 4,
+          "source_frame": 5,
+          "body_frame": "res://assets/characters/player/kunai_primary_se/body/dash_attack/SE_004.png",
+          "right_hand_px": [
+            67,
+            64
+          ],
+          "weapon_angle_deg": 130,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            65,
+            62,
+            5,
+            5
+          ],
+          "start_ms": 291.66666666666663,
+          "duration_ms": 108.33333333333333,
+          "contact": false,
+          "phase": "recovery",
+          "root_registration_px": [
+            0,
+            3
+          ],
+          "body_sha256": "975ec640231529115f63709db62f21faa77cb14efd5bf0ab554bd7bf8279d8fa",
+          "swipe_frame": -1
+        }
+      ],
+      "contact_frames": [
+        2
+      ],
+      "hitbox_active_frames": [
+        2
+      ],
+      "transition_ready_frames": [
+        3,
+        4
+      ]
+    },
+    "run": {
+      "duration_ms": 1666.6666666666663,
+      "loop": true,
+      "frames": [
+        {
+          "frame_index": 0,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_000.png",
+          "right_hand_px": [
+            53,
+            82
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            51,
+            80,
+            5,
+            5
+          ],
+          "start_ms": 0,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 1,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_001.png",
+          "right_hand_px": [
+            49,
+            73
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            47,
+            71,
+            5,
+            5
+          ],
+          "start_ms": 83.33333333333333,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 2,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_002.png",
+          "right_hand_px": [
+            48,
+            67
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            46,
+            65,
+            5,
+            5
+          ],
+          "start_ms": 166.66666666666666,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 3,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_003.png",
+          "right_hand_px": [
+            47,
+            63
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            61,
+            5,
+            5
+          ],
+          "start_ms": 250.0,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 4,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_004.png",
+          "right_hand_px": [
+            50,
+            72
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            48,
+            70,
+            5,
+            5
+          ],
+          "start_ms": 333.3333333333333,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 5,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_005.png",
+          "right_hand_px": [
+            55,
+            76
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            53,
+            74,
+            5,
+            5
+          ],
+          "start_ms": 416.66666666666663,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 6,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_006.png",
+          "right_hand_px": [
+            69,
+            65
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            67,
+            63,
+            5,
+            5
+          ],
+          "start_ms": 499.99999999999994,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 7,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_007.png",
+          "right_hand_px": [
+            70,
+            61
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            68,
+            59,
+            5,
+            5
+          ],
+          "start_ms": 583.3333333333333,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 8,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_008.png",
+          "right_hand_px": [
+            61,
+            70
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            59,
+            68,
+            5,
+            5
+          ],
+          "start_ms": 666.6666666666666,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 9,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_009.png",
+          "right_hand_px": [
+            51,
+            74
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            49,
+            72,
+            5,
+            5
+          ],
+          "start_ms": 750.0,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 10,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_010.png",
+          "right_hand_px": [
+            48,
+            67
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            46,
+            65,
+            5,
+            5
+          ],
+          "start_ms": 833.3333333333334,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 11,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_011.png",
+          "right_hand_px": [
+            47,
+            63
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            61,
+            5,
+            5
+          ],
+          "start_ms": 916.6666666666667,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 12,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_012.png",
+          "right_hand_px": [
+            50,
+            72
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            48,
+            70,
+            5,
+            5
+          ],
+          "start_ms": 1000.0000000000001,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 13,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_013.png",
+          "right_hand_px": [
+            55,
+            76
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            53,
+            74,
+            5,
+            5
+          ],
+          "start_ms": 1083.3333333333335,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 14,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_014.png",
+          "right_hand_px": [
+            69,
+            65
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            67,
+            63,
+            5,
+            5
+          ],
+          "start_ms": 1166.6666666666667,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 15,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_015.png",
+          "right_hand_px": [
+            70,
+            61
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            68,
+            59,
+            5,
+            5
+          ],
+          "start_ms": 1250.0,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 16,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_016.png",
+          "right_hand_px": [
+            61,
+            70
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            59,
+            68,
+            5,
+            5
+          ],
+          "start_ms": 1333.3333333333333,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 17,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_017.png",
+          "right_hand_px": [
+            51,
+            74
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            49,
+            72,
+            5,
+            5
+          ],
+          "start_ms": 1416.6666666666665,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 18,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_018.png",
+          "right_hand_px": [
+            48,
+            67
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            46,
+            65,
+            5,
+            5
+          ],
+          "start_ms": 1499.9999999999998,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        },
+        {
+          "frame_index": 19,
+          "body_frame": "res://assets/characters/player/sprites/production/run/SE_019.png",
+          "right_hand_px": [
+            47,
+            63
+          ],
+          "weapon_angle_deg": 140,
+          "weapon_layer": "front",
+          "hand_occlusion_rect": [
+            45,
+            61,
+            5,
+            5
+          ],
+          "start_ms": 1583.333333333333,
+          "duration_ms": 83.33333333333333,
+          "phase": "run",
+          "contact": false,
+          "swipe_frame": -1
+        }
+      ]
+    }
+  },
+  "sequence": [
+    {
+      "animation": "guard"
+    },
+    {
+      "animation": "light1",
+      "end_ms": 150
+    },
+    {
+      "animation": "light2",
+      "end_ms": 200
+    },
+    {
+      "animation": "light3"
+    },
+    {
+      "animation": "dodge",
+      "end_ms": 920
+    },
+    {
+      "animation": "dash_attack"
+    },
+    {
+      "animation": "run"
+    }
+  ],
+  "source": {
+    "light2": {
+      "raw": "res://assets/characters/player/source/kunai-primary-se/light2-raw.png",
+      "raw_sha256": "839cc2a2b551d1173e2bc4c52c3c8ce217a27a726783d32f061ef6d448142e2b",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "processing": "fixed512-to128 nearest; shared approved player palette; alpha160; explicit planted sole translation, fixed x; no per-frame fit or interpolation"
+    },
+    "light3": {
+      "raw": "res://assets/characters/player/source/kunai-primary-se/light3-raw.png",
+      "raw_sha256": "2d16a9b025e813eaf0c813c02f8641d022c06ed0a7b543d9d39094db4ffcfe91",
+      "source_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "processing": "fixed512-to128 nearest; shared approved player palette; alpha160; explicit planted sole translation, fixed x; no per-frame fit or interpolation"
+    },
+    "dash_attack": {
+      "raw": "res://assets/characters/player/source/kunai-primary-se/dash_attack-raw.png",
+      "raw_sha256": "0c928c95a1c68fad42a9cc558ed2d3ec1e76a1dbf118314fb299b576d7cbe987",
+      "source_indices": [
+        0,
+        1,
+        2,
+        4,
+        5
+      ],
+      "processing": "fixed512-to128 nearest; shared approved player palette; alpha160; explicit planted sole translation, fixed x; no per-frame fit or interpolation"
+    }
+  },
+  "gameplay_integrated": false,
+  "timing_status": "matches existing AttackDef standalone durations; nominal buffered chain exits light1 at150ms, light2 at200ms, dodge at920ms within current gates; approved12FPS locomotion; no hit logic changed",
+  "default_review_speed": 0.5
+}
