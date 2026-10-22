@@ -18,6 +18,7 @@ try{
  await page.waitForFunction(()=>window.__GRASS_STATE__?.ready&&window.__GRASS_STATE__.sample_cells===9,null,{timeout:90000});
  const initial=await state();checks.nine_roles=initial.roles===9&&initial.sample_cells===9;
  checks.world_patches=initial.ground_cells===247&&initial.tall_cells>50&&initial.tall_cells<160;
+ await click(35,689);
  await page.screenshot({path:out+'/01-nine-assembled.png'});
  await click(127,649);checks.half=(await state()).speed===0.5;
  await click(203,649);const a=await state();await wait(500);checks.pause=(await state()).time===a.time;

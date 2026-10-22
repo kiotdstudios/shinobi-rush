@@ -20,13 +20,13 @@
   "initial": {
     "ready": true,
     "phase": 6,
-    "time": 0.2666666805744171,
+    "time": 0.26930001378059387,
     "speed": 1,
     "strength": 1,
     "wind": true,
     "paused": false,
     "review": true,
-    "selected": "nine",
+    "selected": "meadow",
     "ground_cells": 247,
     "tall_cells": 111,
     "roles": 9,
@@ -36,10 +36,10 @@
     "sample": "270x185",
     "sourceSize": "270x185",
     "distinctColors": 31,
-    "dominantRatio": 0.34934934934934936,
+    "dominantRatio": 0.3488088088088088,
     "dominantColor": "#334455",
     "transparentRatio": 0,
-    "changedRatio": 0.22748748748748748
+    "changedRatio": 0.24786786786786788
   },
   "rootStats": {
     "sample": "150x65",
@@ -53,8 +53,8 @@
   "views": [
     {
       "ready": true,
-      "phase": 57,
-      "time": 2.3886499404907227,
+      "phase": 64,
+      "time": 2.707550048828125,
       "speed": 0.5,
       "strength": 1.600000023841858,
       "wind": true,
@@ -68,8 +68,8 @@
     },
     {
       "ready": true,
-      "phase": 57,
-      "time": 2.3886499404907227,
+      "phase": 64,
+      "time": 2.707550048828125,
       "speed": 0.5,
       "strength": 1.600000023841858,
       "wind": true,
@@ -83,8 +83,8 @@
     },
     {
       "ready": true,
-      "phase": 57,
-      "time": 2.3886499404907227,
+      "phase": 64,
+      "time": 2.707550048828125,
       "speed": 0.5,
       "strength": 1.600000023841858,
       "wind": true,
@@ -98,8 +98,8 @@
     },
     {
       "ready": true,
-      "phase": 57,
-      "time": 2.3886499404907227,
+      "phase": 64,
+      "time": 2.707550048828125,
       "speed": 0.5,
       "strength": 1.600000023841858,
       "wind": true,
@@ -113,8 +113,8 @@
     },
     {
       "ready": true,
-      "phase": 57,
-      "time": 2.3886499404907227,
+      "phase": 64,
+      "time": 2.707550048828125,
       "speed": 0.5,
       "strength": 1.600000023841858,
       "wind": true,
@@ -129,8 +129,8 @@
   ],
   "last": {
     "ready": true,
-    "phase": 121,
-    "time": 5.061816692352295,
+    "phase": 128,
+    "time": 5.371616840362549,
     "speed": 1,
     "strength": 1,
     "wind": true,

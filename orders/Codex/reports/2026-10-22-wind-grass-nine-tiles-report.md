@@ -55,3 +55,11 @@ None required. Wind strength/density can be tuned after live review.
 ## Outstanding work
 
 Integrate newest main (Aki's World Builder landed during this job), retest affected integration, required PR checks, merge/Pages deployment and live exact-SHA verification. The grass assets expose a TileSet API; adding a grass brush to Aki's solid-object World Builder is not part of this art delivery. No public-update claim yet.
+
+## Integration validation
+
+Merged main 27c213e0574ae3ba7ce4db4047b6b1061f5f6917 (Aki World Builder) without conflicts. Default review now opens Meadow; browser probe explicitly selects Nine for its assembly screenshot. Fresh integrated Web export/finalization passed (local base identity only). Integrated grass probe: all15 checks PASS; integrated controls probe: PASS, zero console errors. Resource validation:67 scripts/8 scenes/zero failures. Updated screenshots and JSON preserve this integrated build.
+
+The first integrated unit invocation was started before importing the new editor global classes; stopped after unresolved-class parse failures. Ran import successfully, then restarted the full suite. This was local setup, no source change or skipped test.
+
+Integrated full suite retry PASS:1282 assertions,zero failures,expected malformed-sheet fixture warning only. Commands: godot_ci.py import/tests/validate-resources with build/grass-integrated-import, build/grass-integrated-tests-retry and build/grass-integrated-validation; export/finalize-export to ../wind-grass-integrated-web; grass-proof-probe.mjs and controls-probe.mjs against that export. Order validator PASS. Implementation0702f9c precedes this tested main integration.

@@ -112,7 +112,7 @@ func _start_review() -> void:
 	sample_tall.set_cell(Vector2i(5,-5),0,Vector2i.ZERO)
 	camera = Camera2D.new()
 	get_parent().add_child(camera)
-	show_view("nine")
+	show_view("meadow")
 	var layer := CanvasLayer.new()
 	add_child(layer)
 	var panel := PanelContainer.new()
