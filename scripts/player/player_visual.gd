@@ -77,6 +77,24 @@ func play_action(aid: String, dir8: Vector2) -> bool:
 	return shown
 
 
+## Like play_action(), but the frame follows `progress` (0..1) of the action instead of free-running.
+func play_action_progress(aid: String, dir8: Vector2, progress: float) -> bool:
+	if sprite_set == null or not sprite_set.animations.has(aid):
+		return false
+	var shown := actor.show_animation_at(sprite_set, aid, SpriteSet.dir_name(dir8), progress)
+	actor.visible = shown
+	placeholder.visible = not shown
+	if shown:
+		last_anim = aid
+		last_dir = actor.dir + (" (flip)" if actor.flip else "")
+	return shown
+
+
+## True when the active sprite set has authored art for `aid`.
+func has_action(aid: String) -> bool:
+	return sprite_set != null and sprite_set.animations.has(aid)
+
+
 ## Seconds `aid` plays for one cycle (frame count / fps from the manifest), or `fallback` if the
 ## current sprite set has no such animation (placeholder visual: there is no authored timing).
 func action_duration(aid: String, fallback: float) -> float:

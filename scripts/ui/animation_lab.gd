@@ -5,9 +5,10 @@ extends Node
 ## The status line and metrics stay on screen even when the lab is hidden.
 
 const SPEEDS: Array[float] = [0.25, 0.5, 1.0, 1.5, 2.0]
-## Native 1:1 pixel steps. The zoom list is [active preset baseline] + these (see zoom_list); a baseline that
-## already equals 1.0 is not repeated.
-const NATIVE_ZOOMS: Array[float] = [1.0, 2.0, 3.0, 4.0]
+## Lab zoom steps. The zoom list is [active preset baseline] + these (see zoom_list); a baseline that already equals
+## one of them is not repeated. The whole steps (1x 2x 3x 4x) are native 1:1 pixels; the half steps (1.5x 2.5x 3.5x)
+## are NOT pixel-exact with the nearest-neighbour filter (a source pixel covers an uneven number of screen pixels).
+const NATIVE_ZOOMS: Array[float] = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
 ## Camera preset switch (wide <-> close). The action is registered at runtime so project.godot stays untouched.
 const PRESET_ACTION := "dbg_camera_preset"
 const PRESET_KEY := KEY_N
@@ -29,7 +30,7 @@ const OVERLAYS: Array = [
 	["iso", "1 iso grid"], ["square", "2 square grid"], ["anchor", "3 anchor"],
 	["footprint", "4 footprint"], ["ruler", "5 height ruler"], ["bbox", "6 frame box"],
 ]
-const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom | N camera preset | 1-6 overlays | 7 8 9 0 camera kick: light heavy burst slow"
+const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom (half steps are not pixel-exact) | N camera preset | 1-6 overlays | 7 8 9 0 camera kick: light heavy burst slow"
 
 enum DirMode { FOLLOW, FIXED, SPIN }
 
@@ -510,8 +511,8 @@ func _baseline() -> float:
 	return player.camera_baseline if player != null else CameraPreset.zoom_for(CameraPreset.active())
 
 
-## Index 0 is the gameplay baseline (active preset); the rest are native 1:1 pixel steps. A baseline that
-## already equals 1.0 (close preset snapped to pixel-exact) is not listed twice.
+## Index 0 is the gameplay baseline (active preset); the rest are NATIVE_ZOOMS in ascending order. A baseline that
+## already equals one of them (close preset snapped to pixel-exact 1.0, or ?camera=1.5) is not listed twice.
 static func zoom_list(baseline: float) -> Array[float]:
 	var out: Array[float] = [baseline]
 	for z in NATIVE_ZOOMS:
@@ -520,12 +521,15 @@ static func zoom_list(baseline: float) -> Array[float]:
 	return out
 
 
-## "wide 0.44x" / "close 1.17x" for the baseline, "1x".."4x" (native pixels) for the rest.
+## "wide 0.44x" / "close 1.17x" for the baseline, "1x" "1.5x" "2x" ... "4x" for the rest (a whole step has no decimals).
 static func zoom_label(i: int, baseline: float, spec: Variant = null) -> String:
 	var zl := zoom_list(baseline)
 	if i == 0:
 		return CameraPreset.label_for(CameraPreset.active() if spec == null else spec, baseline)
-	return "%dx" % int(zl[clampi(i, 0, zl.size() - 1)])
+	var z := zl[clampi(i, 0, zl.size() - 1)]
+	if is_equal_approx(z, roundf(z)):
+		return "%dx" % int(roundf(z))
+	return "%sx" % String.num(z, 2)
 
 
 func cycle_zoom() -> void:

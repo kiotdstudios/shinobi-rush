@@ -110,6 +110,9 @@ try {
   const zZ = await zoomNow();
   rec('lab-z-changes-zoom', near(zZ, 1.0), `after Z zoom=${zZ}, expected 1 (native 1:1, the first non-baseline lab zoom)`);
   await shot('05-lab-zoom-1x');
+  await tap('KeyZ');
+  const zZ2 = await zoomNow();
+  rec('lab-z-second-step-is-half', near(zZ2, 1.5), `after a second Z zoom=${zZ2}, expected 1.5 (the lab list is baseline, 1, 1.5, 2, 2.5, 3, 3.5, 4)`);
   await tap('Tab');
   const zClosed = await zoomNow();
   rec('lab-close-restores-baseline', near(zClosed, BASE_ZOOM), `after Tab (lab closed) zoom=${zClosed}, expected ~${BASE_ZOOM.toFixed(4)}`);

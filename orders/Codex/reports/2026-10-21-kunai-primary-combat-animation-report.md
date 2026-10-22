@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-21-kunai-primary-combat-animation.md
 - Date:2026-10-21
 - Final status: REVIEW — southeast proof locally tested; integration/live verification pending; owner look/feel gate remains before direction expansion.
-- Commit / PR: Not committed; this report is written BEFORE implementation commit. Reuses PR48 study branch/history; audited PR33/42 notes and changed-asset inventory.
+- Commit / PR: implementation6fb6d19e13814f3cd093ee277b907c871d08ec7f; original report written BEFORE implementation commit. Reuses PR48 study branch/history; audited PR33/42 notes and changed-asset inventory.
 
 ## Work completed
 First P0 deliverable: original one-handed kunai SE guard -> three-hit combo -> dodge -> dedicated dash strike -> normal run, in an isolated in-engine art-review scene. Existing PR48 opening thrust/black kunai reused,17 new weaponless128px body PNGs (light2 six,light3 six,dash five), six separate compact swipe VFX. Approved dodge/run body art stays unchanged, with new per-frame sockets/angles. Body[64,116] root,104px standing scale, palette, identity and nearest filtering preserved. Back/front weapon-layer change on the finisher and same-body hand occlusion; one kunai texture throughout.
@@ -47,3 +47,6 @@ Review the concrete SE look/feel before eight-direction production, as explicitl
 
 ## Outstanding work
 Integrate latest main (Aki jump and Kiro lab zoom changed while art was in progress), rerun tests/build/browser checks, reviewed PR/green CI/merge/verified public build. New P1 jump-recut/air_attack order is queued behind this P0 proof and depends on approved kunai style; Chidori work remains separate, not discarded. Handoff timings/sockets/cancel references are in INTEGRATION_NOTES.md. Final live evidence/report-only commit follows deployment.
+
+## Latest-main integration retest BEFORE merge-update commit
+Merged origin/main91cd0b1 (Aki responsive0.85s jump/progress-resume and Kiro lab half-step zoom) without committing, preserved both sets of changes. `python scripts/ci/godot_ci.py tests --project . --log-dir build/kunai-merged-tests`:830 passed,0 failed. `validate-resources --project . --log-dir build/kunai-merged-validation`:43 scripts,7 scenes,0 failures. Fresh export `../kunai-primary-merged-web` plus finalize with premerge base6fb6d19; `kunai-proof-probe.mjs --serve-dir ../kunai-primary-merged-web --out-dir build/kunai-merged-proof`:all12 checks PASS. `controls-probe.mjs --serve-dir ../kunai-primary-merged-web --out-dir build/kunai-merged-controls`:PASS, including1.5x lab step, jump/dodge selection, all camera-impact modes and0 console errors. These are uncommitted local build identifiers, not live claims. No new art/controller changes during this integration.
