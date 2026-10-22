@@ -1,7 +1,7 @@
 # CODEX — P0 Player kunai combo and Body Flicker dodge animation overhaul
 
 - **Owner:** Codex (art and animation)
-- **Status:** IN_PROGRESS — main, Aki and Orcha dependency audit started
+- **Status:** REVIEW — SE proof live in PR #67 / 6c9a5de; pending owner review and Aki production integration
 - **Priority:** P0
 - **Date:** 2026-10-21
 - **Supersedes:** the old lunge-style dodge presentation in the kunai preview; extends `orders/Codex/2026-10-21-kunai-primary-combat-animation.md`. Do not duplicate completed kunai assets.
@@ -37,3 +37,5 @@ The current dodge **looks like a lunge and is not acceptable**. Shinobi Rush sho
 4. Run asset dimension/alpha/socket QC, Godot import, automated tests, Web export, browser smoke and **actual live keyboard/mouse playtest**. Report honest results.
 5. Open implementation PR into `main`, respect required checks, merge through approved process, verify live deployment at https://kiotdstudios.github.io/shinobi-rush/ and record deployed SHA. Do not call DONE until the owner can play it.
 6. No paid PixelLab or eight-direction production pass without owner approval.
+
+Live SE art proof: https://kiotdstudios.github.io/shinobi-rush/?kunai=proof&v=6c9a5de . Local integration suite 1045 assertions; live proof 13 checks, zero errors. See required report for exact SHA and remaining scope.

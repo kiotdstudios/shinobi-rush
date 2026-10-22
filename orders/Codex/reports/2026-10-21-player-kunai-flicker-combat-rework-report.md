@@ -3,7 +3,7 @@
 - Agent: Codex
 - Order: `orders/Codex/2026-10-21-player-kunai-flicker-combat-rework.md` (PR #65)
 - Date: 2026-10-22 America/New_York; work began October 21
-- Final status: IN_PROGRESS — tested SE visual proof prepared for integration/live review; full order remains pending owner/Aki
+- Final status: REVIEW — SE visual proof integrated and live verified; full order remains pending owner/Aki
 - Commit / PR: Not committed yet; this report precedes implementation commit.
 
 ## Work completed
@@ -73,3 +73,13 @@ Aki PR #66 merged during this job; integrated origin/main `c16d54b299c1643e2e0e9
 - `node scripts/ci/smoke/controls-probe.mjs --serve-dir ../player-flicker-integrated-web --out-dir build/flicker-integrated-controls`: PASS all control/Lab/camera checks, zero errors.
 
 Implementation commit: `f8c173d40276398b97ab646fd59eb1dbebcc16e8`; PR https://github.com/kiotdstudios/shinobi-rush/pull/67. Required CI and live deployment still pending. New Aki art request `2026-10-21-bandit-level1-action-art.md` was read; it overlaps the queued P0 Bandit order and supplies final controller timings. It remains subsequent work, not delivered in this PR.
+## Verified live delivery — October 22, 00:20 America/New_York
+
+- PR #67 merged through required green checks; implementation head `bb2b9ea751a43906c33bf7dba93d3c5f46b27a92`, deployed main SHA **`6c9a5de51821558ff55ab2506cc57c6f1abe6f05`**.
+- Public `build-info.json.commit_sha` independently matches that full SHA. GitHub Pages deployment succeeded in [Godot CI run 39721152254](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39721152254).
+- Review: https://kiotdstudios.github.io/shinobi-rush/?kunai=proof&v=6c9a5de
+- `node scripts/ci/smoke/smoke.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 6c9a5de51821558ff55ab2506cc57c6f1abe6f05 --out-dir build/flicker-live-smoke-final --label flicker-live-final`: PASS; exact SHA, nine served-file hashes, ready hook, rendered canvas, real keyboard effect, zero fatal console messages. Earlier wait began before publication and timed out on the previous SHA; rerun after publication passed immediately. No runtime defect.
+- `node scripts/ci/smoke/flicker-proof-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/flicker-live-proof`: PASS all **13 checks**, zero errors. Preserved evidence: `docs/visuals/player-flicker/live-browser-evidence.json`, `live-half.png`.
+- Additional visible Codex in-app browser playtest: clicked hit twice, Double back, Half speed; verified `READY`, escape count1, half-speed status and fully visible player after retreat. Left the deployed proof open as a deliverable.
+
+Status remains REVIEW because the new SE proof awaits owner review and Aki's real controller integration/final binding. This report-only follow-up adds evidence to the delivery branch; it does not claim a new runtime deployment. All eight-direction expansion remains gated. Bandit art follow-up remains outstanding.
