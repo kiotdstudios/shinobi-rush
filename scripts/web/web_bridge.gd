@@ -74,6 +74,17 @@ func _process(delta: float) -> void:
 		_state.bandit_evades = enemy.evade_count
 		_state.bandit_animation = (enemy.visual as BanditVisual).actor.anim_id
 		_state.bandit_frame = (enemy.visual as BanditVisual).actor.sprite.frame
+		_state.bandit_level = enemy.intelligence_level
+		_state.bandit_intent = enemy.get_intent()
+		_state.bandit_sees = enemy.sees_player
+		_state.bandit_flickers = enemy.flicker_count
+		_state.bandit_swings = enemy.swings_thrown
+		_state.bandit_hits_landed = enemy.player_hits_landed
+		_state.bandit_stuck = enemy.stuck_events
+		_state.bandit_taunt = enemy.taunt_timer > 0.0
+		_state.bandit_home_dist = enemy.global_position.distance_to(enemy.home)
+		_state.bandit_log = enemy.intent_log.slice(maxi(enemy.intent_log.size() - 8, 0))
+		_state.player_hits_taken = _player.hits_taken
 	var scene := get_tree().current_scene
 	var lab := scene.get_node_or_null("AnimationLab") as AnimationLab if scene != null else null
 	if lab != null:

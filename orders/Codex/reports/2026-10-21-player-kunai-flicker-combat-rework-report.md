@@ -60,3 +60,16 @@ Pending: final selectable double-retreat binding (double-tap dodge, hold after h
 Integrate through PR and required green CI, verify exact deployed SHA and live keyboard/mouse proof, then add links/results below. Aki should wire the visual contract into real combo/movement/damage and retest actual Animation Lab interruption there. Eight directions gated on owner approval. Bandit Level 1 order remains separate and unfinished. See `docs/visuals/player-flicker/HANDOFF.md` for event timings and ownership.
 
 Live deployment: pending; no claim of an updated public build yet.
+
+## Integration retest before merge commit (October 22)
+
+Aki PR #66 merged during this job; integrated origin/main `c16d54b299c1643e2e0e90af10af7c5e8ef31489` with a normal merge, no conflicts. This adds Aki's bandit AI/arena changes; Codex did not author or revise them. The isolated art harness places and pauses its local Bandit reference near the player, preserving SE composition. Normal gameplay retains Aki's placement and behavior.
+
+- `python scripts/ci/godot_ci.py import --project . --log-dir build/flicker-integrated-import`: PASS.
+- `python scripts/ci/godot_ci.py tests --project . --log-dir build/flicker-integrated-tests`: PASS **1045 assertions, zero failures**.
+- `python scripts/ci/godot_ci.py export --project . --out ../player-flicker-integrated-web-2 --log-dir build/flicker-integrated-export-2`: PASS.
+- `python scripts/ci/godot_ci.py finalize-export --project . --out ../player-flicker-integrated-web-2 --kind game --commit-sha c16d54b299c1643e2e0e90af10af7c5e8ef31489`: PASS.
+- `node scripts/ci/smoke/flicker-proof-probe.mjs --serve-dir ../player-flicker-integrated-web-2 --out-dir build/flicker-integrated-browser-2`: PASS all 13 checks, zero errors; replaces preserved browser evidence/screenshot.
+- `node scripts/ci/smoke/controls-probe.mjs --serve-dir ../player-flicker-integrated-web --out-dir build/flicker-integrated-controls`: PASS all control/Lab/camera checks, zero errors.
+
+Implementation commit: `f8c173d40276398b97ab646fd59eb1dbebcc16e8`; PR https://github.com/kiotdstudios/shinobi-rush/pull/67. Required CI and live deployment still pending. New Aki art request `2026-10-21-bandit-level1-action-art.md` was read; it overlaps the queued P0 Bandit order and supplies final controller timings. It remains subsequent work, not delivered in this PR.

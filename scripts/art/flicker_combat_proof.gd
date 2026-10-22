@@ -47,6 +47,12 @@ func _ready() -> void:
 	actor.add_child(visual)
 	arena.add_child(actor)
 	actor.global_position = arena.spawn.global_position
+	# Keep a nearby SE-facing art reference in this isolated scene. The live game's
+	# bandit placement and AI stay unchanged in TrainingArena's normal startup.
+	var reference := arena.get_node_or_null("Bandit") as Node2D
+	if reference != null:
+		reference.set_physics_process(false)
+		reference.global_position = actor.global_position + Vector2(145, 105)
 	visual.traverse_requested.connect(_traverse)
 	visual.event_marker.connect(_marker)
 	visual.finished.connect(_flicker_done)

@@ -22,6 +22,8 @@ const EDGE_RING_PX := 72.0
 const BLOCKS: Array = WorldScale.BLOCKS
 
 @onready var spawn: Marker2D = $Spawn
+## Wall-aware navigation over BLOCKS (built once; the Level 1 Bandit paths around walls with it).
+var nav: ArenaNav
 ## Ground layer: a real TileMapLayer (KosenFloorTileset) painted once in _ready(), plus the
 ## arena-bounds border line. The arena y-sorts its children; drawing the ground in the arena's
 ## own _draw() would sort it at y=0 and hide every actor/block with y < 0 beneath it. A child on
@@ -123,6 +125,7 @@ func _ready() -> void:
 		rear.position = ArenaSort.rear_position(b[0], b[1])
 		add_child(rear)
 	_build_bounds_walls()
+	nav = ArenaNav.build(bounds, BLOCKS)
 	_spawn_bandit()
 	for p in get_tree().get_nodes_in_group("player"):
 		p.global_position = spawn.global_position
@@ -130,19 +133,16 @@ func _ready() -> void:
 			p.reset_camera()
 
 
-## One Basic Bandit for combat validation (see the combat order): spawned a short walk from the
-## player's own spawn point so a fresh run can immediately test movement-to-attack chaining, dodging
-## and combos against a live target. Offset diagonally (not purely +x) on purpose: the CI controls
-## probe (scripts/ci/smoke/controls-probe.mjs) walks the player due right from this same spawn point
-## to measure plain movement, and due up to find the arena wall -- a bandit sitting directly on
-## either of those two axes would physically block the probe's player, not a gameplay bug but a
-## false "movement broken" CI failure. The 200px y-offset clears the probe's lane with a wide
-## margin (FOOTPRINT half-height is ~13.5px) while keeping the enemy a comparable short walk away.
+## The Level 1 robber Bandit: spawned on the FAR (east) side of the arena, behind the two long walls,
+## so the player starts alone near the spawn and has to travel through the choke point or around the
+## walls to reach it. It stays off the CI controls probe's lanes (due right / due up from the spawn):
+## its patrol keeps y <= 60 east of x=1250 and the probe only walks a few hundred px.
 func _spawn_bandit() -> void:
 	var packed := load("res://scenes/enemy/bandit.tscn") as PackedScene
 	var bandit := packed.instantiate()
 	bandit.name = "Bandit"
-	bandit.position = spawn.position + Vector2(230, 200)
+	bandit.position = WorldScale.BANDIT_HOME
+	bandit.patrol_points = PackedVector2Array(WorldScale.BANDIT_PATROL)
 	add_child(bandit)
 
 

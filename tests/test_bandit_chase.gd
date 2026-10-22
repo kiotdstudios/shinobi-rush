@@ -13,6 +13,9 @@ func run(ck: Callable, root: Node) -> void:
 	bandit._player = player
 	bandit.position = Vector2.ZERO
 	player.position = Vector2(350, 0)
+	# Acquisition (cone, LOS, notice delay) is covered by test_bandit_robber.gd; this file covers the
+	# chase / spacing / evade mechanics that start once the bandit is already hunting.
+	bandit.state = Bandit.State.APPROACH
 	bandit._physics_process(1.0 / 60.0)
 	ck.call("bandit chase: detects and sprints", bandit.state == Bandit.State.APPROACH and bandit.is_sprinting and is_equal_approx(bandit.velocity.length(), bandit.chase_speed))
 	var visual := bandit.visual as BanditVisual
