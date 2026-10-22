@@ -9,18 +9,11 @@ extends Node
 ## node exists; switching ON creates the overlay as a child of the Bandit's parent (the arena) so it
 ## shares the AI's coordinates, same as BanditVisionOverlay).
 ##
-## Key: F3. NOT F1 (DebugHud's diagnostics key) and NOT F2 (BanditVisionToggle's key); NOT F6 (Chrome/
-## Edge/Firefox's address-bar/pane-focus key, per BanditVisionToggle's own note -- a headed browser
-## cannot be tested here). F3 is unbound in the input map, in every key-collision test and in the major
-## desktop browsers.
+## No hotkey (owner 2026-10-22: "remove the hot keys"): the switch lives in the Settings panel (SettingsPanel).
 
-const ACTION := "dbg_sense_vision"
-const KEY := KEY_F3
 const QUERY_KEY := "sense_vision"
-## Left of the Bandit vision button (942,8 w170), 8 px gap, same row, clear of the lab panel (y >= 40).
-const BUTTON_POS := Vector2(764, DockTab.REST_Y)
-const BUTTON_SIZE := Vector2(170, 26)
-const TIP := "Debug: draw the invisible proximity 'power level' sense circle (intelligence stat) for the Player and every Bandit. Default off. F3 toggles it; ?sense_vision=1 in the URL starts it on."
+const BUTTON_SIZE := Vector2(190, 30)
+const TIP := "Debug: draw the invisible proximity 'power level' sense circle (intelligence stat) for the Player and every Bandit. Default off. Click to switch it; ?sense_vision=1 in the URL starts it on."
 
 ## The wanted state. Mirrors BanditVisionToggle.boot_on exactly (see its doc comment). Tests reset it
 ## with reset_all().
@@ -33,7 +26,6 @@ var button: Button = null
 
 
 func _ready() -> void:
-	_ensure_action()
 	_instance = self
 	if boot_on:
 		set_on(true)
@@ -43,11 +35,6 @@ func _exit_tree() -> void:
 	_drop_overlay(true)
 	if _instance == self:
 		_instance = null
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(ACTION):
-		toggle()
 
 
 func toggle() -> void:
@@ -70,12 +57,11 @@ func build_button(layer: Node) -> Button:
 	button = Button.new()
 	button.name = "SenseVisionButton"
 	button.toggle_mode = true
-	button.position = BUTTON_POS
 	button.custom_minimum_size = BUTTON_SIZE
 	button.focus_mode = Control.FOCUS_NONE
 	button.add_theme_font_size_override("font_size", 12)
 	button.tooltip_text = TIP
-	DockTab.style(button, Color("#4DA3FF"))
+	SettingsPanel.style_toggle(button, Color("#4DA3FF"))
 	button.toggled.connect(_on_button_toggled)
 	layer.add_child(button)
 	_sync_button()
@@ -91,8 +77,7 @@ func _sync_button() -> void:
 	if button == null or not is_instance_valid(button):
 		return
 	button.set_pressed_no_signal(on)
-	button.text = "Sense vision: ON (F3)" if on else "Sense vision: off (F3)"
-	DockTab.set_active(button, on)
+	button.text = "Sense vision: ON" if on else "Sense vision: off"
 
 
 func _attach_overlay() -> void:
@@ -145,15 +130,6 @@ func _overlay_parent() -> Node:
 
 
 # ------------------------------------------------------------------------------------------------ statics
-static func _ensure_action() -> void:
-	if InputMap.has_action(ACTION):
-		return
-	InputMap.add_action(ACTION)
-	var ev := InputEventKey.new()
-	ev.physical_keycode = KEY
-	InputMap.action_add_event(ACTION, ev)
-
-
 ## "?a=1&sense_vision=1" -> true. Only an explicit `sense_vision=1` turns it on; first occurrence wins.
 static func parse_query(query: String) -> bool:
 	for part in query.trim_prefix("?").split("&", false):

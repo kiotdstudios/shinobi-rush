@@ -23,15 +23,6 @@ class LateProbe extends Node:
 		callback.call()
 
 
-## Sits EARLIER in the tree than everything else, so it sees an unhandled event only if nobody consumed it before.
-class EventProbe extends Node:
-	var seen := 0
-
-	func _unhandled_input(event: InputEvent) -> void:
-		var k := event as InputEventKey
-		if k != null and k.physical_keycode == KEY_F2 and k.pressed and not k.echo:
-			seen += 1
-
 var ck: Callable
 var tree: SceneTree
 var rng := RandomNumberGenerator.new()
@@ -259,78 +250,33 @@ func _test_off_by_default(root: Node) -> void:
 	var t := BanditVisionToggle.telemetry()
 	ck.call("vision off: telemetry says off with every number zero and every string empty", t["vision_on"] == false and t["vision_bandits"] == 0 and t["vision_points"] == 0 and t["vision_rays"] == 0 and t["vision_state"] == "" and t["vision_ai_state"] == "" and t["vision_mismatch"] == 0)
 	var b := tog.button
-	ck.call("vision button: an always-visible toggle button exists, labelled with the key, OFF by default", b != null and b.is_inside_tree() and b.visible and b.text == "Bandit vision: off (F2)" and not b.button_pressed, b.text if b != null else "null")
-	var lb := lab._lab_button
-	var lab_rect := Rect2(lb.position, lb.get_combined_minimum_size())
-	var vb_rect := Rect2(b.position, b.get_combined_minimum_size())
-	ck.call("vision button: sits on the Lab button's row, to its left, without touching it, and on the bottom edge (a bottom dock tab: y at the bottom of the 720 viewport)", vb_rect.end.x < lab_rect.position.x and absf(vb_rect.position.y - lab_rect.position.y) < 1.0 and vb_rect.end.y <= DockTab.BASE_H + 0.5 and vb_rect.position.y >= DockTab.BASE_H - 40.0 and not vb_rect.intersects(lab_rect), "%s vs %s" % [str(vb_rect), str(lab_rect)])
-	ck.call("vision button: works with the lab closed (same CanvasLayer, lab is closed by default)", not lab.lab_on and b.get_parent() == lb.get_parent())
+	ck.call("vision button: a toggle button exists in the Settings panel, labelled, OFF by default", b != null and b.is_inside_tree() and b.text == "Bandit vision: off" and not b.button_pressed, b.text if b != null else "null")
+	ck.call("vision button: the Settings tab is visible on the bottom edge and the list is closed by default", lab.settings.tab.is_visible_in_tree() and not lab.settings.panel.visible and b.get_parent() == lab.settings.rows)
+	lab.settings.tab.button_pressed = true
+	ck.call("vision button: clicking the Settings tab opens the list and the button is then visible", lab.settings.panel.visible and b.is_visible_in_tree())
+	lab.settings.tab.button_pressed = false
+	ck.call("vision button: clicking the Settings tab again closes the list", not lab.settings.panel.visible)
 	ck.call("vision button: focus_mode NONE so Space / Enter stay with the game", b.focus_mode == Control.FOCUS_NONE)
 
 
 # ------------------------------------------------------------------------------------------------ key and button
 func _test_key_and_button(root: Node) -> void:
-	var act := BanditVisionToggle.ACTION
-	var evs := InputMap.action_get_events(act)
-	var k := evs[0] as InputEventKey if evs.size() > 0 else null
-	ck.call("vision key: action dbg_bandit_vision exists on plain F2 (physical key, no modifier) - not F6: browsers bind F6 to the address bar", InputMap.has_action(act) and evs.size() == 1 and k != null and k.physical_keycode == KEY_F2 and not k.ctrl_pressed and not k.alt_pressed and not k.shift_pressed and not k.meta_pressed)
-	var clash := false
-	var dbg_clash := false
-	var seen_dbg := {}
+	ck.call("vision hotkey: none - no action dbg_bandit_vision exists and the toggle has no key handler", not InputMap.has_action("dbg_bandit_vision") and not tog.is_processing_unhandled_input())
+	var any_f_key := false
 	for a: String in InputMap.get_actions():
 		for e in InputMap.action_get_events(a):
-			if e is InputEventKey:
-				var pk: int = (e as InputEventKey).physical_keycode
-				if a != act and pk == KEY_F2:
-					clash = true
-				if a.begins_with("dbg_"):
-					if seen_dbg.has(pk) and seen_dbg[pk] != a:
-						dbg_clash = true
-					seen_dbg[pk] = a
-	ck.call("vision key: no other action uses the physical key F2 (the repo's key-collision rule compares physical keys only)", not clash)
-	ck.call("vision key: the dbg_* actions still do not share a physical key with each other", not dbg_clash)
-	var f6_free := true
-	for a: String in InputMap.get_actions():
-		for e in InputMap.action_get_events(a):
-			if e is InputEventKey and (e as InputEventKey).physical_keycode == KEY_F6:
-				f6_free = false
-	ck.call("vision key: F6 is also unbound, so the choice of F2 is about browsers, not about a collision", f6_free)
-	# the real input pipeline: key down, key up, key down
+			if e is InputEventKey and (e as InputEventKey).physical_keycode in [KEY_F1, KEY_F2, KEY_F3]:
+				any_f_key = true
+	ck.call("vision hotkey: no action is bound to F1, F2 or F3 any more", not any_f_key)
 	Input.parse_input_event(_key_event(true))
 	await _frames(2)
-	ck.call("vision key: F2 pressed through the input pipeline turns it ON (overlay created under the arena)", tog.on and tog.overlay != null and tog.overlay.get_parent() == arena and _count_overlays(root) == 1)
-	ck.call("vision key: ...and the button follows (text, pressed state)", tog.button.text == "Bandit vision: ON (F2)" and tog.button.button_pressed)
+	ck.call("vision hotkey: pressing F2 through the input pipeline does nothing", not tog.on and tog.overlay == null and _count_overlays(root) == 0)
 	Input.parse_input_event(_key_event(false))
 	await _frames(1)
-	Input.parse_input_event(_key_event(true, true))  # a key repeat must not toggle
-	await _frames(2)
-	ck.call("vision key: a key-repeat (echo) event does not toggle", tog.on)
-	Input.parse_input_event(_key_event(false))
-	await _frames(1)
-	Input.parse_input_event(_key_event(true))
-	await _frames(2)
-	ck.call("vision key: the second F2 press turns it OFF and the overlay node is gone", not tog.on and tog.overlay == null and _count_overlays(root) == 0 and tog.button.text == "Bandit vision: off (F2)" and not tog.button.button_pressed)
-	Input.parse_input_event(_key_event(false))
-	await _frames(1)
-	# the key must not be consumed: a probe EARLIER in the tree than the switch still gets the event after the switch handled it
-	var probe := EventProbe.new()
-	root.add_child(probe)
-	root.move_child(probe, 0)
-	Input.parse_input_event(_key_event(true))
-	await _frames(2)
-	ck.call("vision key: the switch reacts to F2 without consuming it (a node behind it in the input order still receives the key)", probe.seen == 1 and tog.on, str(probe.seen))
-	Input.parse_input_event(_key_event(false))
-	await _frames(1)
-	Input.parse_input_event(_key_event(true))
-	await _frames(2)
-	ck.call("vision key: ...and pressing it once more switches OFF again", probe.seen == 2 and not tog.on and tog.overlay == null)
-	Input.parse_input_event(_key_event(false))
-	await _frames(1)
-	probe.free()
 	# the button
 	tog.button.button_pressed = true
 	await _frames(2)
-	ck.call("vision button: pressing it turns the overlay ON (works without opening the lab)", tog.on and tog.overlay != null and not lab.lab_on and tog.button.text == "Bandit vision: ON (F2)")
+	ck.call("vision button: pressing it turns the overlay ON (works without opening the lab)", tog.on and tog.overlay != null and not lab.lab_on and tog.button.text == "Bandit vision: ON")
 	tog.button.button_pressed = false
 	await _frames(1)
 	ck.call("vision button: pressing it again turns it OFF and frees the overlay", not tog.on and tog.overlay == null and _count_overlays(root) == 0)
@@ -821,17 +767,14 @@ func _test_isolation(root: Node) -> void:
 		a.action = "dbg_toggle_lab"
 		a.pressed = true
 		lab._unhandled_input(a)  # the lab panel opens / closes
-		var f1 := InputEventAction.new()
-		f1.action = "dbg_toggle_diagnostics"
-		f1.pressed = true
-		hud._unhandled_input(f1)  # the F1 diagnostics panel opens / closes
+		hud._toggle_diagnostics()  # the diagnostics panel opens / closes
 		await _frames(2)
 	await _frames(2)
 	_put(Vector2(1500, 100), _snap8(4), Bandit.State.PATROL)  # the AI walked meanwhile: same place, same facing, same state, no frame in between
 	ov.refresh()
 	var pts_after: PackedVector2Array = (ov.views[0]["region"] as BanditVisionRegion).points
-	ck.call("vision isolation: opening and closing the lab and the F1 diagnostics (4 times each) leaves exactly one overlay and the same polygon", _count_overlays(root) == 1 and pts_before == pts_after and tog.on and not lab.lab_on, "overlays=%d same_polygon=%s on=%s lab_open=%s points %d vs %d" % [_count_overlays(root), str(pts_before == pts_after), str(tog.on), str(lab.lab_on), pts_before.size(), pts_after.size()])
-	ck.call("vision isolation: ...and the lab opening does not move or hide the vision button", tog.button.visible and tog.button.position.x == BanditVisionToggle.BUTTON_POS.x and items_before > 0)
+	ck.call("vision isolation: opening and closing the lab and the diagnostics (4 times each) leaves exactly one overlay and the same polygon", _count_overlays(root) == 1 and pts_before == pts_after and tog.on and not lab.lab_on, "overlays=%d same_polygon=%s on=%s lab_open=%s points %d vs %d" % [_count_overlays(root), str(pts_before == pts_after), str(tog.on), str(lab.lab_on), pts_before.size(), pts_after.size()])
+	ck.call("vision isolation: ...and the lab opening does not move or hide the vision button", tog.button.get_parent() == lab.settings.rows and items_before > 0)
 	_put(WorldScale.BANDIT_HOME, _snap8(4), Bandit.State.PATROL)
 	player.global_position = Vector2(0, 135)
 	tog.set_on(false)
@@ -905,7 +848,7 @@ func _test_telemetry_and_web() -> void:
 	ck.call("vision state: WebBridge publishes every one of them next to the existing fields and reads ?vision= at boot", all_pub and src.contains("BanditVisionToggle.apply_query(search)") and src.contains("BanditVisionToggle.telemetry()"))
 	ck.call("vision state: existing __SHINOBI_STATE__ names are untouched (additive only)", src.contains("_state.bandit_state = ") and src.contains("_state.bandit_sees = ") and src.contains("_state.cfx_enabled = ") and src.contains("_state.camera_preset = ") and src.contains("_state.lab_open = ") and src.contains("_state.x = _player.global_position.x"))
 	var hud_src := FileAccess.get_file_as_string("res://scripts/ui/debug_hud.gd")
-	ck.call("vision state: the HUD legend mentions the key, the button and ?vision=1", hud_src.contains("F2 / bottom tab: Bandit vision") and hud_src.contains("?vision=1"))
+	ck.call("vision state: the HUD legend mentions the Settings button and ?vision=1", hud_src.contains("Bottom tabs: Settings") and hud_src.contains("?vision=1"))
 	# live values, one sample: no frame between the rebuild and the comparison, so the AI cannot have ticked in between
 	_put(Vector2(1500, 100), _snap8(4), Bandit.State.APPROACH)
 	player.global_position = Vector2(1000, 100)
@@ -1009,7 +952,7 @@ func _test_lifecycle(root: Node) -> void:
 	if not ok:
 		return
 	await _frames(3)
-	ck.call("vision url: ?vision=1 at boot -> the next scene starts with the overlay ON (and the button shows it)", tog.on and tog.overlay != null and tog.button.button_pressed and tog.button.text == "Bandit vision: ON (F2)" and _count_overlays(root) == 1)
+	ck.call("vision url: ?vision=1 at boot -> the next scene starts with the overlay ON (and the button shows it)", tog.on and tog.overlay != null and tog.button.button_pressed and tog.button.text == "Bandit vision: ON" and _count_overlays(root) == 1)
 	ck.call("vision url: ...and it is already drawing the Bandit", tog.overlay.views.size() == 1 and tog.overlay.views[0]["region"].points.size() > 20)
 	main.queue_free()
 	await _frames(3)

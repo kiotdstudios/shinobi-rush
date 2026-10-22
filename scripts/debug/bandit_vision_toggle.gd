@@ -8,16 +8,12 @@ extends Node
 ## _process; it only reacts to its key and its button) and no overlay node exists. Switching ON creates the overlay as a
 ## child of the Bandit's parent (the arena) so it shares the AI's coordinates; switching OFF frees it at once.
 ##
-## Key: F2, registered at runtime so project.godot stays untouched. NOT F6 (the order's suggestion): F6 is the address-bar /
-## pane-focus key of Chrome, Edge and Firefox and a headed browser cannot be tested here. F2 is unbound in the input map, in
-## every key-collision test and in the major desktop browsers. The button always works.
+## No hotkey (owner 2026-10-22: "remove the hot keys, I wanna be able to just click them on and off"): the switch lives in the
+## Settings panel at the bottom of the screen (SettingsPanel).
 
-const ACTION := "dbg_bandit_vision"
-const KEY := KEY_F2
 const QUERY_KEY := "vision"
-const BUTTON_POS := Vector2(942, DockTab.REST_Y)  ## left of the lab button (1120, 8), same row, clear of the lab panel (y >= 40)
-const BUTTON_SIZE := Vector2(170, 26)
-const TIP := "Debug: draw what the Level 1 Bandit's AI can see (its real detection region). Default off. F2 toggles it; ?vision=1 in the URL starts it on."
+const BUTTON_SIZE := Vector2(190, 30)
+const TIP := "Debug: draw what the Level 1 Bandit's AI can see (its real detection region). Default off. Click to switch it; ?vision=1 in the URL starts it on."
 
 ## The wanted state. It is what `?vision=1` sets before the scene exists and it survives a scene reload inside one page session
 ## (an arena restart keeps the overlay on). Tests reset it with reset_all().
@@ -30,7 +26,6 @@ var button: Button = null
 
 
 func _ready() -> void:
-	_ensure_action()
 	_instance = self
 	if boot_on:
 		set_on(true)
@@ -40,11 +35,6 @@ func _exit_tree() -> void:
 	_drop_overlay(true)  # deferred: a parent that is busy exiting cannot take remove_child() right now
 	if _instance == self:
 		_instance = null
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(ACTION):  # no echo; the event is NOT consumed, so no other input path changes
-		toggle()
 
 
 func toggle() -> void:
@@ -61,17 +51,16 @@ func set_on(value: bool) -> void:
 	_sync_button()
 
 
-## Always-visible button in the lab's CanvasLayer (works with the lab closed; focus_mode NONE keeps Space/Enter for the game).
+## Toggle button, parented into the Settings panel (SettingsPanel); focus_mode NONE keeps Space/Enter for the game.
 func build_button(layer: Node) -> Button:
 	button = Button.new()
 	button.name = "BanditVisionButton"
 	button.toggle_mode = true
-	button.position = BUTTON_POS
 	button.custom_minimum_size = BUTTON_SIZE
 	button.focus_mode = Control.FOCUS_NONE
 	button.add_theme_font_size_override("font_size", 12)
 	button.tooltip_text = TIP
-	DockTab.style(button, Color("#FF6B00"))
+	SettingsPanel.style_toggle(button, Color("#FF6B00"))
 	button.toggled.connect(_on_button_toggled)
 	layer.add_child(button)
 	_sync_button()
@@ -87,8 +76,7 @@ func _sync_button() -> void:
 	if button == null or not is_instance_valid(button):
 		return
 	button.set_pressed_no_signal(on)
-	button.text = "Bandit vision: ON (F2)" if on else "Bandit vision: off (F2)"
-	DockTab.set_active(button, on)
+	button.text = "Bandit vision: ON" if on else "Bandit vision: off"
 
 
 func _attach_overlay() -> void:
@@ -144,16 +132,6 @@ func _overlay_parent() -> Node:
 
 
 # ------------------------------------------------------------------------------------------------ statics
-## Registered once, plain F2 without modifiers, unless the action already exists.
-static func _ensure_action() -> void:
-	if InputMap.has_action(ACTION):
-		return
-	InputMap.add_action(ACTION)
-	var ev := InputEventKey.new()
-	ev.physical_keycode = KEY
-	InputMap.action_add_event(ACTION, ev)
-
-
 ## "?a=1&vision=1" -> true. Only an explicit `vision=1` turns it on (like ?debug=1); first occurrence wins.
 static func parse_query(query: String) -> bool:
 	for part in query.trim_prefix("?").split("&", false):

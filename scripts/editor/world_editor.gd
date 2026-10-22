@@ -1,11 +1,10 @@
 class_name WorldEditor
 extends CanvasLayer
 ## World Builder: a small collapsible tools panel on the RIGHT edge for placing trees, walls and other built
-## objects (PlacedObjects.CATALOG) anywhere in the arena. F3 or the BUILD tab toggles it.
+## objects (PlacedObjects.CATALOG) anywhere in the arena. The BUILD tab opens it (no hotkey).
 ##   Pick an item in the palette, click the world to place it (right-click or Select to stop).
 ##   Select / Move: click an object to pick it, drag to move it, Delete removes it.   Erase: click objects to remove them.
 ## The layout autosaves (user://world_builder_layout.json). While the panel is hidden nothing is editable.
-const TOGGLE_KEY := KEY_F3
 const PANEL_W := 236.0
 const ACCENT := Color("#FF6B00")
 const SNAPS: Array[int] = [30, 15, 0]
@@ -149,10 +148,6 @@ func _mouse_world() -> Vector2:
 # ------------------------------------------------------------------ input
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == TOGGLE_KEY:
-			set_open(not open)
-			get_viewport().set_input_as_handled()
-			return
 		if open and event.keycode == KEY_S and event.ctrl_pressed:
 			save_now()
 			get_viewport().set_input_as_handled()
@@ -389,7 +384,7 @@ func _build_ui() -> void:
 	tab.name = "BuildTab"
 	tab.text = "<  BUILD"
 	tab.focus_mode = Control.FOCUS_NONE
-	tab.tooltip_text = "World Builder (F3)"
+	tab.tooltip_text = "World Builder"
 	tab.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
 	tab.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	tab.offset_left = -92
@@ -444,7 +439,7 @@ func _build_ui() -> void:
 	title.add_theme_color_override("font_color", Color.WHITE)
 	titles.add_child(title)
 	var sub := Label.new()
-	sub.text = "SHINOBI RUSH   |   F3"
+	sub.text = "SHINOBI RUSH"
 	sub.add_theme_font_size_override("font_size", 10)
 	sub.add_theme_color_override("font_color", ACCENT)
 	titles.add_child(sub)
