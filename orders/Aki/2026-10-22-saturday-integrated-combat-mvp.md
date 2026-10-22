@@ -1,0 +1,22 @@
+# AKI — P0 Saturday combat integration owner
+- **Status:** QUEUED
+- **Priority:** P0
+- **Role:** single gameplay integration owner
+
+## Objective
+Wire Codex's **already merged** kunai animations (PR #63) and selectable double Body Flicker art proof (PR #67) into the **actual** `PlayerController` / `PlayerVisual`, so the real `attack_light` action (**J**, verify input map) animates and deals hits in normal arena. Currently gameplay controller has LIGHT1/LIGHT2/LIGHT3, but PlayerVisual is generic and may fall back to old animations; explicitly audit the live sprite library and real input-to-animation mapping. **Do not confuse `?kunai=proof` with the real game.**
+
+## Ordered slices
+1. **Thursday:** audit merged main and inventory real combat input, attacks, art manifests, animation IDs, damage, Bandit states, Orcha VFX; publish short checklist. Wire player J attacks to approved kunai frames and contact VFX, synchronized to hitboxes, and verify actual Bandit takes damage in normal game. Existing three-hit mechanics may remain; preserve the player's intended two-hit-then-optional-double-retreat rhythm. Avoid sword silhouettes. Commit/push/integrate/test.
+2. **Friday:** bind single Space dodge to Body Flicker rather than lunge, and **player-selectable** double backward Body Flicker after hit 2; define intuitive binding with owner if needed, provide working default in test build and document it. True movement with wall collision, no forced retreat after every combo, clean cancel/re-engage and stable visibility. Commit/push/integrate/test.
+3. **Friday/Saturday:** make Bandit **attack player when actually spotting/closing** using existing Level 1 perception/ATTACK states, and visually play Codex's Bandit kunai animation (when delivered) or explicit interim shared kunai poses, not code-only arcs. Bandit has **same core move/ability vocabulary as player** (idle, walk/run/sprint, kunai combo, dodge/flicker, double retreat, hit reaction, jump/air attack when supported), but AI level 1 uses them badly with longer tells and cooldowns. Distinguish **capability parity** from identical intelligence/identical art. No copying player sprite onto Bandit. Respect LOS, walls, fair attack range, no instant damage through cover. Do not add economy/robbery inventory yet.
+4. **Saturday:** real combat encounter smoke: spawn opposite sides, detect around cover, pursue, player J combo hurts Bandit, Bandit swings and hurts player, both dodge/flicker, retreat, re-engage, death/hit feedback, repeated encounters, wall occlusion. Record real browser footage/screenshots and deploy verified SHA.
+
+## Files
+`scripts/player/player_controller.gd`, `scripts/player/player_visual.gd`, sprite library/manifest integration, `scripts/enemy/bandit.gd`, `scripts/enemy/bandit_visual.gd`, relevant scenes/tests. Coordinate with Codex for art and Orcha for VFX, Kiro for debug; Aki owns gameplay files. Do not implement art from scratch.
+
+## Acceptance
+J in **normal live game** shows correct kunai slash and damages Bandit; Bandit sees, approaches, threatens and attacks/damages player with kunai animation; Space dodge is not a lunge; both can flicker and fight with same core abilities; no regressions, collisions respected. CI, actual browser playtest and live deployment verified. Report `orders/Aki/reports/2026-10-22-saturday-integrated-combat-mvp-report.md`.
+
+## Shared Saturday milestone and delivery rule
+**Deadline: Saturday October 24, 2026, end of day America/New_York.** Read `orders/README.md` and `orders/Aki/README.md`. Owner needs a **playable integrated combat loop in the ONE official live browser game** https://kiotdstudios.github.io/shinobi-rush/, not more disconnected art proofs. Work in small vertical slices; for **each tested meaningful slice**, write evidence, **commit and PUSH immediately**, open/update PR, get required CI, merge into `main`, deploy and verify live before claiming playable. Do not leave local-only uncommitted work or accumulate a huge unreviewable branch. Do not bypass CI, branch protection, or overwrite another agent's files. If CI is pending, say pending and follow it through. Mark DONE only after the actual deployed build is tested. Report PR/SHA/live SHA and blocker promptly. Keep all agents aligned through the integration order and preserve existing 128×128 8-direction art and persistent RPG rules.
