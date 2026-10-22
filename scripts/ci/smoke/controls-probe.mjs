@@ -4,7 +4,7 @@
 //   node controls-probe.mjs --serve-dir <export dir> --out-dir <evidence dir>
 // Reads window.__SHINOBI_STATE__ ({frame,x,y,state,sprinting,fps}, published ~10 Hz by the WebBridge autoload) and proves
 // that REAL key input moves the player: walk right, sprint faster, a wall stops the player. It also drives the camera-impact lab demo keys
-// and reads the cfx_* telemetry. It also toggles the Bandit vision debug overlay (F2, its button, ?vision=1) and reads the vision_* telemetry.
+// and reads the cfx_* telemetry. It also toggles the Bandit vision debug overlay (Settings panel button, ?vision=1) and reads the vision_* telemetry.
 // Exit 0 = all passed, 1 = a check failed.
 // Timing is wall-clock based and tolerant: software-rendered CI browsers run the game at only a few FPS.
 import { chromium } from 'playwright';
@@ -219,7 +219,7 @@ try {
   const [kr] = await kickRun('?camera_impact=reduced', [['Digit8', 1]]);
   rec('camera-impact-reduced', kr.after.cfx_scale === 0.5 && kickOk(kr, 1, 2, 3, BASE_ZOOM), `?camera_impact=reduced halves the heavy kick (5 -> 2.5 px), scale=${kr.after.cfx_scale}: ${kick(kr)}`);
 
-  // Bandit vision debug overlay (BanditVisionToggle / BanditVisionOverlay): default OFF, toggled by F2, by the always-visible button left of "Lab (Tab)"
+  // Bandit vision debug overlay (BanditVisionToggle / BanditVisionOverlay): default OFF, toggled by clicking its button in the bottom-right Settings panel (no hotkeys)
   // and started by ?vision=1. Telemetry only: every wait is on the published state, never on a sleep (the game runs at 4 to 9 FPS here).
   // vision_nodes is the scene tree's node count: ON must add exactly the one overlay node and OFF must take it away again, which is how
   // "OFF leaves no geometry behind" is proven on the real export. The overlay numbers are compared with the Bandit's own (bandit_*) of the SAME publish.
@@ -227,7 +227,7 @@ try {
     'vision_player_in', 'vision_cone', 'vision_range', 'vision_close', 'vision_fov_deg', 'vision_facing_x', 'vision_facing_y', 'vision_mismatch', 'vision_capped',
     'vision_nodes', 'vision_origin_x', 'vision_origin_y'];
   const VISION_CATS = ['not_alert', 'suspicious', 'detected', 'lost_sight', 'searching', 'returning'];
-  const VISION_BUTTON = { x: 1027, y: 3 }; // the tab's coloured lip: "Bandit vision" is a binder tab (x 942..1112) hanging from the top edge, only y 0..7 shows at rest, y 0..26 once popped down
+  // The switches live in the bottom-right Settings panel: click the Settings tab (positions come from the settings_* telemetry), then the row.
   const visionOpen = async (query) => {
     const p = await context.newPage();
     p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
@@ -240,9 +240,18 @@ try {
     const until = async (pred, arg) => { // the first published state that satisfies pred, or null after 30 s
       try { await p.waitForFunction(pred, arg, { timeout: 30000, polling: 100 }); return await st(); } catch (e) { return null; }
     };
-    const key = async () => { await p.keyboard.down('F2'); await sleep(120); await p.keyboard.up('F2'); };
-    const click = async () => { await p.mouse.click(VISION_BUTTON.x, VISION_BUTTON.y, { delay: 80 }); await p.mouse.move(640, 400); }; // move away: no tooltip popup node
-    return { p, st, until, key, click };
+    const clickRow = async (xf, yf) => { // open the Settings list if it is closed, click the row, close the list again
+      let s = await st();
+      if (!s.settings_open) { await p.mouse.click(s.settings_tab_x, s.settings_tab_y, { delay: 80 }); s = (await until(() => window.__SHINOBI_STATE__.settings_open === true)) ?? (await st()); }
+      await p.mouse.click(s[xf], s[yf], { delay: 80 });
+      await sleep(150);
+      await p.mouse.click(s.settings_tab_x, s.settings_tab_y, { delay: 80 });
+      await p.mouse.move(640, 400); // move away: no tooltip popup node
+    };
+    const click = () => clickRow('settings_bandit_x', 'settings_bandit_y');
+    const clickSense = () => clickRow('settings_sense_x', 'settings_sense_y');
+    const key = async (code) => { await p.keyboard.down(code); await sleep(120); await p.keyboard.up(code); };
+    return { p, st, until, key, click, clickSense };
   };
   const visionIsOn = () => window.__SHINOBI_STATE__.vision_on === true && window.__SHINOBI_STATE__.vision_points > 0;
   const visionIsOff = () => window.__SHINOBI_STATE__.vision_on === false;
@@ -257,21 +266,20 @@ try {
     const base = v0.vision_nodes;
     rec('vision-default-off', missing.length === 0 && offOk(v0, base) && Number.isInteger(base) && base > 10,
       `no ?vision= parameter: all ${VISION_FIELDS.length} vision_* fields present (missing: ${missing.join(',') || 'none'}); ${vsum(v0)}`);
-    // F2 on, F2 off
-    await vp.key();
-    const k1 = await vp.until(visionIsOn);
-    await vp.p.screenshot({ path: path.join(outDir, 'probe-vision-on.png') });
-    await vp.key();
-    const k2 = await vp.until(visionIsOff);
-    rec('vision-key-toggles-on-off', onOk(k1, base) && offOk(k2, base), `F2: ON ${vsum(k1)} (expect bandits=1, nodes=${base + 1}); F2 again: OFF ${vsum(k2)} (expect zero geometry, nodes=${base})`);
-    // the always-visible button on, button off (the same switch)
+    // no hotkeys any more: F1, F2 and F3 pressed on the real canvas change nothing
+    for (const code of ['F1', 'F2', 'F3']) await vp.key(code);
+    await sleep(600);
+    const nk = await vp.st();
+    rec('vision-hotkeys-removed', offOk(nk, base) && nk.sense_vision_on === false, `F1/F2/F3 pressed: ${vsum(nk)} sense_vision_on=${nk.sense_vision_on} (expect everything still off)`);
+    // Settings tab -> Bandit vision row on, again off
     await vp.click();
     const b1 = await vp.until(visionIsOn);
+    await vp.p.screenshot({ path: path.join(outDir, 'probe-vision-on.png') });
     await vp.click();
     const b2 = await vp.until(visionIsOff);
-    rec('vision-button-toggles-on-off', onOk(b1, base) && offOk(b2, base), `button click: ON ${vsum(b1)}; click again: OFF ${vsum(b2)}`);
+    rec('vision-button-toggles-on-off', onOk(b1, base) && offOk(b2, base), `Settings > Bandit vision click: ON ${vsum(b1)}; click again: OFF ${vsum(b2)}`);
     // live: ON for >= 20 published frames while the Bandit patrols; every sample compares the overlay with the AI's own numbers of the same publish
-    await vp.key();
+    await vp.click();
     await vp.until(visionIsOn);
     const samples = [];
     let lastFrame = -1;
@@ -301,48 +309,48 @@ try {
     rec('vision-follows-and-agrees-with-ai', samples.length >= 20 && moved > 30 && issues.length === 0,
       `${samples.length} published frames, Bandit moved ${moved.toFixed(0)} px, states ${cats}; ${issues.length} disagreements${issues.length ? ': ' + issues.slice(0, 3).join(' | ') : ''}; ` +
       `polygon apex vs Bandit worst ${worstOrigin.toFixed(4)} px; last sample cone=${last.vision_cone} range=${last.vision_range} ${last.vision_rays} rays ${last.vision_ms} ms/rebuild`);
-    await vp.key();
+    await vp.click();
     const stepOff = await vp.until(visionIsOff);
     // repeated toggling through the key and the button, alternating: every ON has exactly one overlay node, every OFF has none, the end state is the start state
     const cycleBad = [];
     const CYCLES = 12;
     for (let i = 0; i < CYCLES; i++) {
-      const press = i % 2 === 0 ? vp.key : vp.click;
+      const press = vp.click;
       await press();
       const on = await vp.until(visionIsOn);
       await press();
       const off = await vp.until(visionIsOff);
-      if (!onOk(on, base) || on.vision_mismatch !== 0) cycleBad.push(`#${i} ${i % 2 === 0 ? 'key' : 'button'} ON ${vsum(on)}`);
-      if (!offOk(off, base)) cycleBad.push(`#${i} ${i % 2 === 0 ? 'key' : 'button'} OFF ${vsum(off)}`);
+      if (!onOk(on, base) || on.vision_mismatch !== 0) cycleBad.push(`#${i} button ON ${vsum(on)}`);
+      if (!offOk(off, base)) cycleBad.push(`#${i} button OFF ${vsum(off)}`);
     }
     const fin = await vp.st();
     rec('vision-repeat-toggle-stable', offOk(stepOff, base) && cycleBad.length === 0 && offOk(fin, base),
-      `${CYCLES} ON/OFF cycles alternating F2 and the button (${CYCLES * 2} toggles): ${cycleBad.length} bad states${cycleBad.length ? ': ' + cycleBad.slice(0, 3).join(' | ') : ''}; after the last OFF ${vsum(fin)} (start nodes=${base})`);
+      `${CYCLES} ON/OFF cycles through the Settings button (${CYCLES * 2} toggles): ${cycleBad.length} bad states${cycleBad.length ? ': ' + cycleBad.slice(0, 3).join(' | ') : ''}; after the last OFF ${vsum(fin)} (start nodes=${base})`);
   } finally { await vp.p.close(); }
-  // ?vision=1 starts ON with the Bandit drawn; F2 then switches it OFF and takes the overlay node away
+  // ?vision=1 starts ON with the Bandit drawn; clicking the Settings button then switches it OFF and takes the overlay node away
   const vq = await visionOpen('?vision=1');
   try {
     const q0 = await vq.until(visionIsOn);
     rec('vision-url-starts-on', !!q0 && q0.vision_on === true && q0.vision_bandits === 1 && q0.vision_points >= 8 && VISION_CATS.includes(q0.vision_state), `?vision=1: ${vsum(q0)}, state ${q0 ? q0.vision_state : '?'}`);
-    await vq.key();
+    await vq.click();
     const q1 = await vq.until(visionIsOff);
-    rec('vision-url-on-then-off-leaves-nothing', !!q0 && !!q1 && offOk(q1, q0.vision_nodes - 1), `F2 after ?vision=1: ${vsum(q1)} (expect zero geometry and nodes=${q0 ? q0.vision_nodes - 1 : '?'}, one less than ON)`);
+    rec('vision-url-on-then-off-leaves-nothing', !!q0 && !!q1 && offOk(q1, q0.vision_nodes - 1), `Settings click after ?vision=1: ${vsum(q1)} (expect zero geometry and nodes=${q0 ? q0.vision_nodes - 1 : '?'}, one less than ON)`);
   } finally { await vq.p.close(); }
   // Proximity "power level" sense debug overlay toggle (owner 2026-10-22: "make sure the intelligence
-  // vision have a toggle on and off like the bandit vision"). F3, separate from the Bandit vision's F2.
+  // vision have a toggle on and off like the bandit vision"), now a Settings-panel button (no hotkey).
   const sv = await visionOpen('');
   try {
     const sv0 = await sv.st();
     rec('sense-vision-default-off', sv0.sense_vision_on === false && Number.isInteger(sv0.sense_vision_nodes) && sv0.sense_vision_nodes > 10,
       `no toggle pressed: sense_vision_on=${sv0.sense_vision_on} sense_vision_views=${sv0.sense_vision_views} sense_vision_nodes=${sv0.sense_vision_nodes}`);
-    await sv.p.keyboard.down('F3'); await sleep(120); await sv.p.keyboard.up('F3');
+    await sv.clickSense();
     const sv1 = await sv.until(() => window.__SHINOBI_STATE__.sense_vision_on === true);
-    rec('sense-vision-key-toggles-on', !!sv1 && sv1.sense_vision_on === true && sv1.sense_vision_views >= 1,
-      `F3: sense_vision_on=${sv1 ? sv1.sense_vision_on : '?'} sense_vision_views=${sv1 ? sv1.sense_vision_views : '?'}`);
-    await sv.p.keyboard.down('F3'); await sleep(120); await sv.p.keyboard.up('F3');
+    rec('sense-vision-button-toggles-on', !!sv1 && sv1.sense_vision_on === true && sv1.sense_vision_views >= 1,
+      `Settings > Sense vision click: sense_vision_on=${sv1 ? sv1.sense_vision_on : '?'} sense_vision_views=${sv1 ? sv1.sense_vision_views : '?'}`);
+    await sv.clickSense();
     const sv2 = await sv.until(() => window.__SHINOBI_STATE__.sense_vision_on === false);
-    rec('sense-vision-key-toggles-off', !!sv2 && sv2.sense_vision_on === false && sv2.sense_vision_nodes === sv0.sense_vision_nodes,
-      `F3 again: sense_vision_on=${sv2 ? sv2.sense_vision_on : '?'} sense_vision_nodes=${sv2 ? sv2.sense_vision_nodes : '?'} (expect back to ${sv0.sense_vision_nodes})`);
+    rec('sense-vision-button-toggles-off', !!sv2 && sv2.sense_vision_on === false && sv2.sense_vision_nodes === sv0.sense_vision_nodes,
+      `click again: sense_vision_on=${sv2 ? sv2.sense_vision_on : '?'} sense_vision_nodes=${sv2 ? sv2.sense_vision_nodes : '?'} (expect back to ${sv0.sense_vision_nodes})`);
   } finally { await sv.p.close(); }
 } catch (e) {
   rec('probe-exception', false, String(e.message ?? e).split('\n')[0]);

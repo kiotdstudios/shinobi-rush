@@ -62,8 +62,9 @@ var _panel: PanelContainer
 var _value_labels: Dictionary = {}
 var _toggle_buttons: Dictionary = {}
 var _lab_button: Button
-var vision: BanditVisionToggle  ## Bandit vision debug overlay switch (key F2 + the always-visible button), default OFF
-var sense_vision: SenseVisionToggle  ## proximity "power level" sense overlay switch (key F3 + button), default OFF
+var vision: BanditVisionToggle  ## Bandit vision debug overlay switch (button in the Settings panel), default OFF
+var settings: SettingsPanel  ## bottom-right Settings tab: click toggles for every vision/debug overlay (no hotkeys)
+var sense_vision: SenseVisionToggle  ## proximity "power level" sense overlay switch (button in the Settings panel), default OFF
 var _timer: float = 0.0
 var _actions: Dictionary = {}
 
@@ -347,16 +348,21 @@ func _build_ui() -> void:
 	add_child(layer)
 	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, DockTab.REST_Y), Vector2(150, 26), toggle_lab)
 	DockTab.style(_lab_button, Color("#3DDC84"))
-	# Bandit vision overlay (debug, default OFF): its key and its always-visible button next to the Lab button.
+	# Bandit vision overlay (debug, default OFF): its toggle button lives in the Settings panel (bottom-right), no hotkey.
+	settings = SettingsPanel.new()
+	settings.name = "SettingsPanel"
+	layer.add_child(settings)
+	settings.build(layer)
 	vision = BanditVisionToggle.new()
 	vision.name = "BanditVisionToggle"
 	add_child(vision)
-	vision.build_button(layer)
-	# Proximity "power level" sense overlay (debug, default OFF): same pattern, button to the left of it.
+	settings.add_row(vision.build_button(settings.rows))
+	# Proximity "power level" sense overlay (debug, default OFF): same pattern, second row.
 	sense_vision = SenseVisionToggle.new()
 	sense_vision.name = "SenseVisionToggle"
 	add_child(sense_vision)
-	sense_vision.build_button(layer)
+	settings.add_row(sense_vision.build_button(settings.rows))
+	settings.add_diagnostics_row(func() -> Node: return get_parent().get_node_or_null("DebugHud"))
 	_panel = PanelContainer.new()
 	_panel.position = Vector2(930, 40)
 	_panel.custom_minimum_size = Vector2(340, 0)

@@ -2,7 +2,7 @@ extends CanvasLayer
 ## Debug HUD (PLACEHOLDER). Built from real Control containers (not hand-placed Labels) so it
 ## scales correctly across resolutions and never overlaps itself:
 ##   - ESSENTIAL block (top-left, always visible): title/build + player state/speed/pos/direction.
-##   - DIAGNOSTICS panel (top-left, below essential; collapsed by default, F1 toggles):
+##   - DIAGNOSTICS panel (top-left, below essential; collapsed by default, Settings panel toggles):
 ##     camera zoom + sprite info, then FPS + texture memory. AnimationLab feeds its sprite-status
 ##     text in here via set_sprite_status() instead of drawing its own overlapping labels (that
 ##     was the actual overlap bug: two unrelated CanvasLayers each hand-placing absolute-pixel
@@ -12,10 +12,8 @@ extends CanvasLayer
 ## Also owns the tiny pause toggle (runs while paused).
 
 const REFRESH := 0.1
-const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | L lock on/off | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | R3 lock on/off | Options pause\nReserved (no behavior yet): arrows aim, K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nF1: toggle technical diagnostics (camera/sprite/FPS/texture mem)\nF2 / top-right button: Bandit vision (debug, default OFF) shows what the Bandit's AI can see | ?vision=1 starts it on"
+const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | L lock on/off | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | R3 lock on/off | Options pause\nReserved (no behavior yet): arrows aim, K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nSettings (bottom-right button): click to switch Bandit vision, Sense vision and Diagnostics on/off (all default OFF) | ?vision=1 starts Bandit vision on"
 
-const DIAG_ACTION := "dbg_toggle_diagnostics"
-const DIAG_KEY := KEY_F1
 const PANEL_BG := Color(0.03, 0.03, 0.05, 0.8)
 const ACCENT := Color("#FF6B00")
 const EDGE := Color("#2b2b35")
@@ -37,7 +35,6 @@ var _diagnostics_on: bool = false
 
 
 func _ready() -> void:
-	_ensure_diag_action()
 
 	var root := MarginContainer.new()
 	root.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -57,13 +54,13 @@ func _ready() -> void:
 	title.text = "SHINOBI RUSH\nBOOTSTRAP BUILD - PLACEHOLDER ART"
 	_player_info = _make_label(essential_box, 14)
 
-	# ---- Diagnostics panel: collapsed by default; F1 toggles. ----
+	# ---- Diagnostics panel: collapsed by default; the Settings panel toggles it. ----
 	_diag_panel = _panel(stack)
 	_diag_panel.visible = _diagnostics_on
 	var diag_box := VBoxContainer.new()
 	diag_box.add_theme_constant_override("separation", 4)
 	_diag_panel.add_child(diag_box)
-	_header(diag_box, "DIAGNOSTICS  (F1)", func(): _toggle_diagnostics())
+	_header(diag_box, "DIAGNOSTICS", func(): _toggle_diagnostics())
 	_diag_camera_sprite = _make_label(diag_box, 13)
 	_diag_perf = _make_label(diag_box, 13)
 	_diag_combat = _make_label(diag_box, 13)
@@ -193,8 +190,17 @@ func set_box_hidden(id: String, v: bool) -> void:
 
 
 func _toggle_diagnostics() -> void:
-	_diagnostics_on = not _diagnostics_on
-	_diag_panel.visible = _diagnostics_on
+	set_diagnostics(not _diagnostics_on)
+
+
+func set_diagnostics(v: bool) -> void:
+	_diagnostics_on = v
+	if _diag_panel != null:
+		_diag_panel.visible = v
+
+
+func diagnostics_on() -> bool:
+	return _diagnostics_on
 
 
 func _make_label(parent: Node, font_size: int) -> Label:
@@ -207,22 +213,10 @@ func _make_label(parent: Node, font_size: int) -> Label:
 	return l
 
 
-## Registered at runtime (like AnimationLab's camera-preset key) so project.godot stays untouched.
-static func _ensure_diag_action() -> void:
-	if InputMap.has_action(DIAG_ACTION):
-		return
-	InputMap.add_action(DIAG_ACTION)
-	var ev := InputEventKey.new()
-	ev.physical_keycode = DIAG_KEY
-	InputMap.action_add_event(DIAG_ACTION, ev)
-
-
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
 		get_tree().paused = not get_tree().paused
 		_paused.visible = get_tree().paused
-	elif event.is_action_pressed(DIAG_ACTION):
-		_toggle_diagnostics()
 
 
 ## Called by AnimationLab: camera zoom + sprite-set status/metrics, all one "Camera & sprite"
