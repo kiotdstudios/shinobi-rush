@@ -1,5 +1,7 @@
 extends CanvasLayer
-## Debug HUD (PLACEHOLDER). Built from real Control containers (not hand-placed Labels) so it
+## Debug HUD (PLACEHOLDER). The info boxes (PLAYER, CONTROLS, DIAGNOSTICS) are all CLOSED by default and each opens from a
+## bottom-edge "game dev" tab (DockTab: tab sticks out while its box is closed, tucks away while it is open; each box's
+## HIDE button, or F1 for diagnostics, closes it again). Built from real Control containers (not hand-placed Labels) so it
 ## scales correctly across resolutions and never overlaps itself:
 ##   - ESSENTIAL block (top-left, always visible): title/build + player state/speed/pos/direction.
 ##   - DIAGNOSTICS panel (top-left, below essential; collapsed by default, F1 toggles):
@@ -12,18 +14,23 @@ extends CanvasLayer
 ## Also owns the tiny pause toggle (runs while paused).
 
 const REFRESH := 0.1
-const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | L lock on/off | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | R3 lock on/off | Options pause\nReserved (no behavior yet): arrows aim, K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nF1: toggle technical diagnostics (camera/sprite/FPS/texture mem)\nF2 / top-right button: Bandit vision (debug, default OFF) shows what the Bandit's AI can see | ?vision=1 starts it on"
+const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | L lock on/off | Esc pause\nGamepad: left stick/D-pad move | R1 sprint | R3 lock on/off | Options pause\nReserved (no behavior yet): arrows aim, K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nF1 / bottom tab: technical diagnostics (camera/sprite/FPS/texture mem)\nF2 / bottom tab: Bandit vision (debug, default OFF) shows what the Bandit's AI can see | ?vision=1 starts it on"
 
 const DIAG_ACTION := "dbg_toggle_diagnostics"
 const DIAG_KEY := KEY_F1
 const PANEL_BG := Color(0.03, 0.03, 0.05, 0.8)
 const ACCENT := Color("#FF6B00")
+const TAB_SPECS := {
+	"player": {"text": "Player", "x": 6.0, "w": 86.0, "color": "#C084FC"},
+	"controls": {"text": "Controls", "x": 98.0, "w": 100.0, "color": "#FFD23F"},
+	"diag": {"text": "Diagnostics (F1)", "x": 204.0, "w": 150.0, "color": "#FF4D6D"},
+}
 const EDGE := Color("#2b2b35")
 const MUTED := Color(1, 1, 1, 0.55)
 ## Which boxes the player hid (kept for the whole session, survives arena restarts).
 static var hidden: Dictionary = {}
 
-var _boxes: Dictionary = {}  ## id -> {"panel": Control, "chip": Button}
+var _boxes: Dictionary = {}  ## id -> {"panel": Control, "chip": Button (the bottom dock tab)}
 
 var _player_info: Label
 var _diag_panel: PanelContainer
@@ -59,7 +66,10 @@ func _ready() -> void:
 
 	# ---- Diagnostics panel: collapsed by default; F1 toggles. ----
 	_diag_panel = _panel(stack)
+	_boxes["diag"] = {"panel": _diag_panel, "chip": null}
 	_diag_panel.visible = _diagnostics_on
+	_make_tab("diag", func(): _toggle_diagnostics())
+	DockTab.set_active(_boxes["diag"].chip, _diagnostics_on)
 	var diag_box := VBoxContainer.new()
 	diag_box.add_theme_constant_override("separation", 4)
 	_diag_panel.add_child(diag_box)
@@ -71,7 +81,7 @@ func _ready() -> void:
 	# ---- Controls legend: bottom-left, anchored (stays bottom-left at any resolution). ----
 	var legend_holder := VBoxContainer.new()
 	legend_holder.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	legend_holder.position += Vector2(6, -6)
+	legend_holder.position += Vector2(6, -34)  # clear of the bottom dock-tab row
 	legend_holder.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	legend_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(legend_holder)
@@ -174,27 +184,42 @@ func _collapsible(parent: Node, id: String, title: String) -> VBoxContainer:
 	body.add_theme_constant_override("separation", 2)
 	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(body)
-	var chip := Button.new()
-	chip.text = "SHOW  " + title
-	_small_button(chip)
-	parent.add_child(chip)
-	_boxes[id] = {"panel": panel, "chip": chip}
+	_boxes[id] = {"panel": panel, "chip": null}
 	_header(body, title, func(): set_box_hidden(id, true))
-	chip.pressed.connect(func(): set_box_hidden(id, false))
-	set_box_hidden(id, bool(hidden.get(id, false)))
+	_make_tab(id, func(): set_box_hidden(id, not bool(hidden.get(id, true))))
+	set_box_hidden(id, bool(hidden.get(id, true)))
 	return body
+
+
+## The bottom-edge dock tab that opens/closes a HUD box.
+func _make_tab(id: String, on_press: Callable) -> Button:
+	var spec: Dictionary = TAB_SPECS[id]
+	var tab := Button.new()
+	tab.name = "Tab_" + id
+	tab.text = spec.text
+	tab.position = Vector2(float(spec.x), DockTab.REST_Y)
+	tab.custom_minimum_size = Vector2(float(spec.w), DockTab.TAB_H)
+	tab.size = tab.custom_minimum_size
+	tab.focus_mode = Control.FOCUS_NONE
+	tab.add_theme_font_size_override("font_size", 12)
+	DockTab.style(tab, Color(str(spec.color)))
+	tab.pressed.connect(on_press)
+	add_child(tab)
+	_boxes[id].chip = tab
+	return tab
 
 
 func set_box_hidden(id: String, v: bool) -> void:
 	hidden[id] = v
 	if _boxes.has(id):
 		(_boxes[id].panel as Control).visible = not v
-		(_boxes[id].chip as Control).visible = v
+		DockTab.set_active(_boxes[id].chip as Button, not v)
 
 
 func _toggle_diagnostics() -> void:
 	_diagnostics_on = not _diagnostics_on
 	_diag_panel.visible = _diagnostics_on
+	DockTab.set_active(_boxes["diag"].chip as Button, _diagnostics_on)
 
 
 func _make_label(parent: Node, font_size: int) -> Label:

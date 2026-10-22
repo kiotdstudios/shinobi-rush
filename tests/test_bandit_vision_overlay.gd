@@ -263,7 +263,7 @@ func _test_off_by_default(root: Node) -> void:
 	var lb := lab._lab_button
 	var lab_rect := Rect2(lb.position, lb.get_combined_minimum_size())
 	var vb_rect := Rect2(b.position, b.get_combined_minimum_size())
-	ck.call("vision button: sits on the Lab button's row, to its left, without touching it, and above the lab panel (y < 40)", vb_rect.end.x < lab_rect.position.x and absf(vb_rect.position.y - lab_rect.position.y) < 1.0 and vb_rect.end.y < 40.0 and not vb_rect.intersects(lab_rect), "%s vs %s" % [str(vb_rect), str(lab_rect)])
+	ck.call("vision button: sits on the Lab button's row, to its left, without touching it, and on the bottom edge (a bottom dock tab: y at the bottom of the 720 viewport)", vb_rect.end.x < lab_rect.position.x and absf(vb_rect.position.y - lab_rect.position.y) < 1.0 and vb_rect.end.y <= DockTab.BASE_H + 0.5 and vb_rect.position.y >= DockTab.BASE_H - 40.0 and not vb_rect.intersects(lab_rect), "%s vs %s" % [str(vb_rect), str(lab_rect)])
 	ck.call("vision button: works with the lab closed (same CanvasLayer, lab is closed by default)", not lab.lab_on and b.get_parent() == lb.get_parent())
 	ck.call("vision button: focus_mode NONE so Space / Enter stay with the game", b.focus_mode == Control.FOCUS_NONE)
 
@@ -905,7 +905,7 @@ func _test_telemetry_and_web() -> void:
 	ck.call("vision state: WebBridge publishes every one of them next to the existing fields and reads ?vision= at boot", all_pub and src.contains("BanditVisionToggle.apply_query(search)") and src.contains("BanditVisionToggle.telemetry()"))
 	ck.call("vision state: existing __SHINOBI_STATE__ names are untouched (additive only)", src.contains("_state.bandit_state = ") and src.contains("_state.bandit_sees = ") and src.contains("_state.cfx_enabled = ") and src.contains("_state.camera_preset = ") and src.contains("_state.lab_open = ") and src.contains("_state.x = _player.global_position.x"))
 	var hud_src := FileAccess.get_file_as_string("res://scripts/ui/debug_hud.gd")
-	ck.call("vision state: the HUD legend mentions the key, the button and ?vision=1", hud_src.contains("F2 / top-right button: Bandit vision") and hud_src.contains("?vision=1"))
+	ck.call("vision state: the HUD legend mentions the key, the button and ?vision=1", hud_src.contains("F2 / bottom tab: Bandit vision") and hud_src.contains("?vision=1"))
 	# live values, one sample: no frame between the rebuild and the comparison, so the AI cannot have ticked in between
 	_put(Vector2(1500, 100), _snap8(4), Bandit.State.APPROACH)
 	player.global_position = Vector2(1000, 100)

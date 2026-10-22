@@ -1,12 +1,14 @@
 class_name DockTab
 extends RefCounted
-## Binder-divider styling for the screen-top debug buttons (Lab, Bandit vision, Sense vision).
-## A tab rests tucked above the top edge with only its coloured lip showing, slides part-way down while the mouse is
-## over it so you can read the label, and pops fully down while its feature is ON. Clicking it again pops it back up.
+## Binder-divider styling for the bottom-edge "game dev" tabs (Lab, Bandit vision, Sense vision, Player, Controls, Diagnostics).
+## A tab STICKS OUT of the bottom edge while its feature is OFF, and tucks away (only a 3 px sliver left) while the feature is ON.
+## While tucked, hovering the sliver slides it back out so you can click it to switch the feature off (the hotkeys always work too).
 ## The Button node keeps its text, toggle behaviour and x/size; only its y (and look) change, so existing callers/tests work.
-const REST_Y := -19.0  ## 7 px coloured lip only (label hidden)
-const HOVER_Y := -6.0  ## label readable
-const OUT_Y := 0.0  ## selected: fully down
+const BASE_H := 720.0  ## project viewport height (canvas_items + keep aspect: always 1280x720 in canvas space)
+const TAB_H := 26.0
+const REST_Y := BASE_H - TAB_H  ## OFF: sticking out, label readable
+const OUT_Y := REST_Y
+const HIDDEN_Y := BASE_H - 3.0  ## ON: tucked away below the edge
 const SLIDE_TIME := 0.16
 
 
@@ -36,17 +38,17 @@ static func _box(bg: Color, edge: Color) -> StyleBoxFlat:
 	s.border_color = edge
 	s.border_width_left = 2
 	s.border_width_right = 2
-	s.border_width_bottom = 4
-	s.corner_radius_bottom_left = 9
-	s.corner_radius_bottom_right = 9
+	s.border_width_top = 4
+	s.corner_radius_top_left = 9
+	s.corner_radius_top_right = 9
 	s.content_margin_left = 10
 	s.content_margin_right = 10
-	s.content_margin_top = 8
+	s.content_margin_top = 4
 	s.content_margin_bottom = 4
 	return s
 
 
-## Call whenever the feature behind the tab switches (pops the tab down/up).
+## Call whenever the feature behind the tab switches (ON tucks the tab away, OFF sticks it back out).
 static func set_active(b: Button, active: bool) -> void:
 	if b == null or not is_instance_valid(b):
 		return
@@ -63,9 +65,9 @@ static func _hover(b: Button, over: bool) -> void:
 
 
 static func target_y(b: Button) -> float:
-	if bool(b.get_meta("dock_active", false)):
-		return OUT_Y
-	return HOVER_Y if bool(b.get_meta("dock_hover", false)) else REST_Y
+	if bool(b.get_meta("dock_active", false)) and not bool(b.get_meta("dock_hover", false)):
+		return HIDDEN_Y
+	return OUT_Y
 
 
 static func _slide(b: Button) -> void:
