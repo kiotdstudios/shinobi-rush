@@ -511,12 +511,17 @@ func _build_ui() -> void:
 	status.add_theme_color_override("font_color", ACCENT)
 	status.clip_text = true
 	fv.add_child(status)
-	for line in ["Click: place      Right-click: cancel", "Drag: move          Del: remove"]:
+	var hints := GridContainer.new()
+	hints.columns = 2
+	hints.add_theme_constant_override("h_separation", 14)
+	fv.add_child(hints)
+	for line in ["Click: place", "Right-click: cancel", "Drag: move", "Del: remove"]:
 		var help := Label.new()
 		help.text = line
+		help.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		help.add_theme_font_size_override("font_size", 11)
 		help.add_theme_color_override("font_color", MUTED)
-		fv.add_child(help)
+		hints.add_child(help)
 
 
 func _toggle(parent: Node, text: String, cb: Callable) -> Button:
