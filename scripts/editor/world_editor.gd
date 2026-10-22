@@ -394,10 +394,15 @@ func _build_ui() -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	outer.add_child(scroll)
+	_fat_scrollbar(scroll)
 	var col := VBoxContainer.new()
 	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	col.add_theme_constant_override("separation", 8)
-	scroll.add_child(col)
+	var gutter := MarginContainer.new()  # keeps the cards clear of the wide scrollbar
+	gutter.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	gutter.add_theme_constant_override("margin_right", 26)
+	gutter.add_child(col)
+	scroll.add_child(gutter)
 	var group := ButtonGroup.new()
 	for cat: Array in PlacedObjects.CATEGORIES:
 		_section(col, str(cat[0]))
@@ -428,6 +433,9 @@ func _build_ui() -> void:
 				b.add_theme_constant_override("icon_max_width", 44)
 				b.custom_minimum_size = Vector2(0, 76)
 			_skin(b, "card")
+			for sn in ["normal", "hover", "pressed", "hover_pressed"]:
+				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_left = 3
+				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_right = 3
 			b.add_theme_font_size_override("font_size", 11)
 			b.pressed.connect(func(): set_tool("place", id))
 			grid.add_child(b)
@@ -522,6 +530,17 @@ func _build_ui() -> void:
 		help.add_theme_font_size_override("font_size", 11)
 		help.add_theme_color_override("font_color", MUTED)
 		hints.add_child(help)
+
+
+## A wide, easy-to-grab scrollbar (the default is a few pixels wide).
+func _fat_scrollbar(scroll: ScrollContainer) -> void:
+	var bar := scroll.get_v_scroll_bar()
+	bar.custom_minimum_size = Vector2(22, 0)
+	var looks := {"scroll": Color(1, 1, 1, 0.06), "grabber": Color(1, 1, 1, 0.35), "grabber_highlight": Color(ACCENT, 0.85), "grabber_pressed": ACCENT}
+	for k: String in looks:
+		var s := _sbox(looks[k], Color(0, 0, 0, 0), 0, 8)
+		s.set_content_margin_all(0)
+		bar.add_theme_stylebox_override(k, s)
 
 
 func _toggle(parent: Node, text: String, cb: Callable) -> Button:

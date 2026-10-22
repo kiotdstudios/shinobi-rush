@@ -16,7 +16,14 @@ const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J l
 
 const DIAG_ACTION := "dbg_toggle_diagnostics"
 const DIAG_KEY := KEY_F1
-const PANEL_BG := Color(0, 0, 0, 0.45)
+const PANEL_BG := Color(0.03, 0.03, 0.05, 0.8)
+const ACCENT := Color("#FF6B00")
+const EDGE := Color("#2b2b35")
+const MUTED := Color(1, 1, 1, 0.55)
+## Which boxes the player hid (kept for the whole session, survives arena restarts).
+static var hidden: Dictionary = {}
+
+var _boxes: Dictionary = {}  ## id -> {"panel": Control, "chip": Button}
 
 var _player_info: Label
 var _diag_panel: PanelContainer
@@ -45,9 +52,7 @@ func _ready() -> void:
 	root.add_child(stack)
 
 	# ---- Essential block: always visible, gameplay-relevant only. ----
-	var essential := _panel(stack)
-	var essential_box := VBoxContainer.new()
-	essential.add_child(essential_box)
+	var essential_box := _collapsible(stack, "player", "PLAYER")
 	var title := _make_label(essential_box, 20)
 	title.text = "SHINOBI RUSH\nBOOTSTRAP BUILD - PLACEHOLDER ART"
 	_player_info = _make_label(essential_box, 14)
@@ -58,22 +63,20 @@ func _ready() -> void:
 	var diag_box := VBoxContainer.new()
 	diag_box.add_theme_constant_override("separation", 4)
 	_diag_panel.add_child(diag_box)
-	var diag_header := _make_label(diag_box, 13)
-	diag_header.text = "TECHNICAL DIAGNOSTICS (F1 to hide)"
-	diag_header.add_theme_color_override("font_color", Color("#ffd27a"))
+	_header(diag_box, "DIAGNOSTICS  (F1)", func(): _toggle_diagnostics())
 	_diag_camera_sprite = _make_label(diag_box, 13)
 	_diag_perf = _make_label(diag_box, 13)
 	_diag_combat = _make_label(diag_box, 13)
 
 	# ---- Controls legend: bottom-left, anchored (stays bottom-left at any resolution). ----
-	var legend_panel := PanelContainer.new()
-	legend_panel.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	legend_panel.position += Vector2(6, -6)
-	legend_panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	legend_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_style_panel(legend_panel)
-	add_child(legend_panel)
-	var legend := _make_label(legend_panel, 12)
+	var legend_holder := VBoxContainer.new()
+	legend_holder.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	legend_holder.position += Vector2(6, -6)
+	legend_holder.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	legend_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(legend_holder)
+	var legend_box := _collapsible(legend_holder, "controls", "CONTROLS")
+	var legend := _make_label(legend_box, 12)
 	legend.text = LEGEND
 
 	# ---- Paused banner: screen-centre via anchor, not a hardcoded resolution-specific position. ----
@@ -103,11 +106,95 @@ func _panel(parent: Node) -> PanelContainer:
 func _style_panel(p: PanelContainer) -> void:
 	var style := StyleBoxFlat.new()
 	style.bg_color = PANEL_BG
-	style.content_margin_left = 10
-	style.content_margin_right = 10
-	style.content_margin_top = 6
-	style.content_margin_bottom = 6
+	style.border_color = EDGE
+	style.set_border_width_all(1)
+	style.border_width_left = 3
+	style.border_blend = false
+	style.set_corner_radius_all(8)
+	style.shadow_color = Color(0, 0, 0, 0.4)
+	style.shadow_size = 6
+	style.content_margin_left = 12
+	style.content_margin_right = 12
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
 	p.add_theme_stylebox_override("panel", style)
+	# the accent stripe is the left border colour; StyleBoxFlat has one border colour, so tint the whole frame subtly
+	style.border_color = Color(ACCENT, 0.8)
+
+
+static func _small_button(b: Button) -> void:
+	b.focus_mode = Control.FOCUS_NONE
+	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	b.add_theme_font_size_override("font_size", 10)
+	b.add_theme_color_override("font_color", MUTED)
+	b.add_theme_color_override("font_hover_color", ACCENT)
+	var n := StyleBoxFlat.new()
+	n.bg_color = Color(1, 1, 1, 0.06)
+	n.border_color = EDGE
+	n.set_border_width_all(1)
+	n.set_corner_radius_all(5)
+	n.content_margin_left = 8
+	n.content_margin_right = 8
+	n.content_margin_top = 2
+	n.content_margin_bottom = 2
+	var h := n.duplicate() as StyleBoxFlat
+	h.border_color = ACCENT
+	h.bg_color = Color(ACCENT, 0.15)
+	b.add_theme_stylebox_override("normal", n)
+	b.add_theme_stylebox_override("hover", h)
+	b.add_theme_stylebox_override("pressed", h)
+	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+
+
+## Title row with a HIDE button on the right.
+func _header(parent: Node, text: String, on_hide: Callable) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(row)
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_size_override("font_size", 11)
+	l.add_theme_color_override("font_color", ACCENT)
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(l)
+	var b := Button.new()
+	b.text = "HIDE"
+	_small_button(b)
+	b.pressed.connect(on_hide)
+	row.add_child(b)
+	return row
+
+
+## A HUD box the player can hide: styled panel with a title row + HIDE; hidden, it collapses to a small SHOW chip.
+## Returns the VBox to put the content in.
+func _collapsible(parent: Node, id: String, title: String) -> VBoxContainer:
+	var panel := _panel(parent)
+	var body := VBoxContainer.new()
+	body.add_theme_constant_override("separation", 2)
+	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_child(body)
+	var chip := Button.new()
+	chip.text = "SHOW  " + title
+	_small_button(chip)
+	parent.add_child(chip)
+	_boxes[id] = {"panel": panel, "chip": chip}
+	_header(body, title, func(): set_box_hidden(id, true))
+	chip.pressed.connect(func(): set_box_hidden(id, false))
+	set_box_hidden(id, bool(hidden.get(id, false)))
+	return body
+
+
+func set_box_hidden(id: String, v: bool) -> void:
+	hidden[id] = v
+	if _boxes.has(id):
+		(_boxes[id].panel as Control).visible = not v
+		(_boxes[id].chip as Control).visible = v
+
+
+func _toggle_diagnostics() -> void:
+	_diagnostics_on = not _diagnostics_on
+	_diag_panel.visible = _diagnostics_on
 
 
 func _make_label(parent: Node, font_size: int) -> Label:
@@ -135,8 +222,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_tree().paused = not get_tree().paused
 		_paused.visible = get_tree().paused
 	elif event.is_action_pressed(DIAG_ACTION):
-		_diagnostics_on = not _diagnostics_on
-		_diag_panel.visible = _diagnostics_on
+		_toggle_diagnostics()
 
 
 ## Called by AnimationLab: camera zoom + sprite-set status/metrics, all one "Camera & sprite"
