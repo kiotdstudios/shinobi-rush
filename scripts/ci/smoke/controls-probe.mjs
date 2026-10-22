@@ -55,14 +55,14 @@ try {
   await sleep(200);
   await shot('01-start');
 
-  // Camera framing: the gameplay baseline is the wide view (zoom 0.5000, visible world 2560x1440 in a 1280x720 viewport).
-  const BASE_ZOOM = 0.5;
+  // Camera framing: the gameplay baseline is the wide view (zoom 0.7500, visible world 1706.7x960 in a 1280x720 viewport).
+  const BASE_ZOOM = 0.75;
   const zoomNow = async () => (await state()).zoom;
   const near = (v, want) => Number.isFinite(v) && Math.abs(v - want) < 0.005;
   const zs = await state();
   rec('camera-preset-default-is-wide', zs.camera_preset === 'wide', `no ?camera= parameter: state.camera_preset=${JSON.stringify(zs.camera_preset)}, expected "wide"`);
-  rec('camera-baseline-at-start', near(zs.zoom, BASE_ZOOM) && Math.abs(zs.view_w - 2560) < 2 && Math.abs(zs.view_h - 1440) < 2,
-    `expected zoom ~${BASE_ZOOM.toFixed(4)} and view 2560x1440; got zoom=${zs.zoom}, view=${zs.view_w}x${zs.view_h}`);
+  rec('camera-baseline-at-start', near(zs.zoom, BASE_ZOOM) && Math.abs(zs.view_w - 1706.67) < 2 && Math.abs(zs.view_h - 960) < 2,
+    `expected zoom ~${BASE_ZOOM.toFixed(4)} and view 1706.7x960; got zoom=${zs.zoom}, view=${zs.view_w}x${zs.view_h}`);
 
   const dxOver = async (keys, settleMs, windowMs) => {
     for (const k of keys) await page.keyboard.down(k);
@@ -164,8 +164,8 @@ try {
   rec('camera-close-via-query', sc.camera_preset === 'close' && near(sc.zoom, CLOSE_ZOOM) && Math.abs(sc.view_w - 1280 / CLOSE_ZOOM) < 2 && Math.abs(sc.view_h - 720 / CLOSE_ZOOM) < 2,
     `?camera=close expected preset=close zoom ~${CLOSE_ZOOM.toFixed(4)} view ${(1280 / CLOSE_ZOOM).toFixed(1)}x${(720 / CLOSE_ZOOM).toFixed(1)}; got preset=${sc.camera_preset} zoom=${sc.zoom} view=${sc.view_w}x${sc.view_h}`);
   const sg = await cameraPage('?camera=bogus', 'bogus');
-  rec('camera-garbage-falls-back-to-wide', sg.camera_preset === 'wide' && near(sg.zoom, BASE_ZOOM) && Math.abs(sg.view_w - 2560) < 2 && Math.abs(sg.view_h - 1440) < 2,
-    `?camera=bogus expected preset=wide zoom ~${BASE_ZOOM.toFixed(4)} view 2560x1440; got preset=${sg.camera_preset} zoom=${sg.zoom} view=${sg.view_w}x${sg.view_h}`);
+  rec('camera-garbage-falls-back-to-wide', sg.camera_preset === 'wide' && near(sg.zoom, BASE_ZOOM) && Math.abs(sg.view_w - 1706.67) < 2 && Math.abs(sg.view_h - 960) < 2,
+    `?camera=bogus expected preset=wide zoom ~${BASE_ZOOM.toFixed(4)} view 1706.7x960; got preset=${sg.camera_preset} zoom=${sg.zoom} view=${sg.view_w}x${sg.view_h}`);
 
   // Camera hit kick (CameraImpact): lab demo keys Digit7 light / Digit8 heavy / Digit9 burst of three, telemetry cfx_* in SCREEN px. A fresh page per
   // query starts at the spawn (idle, facing down, room on every side), so the edge clamp cannot cut a kick. The game runs at 4 to 9 FPS here, so an
