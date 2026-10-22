@@ -1,6 +1,6 @@
 # CODEX â€” P0 Kunai-First Combat Animation
 
-- **Status:** QUEUED
+- **Status:** IN_PROGRESS — southeast proof; audited PRs 33/42/48
 - **Date:** 2026-10-21
 - **Owner direction:** Make Naruto-inspired kunai, not sword, the basic/default shinobi weapon.
 
