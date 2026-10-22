@@ -1,7 +1,7 @@
 # ORDER — Level 1 Bandit robber AI, ninja locomotion, arena walls and distant spawn
 - Agent: Aki
 - Owner: Aki (gameplay/AI)
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P0
 - Date: 2026-10-21
 - Dependencies: Coordinate with Codex (bandit sprite/animation ownership) and Orcha (Body Flicker visual API). Do not overwrite their work.
