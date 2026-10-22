@@ -118,6 +118,12 @@ func _parse_animation(aid: String, a: Variant, check_files: bool) -> void:
 		"fps": fps, "loop": bool(ad.get("loop", true)),
 		"frame_size": frame_size, "foot_anchor": foot_anchor,
 		"kind": "", "frames": {}, "sheet": "", "columns": 0, "frame_count": 0, "rows": [], "dirs": [],
+		# Owner 2026-10-22 ("wire it to the controller"): explicit per-animation opt-out of the cardinal
+		# check below, for proof-stage combat art that is deliberately SE-only (Codex's kunai order
+		# gates expansion to the other 7 directions behind separate owner approval). Default false so
+		# every pre-existing production animation (idle/walk/run/sprint/jump/dodge) keeps the strict
+		# full-coverage requirement unchanged -- this cannot silently weaken an already-shipped anim.
+		"allow_partial_directions": bool(ad.get("allow_partial_directions", false)),
 	}
 	if ad.has("frame_size"):
 		var fv: Variant = _vec2(ad["frame_size"])
@@ -192,6 +198,8 @@ func _parse_animation(aid: String, a: Variant, check_files: bool) -> void:
 
 func _check_cardinals() -> void:
 	for aid: String in anim_order:
+		if bool(animations[aid].get("allow_partial_directions", false)):
+			continue
 		for c: String in ["N", "E", "S", "W"]:
 			var avail: Array = animations[aid]["dirs"]
 			if not avail.has(c) and _mirror_source(c, avail).is_empty():
