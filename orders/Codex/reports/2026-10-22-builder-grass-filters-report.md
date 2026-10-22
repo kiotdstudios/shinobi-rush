@@ -39,3 +39,8 @@ Final grid-snap suite: godot_ci.py tests --project . --log-dir build/builder-gra
 
 ## Latest-main integration before merge commit
 Aki dock-tabs PR92 advanced main to874b4e4d7fa80ff5c7e9720edb38b118c8fe1da9. Clean merge, including Animation Lab; wheel guard preserved. Ran import, tests (build/builder-dock-tests):1345PASS/zero failures; fresh export/finalize ../builder-dock-web PASS; controls-probe (build/builder-dock-controls) PASS including updated tab lip; builder-grass-probe (build/builder-dock-browser-2) all17PASS,zeroerrors. Browser save flush is asynchronous:2.5second wait was intermittent, so probe now allows8seconds before reload; the round-trip then passed. No save behavior bypass or runtime API mutation used. Updated preserved evidence before this commit.
+
+## Chase-fix integration before merge commit
+Main advanced to b2fc2f75f3c0fc8747abe588805d9371a0d953f9 (PR89,4-line bandit fix plus test). Clean merge; builder and wheel source unchanged. Ran full suite build/builder-chase-tests, fresh export/finalization ../builder-chase-web, and smoke.mjs --serve-dir ../builder-chase-web --out-dir build/builder-chase-smoke --label builder-chase-integration. Web smoke PASS9file hashes,real keyboard response33.314%,zero fatal errors. Existing17builder browser checks remain valid for unchanged builder code; final public17checks will repeat after deployment.
+
+Full chase-integration suite PASS1346/zero failures,expected malformed-sheet fixture warning only.
