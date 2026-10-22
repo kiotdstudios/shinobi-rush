@@ -232,6 +232,11 @@ func to_json_string() -> String:
 
 
 func save() -> bool:
+	# An empty world is never persisted: it would make the next boot start with no trees or walls.
+	if objects.is_empty():
+		if FileAccess.file_exists(save_path):
+			DirAccess.remove_absolute(save_path)
+		return true
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -274,7 +279,13 @@ func load_saved() -> int:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(save_path))
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return 0
-	return load_dict(parsed)
+	var items: Variant = parsed.get("items", [])
+	if typeof(items) != TYPE_ARRAY or items.is_empty():
+		return 0  # empty/garbled saves (older Clear-all autosaves) keep the default trees + walls
+	var made := load_dict(parsed)
+	if objects.is_empty():
+		load_dict({"version": 1, "items": []})  # every entry was rejected: fall back to the defaults
+	return made
 
 
 func _changed(write := true) -> void:
