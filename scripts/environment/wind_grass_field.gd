@@ -7,6 +7,8 @@ var tall: TileMapLayer
 var ground_wind: ShaderMaterial
 var tall_wind: ShaderMaterial
 var clock := 0.0
+const MAX_PUSHERS := 8
+var pushers := PackedVector2Array()  ## world feet positions currently pushing the grass
 var speed := 1.0
 var strength := 1.0
 var wind_on := true
@@ -50,6 +52,7 @@ func _material(is_tall: bool) -> ShaderMaterial:
 	material.set_shader_parameter("root_line", 116.0 if is_tall else 67.0)
 	material.set_shader_parameter("blade_height", 62.0 if is_tall else 30.0)
 	material.set_shader_parameter("amplitude", 4.5 if is_tall else 0.6)
+	material.set_shader_parameter("push_amount", 18.0 if is_tall else 9.0)
 	return material
 
 func _layer(label: String, tiles: TileSet, origin: Vector2) -> TileMapLayer:
@@ -80,9 +83,26 @@ func _clear_of_tree(point: Vector2) -> bool:
 			return false
 	return true
 
+## Feet of the player and every bandit; the grass bends away from them (visual only, grass never blocks movement).
+func pusher_points() -> PackedVector2Array:
+	var pts := PackedVector2Array()
+	if not is_inside_tree():
+		return pts
+	for group: String in ["player", "enemy"]:
+		for n: Node in get_tree().get_nodes_in_group(group):
+			if n is Node2D and pts.size() < MAX_PUSHERS:
+				pts.append((n as Node2D).global_position)
+	return pts
+
 func advance(delta: float) -> void:
 	clock += delta
+	var pts := pusher_points()
+	var padded := pts.duplicate()
+	padded.resize(MAX_PUSHERS)
+	pushers = pts
 	for material: ShaderMaterial in [ground_wind,tall_wind]:
+		material.set_shader_parameter("pushers", padded)
+		material.set_shader_parameter("push_count", pts.size())
 		material.set_shader_parameter("phase_index", float(phase()))
 		material.set_shader_parameter("strength", strength)
 		material.set_shader_parameter("enabled", wind_on)

@@ -149,6 +149,8 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().physics_frame
 	ck.call("builder grass: uses original wind material and ground anchors", (g.nodes[0] as Sprite2D).material == field.ground_wind and (g.nodes[0] as Sprite2D).offset == Vector2(-56, -84) and (tall.nodes[0] as Sprite2D).offset == Vector2(-56, -136))
 	ck.call("builder grass: no collision or nav obstacle added", placed.obstacles().size() == nav_before and not _solid_at(arena, Vector2(-420, 830)) and placed.can_place("grass9_center", player.global_position))
+	field.advance(0.0)
+	ck.call("grass bends: the player and bandits are fed to both grass materials as pushers (visual only, no blocking)", field.pushers.size() >= 1 and int(field.ground_wind.get_shader_parameter("push_count")) == field.pushers.size() and int(field.tall_wind.get_shader_parameter("push_count")) == field.pushers.size() and field.pushers.has(player.global_position))
 	editor.set_tool("select")
 	editor.press(g.pos)
 	editor.drag_to(Vector2(-360, 900))
