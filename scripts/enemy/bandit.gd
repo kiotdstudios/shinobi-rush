@@ -57,11 +57,18 @@ const ENGAGED_STATES: Array = [State.NOTICE, State.APPROACH, State.THREATEN, Sta
 ## is non-empty; the empty-points "stand guard and look around" fallback is unchanged (several isolated
 ## geometry/combat tests deliberately freeze the Bandit in place that way).
 @export var roam_pause: float = 0.4
-## Brief grace after giving up a chase (leash exceeded, or SEARCH timed out) before resuming patrol.
-## Owner 2026-10-22: "I want the logic for all enemies to stay in their new area" -- RETURN no longer
-## marches the Bandit back to its original spawn/home; it settles where it gave up and adopts THAT as its
-## new `home`, so its patrol loop/leash shift with it instead of snapping back across the map.
+## Brief grace after giving up a chase (leash exceeded, or SEARCH timed out) before free-roaming.
+## Owner 2026-10-22: "I want the logic for all enemies to stay in their new area" -- RETURN settles the
+## Bandit exactly where it gave up (see `home` snapshot in `_enter`). Owner follow-up 2026-10-22 (same
+## day): "I do not want there to be a home position; bandit's new home is the last seen location and he
+## continues his search" -- once a Bandit has EVER given up a chase (`_ever_disengaged`), it never walks
+## back to its original authored `patrol_points` loop again; `_tick_patrol` instead free-roams forever
+## from wherever it is (see `_tick_roam`/`_pick_roam_target`), still sprinting and still sensing/looking
+## for players. The first patrol of a Bandit's life (before it has ever disengaged) still walks the
+## authored loop, preserving the level-designed look of an undisturbed guard.
 @export var return_settle_time: float = 0.4
+## Radius (world px) `_pick_roam_target` searches within once free-roaming (see `return_settle_time`).
+@export var roam_radius: float = 260.0
 ## Owner 2026-10-22: "bandit lvl 1 is looking for players with under 30 ryo to try to steal it upon
 ## defeating players." Gates the STEAL action only (see `_try_hit`/`is_worth_robbing`), not detection or
 ## combat -- every player is still chased, threatened and fought the same regardless of ryo. PROVISIONAL
@@ -85,6 +92,7 @@ var home: Vector2 = Vector2.ZERO
 var sees_player := false
 var senses_player := false  ## proximity "power level" sense (ProximitySense); distance-only, no cone/LOS
 var locked_target: Node2D = null  ## non-null while actively engaged (see ENGAGED_STATES/is_locked_on())
+var _ever_disengaged := false  ## true once RETURN has ever been entered; see roam_radius doc comment
 var stolen_ryo: int = 0  ## running tally of ryo actually stolen (see _try_hit/is_worth_robbing)
 var player_hits_landed := 0
 var swings_thrown := 0
@@ -107,6 +115,8 @@ var _player: Node2D = null
 var _rng := RandomNumberGenerator.new()
 var _state_time := 0.0
 var _patrol_idx := 0
+var _roam_target: Vector2 = Vector2.ZERO
+var _has_roam_target := false
 var _wait_timer := 0.0
 var _return_settle_timer := 0.0  ## seconds left settling into the new home on RETURN (see return_settle_time)
 var _look_timer := 0.0
@@ -368,7 +378,11 @@ func _enter(next: State, reason: String = "") -> void:
 			# Owner 2026-10-22: "I want the logic for all enemies to stay in their new area" -- giving up
 			# a chase (leash exceeded, or SEARCH timed out) adopts wherever the Bandit is RIGHT NOW as its
 			# new home, instead of marching back to the original spawn. _tick_return only settles in place.
+			# Owner follow-up, same day: "I do not want there to be a home position" -- _ever_disengaged
+			# makes this permanent: the PATROL that follows free-roams from here on (see _tick_roam), it
+			# never walks back to the original authored patrol_points loop again.
 			home = global_position
+			_ever_disengaged = true
 			_return_settle_timer = return_settle_time
 			locked_target = null
 			_look_base = facing8
@@ -414,6 +428,12 @@ func _tick_patrol(delta: float) -> void:
 			return
 		_wait_timer = float(profile.patrol_wait)
 		return
+	# Owner follow-up 2026-10-22: "I do not want there to be a home position; bandit's new home is the
+	# last seen location and he continues his search." Once the Bandit has ever given up a chase, it
+	# never walks back to this authored loop again -- it free-roams instead (see _tick_roam).
+	if _ever_disengaged:
+		_tick_roam(delta)
+		return
 	# Owner 2026-10-22: "bandits are in the woods running around looking for players (naruto running)" --
 	# sprints between its authored waypoints (is_sprinting=true also activates the proximity sense, see
 	# _update_perception) with only a short breather at each stop, instead of a slow patrol-speed walk.
@@ -433,6 +453,49 @@ func _tick_patrol(delta: float) -> void:
 		_wait_timer = roam_pause
 		_look_base = facing8
 		_look_timer = 0.0
+
+
+## Owner follow-up 2026-10-22: "I do not want there to be a home position; bandit's new home is the
+## last seen location and he continues his search to find people to attack." Entered permanently once
+## `_ever_disengaged` is true (see `_enter`'s State.RETURN case) -- the Bandit never walks back to its
+## original authored `patrol_points` loop again; it free-roams from wherever it currently is, forever,
+## still sprinting (keeps its own proximity sense active, see `_update_perception`) and still looking
+## for players to re-engage.
+func _tick_roam(delta: float) -> void:
+	if _wait_timer > 0.0:
+		velocity = Vector2.ZERO
+		is_sprinting = false
+		_wait_timer -= delta
+		_look_around(delta)
+		if _wait_timer <= 0.0:
+			_look_step = 0
+		return
+	if not _has_roam_target:
+		_pick_roam_target()
+	is_sprinting = true
+	if _follow(_roam_target, chase_speed, delta, 26.0):
+		is_sprinting = false
+		_has_roam_target = false
+		_wait_timer = roam_pause
+		_look_base = facing8
+		_look_timer = 0.0
+
+
+## Picks a new free-roam destination within `roam_radius` of the Bandit's CURRENT position (not any
+## fixed point). Tries a few random directions/distances and keeps the first one `nav` (if present)
+## reports walkable; falls back to standing pat for this cycle if none land (dense geometry nearby).
+func _pick_roam_target() -> void:
+	var origin := global_position
+	for i in 6:
+		var ang := _rng.randf_range(0.0, TAU)
+		var dist := _rng.randf_range(roam_radius * 0.4, roam_radius)
+		var candidate := origin + Vector2.from_angle(ang) * dist
+		if nav == null or nav.is_walkable(candidate):
+			_roam_target = candidate
+			_has_roam_target = true
+			return
+	_roam_target = origin
+	_has_roam_target = true
 
 
 func _tick_notice(delta: float) -> void:
