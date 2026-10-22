@@ -2,7 +2,7 @@
 - Agent: Kiro
 - Order: none. Direct request from the project owner ("zoom goes from .44444 to 1 to 2 etc, I need 1.5, 2.5, 3.5 etc"); there is no order file.
 - Date: 2026-10-21
-- Final status: REVIEW (PR open, not merged, not deployed; the live check belongs to the orchestrator after the merge)
+- Final status: DONE (set by the orchestrator after the live check): PR #57 merged as 9d5b5a0c3135058e2b775f37db324ebffc4e5579 on 2026-10-22 at 02:25:58Z and verified on the deployed build, see "Live verification (added after the merge)" below. The worker had left it at REVIEW.
 - Commit / PR: branch `kiro/lab-zoom-half-steps`, implementation commit 5c50ba2, then this report in a report-only commit. The PR number and the CI run ids are in the PR and in the orchestrator's messages (a report cannot hold the CI result of its own head).
 
 ## Work completed
@@ -37,6 +37,17 @@ Observed in the browser (state zoom / panel label):
 - Key `N` in the lab: wide -> close (1.2115), `Z` `Z` gives 1, 1.5, `N` -> wide (0.4444); and the reverse from the close session.
 - Heavy camera kick (key `8`) at 2.5x, both presets: count 0 -> 1, peak 5 px, not active afterwards, offset 0, zoom stays 2.5.
 
+## Live verification (added after the merge, by the orchestrator, 2026-10-21)
+Live URL https://kiotdstudios.github.io/shinobi-rush/ . `build-info.json` `commit_sha` 9d5b5a0c3135058e2b775f37db324ebffc4e5579 (the PR #57 merge commit), main run 39711340816, built 2026-10-22T02:27:28Z. All six CI jobs of the merge green incl. deploy and post-deploy smoke; log counted by me: `SUMMARY: 758 passed, 0 failed`, controls probe 23 PASS / 0 FAIL (the new `lab-z-second-step-is-half` among them), debug probe 26 PASS, smoke 11 + 11 PASS. Replay on the deployed build (headless Chromium, software GL, 1280x720, real key presses and wheel, zoom read from `window.__SHINOBI_STATE__`, 0 console errors) VERIFIED:
+
+| Case | Result |
+| --- | --- |
+| wide, lab open, Z x9 | 1, 1.5, 2, 2.5, 3, 3.5, 4, 0.4444, 1; closing the lab: 0.4444 |
+| `?camera=close`, lab open, Z x9 | 1, 1.5, 2, 2.5, 3, 3.5, 4, 1.2115, 1; closing the lab: 1.2115 |
+| wide, wheel up, up, up, down | 1, 1.5, 2, 1.5 |
+
+Opened by me: the wide session at the 1.5x step (HUD "Zoom: 1.5000 (wide)", panel row `1.5x`, help line "Z or wheel zoom (half steps are not pixel-exact)"). Evidence on the build laptop: `c:\tmp\shinobi-order01\labzoom\evidence\live\`.
+
 ## Issues encountered
 - None blocking.
 - Observation, unchanged and found by reading the code (not run in the browser): the wheel handler does not check that the lab is open, so a wheel notch zooms the camera during normal play too, and only closing the lab (`Tab` twice) restores the baseline. Half steps make each notch smaller, nothing else changes.
@@ -46,7 +57,7 @@ Observed in the browser (state zoom / panel label):
 ## Not verified
 - Real GPU rendering and frame rate (software GL only); browsers other than headless Chromium; a real controller (the L-stick click calls the same `cycle_zoom`, covered only by the in-engine button/key parity test).
 - Pixel quality of the half steps. "Not pixel-exact" follows from nearest-neighbour sampling at a non-integer scale (each source pixel covers 1 or 2, 2 or 3, 3 or 4 screen pixels); I did not measure it. I opened one 1.5x frame and saw nothing broken.
-- The live site: nothing is deployed from this branch. After the merge the deployed build must be checked (`build-info.json` commit equals the merge commit, then Tab, Z).
+- The live site was NOT checked when this report was written (nothing was deployed from the branch). It was checked after the merge by the orchestrator: see "Live verification (added after the merge)" above.
 
 ## Questions for project owner
 None.
