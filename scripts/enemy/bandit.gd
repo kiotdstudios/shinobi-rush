@@ -465,7 +465,9 @@ func _tick_approach(delta: float) -> void:
 		if _lose_timer > float(profile.lose_sight_time):
 			_enter(State.SEARCH, "lost sight")
 			return
-	if home.distance_to(global_position) > float(profile.chase_leash):
+	# The leash only gives up a chase the Bandit has lost sight of; while the player is in view it keeps coming
+	# (owner 2026-10-22: "he stops the chase though I'm in his vision").
+	if not sees_player and home.distance_to(global_position) > float(profile.chase_leash):
 		_enter(State.RETURN, "chase leash")
 		return
 	var to_player := _player.global_position - global_position
