@@ -200,6 +200,35 @@ func run(ck: Callable, root: Node) -> void:
 	made = placed.load_dict({"version": 1, "items": [{"id": "nope", "x": 0, "y": 0}, {"id": "rock", "x": "a", "y": 1}, {"id": "rock", "x": 0, "y": 135}, {"id": "rock", "x": -600, "y": 560}]})
 	ck.call("builder: load skips unknown ids, bad numbers and objects on the spawn (v1 save also gets the starting trees)", made == 1 and placed.objects.size() == 6 + nb + grass_total)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(placed.save_path))
+	var floor_map := arena.find_child("FloorTiles", true, false) as TileMapLayer
+	var snap_ok := floor_map != null
+	for cell in [Vector2i(0, 0), Vector2i(3, -2), Vector2i(-7, 5), Vector2i(12, 9)]:
+		var centre := floor_map.position + floor_map.map_to_local(cell)
+		snap_ok = snap_ok and WorldEditor.iso_cell_center(centre + Vector2(9, -5)).is_equal_approx(centre)
+	ck.call("builder: grass snaps to the floor tile grid (cell centres match the floor TileMapLayer)", snap_ok)
+	var grass_field := arena.get_node("WindGrassField") as WindGrassField
+	var origin_ok := true
+	for tile in grass_field.initial_tiles:
+		var gp: Vector2 = tile.pos
+		origin_ok = origin_ok and WorldEditor.iso_cell_center(gp).is_equal_approx(gp)
+	ck.call("builder: the original grass field already sits on the floor grid", origin_ok)
+	ck.call("builder: grass footprint is centred on its cell", PlacedObjects.footprint_rect("grass9_center", Vector2(72, 36)).get_center().is_equal_approx(Vector2(72, 36)))
+	var player_node := root.get_tree().get_first_node_in_group("player") as PlayerController
+	editor.set_open(true)
+	root.get_tree().paused = true
+	editor.set_tool("pan")
+	editor.pan_by(Vector2(40, 20))
+	var panned := player_node.camera.offset
+	ck.call("builder: pan moves the camera while the game is paused, and the camera keeps processing", panned.x < 0.0 and panned.y < 0.0 and player_node.camera.process_mode == Node.PROCESS_MODE_ALWAYS and editor.overlay.process_mode == Node.PROCESS_MODE_ALWAYS)
+	var before_n: int = placed.objects.size()
+	editor.set_tool("place", "rock")
+	editor.press(Vector2(400, 300))
+	editor.release()
+	ck.call("builder: placing works while the game is paused (Esc)", placed.objects.size() == before_n + 1)
+	root.get_tree().paused = false
+	editor.set_open(false)
+	ck.call("builder: closing the builder re-centres the camera and restores its pause behaviour", player_node.camera.offset == Vector2.ZERO and player_node.camera.process_mode == Node.PROCESS_MODE_INHERIT)
+	editor.set_open(true)
 	placed.clear_all()
 	placed.save()
 	ck.call("builder: Clear all never persists an empty world (file removed, next boot keeps defaults)", not FileAccess.file_exists(placed.save_path) and placed.load_saved() == 0)

@@ -1,7 +1,7 @@
 class_name WindGrassField
 extends Node2D
 const PATCHES: Array[Rect2i] = [Rect2i(0,4,10,9), Rect2i(2,-3,6,5), Rect2i(-2,-14,6,6), Rect2i(-13,-5,7,6), Rect2i(14,14,7,7)]
-const FIELD_ORIGIN := Vector2(-800, 100)
+const FIELD_ORIGIN := Vector2(-792, 108)  # lands the grass cells on the floor grid (36 x 18 steps, matching parity)
 var ground: TileMapLayer
 var tall: TileMapLayer
 var ground_wind: ShaderMaterial
@@ -72,7 +72,7 @@ func _paint(low: TileMapLayer, blades: TileMapLayer, patch: Rect2i) -> void:
 			var role := WindGrassTileset.role_at(x,y,patch.size.x,patch.size.y)
 			low.set_cell(cell, role, Vector2i.ZERO)
 			var hash_value := KosenFloorTileset._mix_hash(cell.x,cell.y)
-			var world := low.position + low.map_to_local(cell)
+			var world := low.position + low.map_to_local(cell) + Vector2(-8, -8)  # tree clearance as measured before the field moved onto the floor grid
 			if hash_value % 100 < (68 if role == 4 else 40) and _clear_of_tree(world):
 				blades.set_cell(cell, hash_value % 4, Vector2i.ZERO)
 
