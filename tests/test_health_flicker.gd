@@ -1,0 +1,113 @@
+extends RefCounted
+## Player health + health bar, and the Body Flicker dodge (visibility, wall stop, invulnerability, fx cleanup).
+
+var ck: Callable
+
+
+func run(p_ck: Callable, tree_root: Node) -> void:
+	ck = p_ck
+	var main := (load("res://scenes/main.tscn") as PackedScene).instantiate()
+	tree_root.add_child(main)
+	for i in 5:
+		await main.get_tree().process_frame
+	var p := main.get_node("TrainingArena/Player") as PlayerController
+	await test_health(p)
+	await test_flicker(p, main.get_tree())
+	main.queue_free()
+	await tree_root.get_tree().process_frame
+
+
+func _release_all() -> void:
+	for a in ["move_left", "move_right", "move_up", "move_down", "sprint", "dodge", "jump", "attack_light"]:
+		Input.action_release(a)
+
+
+func test_health(p: PlayerController) -> void:
+	var bar := p.get_node_or_null("HealthBar") as HealthBar
+	ck.call("health: the player has a HealthBar child and starts at full health", bar != null and p.health == p.max_health and p.max_health == 100.0)
+	ck.call("health: the bar starts full", bar != null and is_equal_approx(bar.fraction, 1.0) and bar.label_text == "HP 100/100", str(bar.label_text) if bar else "")
+	p._hit_invuln = 0.0
+	p.state = PlayerController.State.IDLE
+	var landed := p.take_hit(8.0, Vector2.RIGHT)
+	ck.call("health: a landed 8 damage hit lowers health to 92 and the bar follows", landed and p.health == 92.0 and is_equal_approx(bar.fraction, 0.92) and bar.label_text == "HP 92/100", "%s %s" % [p.health, bar.label_text])
+	var again := p.take_hit(8.0, Vector2.RIGHT)
+	ck.call("health: hit-invulnerability blocks a second hit (no extra damage)", not again and p.health == 92.0)
+	p._hit_invuln = 0.0
+	p.state = PlayerController.State.DODGE
+	ck.call("health: an evading player takes no damage", not p.take_hit(8.0, Vector2.RIGHT) and p.health == 92.0)
+	p.state = PlayerController.State.IDLE
+	p.restore_health(500.0)
+	ck.call("health: restore_health clamps at max", p.health == 100.0)
+	p.health = 5.0
+	p._hit_invuln = 0.0
+	var downs := p.times_downed
+	p.take_hit(8.0, Vector2.RIGHT)
+	ck.call("health: reaching 0 counts a knock-down and restores the player to full", p.times_downed == downs + 1 and p.health == p.max_health)
+	p._hit_invuln = 0.0
+	p.health = 20.0
+	p.max_health = 100.0
+	p.health_changed.emit(p.health, p.max_health)
+	ck.call("health: the bar turns red at or below 30 percent", bar.fill_color() == HealthBar.COL_LOW)
+	p.restore_health(100.0)
+	ck.call("health: the bar is orange again when healthy", bar.fill_color() == HealthBar.COL_FILL)
+
+
+func test_flicker(p: PlayerController, tree: SceneTree) -> void:
+	_release_all()
+	p.state = PlayerController.State.IDLE
+	p.global_position = Vector2(-900, 100)
+	p.velocity = Vector2.ZERO
+	p._dodge_buffer = 0.0
+	p._hit_invuln = 0.0
+	for i in 5:
+		await tree.physics_frame
+	var start := p.global_position
+	Input.action_press("move_right")
+	Input.action_press("dodge")
+	for i in 3:
+		await tree.physics_frame
+	Input.action_release("dodge")
+	var was_hidden := false
+	var invuln := true
+	var frames := 0
+	while p.state == PlayerController.State.DODGE and frames < 90:
+		if not p.visual.visible:
+			was_hidden = true
+		invuln = invuln and not p.take_hit(8.0, Vector2.LEFT)
+		await tree.physics_frame
+		frames += 1
+	ck.call("flicker: the body disappears during the dodge and is visible again when it ends", was_hidden and p.visual.visible, "hidden=%s visible=%s" % [was_hidden, p.visual.visible])
+	ck.call("flicker: nothing lands during the whole dodge", invuln and p.health == p.max_health)
+	ck.call("flicker: the body moved along the heading in one step (about flicker_distance)", p.global_position.x - start.x > p.flicker_distance * 0.9, str(p.global_position - start))
+	Input.action_release("move_right")
+	for i in 40:
+		await tree.physics_frame
+	var fx_left := 0
+	for c in p.get_parent().get_children():
+		if c is BodyFlickerFx:
+			fx_left += 1
+	ck.call("flicker: the effect node frees itself after it plays", fx_left == 0, str(fx_left))
+	# a wall stops the displacement short
+	_release_all()
+	p.state = PlayerController.State.IDLE
+	var b := WorldScale.ARENA_BOUNDS
+	p.global_position = Vector2(b.end.x - 40.0, 100)
+	p.velocity = Vector2.ZERO
+	p._dodge_buffer = 0.0
+	for i in 5:
+		await tree.physics_frame
+	var wall_start := p.global_position
+	Input.action_press("move_right")
+	Input.action_press("dodge")
+	for i in 3:
+		await tree.physics_frame
+	Input.action_release("dodge")
+	frames = 0
+	while p.state == PlayerController.State.DODGE and frames < 90:
+		await tree.physics_frame
+		frames += 1
+	Input.action_release("move_right")
+	ck.call("flicker: a wall shortens the displacement and the body is visible afterwards", p.global_position.x - wall_start.x < p.flicker_distance * 0.6 and p.visual.visible and p.global_position.x <= b.end.x, str(p.global_position - wall_start))
+	var o := BodyFlickerFx.orientation(Vector2(1, 1))
+	var ow := BodyFlickerFx.orientation(Vector2(-1, 1))
+	ck.call("flicker fx: SE art is unrotated; SW is its mirror", is_zero_approx(o["rotation"]) and not o["mirror"] and is_zero_approx(ow["rotation"]) and ow["mirror"])

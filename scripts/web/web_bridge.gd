@@ -122,6 +122,8 @@ func _process(delta: float) -> void:
 		_state.bandit_home_dist = enemy.global_position.distance_to(enemy.home)
 		_state.bandit_log = enemy.intent_log.slice(maxi(enemy.intent_log.size() - 8, 0))
 		_state.player_hits_taken = _player.hits_taken
+		_state.player_health = _player.health
+		_state.player_max_health = _player.max_health
 	var scene := get_tree().current_scene
 	var lab := scene.get_node_or_null("AnimationLab") as AnimationLab if scene != null else null
 	if lab != null:

@@ -47,3 +47,6 @@ Full chase-integration suite PASS1346/zero failures,expected malformed-sheet fix
 
 ## HUD zoom integration before commit
 Required checks for2c9afb2passed, but main advanced at merge to0e841440632467c536e8dbda12d104a06a47095f(PR94). Clean merge of Animation Lab; guard preserved. Full suite build/builder-hud-tests1346PASS; fresh export/finalization ../builder-hud-web PASS; builder-hud-browser all17PASS; builder-hud-controls PASS,zeroerrors,baseline0.665 and ceiling1.5 preserved. Main then advanced again to104e9b4(PR95). Recording tested intermediate merge before integrating that separate change.
+
+## Health/flicker integration before merge commit
+Main104e9b490bd622ae8b3b3798274ae2f7e5c4c80d(PR95) merged cleanly. No Codex edits to health/combat logic. Import PASS; generated missing tests/test_health_flicker.gd.uid included as required Godot sidecar. Full suite build/builder-health-tests1361PASS/zero failures. Fresh export/finalization ../builder-health-web PASS. Builder probe build/builder-health-browser all17PASS/zeroerrors,including save/reload and scroll isolation with current0.665baseline. Updated screenshot/JSON. Pending renewed required checks and live publication.
