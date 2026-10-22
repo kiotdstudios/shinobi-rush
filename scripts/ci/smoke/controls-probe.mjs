@@ -227,7 +227,7 @@ try {
     'vision_player_in', 'vision_cone', 'vision_range', 'vision_close', 'vision_fov_deg', 'vision_facing_x', 'vision_facing_y', 'vision_mismatch', 'vision_capped',
     'vision_nodes', 'vision_origin_x', 'vision_origin_y'];
   const VISION_CATS = ['not_alert', 'suspicious', 'detected', 'lost_sight', 'searching', 'returning'];
-  const VISION_BUTTON = { x: 1027, y: 21 }; // centre of "Bandit vision: off (F2)" (942, 8, 170x26 in the 1280x720 viewport)
+  const VISION_BUTTON = { x: 1027, y: 3 }; // the tab's coloured lip: "Bandit vision" is a binder tab (x 942..1112) hanging from the top edge, only y 0..7 shows at rest, y 0..26 once popped down
   const visionOpen = async (query) => {
     const p = await context.newPage();
     p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
