@@ -1,10 +1,10 @@
 # ORDER — Palette-matched nine-tile animated grass
 
 - Agent: Codex
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P0 — direct owner request
 - Owner: Codex (environment art, decorative wind animation)
-- Branch/PR: `codex/wind-grass-nine`
+- Branch/PR: `codex/wind-grass-nine` / https://github.com/kiotdstudios/shinobi-rush/pull/85 (merged)
 - Dependencies: review Aki floor PR #75; current main with tree collision/vision updates
 
 ## Objective
@@ -21,3 +21,6 @@ Floor audit with findings; center/four edges/four corners; transparent overflow 
 
 ## Acceptance Criteria / Tests
 Correct72×36 logical grid and nine semantic roles; palette fit; no opaque ground plates or blade clipping; connected patches without straight internal cuts; blade roots stable, tips bend in waves rather than the whole ground sliding. Normal gameplay remains usable. Asset QC, unit/resource checks, Web export, real browser seam/motion/root tests, reviewed PR and verified exact live SHA.
+
+## Completion
+Deployed build1a151d693b833a859ef67f19f635b0e2a6a5182f.1287tests passed; all15 grass browser checks and exact-SHA public smoke passed. Live review: https://kiotdstudios.github.io/shinobi-rush/?grass=review&v=1a151d6 . Full evidence in reports/2026-10-22-wind-grass-nine-tiles-report.md.

@@ -3,8 +3,8 @@
 - Agent: Codex
 - Order: `orders/Codex/2026-10-22-wind-grass-nine-tiles.md` (direct owner request)
 - Date:2026-10-22 America/New_York
-- Status: IN_PROGRESS — local tested implementation, latest-main integration/live pending
-- Commit / PR: Not committed; report written before implementation commit.
+- Status: DONE — integrated, deployed and independently live verified
+- Commit / PR: Implementation 0702f9c; PR https://github.com/kiotdstudios/shinobi-rush/pull/85; merged build 1a151d693b833a859ef67f19f635b0e2a6a5182f. Original report was written before implementation commit.
 
 ## Work completed
 
@@ -75,3 +75,18 @@ Main advanced again to0406774f28030714af8b500a8001888a55f00f21 (PR86 editable st
 ## Reference-only integration before commit
 
 All checks for7ec73b3passed, including requiredgate. Main advanced to15effbafb33a5545b23df892f92e27abb95dad33 (PR84), adding only docs/visuals/walls/reference-stone-mockup.png and orders/Codex/2026-10-22-real-wall-art.md. Clean merge; runtime tree unchanged, so existing1287tests/browser/export evidence applies without rerunning identical runtime. Reviewed new queued wall-art brief; current direct-owner grass delivery remains higher priority until publication completes. No bypass of required checks.
+
+## Final deployment and live verification (supersedes pending notes above)
+
+Completed 2026-10-22T17:28:06Z (13:28 America/New_York). PR85 merged through required checks, no bypass. Final reviewed head2aa675d3921ae76de36fd5638231851dead8afc7; runtime merge1a151d693b833a859ef67f19f635b0e2a6a5182f. Main workflow39821878456 import/tests/export, pre-deploy browser smoke and Pages deployment all confirmed success. Independent live verification passed while workflow's own post-deploy job was still running.
+
+Live review: https://kiotdstudios.github.io/shinobi-rush/?grass=review&v=1a151d6
+Normal game includes the same grass patches. Opened the public review in Codex browser; visually confirmed Meadow, then clicked Half speed and Gust: status0.50x/wind1.6,247terrain/111tall. Retained review tab for owner.
+
+Commands executed against public Pages:
+- node scripts/ci/smoke/smoke.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 1a151d693b833a859ef67f19f635b0e2a6a5182f --out-dir build/grass-live-smoke --label grass-live: PASS exact commit,9file SHA256 hashes,rendered canvas,real keyboard effect33.917%,zero fatal console errors. Four nonfatal engine warnings.
+- node scripts/ci/smoke/grass-proof-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/grass-live-proof: all15PASS,zeroerrors; tip25.039%changed/root0%. Normal/half,pause/step,wind/gust,all5views and stable placement budget verified.
+
+Preserved live-browser-evidence.json, live-meadow.png and player-in-meadow.png in docs/visuals/wind-grass-nine/. Live exact-build smoke artifacts remain under build/grass-live-smoke. This final follow-up commit changes report/order/evidence only; it does not represent another runtime deployment.
+
+Remaining risks: mobile hardware performance not benchmarked; optional wind strength/density tuning after owner review. Aki can add the supplied TileSet API to the World Builder brush catalog separately. No unresolved failures or questions. Grass order complete. New wall-art order is separate and depends on this delivered palette.
