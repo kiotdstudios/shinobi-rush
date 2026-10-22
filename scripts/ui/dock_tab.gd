@@ -73,9 +73,10 @@ static func _slide(b: Button) -> void:
 	if not b.is_inside_tree():
 		b.position.y = y
 		return
-	var old: Variant = b.get_meta("dock_tween", null)
-	if old is Tween and (old as Tween).is_valid():
-		(old as Tween).kill()
+	if b.has_meta("dock_tween"):
+		var old: Variant = b.get_meta("dock_tween")
+		if old is Tween and (old as Tween).is_valid():
+			(old as Tween).kill()
 	var tw := b.create_tween()
 	tw.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_property(b, "position:y", y, SLIDE_TIME)
