@@ -34,7 +34,30 @@ func run(ck: Callable, root: Node) -> void:
 
 	var base_trees := grove.trees.size()
 	var base_objs := placed.objects.size()
-	ck.call("builder: the five starting trees are editable objects", base_trees == 5 and base_objs == 5)
+	var nb := WorldScale.BLOCKS.size()
+	ck.call("builder: the five starting trees and every placeholder wall are editable objects", base_trees == 5 and base_objs == 5 + nb)
+	# a placeholder wall: pick, move (collision + nav follow), delete
+	var wb: Array = WorldScale.BLOCKS[1]
+	var wb_mid: Vector2 = (wb[0] as Vector2) + Vector2(0, -float((wb[1] as Vector2).y) * 0.5)
+	editor.set_open(true)
+	editor.set_tool("select")
+	editor.press(wb_mid)
+	ck.call("builder: clicking a placeholder wall selects it", not editor.selected.is_empty() and editor.selected.id == "base_1" and editor.dragging)
+	editor.drag_to(wb_mid + Vector2(0, 450))
+	editor.release()
+	await root.get_tree().physics_frame
+	await root.get_tree().physics_frame
+	var wmoved: Vector2 = editor.selected.pos
+	ck.call("builder: a placeholder wall moves with collision and nav", wmoved != (wb[0] as Vector2) and _solid_at(arena, wmoved + Vector2(0, -float((wb[1] as Vector2).y) * 0.5)) and not _solid_at(arena, wb_mid) and not arena.nav.is_walkable(wmoved + Vector2(0, -20)))
+	editor.delete_selected()
+	await root.get_tree().physics_frame
+	await root.get_tree().physics_frame
+	ck.call("builder: a placeholder wall can be deleted", placed.objects.size() == base_objs - 1 and not _solid_at(arena, wmoved + Vector2(0, -float((wb[1] as Vector2).y) * 0.5)))
+	editor.set_open(false)
+	editor._reset_armed = true
+	editor._reset_pressed()
+	await root.get_tree().physics_frame
+	await root.get_tree().physics_frame
 	# an ORIGINAL tree can be picked, moved and deleted like any placed one
 	var orig_pos: Vector2 = WorldScale.TREE_POSITIONS[0]
 	editor.set_open(true)
@@ -57,7 +80,7 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().process_frame
 	await root.get_tree().physics_frame
 	await root.get_tree().physics_frame
-	ck.call("builder: reset brings the five starting trees back in place", placed.objects.size() == 5 and grove.trees.size() == 5 and _solid_at(arena, orig_pos + Vector2(0, -20)) and not arena.nav.is_walkable(orig_pos + Vector2(0, -20)))
+	ck.call("builder: reset brings the five starting trees back in place", placed.objects.size() == 5 + nb and grove.trees.size() == 5 and _solid_at(arena, orig_pos + Vector2(0, -20)) and not arena.nav.is_walkable(orig_pos + Vector2(0, -20)))
 	editor.set_open(false)
 	base_trees = grove.trees.size()
 	base_objs = placed.objects.size()
@@ -126,7 +149,7 @@ func run(ck: Callable, root: Node) -> void:
 	var made := placed.load_saved()
 	ck.call("builder: load restores the same layout", made == (snapshot.items as Array).size() and JSON.stringify(placed.to_dict()) == JSON.stringify(snapshot))
 	made = placed.load_dict({"version": 1, "items": [{"id": "nope", "x": 0, "y": 0}, {"id": "rock", "x": "a", "y": 1}, {"id": "rock", "x": 0, "y": 135}, {"id": "rock", "x": -600, "y": 560}]})
-	ck.call("builder: load skips unknown ids, bad numbers and objects on the spawn (v1 save also gets the starting trees)", made == 1 and placed.objects.size() == 6)
+	ck.call("builder: load skips unknown ids, bad numbers and objects on the spawn (v1 save also gets the starting trees)", made == 1 and placed.objects.size() == 6 + nb)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(placed.save_path))
 	placed.clear_all()
 	editor.set_open(false)

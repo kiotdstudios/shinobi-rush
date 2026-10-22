@@ -6,8 +6,9 @@ extends Node
 ##   kind "block": a placeholder box (TrainingArena.Block/BlockRear) with `footprint` (w, depth) and `height`.
 ##   kind "tree":  one of the five Codex blossom trees (index into blossom_trees.art.json); solid trunk base only.
 const SAVE_PATH := "user://world_builder_layout.json"
-## v2 saves list EVERY object (the starting trees included); a v1 save only listed additions, so it also gets the default trees.
-const SAVE_VERSION := 2
+## v3 saves list EVERY object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
+## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
+const SAVE_VERSION := 3
 const CATALOG := {
 	"tree_1": {"label": "Tiered tree", "kind": "tree", "tree": 0},
 	"tree_2": {"label": "Windswept tree", "kind": "tree", "tree": 1},
@@ -26,6 +27,18 @@ const ACTOR_CLEARANCE := 36.0
 
 static var _tree_cache: Array = []
 
+
+## Catalog entry for an id, including the arena's own placeholder walls ("base_N").
+static func def_of(id: String) -> Dictionary:
+	if CATALOG.has(id):
+		return CATALOG[id]
+	if id.begins_with("base_") and id.substr(5).is_valid_int():
+		var n := id.substr(5).to_int()
+		if n >= 0 and n < WorldScale.BLOCKS.size():
+			var b: Array = WorldScale.BLOCKS[n]
+			return {"label": "Wall" if float(b[2]) >= 140.0 else "Block", "kind": "block", "footprint": b[1], "height": float(b[2])}
+	return {}
+
 var arena: TrainingArena
 var save_path := SAVE_PATH
 var autosave := true
@@ -42,7 +55,7 @@ static func tree_info(index: int) -> Dictionary:
 
 
 static func footprint_of(id: String) -> Vector2:
-	var def: Dictionary = CATALOG[id]
+	var def := def_of(id)
 	return WorldScale.TREE_TRUNK_FOOTPRINT if def.kind == "tree" else def.footprint
 
 
@@ -54,7 +67,7 @@ static func footprint_rect(id: String, pos: Vector2) -> Rect2:
 
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
 static func hit_rect(id: String, pos: Vector2) -> Rect2:
-	var def: Dictionary = CATALOG[id]
+	var def := def_of(id)
 	if def.kind == "tree":
 		return Rect2(pos.x - 110.0, pos.y - 330.0, 220.0, 350.0)
 	var fp: Vector2 = def.footprint
@@ -62,7 +75,7 @@ static func hit_rect(id: String, pos: Vector2) -> Rect2:
 
 
 func can_place(id: String, pos: Vector2) -> bool:
-	if arena == null or not CATALOG.has(id):
+	if arena == null or def_of(id).is_empty():
 		return false
 	var rect := footprint_rect(id, pos).grow(8.0)
 	if not arena.bounds.encloses(rect):
@@ -77,9 +90,9 @@ func can_place(id: String, pos: Vector2) -> bool:
 
 
 func add(id: String, pos: Vector2, commit := true) -> Dictionary:
-	if arena == null or not CATALOG.has(id):
+	if arena == null or def_of(id).is_empty():
 		return {}
-	var def: Dictionary = CATALOG[id]
+	var def := def_of(id)
 	var nodes: Array[Node] = []
 	_serial += 1
 	if def.kind == "block":
@@ -122,10 +135,20 @@ func _make_trunk(pos: Vector2) -> StaticBody2D:
 
 ## Take over the trees BlossomGrove spawned at start so they can be picked, moved and deleted like anything else.
 func adopt_grove() -> int:
-	var grove := arena.get_node_or_null("BlossomGrove") as BlossomGrove if arena != null else null
-	if grove == null:
+	if arena == null:
 		return 0
 	var n := 0
+	for i in WorldScale.BLOCKS.size():
+		var front := arena.get_node_or_null("Block%d" % i)
+		var rear := arena.get_node_or_null("BlockRear%d" % i)
+		if front != null and rear != null:
+			_serial += 1
+			objects.append({"id": "base_%d" % i, "pos": WorldScale.BLOCKS[i][0], "nodes": [front, rear]})
+			n += 1
+	var grove := arena.get_node_or_null("BlossomGrove") as BlossomGrove
+	if grove == null:
+		_changed(false)
+		return n
 	for i in mini(grove.trees.size(), 5):
 		var tree: BlossomTree = grove.trees[i]
 		_serial += 1
@@ -139,7 +162,7 @@ func remove(obj: Dictionary, commit := true) -> void:
 	if not objects.has(obj):
 		return
 	objects.erase(obj)
-	var def: Dictionary = CATALOG[obj.id]
+	var def := def_of(obj.id)
 	for n: Node in obj.nodes:
 		if not is_instance_valid(n):
 			continue
@@ -157,7 +180,7 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 	if not objects.has(obj):
 		return
 	obj.pos = pos
-	var def: Dictionary = CATALOG[obj.id]
+	var def := def_of(obj.id)
 	var nodes: Array = obj.nodes
 	if def.kind == "block":
 		(nodes[0] as Node2D).position = pos
@@ -222,12 +245,15 @@ func load_dict(data: Dictionary) -> int:
 	if int(data.get("version", 1)) < 2:
 		for i in WorldScale.TREE_POSITIONS.size():
 			add("tree_%d" % (i + 1), WorldScale.TREE_POSITIONS[i], false)
+	if int(data.get("version", 1)) < 3:
+		for i in WorldScale.BLOCKS.size():
+			add("base_%d" % i, WorldScale.BLOCKS[i][0], false)
 	var made := 0
 	var spawn := Vector2(0, 135)
 	if arena != null and arena.has_node("Spawn"):
 		spawn = (arena.get_node("Spawn") as Node2D).position
 	for item in data.get("items", []):
-		if typeof(item) != TYPE_DICTIONARY or not CATALOG.has(str(item.get("id", ""))):
+		if typeof(item) != TYPE_DICTIONARY or def_of(str(item.get("id", ""))).is_empty():
 			continue
 		if typeof(item.get("x")) not in [TYPE_FLOAT, TYPE_INT] or typeof(item.get("y")) not in [TYPE_FLOAT, TYPE_INT]:
 			continue
