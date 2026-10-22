@@ -14,6 +14,9 @@ signal camera_baseline_changed(zoom: float)
 ## An enemy attack connected (Level 1 Bandit order). There is deliberately no player HP/death here:
 ## the locked RPG/death rules are untouched; this only counts the hit and gives a short readable reaction.
 signal hit_taken(damage: float, from_dir: Vector2)
+## Currency changed (spent, or stolen by an enemy via lose_ryo() -- see Bandit._steal_ryo/is_worth_robbing).
+## No player death/HP system exists here (locked RPG rules); this only tracks the stat.
+signal ryo_changed(new_amount: int)
 
 enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK, AIR_ATTACK }
 ## Phase of the current attack (LIGHT1/LIGHT2/LIGHT3/DASH_ATTACK states only). Startup/active/recovery
@@ -74,6 +77,10 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## proximity-detection radius used while SPRINTing ("naruto running"), see ProximitySense/sense_radius().
 ## PROVISIONAL PROTOTYPE value, not balance.
 @export var intelligence: int = 5
+## Currency (owner 2026-10-22: "bandit lvl 1 is looking for players with under 30 ryo to try to steal
+## it"). Default is deliberately above that threshold so a fresh player is not an automatic target.
+## PROVISIONAL PROTOTYPE value -- no economy/shop/save system exists yet, not balance.
+@export var ryo: int = 50
 
 var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
@@ -561,6 +568,16 @@ func reset_camera() -> void:
 ## _physics_process): how far away a nearby enemy is auto-detected while sprinting ("naruto running").
 func sense_radius() -> float:
 	return ProximitySense.radius_for(intelligence)
+
+
+## Removes up to `amount` ryo (clamped to what is actually carried) and returns the amount actually
+## removed. Called by an enemy's steal action (see Bandit._steal_ryo); emits ryo_changed when it changes.
+func lose_ryo(amount: int) -> int:
+	var taken := clampi(amount, 0, ryo)
+	if taken > 0:
+		ryo -= taken
+		ryo_changed.emit(ryo)
+	return taken
 
 
 func get_state_name() -> String:

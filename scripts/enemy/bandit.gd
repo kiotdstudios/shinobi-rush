@@ -27,6 +27,11 @@ const TAUNT_TEXT := "Hand over your ryo!"
 const TAUNT_TIME := 2.4
 const EYE_OFFSET := Vector2(0, -13.5)  ## sight/attack rays run at collider height, like the walls' footprints
 const LOG_MAX := 40
+## States in which this Bandit is actively engaged with `locked_target` (owner 2026-10-22: "enemies
+## should auto engage lock onto players"). Deliberately separate from the narrower `chasing` list in
+## `_update_perception()` (which only widens the sight check) -- this one drives `is_locked_on()` and
+## is reused by nothing else, so changing it cannot shift unrelated sight/cone behaviour.
+const ENGAGED_STATES: Array = [State.NOTICE, State.APPROACH, State.THREATEN, State.ATTACK, State.REPOSITION, State.RETREAT, State.SEARCH, State.EVADE, State.HIT_REACT]
 @export var intelligence_level: int = 1
 ## Sense stat (owner: "the higher the stat the bigger the circle") -- NOT `intelligence_level` above,
 ## which selects the AI tuning profile. This one only widens the omnidirectional proximity-detection
@@ -46,6 +51,22 @@ const LOG_MAX := 40
 ## Patrol loop in world px. Empty = guard `home` and look around.
 @export var patrol_points: PackedVector2Array = PackedVector2Array()
 @export var debug_log: bool = false
+## "Naruto running" woods patrol (owner 2026-10-22): short breather between waypoint legs while on an
+## authored patrol loop, replacing the old long `profile.patrol_wait` stand-and-look-around pause so the
+## Level 1 robber reads as continuously running the woods, not strolling. Only used when `patrol_points`
+## is non-empty; the empty-points "stand guard and look around" fallback is unchanged (several isolated
+## geometry/combat tests deliberately freeze the Bandit in place that way).
+@export var roam_pause: float = 0.4
+## Brief grace after giving up a chase (leash exceeded, or SEARCH timed out) before resuming patrol.
+## Owner 2026-10-22: "I want the logic for all enemies to stay in their new area" -- RETURN no longer
+## marches the Bandit back to its original spawn/home; it settles where it gave up and adopts THAT as its
+## new `home`, so its patrol loop/leash shift with it instead of snapping back across the map.
+@export var return_settle_time: float = 0.4
+## Owner 2026-10-22: "bandit lvl 1 is looking for players with under 30 ryo to try to steal it upon
+## defeating players." Gates the STEAL action only (see `_try_hit`/`is_worth_robbing`), not detection or
+## combat -- every player is still chased, threatened and fought the same regardless of ryo. PROVISIONAL
+## PROTOTYPE value, not balance.
+@export var ryo_steal_threshold: int = 30
 
 var is_sprinting := false
 var evade_count := 0
@@ -63,6 +84,8 @@ var nav: ArenaNav = null
 var home: Vector2 = Vector2.ZERO
 var sees_player := false
 var senses_player := false  ## proximity "power level" sense (ProximitySense); distance-only, no cone/LOS
+var locked_target: Node2D = null  ## non-null while actively engaged (see ENGAGED_STATES/is_locked_on())
+var stolen_ryo: int = 0  ## running tally of ryo actually stolen (see _try_hit/is_worth_robbing)
 var player_hits_landed := 0
 var swings_thrown := 0
 var overcommits := 0
@@ -85,6 +108,7 @@ var _rng := RandomNumberGenerator.new()
 var _state_time := 0.0
 var _patrol_idx := 0
 var _wait_timer := 0.0
+var _return_settle_timer := 0.0  ## seconds left settling into the new home on RETURN (see return_settle_time)
 var _look_timer := 0.0
 var _look_step := 0
 var _look_base := Vector2.DOWN
@@ -240,9 +264,12 @@ func _update_perception() -> void:
 	# "when naruto running and near enemy ... player will auto detect and pull their kunai out" --
 	# the symmetric case for the Bandit: it auto-notices a nearby player even outside its sight cone.
 	senses_player = is_sprinting and global_position.distance_to(_player.global_position) <= sense_radius()
+	# Owner 2026-10-22: "enemies should auto engage lock onto players" -- the sense is a felt power-level
+	# read, not a glimpse that needs confirming, so it skips the sight path's NOTICE suspicion delay
+	# entirely and commits straight to APPROACH (locked_target is set in _enter's State.APPROACH case).
 	if senses_player and state in [State.PATROL, State.IDLE, State.SEARCH, State.RETURN]:
 		last_seen = _player.global_position
-		_enter(State.NOTICE, "sensed: proximity (intelligence %d)" % intelligence)
+		_enter(State.APPROACH, "sensed: proximity -> instant lock-on (intelligence %d)" % intelligence)
 
 
 ## Range + (optionally) facing cone + clear line of sight. Walls block detection exactly like they
@@ -278,6 +305,34 @@ func sense_radius() -> float:
 	return ProximitySense.radius_for(intelligence)
 
 
+## True while actively engaged with `locked_target` (owner: "enemies should auto engage lock onto
+## players"). See ENGAGED_STATES; cleared on PATROL/RETURN entry (full disengage/settle).
+func is_locked_on() -> bool:
+	return locked_target != null and state in ENGAGED_STATES
+
+
+## Owner 2026-10-22: "bandit lvl 1 is looking for players with under 30 ryo to try to steal it upon
+## defeating players." `p` without a readable `ryo` property (e.g. a bare test stand-in) is always
+## worth robbing -- this never blocks detection/combat (see ryo_steal_threshold's doc comment), it only
+## gates whether `_try_hit` actually steals anything once a hit lands.
+func is_worth_robbing(p: Node) -> bool:
+	if p == null:
+		return false
+	var r = p.get("ryo")
+	return r == null or int(r) < ryo_steal_threshold
+
+
+## Steals everything `p` is carrying (capped at ryo_steal_threshold worth is not implied -- "steal it"
+## means the whole stash) via `p.lose_ryo()`. No-op if `p` has no such method (bare test stand-ins).
+func _steal_ryo(p: Node) -> void:
+	if p == null or not p.has_method("lose_ryo"):
+		return
+	var taken: int = p.call("lose_ryo", int(p.get("ryo")))
+	if taken > 0:
+		stolen_ryo += taken
+		_log("stole %d ryo" % taken)
+
+
 # ---------------------------------------------------------------------------------- states
 func _enter(next: State, reason: String = "") -> void:
 	if next == state:
@@ -295,6 +350,7 @@ func _enter(next: State, reason: String = "") -> void:
 			_notice_blind = 0.0
 		State.APPROACH:
 			_lose_timer = 0.0
+			locked_target = _player  ## owner: "enemies should auto engage lock onto players"
 			if prev in [State.PATROL, State.NOTICE, State.IDLE, State.SEARCH, State.RETURN]:
 				engagement_count += 1
 		State.THREATEN:
@@ -308,11 +364,22 @@ func _enter(next: State, reason: String = "") -> void:
 			_search_arrived = false
 			_search_timer = float(profile.search_duration)
 			_has_lost_player = true
+		State.RETURN:
+			# Owner 2026-10-22: "I want the logic for all enemies to stay in their new area" -- giving up
+			# a chase (leash exceeded, or SEARCH timed out) adopts wherever the Bandit is RIGHT NOW as its
+			# new home, instead of marching back to the original spawn. _tick_return only settles in place.
+			home = global_position
+			_return_settle_timer = return_settle_time
+			locked_target = null
+			_look_base = facing8
+			_look_timer = 0.0
+			_look_step = 0
 		State.PATROL:
 			_wait_timer = 0.4
 			_has_lost_player = false
 			_first_contact_pending = true
 			_look_base = facing8
+			locked_target = null
 	_log("%s>%s %s" % [State.keys()[prev], State.keys()[next], reason])
 	intent_changed.emit(State.keys()[next], reason)
 
@@ -333,20 +400,37 @@ func _tick_patrol(delta: float) -> void:
 	if sees_player:
 		_enter(State.NOTICE, "spotted player at %d px" % int(global_position.distance_to(_player.global_position)))
 		return
-	velocity = Vector2.ZERO
+	if patrol_points.is_empty():
+		# Isolated-test freeze convenience (no authored waypoints): stand guard and look around. The
+		# real deployed Level 1 robber always has patrol_points set (see training_arena.gd) and takes
+		# the "naruto running" branch below instead.
+		velocity = Vector2.ZERO
+		is_sprinting = false
+		if _wait_timer > 0.0:
+			_wait_timer -= delta
+			_look_around(delta)
+			if _wait_timer <= 0.0:
+				_look_step = 0
+			return
+		_wait_timer = float(profile.patrol_wait)
+		return
+	# Owner 2026-10-22: "bandits are in the woods running around looking for players (naruto running)" --
+	# sprints between its authored waypoints (is_sprinting=true also activates the proximity sense, see
+	# _update_perception) with only a short breather at each stop, instead of a slow patrol-speed walk.
 	if _wait_timer > 0.0:
+		velocity = Vector2.ZERO
+		is_sprinting = false
 		_wait_timer -= delta
 		_look_around(delta)
 		if _wait_timer <= 0.0:
 			_look_step = 0
 		return
-	if patrol_points.is_empty():
-		_wait_timer = float(profile.patrol_wait)
-		return
 	var target := patrol_points[_patrol_idx % patrol_points.size()]
-	if _follow(target, float(profile.patrol_speed), delta, 26.0):
+	is_sprinting = true
+	if _follow(target, chase_speed, delta, 26.0):
+		is_sprinting = false
 		_patrol_idx = (_patrol_idx + 1) % patrol_points.size()
-		_wait_timer = float(profile.patrol_wait)
+		_wait_timer = roam_pause
 		_look_base = facing8
 		_look_timer = 0.0
 
@@ -500,6 +584,11 @@ func _try_hit(idx: int) -> void:
 	if _player.call("take_hit", 8.0, to.normalized(), 180.0):
 		player_hits_landed += 1
 		_log("hit %d landed" % (idx + 1))
+		# Owner 2026-10-22: "try to steal it upon defeating players." No player death/HP system exists
+		# yet (that is a locked RPG system, not changed here) -- a landed hit is the closest real combat
+		# resolution event available today, so the steal is wired here. Flagged for owner confirmation.
+		if is_worth_robbing(_player):
+			_steal_ryo(_player)
 	else:
 		_log("hit %d evaded" % (idx + 1))
 
@@ -641,11 +730,15 @@ func _tick_return(delta: float) -> void:
 	if sees_player:
 		_enter(State.NOTICE, "spotted while returning")
 		return
-	var target := home
-	if not patrol_points.is_empty():
-		target = patrol_points[_patrol_idx % patrol_points.size()]
-	if _follow(target, float(profile.patrol_speed) * 1.4, delta, 26.0):
-		_enter(State.PATROL, "back on patrol")
+	# Owner 2026-10-22: "I want the logic for all enemies to stay in their new area." `home` was already
+	# snapped to this exact spot on RETURN entry (see _enter), so there is nowhere to walk back to --
+	# this just settles for a brief beat (looking around, not frozen) before resuming patrol from here.
+	velocity = Vector2.ZERO
+	is_sprinting = false
+	_look_around(delta)
+	_return_settle_timer -= delta
+	if _return_settle_timer <= 0.0:
+		_enter(State.PATROL, "settled into new area")
 
 
 # ---------------------------------------------------------------------------------- movement
