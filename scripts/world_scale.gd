@@ -78,6 +78,10 @@ const BLOCKS: Array = [
 ## the anchor like BLOCKS. All five sit west of the spawn, clear of the due-right and due-up lanes.
 const TREE_POSITIONS: Array[Vector2] = [Vector2(-920, 320), Vector2(-620, 150), Vector2(-350, -100), Vector2(-1060, -130), Vector2(-790, 720)]
 const TREE_TRUNK_FOOTPRINT := Vector2(100, 44)
+## Fire pillars (Orcha art, owner 2026-10-22: "make this little fire pillar thingy" from the shrine
+## mockup). Symmetric, south of spawn, clear of every BLOCKS wall, TREE_POSITIONS and the Bandit's
+## patrol/leash area. Purely decorative -- no collision/nav, same precedent as WindGrassField.
+const FIRE_PILLAR_POSITIONS: Array[Vector2] = [Vector2(-230, 260), Vector2(230, 260)]
 ## Where the Level 1 Bandit lives: far east of the player's spawn, behind the walls above.
 const BANDIT_HOME := Vector2(1300, -130)
 const BANDIT_PATROL: Array[Vector2] = [Vector2(1250, -200), Vector2(1650, -200), Vector2(1650, 60), Vector2(1380, 60)]
