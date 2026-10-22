@@ -1,6 +1,6 @@
 # ORDER — Detailed blue chakra charge
 - Agent: Codex
-- Status: REVIEW
+- Status: REVIEW — PAUSED by owner; both chakra VFX and charge body failed visual review
 - Priority: P0 — direct owner request
 - Owner: Codex (character/VFX art and opt-in review integration)
 - Branch/PR: codex/chakra-charge
@@ -18,4 +18,4 @@ Preserve body scale/feet/design; original blue rising energy with deliberate pix
 ## Handoff / Notes
 Other queued art orders remain separate. Blue is the default; alternate palettes are preview/API capabilities, not unlocked progression rewards.
 
-Pre-commit acceptance:1,486 Godot checks,31 integrated chakra browser checks,11 smoke checks, native asset QC/import/manifest/export all passed. Report: [chakra charge job report](reports/2026-10-22-chakra-charge-report.md). Required PR checks and public deployment verification pending.
+Technical checks passed, but the owner rejected both the chakra VFX and charge-body animation on2026-10-22 and explicitly paused this work. PR #107 is draft and must not merge/deploy. Preserve the work for later revision. Switch priority to all-direction kunai attacks for player and bandit. Report: [chakra charge job report](reports/2026-10-22-chakra-charge-report.md).
