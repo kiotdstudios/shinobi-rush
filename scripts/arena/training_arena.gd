@@ -204,13 +204,9 @@ func paint_floor(tile_map: TileMapLayer) -> void:
 			var near_right := pos.x >= rect.end.x - EDGE_RING_PX
 			var near_top := pos.y <= rect.position.y + EDGE_RING_PX
 			var near_bottom := pos.y >= rect.end.y - EDGE_RING_PX
-			var on_x_edge := near_left or near_right
-			var on_y_edge := near_top or near_bottom
 			var source_id: int
-			if on_x_edge and on_y_edge:
-				source_id = KosenFloorTileset.CORNER_SOURCE_ID
-			elif on_x_edge or on_y_edge:
-				source_id = KosenFloorTileset.EDGE_SOURCE_ID
+			if near_left or near_right or near_top or near_bottom:
+				source_id = KosenFloorTileset.ring_source_id(near_left, near_right, near_top, near_bottom)
 			else:
 				source_id = KosenFloorTileset.pick_interior_source_id(i, j)
 			tile_map.set_cell(Vector2i(i, j), source_id, Vector2i.ZERO)
