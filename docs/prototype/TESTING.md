@@ -15,7 +15,7 @@ The suite does not depend on what is committed under `assets/characters/`: commi
 break it. Parser fixtures are written to `user://shinobi_tests` and removed afterwards. It also drives the real
 lab (speed, direction mode, wheel zoom, button/key parity) and the pause action. `test_camera_framing` checks the
 gameplay camera: baseline zoom = 1/`WorldScale.SCALE`, visible rect 2880x1620 inside the arena bounds, camera limits,
-the lab zoom list and labels (`wide 0.44x`, `1x`-`4x`), lab open/close restoring the baseline, and the state fields.
+the lab zoom list and labels (`wide 0.44x`, then `1x`, `1.5x` ... `4x`), lab open/close restoring the baseline, and the state fields.
 
 ## Sprite manifest validator (stdlib Python)
 
@@ -49,8 +49,9 @@ templates installed. CI uses `scripts/ci/godot_ci.py export`, then `finalize-exp
 - [ ] Camera framing: at 1280x720 the arena shows about 20 x 22 tiles of 64x32 screen px (the wide gameplay view,
       zoom 0.4444); the figure and the `PLACEHOLDER` captions are readable; walking into each wall and corner shows no
       void and no clipped figure (captions may be cut a few px at a side wall).
-- [ ] Lab zoom: `Tab` opens the lab without changing the view (panel reads `wide 0.44x`); `Z` steps `1x`, `2x`, `3x`, `4x`,
-      then back to wide; `Tab` to close restores the wide view.
+- [ ] Lab zoom: `Tab` opens the lab without changing the view (panel reads `wide 0.44x`); `Z` steps `1x`, `1.5x`, `2x`, `2.5x`,
+      `3x`, `3.5x`, `4x`, then back to wide; `Tab` to close restores the wide view. The half steps (`1.5x`, `2.5x`, `3.5x`)
+      are not pixel-exact with the nearest-neighbour filter: judge pixel detail at the whole steps.
 - [ ] Camera preset (PROVISIONAL): no parameter = `wide` (state `camera_preset` is `wide`). Open the page with `?camera=close`
       for the close-combat framing (zoom about 1.17, the standing placeholder figure about 126 px = 17.5 % of 720);
       `?camera=2` gives a custom zoom 2; `?camera=<garbage>` falls back to `wide`. In the lab, `N` switches presets.
