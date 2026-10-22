@@ -831,7 +831,7 @@ func _test_isolation(root: Node) -> void:
 	ov.refresh()
 	var pts_after: PackedVector2Array = (ov.views[0]["region"] as BanditVisionRegion).points
 	ck.call("vision isolation: opening and closing the lab and the F1 diagnostics (4 times each) leaves exactly one overlay and the same polygon", _count_overlays(root) == 1 and pts_before == pts_after and tog.on and not lab.lab_on, "overlays=%d same_polygon=%s on=%s lab_open=%s points %d vs %d" % [_count_overlays(root), str(pts_before == pts_after), str(tog.on), str(lab.lab_on), pts_before.size(), pts_after.size()])
-	ck.call("vision isolation: ...and the lab opening does not move or hide the vision button", tog.button.visible and tog.button.position == BanditVisionToggle.BUTTON_POS and items_before > 0)
+	ck.call("vision isolation: ...and the lab opening does not move or hide the vision button", tog.button.visible and tog.button.position.x == BanditVisionToggle.BUTTON_POS.x and items_before > 0)
 	_put(WorldScale.BANDIT_HOME, _snap8(4), Bandit.State.PATROL)
 	player.global_position = Vector2(0, 135)
 	tog.set_on(false)

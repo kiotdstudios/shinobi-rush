@@ -15,7 +15,7 @@ extends Node
 const ACTION := "dbg_bandit_vision"
 const KEY := KEY_F2
 const QUERY_KEY := "vision"
-const BUTTON_POS := Vector2(942, 8)  ## left of the lab button (1120, 8), same row, clear of the lab panel (y >= 40)
+const BUTTON_POS := Vector2(942, DockTab.REST_Y)  ## left of the lab button (1120, 8), same row, clear of the lab panel (y >= 40)
 const BUTTON_SIZE := Vector2(170, 26)
 const TIP := "Debug: draw what the Level 1 Bandit's AI can see (its real detection region). Default off. F2 toggles it; ?vision=1 in the URL starts it on."
 
@@ -71,6 +71,7 @@ func build_button(layer: Node) -> Button:
 	button.focus_mode = Control.FOCUS_NONE
 	button.add_theme_font_size_override("font_size", 12)
 	button.tooltip_text = TIP
+	DockTab.style(button, Color("#FF6B00"))
 	button.toggled.connect(_on_button_toggled)
 	layer.add_child(button)
 	_sync_button()
@@ -87,6 +88,7 @@ func _sync_button() -> void:
 		return
 	button.set_pressed_no_signal(on)
 	button.text = "Bandit vision: ON (F2)" if on else "Bandit vision: off (F2)"
+	DockTab.set_active(button, on)
 
 
 func _attach_overlay() -> void:
