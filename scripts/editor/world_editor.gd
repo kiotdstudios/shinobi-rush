@@ -366,7 +366,7 @@ func _build_ui() -> void:
 	title.add_theme_color_override("font_color", Color.WHITE)
 	titles.add_child(title)
 	var sub := Label.new()
-	sub.text = "KIOTD  /  LEVEL TOOLS  /  F3"
+	sub.text = "SHINOBI RUSH   |   F3"
 	sub.add_theme_font_size_override("font_size", 10)
 	sub.add_theme_color_override("font_color", ACCENT)
 	titles.add_child(sub)
@@ -477,7 +477,7 @@ func _build_ui() -> void:
 	_skin(copy)
 	copy.pressed.connect(func():
 		DisplayServer.clipboard_set(placed.to_json_string())
-		status.text = "Copied %d objects" % placed.objects.size())
+		status.text = "Copied to clipboard")
 	opts.add_child(copy)
 	var io := HBoxContainer.new()
 	io.add_theme_constant_override("separation", 6)
@@ -502,17 +502,21 @@ func _build_ui() -> void:
 	var fv := VBoxContainer.new()
 	fv.add_theme_constant_override("separation", 2)
 	foot.add_child(fv)
+	count_label = Label.new()
+	count_label.add_theme_font_size_override("font_size", 12)
+	count_label.add_theme_color_override("font_color", Color.WHITE)
+	fv.add_child(count_label)
 	status = Label.new()
 	status.add_theme_font_size_override("font_size", 12)
 	status.add_theme_color_override("font_color", ACCENT)
-	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	status.clip_text = true
 	fv.add_child(status)
-	var help := Label.new()
-	help.text = "CLICK place   RMB cancel   DRAG move   DEL remove"
-	help.add_theme_font_size_override("font_size", 10)
-	help.add_theme_color_override("font_color", MUTED)
-	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	fv.add_child(help)
+	for line in ["Click: place      Right-click: cancel", "Drag: move          Del: remove"]:
+		var help := Label.new()
+		help.text = line
+		help.add_theme_font_size_override("font_size", 11)
+		help.add_theme_color_override("font_color", MUTED)
+		fv.add_child(help)
 
 
 func _toggle(parent: Node, text: String, cb: Callable) -> Button:
@@ -574,7 +578,8 @@ func _refresh() -> void:
 	reset_button.text = "SURE?" if _reset_armed else "RESET"
 	inspector.visible = not selected.is_empty()
 	if not selected.is_empty():
-		inspector_name.text = str(PlacedObjects.CATALOG[selected.id].label)
+		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
-	var what := "PLACING  %s" % str(PlacedObjects.CATALOG[place_id].label).to_upper() if tool == "place" else ("ERASE MODE" if tool == "erase" else ("SELECT / MOVE"))
-	status.text = "%d OBJECTS   |   %s" % [placed.objects.size(), what]
+	var what := "Placing: %s" % str(PlacedObjects.CATALOG[place_id].label) if tool == "place" else ("Erase mode" if tool == "erase" else "Select / move")
+	count_label.text = "%d objects" % placed.objects.size()
+	status.text = what
