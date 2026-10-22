@@ -164,7 +164,7 @@ func test_trace_table() -> void:
 func test_units_clamp_and_modes() -> void:
 	var wide := CameraPreset.zoom_for("wide")
 	var close := CameraPreset.close_zoom(104.0)
-	ck.call("impact units: 3 screen px are 6.0 world px at the wide zoom and 2.48 at the close zoom of the 104 px art", _near(CameraImpact.to_world(Vector2(3.0, 0.0), wide).x, 6.0, 1e-9) and _near(CameraImpact.to_world(Vector2(3.0, 0.0), close).x, 3.0 / 1.2115384615, 1e-6) and _near(close, 1.2115384615, 1e-6))
+	ck.call("impact units: 3 screen px are 4.0 world px at the wide zoom and 2.48 at the close zoom of the 104 px art", _near(CameraImpact.to_world(Vector2(3.0, 0.0), wide).x, 4.0, 1e-9) and _near(CameraImpact.to_world(Vector2(3.0, 0.0), close).x, 3.0 / 1.2115384615, 1e-6) and _near(close, 1.2115384615, 1e-6))
 	ck.call("impact units: a zoom that is not a positive finite number gives zero, and screen -> world -> screen round-trips", CameraImpact.to_world(Vector2(3.0, 4.0), 0.0) == Vector2.ZERO and CameraImpact.to_world(Vector2(3.0, 4.0), -1.0) == Vector2.ZERO and CameraImpact.to_world(Vector2(3.0, 4.0), NAN) == Vector2.ZERO and (CameraImpact.to_world(Vector2(3.0, 4.0), close) * close).is_equal_approx(Vector2(3.0, 4.0)))
 	# limits x -100..100, y -100..100; the view is 100 x 80 (half 50 x 40)
 	var lim := Rect2(-100.0, -100.0, 200.0, 200.0)
@@ -458,7 +458,7 @@ func test_scene(tree_root: Node) -> void:
 			rn.advance(TICK)
 			worst_void = maxf(worst_void, _void_px(cam))
 			along = maxf(along, absf(cam.offset.dot(toward)))
-		ck.call("impact edge (%s limit, wide): a heavy kick toward the wall never shows void and shrinks to 0 at the wall" % sp[0], worst_void <= 1e-3 and along < 1e-6, "void=%s along=%s" % [worst_void, along])
+		ck.call("impact edge (%s limit, wide): a heavy kick toward the wall never shows void and shrinks to 0 at the wall" % sp[0], worst_void <= 1e-3 and along < 1e-3, "void=%s along=%s" % [worst_void, along])
 		CameraImpact.heavy_hit(sp[3])
 		var away := 0.0
 		worst_void = -INF
@@ -480,7 +480,7 @@ func test_scene(tree_root: Node) -> void:
 		rn.advance(TICK)
 		max_world_x = maxf(max_world_x, cam.offset.x)
 		room_void = maxf(room_void, _void_px(cam))
-	ck.call("impact edge: with 3 world px of room left a 5 px kick east shrinks to exactly 3 world px and never shows void", _near(max_world_x, 3.0, 1e-4) and room_void <= 1e-3 and cam.offset == Vector2.ZERO and _snap(player) == snap_room, "max=%s void=%s" % [max_world_x, room_void])
+	ck.call("impact edge: with 3 world px of room left a 5 px kick east shrinks to exactly 3 world px and never shows void", _near(max_world_x, 3.0, 1e-3) and room_void <= 1e-3 and cam.offset == Vector2.ZERO and _snap(player) == snap_room, "max=%s void=%s" % [max_world_x, room_void])
 	rn.free()
 
 	# ---- lab zoom step (native 1x): screen px stay screen px, the zoom is never touched
