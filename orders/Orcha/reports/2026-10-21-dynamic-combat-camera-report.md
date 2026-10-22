@@ -2,8 +2,8 @@
 - Agent: Orcha
 - Order: orders/Orcha/2026-10-18-dynamic-combat-camera.md
 - Date: 2026-10-21
-- Final status: REVIEW (Godot runtime tests and browser playtest not yet performed -- Godot binary not installed in this environment)
-- Commit / PR: see below
+- Final status: REVIEW (Web export + browser smoke test + playtest pending; Godot validation and built-in test suite PASSED)
+- Commit / PR: bdb990d (implementation), 4643d4f (parse-error fix + .uid sidecar) | branch: orcha/dynamic-combat-camera
 
 ## Work completed
 
@@ -59,18 +59,20 @@ zoom delta to `Camera2D.zoom` each frame without touching position, smoothing, l
 | --- | --- | --- |
 | `Get-Content` review of all changed files post-edit | PASS -- all edits verified at correct lines via replace_lines verification output | In-session tool output |
 | Syntax review: GDScript indentation, class_name, static var, match, enum, const types | PASS (manual review) | N/A |
-| Godot project validation (godot_ci.py) | NOT RUN -- Godot binary not installed in shell environment | Blocked |
-| Browser smoke test (bandit-probe.mjs, controls-probe.mjs) | NOT RUN -- Godot binary required | Blocked |
-| Playtest: hit bandit, verify zoom punch-in and return | NOT RUN -- Godot binary required | Blocked |
-| Playtest: dodge, verify slight emphasis and return | NOT RUN -- Godot binary required | Blocked |
-| Reduced-motion mode (?camera_director=reduced) | NOT RUN -- Godot binary required | Blocked |
-| No-effect mode (?camera_director=off) | NOT RUN -- Godot binary required | Blocked |
+| Godot project validation (godot_ci.py import) | PASS -- 0 errors, 0 warnings (Godot 4.7.2) | Tool output |
+| Godot built-in test suite (godot_ci.py tests) | PASS -- 742 passed, 0 failed | Tool output |
+| Playtest: hit bandit, verify zoom punch-in and return | NOT RUN -- Web export not performed this session | Pending |
+| Playtest: dodge, verify slight emphasis and return | NOT RUN -- Web export not performed this session | Pending |
+| Reduced-motion mode (?camera_director=reduced) | NOT RUN -- Web export not performed this session | Pending |
+| No-effect mode (?camera_director=off) | NOT RUN -- Web export not performed this session | Pending |
 
 ## Issues encountered
-1. Godot binary is not installed in the local shell environment. All pre-commit Godot tests (project validation,
-   Web export, browser smoke tests, playtest) could not be run. This is the primary blocker for DONE status.
-2. The `DebugTelemetry` autoload is accessed via `Engine.get_singleton("DebugTelemetry")` in the director's
-   `_record_telemetry()` to avoid a hard dependency. If DebugTelemetry is refactored as a class rather than an
+1. GDScript parse error on first import: `RESET` in the `EventKind` enum was referenced as a dictionary
+   key in the static `PRIORITY` const before the class was fully parsed. Fixed in commit 4643d4f by
+   removing RESET from the enum and routing the reset() API directly to `_instance._do_reset()`.
+2. Godot project import passed (0 errors, 0 warnings) and all 742 built-in tests passed after the fix.
+   Web export and browser smoke tests are the remaining gate for DONE.
+3. The `DebugTelemetry` autoload is accessed via `Engine.get_singleton("DebugTelemetry")` in
    autoload singleton, this pattern will silently stop recording camera events -- flag for Aki.
 3. JUTSU, FINISHER, and TAKE_DAMAGE events have no callers yet because those gameplay systems do not exist.
    The director is ready to receive them when those systems land.
