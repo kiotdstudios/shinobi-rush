@@ -63,3 +63,7 @@ Merged main 27c213e0574ae3ba7ce4db4047b6b1061f5f6917 (Aki World Builder) without
 The first integrated unit invocation was started before importing the new editor global classes; stopped after unresolved-class parse failures. Ran import successfully, then restarted the full suite. This was local setup, no source change or skipped test.
 
 Integrated full suite retry PASS:1282 assertions,zero failures,expected malformed-sheet fixture warning only. Commands: godot_ci.py import/tests/validate-resources with build/grass-integrated-import, build/grass-integrated-tests-retry and build/grass-integrated-validation; export/finalize-export to ../wind-grass-integrated-web; grass-proof-probe.mjs and controls-probe.mjs against that export. Order validator PASS. Implementation0702f9c precedes this tested main integration.
+
+## Camera integration before commit
+
+PR85 initial required checks passed, but merge was rejected because main advanced to6b937961f426eef917ff4e673bc610d3f1dcf318 (Aki default wide zoom0.75, PR83). Merged this base without conflicts. Ran full tests again:1282passed/zero failed (build/grass-zoom-tests); fresh Web export/finalization ../wind-grass-zoom-web passed; grass-proof-probe all15passed (build/grass-zoom-proof); controls-probe passed all checks with zoom0.75,zero errors (build/grass-zoom-controls). A separate real keyboard route around blockers into the meadow passed and screenshot was inspected at close zoom (build/grass-player). No movement collision added. Pending renewed CI and public deployment.

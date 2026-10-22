@@ -30,7 +30,7 @@ func _near(a: float, b: float, eps: float = 1e-4) -> bool:
 func test_table_and_default() -> void:
 	ck.call("camera preset: DEFAULT_ID is wide", CameraPreset.DEFAULT_ID == "wide" and CameraPreset.WIDE == "wide")
 	ck.call("camera preset: the table has exactly wide and close, in that order", CameraPreset.IDS == ["wide", "close"] and CameraPreset.TABLE.has("wide") and CameraPreset.TABLE.has("close"))
-	ck.call("camera preset: wide is 0.5000", _near(CameraPreset.zoom_for("wide"), 0.5, 1e-9) and _near(float(CameraPreset.TABLE["wide"]["zoom"]), 0.5, 1e-9))
+	ck.call("camera preset: wide is 0.7500", _near(CameraPreset.zoom_for("wide"), 0.75, 1e-9) and _near(float(CameraPreset.TABLE["wide"]["zoom"]), 0.75, 1e-9))
 	ck.call("camera preset: the default id resolves to the wide zoom", CameraPreset.zoom_for(CameraPreset.DEFAULT_ID) == CameraPreset.zoom_for("wide"))
 	ck.call("camera preset: provisional tunables (fraction 0.175, band 16-19 %, range 0.25-4)", CameraPreset.CLOSE_FIGURE_FRACTION == 0.175 and CameraPreset.BAND_MIN_FRACTION == 0.16 and CameraPreset.BAND_MAX_FRACTION == 0.19 and CameraPreset.MIN_ZOOM == 0.25 and CameraPreset.MAX_ZOOM == 4.0)
 	ck.call("camera preset: base viewport height comes from the project (720)", CameraPreset.base_viewport_height() == VIEWPORT_H)
@@ -116,10 +116,10 @@ func test_metrics_and_labels() -> void:
 	var m := CameraPreset.metrics(z, WorldScale.BODY_HEIGHT)
 	ck.call("metrics: close/108 px is 126 px, 17.5 %, in band, view 1097x617", _near(m["figure_screen_px"], 126.0) and _near(m["fraction"], 0.175) and m["in_band"] == true and _near(m["view_w"], 1280.0 / z, 0.01) and _near(m["view_h"], 617.14, 0.01), str(m))
 	var w := CameraPreset.metrics(CameraPreset.zoom_for("wide"), WorldScale.BODY_HEIGHT)
-	ck.call("metrics: wide/108 px is 54 px, 7.5 %, outside the band, view 2560x1440", _near(w["figure_screen_px"], 54.0) and _near(w["fraction"], 54.0 / 720.0) and w["in_band"] == false and _near(w["view_w"], 2560.0, 0.01) and _near(w["view_h"], 1440.0, 0.01), str(w))
+	ck.call("metrics: wide/108 px is 81 px, 11.25 %, outside the band, view 1706.7x960", _near(w["figure_screen_px"], 81.0) and _near(w["fraction"], 81.0 / 720.0) and w["in_band"] == false and _near(w["view_w"], 1280.0 / 0.75, 0.01) and _near(w["view_h"], 960.0, 0.01), str(w))
 	var r := CameraPreset.visible_world_rect(CameraPreset.zoom_for("wide"), Vector2(0, 135))
-	ck.call("visible_world_rect: wide centred on the spawn is 2560x1440", r.is_equal_approx(Rect2(-1280.0, 135.0 - 720.0, 2560.0, 1440.0)), str(r))
-	ck.call("label_for: 'wide 0.50x', 'close 1.17x', 'custom 2.00x'", CameraPreset.label_for("wide", CameraPreset.zoom_for("wide")) == "wide 0.50x" and CameraPreset.label_for("close", z) == "close 1.17x" and CameraPreset.label_for(2.0, 2.0) == "custom 2.00x")
+	ck.call("visible_world_rect: wide centred on the spawn is 1706.7x960", r.is_equal_approx(Rect2(-1280.0 / 1.5, 135.0 - 480.0, 1280.0 / 0.75, 960.0)), str(r))
+	ck.call("label_for: 'wide 0.75x', 'close 1.17x', 'custom 2.00x'", CameraPreset.label_for("wide", CameraPreset.zoom_for("wide")) == "wide 0.75x" and CameraPreset.label_for("close", z) == "close 1.17x" and CameraPreset.label_for(2.0, 2.0) == "custom 2.00x")
 	var src := FileAccess.get_file_as_string("res://scripts/web/web_bridge.gd")
 	ck.call("state: WebBridge publishes camera_preset next to the existing fields", src.contains("_state.camera_preset = ") and src.contains("_state.zoom = ") and src.contains("_state.view_w = "))
 	var bridge := load("res://scripts/web/web_bridge.gd")
@@ -143,7 +143,7 @@ func test_lab_zoom_list() -> void:
 	var names: Array[String] = []
 	for i in zl.size():
 		names.append(AnimationLab.zoom_label(i, wide, "wide"))
-	ck.call("lab zoom labels: 'wide 0.50x' then 1x 1.25x 1.5x 1.75x 2x 2.25x 2.5x 2.75x 3x 3.25x 3.5x 3.75x 4x", str(names) == str(["wide 0.50x", "1x", "1.25x", "1.5x", "1.75x", "2x", "2.25x", "2.5x", "2.75x", "3x", "3.25x", "3.5x", "3.75x", "4x"]), str(names))
+	ck.call("lab zoom labels: 'wide 0.75x' then 1x 1.25x 1.5x 1.75x 2x 2.25x 2.5x 2.75x 3x 3.25x 3.5x 3.75x 4x", str(names) == str(["wide 0.75x", "1x", "1.25x", "1.5x", "1.75x", "2x", "2.25x", "2.5x", "2.75x", "3x", "3.25x", "3.5x", "3.75x", "4x"]), str(names))
 	ck.call("lab zoom labels: the close baseline reads 'close 1.21x' (104 px art) and an index past the end clamps to 4x", AnimationLab.zoom_label(0, CameraPreset.close_zoom(104.0), "close") == "close 1.21x" and AnimationLab.zoom_label(99, wide) == "4x")
 	# a baseline equal to ANY step (whole, half, or quarter -- exactly or within float noise) is listed once, in front; the other steps stay
 	var dedupe_bad := ""
@@ -245,11 +245,11 @@ func test_scene(tree_root: Node) -> void:
 	var lab := main.get_node("AnimationLab") as AnimationLab
 	var player := main.get_node("TrainingArena/Player") as PlayerController
 	var cam := player.camera
-	ck.call("camera scene: default preset is wide and the camera zoom equals the wide preset (0.5000)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and absf(cam.zoom.x - CameraPreset.zoom_for(CameraPreset.active(), player.figure_height_px())) < 1e-6 and absf(player.camera_baseline - wide) < 1e-9, "zoom=%s id=%s" % [cam.zoom, CameraPreset.active_id()])
-	ck.call("camera scene: default view is 2560x1440", (vp / cam.zoom.x).is_equal_approx(Vector2(2560, 1440)), str(vp / cam.zoom.x))
+	ck.call("camera scene: default preset is wide and the camera zoom equals the wide preset (0.7500)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and absf(cam.zoom.x - CameraPreset.zoom_for(CameraPreset.active(), player.figure_height_px())) < 1e-6 and absf(player.camera_baseline - wide) < 1e-9, "zoom=%s id=%s" % [cam.zoom, CameraPreset.active_id()])
+	ck.call("camera scene: default view is 1706.7x960", (vp / cam.zoom.x).is_equal_approx(Vector2(1280.0 / 0.75, 960)), str(vp / cam.zoom.x))
 	var zoom_label := lab._value_labels["zoom"] as Label
 	var preset_label := lab._value_labels["preset"] as Label
-	ck.call("camera scene: lab shows 'wide 0.50x' and the preset row says wide", zoom_label.text == "wide 0.50x" and preset_label.text == "wide", "%s / %s" % [zoom_label.text, preset_label.text])
+	ck.call("camera scene: lab shows 'wide 0.75x' and the preset row says wide", zoom_label.text == "wide 0.75x" and preset_label.text == "wide", "%s / %s" % [zoom_label.text, preset_label.text])
 	# a wide camera does not care about the figure height (set120 would change a close zoom)
 	lab._select_set(-1)
 	ck.call("camera scene: wide does not move when the figure height changes", absf(cam.zoom.x - wide) < 1e-6)
@@ -311,7 +311,7 @@ func test_scene(tree_root: Node) -> void:
 	# ---- runtime switch with the lab key (action dbg_camera_preset, key N)
 	ck.call("lab key: the preset action exists with the N key", InputMap.has_action(AnimationLab.PRESET_ACTION) and AnimationLab.PRESET_KEY == KEY_N)
 	_press(lab, AnimationLab.PRESET_ACTION)
-	ck.call("lab key: N switches close -> wide (zoom, id, labels)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and zoom_label.text == "wide 0.50x" and preset_label.text == "wide", "%s %s %s" % [CameraPreset.active_id(), cam.zoom, zoom_label.text])
+	ck.call("lab key: N switches close -> wide (zoom, id, labels)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and zoom_label.text == "wide 0.75x" and preset_label.text == "wide", "%s %s %s" % [CameraPreset.active_id(), cam.zoom, zoom_label.text])
 	_press(lab, AnimationLab.PRESET_ACTION)
 	ck.call("lab key: N switches wide -> close again", CameraPreset.active_id() == "close" and absf(cam.zoom.x - close108) < 1e-6 and zoom_label.text == "close 1.17x")
 	_press(lab, "dbg_zoom_cycle")
