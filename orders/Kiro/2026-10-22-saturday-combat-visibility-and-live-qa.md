@@ -1,0 +1,9 @@
+# KIRO — P0 Saturday combat visibility and live QA
+- **Status:** QUEUED
+- **Priority:** P0
+
+## Objective
+Finish/integrate Bandit **actual** vision cone/LOS debug overlay implementation PR #73 (CI is green as of morning Oct 22; verify before merge) and verify it works in **normal live arena**, F6 and HUD toggle, with correct occlusion and state. Coordinate with Aki on sight data; no invented cone. Keep player/Bandit, attack hit flashes, contact VFX and flicker visible at gameplay camera zoom. Do not modify core combat, AI or sprite art. Help integration owner with real browser QA: record deployed SHA and test both characters can fight while LOS debug on/off. Push each tested slice and deploy; no local-only completion. Report `orders/Kiro/reports/2026-10-22-saturday-combat-visibility-and-live-qa-report.md`.
+
+## Shared Saturday milestone and delivery rule
+**Deadline: Saturday October 24, 2026, end of day America/New_York.** Read `orders/README.md` and `orders/Kiro/README.md`. Owner needs a **playable integrated combat loop in the ONE official live browser game** https://kiotdstudios.github.io/shinobi-rush/, not more disconnected art proofs. Work in small vertical slices; for **each tested meaningful slice**, write evidence, **commit and PUSH immediately**, open/update PR, get required CI, merge into `main`, deploy and verify live before claiming playable. Do not leave local-only uncommitted work or accumulate a huge unreviewable branch. Do not bypass CI, branch protection, or overwrite another agent's files. If CI is pending, say pending and follow it through. Mark DONE only after the actual deployed build is tested. Report PR/SHA/live SHA and blocker promptly. Keep all agents aligned through the integration order and preserve existing 128×128 8-direction art and persistent RPG rules.
