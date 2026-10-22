@@ -11,7 +11,7 @@ const SCALE := 2.25
 ## Zoom of the `wide` camera preset (the default; see CameraPreset, which is what the game reads): the inverse
 ## of SCALE shows the same amount of arena as before the scale pass (visible world rect = viewport * SCALE).
 ## Follows SCALE automatically. Prototype baseline, not final.
-const CAMERA_BASE_ZOOM := 0.5
+const CAMERA_BASE_ZOOM := 0.75
 ## Extra world drawn/visible above the top arena bound so a standing figure at the top wall is not cut off.
 const CAMERA_HEADROOM := BODY_HEIGHT
 ## Extra world drawn/visible below the bottom arena bound so the feet and ground shadow of a figure at the
