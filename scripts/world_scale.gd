@@ -70,7 +70,7 @@ const BLOCKS: Array = [
 	# the two rocks east of them break line of sight and give the Bandit's patrol its far-side territory.
 	[Vector2(900, -80), Vector2(90, 520), 150.0],   # 5: north wall
 	[Vector2(900, 740), Vector2(90, 540), 150.0],   # 6: south wall
-	[Vector2(1180, 90), Vector2(120, 110), 110.0],  # 7: rock covering the choke's east mouth
+	[Vector2(1180, 40), Vector2(120, 110), 110.0],  # 7: rock covering the choke's east mouth
 	[Vector2(1500, -330), Vector2(130, 110), 110.0],  # 8: rock inside the patrol area
 ]
 ## Where the Level 1 Bandit lives: far east of the player's spawn, behind the walls above.

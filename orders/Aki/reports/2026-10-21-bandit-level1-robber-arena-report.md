@@ -38,6 +38,8 @@ New: `scripts/enemy/arena_nav.gd`, `scripts/enemy/enemy_intelligence.gd` (+ .uid
 - I cannot judge feel. Timings are first guesses for the owner to tune in `enemy_intelligence.gd`.
 - The headless renderer runs about 5 fps, so the browser run proves logic and visuals, not smoothness. Gamepad was not tested.
 
+- CI's controls probe failed once (wall-stops-player: y 135 -> 117). The probe sprints right for longer in CI than locally and then walks up, and a rock at y -20..90 was directly above it. I moved that rock to y -70..40 (off the y=135 lane) and re-ran: tests 1006/0, controls probe PASS, bandit probe 14/14.
+
 ## Questions for project owner
 - Should a landed hit have any consequence beyond the tint and shove (player HP is out of scope under the locked rules)?
 - Is a 25% retreat rate right for "rare"?
