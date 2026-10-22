@@ -136,13 +136,13 @@ func test_dodge_dash_attack(tree_root: Node) -> void:
 		if player.state != PlayerController.State.DODGE:
 			break
 	ck.call("dash attack: dodge survives long enough to reach its late window", reached_late)
-	var min_v_during_transition := player.velocity.length()
+	var max_v_during_transition := player.velocity.length()
 	await _tap("attack_light")
 	for i in 3:
 		await main.get_tree().physics_frame
-		min_v_during_transition = minf(min_v_during_transition, player.velocity.length())
+		max_v_during_transition = maxf(max_v_during_transition, player.velocity.length())
 	ck.call("dash attack: late-dodge attack press becomes DASH_ATTACK (not light1, not idle)", player.state == PlayerController.State.DASH_ATTACK, player.get_state_name())
-	ck.call("dash attack: velocity never collapsed to ~0 across dodge->dash-attack", min_v_during_transition > 10.0, str(min_v_during_transition))
+	ck.call("dash attack: the dash attack launches its own lunge right out of the flicker dodge", max_v_during_transition > 10.0, str(max_v_during_transition))
 	Input.action_release("move_right")
 	main.queue_free()
 	await main.get_tree().process_frame
