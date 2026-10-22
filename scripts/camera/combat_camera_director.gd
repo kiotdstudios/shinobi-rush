@@ -108,7 +108,8 @@ static func notify(kind: EventKind, payload: Dictionary = {}) -> void:
 
 ## Reset to baseline immediately (e.g. on death, scene change, pause menu).
 static func reset() -> void:
-	notify(EventKind.RESET, {})
+	if _instance != null and is_instance_valid(_instance):
+		_instance._do_reset()
 
 ## Telemetry snapshot published each frame to window.__SHINOBI_STATE__.
 static func telemetry() -> Dictionary:
@@ -172,6 +173,13 @@ func _exit_tree() -> void:
 		_instance = null
 	_flush_zoom()
 
+## Immediate reset to baseline -- called by the static reset() API.
+func _do_reset() -> void:
+	_active_kind = EventKind.NONE
+	_target_zoom_delta = 0.0
+	_zoom_delta = 0.0
+	_flush_zoom()
+
 ## -------------------------------------------------------------------------  per-frame
 
 func _process(delta: float) -> void:
@@ -198,13 +206,6 @@ func _process(delta: float) -> void:
 ## -------------------------------------------------------------------------  event handling
 
 func _handle_event(kind: EventKind, payload: Dictionary) -> void:
-	if kind == EventKind.RESET:
-		_active_kind = EventKind.NONE
-		_target_zoom_delta = 0.0
-		_zoom_delta = 0.0
-		_flush_zoom()
-		return
-
 	# Lower/equal-priority events do NOT interrupt an active higher-priority effect.
 	if PRIORITY[kind] < PRIORITY[_active_kind]:
 		return
@@ -222,7 +223,6 @@ func _handle_event(kind: EventKind, payload: Dictionary) -> void:
 
 	event_count += 1
 	_record_telemetry(kind)
-
 
 ## -------------------------------------------------------------------------  shape / duration helpers
 
