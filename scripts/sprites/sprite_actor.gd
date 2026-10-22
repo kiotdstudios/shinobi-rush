@@ -106,3 +106,9 @@ func current_frame_text() -> String:
 	if sprite.sprite_frames == null or not sprite.visible:
 		return "-"
 	return "%d/%d" % [sprite.frame + 1, sprite.sprite_frames.get_frame_count(sprite.animation)]
+
+
+## Raw current frame index (0-based) of the currently playing animation. 0 if nothing is loaded yet.
+## Used by weapon/prop overlays that must track the body's exact frame (see WeaponRig).
+func current_frame() -> int:
+	return sprite.frame if sprite.sprite_frames != null else 0
