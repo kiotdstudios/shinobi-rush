@@ -10,7 +10,7 @@ page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()
 const state=()=>page.evaluate(()=>({...window.__KUNAI_PROOF__}));
 const click=async(x,y)=>{await page.mouse.click(x,y);await wait(350)};
 try{
- await page.goto((server?server.url:arg('base-url'))+'?kunai=proof');
+ await page.goto((server?server.url:arg('base-url'))+'?kunai=legacy');
  await page.waitForFunction(()=>window.__KUNAI_PROOF__?.ready===true,null,{timeout:90000});
  checks.half_default=(await state()).speed===0.5;
  for(let i=0;i<90;i++){samples.push(await state());await wait(100)}

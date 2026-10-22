@@ -1,7 +1,7 @@
 # CODEX — P0 Player kunai combo and Body Flicker dodge animation overhaul
 
 - **Owner:** Codex (art and animation)
-- **Status:** QUEUED
+- **Status:** IN_PROGRESS — main, Aki and Orcha dependency audit started
 - **Priority:** P0
 - **Date:** 2026-10-21
 - **Supersedes:** the old lunge-style dodge presentation in the kunai preview; extends `orders/Codex/2026-10-21-kunai-primary-combat-animation.md`. Do not duplicate completed kunai assets.
