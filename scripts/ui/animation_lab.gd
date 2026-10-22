@@ -345,7 +345,8 @@ func _build_ui() -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 5
 	add_child(layer)
-	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, 8), Vector2(150, 26), toggle_lab)
+	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, DockTab.REST_Y), Vector2(150, 26), toggle_lab)
+	DockTab.style(_lab_button, Color("#3DDC84"))
 	# Bandit vision overlay (debug, default OFF): its key and its always-visible button next to the Lab button.
 	vision = BanditVisionToggle.new()
 	vision.name = "BanditVisionToggle"
@@ -496,6 +497,7 @@ func toggle_lab() -> void:
 
 func _set_lab(on: bool) -> void:
 	lab_on = on
+	DockTab.set_active(_lab_button, on)
 	if not on:
 		if zoom_index != 0:
 			set_zoom_index(0)  # closing the lab restores the gameplay baseline

@@ -406,6 +406,11 @@ func _test_search_and_return() -> void:
 
 
 func _test_leash_and_profile() -> void:
+	# in view beyond the leash radius: the chase must NOT be abandoned
+	_put(Vector2(1500, 300), Vector2(1250, 300), Bandit.State.APPROACH)
+	bandit.set_home(Vector2(1500, 300) - Vector2(1700, 0))
+	await _frames(3)
+	ck.call("robber leash: a chase past the leash radius continues while the player is in view", bandit.state != Bandit.State.RETURN and bandit.sees_player, "%s sees=%s" % [bandit.get_state_name(), str(bandit.sees_player)])
 	_put(Vector2(1500, 300), Vector2(-1500, 900), Bandit.State.APPROACH)
 	bandit.last_seen = Vector2(1400, 300)
 	bandit.set_home(Vector2(1500, 300) - Vector2(1700, 0))
