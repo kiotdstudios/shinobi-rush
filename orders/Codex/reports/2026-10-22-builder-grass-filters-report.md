@@ -50,3 +50,6 @@ Required checks for2c9afb2passed, but main advanced at merge to0e841440632467c53
 
 ## Health/flicker integration before merge commit
 Main104e9b490bd622ae8b3b3798274ae2f7e5c4c80d(PR95) merged cleanly. No Codex edits to health/combat logic. Import PASS; generated missing tests/test_health_flicker.gd.uid included as required Godot sidecar. Full suite build/builder-health-tests1361PASS/zero failures. Fresh export/finalization ../builder-health-web PASS. Builder probe build/builder-health-browser all17PASS/zeroerrors,including save/reload and scroll isolation with current0.665baseline. Updated screenshot/JSON. Pending renewed required checks and live publication.
+
+## HUD restyle integration before commit
+Main41781fe2a45945445265a35ae3ef4fe430ef9a98(PR88) changes builder scrollbar/card styling and HUD. One insertion conflict resolved by preserving both set_type_filter and _fat_scrollbar. Gutter/card styles and scoped wheel guard preserved. Full suite build/builder-style-tests1361PASS/zero failures; fresh export/finalization ../builder-style-web PASS; builder-style-browser all17PASS/zeroerrors including save/reload and top/bottom/header wheel isolation. Updated evidence before merge commit. Main confirmed unchanged at commit time.
