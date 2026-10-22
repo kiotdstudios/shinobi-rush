@@ -44,3 +44,6 @@ Aki dock-tabs PR92 advanced main to874b4e4d7fa80ff5c7e9720edb38b118c8fe1da9. Cle
 Main advanced to b2fc2f75f3c0fc8747abe588805d9371a0d953f9 (PR89,4-line bandit fix plus test). Clean merge; builder and wheel source unchanged. Ran full suite build/builder-chase-tests, fresh export/finalization ../builder-chase-web, and smoke.mjs --serve-dir ../builder-chase-web --out-dir build/builder-chase-smoke --label builder-chase-integration. Web smoke PASS9file hashes,real keyboard response33.314%,zero fatal errors. Existing17builder browser checks remain valid for unchanged builder code; final public17checks will repeat after deployment.
 
 Full chase-integration suite PASS1346/zero failures,expected malformed-sheet fixture warning only.
+
+## HUD zoom integration before commit
+Required checks for2c9afb2passed, but main advanced at merge to0e841440632467c536e8dbda12d104a06a47095f(PR94). Clean merge of Animation Lab; guard preserved. Full suite build/builder-hud-tests1346PASS; fresh export/finalization ../builder-hud-web PASS; builder-hud-browser all17PASS; builder-hud-controls PASS,zeroerrors,baseline0.665 and ceiling1.5 preserved. Main then advanced again to104e9b4(PR95). Recording tested intermediate merge before integrating that separate change.
