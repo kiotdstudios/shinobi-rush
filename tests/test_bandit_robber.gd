@@ -386,6 +386,23 @@ func _test_search_and_return() -> void:
 	# new home instead, so it should now be FAR from the original authored home and sitting on top of it.
 	ck.call("robber search: home updates to the new area instead of the original spawn", bandit.home.distance_to(WorldScale.BANDIT_HOME) > 200.0 and bandit.global_position.distance_to(bandit.home) < 10.0, "home=%s pos=%s orig=%s" % [bandit.home, bandit.global_position, WorldScale.BANDIT_HOME])
 	ck.call("robber search: the intent log recorded the transitions", bandit.intent_log.size() >= 3 and "SEARCH" in "".join(bandit.intent_log))
+	# Owner follow-up 2026-10-22, same day: "I do not want there to be a home position; bandit's new
+	# home is the last seen location and he continues his search." The PATROL that follows RETURN must
+	# free-roam near the settle point, NEVER walk back toward the original authored patrol loop (which
+	# sits 200+ px away, per the assertion above) -- that is the exact bug this instruction corrected.
+	var settle_point := bandit.global_position
+	var saw_sprint := false
+	var farthest_from_settle := 0.0
+	var closest_to_old_loop := INF
+	for i in 180:
+		await tree.physics_frame
+		if bandit.is_sprinting:
+			saw_sprint = true
+		farthest_from_settle = max(farthest_from_settle, bandit.global_position.distance_to(settle_point))
+		closest_to_old_loop = min(closest_to_old_loop, bandit.global_position.distance_to(WorldScale.BANDIT_HOME))
+	ck.call("robber search: never walks back toward the original authored patrol loop once settled", closest_to_old_loop > 150.0, "closest to old home over 3s of roaming: %.0f px" % closest_to_old_loop)
+	ck.call("robber search: free-roams near the new settle point (bounded by roam_radius), not standing frozen", saw_sprint and farthest_from_settle > 5.0 and farthest_from_settle < bandit.roam_radius * 2.5, "farthest from settle point: %.0f px (roam_radius=%.0f)" % [farthest_from_settle, bandit.roam_radius])
+	ck.call("robber search: _ever_disengaged is permanently set after the first RETURN", bandit._ever_disengaged)
 
 
 func _test_leash_and_profile() -> void:
