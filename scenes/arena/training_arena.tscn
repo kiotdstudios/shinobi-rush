@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/arena/training_arena.gd" id="1_arena"]
 [ext_resource type="Script" path="res://scripts/environment/blossom_grove.gd" id="2_grove"]
+[ext_resource type="Script" path="res://scripts/environment/wind_grass_field.gd" id="3_grass"]
 
 [node name="TrainingArena" type="Node2D"]
 y_sort_enabled = true
@@ -13,3 +14,7 @@ position = Vector2(0, 135)
 [node name="BlossomGrove" type="Node2D" parent="."]
 y_sort_enabled = true
 script = ExtResource("2_grove")
+
+[node name="WindGrassField" type="Node2D" parent="."]
+y_sort_enabled = true
+script = ExtResource("3_grass")
