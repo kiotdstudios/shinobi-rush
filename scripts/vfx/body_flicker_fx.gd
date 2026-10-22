@@ -37,7 +37,8 @@ static func frames_for(anim: String) -> SpriteFrames:
 	if _frames.has(anim):
 		return _frames[anim]
 	var sf := SpriteFrames.new()
-	sf.add_animation("default")
+	if not sf.has_animation("default"):
+		sf.add_animation("default")
 	sf.set_animation_loop("default", false)
 	sf.set_animation_speed("default", FPS)
 	var names: Array = DEPART if anim == "depart" else (TRAVEL if anim == "travel" else ARRIVE)
