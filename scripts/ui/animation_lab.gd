@@ -6,9 +6,9 @@ extends Node
 
 const SPEEDS: Array[float] = [0.25, 0.5, 1.0, 1.5, 2.0]
 ## Lab zoom steps. The zoom list is [active preset baseline] + these (see zoom_list); a baseline that already equals
-## one of them is not repeated. The whole steps (1x 2x 3x 4x) are native 1:1 pixels; the half steps (1.5x 2.5x 3.5x)
-## are NOT pixel-exact with the nearest-neighbour filter (a source pixel covers an uneven number of screen pixels).
-const NATIVE_ZOOMS: Array[float] = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
+## one of them is not repeated. Whole steps (1x 2x 3x 4x) are native 1:1 pixels; half steps (1.5x 2.5x 3.5x) and
+## quarter steps (1.25x 1.75x 2.25x 2.75x 3.25x 3.75x) are NOT pixel-exact with the nearest-neighbour filter.
+const NATIVE_ZOOMS: Array[float] = [1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0, 3.25, 3.5, 3.75, 4.0]
 ## Camera preset switch (wide <-> close). The action is registered at runtime so project.godot stays untouched.
 const PRESET_ACTION := "dbg_camera_preset"
 const PRESET_KEY := KEY_N
@@ -552,7 +552,7 @@ static func zoom_list(baseline: float) -> Array[float]:
 	return out
 
 
-## "wide 0.44x" / "close 1.17x" for the baseline, "1x" "1.5x" "2x" ... "4x" for the rest (a whole step has no decimals).
+## "wide 0.50x" / "close 1.17x" for the baseline, "1x" "1.25x" "1.5x" ... "4x" for the rest (a whole step has no decimals).
 static func zoom_label(i: int, baseline: float, spec: Variant = null) -> String:
 	var zl := zoom_list(baseline)
 	if i == 0:

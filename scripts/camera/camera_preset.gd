@@ -5,7 +5,7 @@ extends RefCounted
 ## Presets only set the baseline. Anything dynamic (a combat camera director, shake, look-ahead) must add
 ## RELATIVE offsets/zoom on top of the baseline and never write an absolute zoom.
 ##
-##   wide   zoom 1/SCALE (0.4444): the prototype arena view, 2880x1620 visible world. DEFAULT, unchanged.
+##   wide   zoom 0.5000: the prototype arena view. DEFAULT, unchanged.
 ##   close  PROVISIONAL close-combat target from the owner-approved reference (PR #19): the standing figure
 ##          fills CLOSE_FIGURE_FRACTION of the viewport height. The zoom is COMPUTED from the figure height,
 ##          not a magic number. Opt-in until the owner approves a numeric zoom in the engine.
@@ -120,7 +120,7 @@ static func zoom_for(spec: Variant, figure_px: float = WorldScale.BODY_HEIGHT, v
 	return float(TABLE[WIDE]["zoom"])
 
 
-## Label used by the lab and reports: "wide 0.44x", "close 1.17x", "custom 2.00x".
+## Label used by the lab and reports: "wide 0.50x", "close 1.17x", "custom 2.00x".
 static func label_for(spec: Variant, zoom: float) -> String:
 	return "%s %.2fx" % [id_of(spec), zoom]
 

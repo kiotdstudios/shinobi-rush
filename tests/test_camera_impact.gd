@@ -162,9 +162,9 @@ func test_trace_table() -> void:
 
 
 func test_units_clamp_and_modes() -> void:
-	var wide := 1.0 / WorldScale.SCALE
+	var wide := CameraPreset.zoom_for("wide")
 	var close := CameraPreset.close_zoom(104.0)
-	ck.call("impact units: 3 screen px are 6.75 world px at the wide zoom and 2.48 at the close zoom of the 104 px art", _near(CameraImpact.to_world(Vector2(3.0, 0.0), wide).x, 6.75, 1e-9) and _near(CameraImpact.to_world(Vector2(3.0, 0.0), close).x, 3.0 / 1.2115384615, 1e-6) and _near(close, 1.2115384615, 1e-6))
+	ck.call("impact units: 3 screen px are 6.0 world px at the wide zoom and 2.48 at the close zoom of the 104 px art", _near(CameraImpact.to_world(Vector2(3.0, 0.0), wide).x, 6.0, 1e-9) and _near(CameraImpact.to_world(Vector2(3.0, 0.0), close).x, 3.0 / 1.2115384615, 1e-6) and _near(close, 1.2115384615, 1e-6))
 	ck.call("impact units: a zoom that is not a positive finite number gives zero, and screen -> world -> screen round-trips", CameraImpact.to_world(Vector2(3.0, 4.0), 0.0) == Vector2.ZERO and CameraImpact.to_world(Vector2(3.0, 4.0), -1.0) == Vector2.ZERO and CameraImpact.to_world(Vector2(3.0, 4.0), NAN) == Vector2.ZERO and (CameraImpact.to_world(Vector2(3.0, 4.0), close) * close).is_equal_approx(Vector2(3.0, 4.0)))
 	# limits x -100..100, y -100..100; the view is 100 x 80 (half 50 x 40)
 	var lim := Rect2(-100.0, -100.0, 200.0, 200.0)
@@ -312,7 +312,7 @@ func test_scene(tree_root: Node) -> void:
 	var lab := main.get_node("AnimationLab") as AnimationLab
 	var cam := player.camera
 	var b := arena.get_bounds()
-	var wide := 1.0 / WorldScale.SCALE
+	var wide := CameraPreset.zoom_for("wide")
 	var pre := await _settle(tree_root, player, Vector2(0.0, 135.0))
 	ck.call("impact scene: boots on the wide preset with zoom == baseline and a zero offset", absf(cam.zoom.x - wide) < 1e-6 and absf(cam.zoom.x - player.camera_baseline) < 1e-6 and cam.offset == Vector2.ZERO)
 
