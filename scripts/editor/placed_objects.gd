@@ -76,6 +76,8 @@ static func footprint_of(id: String) -> Vector2:
 ## The solid ground rectangle (BLOCKS convention: bottom-centre `pos`, extends `depth` upward).
 static func footprint_rect(id: String, pos: Vector2) -> Rect2:
 	var fp := footprint_of(id)
+	if def_of(id).kind == "grass":
+		return Rect2(pos - fp * 0.5, fp)  # a grass tile is centred on its diamond cell, not standing on it
 	return Rect2(pos.x - fp.x * 0.5, pos.y - fp.y, fp.x, fp.y)
 
 

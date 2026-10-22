@@ -13,7 +13,10 @@ const SNAPS: Array[int] = [30, 15, 0]
 var arena: TrainingArena
 var placed: PlacedObjects
 var open := false
-var tool := "select"  ## "select" | "erase" | "place"
+var tool := "select"  ## "select" | "erase" | "place" | "pan"
+var _panning := false
+var _camera_free := false
+var _pan_camera_mode := Node.PROCESS_MODE_INHERIT
 var place_id := ""
 var snap := 30
 var selected: Dictionary = {}
@@ -44,6 +47,7 @@ class Overlay extends Node2D:
 		editor = e
 		z_index = 200
 		name = "WorldEditorOverlay"
+		process_mode = Node.PROCESS_MODE_ALWAYS  # keeps drawing the cursor/outlines while the game is paused
 	func _process(_d: float) -> void:
 		visible = editor.open
 		if visible:
@@ -113,6 +117,7 @@ func _process(_d: float) -> void:
 
 func set_open(v: bool) -> void:
 	open = v
+	_set_camera_free(v)
 	panel.visible = v
 	tab.visible = not v
 	if not v:
@@ -133,9 +138,26 @@ func set_tool(t: String, id := "") -> void:
 
 func snapped_pos(p: Vector2) -> Vector2:
 	if snap > 0 and _grass_tool():
-		var ground := (arena.get_node("WindGrassField") as WindGrassField).ground
-		return ground.position + ground.map_to_local(ground.local_to_map(p - ground.position))
+		return iso_cell_center(p)
 	return p if snap <= 0 else (p / float(snap)).round() * float(snap)
+
+## Centre of the floor-grid diamond (72 x 36 tiles, centres at (36k, 18m) with k and m of equal parity) nearest to p.
+static func iso_cell_center(p: Vector2) -> Vector2:
+	var best := Vector2.ZERO
+	var best_d := INF
+	var k0 := int(floor(p.x / 36.0))
+	var m0 := int(floor(p.y / 18.0))
+	for k in [k0, k0 + 1]:
+		for m in [m0, m0 + 1]:
+			if posmod(k - m, 2) != 0:
+				continue
+			var c := Vector2(36.0 * k, 18.0 * m)
+			var d := c.distance_squared_to(p)
+			if d < best_d:
+				best_d = d
+				best = c
+	return best
+
 
 func _grass_tool() -> bool:
 	var id := place_id if tool == "place" else str(selected.get("id", ""))
@@ -163,9 +185,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if not open:
 		return
+	if event is InputEventMouseMotion and _panning:
+		pan_by((event as InputEventMouseMotion).relative)
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
-		if mb.button_index == MOUSE_BUTTON_LEFT:
+		if mb.button_index == MOUSE_BUTTON_LEFT and tool == "pan":
+			_panning = mb.pressed
+			get_viewport().set_input_as_handled()
+		elif mb.button_index == MOUSE_BUTTON_LEFT:
 			if mb.pressed:
 				press(_mouse_world())
 			else:
@@ -176,6 +205,37 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 	elif event is InputEventMouseMotion and dragging:
 		drag_to(_mouse_world())
+
+
+func _camera() -> Camera2D:
+	var p := get_tree().get_first_node_in_group("player") as PlayerController
+	return p.camera if p != null else null
+
+
+## While the builder is open the camera keeps running through a pause, so you can pan and place on a frozen world.
+func _set_camera_free(on: bool) -> void:
+	var cam := _camera()
+	if cam == null:
+		return
+	if on:
+		if _camera_free:
+			return
+		_camera_free = true
+		_pan_camera_mode = cam.process_mode
+		cam.process_mode = Node.PROCESS_MODE_ALWAYS
+	else:
+		_camera_free = false
+		cam.process_mode = _pan_camera_mode
+		cam.offset = Vector2.ZERO
+		_panning = false
+
+
+## Drag the view by a screen-space delta (works while the game is paused).
+func pan_by(screen_delta: Vector2) -> void:
+	var cam := _camera()
+	if cam != null:
+		cam.offset -= screen_delta / cam.zoom
+		cam.force_update_scroll()
 
 
 func press(world: Vector2) -> void:
@@ -252,13 +312,20 @@ func delete_selected() -> void:
 	_refresh()
 
 
+static func _diamond(c: Vector2) -> PackedVector2Array:
+	return PackedVector2Array([c + Vector2(0, -18), c + Vector2(36, 0), c + Vector2(0, 18), c + Vector2(-36, 0), c + Vector2(0, -18)])
+
+
 # ------------------------------------------------------------------ overlay drawing
 func draw_overlay(c: Node2D) -> void:
 	for o in placed.objects:
 		if not placed.type_visible(o.id):
 			continue
 		var sel: bool = (o == selected)
-		c.draw_rect(PlacedObjects.footprint_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95) if sel else Color(ACCENT, 0.6), false, 4.0 if sel else 2.0)
+		if PlacedObjects.def_of(o.id).kind == "grass":
+			c.draw_polyline(_diamond(o.pos), Color(1, 0.84, 0.2, 0.95) if sel else Color(ACCENT, 0.6), 4.0 if sel else 2.0)
+		else:
+			c.draw_rect(PlacedObjects.footprint_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95) if sel else Color(ACCENT, 0.6), false, 4.0 if sel else 2.0)
 		if sel:
 			c.draw_rect(PlacedObjects.hit_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.5), false, 2.0)
 	if tool == "erase" and get_viewport().gui_get_hovered_control() == null:
@@ -280,8 +347,12 @@ func draw_overlay(c: Node2D) -> void:
 			c.draw_texture(tex, pos - anchor, Color(1, 1, 1, 0.55) if ok else Color(1, 0.5, 0.5, 0.55))
 		else:
 			c.draw_rect(PlacedObjects.hit_rect(place_id, pos), Color(tint, 0.25))
-		c.draw_rect(PlacedObjects.footprint_rect(place_id, pos), tint, true)
-		c.draw_rect(PlacedObjects.footprint_rect(place_id, pos), Color(tint, 1.0), false, 3.0)
+		if def.kind == "grass":
+			c.draw_colored_polygon(_diamond(pos).slice(0, 4), tint)
+			c.draw_polyline(_diamond(pos), Color(tint, 1.0), 3.0)
+		else:
+			c.draw_rect(PlacedObjects.footprint_rect(place_id, pos), tint, true)
+			c.draw_rect(PlacedObjects.footprint_rect(place_id, pos), Color(tint, 1.0), false, 3.0)
 
 
 # ------------------------------------------------------------------ UI
@@ -466,6 +537,7 @@ func _build_ui() -> void:
 	outer.add_child(tools)
 	_tool_buttons["select"] = _toggle(tools, "SELECT / MOVE", func(): set_tool("select"))
 	_tool_buttons["erase"] = _toggle(tools, "ERASE", func(): set_tool("erase"))
+	_tool_buttons["pan"] = _toggle(tools, "PAN", func(): set_tool("pan"))
 
 	# Visibility filters also isolate picking; no layout data or collision is removed.
 	var filters := GridContainer.new()
@@ -745,6 +817,6 @@ func _refresh() -> void:
 	if not selected.is_empty():
 		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
-	var what := "Placing: %s" % str(PlacedObjects.CATALOG[place_id].label) if tool == "place" else ("Erase mode" if tool == "erase" else "Select / move")
+	var what := "Placing: %s" % str(PlacedObjects.CATALOG[place_id].label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
 	count_label.text = "%d objects" % placed.objects.size()
 	status.text = _note if Time.get_ticks_msec() < _note_until else what
