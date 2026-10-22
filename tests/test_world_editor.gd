@@ -159,9 +159,9 @@ func run(ck: Callable, root: Node) -> void:
 	editor.snap = 30
 	var layout_before := placed.to_json_string()
 	editor.set_type_filter("Grass", false)
-	ck.call("builder filters: hides palette, art and picking without deleting layout", not (g.nodes[0] as CanvasItem).visible and not (editor._category_sections["Grass"] as Control).visible and placed.hit_test(g.pos) != g and placed.to_json_string() == layout_before and editor.selected.is_empty())
+	ck.call("builder filters: hide the palette options only; the world art stays visible and pickable, layout untouched", (g.nodes[0] as CanvasItem).visible and not (editor._category_sections["Grass"] as Control).visible and placed.hit_test(g.pos) == g and placed.to_json_string() == layout_before and editor.selected == g)
 	editor.set_type_filter("Trees", false)
-	ck.call("builder filters: hidden solids retain collision/nav", not placed.type_visible("tree_1") and not arena.nav.is_walkable(WorldScale.TREE_POSITIONS[0] + Vector2(0, -20)))
+	ck.call("builder filters: hidden palette options leave world collision/nav alone", placed.type_visible("tree_1") and not arena.nav.is_walkable(WorldScale.TREE_POSITIONS[0] + Vector2(0, -20)))
 	editor.set_type_filter("Grass", true)
 	editor.set_type_filter("Trees", true)
 	ck.call("builder filters: reveal restores art and picking", (g.nodes[0] as CanvasItem).visible and placed.hit_test(g.pos) == g)

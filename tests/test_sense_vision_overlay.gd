@@ -83,25 +83,14 @@ func _test_off_by_default() -> void:
 
 
 func _test_key_and_button(root: Node) -> void:
-	var act := SenseVisionToggle.ACTION
-	var evs := InputMap.action_get_events(act)
-	var k := evs[0] as InputEventKey if evs.size() > 0 else null
-	ck.call("sense vision key: action dbg_sense_vision exists on plain F3 (physical key, no modifier)", InputMap.has_action(act) and evs.size() == 1 and k != null and k.physical_keycode == KEY_F3 and not k.ctrl_pressed and not k.alt_pressed and not k.shift_pressed and not k.meta_pressed)
-	var clash := false
-	for a: String in InputMap.get_actions():
-		if a == act:
-			continue
-		for e in InputMap.action_get_events(a):
-			if e is InputEventKey and (e as InputEventKey).physical_keycode == KEY_F3:
-				clash = true
-	ck.call("sense vision key: no other action uses the physical key F3 (the repo's key-collision rule compares physical keys only)", not clash)
+	ck.call("sense vision hotkey: none - no action dbg_sense_vision exists and the toggle has no key handler", not InputMap.has_action("dbg_sense_vision") and not tog.is_processing_unhandled_input())
 
-	ck.call("sense vision button: exists, unpressed, labelled off, to the left of the Bandit vision button", tog.button != null and not tog.button.button_pressed and tog.button.text == "Sense vision: off (F3)" and tog.button.position == SenseVisionToggle.BUTTON_POS and tog.button.position.x < lab.vision.button.position.x)
+	ck.call("sense vision button: exists, unpressed, labelled off, in the Settings panel", tog.button != null and not tog.button.button_pressed and tog.button.text == "Sense vision: off" and tog.button.get_parent() == lab.settings.rows)
 
 	tog.toggle()
 	await tree.process_frame
 	ck.call("sense vision toggle(): ON creates exactly one overlay as a child of the arena", tog.on and tog.overlay != null and is_instance_valid(tog.overlay) and tog.overlay.get_parent() == bandit.get_parent() and _count_overlays(root) == 1)
-	ck.call("sense vision button: synced to ON", tog.button.button_pressed and tog.button.text == "Sense vision: ON (F3)")
+	ck.call("sense vision button: synced to ON", tog.button.button_pressed and tog.button.text == "Sense vision: ON")
 
 	tog.button.button_pressed = false
 	tog.button.toggled.emit(false)
@@ -112,7 +101,7 @@ func _test_key_and_button(root: Node) -> void:
 	ev.pressed = true
 	Input.parse_input_event(ev)
 	await tree.process_frame
-	ck.call("sense vision key F3: toggles ON via real input", tog.on and tog.overlay != null and _count_overlays(root) == 1)
+	ck.call("sense vision hotkey: pressing F3 does nothing", not tog.on and tog.overlay == null and _count_overlays(root) == 0)
 	ev.pressed = false
 	Input.parse_input_event(ev)
 	tog.set_on(false)  # back to a known OFF state for the following tests, regardless of the key's own state

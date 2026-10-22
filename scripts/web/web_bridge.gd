@@ -97,6 +97,14 @@ func _process(delta: float) -> void:
 	_state.player_weapon_visible = _player.visual.weapon_visible()  ## owner 2026-10-22: "wire it to the controller"
 	_state.player_sense_radius = _player.sense_radius()
 	_state.player_ryo = _player.ryo
+	var st := SettingsPanel.telemetry()  # Settings tab + vision button centres (additive)
+	_state.settings_open = st["settings_open"]
+	_state.settings_tab_x = st["settings_tab_x"]
+	_state.settings_tab_y = st["settings_tab_y"]
+	_state.settings_bandit_x = st["settings_bandit_x"]
+	_state.settings_bandit_y = st["settings_bandit_y"]
+	_state.settings_sense_x = st["settings_sense_x"]
+	_state.settings_sense_y = st["settings_sense_y"]
 	var sv := SenseVisionToggle.telemetry()  # proximity sense debug overlay (additive; zeros/false while OFF)
 	_state.sense_vision_on = sv["sense_vision_on"]
 	_state.sense_vision_views = sv["sense_vision_views"]

@@ -9,11 +9,9 @@ Code: `scripts/debug/bandit_vision_region.gd` (`BanditVisionRegion`, the polygon
 
 | How | Detail |
 | --- | --- |
-| Button | "Bandit vision: off (F2)" / "Bandit vision: ON (F2)", always visible at the top right, left of "Lab: off (Tab)". It works with the lab closed, with the mouse or a finger, so browser and mobile testers can use it. |
-| Key `F2` | Registered at runtime as the action `dbg_bandit_vision` (`project.godot` is untouched). Plain F2, no modifier. |
+| Button | "Bandit vision: off" / "Bandit vision: ON" in the **Settings** panel: click the "Settings" tab on the bottom edge of the screen, then the row. It works with the lab closed, with the mouse or a finger. There are no hotkeys (owner 2026-10-22). |
 | URL | `?vision=1` starts the page with the overlay ON (like `?debug=1`; only an explicit `vision=1` turns it on, `?vision=0` or nothing means OFF). |
 
-Why `F2` and not the `F6` the order suggested ("provided no conflict"): the input map and every key-collision test are clear for F6, but F6 is the address-bar / pane-focus key of Chrome, Edge and Firefox. Godot's Web runtime calls `preventDefault()` on canvas key events, which should stop it, but a headed browser cannot be driven here (Playwright injects events below the browser UI), so "no conflict" could not be shown. F2 is unbound in the input map, in the collision tests and in the major desktop browsers, and it follows the F-key family of the other debug tools (F1 diagnostics, F7/F8/F9 telemetry). The button is the guaranteed path either way. F6 can be added as a second binding after a check in a headed browser.
 
 The HUD legend (bottom left) carries one line about it. Switching ON creates the overlay as a child of the Bandit's parent (the arena); switching OFF frees it on the spot, so not even one frame of ghost geometry can remain. A page reload with `?vision=1` starts it again; the wish "ON" also survives a scene reload inside one page session (an arena restart keeps it on and attaches a fresh overlay to the new Bandit).
 
@@ -78,13 +76,13 @@ The overlay draws the geometry `can_see` accepts plus the AI's state. It does no
 
 Controls: WASD move, Shift sprint. The HUD at the top left shows `Pos: (x, y)`; the Bandit lives on the east side (x 1250 to 1650, y -200 to 60), behind two long walls with a 280 px gap between them (y -80 to 200).
 
-1. Open the live game. Click "Bandit vision: off (F2)" or press F2 (or open the page with `?vision=1`). The button reads "ON (F2)". Walk east with Shift until the Bandit is on screen: a bluish-green region with an arrow on the Bandit, label "L1 PATROL: not alert".
+1. Open the live game. Click "Settings" (bottom tab), then "Bandit vision: off" (or open the page with `?vision=1`). The row reads "ON". Walk east with Shift until the Bandit is on screen: a bluish-green region with an arrow on the Bandit, label "L1 PATROL: not alert".
 2. Watch it follow: the wedge swings as the Bandit walks its loop and turns in 45 degree steps; it is a circle of 150 px around the Bandit plus a 110 degree wedge to 700 px.
 3. Walls clip it: stand at about `Pos (780, -300)` (west of the north wall). When the wedge points your way the wall cuts it, even though you are inside the wedge's angle: "AI sees player: no", no marker.
 4. Behind the facing: with the Bandit walking away from you (its arrow points away), you stay unseen until you are inside the 150 px circle around it.
 5. Get seen: stand in the lane at about `Pos (780, 135)` until the Bandit faces west. At about 700 px the outline turns yellow and dashed ("suspicious: acquiring N%"), then vermillion ("PLAYER DETECTED") with a ring and "SEEN" on you; the shape becomes a full circle of 945 px, cut into slices by the walls ("NO CONE (chasing)").
 6. Lose it: sprint west along the lane (Shift + A) as soon as the outline turns yellow, while it is still "suspicious". You are past 945 px when it commits to the chase, so the label says "lost sight" with a "last seen" cross; a few seconds later "lost target: searching" (dotted, the cone is back and the Bandit looks around in 45 degree steps), then "returning to patrol" (blue), then green again. If you wait until it is already chasing you, it runs you down to its leash (1500 px from its home) and goes straight to "returning" while it still sees you; that is the AI's rule, not an overlay error.
-7. Toggle repeatedly (F2 and the button), open the lab (Tab) and diagnostics (F1) with the overlay ON: it must appear and vanish at once, keep drawing under the panels, and leave nothing coloured behind when OFF. Hit `Esc` to pause: the picture freezes with the world.
+7. Toggle repeatedly (Settings > Bandit vision), open the lab (Tab) and Settings > Diagnostics with the overlay ON: it must appear and vanish at once, keep drawing under the panels, and leave nothing coloured behind when OFF. Hit `Esc` to pause: the picture freezes with the world.
 8. Report anything where the picture and the Bandit disagree: its `AI sees player` line is the AI's own flag. Note the `Pos`, the Bandit's label line and a screenshot. A red "OVERLAY OUT OF SYNC WITH AI" line or the console warning `[BanditVisionOverlay] OUT OF SYNC` means the overlay itself detected the disagreement.
 
 ## Telemetry (`window.__SHINOBI_STATE__`, additive)
@@ -107,7 +105,7 @@ Published by `WebBridge` about 10 Hz next to the existing fields (existing names
 
 - `tests/test_bandit_vision_overlay.gd` (one `await load(...)` line in `tests/run_tests.gd`), 122 checks: the oracle above, an AI-flag oracle (the AI's own `_update_perception` result in each of 12 States at 6 places equals "polygon contains the player"), the State mapping for every `Bandit.State`, hidden on DEAD, no ghost after a freed Bandit, an arena restart, a freed scene, 100 rapid ON/OFF toggles (node count and draw items stable), other panels opened and closed, OFF = zero nodes and zero rebuilds, input untouched (the player walks the same distance ON and OFF, no input callbacks, the key is not consumed), the toggle action reuses no physical key, a per-frame cost bound, a moving test on real frames (the polygon is on the Bandit's current position and facing at the last `_process` of every frame, camera following).
 - Red proof (five temporary mutations of production code, each shown red and restored byte-identically): the polygon ignores walls (13 red), wrong half-angle (3 red, 1286 of 136,044 oracle samples disagree), a dead Bandit keeps its polygon (4 red), the mirrored chase multiplier 1.0 instead of 1.35 (9 red), OFF only hides instead of freeing (8 red). Re-run on the final code: 122 checks, 109 / 119 / 118 / 113 / 114 passed, no marker left.
-- Browser: `scripts/ci/smoke/controls-probe.mjs` has 7 new checks (default OFF with all 21 fields, F2 on/off, the button on/off, the overlay following the patrolling Bandit with the AI's numbers of the same publish, 12 alternating key/button cycles, `?vision=1`, `?vision=1` then F2 leaves no node behind).
+- Browser: `scripts/ci/smoke/controls-probe.mjs` has 7 new checks (default OFF with all 21 fields, hotkeys do nothing, Settings button on/off, the overlay following the patrolling Bandit with the AI's numbers of the same publish, 12 button cycles, `?vision=1`, `?vision=1` then F2 leaves no node behind).
 - Scenario with real keys on a local Web export (scratch scripts, not in the repo): see the job report. Summary: 746 published frames (655 with the overlay ON); the overlay, the AI's `sees_player` flag, the AI's `can_see` and an independent model of the rules agreed on every frame, including a detection from behind at 91.6 px (unseen at 171.9 px), the 700 px cone edge, the 945 px chase edge, the flee through lost sight, SEARCH, RETURN and back to PATROL, 41 toggles by key and button, the lab and diagnostics panels open, and a Bandit killed with real key presses (nothing left drawn or published).
 
 ## How to extend it
@@ -130,7 +128,7 @@ Orcha's PR #76 added a second way for a Bandit to notice the player: while the B
 
 - **This overlay does not draw it.** The Bandit vision region is exactly the set of positions where `Bandit.can_see` accepts the player; the sense ring is a different rule.
 - **It is reachable.** Since the 2026-10-22 owner change, patrolling Bandits sprint between waypoints (`bandit.gd`, patrol branch), so the sense fires in PATROL, not only in APPROACH and EVADE.
-- **Where to see it:** the Sense vision toggle (blue tab, `SenseVisionOverlay`) draws the ring. Turn on both to see the full truth of what can trigger a Bandit.
+- **Where to see it:** the Sense vision switch in the Settings panel (`SenseVisionOverlay`) draws the ring. Turn on both to see the full truth of what can trigger a Bandit.
 - `can_see` and the oracle tests are unchanged by this channel.
 
 ## Findings handed to Aki (none is an overlay defect)
