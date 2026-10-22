@@ -6,7 +6,8 @@ extends Node
 ##   kind "block": a placeholder box (TrainingArena.Block/BlockRear) with `footprint` (w, depth) and `height`.
 ##   kind "tree":  one of the five Codex blossom trees (index into blossom_trees.art.json); solid trunk base only.
 const SAVE_PATH := "user://world_builder_layout.json"
-const SAVE_VERSION := 1
+## v2 saves list EVERY object (the starting trees included); a v1 save only listed additions, so it also gets the default trees.
+const SAVE_VERSION := 2
 const CATALOG := {
 	"tree_1": {"label": "Tiered tree", "kind": "tree", "tree": 0},
 	"tree_2": {"label": "Windswept tree", "kind": "tree", "tree": 1},
@@ -97,22 +98,41 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		if grove == null:
 			return {}
 		var tree := grove.add_tree(int(def.tree), pos)
-		var body := StaticBody2D.new()
-		body.name = "PlacedTrunk%d" % _serial
-		var shape := RectangleShape2D.new()
-		shape.size = WorldScale.TREE_TRUNK_FOOTPRINT
-		var col := CollisionShape2D.new()
-		col.shape = shape
-		col.position = Vector2(0, -WorldScale.TREE_TRUNK_FOOTPRINT.y * 0.5)
-		body.add_child(col)
-		body.position = pos
-		arena.add_child(body)
-		nodes = [tree, body]
+		nodes = [tree, _make_trunk(pos)]
 	var obj := {"id": id, "pos": pos, "nodes": nodes}
 	objects.append(obj)
 	if commit:
 		_changed()
 	return obj
+
+
+func _make_trunk(pos: Vector2) -> StaticBody2D:
+	var body := StaticBody2D.new()
+	body.name = "PlacedTrunk%d" % _serial
+	var shape := RectangleShape2D.new()
+	shape.size = WorldScale.TREE_TRUNK_FOOTPRINT
+	var col := CollisionShape2D.new()
+	col.shape = shape
+	col.position = Vector2(0, -WorldScale.TREE_TRUNK_FOOTPRINT.y * 0.5)
+	body.add_child(col)
+	body.position = pos
+	arena.add_child(body)
+	return body
+
+
+## Take over the trees BlossomGrove spawned at start so they can be picked, moved and deleted like anything else.
+func adopt_grove() -> int:
+	var grove := arena.get_node_or_null("BlossomGrove") as BlossomGrove if arena != null else null
+	if grove == null:
+		return 0
+	var n := 0
+	for i in mini(grove.trees.size(), 5):
+		var tree: BlossomTree = grove.trees[i]
+		_serial += 1
+		objects.append({"id": "tree_%d" % (i + 1), "pos": tree.position, "nodes": [tree, _make_trunk(tree.position)]})
+		n += 1
+	_changed(false)
+	return n
 
 
 func remove(obj: Dictionary, commit := true) -> void:
@@ -199,6 +219,9 @@ func save() -> bool:
 ## Rebuild a layout. Entries with an unknown id, bad numbers, outside the arena or on top of the spawn are skipped.
 func load_dict(data: Dictionary) -> int:
 	clear_all(false)
+	if int(data.get("version", 1)) < 2:
+		for i in WorldScale.TREE_POSITIONS.size():
+			add("tree_%d" % (i + 1), WorldScale.TREE_POSITIONS[i], false)
 	var made := 0
 	var spawn := Vector2(0, 135)
 	if arena != null and arena.has_node("Spawn"):

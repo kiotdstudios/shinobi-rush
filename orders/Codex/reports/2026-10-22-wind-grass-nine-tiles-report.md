@@ -67,3 +67,7 @@ Integrated full suite retry PASS:1282 assertions,zero failures,expected malforme
 ## Camera integration before commit
 
 PR85 initial required checks passed, but merge was rejected because main advanced to6b937961f426eef917ff4e673bc610d3f1dcf318 (Aki default wide zoom0.75, PR83). Merged this base without conflicts. Ran full tests again:1282passed/zero failed (build/grass-zoom-tests); fresh Web export/finalization ../wind-grass-zoom-web passed; grass-proof-probe all15passed (build/grass-zoom-proof); controls-probe passed all checks with zoom0.75,zero errors (build/grass-zoom-controls). A separate real keyboard route around blockers into the meadow passed and screenshot was inspected at close zoom (build/grass-player). No movement collision added. Pending renewed CI and public deployment.
+
+## Editable-tree integration before commit
+
+Main advanced again to0406774f28030714af8b500a8001888a55f00f21 (PR86 editable starting trees/builder panel). Clean merge, no grass code conflicts. Repeated full tests:1287passed/zero failed (build/grass-builder2-tests); fresh export/finalization ../wind-grass-builder2-web passed; all15 grass browser checks passed (build/grass-builder2-proof); normal smoke passed9file hashes,real keyboard response,rendered canvas,zero fatal console errors (build/grass-builder2-smoke). No editor source altered by Codex. Pending new required checks and public publication.
