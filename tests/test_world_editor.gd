@@ -139,6 +139,9 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().physics_frame
 	ck.call("builder: delete removes the tree, its collision and its art node", placed.objects.size() == base_objs + 1 and grove.trees.size() == base_trees and not _solid_at(arena, tree_pos + Vector2(0, -20)) and arena.nav.is_walkable(tree_pos + Vector2(0, -20)))
 
+	# explicit save button
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(placed.save_path))
+	ck.call("builder: save button exists and Save writes the layout file", editor.save_button != null and editor.save_now() and FileAccess.file_exists(placed.save_path) and "SAVED" in editor.status.text)
 	# save / load round trip
 	placed.add("rock", Vector2(-600, 560))
 	placed.add("tree_1", Vector2(-300, 800))
