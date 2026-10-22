@@ -3,7 +3,7 @@
 - Agent: Codex
 - Order: `orders/Codex/2026-10-22-reference-blossom-trees.md` (direct owner request)
 - Date: 2026-10-22 America/New_York
-- Final status: IN_PROGRESS — local implementation tested, integration/live verification pending
+- Final status: DONE — integrated, deployed and live verified
 - Commit / PR: Not committed; this report precedes implementation commit.
 
 ## Work completed
@@ -70,3 +70,17 @@ Aki's courtyard floor PR #75 landed during this job. Integrated main `661ba9e4ef
 - Final resource walker `build/trees-validate-final`:59 scripts,8 scenes,zero failures. Order and sprite-manifest validators PASS.
 
 Initial implementation commit: `7495c41491b872b0c016327f858387e379de11ec`. Integration/PR/live SHA to follow. These tests precede the integration commit.
+
+## Verified live delivery — 2026-10-22T10:05:29.6730241-04:00
+
+- [PR #77](https://github.com/kiotdstudios/shinobi-rush/pull/77) merged after required checks passed; tested head `6f71020f6864bde6bb211ea1a04a8b6b14c44647`.
+- Deployed main SHA: **`8b9e4a111c9230e7a6b42d3c08b4e91824abcb81`**. Public `build-info.json.commit_sha` independently matches. Normal startup includes all five trees.
+- Review: https://kiotdstudios.github.io/shinobi-rush/?trees=review&v=8b9e4a1
+- [Main CI/Pages run](https://github.com/kiotdstudios/shinobi-rush/actions/runs/39790878367). Publication is independently confirmed by exact public SHA and successful served-file verification below; no claim relies only on queued/in-progress job UI.
+- `node scripts/ci/smoke/smoke.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 8b9e4a111c9230e7a6b42d3c08b4e91824abcb81 --out-dir build/trees-live-smoke --label blossom-trees-live`: PASS exact SHA, nine file hashes, rendered canvas, ready hook, keyboard response and zero fatal console errors.
+- `node scripts/ci/smoke/trees-proof-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/trees-live-proof`: PASS all16 checks, zero errors. Preserved `live-browser-evidence.json`, `live-grove.png`, `live-weeping.png` in `docs/visuals/blossom-trees/`.
+- Visible Codex browser playtest: opened deployed review, selected Tree3, clicked Half speed, inspected detail and independently falling foliage; status showed0.50x, active leaves, advancing wind phase. Left this live review tab open as a deliverable.
+- Additional local normal-game depth check (after implementation commit, before final report): actual A held until player x=-985/y135 behind Tree1 (root[-920,320]); S held until y483 in front. Screenshot inspection verified canopy covers the actor behind it and the actor renders fully in front. No teleport/state mutation. Four navigation/input/error checks passed. Procedure used `node build/trees-occlusion.mjs`; source is local evidence only, manual steps above are reproducible. Preserved `occlusion-evidence.json`, `occlusion-behind.png`, `occlusion-front.png`.
+- Both delivered foliage sheets independently checked:16 frames and16 unique hashes each. Captured wind loop:96 unique rendered frames, starting/returned phase6.
+
+Outstanding work: None for the requested decorative trees, sway and separate falling foliage. These props deliberately add no collision/navigation obstacles. Wind/particle tuning can follow owner feedback. This report/evidence-only follow-up is pushed to the delivery branch; the verified deployed runtime is the merge SHA above.

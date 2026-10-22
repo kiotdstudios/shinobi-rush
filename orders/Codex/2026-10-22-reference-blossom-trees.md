@@ -1,7 +1,7 @@
 # ORDER — Five reference blossom trees and independent falling foliage
 
 - Agent: Codex
-- Status: IN_PROGRESS
+- Status: DONE — PR #77 merged; live 8b9e4a1 verified
 - Priority: P0 — direct owner request
 - Owner: Codex (environment art and decorative animation)
 - Branch/PR: `codex/blossom-trees`
@@ -21,3 +21,5 @@ Five transparent tree assets, documented wind cycle/frame timing, separate detai
 
 ## Acceptance Criteria / Tests
 All five reference silhouettes remain recognizable at gameplay zoom. Roots/rocks stay fixed while canopy and branch tips sway. No clipping, white rectangles, obvious loop seams or synchronized identical motion. Falling foliage starts from canopies, sways/tumbles and fades at ground independently. Confirm Y sorting, safe placement, bounded particles and browser performance. Godot import/resource tests, relevant automated tests, Web export, live browser keyboard/mouse checks and exact deployed SHA.
+
+Live: https://kiotdstudios.github.io/shinobi-rush/?trees=review&v=8b9e4a1 . All1193 automated assertions and16 live art checks passed; exact deployed SHA and evidence in the required report.
