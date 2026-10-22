@@ -124,6 +124,15 @@ Published by `WebBridge` about 10 Hz next to the existing fields (existing names
 - Browser: F6 is reserved (above). Software-GL browsers run the game at 4 to 9 FPS, so fast effects cannot be sampled live; tests wait on published state.
 - Not verified: real GPU rendering, a headed browser, the owner's own play session.
 
+## Second detection channel: proximity sense (named limit)
+
+Orcha's PR #76 added a second way for a Bandit to notice the player: while the Bandit is sprinting (`is_sprinting`, "naruto running"), it senses the player within `sense_radius()` (300 px at intelligence 5). It is distance only: no cone, no line of sight, walls do not block it. If it fires in PATROL, IDLE, SEARCH or RETURN the Bandit goes to NOTICE.
+
+- **This overlay does not draw it.** The Bandit vision region is exactly the set of positions where `Bandit.can_see` accepts the player; the sense ring is a different rule.
+- **It is reachable.** Since the 2026-10-22 owner change, patrolling Bandits sprint between waypoints (`bandit.gd`, patrol branch), so the sense fires in PATROL, not only in APPROACH and EVADE.
+- **Where to see it:** the Sense vision toggle (blue tab, `SenseVisionOverlay`) draws the ring. Turn on both to see the full truth of what can trigger a Bandit.
+- `can_see` and the oracle tests are unchanged by this channel.
+
 ## Findings handed to Aki (none is an overlay defect)
 
 1. `Bandit.can_see` holds the chase reach multiplier as the literal `1.35` (`bandit.gd:239`) and `_update_perception` holds the chasing list inline (`bandit.gd:228`). The overlay mirrors both and guards them (above); exposing them would remove the copy.
