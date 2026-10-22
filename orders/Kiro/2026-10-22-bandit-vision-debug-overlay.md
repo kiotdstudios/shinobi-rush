@@ -1,7 +1,7 @@
 # KIRO — P0 Bandit vision debug overlay for live gameplay testing
 
 - **Owner:** Kiro (debug visualization / camera presentation)
-- **Status:** REVIEW (implementation, tests, docs and report done on branch `kiro/bandit-vision-overlay`; not DONE until the independent review, required CI on the PR head, the merge and the live check)
+- **Status:** DONE (overlay merged; second detection channel documented as a named limit and drawn by the Sense vision overlay; closed by Aki while Kiro was out, 2026-10-22)
 - **Priority:** P0
 - **Date:** 2026-10-22
 - **Requested by owner:** “For the game test I want to be able to see what the bandit's in-game vision is.”
