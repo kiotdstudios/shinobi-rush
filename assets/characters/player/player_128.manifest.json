@@ -1022,6 +1022,78 @@
           "sprites/production/dodge/SW_011.png"
         ]
       }
+    },
+    "light1": {
+      "fps": 20.0,
+      "authored_fps": 24,
+      "loop": false,
+      "allow_partial_directions": true,
+      "status": "owner_review_required_before_eight_directions",
+      "source_art_json": "kunai_poc/kunai-light1.art.json (hand/weapon placement in scripts/combat/weapon_rig.gd)",
+      "authored_duration_ms": 300.0,
+      "frames": {
+        "SE": [
+          "kunai_poc/body/SE_000.png",
+          "kunai_poc/body/SE_001.png",
+          "kunai_poc/body/SE_002.png",
+          "kunai_poc/body/SE_003.png",
+          "kunai_poc/body/SE_004.png",
+          "kunai_poc/body/SE_005.png"
+        ]
+      }
+    },
+    "light2": {
+      "fps": 17.142857142857142,
+      "loop": false,
+      "allow_partial_directions": true,
+      "status": "owner_review_required_before_eight_directions",
+      "source_art_json": "kunai_primary_se/kunai-primary.art.json (hand/weapon placement in scripts/combat/weapon_rig.gd)",
+      "authored_duration_ms": 350.00000000000006,
+      "frames": {
+        "SE": [
+          "kunai_primary_se/body/light2/SE_000.png",
+          "kunai_primary_se/body/light2/SE_001.png",
+          "kunai_primary_se/body/light2/SE_002.png",
+          "kunai_primary_se/body/light2/SE_003.png",
+          "kunai_primary_se/body/light2/SE_004.png",
+          "kunai_primary_se/body/light2/SE_005.png"
+        ]
+      }
+    },
+    "light3": {
+      "fps": 12.413793103448278,
+      "loop": false,
+      "allow_partial_directions": true,
+      "status": "owner_review_required_before_eight_directions",
+      "source_art_json": "kunai_primary_se/kunai-primary.art.json (hand/weapon placement in scripts/combat/weapon_rig.gd)",
+      "authored_duration_ms": 483.3333333333333,
+      "frames": {
+        "SE": [
+          "kunai_primary_se/body/light3/SE_000.png",
+          "kunai_primary_se/body/light3/SE_001.png",
+          "kunai_primary_se/body/light3/SE_002.png",
+          "kunai_primary_se/body/light3/SE_003.png",
+          "kunai_primary_se/body/light3/SE_004.png",
+          "kunai_primary_se/body/light3/SE_005.png"
+        ]
+      }
+    },
+    "dash_attack": {
+      "fps": 12.5,
+      "loop": false,
+      "allow_partial_directions": true,
+      "status": "owner_review_required_before_eight_directions",
+      "source_art_json": "kunai_primary_se/kunai-primary.art.json (hand/weapon placement in scripts/combat/weapon_rig.gd)",
+      "authored_duration_ms": 399.99999999999994,
+      "frames": {
+        "SE": [
+          "kunai_primary_se/body/dash_attack/SE_000.png",
+          "kunai_primary_se/body/dash_attack/SE_001.png",
+          "kunai_primary_se/body/dash_attack/SE_002.png",
+          "kunai_primary_se/body/dash_attack/SE_003.png",
+          "kunai_primary_se/body/dash_attack/SE_004.png"
+        ]
+      }
     }
   }
 }
