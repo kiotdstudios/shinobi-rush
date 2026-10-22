@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ct683vp1e277y"
-path="res://.godot/imported/floor_base_b.png-e1dd47d6cf794b89a737c6b1c8b095d2.ctex"
+uid="uid://c6awwagr0khw2"
+path="res://.godot/imported/floor_slate_mixed.png-6040238d6bdd7f48e757b06614f5e600.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_base_b.png"
-dest_files=["res://.godot/imported/floor_base_b.png-e1dd47d6cf794b89a737c6b1c8b095d2.ctex"]
+source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_slate_mixed.png"
+dest_files=["res://.godot/imported/floor_slate_mixed.png-6040238d6bdd7f48e757b06614f5e600.ctex"]
 
 [params]
 
