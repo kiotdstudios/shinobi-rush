@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gcpg1icbn4xb"
-path="res://.godot/imported/floor_cracked.png-c4b1e955c9632f350d192363d0522bd2.ctex"
+uid="uid://c3herg627cbct"
+path="res://.godot/imported/floor_slate_goldcrack_a.png-bc52d882eb48deb752b47793f4987a90.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_cracked.png"
-dest_files=["res://.godot/imported/floor_cracked.png-c4b1e955c9632f350d192363d0522bd2.ctex"]
+source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_slate_goldcrack_a.png"
+dest_files=["res://.godot/imported/floor_slate_goldcrack_a.png-bc52d882eb48deb752b47793f4987a90.ctex"]
 
 [params]
 

@@ -2,9 +2,9 @@ class_name KosenFloorTileset
 extends RefCounted
 ## Builds the Kosen courtyard floor TileSet in code (no hand-authored .tres): one small,
 ## reusable isometric tile set covering every variant category the ground-tileset order asked
-## for. Source art: assets/environment/kosen_courtyard/floor_tiles/ (PixelLab create_tiles_pro,
-## squashed from the tool's native 1:1 top-down square diamond to the game's 2:1 isometric
-## ratio so it matches WorldScale's diamond grid convention).
+## for. Source art: assets/environment/kosen_courtyard/floor_tiles/, generated with PixelLab
+## create_tiles_pro (isometric, 64x64 slabs) from a text prompt matching the owner's stone floor
+## mockup palette; only each slab's flat top face is kept, resized to the game's 72x36 diamond.
 ##
 ## Deterministic variation: pick_interior_source_id() is a pure function of the cell
 ## coordinate (hash, not randf()), so the same arena always paints the same way across runs —
@@ -20,25 +20,29 @@ const TILE_DIR := "res://assets/environment/kosen_courtyard/floor_tiles/"
 ## Source order fixes each file's source_id (position in this array == source_id), so callers
 ## can address sources by the named constants below without a separate lookup table.
 const ALL_FILES: Array[String] = [
-	"floor_base_a.png",           # 0 - base stone floor
-	"floor_base_b.png",           # 1 - base stone floor, alt mortar tone
-	"floor_alt_herringbone.png",  # 2 - alternate stone texture (herringbone laid)
-	"floor_cracked.png",          # 3 - cracked / weathered stone
-	"floor_dirt_stone.png",       # 4 - dirt-to-stone transition
-	"floor_dirt.png",             # 5 - packed dirt
-	"floor_decor_a.png",          # 6 - decorative detail (gold cloud inlay)
-	"floor_decor_b.png",          # 7 - decorative detail, alt motif
-	"floor_edge.png",             # 8 - worn lighter edge (one side), perimeter ring
-	"floor_corner.png",           # 9 - worn lighter corner (two sides), perimeter corners
+	"floor_slate_crack_a.png",           # 0 - dark slate, hairline cracks
+	"floor_slate_crack_b.png",           # 1 - dark slate, hairline cracks, alt
+	"floor_slate_mixed_a.png",           # 2 - mixed cool/warm mottling
+	"floor_slate_mixed_b.png",           # 3 - mixed cool/warm mottling, alt
+	"floor_slate_warm_a.png",            # 4 - warm amber weathering
+	"floor_slate_warm_b.png",            # 5 - warm amber weathering, alt
+	"floor_slate_light_a.png",           # 6 - lighter cooler worn slate
+	"floor_slate_light_b.png",           # 7 - lighter cooler worn slate, alt
+	"floor_slate_dark_a.png",            # 8 - dark worn slate
+	"floor_slate_lichen_a.png",          # 9 - lichen / frost patches (rare)
+	"floor_slate_goldcrack_a.png",       # 10 - gold-inlay cracks (rare)
+	"floor_rune_cloud.png",              # 11 - gold cloud-rune medallion (very rare)
+	"floor_slate_dark_b.png",            # 12 - darker worn edge (perimeter ring)
+	"floor_slate_dark_a.png",            # 13 - darker worn corner (perimeter corners)
 ]
 
-const EDGE_SOURCE_ID := 8
-const CORNER_SOURCE_ID := 9
+const EDGE_SOURCE_ID := 12
+const CORNER_SOURCE_ID := 13
 
-## Weighted picks for interior (non-perimeter) cells, aligned to ALL_FILES[0..7]. Base/alt
+## Weighted picks for interior (non-perimeter) cells, aligned to ALL_FILES[0..11]. Base/alt
 ## textures dominate; cracked/dirt/decorative are sprinkled in so they read as variation, not
 ## the main pattern.
-const INTERIOR_WEIGHTS: Array[int] = [10, 10, 6, 3, 2, 1, 1, 1]
+const INTERIOR_WEIGHTS: Array[int] = [48, 48, 9, 9, 6, 6, 3, 3, 42, 3, 6, 1]
 
 
 static func build() -> TileSet:

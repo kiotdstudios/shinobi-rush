@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c783wdj0tw2bd"
-path="res://.godot/imported/floor_dirt_stone.png-64a7bb618e84327e383f4d4e2c44f4c4.ctex"
+uid="uid://giyuuqdcp734"
+path="res://.godot/imported/floor_rune_cloud.png-fba848dd15243fb992eabc07556a0bd0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_dirt_stone.png"
-dest_files=["res://.godot/imported/floor_dirt_stone.png-64a7bb618e84327e383f4d4e2c44f4c4.ctex"]
+source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_rune_cloud.png"
+dest_files=["res://.godot/imported/floor_rune_cloud.png-fba848dd15243fb992eabc07556a0bd0.ctex"]
 
 [params]
 
