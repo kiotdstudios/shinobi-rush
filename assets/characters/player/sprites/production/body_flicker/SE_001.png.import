@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dc2avjcqskxws"
-path="res://.godot/imported/swipe_003.png-17df7da4bf4fcbece391d11f5a4d21c8.ctex"
+uid="uid://snq7atjx105v"
+path="res://.godot/imported/SE_001.png-13ea0b27155b2fb3faee12f7ae151232.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/player/kunai_primary_se/vfx/swipe_003.png"
-dest_files=["res://.godot/imported/swipe_003.png-17df7da4bf4fcbece391d11f5a4d21c8.ctex"]
+source_file="res://assets/characters/player/sprites/production/body_flicker/SE_001.png"
+dest_files=["res://.godot/imported/SE_001.png-13ea0b27155b2fb3faee12f7ae151232.ctex"]
 
 [params]
 

@@ -22,12 +22,12 @@
   },
   "vfx": {
     "frames": [
-      "res://assets/characters/player/kunai_primary_se/vfx/swipe_000.png",
-      "res://assets/characters/player/kunai_primary_se/vfx/swipe_001.png",
-      "res://assets/characters/player/kunai_primary_se/vfx/swipe_002.png",
-      "res://assets/characters/player/kunai_primary_se/vfx/swipe_003.png",
-      "res://assets/characters/player/kunai_primary_se/vfx/swipe_004.png",
-      "res://assets/characters/player/kunai_primary_se/vfx/swipe_005.png"
+      "res://assets/vfx/kunai_contact/swipe_000.png",
+      "res://assets/vfx/kunai_contact/swipe_001.png",
+      "res://assets/vfx/kunai_contact/swipe_002.png",
+      "res://assets/vfx/kunai_contact/swipe_003.png",
+      "res://assets/vfx/kunai_contact/swipe_004.png",
+      "res://assets/vfx/kunai_contact/swipe_005.png"
     ],
     "fps": 30,
     "independent": true

@@ -71,7 +71,7 @@ for i in range(6):
  for r,g,b,a in c.get_flattened_data():
   if a<180:pixels.append((0,0,0,0));continue
   level=min([25,70,125,190,235,255],key=lambda n:abs(n-(r+g+b)//3));pixels.append((level,level,level,255))
- c.putdata(pixels);f=Image.new('RGBA',(128,128));f.alpha_composite(c,(24,24));path=PACK/'vfx'/f'swipe_{i:03}.png';path.parent.mkdir(parents=True,exist_ok=True);f.save(path);vfx.append(RES(path))
+ c.putdata(pixels);f=Image.new('RGBA',(128,128));f.alpha_composite(c,(24,24));path=ROOT/'assets/vfx/kunai_contact'/f'swipe_{i:03}.png';path.parent.mkdir(parents=True,exist_ok=True);f.save(path);vfx.append(RES(path))
 sequence=[{'animation':'guard'},{'animation':'light1','end_ms':150},{'animation':'light2','end_ms':200},{'animation':'light3'},{'animation':'dodge','end_ms':920},{'animation':'dash_attack'},{'animation':'run'}]
 # Stable explicit order for selectors, with standard gameplay-compatible action labels.
 animations={k:animations[k] for k in ['guard','light1','light2','light3','dodge','dash_attack','run']}
