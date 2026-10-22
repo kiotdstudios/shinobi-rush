@@ -687,15 +687,25 @@ func test_lab_and_pause() -> void:
 	ck("lab direction: ; ' step switches to FIXED and moves one heading", lab.dir_mode == AnimationLab.DirMode.FIXED and lab.current_dir_name() == "SE", lab.current_dir_name())
 	_restore(lab, base)
 
-	# mouse wheel zoom
+	# mouse wheel zoom: one notch = one entry of the lab zoom list (whole and half steps), clamped at both ends
 	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
 	ck("lab zoom: wheel up -> native 1x on the camera", lab.zoom_index == 1 and player.camera.zoom == Vector2.ONE)
-	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
-	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
+	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
+	ck("lab zoom: the next wheel notch is the 1.5x half step", lab.zoom_index == 2 and player.camera.zoom == Vector2(1.5, 1.5))
+	for i in 3:
+		_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
 	ck("lab zoom: wheel down clamps at the wide baseline", lab.zoom_index == 0 and is_equal_approx(player.camera.zoom.x, CameraPreset.zoom_for(CameraPreset.WIDE)))
-	for i in 6:
+	var wheel_seen: Array[float] = []
+	for i in 9:
 		_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
-	ck("lab zoom: wheel up clamps at 4x", lab.zoom_index == 4 and player.camera.zoom == Vector2(4, 4))
+		wheel_seen.append(player.camera.zoom.x)
+	ck("lab zoom: the wheel walks 1, 1.5, 2, 2.5, 3, 3.5, 4 and stays at 4x", str(wheel_seen) == str([1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.0, 4.0]), str(wheel_seen))
+	ck("lab zoom: wheel up clamps at 4x (the last of the 8 list entries)", lab.zoom_index == 7 and player.camera.zoom == Vector2(4, 4))
+	var wheel_back: Array[float] = []
+	for i in 7:
+		_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
+		wheel_back.append(player.camera.zoom.x)
+	ck("lab zoom: the wheel walks back 3.5, 3, 2.5, 2, 1.5, 1, baseline", str(wheel_back.slice(0, 6)) == str([3.5, 3.0, 2.5, 2.0, 1.5, 1.0]) and lab.zoom_index == 0 and is_equal_approx(wheel_back[6], CameraPreset.zoom_for(CameraPreset.WIDE)), str(wheel_back))
 	_restore(lab, base)
 
 	# every panel button does exactly what its dbg_* key does
@@ -784,10 +794,13 @@ func test_camera_framing() -> void:
 	ck("camera: limit_top is the arena top minus CAMERA_HEADROOM", cam.limit_top == int(b.position.y - WorldScale.CAMERA_HEADROOM), str(cam.limit_top))
 	ck("camera: limited area is at least as large as the visible rect (no void can show)", (cam.limit_right - cam.limit_left) >= view.x and (cam.limit_bottom - cam.limit_top) >= view.y)
 
-	# lab zoom list and labels
+	# lab zoom list and labels (whole steps stay, half steps in between, the first Z from the baseline is exactly 1.0)
 	var zl := AnimationLab.zoom_list(base)
-	ck("lab zoom list is [baseline, 1, 2, 3, 4]", zl.size() == 5 and zl[0] == base and zl.slice(1) == [1.0, 2.0, 3.0, 4.0], str(zl))
-	ck("lab zoom labels: 'wide 0.44x' then 1x..4x", AnimationLab.zoom_label(0, base) == "wide 0.44x" and AnimationLab.zoom_label(1, base) == "1x" and AnimationLab.zoom_label(2, base) == "2x" and AnimationLab.zoom_label(3, base) == "3x" and AnimationLab.zoom_label(4, base) == "4x", AnimationLab.zoom_label(0, base))
+	ck("lab zoom list is [baseline, 1, 1.5, 2, 2.5, 3, 3.5, 4]", zl.size() == 8 and zl[0] == base and zl.slice(1) == [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0], str(zl))
+	var step_labels: Array[String] = []
+	for i in zl.size():
+		step_labels.append(AnimationLab.zoom_label(i, base))
+	ck("lab zoom labels: 'wide 0.44x' then 1x 1.5x 2x 2.5x 3x 3.5x 4x", str(step_labels) == str(["wide 0.44x", "1x", "1.5x", "2x", "2.5x", "3x", "3.5x", "4x"]), str(step_labels))
 
 	# opening the lab must not change the camera; the panel shows the real zoom
 	var zoom_value := lab._value_labels["zoom"] as Label
@@ -795,26 +808,35 @@ func test_camera_framing() -> void:
 	_press(lab, "dbg_toggle_lab")
 	ck("lab: opening explicitly leaves the camera at baseline", lab.lab_on and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x")
 
-	# Z cycles 1x, 2x, 3x, 4x and wraps to baseline; label and camera agree at every step
+	# Z cycles 1x, 1.5x, 2x ... 4x and wraps to baseline; label and camera agree at every step
 	var seen: Array[float] = []
 	var labels: Array[String] = []
-	for i in 6:
+	for i in 9:
 		_press(lab, "dbg_zoom_cycle")
 		seen.append(cam.zoom.x)
 		labels.append(zoom_value.text)
-	ck("lab: Z cycles 1,2,3,4, baseline, 1 on the camera", seen.size() == 6 and seen[0] == 1.0 and seen[1] == 2.0 and seen[2] == 3.0 and seen[3] == 4.0 and is_equal_approx(seen[4], base) and seen[5] == 1.0, str(seen))
-	ck("lab: panel label matches the real zoom at every step", str(labels) == str(["1x", "2x", "3x", "4x", "wide 0.44x", "1x"]), str(labels))
+	ck("lab: the first Z from the baseline is exactly 1.0", seen[0] == 1.0, str(seen))
+	ck("lab: Z cycles 1,1.5,2,2.5,3,3.5,4, baseline, 1 on the camera", str(seen.slice(0, 7)) == str([1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]) and is_equal_approx(seen[7], base) and seen[8] == 1.0, str(seen))
+	ck("lab: panel label matches the real zoom at every step", str(labels) == str(["1x", "1.5x", "2x", "2.5x", "3x", "3.5x", "4x", "wide 0.44x", "1x"]), str(labels))
 
-	# opening while zoomed keeps the zoom; closing restores baseline
-	_press(lab, "dbg_zoom_cycle")  # 1x -> 2x
-	var zoom_2x := cam.zoom.x
+	# opening while zoomed keeps the zoom; closing restores baseline (from a half step and from a whole step)
+	_press(lab, "dbg_zoom_cycle")  # 1x -> 1.5x
+	var zoom_half := cam.zoom.x
 	_press(lab, "dbg_toggle_lab")  # close
-	ck("lab: closing the lab restores the baseline zoom", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_2x == 2.0, "zoom=%s" % cam.zoom)
+	ck("lab: closing the lab at a half step restores the baseline zoom", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_half == 1.5, "zoom=%s" % cam.zoom)
 	_press(lab, "dbg_toggle_lab")  # open
 	ck("lab: re-opening does not change the camera", lab.lab_on and is_equal_approx(cam.zoom.x, base))
+	for i in 3:
+		_press(lab, "dbg_zoom_cycle")  # 1x, 1.5x, 2x
+	var zoom_2x := cam.zoom.x
+	_press(lab, "dbg_toggle_lab")  # close
+	ck("lab: closing the lab at 2x restores the baseline zoom", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_2x == 2.0, "zoom=%s" % cam.zoom)
+	_press(lab, "dbg_toggle_lab")  # open
 	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
+	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)  # 1x, 1.5x
+	var wheel_half := cam.zoom.x
 	_press(lab, "dbg_toggle_lab")
-	ck("lab: closing after a wheel zoom restores the baseline", is_equal_approx(cam.zoom.x, base) and lab.zoom_index == 0)
+	ck("lab: closing after a wheel zoom (to the 1.5x half step) restores the baseline", wheel_half == 1.5 and is_equal_approx(cam.zoom.x, base) and lab.zoom_index == 0)
 
 	# __SHINOBI_STATE__ framing fields (WebBridge is inert outside the browser, so test the publisher's helper + source)
 	var bridge_script := load("res://scripts/web/web_bridge.gd")

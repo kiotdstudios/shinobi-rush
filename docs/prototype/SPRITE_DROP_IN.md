@@ -95,13 +95,18 @@ Every function has a key and a clickable button. The status line is always on sc
 |-----|--------|-----|--------|
 | `[` `]` | set prev/next (incl. placeholder) | `P` / `O` | pause / single-step |
 | `,` `.` | animation prev/next | `C` | compare any two sets side by side |
-| `;` `'` | direction prev/next | `Z` or wheel | zoom: wide, 1x-4x |
+| `;` `'` | direction prev/next | `Z` or wheel | zoom: wide, then 1x-4x in half steps |
 | `V` | direction mode follow / fixed / spin | `1`-`6` | iso grid, square grid, anchor, footprint, height ruler, frame box |
 | `-` `=` | speed 0.25x-2x | gamepad | Back = lab, R-stick click = compare, L-stick click = zoom |
 
 Zoom steps are `wide` (the gameplay baseline, `WorldScale.CAMERA_BASE_ZOOM` = 1/2.25, panel label "wide 0.44x"),
-then `1x` (native 1:1 pixels: a 128x128 frame is 128 screen px), `2x`, `3x`, `4x`. The lab opens at the baseline without
-moving the camera, `Z` wraps from `4x` back to the baseline, and closing the lab with `Tab` restores the baseline.
+then `1x` (native 1:1 pixels: a 128x128 frame is 128 screen px), `1.5x`, `2x`, `2.5x`, `3x`, `3.5x`, `4x`. The first `Z`
+from the baseline is exactly `1x`, and the wheel walks the same list, one step per notch. The lab opens at the baseline
+without moving the camera, `Z` wraps from `4x` back to the baseline, and closing the lab with `Tab` restores the
+baseline. A baseline that equals a step (for example `?camera=1.5`) is not listed twice.
+The half steps (`1.5x`, `2.5x`, `3.5x`) are NOT pixel-exact: with the nearest-neighbour filter some source pixels are
+drawn one screen pixel wide and the next ones two (or two and three, three and four), so edges look uneven. Use the half
+steps to judge size and framing, and the whole steps (`1x`, `2x`, `3x`, `4x`) to judge pixel detail.
 At the baseline a 128x128 production frame is drawn at about 0.44 scale (the 108 px figure is about 48 screen px, shown
 by the nearest-neighbour filter), so check fine detail at `1x` and also at the baseline. (64x64 art is a legacy
 non-production reference only.)
