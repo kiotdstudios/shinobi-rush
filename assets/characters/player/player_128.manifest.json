@@ -1094,6 +1094,95 @@
           "kunai_primary_se/body/dash_attack/SE_004.png"
         ]
       }
+    },
+    "chakra_charge": {
+      "fps": 6,
+      "authored_fps": 12,
+      "loop": true,
+      "status": "art_review",
+      "frames": {
+        "S": [
+          "chakra_charge/frames/S_000.png",
+          "chakra_charge/frames/S_001.png",
+          "chakra_charge/frames/S_002.png",
+          "chakra_charge/frames/S_003.png",
+          "chakra_charge/frames/S_004.png",
+          "chakra_charge/frames/S_005.png",
+          "chakra_charge/frames/S_006.png",
+          "chakra_charge/frames/S_007.png"
+        ],
+        "SE": [
+          "chakra_charge/frames/SE_000.png",
+          "chakra_charge/frames/SE_001.png",
+          "chakra_charge/frames/SE_002.png",
+          "chakra_charge/frames/SE_003.png",
+          "chakra_charge/frames/SE_004.png",
+          "chakra_charge/frames/SE_005.png",
+          "chakra_charge/frames/SE_006.png",
+          "chakra_charge/frames/SE_007.png"
+        ],
+        "E": [
+          "chakra_charge/frames/E_000.png",
+          "chakra_charge/frames/E_001.png",
+          "chakra_charge/frames/E_002.png",
+          "chakra_charge/frames/E_003.png",
+          "chakra_charge/frames/E_004.png",
+          "chakra_charge/frames/E_005.png",
+          "chakra_charge/frames/E_006.png",
+          "chakra_charge/frames/E_007.png"
+        ],
+        "NE": [
+          "chakra_charge/frames/NE_000.png",
+          "chakra_charge/frames/NE_001.png",
+          "chakra_charge/frames/NE_002.png",
+          "chakra_charge/frames/NE_003.png",
+          "chakra_charge/frames/NE_004.png",
+          "chakra_charge/frames/NE_005.png",
+          "chakra_charge/frames/NE_006.png",
+          "chakra_charge/frames/NE_007.png"
+        ],
+        "N": [
+          "chakra_charge/frames/N_000.png",
+          "chakra_charge/frames/N_001.png",
+          "chakra_charge/frames/N_002.png",
+          "chakra_charge/frames/N_003.png",
+          "chakra_charge/frames/N_004.png",
+          "chakra_charge/frames/N_005.png",
+          "chakra_charge/frames/N_006.png",
+          "chakra_charge/frames/N_007.png"
+        ],
+        "W": [
+          "chakra_charge/frames/W_000.png",
+          "chakra_charge/frames/W_001.png",
+          "chakra_charge/frames/W_002.png",
+          "chakra_charge/frames/W_003.png",
+          "chakra_charge/frames/W_004.png",
+          "chakra_charge/frames/W_005.png",
+          "chakra_charge/frames/W_006.png",
+          "chakra_charge/frames/W_007.png"
+        ],
+        "NW": [
+          "chakra_charge/frames/NW_000.png",
+          "chakra_charge/frames/NW_001.png",
+          "chakra_charge/frames/NW_002.png",
+          "chakra_charge/frames/NW_003.png",
+          "chakra_charge/frames/NW_004.png",
+          "chakra_charge/frames/NW_005.png",
+          "chakra_charge/frames/NW_006.png",
+          "chakra_charge/frames/NW_007.png"
+        ],
+        "SW": [
+          "chakra_charge/frames/SW_000.png",
+          "chakra_charge/frames/SW_001.png",
+          "chakra_charge/frames/SW_002.png",
+          "chakra_charge/frames/SW_003.png",
+          "chakra_charge/frames/SW_004.png",
+          "chakra_charge/frames/SW_005.png",
+          "chakra_charge/frames/SW_006.png",
+          "chakra_charge/frames/SW_007.png"
+        ]
+      },
+      "note": "Body-only charging stance; layered chakra VFX and per-instance color in ChakraChargeVisual. Mirrored W/NW/SW declared in chakra-charge.art.json."
     }
   }
 }

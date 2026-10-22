@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "fps": 24,
+  "default_speed": 0.5,
+  "body_anchor": [
+    64,
+    116
+  ],
+  "fx_anchor": [
+    128,
+    230
+  ],
+  "body": {
+    "S": [
+      "assets/characters/player/chakra_charge/frames/S_000.png",
+      "assets/characters/player/chakra_charge/frames/S_001.png",
+      "assets/characters/player/chakra_charge/frames/S_002.png",
+      "assets/characters/player/chakra_charge/frames/S_003.png",
+      "assets/characters/player/chakra_charge/frames/S_004.png",
+      "assets/characters/player/chakra_charge/frames/S_005.png",
+      "assets/characters/player/chakra_charge/frames/S_006.png",
+      "assets/characters/player/chakra_charge/frames/S_007.png"
+    ],
+    "SE": [
+      "assets/characters/player/chakra_charge/frames/SE_000.png",
+      "assets/characters/player/chakra_charge/frames/SE_001.png",
+      "assets/characters/player/chakra_charge/frames/SE_002.png",
+      "assets/characters/player/chakra_charge/frames/SE_003.png",
+      "assets/characters/player/chakra_charge/frames/SE_004.png",
+      "assets/characters/player/chakra_charge/frames/SE_005.png",
+      "assets/characters/player/chakra_charge/frames/SE_006.png",
+      "assets/characters/player/chakra_charge/frames/SE_007.png"
+    ],
+    "E": [
+      "assets/characters/player/chakra_charge/frames/E_000.png",
+      "assets/characters/player/chakra_charge/frames/E_001.png",
+      "assets/characters/player/chakra_charge/frames/E_002.png",
+      "assets/characters/player/chakra_charge/frames/E_003.png",
+      "assets/characters/player/chakra_charge/frames/E_004.png",
+      "assets/characters/player/chakra_charge/frames/E_005.png",
+      "assets/characters/player/chakra_charge/frames/E_006.png",
+      "assets/characters/player/chakra_charge/frames/E_007.png"
+    ],
+    "NE": [
+      "assets/characters/player/chakra_charge/frames/NE_000.png",
+      "assets/characters/player/chakra_charge/frames/NE_001.png",
+      "assets/characters/player/chakra_charge/frames/NE_002.png",
+      "assets/characters/player/chakra_charge/frames/NE_003.png",
+      "assets/characters/player/chakra_charge/frames/NE_004.png",
+      "assets/characters/player/chakra_charge/frames/NE_005.png",
+      "assets/characters/player/chakra_charge/frames/NE_006.png",
+      "assets/characters/player/chakra_charge/frames/NE_007.png"
+    ],
+    "N": [
+      "assets/characters/player/chakra_charge/frames/N_000.png",
+      "assets/characters/player/chakra_charge/frames/N_001.png",
+      "assets/characters/player/chakra_charge/frames/N_002.png",
+      "assets/characters/player/chakra_charge/frames/N_003.png",
+      "assets/characters/player/chakra_charge/frames/N_004.png",
+      "assets/characters/player/chakra_charge/frames/N_005.png",
+      "assets/characters/player/chakra_charge/frames/N_006.png",
+      "assets/characters/player/chakra_charge/frames/N_007.png"
+    ],
+    "W": [
+      "assets/characters/player/chakra_charge/frames/W_000.png",
+      "assets/characters/player/chakra_charge/frames/W_001.png",
+      "assets/characters/player/chakra_charge/frames/W_002.png",
+      "assets/characters/player/chakra_charge/frames/W_003.png",
+      "assets/characters/player/chakra_charge/frames/W_004.png",
+      "assets/characters/player/chakra_charge/frames/W_005.png",
+      "assets/characters/player/chakra_charge/frames/W_006.png",
+      "assets/characters/player/chakra_charge/frames/W_007.png"
+    ],
+    "NW": [
+      "assets/characters/player/chakra_charge/frames/NW_000.png",
+      "assets/characters/player/chakra_charge/frames/NW_001.png",
+      "assets/characters/player/chakra_charge/frames/NW_002.png",
+      "assets/characters/player/chakra_charge/frames/NW_003.png",
+      "assets/characters/player/chakra_charge/frames/NW_004.png",
+      "assets/characters/player/chakra_charge/frames/NW_005.png",
+      "assets/characters/player/chakra_charge/frames/NW_006.png",
+      "assets/characters/player/chakra_charge/frames/NW_007.png"
+    ],
+    "SW": [
+      "assets/characters/player/chakra_charge/frames/SW_000.png",
+      "assets/characters/player/chakra_charge/frames/SW_001.png",
+      "assets/characters/player/chakra_charge/frames/SW_002.png",
+      "assets/characters/player/chakra_charge/frames/SW_003.png",
+      "assets/characters/player/chakra_charge/frames/SW_004.png",
+      "assets/characters/player/chakra_charge/frames/SW_005.png",
+      "assets/characters/player/chakra_charge/frames/SW_006.png",
+      "assets/characters/player/chakra_charge/frames/SW_007.png"
+    ]
+  },
+  "layers": {
+    "aura": {
+      "texture": "res://assets/vfx/chakra_charge/aura.png",
+      "frames": 48,
+      "columns": 4,
+      "frame_size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        230
+      ]
+    },
+    "wisps": {
+      "texture": "res://assets/vfx/chakra_charge/wisps.png",
+      "frames": 32,
+      "columns": 4,
+      "frame_size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        230
+      ]
+    },
+    "ground": {
+      "texture": "res://assets/vfx/chakra_charge/ground.png",
+      "frames": 16,
+      "columns": 4,
+      "frame_size": [
+        256,
+        256
+      ],
+      "anchor": [
+        128,
+        128
+      ]
+    }
+  },
+  "mirrored_directions": {
+    "W": "E",
+    "NW": "NE",
+    "SW": "SE"
+  },
+  "combined_loop_phases": 96,
+  "body_authored_frames_per_source_direction": 8,
+  "base_color": "blue",
+  "processing": {
+    "filter": "nearest",
+    "body_scale": 0.48,
+    "fx_scale": 0.7,
+    "ground_y_scale": 0.35,
+    "ground_projection": "one shared overhead ellipse correction; no per-frame fit",
+    "source_body_keys": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      12,
+      13,
+      15
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "body_S": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-aeca60d2-3c3e-4845-9522-a787a0a2fb6a.png",
+    "source": "assets/characters/player/chakra_charge/source/body_S.png",
+    "sha256": "1b957fd91f963addc3aa6fec035ee7a236fc2bddc96e085898fc4323756e60ec"
+  },
+  "body_E": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-03b91fd1-e1e3-4dc8-9143-133fc3f891b9.png",
+    "source": "assets/characters/player/chakra_charge/source/body_E.png",
+    "sha256": "1bc8a105461111e7d0c8a91ab7d9bf7aecfaea80c906528d3f336213220a5088"
+  },
+  "body_N": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-bf4b7b1f-5504-4757-99df-ee057ac5a7c7.png",
+    "source": "assets/characters/player/chakra_charge/source/body_N.png",
+    "sha256": "6f741a0fded2aa43cc66dec5301b9166ffac91152163d7bc1a83a0c185035545"
+  },
+  "body_SE": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-a1c5b0b2-8479-44f0-a85a-632aae9cffd2.png",
+    "source": "assets/characters/player/chakra_charge/source/body_SE.png",
+    "sha256": "89fc0a6e88388eb5598a4f198ec967a48a4689087b75fbd7aafd9273bf65febe"
+  },
+  "body_NE": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-713aa0de-79ce-440f-b0f5-23e560219e58.png",
+    "source": "assets/characters/player/chakra_charge/source/body_NE.png",
+    "sha256": "3e4e4390ef94101d1510443781439ab2e3d0d899ef111d2982f51cb7016a2c05"
+  },
+  "aura_a": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-5e7acd62-33a6-46a9-88e7-46f1ed867a9b.png",
+    "source": "assets/vfx/chakra_charge/source/aura_a.png",
+    "sha256": "ce43212cfc46c5e371d3eae8f00016fe2f1c0d3819e82a0ac6b3b423d8da97df"
+  },
+  "aura_b": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-193bc657-483b-413a-bea6-651147de22fb.png",
+    "source": "assets/vfx/chakra_charge/source/aura_b.png",
+    "sha256": "a53592c1c2e544333bc4d32dbcdfb4897057c6848c6bb4bd985ae59e37b26440"
+  },
+  "aura_c": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-3c6164a3-94ed-47d3-ba81-5892bfe02280.png",
+    "source": "assets/vfx/chakra_charge/source/aura_c.png",
+    "sha256": "85374c9099dc9881796be758d35f011ed2d83fa0acd936e460efbf90a9a38ba4"
+  },
+  "wisps_a": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-1b2aa698-1f12-4389-91e6-607731226e09.png",
+    "source": "assets/vfx/chakra_charge/source/wisps_a.png",
+    "sha256": "887c8f59eb79f161d84280b24adca33484e24f1eddba281b69c9328bcf3714a6"
+  },
+  "wisps_b": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-b4f1bddc-f4c8-41fd-913e-7f90f509a503.png",
+    "source": "assets/vfx/chakra_charge/source/wisps_b.png",
+    "sha256": "99903708e8be20a3f426eccd60298364e99f2222ccc5fdb73aa5535b93b83d07"
+  },
+  "ground": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-4d7ebff9-42c9-4cdd-8183-4e885529d5f6.png",
+    "source": "assets/vfx/chakra_charge/source/ground.png",
+    "sha256": "5ad2afca43aa71613f4867ef5b1f4cfdb13c7f5dcffabbc30a915a0c0f9bef4d"
+  }
+}

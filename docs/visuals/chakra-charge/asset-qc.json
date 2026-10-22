@@ -1,0 +1,91 @@
+{
+  "body_S": {
+    "frames": 8,
+    "unique": 8,
+    "height_range": [
+      96,
+      99
+    ],
+    "fixed_sole_y": 116,
+    "binary_alpha": true
+  },
+  "body_SE": {
+    "frames": 8,
+    "unique": 8,
+    "height_range": [
+      99,
+      100
+    ],
+    "fixed_sole_y": 116,
+    "binary_alpha": true
+  },
+  "body_E": {
+    "frames": 8,
+    "unique": 8,
+    "height_range": [
+      102,
+      102
+    ],
+    "fixed_sole_y": 116,
+    "binary_alpha": true
+  },
+  "body_NE": {
+    "frames": 8,
+    "unique": 8,
+    "height_range": [
+      101,
+      101
+    ],
+    "fixed_sole_y": 116,
+    "binary_alpha": true
+  },
+  "body_N": {
+    "frames": 8,
+    "unique": 8,
+    "height_range": [
+      99,
+      100
+    ],
+    "fixed_sole_y": 116,
+    "binary_alpha": true
+  },
+  "body_W": {
+    "frames": 8,
+    "mirrored_from": "E",
+    "unique": 8,
+    "fixed_sole_y": 116,
+    "binary_alpha": true
+  },
+  "body_NW": {
+    "frames": 8,
+    "mirrored_from": "NE",
+    "unique": 8,
+    "fixed_sole_y": 116,
+    "binary_alpha": true
+  },
+  "body_SW": {
+    "frames": 8,
+    "mirrored_from": "SE",
+    "unique": 8,
+    "fixed_sole_y": 116,
+    "binary_alpha": true
+  },
+  "aura": {
+    "frames": 48,
+    "unique": 48,
+    "edge_contacts": 0,
+    "binary_alpha": true
+  },
+  "wisps": {
+    "frames": 32,
+    "unique": 32,
+    "edge_contacts": 0,
+    "binary_alpha": true
+  },
+  "ground": {
+    "frames": 16,
+    "unique": 16,
+    "edge_contacts": 0,
+    "binary_alpha": true
+  }
+}

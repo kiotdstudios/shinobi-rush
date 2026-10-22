@@ -51,6 +51,7 @@ func _initialize() -> void:
 	await load("res://tests/test_kunai_attack_wiring.gd").new().run(ck, root)
 	await load("res://tests/test_blossom_trees.gd").new().run(ck, root)
 	await load("res://tests/test_wind_grass.gd").new().run(ck, root)
+	await load("res://tests/test_chakra_charge.gd").new().run(ck, root)
 	await load("res://tests/test_proximity_sense.gd").new().run(ck, root)
 	await load("res://tests/test_world_editor.gd").new().run(ck, root)
 	var debug_store_tests = load("res://tests/test_debug_store.gd").new()
