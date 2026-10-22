@@ -56,7 +56,7 @@ templates installed. CI uses `scripts/ci/godot_ci.py export`, then `finalize-exp
       for the close-combat framing (zoom about 1.17, the standing placeholder figure about 126 px = 17.5 % of 720);
       `?camera=2` gives a custom zoom 2; `?camera=<garbage>` falls back to `wide`. In the lab, `N` switches presets.
 - [ ] Camera impact (hit kick, nothing calls it yet): with the lab open (`Tab`) keys `7` light, `8` heavy, `9` burst, `0` slow heavy nudge the view 2-5 screen px along the facing and it returns exactly; `?camera_impact=off` disables them, `?camera_impact=reduced` halves them (`docs/development/CAMERA_IMPACT.md`).
-- [ ] Bandit vision (debug, default OFF): the "Bandit vision" switch in the bottom-right Settings panel (or `?vision=1`; there are no hotkeys) draws the Bandit's real sight region, a wedge or a circle cut by the walls, with its State and "AI sees player" line; the SEEN marker appears only while the AI really sees you; OFF leaves nothing behind (`docs/development/BANDIT_VISION_OVERLAY.md`).
+- [ ] Bandit vision (debug, default OFF): the "Bandit vision" switch in the bottom-edge Settings tab (or `?vision=1`; there are no hotkeys) draws the Bandit's real sight region, a wedge or a circle cut by the walls, with its State and "AI sees player" line; the SEEN marker appears only while the AI really sees you; OFF leaves nothing behind (`docs/development/BANDIT_VISION_OVERLAY.md`).
 - [ ] Walking into a block or the arena edge stops the player; the player passes in front of and behind blocks.
 - [ ] `Esc` shows PAUSED and freezes movement; `Esc` again resumes.
 - [ ] With a sprite set: `Tab` opens the lab; set, animation, direction, speed, pause/step, compare (any two sets), zoom and the

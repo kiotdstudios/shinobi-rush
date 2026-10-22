@@ -251,7 +251,7 @@ func _test_off_by_default(root: Node) -> void:
 	ck.call("vision off: telemetry says off with every number zero and every string empty", t["vision_on"] == false and t["vision_bandits"] == 0 and t["vision_points"] == 0 and t["vision_rays"] == 0 and t["vision_state"] == "" and t["vision_ai_state"] == "" and t["vision_mismatch"] == 0)
 	var b := tog.button
 	ck.call("vision button: a toggle button exists in the Settings panel, labelled, OFF by default", b != null and b.is_inside_tree() and b.text == "Bandit vision: off" and not b.button_pressed, b.text if b != null else "null")
-	ck.call("vision button: the Settings tab is visible at the bottom-right and the list is closed by default", lab.settings.tab.is_visible_in_tree() and not lab.settings.panel.visible and b.get_parent() == lab.settings.rows)
+	ck.call("vision button: the Settings tab is visible on the bottom edge and the list is closed by default", lab.settings.tab.is_visible_in_tree() and not lab.settings.panel.visible and b.get_parent() == lab.settings.rows)
 	lab.settings.tab.button_pressed = true
 	ck.call("vision button: clicking the Settings tab opens the list and the button is then visible", lab.settings.panel.visible and b.is_visible_in_tree())
 	lab.settings.tab.button_pressed = false
@@ -767,7 +767,7 @@ func _test_isolation(root: Node) -> void:
 		a.action = "dbg_toggle_lab"
 		a.pressed = true
 		lab._unhandled_input(a)  # the lab panel opens / closes
-		hud.set_diagnostics(not hud.diagnostics_on())  # the diagnostics panel opens / closes
+		hud._toggle_diagnostics()  # the diagnostics panel opens / closes
 		await _frames(2)
 	await _frames(2)
 	_put(Vector2(1500, 100), _snap8(4), Bandit.State.PATROL)  # the AI walked meanwhile: same place, same facing, same state, no frame in between
@@ -848,7 +848,7 @@ func _test_telemetry_and_web() -> void:
 	ck.call("vision state: WebBridge publishes every one of them next to the existing fields and reads ?vision= at boot", all_pub and src.contains("BanditVisionToggle.apply_query(search)") and src.contains("BanditVisionToggle.telemetry()"))
 	ck.call("vision state: existing __SHINOBI_STATE__ names are untouched (additive only)", src.contains("_state.bandit_state = ") and src.contains("_state.bandit_sees = ") and src.contains("_state.cfx_enabled = ") and src.contains("_state.camera_preset = ") and src.contains("_state.lab_open = ") and src.contains("_state.x = _player.global_position.x"))
 	var hud_src := FileAccess.get_file_as_string("res://scripts/ui/debug_hud.gd")
-	ck.call("vision state: the HUD legend mentions the Settings button and ?vision=1", hud_src.contains("Settings (bottom-right button)") and hud_src.contains("?vision=1"))
+	ck.call("vision state: the HUD legend mentions the Settings button and ?vision=1", hud_src.contains("Bottom tabs: Settings") and hud_src.contains("?vision=1"))
 	# live values, one sample: no frame between the rebuild and the comparison, so the AI cannot have ticked in between
 	_put(Vector2(1500, 100), _snap8(4), Bandit.State.APPROACH)
 	player.global_position = Vector2(1000, 100)

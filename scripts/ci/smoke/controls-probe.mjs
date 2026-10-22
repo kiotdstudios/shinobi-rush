@@ -219,7 +219,7 @@ try {
   const [kr] = await kickRun('?camera_impact=reduced', [['Digit8', 1]]);
   rec('camera-impact-reduced', kr.after.cfx_scale === 0.5 && kickOk(kr, 1, 2, 3, BASE_ZOOM), `?camera_impact=reduced halves the heavy kick (5 -> 2.5 px), scale=${kr.after.cfx_scale}: ${kick(kr)}`);
 
-  // Bandit vision debug overlay (BanditVisionToggle / BanditVisionOverlay): default OFF, toggled by clicking its button in the bottom-right Settings panel (no hotkeys)
+  // Bandit vision debug overlay (BanditVisionToggle / BanditVisionOverlay): default OFF, toggled by clicking its button in the bottom-edge Settings tab (no hotkeys)
   // and started by ?vision=1. Telemetry only: every wait is on the published state, never on a sleep (the game runs at 4 to 9 FPS here).
   // vision_nodes is the scene tree's node count: ON must add exactly the one overlay node and OFF must take it away again, which is how
   // "OFF leaves no geometry behind" is proven on the real export. The overlay numbers are compared with the Bandit's own (bandit_*) of the SAME publish.
@@ -227,7 +227,7 @@ try {
     'vision_player_in', 'vision_cone', 'vision_range', 'vision_close', 'vision_fov_deg', 'vision_facing_x', 'vision_facing_y', 'vision_mismatch', 'vision_capped',
     'vision_nodes', 'vision_origin_x', 'vision_origin_y'];
   const VISION_CATS = ['not_alert', 'suspicious', 'detected', 'lost_sight', 'searching', 'returning'];
-  // The switches live in the bottom-right Settings panel: click the Settings tab (positions come from the settings_* telemetry), then the row.
+  // The switches live in the bottom-edge Settings tab: click the Settings tab (positions come from the settings_* telemetry), then the row.
   const visionOpen = async (query) => {
     const p = await context.newPage();
     p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
@@ -240,12 +240,11 @@ try {
     const until = async (pred, arg) => { // the first published state that satisfies pred, or null after 30 s
       try { await p.waitForFunction(pred, arg, { timeout: 30000, polling: 100 }); return await st(); } catch (e) { return null; }
     };
-    const clickRow = async (xf, yf) => { // open the Settings list if it is closed, click the row, close the list again
+    const clickRow = async (xf, yf) => { // open the Settings list if it is closed, click the row
       let s = await st();
       if (!s.settings_open) { await p.mouse.click(s.settings_tab_x, s.settings_tab_y, { delay: 80 }); s = (await until(() => window.__SHINOBI_STATE__.settings_open === true)) ?? (await st()); }
-      await p.mouse.click(s[xf], s[yf], { delay: 80 });
+      await p.mouse.click(s[xf], s[yf], { delay: 80 }); // the list stays open (the tab tucks away while open); later rows reuse it
       await sleep(150);
-      await p.mouse.click(s.settings_tab_x, s.settings_tab_y, { delay: 80 });
       await p.mouse.move(640, 400); // move away: no tooltip popup node
     };
     const click = () => clickRow('settings_bandit_x', 'settings_bandit_y');

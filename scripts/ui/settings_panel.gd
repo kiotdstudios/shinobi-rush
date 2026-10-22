@@ -1,21 +1,20 @@
 class_name SettingsPanel
 extends Control
-## One "Settings" tab at the bottom-right of the screen. Click it to open a small panel of click-to-toggle switches for the
-## debug visions (Bandit vision, Sense vision) and the Diagnostics readout. Owner 2026-10-22: "all these f# buttons are
+## One "Settings" dock tab on the bottom edge (where the Bandit / Sense vision tabs used to be). Click it to open a small panel of
+## click-to-toggle switches for the debug visions (Bandit vision, Sense vision). Owner 2026-10-22: "all these f# buttons are
 ## confusing me, make one settings tab at the bottom for all visions, remove the hot keys, I wanna be able to just click
 ## them on and off". There are no hotkeys for any of these switches any more.
 ##
 ## Added by AnimationLab._build_ui into its CanvasLayer. The panel is closed by default; the toggle buttons exist (and keep
 ## their state) while it is closed, so a feature that is ON stays ON when the panel is hidden.
-const TAB_SIZE := Vector2(130, 30)
+const TAB_POS_X := 942.0  ## the slot the Bandit vision tab had on the bottom row (Lab is at 1120)
+const TAB_W := 170.0
 const MARGIN := 8.0
 const COLOR := Color("#9AA0A6")
 
 var tab: Button
 var panel: PanelContainer
 var rows: VBoxContainer
-var diag_button: Button
-var _hud_lookup: Callable = Callable()
 var open := false
 var bandit_button: Button = null
 var sense_button: Button = null
@@ -39,15 +38,11 @@ func build(_layer: Node) -> void:
 	tab.text = "Settings"
 	tab.toggle_mode = true
 	tab.focus_mode = Control.FOCUS_NONE
-	tab.custom_minimum_size = TAB_SIZE
-	tab.add_theme_font_size_override("font_size", 13)
-	tab.tooltip_text = "Click to open: switch Bandit vision, Sense vision and Diagnostics on or off."
-	style_toggle(tab, COLOR)
-	tab.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	tab.offset_left = -TAB_SIZE.x - MARGIN
-	tab.offset_top = -TAB_SIZE.y - MARGIN
-	tab.offset_right = -MARGIN
-	tab.offset_bottom = -MARGIN
+	tab.position = Vector2(TAB_POS_X, DockTab.REST_Y)
+	tab.custom_minimum_size = Vector2(TAB_W, DockTab.TAB_H)
+	tab.add_theme_font_size_override("font_size", 12)
+	tab.tooltip_text = "Click to open: switch Bandit vision and Sense vision on or off."
+	DockTab.style(tab, COLOR)
 	tab.toggled.connect(set_open)
 	add_child(tab)
 	panel = PanelContainer.new()
@@ -56,8 +51,8 @@ func build(_layer: Node) -> void:
 	panel.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	panel.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	panel.offset_right = -MARGIN
-	panel.offset_bottom = -TAB_SIZE.y - MARGIN * 2.0
+	panel.offset_right = -(1280.0 - (TAB_POS_X + TAB_W))  ## right edge lines up with the tab (base canvas 1280x720)
+	panel.offset_bottom = -(DockTab.TAB_H + MARGIN)
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.04, 0.04, 0.04, 0.92)
 	sb.border_color = COLOR
@@ -69,11 +64,21 @@ func build(_layer: Node) -> void:
 	rows = VBoxContainer.new()
 	rows.add_theme_constant_override("separation", 6)
 	panel.add_child(rows)
+	var head := HBoxContainer.new()
+	rows.add_child(head)
 	var title := Label.new()
 	title.text = "SETTINGS  (click to switch on / off)"
 	title.add_theme_font_size_override("font_size", 11)
 	title.add_theme_color_override("font_color", COLOR)
-	rows.add_child(title)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(title)
+	var close := Button.new()
+	close.name = "SettingsClose"
+	close.text = "HIDE"
+	close.focus_mode = Control.FOCUS_NONE
+	close.add_theme_font_size_override("font_size", 10)
+	close.pressed.connect(func() -> void: set_open(false))
+	head.add_child(close)
 
 
 ## A toggle_mode button used as a settings row: flat grey when off, filled with its colour when on.
@@ -136,51 +141,11 @@ static func telemetry() -> Dictionary:
 	return d
 
 
-## Diagnostics lives in the HUD node (found lazily: the HUD may be created after the lab).
-func add_diagnostics_row(hud_lookup: Callable) -> void:
-	_hud_lookup = hud_lookup
-	diag_button = Button.new()
-	diag_button.name = "DiagnosticsButton"
-	diag_button.toggle_mode = true
-	diag_button.focus_mode = Control.FOCUS_NONE
-	diag_button.custom_minimum_size = Vector2(190, 30)
-	diag_button.add_theme_font_size_override("font_size", 12)
-	diag_button.tooltip_text = "Show the technical diagnostics readout (camera, sprite, FPS, texture memory)."
-	style_toggle(diag_button, Color("#3DDC84"))
-	diag_button.toggled.connect(_on_diag_toggled)
-	rows.add_child(diag_button)
-	_sync_diag()
-
-
 func set_open(v: bool) -> void:
 	open = v
 	if panel != null:
 		panel.visible = v
-	if tab != null and tab.button_pressed != v:
-		tab.set_pressed_no_signal(v)
-	if v:
-		_sync_diag()  # the HUD's own HIDE button may have changed it while the panel was closed
-
-
-func _hud() -> Node:
-	if _hud_lookup.is_valid():
-		var h: Variant = _hud_lookup.call()
-		if h != null and is_instance_valid(h):
-			return h
-	return null
-
-
-func _on_diag_toggled(pressed: bool) -> void:
-	var h := _hud()
-	if h != null:
-		h.call("set_diagnostics", pressed)
-	_sync_diag()
-
-
-func _sync_diag() -> void:
-	if diag_button == null:
-		return
-	var h := _hud()
-	var on: bool = h != null and bool(h.call("diagnostics_on"))
-	diag_button.set_pressed_no_signal(on)
-	diag_button.text = "Diagnostics: ON" if on else "Diagnostics: off"
+	if tab != null:
+		if tab.button_pressed != v:
+			tab.set_pressed_no_signal(v)
+		DockTab.set_active(tab, v)

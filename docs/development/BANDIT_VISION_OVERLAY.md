@@ -9,7 +9,7 @@ Code: `scripts/debug/bandit_vision_region.gd` (`BanditVisionRegion`, the polygon
 
 | How | Detail |
 | --- | --- |
-| Button | "Bandit vision: off" / "Bandit vision: ON" in the **Settings** panel: click the "Settings" tab at the bottom-right of the screen, then the row. It works with the lab closed, with the mouse or a finger. There are no hotkeys (owner 2026-10-22). |
+| Button | "Bandit vision: off" / "Bandit vision: ON" in the **Settings** panel: click the "Settings" tab on the bottom edge of the screen, then the row. It works with the lab closed, with the mouse or a finger. There are no hotkeys (owner 2026-10-22). |
 | URL | `?vision=1` starts the page with the overlay ON (like `?debug=1`; only an explicit `vision=1` turns it on, `?vision=0` or nothing means OFF). |
 
 
@@ -76,7 +76,7 @@ The overlay draws the geometry `can_see` accepts plus the AI's state. It does no
 
 Controls: WASD move, Shift sprint. The HUD at the top left shows `Pos: (x, y)`; the Bandit lives on the east side (x 1250 to 1650, y -200 to 60), behind two long walls with a 280 px gap between them (y -80 to 200).
 
-1. Open the live game. Click "Settings" (bottom-right), then "Bandit vision: off" (or open the page with `?vision=1`). The row reads "ON". Walk east with Shift until the Bandit is on screen: a bluish-green region with an arrow on the Bandit, label "L1 PATROL: not alert".
+1. Open the live game. Click "Settings" (bottom tab), then "Bandit vision: off" (or open the page with `?vision=1`). The row reads "ON". Walk east with Shift until the Bandit is on screen: a bluish-green region with an arrow on the Bandit, label "L1 PATROL: not alert".
 2. Watch it follow: the wedge swings as the Bandit walks its loop and turns in 45 degree steps; it is a circle of 150 px around the Bandit plus a 110 degree wedge to 700 px.
 3. Walls clip it: stand at about `Pos (780, -300)` (west of the north wall). When the wedge points your way the wall cuts it, even though you are inside the wedge's angle: "AI sees player: no", no marker.
 4. Behind the facing: with the Bandit walking away from you (its arrow points away), you stay unseen until you are inside the 150 px circle around it.
