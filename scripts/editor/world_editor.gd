@@ -467,7 +467,7 @@ func _build_ui() -> void:
 	_tool_buttons["select"] = _toggle(tools, "SELECT / MOVE", func(): set_tool("select"))
 	_tool_buttons["erase"] = _toggle(tools, "ERASE", func(): set_tool("erase"))
 
-	# Visibility filters also isolate picking; no layout data or collision is removed.
+	# Palette filters: hide/show the option cards by type; the world itself is untouched.
 	var filters := GridContainer.new()
 	filters.columns = 2
 	outer.add_child(filters)
@@ -475,7 +475,7 @@ func _build_ui() -> void:
 		var name := str(category[0])
 		var check := CheckBox.new()
 		check.text = "Walls" if name == "Walls & blocks" else name
-		check.tooltip_text = "Show/hide " + name.to_lower() + " in the world and palette"
+		check.tooltip_text = "Show/hide the " + name.to_lower() + " options in the build palette (the world is not affected)"
 		check.button_pressed = true
 		check.focus_mode = Control.FOCUS_NONE
 		check.add_theme_font_size_override("font_size", 11)
@@ -661,13 +661,10 @@ func _build_ui() -> void:
 
 
 func set_type_filter(category: String, shown: bool) -> void:
-	placed.set_type_visible(category, shown)
+	# The filters only declutter the BUILD PALETTE; the game world is never hidden by them.
 	(_category_sections[category] as Control).visible = shown
 	(_filter_buttons[category] as CheckBox).set_pressed_no_signal(shown)
 	if not shown:
-		if not selected.is_empty() and PlacedObjects.type_of(selected.id) == category:
-			selected = {}
-			dragging = false
 		if place_id != "" and PlacedObjects.type_of(place_id) == category:
 			set_tool("select")
 	_refresh()
