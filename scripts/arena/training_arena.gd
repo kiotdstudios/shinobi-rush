@@ -147,6 +147,9 @@ func _ready() -> void:
 			p.reset_camera()
 
 
+const BANDIT_RESPAWN_DELAY := 4.0
+
+
 ## The Level 1 robber Bandit: spawned on the FAR (east) side of the arena, behind the two long walls,
 ## so the player starts alone near the spawn and has to travel through the choke point or around the
 ## walls to reach it. It stays off the CI controls probe's lanes (due right / due up from the spawn):
@@ -158,6 +161,20 @@ func _spawn_bandit() -> void:
 	bandit.position = WorldScale.BANDIT_HOME
 	bandit.patrol_points = PackedVector2Array(WorldScale.BANDIT_PATROL)
 	add_child(bandit)
+	if "nav" in bandit:
+		bandit.nav = nav
+	bandit.defeated.connect(_on_bandit_defeated.bind(bandit))
+
+
+## A defeated Bandit is replaced: after a short beat the body is removed and a fresh one starts again at the far-side home.
+func _on_bandit_defeated(bandit: Bandit) -> void:
+	await get_tree().create_timer(BANDIT_RESPAWN_DELAY).timeout
+	if not is_inside_tree():
+		return
+	if is_instance_valid(bandit):
+		bandit.name = "BanditDown"
+		bandit.queue_free()
+	_spawn_bandit()
 
 
 ## Rebuild the bandit nav after the player-built layout changed; live enemies get the new grid at once.

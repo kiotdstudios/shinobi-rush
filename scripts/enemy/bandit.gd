@@ -19,6 +19,7 @@ enum AtkPhase { NONE, WINDUP1, ACTIVE1, GAP, WINDUP2, ACTIVE2, RECOVERY }
 enum RetreatPhase { NONE, TELEGRAPH, HOP1, PAUSE, HOP2, RECOVER }
 
 signal intent_changed(state_name: String, reason: String)
+signal defeated  ## hp reached 0 (the arena spawns a replacement Bandit a few seconds later)
 
 const SKIN := Color("#8a4a3a")
 const CLOTH := Color("#4a3a2a")
@@ -953,6 +954,7 @@ func take_damage(amount: float, knockback_dir: Vector2, knockback_speed: float, 
 		state = State.DEAD
 		velocity = Vector2.ZERO
 		visual.queue_redraw()
+		defeated.emit()
 		return
 	if state in [State.ATTACK, State.THREATEN, State.REPOSITION, State.RETREAT]:
 		_atk_cooldown = maxf(_atk_cooldown, float(profile.attack_cooldown) * 0.5)

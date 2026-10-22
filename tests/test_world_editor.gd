@@ -238,5 +238,16 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("builder: an old empty v3 save is ignored on boot", placed.load_saved() == 0)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(placed.save_path))
 	editor.set_open(false)
+	var old_b := arena.get_node("Bandit") as Bandit
+	old_b.take_damage(old_b.max_hp + 1.0, Vector2.RIGHT, 0.0, 0.0)
+	ck.call("bandit respawn: defeated bandit is down and still present until the delay passes", not old_b.is_alive() and is_instance_valid(old_b))
+	await root.get_tree().create_timer(TrainingArena.BANDIT_RESPAWN_DELAY + 0.6).timeout
+	var new_b := arena.get_node_or_null("Bandit") as Bandit
+	ck.call("bandit respawn: a fresh living Bandit stands at home with full hp and the nav; the dead one is gone", new_b != null and new_b != old_b and new_b.is_alive() and new_b.hp == new_b.max_hp and new_b.position.distance_to(WorldScale.BANDIT_HOME) < 150.0 and new_b.nav == arena.nav and (not is_instance_valid(old_b) or old_b.is_queued_for_deletion()))
+	var alive := 0
+	for e in root.get_tree().get_nodes_in_group("enemy"):
+		if e is Bandit and (e as Bandit).is_alive() and not e.is_queued_for_deletion():
+			alive += 1
+	ck.call("bandit respawn: exactly one living Bandit", alive == 1)
 	main.queue_free()
 	await root.get_tree().process_frame
