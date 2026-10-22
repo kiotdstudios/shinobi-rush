@@ -51,6 +51,11 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## Used only when the active sprite set has no matching action animation to time against (placeholder visual).
 @export var dodge_fallback_duration: float = 0.5
 @export var jump_fallback_duration: float = 0.6
+## Gameplay duration of a jump (s). The 24-frame jump art (2.0 s at its authored 12 fps) is played
+## compressed to this (frame follows jump progress, so no frames are lost and an air attack cannot
+## restart it). Owner target 0.7-1.0 s; <= 0 means "use the art's authored duration". A re-cut of the
+## art to this length is requested from Codex; this export is the single place to tune it.
+@export var jump_duration: float = 0.85
 ## Seconds between dirt-puff bursts while running on the ground (SPRINT uses a shorter interval,
 ## see `_update_footsteps()`), roughly matched to footstep cadence.
 @export var footstep_interval_walk: float = 0.28
@@ -189,7 +194,10 @@ func _physics_process(delta: float) -> void:
 
 	if still_acting:
 		move_and_slide()
-		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)
+		if state == State.DODGE:
+			visual.play_action("dodge", facing8)
+		else:
+			_play_jump_visual()
 		_update_jump_lift()
 		_footstep_timer = 0.0
 		if state != prev_state:
@@ -225,8 +233,10 @@ func _physics_process(delta: float) -> void:
 		state = State.IDLE
 	move_and_slide()
 	_update_jump_lift()
-	if state == State.DODGE or state == State.JUMP:
-		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)
+	if state == State.DODGE:
+		visual.play_action("dodge", facing8)
+	elif state == State.JUMP:
+		_play_jump_visual()
 	elif _is_attack_state(state):
 		visual.play_action(_attack_def.id, facing8)
 	else:
@@ -271,9 +281,9 @@ func _begin_dodge(input: Vector2) -> void:
 ## exiting the jump state").
 func _begin_jump() -> void:
 	state = State.JUMP
-	_action_duration = visual.action_duration("jump", jump_fallback_duration)
+	_action_duration = jump_duration if jump_duration > 0.0 else visual.action_duration("jump", jump_fallback_duration)
 	_action_timer = _action_duration
-	visual.play_action("jump", facing8)
+	_play_jump_visual()
 	dust.burst(global_position, 1.5)
 
 
@@ -295,7 +305,10 @@ func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
 	_attack_timer = _attack_def.startup
 	_hit_targets.clear()
 	velocity += facing8 * _attack_def.lunge
-	visual.play_action(attack_id, facing8)
+	if state == State.AIR_ATTACK and not visual.has_action(attack_id):
+		_play_jump_visual()  # no air_attack art yet: stay on the jump at its current phase
+	else:
+		visual.play_action(attack_id, facing8)
 
 
 ## Advance to the next hit in the light combo (wraps light3 -> light1, there is no light4), keeping
@@ -372,6 +385,11 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 	move_and_slide()
 	if airborne:
 		_update_jump_lift()
+		# No dedicated air-attack art yet: keep showing the jump at its current phase (never the
+		# placeholder, never a restart from frame 0) until Codex delivers `air_attack`.
+		if not visual.has_action(_attack_def.id):
+			_play_jump_visual()
+			return
 	visual.play_action(_attack_def.id, facing8)
 
 
@@ -448,6 +466,12 @@ func _update_footsteps(delta: float) -> void:
 ## Visual-only elevation arc for the current jump (0 outside JUMP). Applied to PlayerVisual's local
 ## position -- never to this body's position -- so the logical ground position used for collision and
 ## the arena's Y-sort (keyed off this node's own global_position.y, see arena_sort.gd) never moves.
+## Jump art frame follows the jump's own progress, so it is phase-correct through an air attack.
+func _play_jump_visual() -> void:
+	var progress := 0.0 if _action_duration <= 0.0 else 1.0 - _action_timer / _action_duration
+	visual.play_action_progress("jump", facing8, progress)
+
+
 func _update_jump_lift() -> void:
 	if (state != State.JUMP and state != State.AIR_ATTACK) or _action_duration <= 0.0:
 		visual.position.y = 0.0

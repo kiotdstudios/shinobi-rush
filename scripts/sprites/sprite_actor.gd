@@ -75,6 +75,18 @@ func show_animation(s: SpriteSet, aid: String, want_dir: String, freeze: bool = 
 	return true
 
 
+## Show `aid` with the frame DRIVEN by `progress` (0..1) instead of free-running: the animation can
+## then be stretched/compressed to any gameplay duration and survives interruptions (an air attack
+## mid-jump) without restarting from frame 0.
+func show_animation_at(s: SpriteSet, aid: String, want_dir: String, progress: float) -> bool:
+	if not show_animation(s, aid, want_dir, false):
+		return false
+	var n := sprite.sprite_frames.get_frame_count(sprite.animation)
+	sprite.pause()
+	sprite.frame = clampi(int(clampf(progress, 0.0, 1.0) * n), 0, maxi(n - 1, 0))
+	return true
+
+
 func set_playback(speed: float, paused: bool) -> void:
 	sprite.speed_scale = speed
 	if paused and sprite.is_playing():
