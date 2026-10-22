@@ -34,7 +34,9 @@ const NEAR_STEP_DEG := 6.0  ## ... where they are short (the close-sense circle)
 const NEAR_RADIUS := 300.0  ## rays up to this long use NEAR_STEP_DEG
 const MAX_DEPTH := 8  ## bisection levels per interval (3 deg / 256 = 0.012 deg, 0.14 px at 700 px)
 const FLAT_TOL := 0.3  ## px: a chord this close to the real surface is accepted as it is
-const MAX_RAYS := 512  ## hard budget of ray queries per Bandit per rebuild (base fan + bisection); typical rebuilds use 110 to 300
+const MAX_RAYS := 512  ## ray queries after which bisection stops and `capped` is set; typical rebuilds use 110 to 300
+## The base fan (121 rays for a full circle, 82 for the cone) is always completed, so a rebuild never casts more than this.
+const MAX_TOTAL_RAYS := MAX_RAYS + 140
 const MIN_DT := 1.0e-4  ## rad: never bisect narrower than this
 const DUP_EPS := 0.05  ## px: consecutive points closer than this are merged
 const BOUNDARY_TOL := 1.0  ## px: see near_ai_boundary()
@@ -61,6 +63,7 @@ var _space: PhysicsDirectSpaceState2D = null
 var _q: PhysicsRayQueryParameters2D = null
 var _pts := PackedVector2Array()
 var _rays := 0
+var _budget := MAX_RAYS
 
 
 ## One ray: angle `t` relative to the facing, radius `r` (first hit or the range limit), and what it hit.
@@ -88,9 +91,11 @@ static func uses_cone(st: int) -> bool:
 
 
 ## Region of `bandit` as it is right now. `player` is the node the AI excludes from its ray (first node of group "player").
-static func compute(bandit: Bandit, player: Node = null, reach_mult: float = CHASE_REACH_MULT) -> BanditVisionRegion:
+## `reach_mult` and `ray_budget` exist for tests (a wrong multiplier / a budget too small to refine the silhouettes).
+static func compute(bandit: Bandit, player: Node = null, reach_mult: float = CHASE_REACH_MULT, ray_budget: int = MAX_RAYS) -> BanditVisionRegion:
 	compute_count += 1
 	var r := BanditVisionRegion.new()
+	r._budget = ray_budget
 	r._build(bandit, player, reach_mult)
 	return r
 
@@ -224,7 +229,7 @@ func _emit(s: Sample) -> void:
 func _subdivide(a: Sample, b: Sample, depth: int, rmax: float) -> void:
 	if depth >= MAX_DEPTH or b.t - a.t <= MIN_DT:
 		return
-	if _rays >= MAX_RAYS:
+	if _rays >= _budget:
 		capped = true
 		return
 	if not a.hit and not b.hit:

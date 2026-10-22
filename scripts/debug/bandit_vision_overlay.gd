@@ -61,7 +61,8 @@ var draw_items := 0  ## draw primitives issued by the last _draw
 var rays_last := 0  ## ray queries of the last refresh (all Bandits)
 var usec_last := 0  ## wall time of the last refresh in microseconds
 var mismatches := 0  ## rebuilds in which the polygon disagreed with the AI beyond TOLERANCE
-var log_mismatches := true
+var log_mismatches := true  ## log the first disagreement of each kind (push_warning, or log_sink if set)
+var log_sink: Callable = Callable()  ## test hook: receives the log line instead of push_warning
 var show_rays := true
 var refresh_count := 0
 ## Test hook: the chase reach multiplier the polygons are built with. Tests set a wrong one to prove the runtime sync
@@ -151,11 +152,15 @@ func _view_for(b: Bandit, player: Node2D) -> Dictionary:
 	if msg != "":
 		v["sync"] = msg
 		mismatches += 1
-		var kind := msg.get_slice(":", 0)
+		var kind := "probe" if msg.begins_with("facing ray") else "player"  # log each kind once, not once per frame
 		if log_mismatches and not _logged.has(kind):
 			_logged[kind] = true
-			push_warning("[BanditVisionOverlay] OUT OF SYNC with Bandit.can_see (bandit.gd:236): %s | state=%s facing=%s pos=%s level=%d" % [
-				msg, b.get_state_name(), str(b.facing8), str(b.global_position), int(v["level"])])
+			var line := "[BanditVisionOverlay] OUT OF SYNC with Bandit.can_see (bandit.gd:236): %s | state=%s facing=%s pos=%s level=%d" % [
+				msg, b.get_state_name(), str(b.facing8), str(b.global_position), int(v["level"])]
+			if log_sink.is_valid():
+				log_sink.call(line)
+			else:
+				push_warning(line)
 	return v
 
 

@@ -408,7 +408,7 @@ func _test_geometry_box() -> void:
 			edge_ok = false
 	ck.call("vision geometry: 500 px out, points 0.5 px either side of each exact shadow edge are classified like the AI (one seen, one hidden)", edge_ok, info)
 	var uncapped := not reg.capped and reg.rays_cast <= BanditVisionRegion.MAX_RAYS
-	ck.call("vision geometry: the whole polygon cost %d rays (budget %d), nothing capped" % [reg.rays_cast, BanditVisionRegion.MAX_RAYS], uncapped)
+	ck.call("vision geometry: the whole polygon cost %d rays (refinement budget %d), nothing capped" % [reg.rays_cast, BanditVisionRegion.MAX_RAYS], uncapped)
 	box.queue_free()
 	await tree.physics_frame
 	await tree.physics_frame
@@ -540,7 +540,7 @@ func _test_oracle() -> void:
 	ck.call("vision oracle: the exceptions inside the stated 1 px boundary band are at most 0.1%% of the samples (%d of %d, the worst one %.2f px from the AI's own boundary)" % [band, total, worst_band], band * 1000 <= total)
 	ck.call("vision oracle: not vacuous - the AI sees and does not see a large share of the samples, in every mode", seen > total / 20 and total - seen > total / 5 and per_state.size() == 6 and per_state.values().all(func(c: Array) -> bool: return c[1] > 100 and c[0] - c[1] > 100))
 	ck.call("vision oracle: the overlay picked cone / no-cone exactly as the test's own table for all %d configurations" % configs, cone_flag_bad == 0)
-	ck.call("vision oracle: no rebuild hit the ray budget and none used more than %d rays (max %d)" % [BanditVisionRegion.MAX_RAYS, max_rays], capped == 0 and max_rays <= BanditVisionRegion.MAX_RAYS)
+	ck.call("vision oracle: no rebuild in the real arena reached the %d-ray refinement budget (max %d rays used)" % [BanditVisionRegion.MAX_RAYS, max_rays], capped == 0 and max_rays <= BanditVisionRegion.MAX_RAYS)
 	ck.call("vision oracle: the overlay's own runtime sync check (polygon vs can_see at the player and on the facing ray) found no disagreement in all those rebuilds", ov.mismatches == 0, str(ov.mismatches))
 
 
@@ -599,6 +599,14 @@ func _test_ai_flag() -> void:
 # ------------------------------------------------------------------------------------------------ sync probe
 func _test_sync_probe() -> void:
 	var ov := tog.overlay
+	# a ray budget too small to refine the silhouettes is reported, never hidden
+	_put(Vector2(975, -300), _snap8(4), Bandit.State.APPROACH)  # hugging the north wall: many silhouettes
+	var full := BanditVisionRegion.compute(bandit, player)
+	var starved := BanditVisionRegion.compute(bandit, player, BanditVisionRegion.CHASE_REACH_MULT, 140)
+	_put(Vector2(-1000, 300), _snap8(4), Bandit.State.PATROL)  # nothing within 700 px ahead: the range arc is all there is
+	var open_spot := BanditVisionRegion.compute(bandit, player, BanditVisionRegion.CHASE_REACH_MULT, 140)
+	ck.call("vision budget: a starved ray budget (140) sets `capped` where silhouettes need more rays (the label and vision_capped then say so); the full budget does not", starved.capped and not full.capped and full.rays_cast > 140 and starved.rays_cast < full.rays_cast, "full %d rays capped=%s, starved %d rays capped=%s" % [full.rays_cast, str(full.capped), starved.rays_cast, str(starved.capped)])
+	ck.call("vision budget: open ground needs no refinement, so even the starved budget is not capped (base fan only)", not open_spot.capped and open_spot.rays_cast <= 90)
 	ov.log_mismatches = false
 	_put(Vector2(1500, 100), _snap8(4), Bandit.State.APPROACH)
 	player.global_position = Vector2(700, 100)  # 800 px ahead: seen only with the true 1.35 reach
@@ -610,6 +618,16 @@ func _test_sync_probe() -> void:
 	var msg: String = ov.views[0]["sync"]
 	ck.call("vision sync: a wrong chase multiplier is caught at run time, counted and described with exact numbers", msg != "" and ov.mismatches > before and msg.contains("can_see"), msg)
 	ck.call("vision sync: ...and published (telemetry vision_mismatch)", int(BanditVisionToggle.telemetry()["vision_mismatch"]) == ov.mismatches)
+	# the discrepancy log: one exact line per kind, however many frames the disagreement lasts
+	var logged: Array[String] = []
+	ov.log_sink = func(line: String) -> void: logged.append(line)
+	ov.log_mismatches = true
+	ov.reach_mult = 1.0
+	for i in 20:
+		ov.refresh()
+	ov.log_mismatches = false
+	ov.log_sink = Callable()
+	ck.call("vision sync: 20 rebuilds of a persistent disagreement log it ONCE, with one exact line naming bandit.gd:236, the State, facing and position (no log spam)", logged.size() == 1 and logged[0].contains("bandit.gd:236") and logged[0].contains("state=APPROACH") and logged[0].contains("facing=(-1.0, 0.0)") and logged[0].contains("pos=(1500.0, 100.0)") and ov.mismatches >= 20, str(logged) + " mismatches=" + str(ov.mismatches))
 	ov.reach_mult = BanditVisionRegion.CHASE_REACH_MULT
 	ov.mismatches = 0
 	ov.refresh()
@@ -846,7 +864,7 @@ func _test_cost() -> void:
 		worst_rays = maxi(worst_rays, rays)
 		rows += "[%s: %d rays, %.0f us/rebuild, %.1f us/ray] " % [s[0], rays, per, per / float(maxi(rays, 1))]
 	print("COST per-frame polygon rebuild (native headless; the browser build reports vision_ms in telemetry): ", rows)
-	ck.call("vision cost: a rebuild never exceeds the %d-ray budget (worst %d rays)" % [BanditVisionRegion.MAX_RAYS, worst_rays], worst_rays <= BanditVisionRegion.MAX_RAYS)
+	ck.call("vision cost: a rebuild never exceeds %d rays in total, base fan included (worst here %d)" % [BanditVisionRegion.MAX_TOTAL_RAYS, worst_rays], worst_rays <= BanditVisionRegion.MAX_TOTAL_RAYS)
 	ck.call("vision cost: a rebuild of up to %d rays stays under 20 ms even on a slow CI machine - worst %.0f us here (about 1-2 ms natively)" % [worst_rays, worst_us], worst_us < 20000.0)
 	_put(WorldScale.BANDIT_HOME, _snap8(4), Bandit.State.PATROL)
 	# with the overlay ON, one full refresh (polygon + sync probes + player check) per frame
@@ -895,6 +913,7 @@ func _test_telemetry_and_web() -> void:
 	ck.call("vision state: ON publishes the live numbers (bandit count, polygon size, rays, mode, range, fov, close sense)", t["vision_on"] == true and t["vision_bandits"] == 1 and t["vision_points"] == reg.points.size() and reg.points.size() > 20 and t["vision_rays"] > 20 and t["vision_cone"] == reg.use_cone and is_equal_approx(float(t["vision_range"]), reg.reach) and is_equal_approx(float(t["vision_fov_deg"]), 110.0) and is_equal_approx(float(t["vision_close"]), 150.0) and float(t["vision_ms"]) >= 0.0)
 	ck.call("vision state: ...the AI's own State name, facing and sees flag come from the same rebuild", t["vision_ai_state"] == bandit.get_state_name() and is_equal_approx(float(t["vision_facing_x"]), bandit.facing8.x) and is_equal_approx(float(t["vision_facing_y"]), bandit.facing8.y) and t["vision_sees"] == bandit.sees_player)
 	ck.call("vision state: ...and the overlay's category text and the polygon / can_see answers about the player", t["vision_state"] in BanditVisionOverlay.KEYS and t["vision_player_in"] == reg.contains(player.global_position) and t["vision_can_see"] == bandit.can_see(player.global_position, reg.use_cone))
+	ck.call("vision state: the view carries what the label shows - intelligence level, the real State name, category text, notice progress", int(ov.views[0]["level"]) == bandit.intelligence_level and ov.views[0]["state_name"] == "APPROACH" and ov.views[0]["cat_text"] == "PLAYER DETECTED" and float(ov.views[0]["notice"]) == 0.0 and t["vision_capped"] == false)
 	tog.set_on(false)
 	await _frames(2)
 	ck.call("vision state: switching OFF zeroes the geometry numbers again (vision_points 0)", BanditVisionToggle.telemetry()["vision_points"] == 0 and BanditVisionToggle.telemetry()["vision_on"] == false)
