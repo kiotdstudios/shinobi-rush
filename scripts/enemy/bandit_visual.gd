@@ -10,12 +10,16 @@ static var _art_checked := false
 @export_enum("auto", "run", "sprint") var approach_animation: String = "auto"
 var streak: AnimatedSprite2D
 var _last_evade := 0
+var _last_flicker := 0
 var actor: SpriteActor
 
 const CLOTH := Color("#5a3a2a")
 const LIMB := Color("#3a2a1a")
 const SKIN := Color("#8a4a3a")
 const DEAD_TINT := Color("#555555")
+const MOVING_STATES := [Bandit.State.APPROACH, Bandit.State.EVADE, Bandit.State.PATROL, Bandit.State.SEARCH, Bandit.State.RETURN, Bandit.State.REPOSITION]
+const SLASH_COLOR := Color(1.0, 0.85, 0.6, 0.9)
+const TELL_COLOR := Color(1.0, 0.2, 0.15)
 
 var bandit: Bandit
 
@@ -49,7 +53,7 @@ func _process(_delta: float) -> void:
 		return
 	actor.visible = _art_set != null and _art_set.is_valid() and bandit.state != Bandit.State.DEAD
 	if actor.visible:
-		var moving := bandit.state in [Bandit.State.APPROACH, Bandit.State.EVADE] and bandit.velocity.length_squared() > 1.0
+		var moving := bandit.state in MOVING_STATES and bandit.velocity.length_squared() > 1.0
 		# Knockback is not a running cycle. Keep the struck pose through hurt/hitstop.
 		if bandit.state != Bandit.State.HIT_REACT or actor.set_ref == null:
 			var action := "idle"
@@ -64,8 +68,22 @@ func _process(_delta: float) -> void:
 			if preserve:
 				var frame := phase * actor.sprite.sprite_frames.get_frame_count(actor.sprite.animation)
 				actor.sprite.set_frame_and_progress(int(frame), frame - floorf(frame))
-		actor.set_playback(1.0, bandit._hitstop_timer > 0.0 or bandit.state == Bandit.State.HIT_REACT)
-		actor.modulate = Bandit.HIT_FLASH if bandit._hit_flash_timer > 0.0 else Color.WHITE
+		# Slow walking states reuse the run cycle at a matching cadence (no dedicated walk art yet).
+		var cadence := 1.0
+		if moving and not bandit.is_sprinting and bandit.state != Bandit.State.EVADE:
+			cadence = clampf(bandit.velocity.length() / bandit.move_speed, 0.4, 1.0)
+		actor.set_playback(cadence, bandit._hitstop_timer > 0.0 or bandit.state == Bandit.State.HIT_REACT)
+		var tint := Color.WHITE
+		var tell := bandit.get_attack_progress()
+		if bandit._hit_flash_timer > 0.0:
+			tint = Bandit.HIT_FLASH
+		elif bandit.state == Bandit.State.ATTACK and tell > 0.0:
+			tint = Color(1.0, 1.0 - 0.55 * tell, 1.0 - 0.55 * tell)  # reddens as the swing nears
+		elif bandit.state == Bandit.State.RETREAT and tell > 0.0:
+			tint = Color(1.0 - 0.3 * tell, 0.9, 1.0)  # cold flash before the flicker
+		if bandit.flicker_hopping:
+			tint.a = 0.12  # mid-flicker the body is barely there
+		actor.modulate = tint
 	if streak != null:
 		if bandit.evade_count != _last_evade:
 			_last_evade = bandit.evade_count
@@ -73,7 +91,15 @@ func _process(_delta: float) -> void:
 			streak.visible = true
 			streak.play("default")
 			streak.set_frame_and_progress(0, 0.0)
-		if bandit.state != Bandit.State.EVADE:
+		if bandit.flicker_count != _last_flicker:
+			_last_flicker = bandit.flicker_count
+			streak.rotation = bandit._retreat_hop_velocity.angle()
+			streak.visible = true
+			streak.play("default")
+			streak.set_frame_and_progress(0, 0.0)
+		if bandit.state != Bandit.State.EVADE and bandit.state != Bandit.State.RETREAT:
+			streak.visible = false
+		elif bandit.state == Bandit.State.RETREAT and not streak.is_playing():
 			streak.visible = false
 		streak.speed_scale = 0.0 if bandit._hitstop_timer > 0.0 else 1.0
 	queue_redraw()
@@ -84,6 +110,7 @@ func _draw() -> void:
 		return
 	if actor != null and actor.visible:
 		_draw_hp_and_label(-122.0)
+		_draw_intent_overlays()
 		return
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE * WorldScale.FIGURE_SCALE)
 	var dead := bandit.state == Bandit.State.DEAD
@@ -115,7 +142,7 @@ func _draw() -> void:
 func _draw_hp_and_label(top_y: float = -78.0) -> void:
 	var font := ThemeDB.fallback_font
 	var top := Vector2(-30, top_y)
-	draw_string(font, top + Vector2(0, -6), "BANDIT (" + bandit.get_state_name() + ")", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.75))
+	draw_string(font, top + Vector2(0, -6), "BANDIT L%d (%s)" % [bandit.intelligence_level, bandit.get_state_name()], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.75))
 	if bandit.state == Bandit.State.DEAD:
 		return
 	var w := 60.0
@@ -124,3 +151,50 @@ func _draw_hp_and_label(top_y: float = -78.0) -> void:
 	var frac := clampf(bandit.hp / bandit.max_hp, 0.0, 1.0)
 	draw_rect(Rect2(top, Vector2(w * frac, h)), Color("#c0392b"), true)
 	draw_rect(Rect2(top, Vector2(w, h)), Color(1, 1, 1, 0.6), false, 1.0)
+
+
+## Code-drawn telegraphs and status marks. These are placeholders for Codex's dedicated alert/attack
+## art (see orders/Codex/2026-10-21-bandit-level1-action-art.md); they are drawn above the sprite and
+## carry no collision, so they never block anything.
+func _draw_intent_overlays() -> void:
+	var font := ThemeDB.fallback_font
+	var head := Vector2(0, -136)
+	match bandit.state:
+		Bandit.State.NOTICE:
+			var p := bandit.get_notice_progress()
+			draw_string(font, head + Vector2(-5, 0), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(1.0, 0.85, 0.2, 0.4 + 0.6 * p))
+			draw_arc(head + Vector2(0, -8), 16.0, -PI / 2.0, -PI / 2.0 + TAU * p, 20, Color(1.0, 0.85, 0.2, 0.9), 2.0)
+		Bandit.State.SEARCH:
+			draw_string(font, head + Vector2(-5, 0), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(0.7, 0.85, 1.0, 0.9))
+		Bandit.State.ATTACK:
+			_draw_swing()
+		Bandit.State.RETREAT:
+			var t := bandit.get_attack_progress()
+			if t > 0.0:
+				draw_arc(Vector2(0, -54), 20.0 + 18.0 * (1.0 - t), 0.0, TAU, 24, Color(0.6, 0.85, 1.0, 0.9), 2.0)
+	if bandit.taunt_timer > 0.0:
+		var text := Bandit.TAUNT_TEXT
+		var size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14)
+		var box := Rect2(Vector2(-size.x * 0.5 - 6.0, -176.0), size + Vector2(12.0, 8.0))
+		var a := clampf(bandit.taunt_timer / 0.4, 0.0, 1.0)
+		draw_rect(box, Color(0, 0, 0, 0.7 * a), true)
+		draw_rect(box, Color(1.0, 0.42, 0.0, 0.9 * a), false, 1.5)
+		draw_string(font, box.position + Vector2(6.0, 15.0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color(1, 1, 1, a))
+
+
+## Ground wedge showing where the swing will land: thin and red while winding up (fills as the tell
+## progresses), bright slash while active.
+func _draw_swing() -> void:
+	var dir := bandit._atk_dir
+	var reach: float = float(bandit.profile.attack_reach)
+	var half := deg_to_rad(float(bandit.profile.attack_arc_deg) * 0.5)
+	var origin := Vector2(0, -14)
+	var a0 := dir.angle() - half
+	var a1 := dir.angle() + half
+	var tell := bandit.get_attack_progress()
+	if tell > 0.0:
+		draw_arc(origin, reach, a0, a1, 16, Color(TELL_COLOR, 0.25 + 0.6 * tell), 2.0)
+		draw_line(origin, origin + dir.rotated(-half) * reach * tell, Color(TELL_COLOR, 0.6), 1.5)
+		draw_line(origin, origin + dir.rotated(half) * reach * tell, Color(TELL_COLOR, 0.6), 1.5)
+	elif bandit.atk_phase in [Bandit.AtkPhase.ACTIVE1, Bandit.AtkPhase.ACTIVE2]:
+		draw_arc(origin, reach, a0, a1, 16, SLASH_COLOR, 6.0)
