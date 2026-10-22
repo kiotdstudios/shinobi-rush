@@ -105,3 +105,18 @@ No remaining known issues. No regressions in the 1045 pre-existing automated tes
 - Push this branch, open/merge the PR through the required CI checks, verify the live deployed build at
   https://kiotdstudios.github.io/shinobi-rush/, and record the deployed commit SHA (follow-up to this
   report once pushed/merged).
+
+
+## Deployment verification (follow-up)
+- PR: https://github.com/kiotdstudios/shinobi-rush/pull/76
+- Merge commit: 1c19e2397dabe1d30e6385457e84dd9be7c5387e
+- Rebased twice during review to absorb concurrent merges from Kiro (bandit vision overlay, PR #73),
+  Aki (floor 9-tile set, PR #75), and Codex (blossom trees, PR #77) -- one trivial additive conflict in
+  tests/run_tests.gd (two new test-registration lines), resolved by keeping both; re-ran the full suite
+  after each rebase (1063/0 -> 1185/0 -> 1211/0 as other agents' tests landed; zero regressions from this
+  order at any point).
+- Live deployed build confirmed via https://kiotdstudios.github.io/shinobi-rush/build-info.json:
+  commit_sha=1c19e2397dabe1d30e6385457e84dd9be7c5387e, built_at=2026-10-22T14:26:32Z.
+- CI Deploy to GitHub Pages job: success (2026-10-22T14:41:07Z). Post-deploy live smoke test against the
+  real URL: success. godot-ci-gate: success. Full workflow conclusion: success.
+- Final status: DONE.
