@@ -134,6 +134,7 @@ func _ready() -> void:
 	placed.arena = self
 	add_child(placed)
 	placed.adopt_grove()  # the starting trees become editable objects (solid bases + nav come from them)
+	placed.adopt_grass()
 	placed.load_saved()
 	rebuild_nav()
 	_spawn_bandit()

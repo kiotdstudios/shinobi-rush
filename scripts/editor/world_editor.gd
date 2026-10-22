@@ -31,6 +31,9 @@ var _note_until := 0
 var overlay: Node2D
 var _tool_buttons: Dictionary = {}
 var _palette_buttons: Dictionary = {}
+var _filter_buttons: Dictionary = {}
+var _category_sections: Dictionary = {}
+var palette_scroll: ScrollContainer
 var _clear_armed := false
 var _js_state: JavaScriptObject
 
@@ -75,6 +78,35 @@ func _process(_d: float) -> void:
 		_js_state.open = open
 		_js_state.count = placed.objects.size()
 		_js_state.tool = tool
+		_js_state.place_id = place_id
+		_js_state.selected_id = str(selected.get("id", ""))
+		_js_state.selected_x = float(selected.get("pos", Vector2.ZERO).x)
+		_js_state.selected_y = float(selected.get("pos", Vector2.ZERO).y)
+		_js_state.scroll = palette_scroll.scroll_vertical
+		if open:
+			var scroll_rect := palette_scroll.get_global_rect()
+			_js_state.scroll_x = scroll_rect.get_center().x
+			_js_state.scroll_y = scroll_rect.get_center().y
+			_js_state.scroll_h = scroll_rect.size.y
+			var cards := {}
+			for id: String in _palette_buttons:
+				var b: Button = _palette_buttons[id]
+				var r := b.get_global_rect()
+				cards[id] = {"x": r.get_center().x, "y": r.get_center().y, "shown": b.is_visible_in_tree() and palette_scroll.get_global_rect().has_point(r.get_center())}
+			var filters := {}
+			for category: String in _filter_buttons:
+				var b: CheckBox = _filter_buttons[category]
+				var center := b.get_global_rect().get_center()
+				filters[category] = {"x": center.x, "y": center.y, "shown": b.button_pressed}
+			_js_state.cards_json = JSON.stringify(cards)
+			_js_state.filters_json = JSON.stringify(filters)
+			var r := panel.get_global_rect()
+			_js_state.panel_x = r.position.x
+			_js_state.panel_y = r.position.y
+			_js_state.panel_w = r.size.x
+			_js_state.panel_h = r.size.y
+			_js_state.grass_count = (arena.get_node("WindGrassField") as WindGrassField).ground_count()
+			_js_state.tall_count = (arena.get_node("WindGrassField") as WindGrassField).tall_count()
 	if open and inspector != null and inspector.visible and not selected.is_empty():
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
 
@@ -100,7 +132,14 @@ func set_tool(t: String, id := "") -> void:
 
 
 func snapped_pos(p: Vector2) -> Vector2:
+	if snap > 0 and _grass_tool():
+		var ground := (arena.get_node("WindGrassField") as WindGrassField).ground
+		return ground.position + ground.map_to_local(ground.local_to_map(p - ground.position))
 	return p if snap <= 0 else (p / float(snap)).round() * float(snap)
+
+func _grass_tool() -> bool:
+	var id := place_id if tool == "place" else str(selected.get("id", ""))
+	return id != "" and PlacedObjects.def_of(id).kind == "grass"
 
 
 func _mouse_world() -> Vector2:
@@ -216,6 +255,8 @@ func delete_selected() -> void:
 # ------------------------------------------------------------------ overlay drawing
 func draw_overlay(c: Node2D) -> void:
 	for o in placed.objects:
+		if not placed.type_visible(o.id):
+			continue
 		var sel: bool = (o == selected)
 		c.draw_rect(PlacedObjects.footprint_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95) if sel else Color(ACCENT, 0.6), false, 4.0 if sel else 2.0)
 		if sel:
@@ -229,7 +270,10 @@ func draw_overlay(c: Node2D) -> void:
 		var ok := placed.can_place(place_id, pos)
 		var tint := Color(0.4, 1, 0.5, 0.55) if ok else Color(1, 0.3, 0.3, 0.55)
 		var def: Dictionary = PlacedObjects.CATALOG[place_id]
-		if def.kind == "tree":
+		if def.kind == "grass":
+			var tex := load(WindGrassTileset.DIR + place_id + ".png") as Texture2D
+			c.draw_texture(tex, pos - Vector2(56, 136 if def.tall else 84), Color(1, 1, 1, 0.55))
+		elif def.kind == "tree":
 			var info := PlacedObjects.tree_info(int(def.tree))
 			var tex := load(str(info.texture)) as Texture2D
 			var anchor := Vector2(float(info.anchor[0]), float(info.anchor[1]))
@@ -371,6 +415,8 @@ func _build_ui() -> void:
 	panel.offset_top = 56
 	panel.offset_bottom = -24
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.mouse_force_pass_scroll_events = false
+	panel.add_to_group("world_builder_ui")
 	var sb := _sbox(Color(BG, 0.95), Color(ACCENT, 0.85), 2, 12)
 	sb.corner_radius_top_right = 0
 	sb.corner_radius_bottom_right = 0
@@ -421,8 +467,25 @@ func _build_ui() -> void:
 	_tool_buttons["select"] = _toggle(tools, "SELECT / MOVE", func(): set_tool("select"))
 	_tool_buttons["erase"] = _toggle(tools, "ERASE", func(): set_tool("erase"))
 
+	# Visibility filters also isolate picking; no layout data or collision is removed.
+	var filters := GridContainer.new()
+	filters.columns = 2
+	outer.add_child(filters)
+	for category: Array in PlacedObjects.CATEGORIES:
+		var name := str(category[0])
+		var check := CheckBox.new()
+		check.text = "Walls" if name == "Walls & blocks" else name
+		check.tooltip_text = "Show/hide " + name.to_lower() + " in the world and palette"
+		check.button_pressed = true
+		check.focus_mode = Control.FOCUS_NONE
+		check.add_theme_font_size_override("font_size", 11)
+		check.toggled.connect(func(shown: bool): set_type_filter(name, shown))
+		filters.add_child(check)
+		_filter_buttons[name] = check
+
 	# palette (scrolls)
 	var scroll := ScrollContainer.new()
+	palette_scroll = scroll
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	outer.add_child(scroll)
@@ -432,12 +495,15 @@ func _build_ui() -> void:
 	scroll.add_child(col)
 	var group := ButtonGroup.new()
 	for cat: Array in PlacedObjects.CATEGORIES:
-		_section(col, str(cat[0]))
+		var section := VBoxContainer.new()
+		col.add_child(section)
+		_category_sections[str(cat[0])] = section
+		_section(section, str(cat[0]))
 		var grid := GridContainer.new()
 		grid.columns = 2
 		grid.add_theme_constant_override("h_separation", 6)
 		grid.add_theme_constant_override("v_separation", 6)
-		col.add_child(grid)
+		section.add_child(grid)
 		for id: String in cat[1]:
 			var def: Dictionary = PlacedObjects.CATALOG[id]
 			var b := Button.new()
@@ -451,7 +517,11 @@ func _build_ui() -> void:
 			b.expand_icon = true
 			b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-			if def.kind == "tree":
+			if def.kind == "grass":
+				b.icon = load(WindGrassTileset.DIR + id + ".png") as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "tree":
 				b.icon = load(str(PlacedObjects.tree_info(int(def.tree)).texture)) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
@@ -582,6 +652,19 @@ func _build_ui() -> void:
 		hints.add_child(help)
 
 
+func set_type_filter(category: String, shown: bool) -> void:
+	placed.set_type_visible(category, shown)
+	(_category_sections[category] as Control).visible = shown
+	(_filter_buttons[category] as CheckBox).set_pressed_no_signal(shown)
+	if not shown:
+		if not selected.is_empty() and PlacedObjects.type_of(selected.id) == category:
+			selected = {}
+			dragging = false
+		if place_id != "" and PlacedObjects.type_of(place_id) == category:
+			set_tool("select")
+	_refresh()
+
+
 func _toggle(parent: Node, text: String, cb: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
@@ -636,7 +719,7 @@ func _refresh() -> void:
 		(_tool_buttons[k] as Button).set_pressed_no_signal(tool == k)
 	for id: String in _palette_buttons:
 		(_palette_buttons[id] as Button).set_pressed_no_signal(tool == "place" and place_id == id)
-	snap_button.text = "SNAP  %s" % (str(snap) if snap > 0 else "OFF")
+	snap_button.text = "GRASS GRID" if snap > 0 and _grass_tool() else "SNAP  %s" % (str(snap) if snap > 0 else "OFF")
 	clear_button.text = "SURE?" if _clear_armed else "CLEAR ALL"
 	reset_button.text = "SURE?" if _reset_armed else "RESET"
 	inspector.visible = not selected.is_empty()
