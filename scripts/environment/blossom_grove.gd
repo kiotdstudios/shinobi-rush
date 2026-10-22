@@ -1,8 +1,8 @@
 class_name BlossomGrove
 extends Node2D
-## Decorative scene integration; no collision/navigation, gameplay or camera-controller edits.
+## Scene integration for the trees. Trunk collision/nav lives in TrainingArena (WorldScale.TREE_POSITIONS).
 const MANIFEST := "res://assets/environment/blossom_trees/blossom_trees.art.json"
-const PLACEMENTS := [Vector2(-920, 320), Vector2(-620, 150), Vector2(-350, -100), Vector2(-1060, -130), Vector2(-790, 720)]
+const PLACEMENTS: Array[Vector2] = WorldScale.TREE_POSITIONS  # single source: trunk colliders use the same list
 var trees: Array[BlossomTree] = []
 var clock := 0.0
 var speed := 1.0

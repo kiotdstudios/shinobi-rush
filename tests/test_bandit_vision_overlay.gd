@@ -603,7 +603,7 @@ func _test_sync_probe() -> void:
 	_put(Vector2(975, -300), _snap8(4), Bandit.State.APPROACH)  # hugging the north wall: many silhouettes
 	var full := BanditVisionRegion.compute(bandit, player)
 	var starved := BanditVisionRegion.compute(bandit, player, BanditVisionRegion.CHASE_REACH_MULT, 140)
-	_put(Vector2(-1000, 300), _snap8(4), Bandit.State.PATROL)  # nothing within 700 px ahead: the range arc is all there is
+	_put(Vector2(600, 100), _snap8(4), Bandit.State.PATROL)  # nothing within 700 px ahead (clear of walls and tree trunks): the range arc is all there is
 	var open_spot := BanditVisionRegion.compute(bandit, player, BanditVisionRegion.CHASE_REACH_MULT, 140)
 	ck.call("vision budget: a starved ray budget (140) sets `capped` where silhouettes need more rays (the label and vision_capped then say so); the full budget does not", starved.capped and not full.capped and full.rays_cast > 140 and starved.rays_cast < full.rays_cast, "full %d rays capped=%s, starved %d rays capped=%s" % [full.rays_cast, str(full.capped), starved.rays_cast, str(starved.capped)])
 	ck.call("vision budget: open ground needs no refinement, so even the starved budget is not capped (base fan only)", not open_spot.capped and open_spot.rays_cast <= 90)

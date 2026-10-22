@@ -406,6 +406,22 @@ func test_main_scene_and_movement() -> void:
 	await _hold(["move_right"], 60)
 	var px := player.global_position.x
 	ck("a wall (block) blocks the player", px > wall_start and px < wall_face, "x=%.1f face=%.1f" % [px, wall_face])
+	# blossom tree trunks are solid: walk west-to-east and north-to-south into each base
+	for ti in WorldScale.TREE_POSITIONS.size():
+		var tp: Vector2 = WorldScale.TREE_POSITIONS[ti]
+		var half := WorldScale.TREE_TRUNK_FOOTPRINT * 0.5
+		var mid_y := tp.y - half.y
+		_place(player, Vector2(tp.x - half.x - 90.0, mid_y))
+		await _hold(["move_right"], 60)
+		ck("tree %d trunk blocks the player (from west)" % ti, player.global_position.x < tp.x - half.x + 1.0, "x=%.1f left=%.1f" % [player.global_position.x, tp.x - half.x])
+		_place(player, Vector2(tp.x, tp.y + 90.0))
+		await _hold(["move_up"], 60)
+		ck("tree %d trunk blocks the player (from south)" % ti, player.global_position.y > tp.y - 1.0, "y=%.1f base=%.1f" % [player.global_position.y, tp.y])
+		await _hold([], 20)
+	var nav_blocked := true
+	for tp in WorldScale.TREE_POSITIONS:
+		nav_blocked = nav_blocked and not arena.nav.is_walkable(tp + Vector2(0, -20))
+	ck("bandit nav treats tree bases as solid", nav_blocked)
 	_place(player, Vector2(arena.bounds.end.x - 150.0, 0))
 	await _hold(["move_right"], 90)
 	ck("arena bounds wall blocks the player", player.global_position.x <= arena.bounds.end.x, "x=%.1f" % player.global_position.x)
