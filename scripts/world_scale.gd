@@ -73,6 +73,11 @@ const BLOCKS: Array = [
 	[Vector2(1180, 40), Vector2(120, 110), 110.0],  # 7: rock covering the choke's east mouth
 	[Vector2(1500, -330), Vector2(130, 110), 110.0],  # 8: rock inside the patrol area
 ]
+## Blossom trees (Codex art, placed by BlossomGrove): ground-anchor positions. Each trunk/stone base is solid
+## (player, bandit nav); the canopy is not. Footprint is (w, depth) of the base, extending `depth` upward from
+## the anchor like BLOCKS. All five sit west of the spawn, clear of the due-right and due-up lanes.
+const TREE_POSITIONS: Array[Vector2] = [Vector2(-920, 320), Vector2(-620, 150), Vector2(-350, -100), Vector2(-1060, -130), Vector2(-790, 720)]
+const TREE_TRUNK_FOOTPRINT := Vector2(100, 44)
 ## Where the Level 1 Bandit lives: far east of the player's spawn, behind the walls above.
 const BANDIT_HOME := Vector2(1300, -130)
 const BANDIT_PATROL: Array[Vector2] = [Vector2(1250, -200), Vector2(1650, -200), Vector2(1650, 60), Vector2(1380, 60)]

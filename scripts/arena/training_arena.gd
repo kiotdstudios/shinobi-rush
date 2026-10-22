@@ -125,7 +125,8 @@ func _ready() -> void:
 		rear.position = ArenaSort.rear_position(b[0], b[1])
 		add_child(rear)
 	_build_bounds_walls()
-	nav = ArenaNav.build(bounds, BLOCKS)
+	_build_tree_trunks()
+	nav = ArenaNav.build(bounds, BLOCKS + tree_trunk_blocks())
 	_spawn_bandit()
 	for p in get_tree().get_nodes_in_group("player"):
 		p.global_position = spawn.global_position
@@ -144,6 +145,28 @@ func _spawn_bandit() -> void:
 	bandit.position = WorldScale.BANDIT_HOME
 	bandit.patrol_points = PackedVector2Array(WorldScale.BANDIT_PATROL)
 	add_child(bandit)
+
+
+## Trunk bases as BLOCKS-style entries [anchor, footprint, height] (height unused by collision/nav).
+static func tree_trunk_blocks() -> Array:
+	var out: Array = []
+	for p in WorldScale.TREE_POSITIONS:
+		out.append([p, WorldScale.TREE_TRUNK_FOOTPRINT, 0.0])
+	return out
+
+
+## Invisible solid bases for the blossom trees (canopy stays walk-behind scenery).
+func _build_tree_trunks() -> void:
+	var body := StaticBody2D.new()
+	body.name = "TreeTrunks"
+	for p in WorldScale.TREE_POSITIONS:
+		var shape := RectangleShape2D.new()
+		shape.size = WorldScale.TREE_TRUNK_FOOTPRINT
+		var col := CollisionShape2D.new()
+		col.shape = shape
+		col.position = p + Vector2(0, -WorldScale.TREE_TRUNK_FOOTPRINT.y * 0.5)
+		body.add_child(col)
+	add_child(body)
 
 
 func get_bounds() -> Rect2:
