@@ -36,6 +36,7 @@ func run(check: Callable, root: Node) -> void:
 	await _test_double_flicker()
 	await _test_search_and_return()
 	await _test_leash_and_profile()
+	await _test_leash_survives_a_stale_prior_home()
 	ck.call("robber: no stuck states anywhere in the suite", bandit.stuck_events == 0, str(bandit.stuck_events))
 	main.queue_free()
 	await tree.process_frame
@@ -67,6 +68,7 @@ func _put(bandit_pos: Vector2, player_pos: Vector2, state: Bandit.State = Bandit
 	bandit.set_intelligence_level(1)
 	bandit.seed_rng(7)
 	bandit.set_home(bandit_pos)
+	bandit._chase_origin = bandit_pos  ## leash measures from here now, not `home` (see bandit.gd doc comment)
 	bandit.state = state
 	bandit._state_time = 0.0
 	player.global_position = player_pos
@@ -413,7 +415,10 @@ func _test_leash_and_profile() -> void:
 	ck.call("robber leash: a chase past the leash radius continues while the player is in view", bandit.state != Bandit.State.RETURN and bandit.sees_player, "%s sees=%s" % [bandit.get_state_name(), str(bandit.sees_player)])
 	_put(Vector2(1500, 300), Vector2(-1500, 900), Bandit.State.APPROACH)
 	bandit.last_seen = Vector2(1400, 300)
-	bandit.set_home(Vector2(1500, 300) - Vector2(1700, 0))
+	# Owner 2026-10-22 (second follow-up, same day): the leash now measures from where THIS chase
+	# started (_chase_origin), never the stale `home` left over from a previous disengage -- setting
+	# `home` far away here would no longer do anything; `_chase_origin` is the actual mechanism.
+	bandit._chase_origin = Vector2(1500, 300) - Vector2(1700, 0)
 	await _frames(3)
 	ck.call("robber leash: a chase beyond the leash radius is abandoned (RETURN)", bandit.state == Bandit.State.RETURN, bandit.get_state_name())
 	bandit.set_intelligence_level(99)
@@ -426,3 +431,32 @@ func _test_leash_and_profile() -> void:
 	ck.call("robber profile: Level 1 retreats rarely (< 50%) and overcommits sometimes", float(p.retreat_chance) < 0.5 and float(p.overcommit_chance) > 0.0)
 	ck.call("robber profile: chase is bounded", float(p.chase_leash) > 0.0 and float(p.chase_leash) < 4000.0)
 	ck.call("robber profile: intent is observable (get_intent + state name)", bandit.get_intent() != "" and bandit.get_state_name() != "")
+
+# ------------------------------------------------------------------ owner 2026-10-22 (second follow-up,
+# same day): "bandit now moves to another ... home ... instead of that being his now home area" -- a
+# fresh chase must give up based on where THIS chase started, not a stale `home` left by a PREVIOUS
+# disengage that the Bandit has since roamed away from. Kept physically on the SAME proven-safe spot
+# ((1500, 300), the same anchor _test_leash_and_profile already uses) the whole time -- this test is
+# about which REFERENCE POINT (`home` vs `_chase_origin`) gates the leash, not about real movement
+# across unknown level geometry.
+func _test_leash_survives_a_stale_prior_home() -> void:
+	var anchor := Vector2(1500, 300)  ## same proven-safe spot _test_leash_and_profile uses
+	var old_home := anchor - Vector2(1700, 0)  ## stale: left over from a disengage long before now
+	# Player beyond Level 1's sight_range (500, post Aki's "smaller vision" tune) so sees_player stays
+	# false throughout -- otherwise RETURN immediately re-triggers NOTICE ("spotted while returning")
+	# and the leash transition never gets a chance to be observed.
+	_put(anchor, anchor + Vector2(0, 700), Bandit.State.PATROL)
+	# NOT equal to `anchor` itself: _tick_approach's "reached last seen" check fires the instant the
+	# Bandit arrives within 20px of `last_seen` while not seeing the player -- setting it to the
+	# Bandit's own current position would trigger that on frame one, before the leash can be observed.
+	bandit.last_seen = anchor + Vector2(0, 300)
+	bandit._ever_disengaged = true
+	bandit.home = old_home
+	bandit._enter(Bandit.State.APPROACH, "test: a brand new engagement begins right here")
+	ck.call("robber leash: a fresh engagement sets _chase_origin to where it currently is, not the stale home", bandit._chase_origin.distance_to(anchor) < 1.0, str(bandit._chase_origin))
+	await _frames(3)
+	ck.call("robber leash: despite `home` being 1700px away (stale, > leash), the chase continues because _chase_origin is right here", bandit.state == Bandit.State.APPROACH, bandit.get_state_name())
+	bandit._chase_origin = old_home  ## simulate THIS chase having actually started back at the old spot
+	await _frames(3)
+	ck.call("robber leash: once _chase_origin itself is far enough away, the SAME distance now correctly gives up (RETURN)", bandit.state == Bandit.State.RETURN, bandit.get_state_name())
+	ck.call("robber leash: the new home settles at THIS chase's actual giving-up point, not the old stale home or chase_origin", bandit.home.distance_to(anchor) < 60.0 and bandit.home.distance_to(old_home) > 1000.0, "home=%s anchor=%s old_home=%s" % [bandit.home, anchor, old_home])
