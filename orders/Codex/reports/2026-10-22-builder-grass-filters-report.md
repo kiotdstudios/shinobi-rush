@@ -36,3 +36,6 @@ Final grid-snapping suite/browser evidence, required PR checks, merge/deployment
 
 ## Final checks before implementation commit
 Final grid-snap suite: godot_ci.py tests --project . --log-dir build/builder-grass-final-tests PASS1345/zero failures. Final export builder-grass-probe.mjs --serve-dir ../builder-grass-final-web --out-dir build/builder-grass-final-browser: all17checks PASS; screenshot/persistent JSON copied to docs/visuals/builder-grass/. Final wind-regression probe all15PASS. Latest main checked unchanged. git diff --check and order validator passed.
+
+## Latest-main integration before merge commit
+Aki dock-tabs PR92 advanced main to874b4e4d7fa80ff5c7e9720edb38b118c8fe1da9. Clean merge, including Animation Lab; wheel guard preserved. Ran import, tests (build/builder-dock-tests):1345PASS/zero failures; fresh export/finalize ../builder-dock-web PASS; controls-probe (build/builder-dock-controls) PASS including updated tab lip; builder-grass-probe (build/builder-dock-browser-2) all17PASS,zeroerrors. Browser save flush is asynchronous:2.5second wait was intermittent, so probe now allows8seconds before reload; the round-trip then passed. No save behavior bypass or runtime API mutation used. Updated preserved evidence before this commit.
