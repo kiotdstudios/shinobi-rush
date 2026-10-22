@@ -24,6 +24,9 @@ const BLOCKS: Array = WorldScale.BLOCKS
 @onready var spawn: Marker2D = $Spawn
 ## Wall-aware navigation over BLOCKS (built once; the Level 1 Bandit paths around walls with it).
 var nav: ArenaNav
+## Player-built objects (trees/walls/...) and the World Builder panel that edits them.
+var placed: PlacedObjects
+var editor: WorldEditor
 ## Ground layer: a real TileMapLayer (KosenFloorTileset) painted once in _ready(), plus the
 ## arena-bounds border line. The arena y-sorts its children; drawing the ground in the arena's
 ## own _draw() would sort it at y=0 and hide every actor/block with y < 0 beneath it. A child on
@@ -127,7 +130,15 @@ func _ready() -> void:
 	_build_bounds_walls()
 	_build_tree_trunks()
 	nav = ArenaNav.build(bounds, BLOCKS + tree_trunk_blocks())
+	placed = PlacedObjects.new()
+	placed.name = "PlacedObjects"
+	placed.arena = self
+	add_child(placed)
+	placed.load_saved()
 	_spawn_bandit()
+	editor = WorldEditor.new()
+	editor.setup(self, placed)
+	add_child(editor)
 	for p in get_tree().get_nodes_in_group("player"):
 		p.global_position = spawn.global_position
 		if p.has_method("reset_camera"):
@@ -145,6 +156,14 @@ func _spawn_bandit() -> void:
 	bandit.position = WorldScale.BANDIT_HOME
 	bandit.patrol_points = PackedVector2Array(WorldScale.BANDIT_PATROL)
 	add_child(bandit)
+
+
+## Rebuild the bandit nav after the player-built layout changed; live enemies get the new grid at once.
+func rebuild_nav() -> void:
+	nav = ArenaNav.build(bounds, BLOCKS + tree_trunk_blocks() + (placed.obstacles() if placed != null else []))
+	for e in get_tree().get_nodes_in_group("enemy"):
+		if "nav" in e:
+			e.nav = nav
 
 
 ## Trunk bases as BLOCKS-style entries [anchor, footprint, height] (height unused by collision/nav).

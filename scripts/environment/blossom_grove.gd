@@ -14,10 +14,11 @@ var selected := -1
 var review_camera: Camera2D
 var status: Label
 var _state: JavaScriptObject
+var _manifest: Dictionary = {}
 
 func _ready() -> void:
 	y_sort_enabled = true
-	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST))
+	var manifest: Dictionary = _load_manifest()
 	for i in manifest.trees.size():
 		var tree := BlossomTree.new()
 		tree.name = str(manifest.trees[i].id)
@@ -32,6 +33,25 @@ func _ready() -> void:
 		JavaScriptBridge.get_interface("window").__BLOSSOM_STATE__ = _state
 	if review_mode:
 		call_deferred("_start_review")
+
+func _load_manifest() -> Dictionary:
+	if _manifest.is_empty():
+		_manifest = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST))
+	return _manifest
+
+## World Builder hook: one more tree of art variant `index` (0-4) at a ground anchor. Wind/leaves advance with the rest.
+func add_tree(index: int, at: Vector2) -> BlossomTree:
+	var tree := BlossomTree.new()
+	tree.name = "Placed%d_%d" % [index, trees.size()]
+	tree.data = _load_manifest().trees[index]
+	tree.position = at
+	add_child(tree)
+	trees.append(tree)
+	return tree
+
+func remove_tree(tree: BlossomTree) -> void:
+	trees.erase(tree)
+	tree.queue_free()
 
 func _process(delta: float) -> void:
 	advance(0.0 if paused else delta * speed)
