@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b3ajwe5u6bmrk"
-path="res://.godot/imported/floor_alt_herringbone.png-c337c9b81d28e82d5925cbbdcc088c68.ctex"
+uid="uid://t3h125km0d5l"
+path="res://.godot/imported/floor_slate_b.png-2980bf6ffd070dcafb8032df7cc29fe1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_alt_herringbone.png"
-dest_files=["res://.godot/imported/floor_alt_herringbone.png-c337c9b81d28e82d5925cbbdcc088c68.ctex"]
+source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_slate_b.png"
+dest_files=["res://.godot/imported/floor_slate_b.png-2980bf6ffd070dcafb8032df7cc29fe1.ctex"]
 
 [params]
 

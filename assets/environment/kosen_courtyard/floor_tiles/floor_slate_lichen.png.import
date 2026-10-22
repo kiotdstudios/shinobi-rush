@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mfubyo4ax8lp"
-path="res://.godot/imported/floor_dirt.png-24678aa3934766644df0d2c200f1c7ba.ctex"
+uid="uid://xedq6to7041k"
+path="res://.godot/imported/floor_slate_lichen.png-02787b2a752feec7ac95ec6eb7b88cc3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_dirt.png"
-dest_files=["res://.godot/imported/floor_dirt.png-24678aa3934766644df0d2c200f1c7ba.ctex"]
+source_file="res://assets/environment/kosen_courtyard/floor_tiles/floor_slate_lichen.png"
+dest_files=["res://.godot/imported/floor_slate_lichen.png-02787b2a752feec7ac95ec6eb7b88cc3.ctex"]
 
 [params]
 
