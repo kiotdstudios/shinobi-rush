@@ -128,13 +128,14 @@ func _ready() -> void:
 		rear.position = ArenaSort.rear_position(b[0], b[1])
 		add_child(rear)
 	_build_bounds_walls()
-	_build_tree_trunks()
-	nav = ArenaNav.build(bounds, BLOCKS + tree_trunk_blocks())
+	nav = ArenaNav.build(bounds, BLOCKS)
 	placed = PlacedObjects.new()
 	placed.name = "PlacedObjects"
 	placed.arena = self
 	add_child(placed)
+	placed.adopt_grove()  # the starting trees become editable objects (solid bases + nav come from them)
 	placed.load_saved()
+	rebuild_nav()
 	_spawn_bandit()
 	editor = WorldEditor.new()
 	editor.setup(self, placed)
@@ -160,7 +161,7 @@ func _spawn_bandit() -> void:
 
 ## Rebuild the bandit nav after the player-built layout changed; live enemies get the new grid at once.
 func rebuild_nav() -> void:
-	nav = ArenaNav.build(bounds, BLOCKS + tree_trunk_blocks() + (placed.obstacles() if placed != null else []))
+	nav = ArenaNav.build(bounds, BLOCKS + (placed.obstacles() if placed != null else []))
 	for e in get_tree().get_nodes_in_group("enemy"):
 		if "nav" in e:
 			e.nav = nav

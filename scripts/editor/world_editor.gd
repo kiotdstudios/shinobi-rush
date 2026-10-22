@@ -72,6 +72,8 @@ func _process(_d: float) -> void:
 		_js_state.open = open
 		_js_state.count = placed.objects.size()
 		_js_state.tool = tool
+	if open and inspector != null and inspector.visible and not selected.is_empty():
+		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
 
 
 func set_open(v: bool) -> void:
@@ -82,6 +84,7 @@ func set_open(v: bool) -> void:
 		dragging = false
 		selected = {}
 		_clear_armed = false
+		_reset_armed = false
 	_refresh()
 
 
@@ -180,8 +183,6 @@ func delete_selected() -> void:
 
 # ------------------------------------------------------------------ overlay drawing
 func draw_overlay(c: Node2D) -> void:
-	for tp in WorldScale.TREE_POSITIONS:
-		c.draw_rect(Rect2(tp.x - WorldScale.TREE_TRUNK_FOOTPRINT.x * 0.5, tp.y - WorldScale.TREE_TRUNK_FOOTPRINT.y, WorldScale.TREE_TRUNK_FOOTPRINT.x, WorldScale.TREE_TRUNK_FOOTPRINT.y), Color(1, 1, 1, 0.25), false, 2.0)
 	for o in placed.objects:
 		var sel: bool = (o == selected)
 		c.draw_rect(PlacedObjects.footprint_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95) if sel else Color(ACCENT, 0.6), false, 4.0 if sel else 2.0)
@@ -208,6 +209,99 @@ func draw_overlay(c: Node2D) -> void:
 
 
 # ------------------------------------------------------------------ UI
+const BG := Color("#0c0c10")
+const CARD := Color("#16161c")
+const CARD_HOVER := Color("#1f1f27")
+const EDGE := Color("#2b2b35")
+const DANGER := Color("#ff4d4d")
+const MUTED := Color(1, 1, 1, 0.55)
+
+var inspector: PanelContainer
+var inspector_name: Label
+var inspector_pos: Label
+var count_label: Label
+var reset_button: Button
+var _reset_armed := false
+
+
+static func _sbox(bg: Color, border := Color(0, 0, 0, 0), bw := 0, radius := 8) -> StyleBoxFlat:
+	var s := StyleBoxFlat.new()
+	s.bg_color = bg
+	s.border_color = border
+	s.set_border_width_all(bw)
+	s.set_corner_radius_all(radius)
+	s.content_margin_left = 10
+	s.content_margin_right = 10
+	s.content_margin_top = 6
+	s.content_margin_bottom = 6
+	return s
+
+
+## kind: "card" (palette), "tool" (segmented), "ghost" (small action), "danger".
+func _skin(b: Button, kind := "ghost") -> void:
+	var base := CARD
+	var edge := EDGE
+	var hover_edge := ACCENT
+	var press_bg := Color(ACCENT, 0.18)
+	var text := Color.WHITE
+	match kind:
+		"tool":
+			press_bg = ACCENT
+		"danger":
+			edge = Color(DANGER, 0.45)
+			hover_edge = DANGER
+			press_bg = Color(DANGER, 0.25)
+			text = Color("#ffb3b3")
+	b.add_theme_stylebox_override("normal", _sbox(base, edge, 1))
+	b.add_theme_stylebox_override("hover", _sbox(CARD_HOVER, hover_edge, 1))
+	b.add_theme_stylebox_override("pressed", _sbox(press_bg, hover_edge, 2))
+	b.add_theme_stylebox_override("hover_pressed", _sbox(press_bg, hover_edge, 2))
+	b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	b.add_theme_color_override("font_color", text)
+	b.add_theme_color_override("font_hover_color", Color.WHITE)
+	var on := Color("#0a0a0a") if kind == "tool" else Color.WHITE
+	b.add_theme_color_override("font_pressed_color", on)
+	b.add_theme_color_override("font_hover_pressed_color", on)
+	b.add_theme_font_size_override("font_size", 13)
+	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+
+
+func _section(col: Control, title: String) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	col.add_child(row)
+	var lab := Label.new()
+	lab.text = title.to_upper()
+	lab.add_theme_font_size_override("font_size", 11)
+	lab.add_theme_color_override("font_color", MUTED)
+	row.add_child(lab)
+	var line := ColorRect.new()
+	line.color = EDGE
+	line.custom_minimum_size = Vector2(0, 1)
+	line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	line.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(line)
+
+
+## Small procedural thumbnail for block items (front face, lit roof, shaded side) so the palette shows what you get.
+static func block_icon(id: String) -> Texture2D:
+	var def: Dictionary = PlacedObjects.CATALOG[id]
+	var fp: Vector2 = def.footprint
+	var img := Image.create(48, 48, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+	var scale_f := 30.0 / maxf(fp.x, float(def.height) + fp.y * 0.5)
+	var w := int(clampf(fp.x * scale_f, 14.0, 34.0))
+	var h := int(clampf(float(def.height) * scale_f, 12.0, 28.0))
+	var d := int(clampf(fp.y * scale_f * 0.5, 4.0, 12.0))
+	var x0 := int((48 - w - d) * 0.5)
+	var y0 := int((48 - h - d) * 0.5) + d
+	img.fill_rect(Rect2i(x0, y0, w, h), Color("#8a8f99"))
+	img.fill_rect(Rect2i(x0 + w, y0 - d + 2, d, h), Color("#555a63"))
+	img.fill_rect(Rect2i(x0 + 2, y0 - d, w, d), Color("#b9bfca"))
+	img.fill_rect(Rect2i(x0, y0 + h - 3, w, 3), Color("#6a6f78"))
+	return ImageTexture.create_from_image(img)
+
+
 func _build_ui() -> void:
 	var root := Control.new()
 	root.name = "Root"
@@ -217,16 +311,22 @@ func _build_ui() -> void:
 
 	tab = Button.new()
 	tab.name = "BuildTab"
-	tab.text = "< BUILD"
+	tab.text = "<  BUILD"
 	tab.focus_mode = Control.FOCUS_NONE
 	tab.tooltip_text = "World Builder (F3)"
 	tab.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
 	tab.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	tab.offset_left = -84
+	tab.offset_left = -92
 	tab.offset_right = 0
 	tab.offset_top = 40
-	tab.offset_bottom = 76
-	_style_button(tab)
+	tab.offset_bottom = 80
+	_skin(tab, "card")
+	var tab_sb := _sbox(Color(BG, 0.94), ACCENT, 2, 0)
+	tab_sb.corner_radius_top_left = 10
+	tab_sb.corner_radius_bottom_left = 10
+	tab_sb.border_width_right = 0
+	tab.add_theme_stylebox_override("normal", tab_sb)
+	tab.add_theme_color_override("font_color", ACCENT)
 	tab.pressed.connect(func(): set_open(true))
 	root.add_child(tab)
 
@@ -236,55 +336,75 @@ func _build_ui() -> void:
 	panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	panel.offset_left = -PANEL_W
 	panel.offset_right = 0
-	panel.offset_top = 90
-	panel.offset_bottom = -110
+	panel.offset_top = 56
+	panel.offset_bottom = -24
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.04, 0.04, 0.04, 0.93)
-	sb.border_color = ACCENT
-	sb.set_border_width_all(2)
+	var sb := _sbox(Color(BG, 0.95), Color(ACCENT, 0.85), 2, 12)
+	sb.corner_radius_top_right = 0
+	sb.corner_radius_bottom_right = 0
 	sb.border_width_right = 0
-	sb.set_content_margin_all(8)
+	sb.set_content_margin_all(12)
+	sb.shadow_color = Color(0, 0, 0, 0.55)
+	sb.shadow_size = 14
 	panel.add_theme_stylebox_override("panel", sb)
 	root.add_child(panel)
 
-	var scroll := ScrollContainer.new()
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	panel.add_child(scroll)
-	var col := VBoxContainer.new()
-	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	col.add_theme_constant_override("separation", 6)
-	scroll.add_child(col)
+	var outer := VBoxContainer.new()
+	outer.add_theme_constant_override("separation", 8)
+	panel.add_child(outer)
 
+	# header
 	var head := HBoxContainer.new()
-	col.add_child(head)
+	outer.add_child(head)
+	var titles := VBoxContainer.new()
+	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	titles.add_theme_constant_override("separation", 0)
+	head.add_child(titles)
 	var title := Label.new()
 	title.text = "WORLD BUILDER"
-	title.add_theme_color_override("font_color", ACCENT)
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	head.add_child(title)
+	title.add_theme_font_size_override("font_size", 19)
+	title.add_theme_color_override("font_color", Color.WHITE)
+	titles.add_child(title)
+	var sub := Label.new()
+	sub.text = "KIOTD  /  LEVEL TOOLS  /  F3"
+	sub.add_theme_font_size_override("font_size", 10)
+	sub.add_theme_color_override("font_color", ACCENT)
+	titles.add_child(sub)
 	var hide := Button.new()
-	hide.text = "Hide >"
+	hide.text = "HIDE  >"
 	hide.focus_mode = Control.FOCUS_NONE
-	_style_button(hide)
+	hide.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_skin(hide)
 	hide.pressed.connect(func(): set_open(false))
 	head.add_child(hide)
+	var bar := ColorRect.new()
+	bar.color = ACCENT
+	bar.custom_minimum_size = Vector2(0, 3)
+	outer.add_child(bar)
 
+	# tools
 	var tools := HBoxContainer.new()
-	col.add_child(tools)
-	_tool_buttons["select"] = _toggle(tools, "Select / Move", func(): set_tool("select"))
-	_tool_buttons["erase"] = _toggle(tools, "Erase", func(): set_tool("erase"))
+	tools.add_theme_constant_override("separation", 6)
+	outer.add_child(tools)
+	_tool_buttons["select"] = _toggle(tools, "SELECT / MOVE", func(): set_tool("select"))
+	_tool_buttons["erase"] = _toggle(tools, "ERASE", func(): set_tool("erase"))
 
+	# palette (scrolls)
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	outer.add_child(scroll)
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.add_theme_constant_override("separation", 8)
+	scroll.add_child(col)
 	var group := ButtonGroup.new()
 	for cat: Array in PlacedObjects.CATEGORIES:
-		var lab := Label.new()
-		lab.text = str(cat[0])
-		lab.add_theme_color_override("font_color", Color(1, 1, 1, 0.7))
-		col.add_child(lab)
+		_section(col, str(cat[0]))
 		var grid := GridContainer.new()
 		grid.columns = 2
-		grid.add_theme_constant_override("h_separation", 4)
-		grid.add_theme_constant_override("v_separation", 4)
+		grid.add_theme_constant_override("h_separation", 6)
+		grid.add_theme_constant_override("v_separation", 6)
 		col.add_child(grid)
 		for id: String in cat[1]:
 			var def: Dictionary = PlacedObjects.CATALOG[id]
@@ -293,66 +413,106 @@ func _build_ui() -> void:
 			b.button_group = group
 			b.focus_mode = Control.FOCUS_NONE
 			b.text = str(def.label)
+			b.tooltip_text = "Place: %s" % str(def.label)
 			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			b.custom_minimum_size = Vector2(0, 56)
 			b.clip_text = true
 			b.expand_icon = true
 			b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-			b.add_theme_constant_override("icon_max_width", 40)
 			if def.kind == "tree":
-				var info := PlacedObjects.tree_info(int(def.tree))
-				b.icon = load(str(info.texture)) as Texture2D
-				b.custom_minimum_size = Vector2(0, 84)
-			b.add_theme_font_size_override("font_size", 12)
+				b.icon = load(str(PlacedObjects.tree_info(int(def.tree)).texture)) as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			else:
+				b.icon = block_icon(id)
+				b.add_theme_constant_override("icon_max_width", 44)
+				b.custom_minimum_size = Vector2(0, 76)
+			_skin(b, "card")
+			b.add_theme_font_size_override("font_size", 11)
 			b.pressed.connect(func(): set_tool("place", id))
 			grid.add_child(b)
 			_palette_buttons[id] = b
 
+	# inspector card (only while something is selected)
+	inspector = PanelContainer.new()
+	inspector.add_theme_stylebox_override("panel", _sbox(CARD, Color(1, 0.84, 0.2, 0.7), 1, 8))
+	outer.add_child(inspector)
+	var ib := HBoxContainer.new()
+	ib.add_theme_constant_override("separation", 8)
+	inspector.add_child(ib)
+	var itxt := VBoxContainer.new()
+	itxt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	itxt.add_theme_constant_override("separation", 0)
+	ib.add_child(itxt)
+	inspector_name = Label.new()
+	inspector_name.add_theme_font_size_override("font_size", 14)
+	inspector_name.add_theme_color_override("font_color", Color(1, 0.84, 0.2))
+	itxt.add_child(inspector_name)
+	inspector_pos = Label.new()
+	inspector_pos.add_theme_font_size_override("font_size", 11)
+	inspector_pos.add_theme_color_override("font_color", MUTED)
+	itxt.add_child(inspector_pos)
+	var del := Button.new()
+	del.text = "DELETE"
+	del.focus_mode = Control.FOCUS_NONE
+	del.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_skin(del, "danger")
+	del.pressed.connect(delete_selected)
+	ib.add_child(del)
+
+	# options
 	var opts := HBoxContainer.new()
-	col.add_child(opts)
+	opts.add_theme_constant_override("separation", 6)
+	outer.add_child(opts)
 	snap_button = Button.new()
 	snap_button.focus_mode = Control.FOCUS_NONE
 	snap_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_style_button(snap_button)
+	_skin(snap_button)
 	snap_button.pressed.connect(_cycle_snap)
 	opts.add_child(snap_button)
-	var del := Button.new()
-	del.text = "Delete"
-	del.focus_mode = Control.FOCUS_NONE
-	del.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_style_button(del)
-	del.pressed.connect(delete_selected)
-	opts.add_child(del)
-
-	var io := HBoxContainer.new()
-	col.add_child(io)
 	var copy := Button.new()
-	copy.text = "Copy JSON"
+	copy.text = "COPY JSON"
 	copy.focus_mode = Control.FOCUS_NONE
 	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_style_button(copy)
+	_skin(copy)
 	copy.pressed.connect(func():
 		DisplayServer.clipboard_set(placed.to_json_string())
 		status.text = "Copied %d objects" % placed.objects.size())
-	io.add_child(copy)
+	opts.add_child(copy)
+	var io := HBoxContainer.new()
+	io.add_theme_constant_override("separation", 6)
+	outer.add_child(io)
+	reset_button = Button.new()
+	reset_button.focus_mode = Control.FOCUS_NONE
+	reset_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_skin(reset_button)
+	reset_button.pressed.connect(_reset_pressed)
+	io.add_child(reset_button)
 	clear_button = Button.new()
 	clear_button.focus_mode = Control.FOCUS_NONE
 	clear_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_style_button(clear_button)
+	_skin(clear_button, "danger")
 	clear_button.pressed.connect(_clear_pressed)
 	io.add_child(clear_button)
 
+	# footer
+	var foot := PanelContainer.new()
+	foot.add_theme_stylebox_override("panel", _sbox(Color(0, 0, 0, 0.45), Color(0, 0, 0, 0), 0, 6))
+	outer.add_child(foot)
+	var fv := VBoxContainer.new()
+	fv.add_theme_constant_override("separation", 2)
+	foot.add_child(fv)
 	status = Label.new()
 	status.add_theme_font_size_override("font_size", 12)
+	status.add_theme_color_override("font_color", ACCENT)
 	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	col.add_child(status)
+	fv.add_child(status)
 	var help := Label.new()
-	help.text = "Click world to place. Right-click = Select. Drag to move, Del removes. F3 toggles."
-	help.add_theme_font_size_override("font_size", 11)
-	help.add_theme_color_override("font_color", Color(1, 1, 1, 0.55))
+	help.text = "CLICK place   RMB cancel   DRAG move   DEL remove"
+	help.add_theme_font_size_override("font_size", 10)
+	help.add_theme_color_override("font_color", MUTED)
 	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	col.add_child(help)
+	fv.add_child(help)
 
 
 func _toggle(parent: Node, text: String, cb: Callable) -> Button:
@@ -361,14 +521,11 @@ func _toggle(parent: Node, text: String, cb: Callable) -> Button:
 	b.toggle_mode = true
 	b.focus_mode = Control.FOCUS_NONE
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.custom_minimum_size = Vector2(0, 38)
+	_skin(b, "tool")
 	b.pressed.connect(cb)
 	parent.add_child(b)
 	return b
-
-
-func _style_button(b: Button) -> void:
-	b.add_theme_color_override("font_color", Color.WHITE)
-	b.add_theme_color_override("font_hover_color", ACCENT)
 
 
 func _cycle_snap() -> void:
@@ -376,16 +533,31 @@ func _cycle_snap() -> void:
 	_refresh()
 
 
+func _armed_button(armed_flag: String) -> void:
+	set(armed_flag, true)
+	_refresh()
+	get_tree().create_timer(2.5).timeout.connect(func():
+		set(armed_flag, false)
+		_refresh())
+
+
 func _clear_pressed() -> void:
 	if not _clear_armed:
-		_clear_armed = true
-		_refresh()
-		get_tree().create_timer(2.5).timeout.connect(func():
-			_clear_armed = false
-			_refresh())
+		_armed_button("_clear_armed")
 		return
 	_clear_armed = false
 	placed.clear_all()
+	selected = {}
+	_refresh()
+
+
+## Back to the original arena: the five starting trees, everything you built removed.
+func _reset_pressed() -> void:
+	if not _reset_armed:
+		_armed_button("_reset_armed")
+		return
+	_reset_armed = false
+	placed.load_dict({"version": 1, "items": []})
 	selected = {}
 	_refresh()
 
@@ -397,7 +569,12 @@ func _refresh() -> void:
 		(_tool_buttons[k] as Button).set_pressed_no_signal(tool == k)
 	for id: String in _palette_buttons:
 		(_palette_buttons[id] as Button).set_pressed_no_signal(tool == "place" and place_id == id)
-	snap_button.text = "Snap: %s" % (str(snap) if snap > 0 else "off")
-	clear_button.text = "Sure? click again" if _clear_armed else "Clear all"
-	var what := "placing %s" % PlacedObjects.CATALOG[place_id].label if tool == "place" else ("erase" if tool == "erase" else ("selected %s" % PlacedObjects.CATALOG[selected.id].label if not selected.is_empty() else "select / move"))
-	status.text = "%d placed | %s" % [placed.objects.size(), what]
+	snap_button.text = "SNAP  %s" % (str(snap) if snap > 0 else "OFF")
+	clear_button.text = "SURE?" if _clear_armed else "CLEAR ALL"
+	reset_button.text = "SURE?" if _reset_armed else "RESET"
+	inspector.visible = not selected.is_empty()
+	if not selected.is_empty():
+		inspector_name.text = str(PlacedObjects.CATALOG[selected.id].label)
+		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
+	var what := "PLACING  %s" % str(PlacedObjects.CATALOG[place_id].label).to_upper() if tool == "place" else ("ERASE MODE" if tool == "erase" else ("SELECT / MOVE"))
+	status.text = "%d OBJECTS   |   %s" % [placed.objects.size(), what]
