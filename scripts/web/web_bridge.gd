@@ -25,8 +25,6 @@ func _ready() -> void:
 	apply_camera_query(search)
 	# ?camera_impact=off|reduced|on (hit kick); without it "reduced" when the browser asks for reduced motion.
 	apply_camera_impact_query(search, bool(JavaScriptBridge.eval("!!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)", true)))
-	# ?camera_director=off|reduced|on (combat zoom director); same reduced-motion default as the impact kick.
-	apply_camera_director_query(search, bool(JavaScriptBridge.eval("!!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)", true)))
 	_window = JavaScriptBridge.get_interface("window")
 	_state = JavaScriptBridge.create_object("Object")
 	_window.__SHINOBI_STATE__ = _state
@@ -66,11 +64,6 @@ func _process(delta: float) -> void:
 	_state.cfx_offset_y = cfx["cfx_offset_y"]
 	_state.cfx_peak_px = cfx["cfx_peak_px"]
 	_state.cfx_count = cfx["cfx_count"]
-	var cam_dir := CombatCameraDirector.telemetry()
-	_state.cam_dir_event = cam_dir["cam_dir_event"]
-	_state.cam_dir_active = cam_dir["cam_dir_active"]
-	_state.cam_dir_zoom_delta = cam_dir["cam_dir_zoom_delta"]
-	_state.cam_dir_event_count = cam_dir["cam_dir_event_count"]
 	var lock := _player.get_node_or_null("LockOn") as PlayerLockOn
 	_state.target_locked = lock != null and lock.valid_target()
 	var enemy := get_tree().get_first_node_in_group("enemy") as Bandit
@@ -113,9 +106,3 @@ static func apply_camera_impact_query(query: String, prefers_reduced_motion: boo
 ## Camera framing published in __SHINOBI_STATE__: zoom and the visible world size (viewport / zoom).
 static func camera_framing(zoom: float, viewport_size: Vector2) -> Dictionary:
 	return {"zoom": zoom, "view_w": viewport_size.x / zoom, "view_h": viewport_size.y / zoom}
-
-
-## Select the combat camera director mode from the page's query string.
-## The URL wins; without it uses reduced-motion preference, else on.
-static func apply_camera_director_query(query: String, prefers_reduced_motion: bool = false) -> void:
-	CombatCameraDirector.apply_mode(CombatCameraDirector.boot_mode(query, prefers_reduced_motion))

@@ -1,7 +1,7 @@
 # ORCHA — P0 Body Flicker In-Game Preview (Owner Directive)
 
 - **Agent:** Orcha
-- **Status:** REVIEW -- in-game demo implemented and tests passing; Web export + live browser smoke test pending
+- **Status:** REVIEW -- Godot 742/0, Web export PASS, browser smoke PASS (11/11); live Pages deploy pending PR merge
 - **Priority:** P0
 - **Date:** 2026-10-21
 - **Owner directive:** "make orcha do it its his project"

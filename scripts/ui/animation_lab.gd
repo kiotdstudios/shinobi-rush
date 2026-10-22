@@ -620,14 +620,13 @@ func impact_demo(kind: String) -> void:
 				get_tree().create_timer(i * BURST_GAP_S).timeout.connect(func() -> void: CameraImpact.light_hit(dir))
 
 
-## Body Flicker visual demo (B key or button). Only fires while the lab is open.
 ## speed_scale: 1.0 = normal (~417 ms total), 0.5 = half speed (~834 ms).
 func flicker_demo(speed_scale: float = 1.0) -> void:
 	if not lab_on or player == null:
 		return
 	BodyFlickerDemo.trigger(player, speed_scale)
-	## Fire the JUTSU camera event so the director zooms in on the effect
-	CombatCameraDirector.notify(CombatCameraDirector.EventKind.JUTSU, {"target_pos": player.global_position})
+	## CombatCameraDirector.notify(JUTSU) intentionally omitted -- camera director lives in a
+	## separate PR (orcha/dynamic-combat-camera). Wire it when that PR merges.
 
 func _unhandled_input(event: InputEvent) -> void:
 	if player == null:
