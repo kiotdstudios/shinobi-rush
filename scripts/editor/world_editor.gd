@@ -38,6 +38,7 @@ var _category_sections: Dictionary = {}
 var palette_scroll: ScrollContainer
 var _clear_armed := false
 var _js_state: JavaScriptObject
+var _hud_buttons: Dictionary = {}
 ## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
 const DIM_TYPES: Array[String] = ["Trees", "Walls & blocks", "Temple walls", "Grass", "Tall grass"]
@@ -85,6 +86,9 @@ func _ready() -> void:
 
 
 func _process(_d: float) -> void:
+	var hud := hud_bar()
+	if hud != null and hud.edit_mode != open:
+		hud.set_edit_mode(open)
 	if not _settings_rows_added and SettingsPanel.instance() != null:
 		_add_settings_rows(SettingsPanel.instance())
 	if _js_state != null:
@@ -129,6 +133,9 @@ func set_open(v: bool) -> void:
 	_set_camera_free(v)
 	panel.visible = v
 	tab.visible = not v
+	var hud := hud_bar()
+	if hud != null:
+		hud.set_edit_mode(v)
 	if not v:
 		dragging = false
 		selected = {}
@@ -191,6 +198,13 @@ func _unhandled_input(event: InputEvent) -> void:
 			save_now()
 			get_viewport().set_input_as_handled()
 			return
+		if open and event.keycode in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN] and hud_bar() != null and hud_bar().selected_element != "":
+			var step := 10.0 if event.shift_pressed else 1.0
+			var dir := Vector2(float(event.keycode == KEY_RIGHT) - float(event.keycode == KEY_LEFT), float(event.keycode == KEY_DOWN) - float(event.keycode == KEY_UP))
+			hud_bar().move_element(hud_bar().selected_element, dir * step)
+			hud_bar().save_layout()
+			get_viewport().set_input_as_handled()
+			return
 		if open and (event.keycode == KEY_DELETE or event.keycode == KEY_BACKSPACE) and not selected.is_empty():
 			delete_selected()
 			get_viewport().set_input_as_handled()
@@ -208,13 +222,18 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif mb.button_index == MOUSE_BUTTON_LEFT:
 			if mb.pressed:
-				press(_mouse_world())
+				if not press_hud(get_viewport().get_mouse_position()):
+					press(_mouse_world())
+			elif hud_bar() != null and hud_bar().dragging_element:
+				release_hud()
 			else:
 				release()
 			get_viewport().set_input_as_handled()
 		elif mb.button_index == MOUSE_BUTTON_RIGHT and mb.pressed:
 			set_tool("select")
 			get_viewport().set_input_as_handled()
+	elif event is InputEventMouseMotion and hud_bar() != null and hud_bar().dragging_element:
+		hud_bar().drag_at(get_viewport().get_mouse_position())
 	elif event is InputEventMouseMotion and dragging:
 		drag_to(_mouse_world())
 
@@ -248,6 +267,41 @@ func pan_by(screen_delta: Vector2) -> void:
 	if cam != null:
 		cam.offset -= screen_delta / cam.zoom
 		cam.force_update_scroll()
+
+
+## The player's HUD (HealthBar canvas layer), or null when there is no player yet.
+func hud_bar() -> HealthBar:
+	var p := get_tree().get_first_node_in_group("player") if is_inside_tree() else null
+	return p.get_node_or_null("HealthBar") as HealthBar if p != null else null
+
+
+## Builder, select tool: a click on a HUD piece (bars, avatar, pips, ability slots) picks it up instead of a world object.
+func press_hud(screen: Vector2) -> bool:
+	var hud := hud_bar()
+	if not open or tool != "select" or hud == null:
+		return false
+	if not hud.press_at(screen):
+		return false
+	selected = {}
+	_refresh()
+	return true
+
+
+func release_hud() -> void:
+	var hud := hud_bar()
+	if hud != null:
+		hud.release_drag()
+	_refresh()
+
+
+func select_hud(id: String) -> void:
+	var hud := hud_bar()
+	if hud == null:
+		return
+	set_tool("select")
+	hud.select_element("" if hud.selected_element == id else id)
+	_flash("%s: drag it, or arrow keys (Shift = 10px)" % HealthBar.ELEMENT_NAMES[id] if hud.selected_element == id else "HUD piece deselected")
+	_refresh()
 
 
 func press(world: Vector2) -> void:
@@ -721,6 +775,35 @@ func _build_ui() -> void:
 	del.pressed.connect(delete_selected)
 	ib.add_child(del)
 
+	# HUD pieces: pick one here (or click it in the game view) and drag it where it should go
+	_section(outer, "HUD pieces")
+	var hud_grid := GridContainer.new()
+	hud_grid.columns = 2
+	hud_grid.add_theme_constant_override("h_separation", 4)
+	hud_grid.add_theme_constant_override("v_separation", 4)
+	outer.add_child(hud_grid)
+	for id in HealthBar.ELEMENTS:
+		var hb := Button.new()
+		hb.text = HealthBar.ELEMENT_NAMES[id]
+		hb.toggle_mode = true
+		hb.focus_mode = Control.FOCUS_NONE
+		hb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		hb.clip_text = true
+		_skin(hb)
+		hb.add_theme_font_size_override("font_size", 11)
+		hb.pressed.connect(select_hud.bind(id))
+		hud_grid.add_child(hb)
+		_hud_buttons[id] = hb
+	var hud_reset := Button.new()
+	hud_reset.text = "RESET HUD LAYOUT"
+	hud_reset.focus_mode = Control.FOCUS_NONE
+	_skin(hud_reset)
+	hud_reset.pressed.connect(func():
+		if hud_bar() != null:
+			hud_bar().reset_layout()
+		_flash("HUD layout reset"))
+	outer.add_child(hud_reset)
+
 	# save row
 	var saves := HBoxContainer.new()
 	saves.add_theme_constant_override("separation", 6)
@@ -889,6 +972,9 @@ func _refresh() -> void:
 	snap_button.text = "GRASS GRID" if snap > 0 and _grass_tool() else "SNAP  %s" % (str(snap) if snap > 0 else "OFF")
 	clear_button.text = "SURE?" if _clear_armed else "CLEAR ALL"
 	reset_button.text = "SURE?" if _reset_armed else "RESET"
+	var hud := hud_bar()
+	for id: String in _hud_buttons:
+		(_hud_buttons[id] as Button).set_pressed_no_signal(hud != null and hud.selected_element == id)
 	inspector.visible = not selected.is_empty()
 	if not selected.is_empty():
 		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
