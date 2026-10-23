@@ -9,11 +9,11 @@ extends Node2D
 const DIR := "res://assets/vfx/substitution/"
 const JSON_PATH := "res://assets/vfx/substitution/substitution.json"
 const ARRIVAL_DELAY := 0.08
-const LOG_LIFETIME := 2.65
-const LOG_FALL_START := 0.38
-const LOG_IMPACT := 1.12
-const LOG_POOF := 1.72
-const LOG_SMOKE_END := 2.65
+const LOG_LIFETIME := 2.95
+const LOG_FALL_START := 0.48
+const LOG_IMPACT := 1.02
+const LOG_POOF := 1.88
+const LOG_SMOKE_END := 2.95
 const FADE := 0.4
 const Z := 20
 
@@ -158,19 +158,28 @@ func _update_log_motion() -> void:
 	if _log_sprite == null or not is_instance_valid(_log_sprite):
 		return
 	if _age < LOG_FALL_START:
+		# Big anticipation: a violent stagger followed by a split-second hang.
 		var t := _age / LOG_FALL_START
-		_log_sprite.rotation = sin(t * TAU * 2.7) * 0.095 * t
-		_log_sprite.position.x = sin(t * TAU * 2.7) * 3.0 * t
+		var shake := sin(t * TAU * 4.0) * (1.0 - t * 0.3)
+		_log_sprite.rotation = shake * 0.23 + sin(t * PI) * -0.15
+		_log_sprite.position = Vector2(shake * 6.0, -sin(t * PI) * 9.0)
+		_log_sprite.scale = Vector2(1.0 + 0.12 * sin(t * PI), 1.0 - 0.13 * sin(t * PI))
 	elif _age < LOG_IMPACT:
+		# Quick airborne whip and near-horizontal slam; acceleration increases
+		# sharply in the last half rather than gently easing to the floor.
 		var t := clampf((_age - LOG_FALL_START) / (LOG_IMPACT - LOG_FALL_START), 0.0, 1.0)
-		var eased := t * t * (3.0 - 2.0 * t)
-		_log_sprite.rotation = lerpf(0.0, 1.28, eased) + sin(t * TAU * 2.0) * (1.0 - t) * 0.075
-		_log_sprite.position = Vector2(9.0 * eased, 10.0 * eased - sin(t * PI) * 9.0)
+		var drop := t * t
+		_log_sprite.rotation = lerpf(-0.12, 1.78, drop) + sin(t * PI) * 0.22
+		_log_sprite.position = Vector2(25.0 * drop, -25.0 * sin(t * PI) + 16.0 * drop)
+		_log_sprite.scale = Vector2(1.0 + 0.16 * t, 1.0 - 0.12 * t)
 	elif _age < LOG_POOF:
+		# Crunch on impact, rebound, then two increasingly tiny rattles.
 		var t := (_age - LOG_IMPACT) / (LOG_POOF - LOG_IMPACT)
-		var bounce := absf(sin(t * PI * 2.5)) * exp(-4.5 * t)
-		_log_sprite.rotation = 1.28 + bounce * 0.13
-		_log_sprite.position = Vector2(9.0 + t * 3.0, 10.0 - bounce * 5.0)
+		var bounce := absf(sin(t * PI * 4.0)) * exp(-5.2 * t)
+		var impact_compress := exp(-22.0 * t)
+		_log_sprite.rotation = 1.78 + bounce * 0.25 - impact_compress * 0.12
+		_log_sprite.position = Vector2(25.0 + t * 5.0, 16.0 - bounce * 15.0 + impact_compress * 5.0)
+		_log_sprite.scale = Vector2(1.0 + impact_compress * 0.35, 1.0 - impact_compress * 0.35)
 		_log_sprite.modulate = Color.WHITE
 	else:
 		_log_sprite.visible = false
@@ -178,19 +187,21 @@ func _update_log_motion() -> void:
 			_log_body.queue_free()
 			_log_body = null
 
-
 ## Pixel-like smoke puffs, small sparks and ground impact ring. Drawn in
 ## world coordinates through to_local so FX stays anchored even with a
 ## transformed parent. No random() per frame: reproducible puff trajectories.
 func _draw() -> void:
 	var p := to_local(_log_foot)
-	if _age >= LOG_IMPACT and _age < LOG_IMPACT + 0.36:
-		var t := (_age - LOG_IMPACT) / 0.36
-		draw_arc(p + Vector2(10, -3), lerpf(5, 34, t), 0.0, TAU, 22, Color(0.78, 0.82, 0.88, (1.0 - t) * 0.55), 2.0)
-		for i in 7:
-			var a := TAU * float(i) / 7.0
-			var q := p + Vector2(10, -4) + Vector2(cos(a) * 23.0 * t, sin(a) * 10.0 * t)
-			draw_rect(Rect2(q, Vector2(3, 3)), Color(0.91, 0.87, 0.76, 1.0 - t))
+	if _age >= LOG_IMPACT and _age < LOG_IMPACT + 0.52:
+		var t := (_age - LOG_IMPACT) / 0.52
+		draw_arc(p + Vector2(25, 3), lerpf(7, 57, t), 0.0, TAU, 22, Color(0.78, 0.82, 0.88, (1.0 - t) * 0.55), 2.0)
+		for i in 13:
+			var a := TAU * float(i) / 13.0
+			var q := p + Vector2(25, 3) + Vector2(cos(a) * 52.0 * t, sin(a) * 22.0 * t - sin(t * PI) * 14.0)
+			draw_rect(Rect2(q, Vector2(4, 4)), Color(0.91, 0.87, 0.76, 1.0 - t))
+	if _age >= LOG_IMPACT and _age < LOG_IMPACT + 0.14:
+		var flash := 1.0 - (_age - LOG_IMPACT) / 0.14
+		draw_circle(p + Vector2(25, 3), 17.0 * flash, Color(1.0, 0.95, 0.78, flash * 0.48))
 	if _age < LOG_POOF or _age >= LOG_SMOKE_END:
 		return
 	var t := clampf((_age - LOG_POOF) / (LOG_SMOKE_END - LOG_POOF), 0.0, 1.0)
