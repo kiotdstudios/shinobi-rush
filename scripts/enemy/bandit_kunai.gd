@@ -2,12 +2,13 @@ class_name BanditKunai
 extends Node2D
 ## Thrown kunai fired by the Bandit's ranged attack. Flies straight along the aim direction chosen when
 ## the throw's aim froze, stops on walls, and hands a landed hit to `Player.take_hit` (so jump / dodge
-## evade it and a timed Substitution swallows it). The body is drawn procedurally for now.
+## evade it and a timed Substitution swallows it). Uses the shared production black kunai asset.
 
 const SPEED := 520.0
 const MAX_RANGE := 560.0
 const HIT_RADIUS := 22.0
 const DRAW_LIFT := Vector2(0, -30)  ## drawn at hand height, travels along the ground plane
+const TEXTURE := preload("res://assets/weapons/kunai/black_kunai.png")
 
 var dir: Vector2 = Vector2.RIGHT
 var speed: float = SPEED
@@ -32,6 +33,17 @@ static func spawn(parent: Node, from: Vector2, aim: Vector2, who: Node2D, tgt: N
 	kn.global_position = from
 	kn.z_index = 5
 	return kn
+
+
+func _ready() -> void:
+	var body := Sprite2D.new()
+	body.name = "BlackKunai"
+	body.texture = TEXTURE
+	body.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	body.position = DRAW_LIFT
+	body.offset = Vector2(0, 1)  # texture blade axis is at y=31 on its 64px canvas
+	body.rotation = dir.angle()  # source blade points +X; fixed throw aim drives every heading
+	add_child(body)
 
 
 func _physics_process(delta: float) -> void:
@@ -77,11 +89,3 @@ func step(delta: float) -> void:
 		queue_free()
 
 
-func _draw() -> void:
-	draw_set_transform(DRAW_LIFT, dir.angle(), Vector2.ONE)
-	draw_circle(Vector2(0, 0), 1.0, Color(0, 0, 0, 0))
-	draw_line(Vector2(-16, 0), Vector2(-4, 0), Color(0.82, 0.86, 0.9, 0.25), 2.0)  # motion streak
-	draw_colored_polygon(PackedVector2Array([Vector2(-3, -2.5), Vector2(10, 0), Vector2(-3, 2.5)]), Color(0.78, 0.82, 0.88))
-	draw_line(Vector2(-3, 0), Vector2(8, 0), Color(1, 1, 1, 0.8), 1.0)
-	draw_rect(Rect2(-9, -1.6, 6, 3.2), Color(0.72, 0.1, 0.1))
-	draw_arc(Vector2(-11, 0), 2.6, 0.0, TAU, 10, Color(0.78, 0.82, 0.88), 1.2)
