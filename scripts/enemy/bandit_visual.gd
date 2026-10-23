@@ -60,26 +60,30 @@ func _process(_delta: float) -> void:
 	if not actor.visible:weapon_layer.visible=false
 	if actor.visible:
 		var combat_pose := _show_kunai_pose()
+		var throw_progress := bandit.get_throw_progress()
 		var moving := bandit.state in MOVING_STATES and bandit.velocity.length_squared() > 1.0
 		# Knockback is not a running cycle. Keep the struck pose through hurt/hitstop.
 		if not combat_pose and (bandit.state != Bandit.State.HIT_REACT or actor.set_ref == null):
-			var action := "idle"
-			if moving:
-				action = ("sprint" if bandit.is_sprinting else "run") if approach_animation == "auto" else approach_animation
-			# Preserve gait phase across octant and run/sprint changes; idle still starts deliberately.
-			var preserve := moving and actor.anim_id in ["run", "sprint"]
-			var phase := 0.0
-			if preserve:
-				phase = (actor.sprite.frame + actor.sprite.frame_progress) / float(actor.sprite.sprite_frames.get_frame_count(actor.sprite.animation))
-			actor.show_animation(_art_set, action, SpriteSet.dir_name(bandit.facing8))
-			if preserve:
-				var frame := phase * actor.sprite.sprite_frames.get_frame_count(actor.sprite.animation)
-				actor.sprite.set_frame_and_progress(int(frame), frame - floorf(frame))
+			if throw_progress >= 0.0 and _art_set.animations.has("throw"):
+				actor.show_animation_at(_art_set, "throw", SpriteSet.dir_name(bandit.facing8), throw_progress)
+			else:
+				var action := "idle"
+				if moving:
+					action = ("sprint" if bandit.is_sprinting else "run") if approach_animation == "auto" else approach_animation
+				# Preserve gait phase across octant and run/sprint changes; idle still starts deliberately.
+				var preserve := moving and actor.anim_id in ["run", "sprint"]
+				var phase := 0.0
+				if preserve:
+					phase = (actor.sprite.frame + actor.sprite.frame_progress) / float(actor.sprite.sprite_frames.get_frame_count(actor.sprite.animation))
+				actor.show_animation(_art_set, action, SpriteSet.dir_name(bandit.facing8))
+				if preserve:
+					var frame := phase * actor.sprite.sprite_frames.get_frame_count(actor.sprite.animation)
+					actor.sprite.set_frame_and_progress(int(frame), frame - floorf(frame))
 		# Slow walking states reuse the run cycle at a matching cadence (no dedicated walk art yet).
 		var cadence := 1.0
 		if moving and not bandit.is_sprinting and bandit.state != Bandit.State.EVADE:
 			cadence = clampf(bandit.velocity.length() / bandit.move_speed, 0.4, 1.0)
-		if combat_pose:actor.sprite.pause()
+		if combat_pose or throw_progress>=0.0:actor.sprite.pause()
 		else:actor.set_playback(cadence, bandit._hitstop_timer > 0.0 or bandit.state == Bandit.State.HIT_REACT)
 		var tint := Color.WHITE
 		var tell := bandit.get_attack_progress()

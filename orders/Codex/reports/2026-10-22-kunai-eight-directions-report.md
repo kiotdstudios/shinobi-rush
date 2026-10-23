@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-22-kunai-eight-directions.md
 - Date:2026-10-22; continuation2026-10-23
 - Final status: REVIEW — local acceptance passed; PR/publication pending
-- Commit / PR: Not committed; all pre-commit acceptance checks now passed.
+- Commit / PR: Initial tested implementation fdddc7677c06d10728fc91c5d0b4d864908da6b9. Integration with main0c84e6f passed final local checks; merge commit/PR pending.
 
 ## Work completed
 Owner rejected both chakra layers and paused that work. PR107 was converted to draft with an explicit no-merge title/body; no chakra code/assets are included here.
@@ -62,3 +62,16 @@ None required to finish delivery. New facings are ready for owner visual review 
 
 ## Outstanding work / next steps
 Commit/push, required CI/PR integration, Pages publication and exact-SHA live feature/gameplay smoke. Add actual commit/PR/deployment evidence in a report update. Keep chakra paused. Other queued bandit action-art requests outside these attacks/guard remain separate.
+
+## Safe integration —2026-10-23
+Integrated main0c84e6f (Aki HUD/dust/substitution/bandit throw) with a pending merge. Resolved two overlaps by preserving the incoming eight-direction throw manifest/action alongside all shared melee clips, and preserving the throw visual branch alongside melee phase rendering. Added a cold-cache throw transition test. That test caught incoming has_frames() incorrectly testing the lazy cache rather than animation existence; switched to animations.has() and kept explicit throw progress paused. No throw AI/projectile/damage/controller changes.
+
+- Import: python scripts/ci/godot_ci.py import --project . --log-dir build/kunai-eight-import-substitution — PASS.
+- Validation: python scripts/ci/godot_ci.py validate-resources --project . --log-dir build/kunai-eight-validation-substitution — PASS;88 scripts,9 scenes,0 failures.
+- First combined native run: python scripts/ci/godot_ci.py tests --project . --log-dir build/kunai-eight-tests-substitution —1826 passed,1 failed (new cold-cache throw check);0 engine errors. Fixed the caught lazy-cache lookup; full rerun PASS1827 passed,0 failed,0 engine errors in build/kunai-eight-tests-final-merged/tests-builtin.log.
+- New Web export: python scripts/ci/godot_ci.py export --project . --out ../kunai-eight-publish-web --log-dir build/kunai-eight-export-publish — PASS.
+- Combined browser review: KUNAI_DIR=../kunai-eight-integrated-web KUNAI_OUT=build/kunai-eight-review-integrated node docs/visuals/kunai-eight/browser-proof.mjs — PASS192 paired poses, controls/layers/cache,0 errors.
+- Gameplay driver was briefly made to require an AI throw during a route that only saw melee (no throw opportunity); removed that route assumption. Native cold-cache transition test exercises throw rendering directly. Actual-key melee/cleanup/bandit-swing rerun on publish export PASS in build/kunai-eight-gameplay-publish/gameplay.json;0 browser runtime errors.
+
+- Final export metadata/check: finalize-export and check-export against base0c84e6f50bc0b7f106e1c84f2bcfc51ddf607780 on ../kunai-eight-publish-web — PASS;41MiB,1530 sprite PNG imports packed. Base label is local verification only; deployed build will be checked against exact merge SHA.
+- Order validation: python scripts/ci/validate_orders.py — PASS.

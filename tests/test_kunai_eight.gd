@@ -62,6 +62,12 @@ func run(ck: Callable, root: Node) -> void:
 		visual._process(0)
 		ck.call("kunai eight: bandit second swing binding "+dir,visual.actor.anim_id=="light2" and visual.actor.current_frame()==3)
 	ck.call("kunai eight: same renderer and black kunai, distinct bodies",player.visual.weapon_layer.get_script()==visual.weapon_layer.get_script() and player.visual.weapon_layer.weapon.texture==visual.weapon_layer.weapon.texture and player.visual.actor.set_ref.id!=visual.actor.set_ref.id)
+	enemy.state=Bandit.State.ATTACK
+	enemy.atk_phase=Bandit.AtkPhase.THROW_WINDUP
+	enemy._atk_timer=float(enemy.profile.get("throw_windup",0.42))*.5
+	visual._process(0)
+	ck.call("kunai eight: incoming throw keeps its own art and clears melee weapon",visual.actor.anim_id=="throw" and not visual.weapon_visible() and not visual.actor.fallback)
+	visual.show_attack_pose("light2","SW","active",.5)
 	enemy.state=Bandit.State.HIT_REACT
 	var held_frame := visual.actor.current_frame()
 	var held_grip := visual.weapon_layer.grip.position
