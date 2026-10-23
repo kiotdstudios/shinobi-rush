@@ -9,7 +9,7 @@ extends CanvasLayer
 const DIR := "res://assets/ui/hud/"
 const ORIGIN := Vector2(8.0, 6.0)  ## top-left of the portrait frame
 const PORTRAIT_SIZE := Vector2(96.0, 96.0)
-const AVATAR_POS := Vector2(16.0, 16.0)  ## avatar (64x64) inside the frame
+const AVATAR_POS := Vector2(8.0, -4.0)  ## avatar (80x80) over the frame; the head pops out above the diamond
 const BAR_X := 104.0
 const HP_Y := 12.0
 const CHAKRA_Y := 40.0
@@ -105,13 +105,16 @@ func _draw_hud() -> void:
 	var o := ORIGIN
 	var back := PackedVector2Array([o + Vector2(48, 8), o + Vector2(88, 48), o + Vector2(48, 88), o + Vector2(8, 48)])
 	_canvas.draw_colored_polygon(back, Color(0.09, 0.07, 0.06, 1.0))
-	var av_origin := o + AVATAR_POS
-	var diamond := PackedVector2Array([o + Vector2(48, 16), o + Vector2(80, 48), o + Vector2(48, 80), o + Vector2(16, 48)])
-	var uvs := PackedVector2Array()
-	for p in diamond:
-		uvs.append((p - av_origin) / 64.0)
-	_canvas.draw_colored_polygon(diamond, Color.WHITE, uvs, _tex["portrait_avatar"])
 	_canvas.draw_texture(_tex["portrait_frame"], o)
+	# the avatar is drawn over the frame: free above the diamond's middle (head breaks out of the frame), clipped to the opening below
+	var av_origin := o + AVATAR_POS
+	var clip := PackedVector2Array([Vector2(8, -4), Vector2(88, -4), Vector2(88, 48), Vector2(80, 48), Vector2(52, 76), Vector2(44, 76), Vector2(16, 48), Vector2(8, 48)])
+	var pts := PackedVector2Array()
+	var uvs := PackedVector2Array()
+	for p in clip:
+		pts.append(o + p)
+		uvs.append((o + p - av_origin) / 80.0)
+	_canvas.draw_colored_polygon(pts, Color.WHITE, uvs, _tex["portrait_avatar"])
 	# bars
 	_bar(HP_Y, trail, fraction, "hp_fill", fill_color(), label_text)
 	_bar(CHAKRA_Y, chakra_fraction, chakra_fraction, "chakra_fill", COL_FILL, chakra_text)
