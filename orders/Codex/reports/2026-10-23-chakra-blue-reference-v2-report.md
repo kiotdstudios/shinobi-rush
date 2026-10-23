@@ -44,3 +44,6 @@ None required to deliver the candidate. Owner visual review is the next decision
 
 ## Outstanding work / next steps
 Committed/pushed and opened draft art-review PR118 with direct normal/half-speed GIF links. Public half-speed GIF downloaded back and SHA256 matched the verified local artifact. Production integration stays separate until owner feedback. Live deployment: not applicable; no runtime scene/script references the new assets. The rejected charging body remains untouched.
+
+## Owner rejection and Desktop archive —2026-10-23
+Owner failed V2 visuals and requested V1/V2 be moved to Desktop for a later free giveaway. PR118 is closed as REJECTED / ARCHIVED. V2 assets and previews were relocated to Desktop/Shinobi Rush - Chakra VFX Giveaway - 2026-10-23/Private Project Archive/V2 after verifying all226 moved file hashes. Standalone giveaway folders/ZIPs exclude character sprites and supplied references. V1 snapshot and96 standalone VFX frames were also archived;273 source/export files were verified during packaging. No new game deployment applies. New body work for player and bandit is on codex/charge-body-revision.

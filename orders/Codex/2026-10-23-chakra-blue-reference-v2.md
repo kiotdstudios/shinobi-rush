@@ -21,3 +21,6 @@ Builtin image generation for creative artwork; deterministic extraction/chroma/n
 
 ## Review delivery
 Commit bb8dde498b526a9fe56a13fe9cff5994fc2ec504. All96 frame/GIF/native-load/browser checks passed. Public normal/half-speed previews and asset ZIP in PR118. No runtime binding or live game change; awaiting owner visual feedback.
+
+## Owner outcome — REJECTED / ARCHIVED
+V2 art failed owner review. PR118 is closed; do not merge/deploy. V1/V2 have verified standalone Desktop giveaway packs and private originals. User redirected to new player/bandit charge-body animation.
