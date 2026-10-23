@@ -63,6 +63,17 @@ func test_health(p: PlayerController) -> void:
 	ck.call("hud: chakra_changed updates the chakra bar", is_equal_approx(bar.chakra_fraction, 0.64) and bar.chakra_text == "Chakra 64 / 100", bar.chakra_text)
 	p.substitution_changed.emit(2, 3)
 	ck.call("hud: substitution_changed updates the pips", bar.pips == 2 and bar.max_pips == 3, str(bar.pips))
+	ck.call("hud: substitution recharge is 20 seconds", is_equal_approx(PlayerController.SUB_COOLDOWN, 20.0))
+	ck.call("hud: nothing recharging reads as full progress", is_equal_approx(p.substitution_progress(), 1.0) and is_equal_approx(bar.sub_progress, 1.0))
+	var keep: Array = p._sub_cooldowns.duplicate()
+	p._sub_cooldowns.assign([15.0, 5.0])
+	ck.call("hud: progress follows the soonest charge (5s left of 20 = 0.75)", is_equal_approx(p.substitution_progress(), 0.75), str(p.substitution_progress()))
+	p._sub_cooldowns.assign(keep)
+	var before_pips: int = bar.pips
+	p.substitution_changed.emit(0, 3)
+	p.substitution_changed.emit(1, 3)
+	ck.call("hud: a refilled charge lights its pip (flash) and the slot reads recharging until all are back", bar.pips == 1 and bar._flash[0] > 0.0 and bar.pips < bar.max_pips)
+	p.substitution_changed.emit(before_pips, 3)
 	p.chakra_changed.emit(100.0, 100.0)
 	p.substitution_changed.emit(3, 3)
 

@@ -132,7 +132,7 @@ var substitution_charges: int = MAX_SUBSTITUTIONS
 ## Each success spends one charge and starts that charge's OWN cooldown; the others stay usable.
 signal substitution_triggered(old_pos: Vector2, new_pos: Vector2)
 const SUB_WINDOW := 0.25  ## L2 pressed up to this long BEFORE a hit lands counts as a timed evade
-const SUB_COOLDOWN := 12.0  ## PROVISIONAL: per-charge recharge seconds (design doc gives no number)
+const SUB_COOLDOWN := 20.0  ## per-charge recharge seconds (set to 20 by the designer)
 const SUB_INVULN := 0.5  ## grace after a substitution so a simultaneous second hit cannot land
 const SUB_BEHIND_DIST := 72.0  ## how far behind the attacker the player reappears
 var _sub_buffer: float = 0.0
@@ -656,6 +656,16 @@ func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: 
 		downed.emit()
 		respawn()
 	return true
+
+
+## 0..1 refill of the charge that comes back first (1.0 when no charge is recharging). Drives the HUD slot.
+func substitution_progress() -> float:
+	if _sub_cooldowns.is_empty():
+		return 1.0
+	var soonest: float = _sub_cooldowns[0]
+	for c in _sub_cooldowns:
+		soonest = minf(soonest, c)
+	return clampf(1.0 - soonest / SUB_COOLDOWN, 0.0, 1.0)
 
 
 func _tick_substitution(delta: float) -> void:
