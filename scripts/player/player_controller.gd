@@ -18,7 +18,8 @@ signal health_changed(current: float, maximum: float)
 signal chakra_changed(current: float, maximum: float)
 ## Substitution charges (shown as pips on the HUD). Only the stat exists so far; the Substitution jutsu will spend them.
 signal substitution_changed(charges: int, maximum: int)
-signal downed  ## health reached 0 (the player is restored to full right after; there is no death screen yet)
+signal downed  ## health reached 0 (the player is respawned at the spawn point at full health right after; there is no death screen yet)
+signal respawned(at: Vector2)  ## emitted after a respawn has put the player back at `spawn_position`
 ## Currency changed (spent, or stolen by an enemy via lose_ryo() -- see Bandit._steal_ryo/is_worth_robbing).
 ## No player death/HP system exists here (locked RPG rules); this only tracks the stat.
 signal ryo_changed(new_amount: int)
@@ -117,6 +118,10 @@ const MAX_HEALTH := 100.0
 var max_health: float = MAX_HEALTH
 var health: float = MAX_HEALTH
 var times_downed: int = 0
+var spawn_position: Vector2 = Vector2.ZERO  ## where a downed player comes back; defaults to where the player started (set in _ready)
+const RESPAWN_INVULN := 1.5  ## grace after a respawn so enemies camping the spawn cannot instantly chain-down the player
+const RESPAWN_FADE_IN := 0.5
+var respawn_count: int = 0
 const MAX_CHAKRA := 100.0
 const MAX_SUBSTITUTIONS := 3
 var max_chakra: float = MAX_CHAKRA
@@ -155,6 +160,7 @@ var kunai_drawn: bool = false  ## true the instant `sensed_enemy` is non-null (r
 
 func _ready() -> void:
 	add_to_group("player")
+	spawn_position = global_position
 	# Collider comes from the shared footprint constant (the scene values mirror it).
 	var feet := $CollisionShape2D as CollisionShape2D
 	(feet.shape as RectangleShape2D).size = WorldScale.FOOTPRINT
@@ -648,7 +654,7 @@ func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: 
 	if health <= 0.0:
 		times_downed += 1
 		downed.emit()
-		restore_health(max_health)
+		respawn()
 	return true
 
 
@@ -730,6 +736,41 @@ func _substitution_spot_ok(p: Vector2) -> bool:
 
 
 ## Adds health (clamped to max_health). Returns the amount actually restored.
+## Puts a downed player back at `spawn_position` with full health, no leftover motion / action / combo
+## state and a short grace period. Safe to call any time (the hit path calls it when health reaches 0).
+func respawn() -> void:
+	dust.landing(global_position)
+	global_position = spawn_position
+	velocity = Vector2.ZERO
+	state = State.IDLE
+	_action_timer = 0.0
+	_dodge_buffer = 0.0
+	_jump_buffer = 0.0
+	_attack_buffer = 0.0
+	_sub_buffer = 0.0
+	_sub_reveal = 0.0
+	_attack_timer = 0.0
+	_attack_def = null
+	_combo_index = 0
+	_hit_targets.clear()
+	_dash_grace_timer = 0.0
+	_hitstop_timer = 0.0
+	_footstep_timer = 0.0
+	hit_flash_timer = 0.0
+	_flicker_hidden = false
+	_flicker_moved = false
+	visual.visible = true
+	_hit_invuln = RESPAWN_INVULN
+	var base := Color.WHITE
+	visual.modulate = Color(base.r, base.g, base.b, 0.0)
+	create_tween().tween_property(visual, "modulate:a", 1.0, RESPAWN_FADE_IN)
+	restore_health(max_health)
+	reset_camera()
+	dust.landing(global_position)
+	respawn_count += 1
+	respawned.emit(global_position)
+
+
 func restore_health(amount: float) -> float:
 	var before := health
 	health = clampf(health + maxf(amount, 0.0), 0.0, max_health)
