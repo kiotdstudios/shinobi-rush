@@ -1,0 +1,23 @@
+{
+  "result": "PASS",
+  "transparent_frames": 26,
+  "native_body_height_px": [
+    75,
+    75
+  ],
+  "body_palette_exact": true,
+  "clear_body_borders": true,
+  "effects_exact_health_geometry_and_alpha": true,
+  "body_timed_keys": 16,
+  "body_distinct_raster_poses": 7,
+  "gif_timing": {
+    "normal.gif": {
+      "frames": 84,
+      "duration_ms": 6000
+    },
+    "half-speed.gif": {
+      "frames": 84,
+      "duration_ms": 12000
+    }
+  }
+}
