@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-22-kunai-eight-directions.md
 - Date:2026-10-22; continuation2026-10-23
-- Final status: REVIEW — local acceptance passed; PR/publication pending
-- Commit / PR: Initial tested implementation fdddc7677c06d10728fc91c5d0b4d864908da6b9. Integration with main0c84e6f passed final local checks; merge commit/PR pending.
+- Final status: DONE — implemented, integrated, live verified; owner visual feedback remains welcome
+- Commit / PR: Initial tested implementation fdddc7677c06d10728fc91c5d0b4d864908da6b9. Integrated via merge8830e85e600acb3e97509ed3de8a61c9202b551c, PR115 https://github.com/kiotdstudios/shinobi-rush/pull/115.
 
 ## Work completed
 Owner rejected both chakra layers and paused that work. PR107 was converted to draft with an explicit no-merge title/body; no chakra code/assets are included here.
@@ -61,7 +61,7 @@ Environment: Windows PowerShell; Godot4.7.2 stable, Compatibility debug single-t
 None required to finish delivery. New facings are ready for owner visual review after publication; automated success does not imply visual approval.
 
 ## Outstanding work / next steps
-Commit/push, required CI/PR integration, Pages publication and exact-SHA live feature/gameplay smoke. Add actual commit/PR/deployment evidence in a report update. Keep chakra paused. Other queued bandit action-art requests outside these attacks/guard remain separate.
+No remaining work for this delivery. Keep chakra paused. Owner visual review of the new facings is not implied by automated checks. Other queued bandit action-art requests outside these attacks/guard remain separate.
 
 ## Safe integration —2026-10-23
 Integrated main0c84e6f (Aki HUD/dust/substitution/bandit throw) with a pending merge. Resolved two overlaps by preserving the incoming eight-direction throw manifest/action alongside all shared melee clips, and preserving the throw visual branch alongside melee phase rendering. Added a cold-cache throw transition test. That test caught incoming has_frames() incorrectly testing the lazy cache rather than animation existence; switched to animations.has() and kept explicit throw progress paused. No throw AI/projectile/damage/controller changes.
@@ -75,3 +75,15 @@ Integrated main0c84e6f (Aki HUD/dust/substitution/bandit throw) with a pending m
 
 - Final export metadata/check: finalize-export and check-export against base0c84e6f50bc0b7f106e1c84f2bcfc51ddf607780 on ../kunai-eight-publish-web — PASS;41MiB,1530 sprite PNG imports packed. Base label is local verification only; deployed build will be checked against exact merge SHA.
 - Order validation: python scripts/ci/validate_orders.py — PASS.
+
+## Published delivery —2026-10-23 06:25 UTC
+- PR115: https://github.com/kiotdstudios/shinobi-rush/pull/115 — merged after required validate-orders-and-project and godot-ci-gate succeeded. PR CI run39909594605 passed native/export/browser/controls/debug checks.
+- Tested head: cd33f9d96dd09b0905bad578eecf403c04f403c3. Public merge:8830e85e600acb3e97509ed3de8a61c9202b551c. git diff between these commits returned empty (the tested content is exactly the merged tree).
+- Main CI/deploy run39910384603: every job passed, including Pages publication and post-deploy live smoke.
+- Live review: https://kiotdstudios.github.io/shinobi-rush/?kunai=directions&v=8830e85 — both skins, all8 facings, half speed default.
+- Exact public build-info commit matched8830e85e600acb3e97509ed3de8a61c9202b551c. node scripts/ci/smoke/smoke.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 8830e85e600acb3e97509ed3de8a61c9202b551c --out-dir build/kunai-eight-live-smoke --label kunai-eight-live — PASS;9 served-file SHA256 hashes matched, ready/nonblank/input-effect checks passed,0 fatal console events. Evidence: build/kunai-eight-live-smoke/smoke-result.json (4 nonfatal environment warnings retained in console-log.json).
+- KUNAI_URL=https://kiotdstudios.github.io/shinobi-rush/ KUNAI_OUT=build/kunai-eight-live-review node docs/visuals/kunai-eight/browser-proof.mjs — PASS192 paired poses,8 directions, exact steps, sockets/layers, controls and cache bounds;0 browser errors.
+- KUNAI_URL=https://kiotdstudios.github.io/shinobi-rush/ KUNAI_OUT=build/kunai-eight-live-gameplay node docs/visuals/kunai-eight/gameplay-proof.mjs — PASS actual-key player attacks in8 directions, no fallback, cleanup and actual bandit melee light1/light2;0 errors.
+- Opened actual public review in the in-app browser, visually checked both actors, clicked Pause, N and Step (north light1 key1 shown for both), then restored SE/both/half-speed playback and kept the tab as deliverable.
+- Chakra PR107 checked again: draft=true, merged=false; rejected art remains paused.
+- This follow-up changes order/report documentation only; no new runtime deployment is applicable. Runtime delivery is the verified merge above. The completed report is pushed on the delivery branch to retain final evidence without rebuilding identical game content.

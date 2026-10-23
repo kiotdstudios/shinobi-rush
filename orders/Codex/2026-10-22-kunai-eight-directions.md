@@ -1,6 +1,6 @@
 # ORDER — Eight-direction kunai combat for player and bandit
 - Agent: Codex
-- Status: REVIEW
+- Status: DONE
 - Priority: P0 — direct owner request; replaces paused chakra work
 - Owner: Codex (art, shared visual rig and requested attack-animation wiring)
 - Branch/PR: codex/kunai-eight-directions
@@ -25,4 +25,10 @@ Native128×128 RGBA; fixed(64,116) anchor; approved design/scale; no baked shado
 Shared choreography/profile does not mean giving the bandit the player's skin or changing enemy damage/cadence. Preserve the approved SE player art. Chakra PR107 remains draft and paused.
 
 ## Local acceptance —2026-10-23
-1792 native checks passed,0 failures/engine errors. All384 body references validated;192 paired Web-review poses and real-input player attacks in8 headings plus actual bandit two-swing AI passed. Phone portrait/landscape touch emulation and controls regression passed. Report: reports/2026-10-22-kunai-eight-directions-report.md. PR, CI, deployment and owner visual review pending.
+1792 native checks passed,0 failures/engine errors. All384 body references validated;192 paired Web-review poses and real-input player attacks in8 headings plus actual bandit two-swing AI passed. Phone portrait/landscape touch emulation and controls regression passed. Report: reports/2026-10-22-kunai-eight-directions-report.md. PR115 merged as8830e85; required CI, Pages and exact-SHA live verification passed. Owner visual feedback remains welcome.
+
+## Live delivery —2026-10-23
+PR: https://github.com/kiotdstudios/shinobi-rush/pull/115
+Public merge:8830e85e600acb3e97509ed3de8a61c9202b551c
+Review: https://kiotdstudios.github.io/shinobi-rush/?kunai=directions&v=8830e85
+Final merged suite1827 passed,0 failures/engine errors. Live192 paired poses and actual player/bandit combat checks passed;9 file hashes matched public build. Full evidence in the report. Chakra remains draft/paused.
