@@ -3,7 +3,7 @@
 - Order: ../2026-10-23-bandit-black-kunai.md
 - Date: 2026-10-23
 - Final status: REVIEW — local checks complete, reviewed integration/live deployment pending
-- Commit / PR: Not committed yet; report written before implementation commit.
+- Commit / PR: Implementation e900c56 plus whitespace cleanup a4f961d; PR https://github.com/kiotdstudios/shinobi-rush/pull/134 merged as b53651d8f29bf0f07fbacc5323c2b7e7add7cbf7. Original report preceded implementation commit.
 
 ## Work completed
 Replaced the silver polygon, white blade highlight, red grip/ring and pale motion streak with a Sprite2D using the existing shared assets/weapons/kunai/black_kunai.png. Native pixel scale, nearest filtering, hand-height DRAW_LIFT retained; blade source +X rotates to the fixed throw direction.64px transparent canvas centered with1px vertical correction for blade axis y31. No newly generated art. Physics, speed, damage, hit radius, collision queries, range, throw timing and substitution code unchanged.
@@ -30,3 +30,12 @@ None.
 
 ## Outstanding work / next steps
 Commit/push, reviewed PR/CI, merge through existing policy, configured Pages deployment, verify exact live build and repeat browser probe. No live update claimed before deployment.
+
+
+## Integration and live verification
+- PR game CI39990898801 passed native/import/validate/Web export, pre-deploy browser smoke/controls/debug probes and godot-ci-gate; repository checks39990898611 passed. The separate throwaway pipeline self-test39990898659 completed success as well (finished after the normal merge).
+- Main CI39992260424 passed import/validate/tests/export, pre-deploy browser checks and Pages deployment. Its separate post-deploy smoke job was still running when this delivery report was finalized; its final conclusion is not claimed.
+- Live build-info.json reports b53651d8f29bf0f07fbacc5323c2b7e7add7cbf7. Public URL https://kiotdstudios.github.io/shinobi-rush/?v=b53651d verified2026-10-23 13:15EDT.
+- Node scripts/ci/smoke/bandit-black-kunai-probe.mjs https://kiotdstudios.github.io/shinobi-rush/?v=b53651d: PASS actual normal-play keyboard approach/retreat; bandit throw frames0and13 observed; zero browser console/page errors. Screenshot visibly shows the dark kunai between enemy and player; no silver procedural blade remains.
+- Evidence: docs/visuals/bandit-black-kunai/live-throw.png and live-validation.json. Flight/hit/substitution behaviors remain covered by the unchanged native suite,2092passes.
+- Final report/evidence-only update pushed to delivery branch after implementation merge; does not change the live build.

@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "commit": "b53651d8f29bf0f07fbacc5323c2b7e7add7cbf7",
+  "url": "https://kiotdstudios.github.io/shinobi-rush/?v=b53651d",
+  "errors": [],
+  "observed_throw_frames": [
+    [
+      28,
+      0
+    ],
+    [
+      29,
+      13
+    ]
+  ],
+  "selected_screenshot_index": 29
+}
