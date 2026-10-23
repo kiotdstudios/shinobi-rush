@@ -4,6 +4,8 @@ extends Node
 ## Solid props block player/bandit navigation; grass is passable. Layouts survive restarts.
 ## To add a new buildable thing, add ONE row to CATALOG (and an id to CATEGORIES so it shows in the panel).
 ##   kind "block": a placeholder box (TrainingArena.Block/BlockRear) with `footprint` (w, depth) and `height`.
+##   kind "wall":  a pre-drawn isometric wall piece from wall_kit_v2 (art, size, anchor = pixel of the front-bottom-left ground corner, col = ground vector of its collider).
+##                 `pos` is that ground corner, snapped to a floor-diamond vertex, so a piece placed at the previous piece's pos + run joins it.
 ##   kind "tree":  one of the five Codex blossom trees (index into blossom_trees.art.json); solid trunk base only.
 const SAVE_PATH := "user://world_builder_layout.json"
 ## v4 adds editable grass to v3 saves, which list EVERY solid object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
@@ -19,6 +21,19 @@ const CATALOG := {
 	"wall_v": {"label": "Wall (deep)", "kind": "block", "footprint": Vector2(90, 270), "height": 150.0},
 	"rock": {"label": "Rock", "kind": "block", "footprint": Vector2(120, 110), "height": 110.0},
 	"crate": {"label": "Crate", "kind": "block", "footprint": Vector2(108, 108), "height": 108.0},
+	"kit_se_2": {"label": "Wall SE x2", "kind": "wall", "art": "wall_se_2", "size": Vector2(110, 152), "anchor": Vector2(8, 118), "col": Vector2(72, 36)},
+	"kit_se_3": {"label": "Wall SE x3", "kind": "wall", "art": "wall_se_3", "size": Vector2(146, 170), "anchor": Vector2(8, 118), "col": Vector2(108, 54)},
+	"kit_se_4": {"label": "Wall SE x4", "kind": "wall", "art": "wall_se_4", "size": Vector2(182, 188), "anchor": Vector2(8, 118), "col": Vector2(144, 72)},
+	"kit_se_5": {"label": "Wall SE x5", "kind": "wall", "art": "wall_se_5", "size": Vector2(218, 206), "anchor": Vector2(8, 118), "col": Vector2(180, 90)},
+	"kit_se_6": {"label": "Wall SE x6", "kind": "wall", "art": "wall_se_6", "size": Vector2(254, 224), "anchor": Vector2(8, 118), "col": Vector2(216, 108)},
+	"kit_sw_2": {"label": "Wall SW x2", "kind": "wall", "art": "wall_sw_2", "size": Vector2(110, 152), "anchor": Vector2(102, 118), "col": Vector2(-72, 36)},
+	"kit_sw_3": {"label": "Wall SW x3", "kind": "wall", "art": "wall_sw_3", "size": Vector2(146, 170), "anchor": Vector2(138, 118), "col": Vector2(-108, 54)},
+	"kit_sw_4": {"label": "Wall SW x4", "kind": "wall", "art": "wall_sw_4", "size": Vector2(182, 188), "anchor": Vector2(174, 118), "col": Vector2(-144, 72)},
+	"kit_sw_5": {"label": "Wall SW x5", "kind": "wall", "art": "wall_sw_5", "size": Vector2(218, 206), "anchor": Vector2(210, 118), "col": Vector2(-180, 90)},
+	"kit_sw_6": {"label": "Wall SW x6", "kind": "wall", "art": "wall_sw_6", "size": Vector2(254, 224), "anchor": Vector2(246, 118), "col": Vector2(-216, 108)},
+	"kit_pillar": {"label": "Pillar", "kind": "wall", "art": "pillar", "size": Vector2(64, 120), "anchor": Vector2(31, 119), "col": Vector2(0, 0)},
+	"kit_ruin_se": {"label": "Ruin SE", "kind": "wall", "art": "ruin_se", "size": Vector2(182, 158), "anchor": Vector2(-7, 143), "col": Vector2(144, 72)},
+	"kit_ruin_sw": {"label": "Ruin SW", "kind": "wall", "art": "ruin_sw", "size": Vector2(182, 158), "anchor": Vector2(188, 143), "col": Vector2(-144, 72)},
 	"grass9_corner_top": {"label": "Corner Top", "kind": "grass", "tall": false},
 	"grass9_edge_ne": {"label": "Edge Ne", "kind": "grass", "tall": false},
 	"grass9_corner_right": {"label": "Corner Right", "kind": "grass", "tall": false},
@@ -34,7 +49,7 @@ const CATALOG := {
 	"grass_tall_03": {"label": "Tall grass 4", "kind": "grass", "tall": true},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]]]
+const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 
@@ -68,14 +83,57 @@ static func tree_info(index: int) -> Dictionary:
 	return _tree_cache[index]
 
 
+const KIT_DIR := "res://assets/environment/kosen_courtyard/wall_kit_v2/"
+const WALL_THICKNESS := 18.0
+
+
+static func wall_texture(id: String) -> Texture2D:
+	return load(KIT_DIR + String(def_of(id).art) + ".png") as Texture2D
+
+
+## Ground rectangle covering a wall piece's collider (a strip along `col`, WALL_THICKNESS deep).
+static func wall_rect(def: Dictionary, pos: Vector2) -> Rect2:
+	var col: Vector2 = def.col
+	var a := pos
+	var b := pos + col
+	var lo := Vector2(minf(a.x, b.x), minf(a.y, b.y) - WALL_THICKNESS)
+	var hi := Vector2(maxf(a.x, b.x), maxf(a.y, b.y))
+	if col == Vector2.ZERO:
+		lo.x -= 16.0
+		hi.x += 16.0
+	return Rect2(lo, hi - lo)
+
+
+## Nearest floor-diamond VERTEX (36a, 18b with a + b odd): where a wall piece's front-bottom-left corner sits.
+static func iso_vertex(p: Vector2) -> Vector2:
+	var best := Vector2.ZERO
+	var best_d := INF
+	var k0 := int(floor(p.x / 36.0))
+	var m0 := int(floor(p.y / 18.0))
+	for k in [k0, k0 + 1]:
+		for m in [m0, m0 + 1]:
+			if posmod(k - m, 2) != 1:
+				continue
+			var c := Vector2(36.0 * k, 18.0 * m)
+			var d := c.distance_squared_to(p)
+			if d < best_d:
+				best_d = d
+				best = c
+	return best
+
+
 static func footprint_of(id: String) -> Vector2:
 	var def := def_of(id)
+	if def.kind == "wall":
+		return wall_rect(def, Vector2.ZERO).size
 	return Vector2(72, 36) if def.kind == "grass" else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind == "tree" else def.footprint
 
 
 ## The solid ground rectangle (BLOCKS convention: bottom-centre `pos`, extends `depth` upward).
 static func footprint_rect(id: String, pos: Vector2) -> Rect2:
 	var fp := footprint_of(id)
+	if def_of(id).kind == "wall":
+		return wall_rect(def_of(id), pos)
 	if def_of(id).kind == "grass":
 		return Rect2(pos - fp * 0.5, fp)  # a grass tile is centred on its diamond cell, not standing on it
 	return Rect2(pos.x - fp.x * 0.5, pos.y - fp.y, fp.x, fp.y)
@@ -88,6 +146,8 @@ static func hit_rect(id: String, pos: Vector2) -> Rect2:
 		return Rect2(pos - Vector2(56, 136 if def.tall else 84), Vector2(112, 160 if def.tall else 112))
 	if def.kind == "tree":
 		return Rect2(pos.x - 110.0, pos.y - 330.0, 220.0, 350.0)
+	if def.kind == "wall":
+		return Rect2(pos - (def.anchor as Vector2), def.size)
 	var fp: Vector2 = def.footprint
 	return Rect2(pos.x - fp.x * 0.5, pos.y - fp.y - float(def.height), fp.x + fp.y * 0.5, fp.y + float(def.height))
 
@@ -133,6 +193,8 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		rear.position = ArenaSort.rear_position(pos, fp)
 		arena.add_child(rear)
 		nodes = [front, rear]
+	elif def.kind == "wall":
+		nodes = _make_wall(id, pos)
 	else:
 		var grove := arena.get_node_or_null("BlossomGrove") as BlossomGrove
 		if grove == null:
@@ -145,6 +207,32 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	if commit:
 		_changed()
 	return obj
+
+
+## [sprite, collider]. The sprite sorts at the MIDDLE of its ground run (one key for a long diagonal piece); the collider is a thin parallelogram along it.
+func _make_wall(id: String, pos: Vector2) -> Array[Node]:
+	var def := def_of(id)
+	var col: Vector2 = def.col
+	var sprite := Sprite2D.new()
+	sprite.name = "PlacedWall%d" % _serial
+	sprite.texture = wall_texture(id)
+	sprite.centered = false
+	sprite.offset = -(def.anchor as Vector2) - col * 0.5
+	sprite.position = pos + col * 0.5
+	arena.add_child(sprite)
+	var body := StaticBody2D.new()
+	body.name = "PlacedWallBody%d" % _serial
+	var shape := ConvexPolygonShape2D.new()
+	if col == Vector2.ZERO:
+		shape.points = PackedVector2Array([Vector2(-14, 0), Vector2(14, 0), Vector2(14, -14), Vector2(-14, -14)])
+	else:
+		shape.points = PackedVector2Array([Vector2.ZERO, col, col + Vector2(0, -WALL_THICKNESS), Vector2(0, -WALL_THICKNESS)])
+	var cs := CollisionShape2D.new()
+	cs.shape = shape
+	body.add_child(cs)
+	body.position = pos
+	arena.add_child(body)
+	return [sprite, body]
 
 
 func _make_trunk(pos: Vector2) -> StaticBody2D:
@@ -200,7 +288,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Walls & blocks"
+	return "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Temple walls" if def.kind == "wall" else "Walls & blocks"
 
 
 func type_visible(id: String) -> bool:
@@ -249,6 +337,9 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 	if def.kind == "block":
 		(nodes[0] as Node2D).position = pos
 		(nodes[1] as Node2D).position = ArenaSort.rear_position(pos, def.footprint)
+	elif def.kind == "wall":
+		(nodes[0] as Node2D).position = pos + (def.col as Vector2) * 0.5
+		(nodes[1] as Node2D).position = pos
 	else:
 		for n: Node2D in nodes:
 			n.position = pos
@@ -284,8 +375,25 @@ func hit_test(point: Vector2) -> Dictionary:
 func obstacles() -> Array:
 	var out: Array = []
 	for o in objects:
-		if def_of(o.id).kind != "grass":
+		var kind: String = def_of(o.id).kind
+		if kind == "wall":
+			out.append_array(_wall_obstacles(def_of(o.id), o.pos))
+		elif kind != "grass":
 			out.append([o.pos, footprint_of(o.id), 0.0])
+	return out
+
+
+## One 36 x 36 nav box per floor cell the wall's collider crosses (the nav only knows axis-aligned boxes).
+static func _wall_obstacles(def: Dictionary, pos: Vector2) -> Array:
+	var col: Vector2 = def.col
+	if col == Vector2.ZERO:
+		return [[pos, Vector2(32, 16), 0.0]]
+	var out: Array = []
+	var steps := int(round(absf(col.x) / 36.0))
+	var step := col / float(steps)
+	for i in steps:
+		var a := pos + step * float(i)
+		out.append([Vector2(a.x + step.x * 0.5, maxf(a.y, a.y + step.y)), Vector2(36, 36), 0.0])
 	return out
 
 
