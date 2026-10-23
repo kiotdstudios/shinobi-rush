@@ -685,8 +685,17 @@ func _test_moving() -> void:
 
 
 # ------------------------------------------------------------------------------------------------ rapid toggles
+## Footstep dust puffs (and their tweens) from player activity come and go mid-test; they are not what this
+## test measures, so drop them before each node/object-count reading.
+func _clear_dust(root: Node) -> void:
+	for d in root.find_children("DustPuff", "", true, false):
+		for c in d.get_children():
+			c.free()
+
+
 func _test_toggle_stress(root: Node) -> void:
 	tog.set_on(false)
+	_clear_dust(root)
 	await _frames(3)
 	var base_nodes := Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
 	var base_objs := Performance.get_monitor(Performance.OBJECT_COUNT)
@@ -707,6 +716,7 @@ func _test_toggle_stress(root: Node) -> void:
 	ck.call("vision toggles: after 100 real-frame ON/OFF cycles ending ON there is still exactly one overlay and the same node count (+-2 for unrelated engine nodes; a leak would add 100)", tog.on and _count_overlays(root) == 1 and absf(Performance.get_monitor(Performance.OBJECT_NODE_COUNT) - on_nodes) <= 2.0)
 	ck.call("vision toggles: ...and the same number of draw items as before (%d)" % items_on, tog.overlay.draw_items == items_on and items_on > 0, "%d vs %d" % [tog.overlay.draw_items, items_on])
 	tog.set_on(false)
+	_clear_dust(root)
 	await _frames(2)
 	ck.call("vision toggles: OFF again - node count and object count are back to the baseline within +-2 / +-8 (no leaked regions or overlays: a leak would add 100)", _count_overlays(root) == 0 and absf(Performance.get_monitor(Performance.OBJECT_NODE_COUNT) - base_nodes) <= 2.0 and absf(Performance.get_monitor(Performance.OBJECT_COUNT) - base_objs) <= 8.0, "nodes %s vs %s, objects %s vs %s" % [str(Performance.get_monitor(Performance.OBJECT_NODE_COUNT)), str(base_nodes), str(Performance.get_monitor(Performance.OBJECT_COUNT)), str(base_objs)])
 	var before := BanditVisionRegion.compute_count
