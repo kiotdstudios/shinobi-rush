@@ -228,6 +228,42 @@ func run(ck: Callable, root: Node) -> void:
 	root.get_tree().paused = false
 	editor.set_open(false)
 	ck.call("builder: closing the builder re-centres the camera and restores its pause behaviour", player_node.camera.offset == Vector2.ZERO and player_node.camera.process_mode == Node.PROCESS_MODE_INHERIT)
+	# wall kit: chained pieces join exactly, collide, feed the nav, save/load and delete cleanly
+	var v0 := PlacedObjects.iso_vertex(arena.bounds.get_center() + Vector2(300, 200))
+	ck.call("wall kit: iso_vertex lands on a floor-diamond vertex (36a, 18b, a+b odd)", posmod(int(round(v0.x / 36.0)) - int(round(v0.y / 18.0)), 2) == 1 and PlacedObjects.iso_vertex(v0 + Vector2(5, 3)) == v0)
+	var wall_n := placed.objects.size()
+	var nav_n := placed.obstacles().size()
+	var run_a: Vector2 = PlacedObjects.CATALOG["kit_se_3"].col
+	var run_b: Vector2 = PlacedObjects.CATALOG["kit_se_2"].col
+	var a_obj := placed.add("kit_se_3", v0, false)
+	var b_obj := placed.add("kit_se_2", v0 + run_a, false)
+	var c_obj := placed.add("kit_pillar", v0 + run_a + run_b, false)
+	var d_obj := placed.add("kit_sw_4", v0 + run_a + run_b, false)
+	ck.call("wall kit: pieces are added as sprite + collider and listed under Temple walls", placed.objects.size() == wall_n + 4 and a_obj.nodes.size() == 2 and a_obj.nodes[0] is Sprite2D and a_obj.nodes[1] is StaticBody2D and PlacedObjects.type_of("kit_se_3") == "Temple walls")
+	var sa := a_obj.nodes[0] as Sprite2D
+	var sb := b_obj.nodes[0] as Sprite2D
+	var start_a := sa.global_position + sa.offset + (PlacedObjects.CATALOG["kit_se_3"].anchor as Vector2)
+	var start_b := sb.global_position + sb.offset + (PlacedObjects.CATALOG["kit_se_2"].anchor as Vector2)
+	ck.call("wall kit: a piece placed at the previous piece's pos + run starts exactly where it ends", start_a.is_equal_approx(v0) and start_b.is_equal_approx(v0 + run_a))
+	ck.call("wall kit: nav gets one 36x36 box per crossed cell (3 + 2 + 1 pillar + 4)", placed.obstacles().size() == nav_n + 3 + 2 + 1 + 4)
+	var body_a := a_obj.nodes[1] as StaticBody2D
+	ck.call("wall kit: the collider is a parallelogram along the run", body_a.get_child_count() == 1 and ((body_a.get_child(0) as CollisionShape2D).shape as ConvexPolygonShape2D).points.size() == 4 and body_a.global_position == a_obj.pos)
+	ck.call("wall kit: clicking the picture selects the piece", placed.hit_test(a_obj.pos + Vector2(20, -60)).get("id", "") == "kit_se_3")
+	placed.move(a_obj, a_obj.pos + Vector2(72, 36), false)
+	ck.call("wall kit: moving carries sprite and collider", body_a.position == a_obj.pos and sa.position == a_obj.pos + run_a * 0.5)
+	var saved := placed.to_dict()
+	placed.remove(c_obj, false)
+	placed.remove(d_obj, false)
+	placed.remove(b_obj, false)
+	placed.remove(a_obj, false)
+	await root.get_tree().process_frame
+	ck.call("wall kit: removing frees every node", placed.objects.size() == wall_n and not is_instance_valid(sa) and not is_instance_valid(body_a))
+	var ids_saved := 0
+	for it: Dictionary in saved.items:
+		if str(it.id).begins_with("kit_"):
+			ids_saved += 1
+	ck.call("wall kit: the four pieces are in the save data by id", ids_saved == 4)
+
 	editor.set_open(true)
 	placed.clear_all()
 	placed.save()
