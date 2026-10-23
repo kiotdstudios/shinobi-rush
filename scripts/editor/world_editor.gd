@@ -31,6 +31,7 @@ var save_button: Button
 var _note := ""
 var _note_until := 0
 var overlay: Node2D
+var grid_layer: Node2D
 var _tool_buttons: Dictionary = {}
 var _palette_buttons: Dictionary = {}
 var _filter_buttons: Dictionary = {}
@@ -58,11 +59,29 @@ class Overlay extends Node2D:
 		name = "WorldEditorOverlay"
 		process_mode = Node.PROCESS_MODE_ALWAYS  # keeps drawing the cursor/outlines while the game is paused
 	func _process(_d: float) -> void:
-		visible = editor.open or editor.show_grid
+		visible = editor.open
 		if visible:
 			queue_redraw()
 	func _draw() -> void:
 		editor.draw_overlay(self)
+
+
+## Floor grid layer: sits on the ground (same z_index as Ground, added after it) so walls, trees and every
+## other y-sorted object draw OVER the lines and hide the cells they cover.
+class GridLayer extends Node2D:
+	var editor: WorldEditor
+	func _init(e: WorldEditor) -> void:
+		editor = e
+		z_index = -1
+		name = "WorldEditorGrid"
+		process_mode = Node.PROCESS_MODE_ALWAYS
+	func _process(_d: float) -> void:
+		visible = editor.show_grid
+		if visible:
+			queue_redraw()
+	func _draw() -> void:
+		if editor.arena != null:
+			editor._draw_floor_grid(self)
 
 
 func setup(a: TrainingArena, p: PlacedObjects) -> void:
@@ -76,6 +95,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	overlay = Overlay.new(self)
 	arena.add_child(overlay)
+	grid_layer = GridLayer.new(self)
+	arena.add_child(grid_layer)
 	_build_ui()
 	set_open(false)
 	if OS.has_feature("web"):
@@ -453,8 +474,6 @@ static func _clip_line(r: Rect2, m: float, cst: float) -> Array:
 
 
 func draw_overlay(c: Node2D) -> void:
-	if show_grid and arena != null:
-		_draw_floor_grid(c)
 	if not open:
 		return
 	for o in placed.objects:
