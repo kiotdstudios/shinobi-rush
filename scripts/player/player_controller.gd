@@ -632,7 +632,7 @@ func is_evading_melee() -> bool:
 
 ## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely; a
 ## hit that lands only tints the figure and adds a small shove -- control is never taken away.
-func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: Node2D = null) -> bool:
+func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: Variant = null) -> bool:
 	if is_evading_melee() or _hit_invuln > 0.0:
 		return false
 	if _try_substitution(attacker, from_dir):
@@ -672,7 +672,7 @@ func _tick_substitution(delta: float) -> void:
 
 ## Confirmed timed L2 evade: only reached from take_hit, i.e. an attack that would really have landed.
 ## One call per attack, so one proc per attack. Returns true if the hit was swallowed by a log swap.
-func _try_substitution(attacker: Node2D, from_dir: Vector2) -> bool:
+func _try_substitution(attacker: Variant, from_dir: Vector2) -> bool:
 	if _sub_buffer <= 0.0 or substitution_charges <= 0 or _sub_cooldowns.size() >= max_substitution_charges:
 		return false
 	var old := global_position
@@ -685,8 +685,8 @@ func _try_substitution(attacker: Node2D, from_dir: Vector2) -> bool:
 	_hit_invuln = SUB_INVULN
 	global_position = dest
 	velocity = Vector2.ZERO
-	if attacker != null and is_instance_valid(attacker) and not attacker.is_queued_for_deletion():
-		var to_att := attacker.global_position - dest
+	if _attacker_alive(attacker):
+		var to_att := (attacker as Node2D).global_position - dest
 		if to_att.length() > 1.0:
 			facing8 = _snap8(to_att)
 			visual.set_pose(facing8, false, false)
@@ -700,19 +700,24 @@ func _try_substitution(attacker: Node2D, from_dir: Vector2) -> bool:
 ## Spot behind the attacker (opposite side from where the player stood). Validated against walls and the
 ## arena bounds; shrinks the distance and swings the angle before giving up and staying in place (the
 ## log swap still happens, just without the reposition). A dead / freed attacker also means "stay".
-func _substitution_destination(attacker: Node2D, from_dir: Vector2) -> Vector2:
-	if attacker == null or not is_instance_valid(attacker) or attacker.is_queued_for_deletion():
+func _substitution_destination(attacker: Variant, from_dir: Vector2) -> Vector2:
+	if not _attacker_alive(attacker):
 		return global_position
-	var toward := global_position - attacker.global_position
+	var toward := global_position - (attacker as Node2D).global_position
 	if toward.length() < 1.0:
 		toward = from_dir if from_dir.length() > 0.01 else Vector2(1, 1)
 	var behind := -toward.normalized()
 	for dist in [SUB_BEHIND_DIST, SUB_BEHIND_DIST * 0.7, SUB_BEHIND_DIST * 0.5]:
 		for ang in [0.0, 0.5, -0.5, 1.0, -1.0]:
-			var p: Vector2 = attacker.global_position + behind.rotated(ang) * dist
+			var p: Vector2 = (attacker as Node2D).global_position + behind.rotated(ang) * dist
 			if _substitution_spot_ok(p):
 				return p
 	return global_position
+
+
+## Attackers can be freed mid-flight (killed bandit, expired thrower), so they travel as untyped Variants.
+static func _attacker_alive(attacker: Variant) -> bool:
+	return is_instance_valid(attacker) and attacker is Node2D and not (attacker as Node2D).is_queued_for_deletion()
 
 
 func _substitution_spot_ok(p: Vector2) -> bool:

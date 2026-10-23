@@ -61,9 +61,9 @@ func step(delta: float) -> void:
 	if is_inside_tree():
 		var q := PhysicsRayQueryParameters2D.create(a + Vector2(0, -14), b + Vector2(0, -14))
 		var ex: Array[RID] = []
-		if thrower is CollisionObject2D and is_instance_valid(thrower):
+		if is_instance_valid(thrower) and thrower is CollisionObject2D:
 			ex.append((thrower as CollisionObject2D).get_rid())
-		if target is CollisionObject2D and is_instance_valid(target):
+		if is_instance_valid(target) and target is CollisionObject2D:
 			ex.append((target as CollisionObject2D).get_rid())
 		q.exclude = ex
 		if not get_world_2d().direct_space_state.intersect_ray(q).is_empty():
