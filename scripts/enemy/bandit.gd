@@ -15,7 +15,8 @@ extends CharacterBody2D
 ## orders/Codex/2026-10-21-bandit-level1-action-art.md.
 
 enum State { IDLE, APPROACH, HIT_REACT, DEAD, EVADE, PATROL, NOTICE, THREATEN, ATTACK, REPOSITION, RETREAT, SEARCH, RETURN }
-enum AtkPhase { NONE, WINDUP1, ACTIVE1, GAP, WINDUP2, ACTIVE2, RECOVERY }
+const THROW_RELEASE_AT := 0.7  ## fraction of the throw animation at which the kunai leaves the hand
+enum AtkPhase { NONE, WINDUP1, ACTIVE1, GAP, WINDUP2, ACTIVE2, RECOVERY, THROW_WINDUP, THROW_RECOVERY }
 enum RetreatPhase { NONE, TELEGRAPH, HOP1, PAUSE, HOP2, RECOVER }
 
 signal intent_changed(state_name: String, reason: String)
@@ -139,6 +140,8 @@ var _has_lost_player := false
 var _lose_timer := 0.0
 var _threaten_timer := 0.0
 var _atk_cooldown := 0.0
+var _throw_cooldown := 2.0  ## seconds until the next kunai throw is allowed
+var kunai_thrown := 0  ## kunai released this life (read by tests / telemetry)
 var _atk_timer := 0.0
 var _atk_dir := Vector2.DOWN
 var _atk_hit_done := [false, false]
@@ -206,6 +209,7 @@ func _physics_process(delta: float) -> void:
 	_hit_flash_timer = maxf(_hit_flash_timer - delta, 0.0)
 	_evade_cooldown = maxf(_evade_cooldown - delta, 0.0)
 	_atk_cooldown = maxf(_atk_cooldown - delta, 0.0)
+	_throw_cooldown = maxf(_throw_cooldown - delta, 0.0)
 	taunt_timer = maxf(taunt_timer - delta, 0.0)
 	_turn_pause = maxf(_turn_pause - delta, 0.0)
 	_state_time += delta
@@ -365,6 +369,7 @@ func _enter(next: State, reason: String = "") -> void:
 	_repath_timer = 0.0
 	match next:
 		State.NOTICE:
+			_throw_cooldown = maxf(_throw_cooldown, float(profile.get("throw_first_delay", 2.0)))  # no instant kunai on first sight
 			_resume_state = prev if prev in [State.PATROL, State.RETURN, State.SEARCH, State.IDLE] else State.PATROL
 			_notice_timer = 0.0
 			_notice_blind = 0.0
@@ -552,6 +557,9 @@ func _tick_approach(delta: float) -> void:
 	if sees_player and _should_evade(to_player) and _begin_evade(to_player):
 		_evade_timer -= delta
 		return
+	if _can_throw(dist):
+		_begin_throw()
+		return
 	if sees_player and dist <= combat_distance:
 		_enter(State.THREATEN, "in range")
 		velocity = Vector2.ZERO
@@ -594,6 +602,70 @@ func _tick_threaten(delta: float) -> void:
 	_threaten_timer = maxf(_threaten_timer - delta, 0.0)
 	if sees_player and _threaten_timer <= 0.0 and _atk_cooldown <= 0.0 and dist <= float(profile.attack_reach):
 		_begin_attack()
+	elif dist > float(profile.attack_reach) and _can_throw(dist):
+		_begin_throw()
+
+
+## Ranged option: a kunai throw at mid range with a clear line. Windup tracks the player for the first
+## half, then the aim freezes (a sidestep / dodge after the freeze beats it), then the kunai leaves the
+## hand on the release frame and the Bandit recovers.
+func _can_throw(dist: float) -> bool:
+	return (
+		sees_player
+		and _player != null
+		and _throw_cooldown <= 0.0
+		and _atk_cooldown <= 0.0
+		and dist >= float(profile.get("throw_min", 190.0))
+		and dist <= float(profile.get("throw_range", 420.0))
+		and line_clear_to(_player.global_position)
+	)
+
+
+func _begin_throw() -> void:
+	_enter(State.ATTACK, "kunai")
+	atk_phase = AtkPhase.THROW_WINDUP
+	_atk_timer = float(profile.get("throw_windup", 0.42))
+	_atk_dir = (_player.global_position - global_position).normalized()
+	velocity = Vector2.ZERO
+	facing8 = WorldScale.snap8(_atk_dir)
+
+
+func _tick_throw(delta: float) -> void:
+	_atk_timer -= delta
+	velocity = Vector2.ZERO
+	if atk_phase == AtkPhase.THROW_WINDUP:
+		var total: float = float(profile.get("throw_windup", 0.42))
+		if _atk_timer >= total * 0.5 and _player != null:
+			_atk_dir = (_player.global_position - global_position).normalized()
+		facing8 = WorldScale.snap8(_atk_dir)
+		if _atk_timer <= 0.0:
+			_release_kunai()
+			atk_phase = AtkPhase.THROW_RECOVERY
+			_atk_timer = float(profile.get("throw_recovery", 0.3))
+	elif _atk_timer <= 0.0:
+		atk_phase = AtkPhase.NONE
+		_throw_cooldown = float(profile.get("throw_cooldown", 3.5))
+		_atk_cooldown = maxf(_atk_cooldown, 0.8)
+		_enter(State.APPROACH, "after throw")
+
+
+func _release_kunai() -> void:
+	kunai_thrown += 1
+	_log("kunai thrown")
+	BanditKunai.spawn(get_parent(), global_position + _atk_dir * 18.0, _atk_dir, self, _player, float(profile.get("throw_damage", 6.0)), float(profile.get("throw_speed", 520.0)))
+
+
+## 0..1 through the throw animation (windup 0..0.7, release at ~0.7, recovery to 1); -1 when not throwing.
+func get_throw_progress() -> float:
+	if state != State.ATTACK:
+		return -1.0
+	if atk_phase == AtkPhase.THROW_WINDUP:
+		var total: float = float(profile.get("throw_windup", 0.42))
+		return clampf(1.0 - _atk_timer / total, 0.0, 1.0) * THROW_RELEASE_AT
+	if atk_phase == AtkPhase.THROW_RECOVERY:
+		var rec: float = float(profile.get("throw_recovery", 0.3))
+		return THROW_RELEASE_AT + clampf(1.0 - _atk_timer / rec, 0.0, 1.0) * (1.0 - THROW_RELEASE_AT)
+	return -1.0
 
 
 func _begin_attack() -> void:
@@ -608,6 +680,9 @@ func _begin_attack() -> void:
 
 
 func _tick_attack(delta: float) -> void:
+	if atk_phase == AtkPhase.THROW_WINDUP or atk_phase == AtkPhase.THROW_RECOVERY:
+		_tick_throw(delta)
+		return
 	_atk_timer -= delta
 	var windup: float = float(profile.attack_windup)
 	match atk_phase:
@@ -660,7 +735,7 @@ func _try_hit(idx: int) -> void:
 	if not line_clear_to(_player.global_position):
 		return  # no hits through walls
 	_atk_hit_done[idx] = true
-	if _player.call("take_hit", 8.0, to.normalized(), 180.0):
+	if _player.call("take_hit", 8.0, to.normalized(), 180.0, self):
 		player_hits_landed += 1
 		_log("hit %d landed" % (idx + 1))
 		# Owner 2026-10-22: "try to steal it upon defeating players." No player death/HP system exists
