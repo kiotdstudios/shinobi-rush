@@ -25,11 +25,11 @@ func _release_all() -> void:
 func test_health(p: PlayerController) -> void:
 	var bar := p.get_node_or_null("HealthBar") as HealthBar
 	ck.call("health: the player has a HealthBar child and starts at full health", bar != null and p.health == p.max_health and p.max_health == 100.0)
-	ck.call("health: the bar starts full", bar != null and is_equal_approx(bar.fraction, 1.0) and bar.label_text == "HP 100/100", str(bar.label_text) if bar else "")
+	ck.call("health: the bar starts full", bar != null and is_equal_approx(bar.fraction, 1.0) and bar.label_text == "HP 100 / 100", str(bar.label_text) if bar else "")
 	p._hit_invuln = 0.0
 	p.state = PlayerController.State.IDLE
 	var landed := p.take_hit(8.0, Vector2.RIGHT)
-	ck.call("health: a landed 8 damage hit lowers health to 92 and the bar follows", landed and p.health == 92.0 and is_equal_approx(bar.fraction, 0.92) and bar.label_text == "HP 92/100", "%s %s" % [p.health, bar.label_text])
+	ck.call("health: a landed 8 damage hit lowers health to 92 and the bar follows", landed and p.health == 92.0 and is_equal_approx(bar.fraction, 0.92) and bar.label_text == "HP 92 / 100", "%s %s" % [p.health, bar.label_text])
 	var again := p.take_hit(8.0, Vector2.RIGHT)
 	ck.call("health: hit-invulnerability blocks a second hit (no extra damage)", not again and p.health == 92.0)
 	p._hit_invuln = 0.0
@@ -50,6 +50,14 @@ func test_health(p: PlayerController) -> void:
 	ck.call("health: the bar turns red at or below 30 percent", bar.fill_color() == HealthBar.COL_LOW)
 	p.restore_health(100.0)
 	ck.call("health: the bar is orange again when healthy", bar.fill_color() == HealthBar.COL_FILL)
+	ck.call("hud: chakra starts full at 100 with 3 substitution charges", p.chakra == 100.0 and p.max_chakra == 100.0 and p.substitution_charges == 3 and p.max_substitution_charges == 3)
+	ck.call("hud: chakra bar starts full", is_equal_approx(bar.chakra_fraction, 1.0) and bar.chakra_text == "Chakra 100 / 100", bar.chakra_text)
+	p.chakra_changed.emit(64.0, 100.0)
+	ck.call("hud: chakra_changed updates the chakra bar", is_equal_approx(bar.chakra_fraction, 0.64) and bar.chakra_text == "Chakra 64 / 100", bar.chakra_text)
+	p.substitution_changed.emit(2, 3)
+	ck.call("hud: substitution_changed updates the pips", bar.pips == 2 and bar.max_pips == 3, str(bar.pips))
+	p.chakra_changed.emit(100.0, 100.0)
+	p.substitution_changed.emit(3, 3)
 
 
 func test_flicker(p: PlayerController, tree: SceneTree) -> void:
