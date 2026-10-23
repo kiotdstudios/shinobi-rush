@@ -348,6 +348,7 @@ func _build_ui() -> void:
 	add_child(layer)
 	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, DockTab.REST_Y), Vector2(150, 26), toggle_lab)
 	DockTab.style(_lab_button, Color("#3DDC84"))
+	SettingsPanel.adopt(_lab_button)  # the Lab tab moves under Settings too
 	# Bandit vision overlay (debug, default OFF): its toggle button lives in the Settings panel (bottom edge), no hotkey.
 	settings = SettingsPanel.new()
 	settings.name = "SettingsPanel"

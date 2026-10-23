@@ -18,7 +18,18 @@ var rows: VBoxContainer
 var open := false
 var bandit_button: Button = null
 var sense_button: Button = null
+var zoom_slider: HSlider = null
+var zoom_label: Label = null
+var tab_rows: Dictionary = {}  ## adopted dock tab (Button) -> its mirror row in this panel
 static var _instance: SettingsPanel = null
+static var _adopted: Array = []  ## dock tabs moved under Settings (bottom-edge tabs are hidden, rows live here)
+
+## Gameplay camera zoom the Settings slider edits. The default is WorldScale.CAMERA_BASE_ZOOM, locked at 0.665
+## by the owner (2026-10-23). The chosen value is remembered between sessions.
+const ZOOM_MIN := 0.3
+const ZOOM_MAX := 1.5
+const ZOOM_STEP := 0.005
+const SAVE_PATH := "user://settings.cfg"
 
 
 func _enter_tree() -> void:
@@ -41,7 +52,7 @@ func build(_layer: Node) -> void:
 	tab.position = Vector2(TAB_POS_X, DockTab.REST_Y)
 	tab.custom_minimum_size = Vector2(TAB_W, DockTab.TAB_H)
 	tab.add_theme_font_size_override("font_size", 12)
-	tab.tooltip_text = "Click to open: switch Bandit vision and Sense vision on or off."
+	tab.tooltip_text = "Click to open: all panels (Lab, Player, Controls, Diagnostics), vision switches and camera zoom."
 	DockTab.style(tab, COLOR)
 	tab.toggled.connect(set_open)
 	add_child(tab)
@@ -79,6 +90,124 @@ func build(_layer: Node) -> void:
 	close.add_theme_font_size_override("font_size", 10)
 	close.pressed.connect(func() -> void: set_open(false))
 	head.add_child(close)
+	_build_zoom_row()
+	_adopted = _adopted.filter(func(b: Variant) -> bool: return is_instance_valid(b))
+	for b in _adopted:
+		_add_tab_row(b)
+	load_saved_zoom()
+
+
+## Moves a bottom-edge dock tab under Settings: the tab itself is hidden (it still works, and keeps its state
+## and callbacks) and a mirror row appears in the Settings panel that triggers it and shows its on/off state.
+static func adopt(b: Button) -> void:
+	if b == null or _adopted.has(b):
+		return
+	_adopted.append(b)
+	b.visible = false
+	if _instance != null and is_instance_valid(_instance) and _instance.rows != null:
+		_instance._add_tab_row(b)
+
+
+func _add_tab_row(b: Button) -> void:
+	if tab_rows.has(b):
+		return
+	var row := Button.new()
+	row.name = "TabRow_" + str(b.name)
+	row.text = b.text
+	row.focus_mode = Control.FOCUS_NONE
+	row.add_theme_font_size_override("font_size", 12)
+	style_toggle(row, b.get_meta("dock_color", COLOR))
+	row.pressed.connect(func() -> void:
+		if is_instance_valid(b):
+			b.pressed.emit()
+	)
+	rows.add_child(row)
+	tab_rows[b] = row
+
+
+func _process(_delta: float) -> void:
+	for b in tab_rows.keys():
+		var row: Button = tab_rows[b]
+		if not is_instance_valid(b) or not is_instance_valid(row):
+			continue
+		var on := bool(b.get_meta("dock_active", false))
+		if row.button_pressed != on:
+			row.set_pressed_no_signal(on)
+		if row.text != b.text:
+			row.text = b.text
+
+
+func _build_zoom_row() -> void:
+	var box := VBoxContainer.new()
+	box.name = "ZoomRow"
+	rows.add_child(box)
+	zoom_label = Label.new()
+	zoom_label.add_theme_font_size_override("font_size", 11)
+	zoom_label.add_theme_color_override("font_color", COLOR)
+	box.add_child(zoom_label)
+	var line := HBoxContainer.new()
+	box.add_child(line)
+	zoom_slider = HSlider.new()
+	zoom_slider.name = "ZoomSlider"
+	zoom_slider.min_value = ZOOM_MIN
+	zoom_slider.max_value = ZOOM_MAX
+	zoom_slider.step = ZOOM_STEP
+	zoom_slider.custom_minimum_size = Vector2(190, 18)
+	zoom_slider.focus_mode = Control.FOCUS_NONE
+	zoom_slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	zoom_slider.set_value_no_signal(current_zoom())
+	zoom_slider.value_changed.connect(func(v: float) -> void: set_zoom(v, true))
+	line.add_child(zoom_slider)
+	var reset := Button.new()
+	reset.name = "ZoomReset"
+	reset.text = "RESET"
+	reset.focus_mode = Control.FOCUS_NONE
+	reset.add_theme_font_size_override("font_size", 10)
+	reset.pressed.connect(func() -> void: set_zoom(WorldScale.CAMERA_BASE_ZOOM, true))
+	line.add_child(reset)
+	_update_zoom_label(current_zoom())
+
+
+func current_zoom() -> float:
+	for p in get_tree().get_nodes_in_group("player") if is_inside_tree() else []:
+		if p is PlayerController:
+			return (p as PlayerController).camera_baseline
+	return WorldScale.CAMERA_BASE_ZOOM
+
+
+func _update_zoom_label(v: float) -> void:
+	if zoom_label != null:
+		zoom_label.text = "CAMERA ZOOM  %.3f  (default %.3f)" % [v, WorldScale.CAMERA_BASE_ZOOM]
+
+
+## Sets the gameplay camera baseline zoom for every player. `persist` stores it for the next session.
+func set_zoom(v: float, persist: bool = false) -> void:
+	v = clampf(v, ZOOM_MIN, ZOOM_MAX)
+	CameraPreset.set_active(v)
+	if is_inside_tree():
+		for p in get_tree().get_nodes_in_group("player"):
+			if p is PlayerController:
+				(p as PlayerController).refresh_camera_baseline()
+	if zoom_slider != null and not is_equal_approx(zoom_slider.value, v):
+		zoom_slider.set_value_no_signal(v)
+	_update_zoom_label(v)
+	if persist:
+		var cfg := ConfigFile.new()
+		cfg.load(SAVE_PATH)
+		cfg.set_value("camera", "zoom", v)
+		cfg.save(SAVE_PATH)
+
+
+## Applies the zoom saved by an earlier session. A URL ?camera= override (non-default preset) wins.
+func load_saved_zoom() -> void:
+	if CameraPreset.active_id() != CameraPreset.DEFAULT_ID:
+		return
+	var cfg := ConfigFile.new()
+	if cfg.load(SAVE_PATH) != OK or not cfg.has_section_key("camera", "zoom"):
+		return
+	var v := float(cfg.get_value("camera", "zoom", WorldScale.CAMERA_BASE_ZOOM))
+	if not is_equal_approx(v, WorldScale.CAMERA_BASE_ZOOM):
+		set_zoom(v, false)
 
 
 ## A toggle_mode button used as a settings row: flat grey when off, filled with its colour when on.

@@ -203,6 +203,7 @@ func _make_tab(id: String, on_press: Callable) -> Button:
 	tab.pressed.connect(on_press)
 	add_child(tab)
 	_boxes[id].chip = tab
+	SettingsPanel.adopt(tab)  # the bottom-edge tab moves under Settings
 	return tab
 
 
