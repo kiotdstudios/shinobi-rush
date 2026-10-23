@@ -207,16 +207,14 @@ func _draw() -> void:
 
 func _draw_hp_and_label(top_y: float = -78.0) -> void:
 	var font := ThemeDB.fallback_font
-	var top := Vector2(-30, top_y)
-	draw_string(font, top + Vector2(0, -6), "BANDIT L%d (%s)" % [bandit.intelligence_level, bandit.get_state_name()], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.75))
+	var block := UnitBars.size_for(bandit.max_substitutions)
+	var y0 := top_y - block.y + 6.0  ## bars sit on the old HP-bar line, growing upward over the head
+	draw_string(font, Vector2(-30.0, y0 - 4.0), "BANDIT L%d (%s)" % [bandit.intelligence_level, bandit.get_state_name()], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.75))
 	if bandit.state == Bandit.State.DEAD:
 		return
-	var w := 60.0
-	var h := 6.0
-	draw_rect(Rect2(top, Vector2(w, h)), Color(0, 0, 0, 0.5), true)
 	var frac := clampf(bandit.hp / bandit.max_hp, 0.0, 1.0)
-	draw_rect(Rect2(top, Vector2(w * frac, h)), Color("#c0392b"), true)
-	draw_rect(Rect2(top, Vector2(w, h)), Color(1, 1, 1, 0.6), false, 1.0)
+	var cfrac := clampf(bandit.chakra / maxf(bandit.max_chakra, 0.001), 0.0, 1.0)
+	UnitBars.draw(self, Vector2(-block.x * 0.5, y0), frac, cfrac, bandit.substitutions, bandit.max_substitutions)
 
 
 ## Code-drawn telegraphs and status marks. These are placeholders for Codex's dedicated alert/attack
