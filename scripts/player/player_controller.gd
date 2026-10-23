@@ -15,6 +15,9 @@ signal camera_baseline_changed(zoom: float)
 ## the locked RPG/death rules are untouched; this only counts the hit and gives a short readable reaction.
 signal hit_taken(damage: float, from_dir: Vector2)
 signal health_changed(current: float, maximum: float)
+signal chakra_changed(current: float, maximum: float)
+## Substitution charges (shown as pips on the HUD). Only the stat exists so far; the Substitution jutsu will spend them.
+signal substitution_changed(charges: int, maximum: int)
 signal downed  ## health reached 0 (the player is restored to full right after; there is no death screen yet)
 ## Currency changed (spent, or stolen by an enemy via lose_ryo() -- see Bandit._steal_ryo/is_worth_robbing).
 ## No player death/HP system exists here (locked RPG rules); this only tracks the stat.
@@ -114,6 +117,12 @@ const MAX_HEALTH := 100.0
 var max_health: float = MAX_HEALTH
 var health: float = MAX_HEALTH
 var times_downed: int = 0
+const MAX_CHAKRA := 100.0
+const MAX_SUBSTITUTIONS := 3
+var max_chakra: float = MAX_CHAKRA
+var chakra: float = MAX_CHAKRA
+var max_substitution_charges: int = MAX_SUBSTITUTIONS
+var substitution_charges: int = MAX_SUBSTITUTIONS
 var _flicker_hidden: bool = false
 var _flicker_moved: bool = false
 var flicker_count: int = 0
