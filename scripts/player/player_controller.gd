@@ -75,8 +75,8 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 @export var jump_duration: float = 0.85
 ## Seconds between dirt-puff bursts while running on the ground (SPRINT uses a shorter interval,
 ## see `_update_footsteps()`), roughly matched to footstep cadence.
-@export var footstep_interval_walk: float = 0.28
-@export var footstep_interval_sprint: float = 0.18
+@export var footstep_interval_walk: float = 1.1  ## roughly every 4th step; +-jitter applied per puff
+@export var footstep_interval_sprint: float = 0.72
 ## Dash attack is available during the last stretch of an active dodge (seconds of `_action_timer`
 ## remaining counts as "late") -- order section 4: "available during an approved late-dodge ... window".
 @export var dash_attack_late_window: float = 0.08
@@ -571,7 +571,7 @@ func _update_footsteps(delta: float) -> void:
 	_footstep_timer -= delta
 	if _footstep_timer <= 0.0:
 		dust.footstep(global_position, state == State.SPRINT, facing)
-		_footstep_timer = footstep_interval_sprint if state == State.SPRINT else footstep_interval_walk
+		_footstep_timer = (footstep_interval_sprint if state == State.SPRINT else footstep_interval_walk) * randf_range(0.8, 1.25)
 
 
 ## Visual-only elevation arc for the current jump (0 outside JUMP). Applied to PlayerVisual's local
