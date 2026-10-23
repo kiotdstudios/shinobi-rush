@@ -10,9 +10,10 @@ const DIR := "res://assets/ui/hud/"
 const ORIGIN := Vector2(8.0, 6.0)  ## top-left of the portrait frame
 const PORTRAIT_SIZE := Vector2(96.0, 96.0)
 const AVATAR_POS := Vector2(8.0, -4.0)  ## avatar (80x80) over the frame; the head pops out above the diamond
-const BAR_X := 104.0
-const HP_Y := 12.0
-const CHAKRA_Y := 40.0
+const BAR_X := 84.0  ## bars tuck 12px behind the diamond's right tip, as in the mockup
+const BAR_TUCK := 14.0  ## hidden left part of each bar: the label centres on the visible part
+const HP_Y := 15.0
+const CHAKRA_Y := 41.0
 const BAR_SIZE := Vector2(224.0, 22.0)
 const FILL_INSET := Vector2(3.0, 3.0)
 const FILL_SIZE := Vector2(218.0, 16.0)
@@ -101,6 +102,9 @@ func fill_color() -> Color:
 
 
 func _draw_hud() -> void:
+	# bars first: the portrait is drawn over their left ends
+	_bar(HP_Y, trail, fraction, "hp_fill", fill_color(), label_text)
+	_bar(CHAKRA_Y, chakra_fraction, chakra_fraction, "chakra_fill", COL_FILL, chakra_text)
 	# portrait: dark backing diamond, the player's face clipped to the diamond opening, then the gold frame on top
 	var o := ORIGIN
 	var back := PackedVector2Array([o + Vector2(48, 8), o + Vector2(88, 48), o + Vector2(48, 88), o + Vector2(8, 48)])
@@ -115,9 +119,6 @@ func _draw_hud() -> void:
 		pts.append(o + p)
 		uvs.append((o + p - av_origin) / 80.0)
 	_canvas.draw_colored_polygon(pts, Color.WHITE, uvs, _tex["portrait_avatar"])
-	# bars
-	_bar(HP_Y, trail, fraction, "hp_fill", fill_color(), label_text)
-	_bar(CHAKRA_Y, chakra_fraction, chakra_fraction, "chakra_fill", COL_FILL, chakra_text)
 	# substitution pips
 	for i in max_pips:
 		var tex: Texture2D = _tex["pip_full"] if i < pips else _tex["pip_empty"]
@@ -134,6 +135,6 @@ func _bar(y: float, trail_f: float, fill_f: float, fill_tex: String, tint: Color
 		var src := Rect2(0.0, 0.0, FILL_SIZE.x * fill_f, FILL_SIZE.y)
 		_canvas.draw_texture_rect_region(_tex[fill_tex], Rect2(inner, src.size), src, tint)
 	var font := ThemeDB.fallback_font
-	var at := pos + Vector2(0.0, BAR_SIZE.y * 0.5 + 5.0)
-	_canvas.draw_string_outline(font, at, text, HORIZONTAL_ALIGNMENT_CENTER, BAR_SIZE.x, 12, 3, Color(0, 0, 0, 0.9))
-	_canvas.draw_string(font, at, text, HORIZONTAL_ALIGNMENT_CENTER, BAR_SIZE.x, 12, COL_TEXT)
+	var at := pos + Vector2(BAR_TUCK, BAR_SIZE.y * 0.5 + 5.0)
+	_canvas.draw_string_outline(font, at, text, HORIZONTAL_ALIGNMENT_CENTER, BAR_SIZE.x - BAR_TUCK, 12, 3, Color(0, 0, 0, 0.9))
+	_canvas.draw_string(font, at, text, HORIZONTAL_ALIGNMENT_CENTER, BAR_SIZE.x - BAR_TUCK, 12, COL_TEXT)
