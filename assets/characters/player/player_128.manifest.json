@@ -1027,11 +1027,18 @@
       "fps": 20.0,
       "authored_fps": 24,
       "loop": false,
-      "allow_partial_directions": true,
-      "status": "owner_review_required_before_eight_directions",
-      "source_art_json": "kunai_poc/kunai-light1.art.json (hand/weapon placement in scripts/combat/weapon_rig.gd)",
+      "status": "owner_requested_eight_direction_kunai",
+      "source_art_json": "res://assets/combat/kunai/kunai-combat.art.json",
       "authored_duration_ms": 300.0,
       "frames": {
+        "S": [
+          "kunai_eight/body/light1/S_000.png",
+          "kunai_eight/body/light1/S_001.png",
+          "kunai_eight/body/light1/S_002.png",
+          "kunai_eight/body/light1/S_003.png",
+          "kunai_eight/body/light1/S_004.png",
+          "kunai_eight/body/light1/S_005.png"
+        ],
         "SE": [
           "kunai_poc/body/SE_000.png",
           "kunai_poc/body/SE_001.png",
@@ -1039,17 +1046,73 @@
           "kunai_poc/body/SE_003.png",
           "kunai_poc/body/SE_004.png",
           "kunai_poc/body/SE_005.png"
+        ],
+        "E": [
+          "kunai_eight/body/light1/E_000.png",
+          "kunai_eight/body/light1/E_001.png",
+          "kunai_eight/body/light1/E_002.png",
+          "kunai_eight/body/light1/E_003.png",
+          "kunai_eight/body/light1/E_004.png",
+          "kunai_eight/body/light1/E_005.png"
+        ],
+        "NE": [
+          "kunai_eight/body/light1/NE_000.png",
+          "kunai_eight/body/light1/NE_001.png",
+          "kunai_eight/body/light1/NE_002.png",
+          "kunai_eight/body/light1/NE_003.png",
+          "kunai_eight/body/light1/NE_004.png",
+          "kunai_eight/body/light1/NE_005.png"
+        ],
+        "N": [
+          "kunai_eight/body/light1/N_000.png",
+          "kunai_eight/body/light1/N_001.png",
+          "kunai_eight/body/light1/N_002.png",
+          "kunai_eight/body/light1/N_003.png",
+          "kunai_eight/body/light1/N_004.png",
+          "kunai_eight/body/light1/N_005.png"
+        ],
+        "NW": [
+          "kunai_eight/body/light1/NW_000.png",
+          "kunai_eight/body/light1/NW_001.png",
+          "kunai_eight/body/light1/NW_002.png",
+          "kunai_eight/body/light1/NW_003.png",
+          "kunai_eight/body/light1/NW_004.png",
+          "kunai_eight/body/light1/NW_005.png"
+        ],
+        "W": [
+          "kunai_eight/body/light1/W_000.png",
+          "kunai_eight/body/light1/W_001.png",
+          "kunai_eight/body/light1/W_002.png",
+          "kunai_eight/body/light1/W_003.png",
+          "kunai_eight/body/light1/W_004.png",
+          "kunai_eight/body/light1/W_005.png"
+        ],
+        "SW": [
+          "kunai_eight/body/light1/SW_000.png",
+          "kunai_eight/body/light1/SW_001.png",
+          "kunai_eight/body/light1/SW_002.png",
+          "kunai_eight/body/light1/SW_003.png",
+          "kunai_eight/body/light1/SW_004.png",
+          "kunai_eight/body/light1/SW_005.png"
         ]
       }
     },
     "light2": {
-      "fps": 17.142857142857142,
+      "fps": 17.14285714285714,
+      "authored_fps": 24,
       "loop": false,
-      "allow_partial_directions": true,
-      "status": "owner_review_required_before_eight_directions",
-      "source_art_json": "kunai_primary_se/kunai-primary.art.json (hand/weapon placement in scripts/combat/weapon_rig.gd)",
+      "status": "owner_requested_eight_direction_kunai",
+      "source_art_json": "res://assets/combat/kunai/kunai-combat.art.json",
       "authored_duration_ms": 350.00000000000006,
       "frames": {
+        "S": [
+          "kunai_eight/body/light2/S_000.png",
+          "kunai_eight/body/light2/S_001.png",
+          "kunai_eight/body/light2/S_002.png",
+          "kunai_eight/body/light2/S_003.png",
+          "kunai_eight/body/light2/S_004.png",
+          "kunai_eight/body/light2/S_005.png"
+        ],
         "SE": [
           "kunai_primary_se/body/light2/SE_000.png",
           "kunai_primary_se/body/light2/SE_001.png",
@@ -1057,17 +1120,73 @@
           "kunai_primary_se/body/light2/SE_003.png",
           "kunai_primary_se/body/light2/SE_004.png",
           "kunai_primary_se/body/light2/SE_005.png"
+        ],
+        "E": [
+          "kunai_eight/body/light2/E_000.png",
+          "kunai_eight/body/light2/E_001.png",
+          "kunai_eight/body/light2/E_002.png",
+          "kunai_eight/body/light2/E_003.png",
+          "kunai_eight/body/light2/E_004.png",
+          "kunai_eight/body/light2/E_005.png"
+        ],
+        "NE": [
+          "kunai_eight/body/light2/NE_000.png",
+          "kunai_eight/body/light2/NE_001.png",
+          "kunai_eight/body/light2/NE_002.png",
+          "kunai_eight/body/light2/NE_003.png",
+          "kunai_eight/body/light2/NE_004.png",
+          "kunai_eight/body/light2/NE_005.png"
+        ],
+        "N": [
+          "kunai_eight/body/light2/N_000.png",
+          "kunai_eight/body/light2/N_001.png",
+          "kunai_eight/body/light2/N_002.png",
+          "kunai_eight/body/light2/N_003.png",
+          "kunai_eight/body/light2/N_004.png",
+          "kunai_eight/body/light2/N_005.png"
+        ],
+        "NW": [
+          "kunai_eight/body/light2/NW_000.png",
+          "kunai_eight/body/light2/NW_001.png",
+          "kunai_eight/body/light2/NW_002.png",
+          "kunai_eight/body/light2/NW_003.png",
+          "kunai_eight/body/light2/NW_004.png",
+          "kunai_eight/body/light2/NW_005.png"
+        ],
+        "W": [
+          "kunai_eight/body/light2/W_000.png",
+          "kunai_eight/body/light2/W_001.png",
+          "kunai_eight/body/light2/W_002.png",
+          "kunai_eight/body/light2/W_003.png",
+          "kunai_eight/body/light2/W_004.png",
+          "kunai_eight/body/light2/W_005.png"
+        ],
+        "SW": [
+          "kunai_eight/body/light2/SW_000.png",
+          "kunai_eight/body/light2/SW_001.png",
+          "kunai_eight/body/light2/SW_002.png",
+          "kunai_eight/body/light2/SW_003.png",
+          "kunai_eight/body/light2/SW_004.png",
+          "kunai_eight/body/light2/SW_005.png"
         ]
       }
     },
     "light3": {
-      "fps": 12.413793103448278,
+      "fps": 12.413793103448276,
+      "authored_fps": 24,
       "loop": false,
-      "allow_partial_directions": true,
-      "status": "owner_review_required_before_eight_directions",
-      "source_art_json": "kunai_primary_se/kunai-primary.art.json (hand/weapon placement in scripts/combat/weapon_rig.gd)",
+      "status": "owner_requested_eight_direction_kunai",
+      "source_art_json": "res://assets/combat/kunai/kunai-combat.art.json",
       "authored_duration_ms": 483.3333333333333,
       "frames": {
+        "S": [
+          "kunai_eight/body/light3/S_000.png",
+          "kunai_eight/body/light3/S_001.png",
+          "kunai_eight/body/light3/S_002.png",
+          "kunai_eight/body/light3/S_003.png",
+          "kunai_eight/body/light3/S_004.png",
+          "kunai_eight/body/light3/S_005.png"
+        ],
         "SE": [
           "kunai_primary_se/body/light3/SE_000.png",
           "kunai_primary_se/body/light3/SE_001.png",
@@ -1075,23 +1194,120 @@
           "kunai_primary_se/body/light3/SE_003.png",
           "kunai_primary_se/body/light3/SE_004.png",
           "kunai_primary_se/body/light3/SE_005.png"
+        ],
+        "E": [
+          "kunai_eight/body/light3/E_000.png",
+          "kunai_eight/body/light3/E_001.png",
+          "kunai_eight/body/light3/E_002.png",
+          "kunai_eight/body/light3/E_003.png",
+          "kunai_eight/body/light3/E_004.png",
+          "kunai_eight/body/light3/E_005.png"
+        ],
+        "NE": [
+          "kunai_eight/body/light3/NE_000.png",
+          "kunai_eight/body/light3/NE_001.png",
+          "kunai_eight/body/light3/NE_002.png",
+          "kunai_eight/body/light3/NE_003.png",
+          "kunai_eight/body/light3/NE_004.png",
+          "kunai_eight/body/light3/NE_005.png"
+        ],
+        "N": [
+          "kunai_eight/body/light3/N_000.png",
+          "kunai_eight/body/light3/N_001.png",
+          "kunai_eight/body/light3/N_002.png",
+          "kunai_eight/body/light3/N_003.png",
+          "kunai_eight/body/light3/N_004.png",
+          "kunai_eight/body/light3/N_005.png"
+        ],
+        "NW": [
+          "kunai_eight/body/light3/NW_000.png",
+          "kunai_eight/body/light3/NW_001.png",
+          "kunai_eight/body/light3/NW_002.png",
+          "kunai_eight/body/light3/NW_003.png",
+          "kunai_eight/body/light3/NW_004.png",
+          "kunai_eight/body/light3/NW_005.png"
+        ],
+        "W": [
+          "kunai_eight/body/light3/W_000.png",
+          "kunai_eight/body/light3/W_001.png",
+          "kunai_eight/body/light3/W_002.png",
+          "kunai_eight/body/light3/W_003.png",
+          "kunai_eight/body/light3/W_004.png",
+          "kunai_eight/body/light3/W_005.png"
+        ],
+        "SW": [
+          "kunai_eight/body/light3/SW_000.png",
+          "kunai_eight/body/light3/SW_001.png",
+          "kunai_eight/body/light3/SW_002.png",
+          "kunai_eight/body/light3/SW_003.png",
+          "kunai_eight/body/light3/SW_004.png",
+          "kunai_eight/body/light3/SW_005.png"
         ]
       }
     },
     "dash_attack": {
-      "fps": 12.5,
+      "fps": 12.500000000000002,
+      "authored_fps": 24,
       "loop": false,
-      "allow_partial_directions": true,
-      "status": "owner_review_required_before_eight_directions",
-      "source_art_json": "kunai_primary_se/kunai-primary.art.json (hand/weapon placement in scripts/combat/weapon_rig.gd)",
+      "status": "owner_requested_eight_direction_kunai",
+      "source_art_json": "res://assets/combat/kunai/kunai-combat.art.json",
       "authored_duration_ms": 399.99999999999994,
       "frames": {
+        "S": [
+          "kunai_eight/body/dash_attack/S_000.png",
+          "kunai_eight/body/dash_attack/S_001.png",
+          "kunai_eight/body/dash_attack/S_002.png",
+          "kunai_eight/body/dash_attack/S_003.png",
+          "kunai_eight/body/dash_attack/S_004.png"
+        ],
         "SE": [
           "kunai_primary_se/body/dash_attack/SE_000.png",
           "kunai_primary_se/body/dash_attack/SE_001.png",
           "kunai_primary_se/body/dash_attack/SE_002.png",
           "kunai_primary_se/body/dash_attack/SE_003.png",
           "kunai_primary_se/body/dash_attack/SE_004.png"
+        ],
+        "E": [
+          "kunai_eight/body/dash_attack/E_000.png",
+          "kunai_eight/body/dash_attack/E_001.png",
+          "kunai_eight/body/dash_attack/E_002.png",
+          "kunai_eight/body/dash_attack/E_003.png",
+          "kunai_eight/body/dash_attack/E_004.png"
+        ],
+        "NE": [
+          "kunai_eight/body/dash_attack/NE_000.png",
+          "kunai_eight/body/dash_attack/NE_001.png",
+          "kunai_eight/body/dash_attack/NE_002.png",
+          "kunai_eight/body/dash_attack/NE_003.png",
+          "kunai_eight/body/dash_attack/NE_004.png"
+        ],
+        "N": [
+          "kunai_eight/body/dash_attack/N_000.png",
+          "kunai_eight/body/dash_attack/N_001.png",
+          "kunai_eight/body/dash_attack/N_002.png",
+          "kunai_eight/body/dash_attack/N_003.png",
+          "kunai_eight/body/dash_attack/N_004.png"
+        ],
+        "NW": [
+          "kunai_eight/body/dash_attack/NW_000.png",
+          "kunai_eight/body/dash_attack/NW_001.png",
+          "kunai_eight/body/dash_attack/NW_002.png",
+          "kunai_eight/body/dash_attack/NW_003.png",
+          "kunai_eight/body/dash_attack/NW_004.png"
+        ],
+        "W": [
+          "kunai_eight/body/dash_attack/W_000.png",
+          "kunai_eight/body/dash_attack/W_001.png",
+          "kunai_eight/body/dash_attack/W_002.png",
+          "kunai_eight/body/dash_attack/W_003.png",
+          "kunai_eight/body/dash_attack/W_004.png"
+        ],
+        "SW": [
+          "kunai_eight/body/dash_attack/SW_000.png",
+          "kunai_eight/body/dash_attack/SW_001.png",
+          "kunai_eight/body/dash_attack/SW_002.png",
+          "kunai_eight/body/dash_attack/SW_003.png",
+          "kunai_eight/body/dash_attack/SW_004.png"
         ]
       }
     }

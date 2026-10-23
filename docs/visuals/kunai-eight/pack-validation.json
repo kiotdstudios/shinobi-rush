@@ -1,0 +1,25 @@
+{
+  "result": "PASS",
+  "body_frame_references": 384,
+  "new_pngs": 360,
+  "approved_SE_preserved": true,
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "characters": [
+    "player",
+    "bandit"
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "legacy_SE_sole_convention": "exclusive bounds 116 or 117 preserved"
+}
