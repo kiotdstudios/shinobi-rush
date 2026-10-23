@@ -33,7 +33,7 @@ func run(ck: Callable, root: Node) -> void:
 	player.position = bandit.position + Vector2(120, 0)
 	bandit._physics_process(0.3)
 	visual._process(0)
-	ck.call("bandit chase: waits with idle at spacing", visual.actor.anim_id == "idle")
+	ck.call("bandit chase: waits in kunai guard at spacing", visual.actor.anim_id == "kunai_guard" and visual.weapon_visible())
 	player.position = bandit.position + Vector2(140, 0)
 	bandit._physics_process(0.02)
 	ck.call("bandit chase: spacing deadband prevents chatter", bandit.velocity == Vector2.ZERO)

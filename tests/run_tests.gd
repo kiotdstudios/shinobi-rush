@@ -50,6 +50,7 @@ func _initialize() -> void:
 	await load("res://tests/test_kunai_primary_proof.gd").new().run(ck, root)
 	await load("res://tests/test_player_flicker_proof.gd").new().run(ck, root)
 	await load("res://tests/test_kunai_attack_wiring.gd").new().run(ck, root)
+	await load("res://tests/test_kunai_eight.gd").new().run(ck, root)
 	await load("res://tests/test_blossom_trees.gd").new().run(ck, root)
 	await load("res://tests/test_fire_pillar.gd").new().run(ck, root)
 	await load("res://tests/test_wind_grass.gd").new().run(ck, root)

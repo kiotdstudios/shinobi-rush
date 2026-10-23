@@ -8,6 +8,7 @@ var hand: Sprite2D
 var swipe: Sprite2D
 var current_pose: Dictionary = {}
 var _cache: Dictionary = {}
+var _pose_key := ""
 
 func _init() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -24,22 +25,24 @@ func _init() -> void:
 	grip.add_child(weapon)
 	hand = Sprite2D.new()
 	hand.centered = false
-	hand.z_index = 2
 	add_child(hand)
 	swipe = Sprite2D.new()
-	swipe.z_index = 3
 	add_child(swipe)
 
 func show_pose(pose: Dictionary) -> void:
-	current_pose = pose.duplicate(true)
+	current_pose = pose
 	var path := str(pose.body_frame)
+	var key := path+str(pose.right_hand_px)+str(pose.weapon_angle_deg)+str(pose.weapon_layer)+str(pose.get("swipe_frame",-1))+str(pose.get("swipe_rotation_deg",0))+str(pose.get("swipe_offset_px",[10,5]))
+	if key==_pose_key:return
+	_pose_key=key
 	if not _cache.has(path):
 		_cache[path] = load(path)
 	body.texture = _cache[path]
 	var socket := Vector2(float(pose.right_hand_px[0]), float(pose.right_hand_px[1]))
 	grip.position = socket - Vector2(64, 116)
 	grip.rotation = deg_to_rad(float(pose.weapon_angle_deg))
-	grip.z_index = -1 if str(pose.weapon_layer) == "behind" else 1
+	# Sibling order keeps the weapon on the actor's Y-sort plane, above the floor.
+	move_child(grip,0 if str(pose.weapon_layer)=="behind" else 1)
 	var patch := AtlasTexture.new()
 	patch.atlas = body.texture
 	patch.region = Rect2(socket - Vector2(2, 2), Vector2(5, 5))
@@ -53,4 +56,6 @@ func show_pose(pose: Dictionary) -> void:
 		if not _cache.has(fx_path):
 			_cache[fx_path] = load(fx_path)
 		swipe.texture = _cache[fx_path]
-		swipe.position = grip.position + Vector2(10, 5)
+		var offset: Array=pose.get("swipe_offset_px",[10,5])
+		swipe.position = grip.position + Vector2(offset[0],offset[1])
+		swipe.rotation=deg_to_rad(float(pose.get("swipe_rotation_deg",0)))

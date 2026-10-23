@@ -1,8 +1,43 @@
 extends Node
+var state: JavaScriptObject
+var player: PlayerController
+var enemy: Bandit
+
 func _ready() -> void:
-	var query := str(JavaScriptBridge.eval("window.location.search", true)) if OS.has_feature("web") else ""
+	var query := str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
 	var enabled := "--kunai-proof" in OS.get_cmdline_user_args() or "kunai=proof" in query or "flicker=proof" in query
-	if "kunai=legacy" in query:
-		get_tree().change_scene_to_file.call_deferred("res://scenes/art/kunai_primary_proof.tscn")
-	elif enabled:
-		get_tree().change_scene_to_file.call_deferred("res://scenes/art/flicker_combat_proof.tscn")
+	var target := ""
+	if "kunai=directions" in query or "--kunai-directions" in OS.get_cmdline_user_args():target="res://scenes/art/kunai_eight_review.tscn"
+	elif "kunai=legacy" in query:target="res://scenes/art/kunai_primary_proof.tscn"
+	elif enabled:target="res://scenes/art/flicker_combat_proof.tscn"
+	if not target.is_empty():
+		get_tree().change_scene_to_file.call_deferred(target)
+		set_process(false)
+		return
+	# Opt-in READ-ONLY visual inspection, never input/gameplay mutation; no normal-game overhead.
+	if OS.has_feature("web") and "kunai_inspect=1" in query:
+		state=JavaScriptBridge.create_object("Object")
+		JavaScriptBridge.get_interface("window").__KUNAI_GAME__=state
+	else:set_process(false)
+
+func _process(_delta: float) -> void:
+	if state==null:return
+	if not is_instance_valid(player):player=get_tree().get_first_node_in_group("player") as PlayerController
+	if not is_instance_valid(enemy):enemy=get_tree().get_first_node_in_group("enemy") as Bandit
+	if player==null or player.visual==null or player.visual.actor==null:return
+	var visual := player.visual
+	state.ready=true
+	state.direction=visual.actor.dir
+	state.animation=visual.actor.anim_id
+	state.frame=visual.actor.current_frame()
+	state.weapon=visual.weapon_visible()
+	state.fallback=visual.actor.fallback
+	state.phase=int(player._attack_phase)
+	state.player_state=player.get_state_name()
+	if enemy!=null and enemy.visual!=null:
+		var bandit_visual := enemy.visual as BanditVisual
+		state.bandit_animation=bandit_visual.actor.anim_id
+		state.bandit_direction=bandit_visual.actor.dir
+		state.bandit_frame=bandit_visual.actor.current_frame()
+		state.bandit_weapon=bandit_visual.weapon_visible()
+		state.bandit_state=enemy.get_state_name()

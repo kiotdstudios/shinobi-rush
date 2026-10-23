@@ -12,6 +12,7 @@ var streak: AnimatedSprite2D
 var _last_evade := 0
 var _last_flicker := 0
 var actor: SpriteActor
+var weapon_layer: KunaiWeaponVisual
 
 const CLOTH := Color("#5a3a2a")
 const LIMB := Color("#3a2a1a")
@@ -30,6 +31,10 @@ func _ready() -> void:
 	actor.name = "BanditSprite"
 	actor.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(actor)
+	weapon_layer=KunaiWeaponVisual.new()
+	weapon_layer.name="KunaiWeapon"
+	weapon_layer.visible=false
+	add_child(weapon_layer)
 	if not _art_checked:
 		_art_checked = true
 		_art_set = SpriteSet.parse(FileAccess.get_file_as_string(ART_PATH), ART_PATH)
@@ -52,12 +57,14 @@ func _process(_delta: float) -> void:
 	if bandit == null or actor == null:
 		return
 	actor.visible = _art_set != null and _art_set.is_valid() and bandit.state != Bandit.State.DEAD
+	if not actor.visible:weapon_layer.visible=false
 	if actor.visible:
+		var combat_pose := _show_kunai_pose()
+		var throw_progress := bandit.get_throw_progress()
 		var moving := bandit.state in MOVING_STATES and bandit.velocity.length_squared() > 1.0
 		# Knockback is not a running cycle. Keep the struck pose through hurt/hitstop.
-		if bandit.state != Bandit.State.HIT_REACT or actor.set_ref == null:
-			var throw_progress := bandit.get_throw_progress()
-			if throw_progress >= 0.0 and _art_set.has_frames("throw"):
+		if not combat_pose and (bandit.state != Bandit.State.HIT_REACT or actor.set_ref == null):
+			if throw_progress >= 0.0 and _art_set.animations.has("throw"):
 				actor.show_animation_at(_art_set, "throw", SpriteSet.dir_name(bandit.facing8), throw_progress)
 			else:
 				var action := "idle"
@@ -76,7 +83,8 @@ func _process(_delta: float) -> void:
 		var cadence := 1.0
 		if moving and not bandit.is_sprinting and bandit.state != Bandit.State.EVADE:
 			cadence = clampf(bandit.velocity.length() / bandit.move_speed, 0.4, 1.0)
-		actor.set_playback(cadence, bandit._hitstop_timer > 0.0 or bandit.state == Bandit.State.HIT_REACT)
+		if combat_pose or throw_progress>=0.0:actor.sprite.pause()
+		else:actor.set_playback(cadence, bandit._hitstop_timer > 0.0 or bandit.state == Bandit.State.HIT_REACT)
 		var tint := Color.WHITE
 		var tell := bandit.get_attack_progress()
 		if bandit._hit_flash_timer > 0.0:
@@ -88,6 +96,7 @@ func _process(_delta: float) -> void:
 		if bandit.flicker_hopping:
 			tint.a = 0.12  # mid-flicker the body is barely there
 		actor.modulate = tint
+		weapon_layer.modulate=tint
 	if streak != null:
 		if bandit.evade_count != _last_evade:
 			_last_evade = bandit.evade_count
@@ -107,6 +116,59 @@ func _process(_delta: float) -> void:
 			streak.visible = false
 		streak.speed_scale = 0.0 if bandit._hitstop_timer > 0.0 else 1.0
 	queue_redraw()
+
+
+func weapon_visible() -> bool:
+	return weapon_layer!=null and weapon_layer.visible
+
+
+## Uses Aki's existing phase/timer values read-only. Does not choose attacks or change damage/AI.
+func _show_kunai_pose() -> bool:
+	if bandit.state==Bandit.State.HIT_REACT and weapon_layer.visible:
+		return true  # preserve the struck body and its matching hand/blade through knockback/hitstop
+	var dir := SpriteSet.dir_name(bandit.facing8)
+	var aid := "guard"
+	var phase := "guard"
+	var progress := 0.0
+	if bandit.state==Bandit.State.ATTACK:
+		var duration := 1.0
+		match bandit.atk_phase:
+			Bandit.AtkPhase.WINDUP1:
+				aid="light1";phase="startup";duration=float(bandit.profile.attack_windup)
+			Bandit.AtkPhase.ACTIVE1:
+				aid="light1";phase="active";duration=float(bandit.profile.attack_active)
+			Bandit.AtkPhase.GAP:
+				aid="light1";phase="recovery";duration=float(bandit.profile.combo_gap)
+			Bandit.AtkPhase.WINDUP2:
+				aid="light2";phase="startup";duration=float(bandit.profile.attack_windup)*0.8
+			Bandit.AtkPhase.ACTIVE2:
+				aid="light2";phase="active";duration=float(bandit.profile.attack_active)
+			Bandit.AtkPhase.RECOVERY:
+				aid="light2";phase="recovery";duration=float(bandit.profile.final_recovery if bandit._overcommit else bandit.profile.attack_recovery)
+			_:
+				weapon_layer.visible=false
+				return false
+		progress=1.0-bandit._atk_timer/maxf(duration,0.00001)
+	elif bandit.state!=Bandit.State.THREATEN:
+		weapon_layer.visible=false
+		return false
+	return show_attack_pose(aid,dir,phase,progress)
+
+
+## All four shared attack IDs are available to future enemy profiles; the existing AI still chooses two swings.
+func show_attack_pose(aid: String, direction: String, phase: String, progress: float) -> bool:
+	var pose := KunaiCombatData.pose_for_phase("bandit",direction,aid,phase,progress)
+	if pose.is_empty():
+		weapon_layer.visible=false
+		return false
+	var animation := "kunai_guard" if aid=="guard" else aid
+	if not actor.show_animation(_art_set,animation,direction,aid=="guard"):
+		weapon_layer.visible=false
+		return false
+	actor.sprite.pause()
+	actor.sprite.set_frame_and_progress(int(pose.frame_index),0.0)
+	weapon_layer.show_for(actor,pose)
+	return true
 
 
 func _draw() -> void:
