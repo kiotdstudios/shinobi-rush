@@ -7,6 +7,15 @@ func _solid_at(arena: Node2D, p: Vector2) -> bool:
 	return not arena.get_world_2d().direct_space_state.intersect_point(q).is_empty()
 
 
+## Builder objects other than floating pickups (random health gourds are scattered on top of the fixed starting world).
+func _non_pickups(placed: PlacedObjects) -> int:
+	var n := 0
+	for o in placed.objects:
+		if PlacedObjects.def_of(o.id).kind != "pickup":
+			n += 1
+	return n
+
+
 func run(ck: Callable, root: Node) -> void:
 	var main := (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
@@ -106,7 +115,7 @@ func run(ck: Callable, root: Node) -> void:
 	var base_objs := placed.objects.size()
 	var nb := WorldScale.BLOCKS.size()
 	var grass_total := (arena.get_node("WindGrassField") as WindGrassField).initial_tiles.size()
-	ck.call("builder: the five starting trees and every placeholder wall are editable objects", base_trees == 5 and base_objs == 5 + nb + grass_total)
+	ck.call("builder: the five starting trees and every placeholder wall are editable objects", base_trees == 5 and base_objs == 5 + nb + grass_total + PlacedObjects.DEFAULT_GOURDS)
 	# a placeholder wall: pick, move (collision + nav follow), delete
 	var wb: Array = WorldScale.BLOCKS[1]
 	var wb_mid: Vector2 = (wb[0] as Vector2) + Vector2(0, -float((wb[1] as Vector2).y) * 0.5)
@@ -145,13 +154,14 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().process_frame
 	await root.get_tree().physics_frame
 	await root.get_tree().physics_frame
-	ck.call("builder: an original tree can be deleted (art, collision and nav)", placed.objects.size() == base_objs - 1 and grove.trees.size() == base_trees - 1 and not _solid_at(arena, moved_to + Vector2(0, -20)) and arena.nav.is_walkable(moved_to + Vector2(0, -20)))
+	ck.call("builder: an original tree can be deleted (art, collision and nav)", _non_pickups(placed) == 5 + nb + grass_total - 1 and grove.trees.size() == base_trees - 1 and not _solid_at(arena, moved_to + Vector2(0, -20)) and arena.nav.is_walkable(moved_to + Vector2(0, -20)))
 	editor._reset_armed = true
 	editor._reset_pressed()
 	await root.get_tree().process_frame
 	await root.get_tree().physics_frame
 	await root.get_tree().physics_frame
-	ck.call("builder: reset brings the five starting trees back in place", placed.objects.size() == 5 + nb + grass_total and grove.trees.size() == 5 and _solid_at(arena, orig_pos + Vector2(0, -20)) and not arena.nav.is_walkable(orig_pos + Vector2(0, -20)))
+	ck.call("builder: reset brings the five starting trees back in place", _non_pickups(placed) == 5 + nb + grass_total and grove.trees.size() == 5 and _solid_at(arena, orig_pos + Vector2(0, -20)) and not arena.nav.is_walkable(orig_pos + Vector2(0, -20)))
+	ck.call("builder: reset also scatters a fresh set of health gourds", placed.objects.size() - _non_pickups(placed) == PlacedObjects.DEFAULT_GOURDS, str(placed.objects.size() - _non_pickups(placed)))
 	editor.set_open(false)
 	base_trees = grove.trees.size()
 	base_objs = placed.objects.size()

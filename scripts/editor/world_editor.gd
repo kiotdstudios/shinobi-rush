@@ -735,6 +735,10 @@ func _build_ui() -> void:
 				b.icon = PlacedObjects.wall_texture(id)
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "pickup":
+				b.icon = HealthGourd.icon()
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "tree":
 				b.icon = load(str(PlacedObjects.tree_info(int(def.tree)).texture)) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
@@ -988,13 +992,14 @@ func _clear_pressed() -> void:
 	_refresh()
 
 
-## Back to the original arena: the five starting trees, everything you built removed.
+## Back to the original arena: the five starting trees and a fresh scatter of health gourds, everything you built removed.
 func _reset_pressed() -> void:
 	if not _reset_armed:
 		_armed_button("_reset_armed")
 		return
 	_reset_armed = false
 	placed.load_dict({"version": 1, "items": []})
+	placed.scatter_gourds()  # the starting arena has its health gourds lying around
 	selected = {}
 	_refresh()
 

@@ -10,7 +10,7 @@ extends Node
 const SAVE_PATH := "user://world_builder_layout.json"
 ## v4 adds editable grass to v3 saves, which list EVERY solid object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
-const SAVE_VERSION := 4
+const SAVE_VERSION := 5
 const CATALOG := {
 	"tree_1": {"label": "Tiered tree", "kind": "tree", "tree": 0},
 	"tree_2": {"label": "Windswept tree", "kind": "tree", "tree": 1},
@@ -47,11 +47,16 @@ const CATALOG := {
 	"grass_tall_01": {"label": "Tall grass 2", "kind": "grass", "tall": true},
 	"grass_tall_02": {"label": "Tall grass 3", "kind": "grass", "tall": true},
 	"grass_tall_03": {"label": "Tall grass 4", "kind": "grass", "tall": true},
+	"health_gourd": {"label": "Health gourd +25", "kind": "pickup"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]]]
+const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Pickups", ["health_gourd"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
+## Ground footprint of a floating pickup (selection outline only; it never blocks).
+const PICKUP_FOOTPRINT := Vector2(40, 20)
+## Health gourds scattered over a layout that has never had any (first run / pre-v5 saves).
+const DEFAULT_GOURDS := 5
 
 static var _tree_cache: Array = []
 
@@ -73,6 +78,8 @@ var autosave := true
 ## Each entry: {"id": String, "pos": Vector2, "nodes": Array[Node]}
 var objects: Array[Dictionary] = []
 var _serial := 0
+## SAVE_VERSION of the layout last loaded (0 = none); the arena scatters the default gourds when it is below 5.
+var loaded_version := 0
 var hidden_types: Dictionary = {}
 
 
@@ -126,6 +133,8 @@ static func footprint_of(id: String) -> Vector2:
 	var def := def_of(id)
 	if def.kind == "wall":
 		return wall_rect(def, Vector2.ZERO).size
+	if def.kind == "pickup":
+		return PICKUP_FOOTPRINT
 	return Vector2(72, 36) if def.kind == "grass" else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind == "tree" else def.footprint
 
 
@@ -153,6 +162,10 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 			return [load(str(info.texture)) as Texture2D, pos - Vector2(float(info.anchor[0]), float(info.anchor[1]))]
 		"wall":
 			return [wall_texture(id), pos - (def.anchor as Vector2)]
+		"pickup":
+			var icon := HealthGourd.icon()
+			if icon != null:
+				return [icon, pos - Vector2(icon.get_width() * 0.5, icon.get_height() * 0.5 + HealthGourd.FLOAT_HEIGHT)]
 	return [null, Vector2.ZERO]
 
 
@@ -182,6 +195,8 @@ static func hit_rect(id: String, pos: Vector2) -> Rect2:
 	var def := def_of(id)
 	if def.kind == "grass":
 		return Rect2(pos - Vector2(56, 136 if def.tall else 84), Vector2(112, 160 if def.tall else 112))
+	if def.kind == "pickup":
+		return Rect2(pos.x - 40.0, pos.y - 140.0, 80.0, 150.0)
 	if def.kind == "tree":
 		return Rect2(pos.x - 110.0, pos.y - 330.0, 220.0, 350.0)
 	if def.kind == "wall":
@@ -196,8 +211,8 @@ func can_place(id: String, pos: Vector2) -> bool:
 	var rect := footprint_rect(id, pos).grow(8.0)
 	if not arena.bounds.encloses(rect):
 		return false
-	if def_of(id).kind == "grass":
-		return true
+	if def_of(id).kind in ["grass", "pickup"]:
+		return true  # grass and floating pickups never block anyone
 	var actors: Array[Node] = []
 	actors.append_array(get_tree().get_nodes_in_group("player"))
 	actors.append_array(get_tree().get_nodes_in_group("enemy"))
@@ -233,6 +248,12 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		nodes = [front, rear]
 	elif def.kind == "wall":
 		nodes = _make_wall(id, pos)
+	elif def.kind == "pickup":
+		var gourd := HealthGourd.new()
+		gourd.name = "PlacedGourd%d" % _serial
+		gourd.position = pos
+		arena.add_child(gourd)
+		nodes = [gourd]
 	else:
 		var grove := arena.get_node_or_null("BlossomGrove") as BlossomGrove
 		if grove == null:
@@ -396,7 +417,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Temple walls" if def.kind == "wall" else "Walls & blocks"
+	return "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Temple walls" if def.kind == "wall" else "Walls & blocks"
 
 
 func type_visible(id: String) -> bool:
@@ -499,7 +520,7 @@ func obstacles() -> Array:
 		var kind: String = def_of(o.id).kind
 		if kind == "wall":
 			out.append_array(_wall_obstacles(def_of(o.id), o.pos))
-		elif kind != "grass":
+		elif kind != "grass" and kind != "pickup":
 			out.append([o.pos, footprint_of(o.id), 0.0])
 	return out
 
@@ -552,6 +573,7 @@ func save() -> bool:
 ## Rebuild a layout. Entries with an unknown id, bad numbers, outside the arena or on top of the spawn are skipped.
 func load_dict(data: Dictionary) -> int:
 	clear_all(false)
+	loaded_version = int(data.get("version", 1))
 	if int(data.get("version", 1)) < 2:
 		for i in WorldScale.TREE_POSITIONS.size():
 			add("tree_%d" % (i + 1), WorldScale.TREE_POSITIONS[i], false)
@@ -572,12 +594,58 @@ func load_dict(data: Dictionary) -> int:
 		var id := str(item.id)
 		var pos := Vector2(float(item.x), float(item.y))
 		var rect := footprint_rect(id, pos)
-		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind != "grass" and rect.grow(60.0).has_point(spawn)):
+		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind not in ["grass", "pickup"] and rect.grow(60.0).has_point(spawn)):
 			continue
 		if not add(id, pos, false).is_empty():
 			made += 1
 	_changed(false)
 	return made
+
+
+## Drop `count` health gourds at random spots clear of the spawn, enemies, other gourds and every solid object.
+## Deterministic for a given `seed_value` (tests); a negative seed randomises. Returns how many were placed.
+func scatter_gourds(count := DEFAULT_GOURDS, seed_value := -1) -> int:
+	if arena == null:
+		return 0
+	var rng := RandomNumberGenerator.new()
+	if seed_value >= 0:
+		rng.seed = seed_value
+	else:
+		rng.randomize()
+	var area := arena.bounds.grow(-140.0)
+	var made := 0
+	var taken: Array[Vector2] = []
+	for attempt in 600:
+		if made >= count:
+			break
+		var pos := Vector2(rng.randf_range(area.position.x, area.end.x), rng.randf_range(area.position.y, area.end.y)).round()
+		if _gourd_spot_ok(pos, taken):
+			add("health_gourd", pos, false)
+			taken.append(pos)
+			made += 1
+	loaded_version = SAVE_VERSION
+	_changed(false)
+	return made
+
+
+func _gourd_spot_ok(pos: Vector2, taken: Array[Vector2]) -> bool:
+	var spawn := Vector2(0, 135)
+	if arena.has_node("Spawn"):
+		spawn = (arena.get_node("Spawn") as Node2D).position
+	if pos.distance_to(spawn) < 260.0:
+		return false
+	for t in taken:
+		if t.distance_to(pos) < 420.0:
+			return false
+	for e: Node in get_tree().get_nodes_in_group("enemy"):
+		if e is Node2D and (e as Node2D).global_position.distance_to(pos) < 200.0:
+			return false
+	for o in objects:
+		if def_of(o.id).kind in ["grass", "pickup"]:
+			continue
+		if footprint_rect(o.id, o.pos).grow(90.0).has_point(pos) or hit_rect(o.id, o.pos).grow(20.0).has_point(pos):
+			return false
+	return true
 
 
 func load_saved() -> int:
