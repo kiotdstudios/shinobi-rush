@@ -64,7 +64,7 @@ static func def_of(id: String) -> Dictionary:
 		var n := id.substr(5).to_int()
 		if n >= 0 and n < WorldScale.BLOCKS.size():
 			var b: Array = WorldScale.BLOCKS[n]
-			return {"label": "Wall" if float(b[2]) >= 140.0 else "Block", "kind": "block", "footprint": b[1], "height": float(b[2])}
+			return {"label": "Wall" if float(b[2]) >= WorldScale.WALL_ART_MIN_HEIGHT else "Block", "kind": "block", "footprint": b[1], "height": float(b[2])}
 	return {}
 
 var arena: TrainingArena
