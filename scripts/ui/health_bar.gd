@@ -14,11 +14,16 @@ const BAR_X := 84.0  ## bars tuck 12px behind the diamond's right tip, as in the
 const BAR_TUCK := 14.0  ## hidden left part of each bar: the label centres on the visible part
 const HP_Y := 15.0
 const CHAKRA_Y := 41.0
-const BAR_SIZE := Vector2(224.0, 22.0)
+const BAR_SIZE := Vector2(196.0, 22.0)
 const FILL_INSET := Vector2(3.0, 3.0)
-const FILL_SIZE := Vector2(218.0, 16.0)
-const PIP_POS := Vector2(122.0, 72.0)
-const PIP_STEP := 26.0
+const FILL_SIZE := Vector2(190.0, 16.0)
+const PIP_POS := Vector2(116.0, 70.0)
+const PIP_STEP := 28.0
+const PIP_FLASH := 0.7  ## seconds a pip glows after it refills
+const SLOT_SIZE := 56.0  ## ability bar (bottom centre): five slots, only the first (Substitution, L2) has art
+const SLOT_GAP := 8.0
+const SLOT_COUNT := 5
+const SLOT_Y := 616.0
 const COL_TEXT := Color(1.0, 1.0, 1.0, 0.95)
 const COL_FILL := Color(1.0, 1.0, 1.0, 1.0)  ## fill textures are already red / blue: white = unmodulated
 const COL_LOW := Color(1.0, 0.72, 0.72, 1.0)  ## HP at or below LOW_FRACTION: brighter flush
@@ -35,13 +40,16 @@ var chakra_text: String = "Chakra 100 / 100"
 var pips: int = 3
 var max_pips: int = 3
 var _hold: float = 0.0
+var sub_progress: float = 1.0  ## 0..1: how far the soonest-recharging substitution charge has refilled (1 = nothing recharging)
+var _player: PlayerController
+var _flash: Array[float] = [0.0, 0.0, 0.0]
 var _canvas: Control
 var _tex: Dictionary = {}
 
 
 func _ready() -> void:
 	layer = 20
-	for n: String in ["portrait_frame", "portrait_avatar", "bar_frame", "hp_fill", "chakra_fill", "pip_full", "pip_empty"]:
+	for n: String in ["portrait_frame", "portrait_avatar", "bar_frame", "hp_fill", "chakra_fill", "pip_full", "pip_empty", "slot_frame", "slot_frame_gold", "log_icon", "log_icon_gray"]:
 		_tex[n] = load(DIR + n + ".png") as Texture2D
 	_canvas = Control.new()
 	_canvas.name = "Bar"
@@ -50,9 +58,11 @@ func _ready() -> void:
 	_canvas.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(_canvas)
 	_canvas.draw.connect(_draw_hud)
+	_canvas.resized.connect(_redraw)
 
 
 func bind(player: PlayerController) -> void:
+	_player = player
 	player.health_changed.connect(_on_health_changed)
 	player.chakra_changed.connect(_on_chakra_changed)
 	player.substitution_changed.connect(_on_substitution_changed)
@@ -79,6 +89,8 @@ func _on_chakra_changed(current: float, maximum: float) -> void:
 
 
 func _on_substitution_changed(charges: int, maximum: int) -> void:
+	if charges > pips and charges >= 1 and charges <= _flash.size():
+		_flash[charges - 1] = PIP_FLASH  ## a charge just refilled: its pip lights up
 	pips = clampi(charges, 0, maximum)
 	max_pips = maximum
 	_redraw()
@@ -90,6 +102,15 @@ func _redraw() -> void:
 
 
 func _process(delta: float) -> void:
+	if _player != null:
+		var p := _player.substitution_progress()
+		if not is_equal_approx(p, sub_progress):
+			sub_progress = p
+			_redraw()
+	for i in _flash.size():
+		if _flash[i] > 0.0:
+			_flash[i] = maxf(_flash[i] - delta, 0.0)
+			_redraw()
 	if trail > fraction:
 		_hold -= delta
 		if _hold <= 0.0:
@@ -122,7 +143,36 @@ func _draw_hud() -> void:
 	# substitution pips
 	for i in max_pips:
 		var tex: Texture2D = _tex["pip_full"] if i < pips else _tex["pip_empty"]
-		_canvas.draw_texture(tex, PIP_POS + Vector2(PIP_STEP * i, 0.0))
+		var at := PIP_POS + Vector2(PIP_STEP * i, 0.0)
+		if i < _flash.size() and _flash[i] > 0.0:
+			var k: float = _flash[i] / PIP_FLASH
+			_canvas.draw_circle(at + Vector2(10, 10), 11.0 + 6.0 * (1.0 - k), Color(1.0, 0.86, 0.45, 0.55 * k))
+		_canvas.draw_texture(tex, at)
+	_draw_abilities()
+
+
+## Ability bar: slot 0 is Substitution Jutsu (log art). While a charge recharges the icon is grey and refills bottom to top.
+func _draw_abilities() -> void:
+	var total := SLOT_SIZE * SLOT_COUNT + SLOT_GAP * (SLOT_COUNT - 1)
+	var x0 := (_canvas.size.x - total) * 0.5
+	for i in SLOT_COUNT:
+		var pos := Vector2(x0 + (SLOT_SIZE + SLOT_GAP) * i, SLOT_Y)
+		_canvas.draw_texture(_tex["slot_frame_gold" if i == 0 else "slot_frame"], pos)
+	var first := Vector2(x0, SLOT_Y)
+	var icon: Texture2D = _tex["log_icon"]
+	var isz := icon.get_size()
+	var ipos := first + (Vector2(SLOT_SIZE, SLOT_SIZE) - isz) * 0.5
+	if pips < max_pips:
+		_canvas.draw_texture(_tex["log_icon_gray"], ipos)
+		var top := roundf(isz.y * (1.0 - sub_progress))
+		if sub_progress > 0.0 and top < isz.y:
+			_canvas.draw_texture_rect_region(icon, Rect2(ipos + Vector2(0.0, top), Vector2(isz.x, isz.y - top)), Rect2(0.0, top, isz.x, isz.y - top))
+	else:
+		_canvas.draw_texture(icon, ipos)
+	var font := ThemeDB.fallback_font
+	var lab := first + Vector2(0.0, SLOT_SIZE + 15.0)
+	_canvas.draw_string_outline(font, lab, "L2", HORIZONTAL_ALIGNMENT_CENTER, SLOT_SIZE, 13, 3, Color(0, 0, 0, 0.9))
+	_canvas.draw_string(font, lab, "L2", HORIZONTAL_ALIGNMENT_CENTER, SLOT_SIZE, 13, COL_TEXT)
 
 
 func _bar(y: float, trail_f: float, fill_f: float, fill_tex: String, tint: Color, text: String) -> void:
