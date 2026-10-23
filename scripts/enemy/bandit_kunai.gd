@@ -87,5 +87,3 @@ func step(delta: float) -> void:
 	if travelled >= MAX_RANGE:
 		hit_result = "range"
 		queue_free()
-
-

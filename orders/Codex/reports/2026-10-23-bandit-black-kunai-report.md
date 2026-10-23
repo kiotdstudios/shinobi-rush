@@ -20,10 +20,10 @@ Windows, bundled Python/Node/Playwright Chromium, Godot4.7.2console via GODOT_BI
 | Python scripts/ci/godot_ci.py export --project . --out ../black-kunai-web --log-dir build/black-kunai-export | PASS debug Web export, no engine/script errors | export.log |
 | Node scripts/ci/smoke/bandit-black-kunai-probe.mjs ../black-kunai-web | PASS normal keyboard movement to bandit and retreat, real AI throw animation/frame9 observed,0console/page errors | build/bandit-black-kunai-browser/result.json, states.json, flight-31.png |
 | Browser screenshot review | Normal arena/character/throw rendered; procedural silver blade removed from runtime source; existing black texture is native sprite | flight-31.png |
-| Python scripts/ci/validate_orders.py; git diff --check | PASS | stdout |
+| Python scripts/ci/validate_orders.py; git diff --check after whitespace cleanup | PASS | stdout |
 
 ## Issues encountered
-Initial QA driver assumed bandit_log is exported as a JavaScript array; the existing hook doesn't expose that field. Corrected to existing bandit_animation/frame fields. Initial stationary approach led to melee instead of ranged AI; QA driver now retreats using actual keys to create a ranged opportunity. Those were harness failures, not projectile-code failures; no AI/gameplay changes made to force a pass. No physical gamepad tested; this is a visual-only projectile swap.
+Initial QA driver assumed bandit_log is exported as a JavaScript array; the existing hook doesn't expose that field. Corrected to existing bandit_animation/frame fields. Initial stationary approach led to melee instead of ranged AI; QA driver now retreats using actual keys to create a ranged opportunity. Those were harness failures, not projectile-code failures; no AI/gameplay changes made to force a pass. The first diff check flagged trailing blank lines at EOF; removed them in a follow-up whitespace-only commit and rechecked before PR. No physical gamepad tested; this is a visual-only projectile swap.
 
 ## Questions for project owner
 None.
