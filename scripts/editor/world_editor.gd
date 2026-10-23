@@ -349,6 +349,10 @@ func draw_overlay(c: Node2D) -> void:
 			c.draw_texture(tex, pos - anchor, Color(1, 1, 1, 0.55) if ok else Color(1, 0.5, 0.5, 0.55))
 		elif def.kind == "wall":
 			c.draw_texture(PlacedObjects.wall_texture(place_id), pos - (def.anchor as Vector2), Color(1, 1, 1, 0.55) if ok else Color(1, 0.5, 0.5, 0.55))
+		elif def.kind == "pickup":
+			var gtex := HealthGourd.icon()
+			if gtex != null:
+				c.draw_texture(gtex, pos - Vector2(gtex.get_width() * 0.5, gtex.get_height() * 0.5 + HealthGourd.FLOAT_HEIGHT), Color(1, 1, 1, 0.6))
 		else:
 			c.draw_rect(PlacedObjects.hit_rect(place_id, pos), Color(tint, 0.25))
 		if def.kind == "grass":
@@ -606,6 +610,10 @@ func _build_ui() -> void:
 				b.icon = PlacedObjects.wall_texture(id)
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "pickup":
+				b.icon = HealthGourd.icon()
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "tree":
 				b.icon = load(str(PlacedObjects.tree_info(int(def.tree)).texture)) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
@@ -797,13 +805,14 @@ func _clear_pressed() -> void:
 	_refresh()
 
 
-## Back to the original arena: the five starting trees, everything you built removed.
+## Back to the original arena: the five starting trees and a fresh scatter of health gourds, everything you built removed.
 func _reset_pressed() -> void:
 	if not _reset_armed:
 		_armed_button("_reset_armed")
 		return
 	_reset_armed = false
 	placed.load_dict({"version": 1, "items": []})
+	placed.scatter_gourds()  # the starting arena has its health gourds lying around
 	selected = {}
 	_refresh()
 
