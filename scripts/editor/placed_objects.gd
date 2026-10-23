@@ -139,6 +139,44 @@ static func footprint_rect(id: String, pos: Vector2) -> Rect2:
 	return Rect2(pos.x - fp.x * 0.5, pos.y - fp.y, fp.x, fp.y)
 
 
+static var _art_cache: Dictionary = {}
+
+
+## The object's picture: [Texture2D, top-left world origin] for kinds drawn from a texture, else [null, ZERO].
+static func art_texture(id: String, pos: Vector2) -> Array:
+	var def := def_of(id)
+	match String(def.kind):
+		"grass":
+			return [load(WindGrassTileset.DIR + id + ".png") as Texture2D, pos - Vector2(56, 136 if def.tall else 84)]
+		"tree":
+			var info := tree_info(int(def.tree))
+			return [load(str(info.texture)) as Texture2D, pos - Vector2(float(info.anchor[0]), float(info.anchor[1]))]
+		"wall":
+			return [wall_texture(id), pos - (def.anchor as Vector2)]
+	return [null, Vector2.ZERO]
+
+
+## The rectangle that exactly bounds the object's VISIBLE art (transparent padding trimmed). Used for the
+## builder's dimension boxes, hover and selection, so a box never covers more than the picture.
+static func art_rect(id: String, pos: Vector2) -> Rect2:
+	var at := art_texture(id, pos)
+	var tex: Texture2D = at[0]
+	if tex == null:
+		return hit_rect(id, pos)  # placeholder blocks have no texture: their drawn volume is the art
+	if not _art_cache.has(id):
+		var used := Rect2i(Vector2i.ZERO, Vector2i(tex.get_size()))
+		var img := tex.get_image()
+		if img != null:
+			if img.is_compressed():
+				img.decompress()
+			var r := img.get_used_rect()
+			if r.size.x > 0 and r.size.y > 0:
+				used = r
+		_art_cache[id] = used
+	var u: Rect2i = _art_cache[id]
+	return Rect2((at[1] as Vector2) + Vector2(u.position), Vector2(u.size))
+
+
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
 static func hit_rect(id: String, pos: Vector2) -> Rect2:
 	var def := def_of(id)
