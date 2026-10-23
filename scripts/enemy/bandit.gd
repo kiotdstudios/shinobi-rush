@@ -306,7 +306,7 @@ func _update_perception() -> void:
 func can_see(target: Vector2, use_cone: bool) -> bool:
 	var to := target - global_position
 	var d := to.length()
-	var reach: float = float(profile.sight_range) * (1.0 if use_cone else 1.35)
+	var reach: float = float(profile.sight_range) * (1.0 if use_cone else 1.2)
 	if d > reach:
 		return false
 	if use_cone and d > float(profile.close_sense):

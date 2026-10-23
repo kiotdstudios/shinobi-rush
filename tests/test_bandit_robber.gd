@@ -114,7 +114,7 @@ func _test_navigation_data() -> void:
 	var back := nav.find_path(WorldScale.BANDIT_HOME, spawn)
 	ck.call("robber nav: a path exists Bandit home -> spawn (nobody is trapped)", not back.is_empty())
 	# Three distinct routes past the wall line at x=900: north of it, through the choke, south of it.
-	ck.call("robber nav: choke route (y=60) is a straight walkable line through the gap", nav.line_clear(Vector2(700, 60), Vector2(1020, 60)))
+	ck.call("robber nav: choke route (y=60) is a straight walkable line through the gap", nav.line_clear(Vector2(800, 60), Vector2(1020, 60)))
 	ck.call("robber nav: the north wall blocks a straight crossing (y=-300)", not nav.line_clear(Vector2(780, -300), Vector2(1100, -300)))
 	ck.call("robber nav: the south wall blocks a straight crossing (y=450)", not nav.line_clear(Vector2(700, 450), Vector2(1100, 450)))
 	ck.call("robber nav: north route above the wall is walkable (y=-800)", nav.line_clear(Vector2(700, -800), Vector2(1100, -800)))
@@ -169,17 +169,17 @@ func _test_patrol() -> void:
 
 
 func _test_sight_and_walls() -> void:
-	# Open-air sight: bandit facing left, player 400 px ahead, nothing between.
-	_put(Vector2(1100, 60), Vector2(700, 60))
+	# Open-air sight: bandit facing left, player 300 px ahead, nothing between.
+	_put(Vector2(1100, 60), Vector2(800, 60))
 	bandit.facing8 = Vector2.LEFT
 	ck.call("robber sight: sees a player in its cone with clear line of sight", bandit.can_see(player.global_position, true))
 	# Behind it: outside the narrow cone, beyond close-sense.
 	_put(Vector2(1500, 300), Vector2(1900, 300))
 	bandit.facing8 = Vector2.LEFT
 	ck.call("robber sight: does NOT see a player behind it beyond close-sense (narrow awareness)", not bandit.can_see(player.global_position, true))
-	_put(Vector2(1500, 300), Vector2(1600, 300))
+	_put(Vector2(1500, 300), Vector2(1560, 300))
 	bandit.facing8 = Vector2.LEFT
-	ck.call("robber sight: still senses a player right behind it at 100 px", bandit.can_see(player.global_position, true))
+	ck.call("robber sight: still senses a player right behind it at 60 px", bandit.can_see(player.global_position, true))
 	# The north wall (x 855..945, y -600..-80) sits between these two.
 	_put(Vector2(1100, -300), Vector2(780, -300))
 	bandit.facing8 = Vector2.LEFT
@@ -187,7 +187,7 @@ func _test_sight_and_walls() -> void:
 	await _frames(90)
 	ck.call("robber sight: stays PATROL, never NOTICEs through the wall", bandit.state == Bandit.State.PATROL and not bandit.sees_player, bandit.get_state_name())
 	# Through the gap the same distance is visible.
-	_put(Vector2(1100, 60), Vector2(700, 60))
+	_put(Vector2(1100, 60), Vector2(800, 60))
 	bandit.facing8 = Vector2.LEFT
 	await _frames(3)
 	ck.call("robber sight: the same distance through the choke gap IS visible", bandit.sees_player)
@@ -198,7 +198,7 @@ func _test_sight_and_walls() -> void:
 
 
 func _test_acquisition_delay() -> void:
-	_put(Vector2(1500, 300), Vector2(1100, 300))
+	_put(Vector2(1500, 300), Vector2(1200, 300))
 	bandit.facing8 = Vector2.LEFT
 	await _frames(12)
 	ck.call("robber acquire: first sees -> NOTICE (suspicion beat), not an instant chase", bandit.state == Bandit.State.NOTICE, bandit.get_state_name())
@@ -206,7 +206,7 @@ func _test_acquisition_delay() -> void:
 	await _frames(int(float(bandit.profile.notice_delay) * 60.0) + 12)
 	ck.call("robber acquire: after the notice delay it commits (APPROACH)", bandit.state == Bandit.State.APPROACH or bandit.state == Bandit.State.THREATEN, bandit.get_state_name())
 	# Slow re-acquisition after losing the player.
-	_put(Vector2(1500, 300), Vector2(1100, 300), Bandit.State.SEARCH)
+	_put(Vector2(1500, 300), Vector2(1200, 300), Bandit.State.SEARCH)
 	bandit.facing8 = Vector2.LEFT
 	bandit._has_lost_player = true
 	bandit.last_seen = Vector2(1500, 300)
