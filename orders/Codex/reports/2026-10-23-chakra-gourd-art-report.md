@@ -3,7 +3,7 @@
 - Order: ../2026-10-23-chakra-gourd-art.md
 - Date: 2026-10-23
 - Final status: REVIEW — complete art package delivered for visual review
-- Commit / PR: Not committed yet; this report precedes implementation commit.
+- Commit / PR: Implementation95dd8a0ebb49d6f0b03f03a771baec3e8604eed8; draft https://github.com/kiotdstudios/shinobi-rush/pull/136. Original report preceded implementation commit.
 
 ## Work completed
 Created a blue/teal glazed chakra gourd in PixelLab using the existing health gourd's native scale/pixel style and the supplied blue ceramic reference. Preserved cork, red cord/tassel, gold wear/cracks; removed health paper lettering. PixelLab Pixen edit job6b3e6aaf produced the48×80 base, then PixelLab pixel-tools drawing f06cb019 authored the±1.4degree rigid sway on a padded64×96canvas. Native painted body stays75px tall in every frame; palette is preserved exactly. Export16timed body keys at14FPS,7distinct raster poses reused through a natural pendulum motion. No claim of16unique redraws. The17-key source closes exactly; omitted its identical last key to avoid an extra seam hold. No local repainting/interpolated asset pixels.
@@ -40,3 +40,6 @@ None. Concrete normal/half-speed previews supplied for visual review.
 
 ## Outstanding work / recommended next steps
 Owner visual review, then a separate requested pickup integration can bind chakra restoration/builder placement. No new restoration amount or spawn behavior invented in this art task. Live deployment: not applicable; assets are unbound review art. Existing health gourd and player charge VFX stay unchanged.
+
+
+Published preview verification: fetched half-speed.gif from raw.githubusercontent.com at implementation95dd8a0; downloaded SHA2567B67AB21260A31A08C24103D5CDA83645B00DBD279B8F4778D045B168E8B8D63 matches local. Preview publication confirmed; no live game deployment claimed.

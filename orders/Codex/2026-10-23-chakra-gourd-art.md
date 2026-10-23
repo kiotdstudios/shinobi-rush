@@ -3,7 +3,7 @@
 - Owner: Codex art
 - Status: REVIEW
 - Priority: P0 direct owner request
-- Branch/PR: codex/chakra-gourd
+- Branch/PR: codex/chakra-gourd / https://github.com/kiotdstudios/shinobi-rush/pull/136 (draft); implementation95dd8a0
 - Dependencies: existing health gourd and supplied blue ceramic reference
 
 ## Objective
