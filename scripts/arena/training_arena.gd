@@ -244,6 +244,8 @@ func _ready() -> void:
 	placed.load_saved()
 	rebuild_nav()
 	_spawn_bandit()
+	if placed.loaded_version < PlacedObjects.SAVE_VERSION:
+		placed.scatter_gourds()  # first run / a layout saved before pickups existed: a few health gourds lie around
 	editor = WorldEditor.new()
 	editor.setup(self, placed)
 	add_child(editor)

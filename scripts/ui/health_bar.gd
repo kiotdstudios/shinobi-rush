@@ -17,10 +17,11 @@ const CHAKRA_Y := 41.0
 const BAR_SIZE := Vector2(196.0, 22.0)
 const FILL_INSET := Vector2(3.0, 3.0)
 const FILL_SIZE := Vector2(190.0, 16.0)
-const PIP_POS := Vector2(116.0, 70.0)
-const PIP_STEP := 28.0
+const PIP_POS := Vector2(112.0, 72.0)
+const PIP_SIZE := 16.0  ## the blue crystal pips are 16x16 pixel art, drawn 1:1
+const PIP_STEP := 24.0
 const PIP_FLASH := 0.7  ## seconds a pip glows after it refills
-const SLOT_SIZE := 56.0  ## ability bar (bottom centre): five slots, only the first (Substitution, L2) has art
+const SLOT_SIZE := 56.0  ## ability bar (bottom centre): Substitution (L2, square gold frame) + four gold circles for R2 + a face button
 const SLOT_GAP := 8.0
 const SLOT_COUNT := 5
 const SLOT_Y := 616.0
@@ -28,6 +29,14 @@ const COL_TEXT := Color(1.0, 1.0, 1.0, 0.95)
 const COL_FILL := Color(1.0, 1.0, 1.0, 1.0)  ## fill textures are already red / blue: white = unmodulated
 const COL_LOW := Color(1.0, 0.72, 0.72, 1.0)  ## HP at or below LOW_FRACTION: brighter flush
 const COL_TRAIL := Color(1.0, 1.0, 1.0, 0.55)
+## Every piece of the HUD the builder can pick up and move. Order = draw order (hit-testing walks it backwards).
+const ELEMENTS: Array[String] = ["hp_bar", "chakra_bar", "portrait", "pips", "ability_0", "ability_1", "ability_2", "ability_3", "ability_4"]
+const ELEMENT_NAMES := {
+	"hp_bar": "HP bar", "chakra_bar": "Chakra bar", "portrait": "Avatar", "pips": "Sub pips",
+	"ability_0": "Substitution", "ability_1": "R2 + Sq (Chidori)", "ability_2": "R2 + Tri", "ability_3": "R2 + O", "ability_4": "R2 + X",
+}
+const ABILITY_LABELS: Array[String] = ["L2", "R2+Sq", "R2+Tri", "R2+O", "R2+X"]
+const LAYOUT_PATH := "user://hud_layout.json"
 const LOW_FRACTION := 0.3
 const TRAIL_DELAY := 0.35
 const TRAIL_SPEED := 0.9  ## fraction per second
@@ -45,11 +54,19 @@ var _player: PlayerController
 var _flash: Array[float] = [0.0, 0.0, 0.0]
 var _canvas: Control
 var _tex: Dictionary = {}
+var offsets: Dictionary = {}  ## element id -> Vector2 shift from its default spot (saved to LAYOUT_PATH)
+var edit_mode := false  ## true while the builder is open: pieces get outlines and can be picked and dragged
+var selected_element := ""
+var layout_path := LAYOUT_PATH  ## where drags are saved (tests point this elsewhere)
+var _drag_grab := Vector2.ZERO
+var dragging_element := false
+const SNAPS: Array[int] = [8, 16, 32, 0]
+var hud_snap: int = 8  ## builder drag grid in screen px (0 = free); hold Shift while dragging to bypass
 
 
 func _ready() -> void:
 	layer = 20
-	for n: String in ["portrait_frame", "portrait_avatar", "bar_frame", "hp_fill", "chakra_fill", "pip_full", "pip_empty", "slot_frame", "slot_frame_gold", "log_icon", "log_icon_gray"]:
+	for n: String in ["portrait_frame", "portrait_avatar", "bar_frame", "hp_fill", "chakra_fill", "pip_full", "pip_empty", "slot_frame", "slot_frame_gold", "slot_circle_gold", "chidori_icon", "log_icon", "log_icon_gray"]:
 		_tex[n] = load(DIR + n + ".png") as Texture2D
 	_canvas = Control.new()
 	_canvas.name = "Bar"
@@ -59,6 +76,7 @@ func _ready() -> void:
 	add_child(_canvas)
 	_canvas.draw.connect(_draw_hud)
 	_canvas.resized.connect(_redraw)
+	load_layout()
 
 
 func bind(player: PlayerController) -> void:
@@ -124,10 +142,10 @@ func fill_color() -> Color:
 
 func _draw_hud() -> void:
 	# bars first: the portrait is drawn over their left ends
-	_bar(HP_Y, trail, fraction, "hp_fill", fill_color(), label_text)
-	_bar(CHAKRA_Y, chakra_fraction, chakra_fraction, "chakra_fill", COL_FILL, chakra_text)
+	_bar("hp_bar", trail, fraction, "hp_fill", fill_color(), label_text)
+	_bar("chakra_bar", chakra_fraction, chakra_fraction, "chakra_fill", COL_FILL, chakra_text)
 	# portrait: dark backing diamond, the player's face clipped to the diamond opening, then the gold frame on top
-	var o := ORIGIN
+	var o := pos_of("portrait")
 	var back := PackedVector2Array([o + Vector2(48, 8), o + Vector2(88, 48), o + Vector2(48, 88), o + Vector2(8, 48)])
 	_canvas.draw_colored_polygon(back, Color(0.09, 0.07, 0.06, 1.0))
 	_canvas.draw_texture(_tex["portrait_frame"], o)
@@ -140,25 +158,33 @@ func _draw_hud() -> void:
 		pts.append(o + p)
 		uvs.append((o + p - av_origin) / 80.0)
 	_canvas.draw_colored_polygon(pts, Color.WHITE, uvs, _tex["portrait_avatar"])
-	# substitution pips
+	# substitution pips: blue lit crystals in a gold rim
+	var pp := pos_of("pips")
 	for i in max_pips:
 		var tex: Texture2D = _tex["pip_full"] if i < pips else _tex["pip_empty"]
-		var at := PIP_POS + Vector2(PIP_STEP * i, 0.0)
+		var at := pp + Vector2(PIP_STEP * i, 0.0)
 		if i < _flash.size() and _flash[i] > 0.0:
 			var k: float = _flash[i] / PIP_FLASH
-			_canvas.draw_circle(at + Vector2(10, 10), 11.0 + 6.0 * (1.0 - k), Color(1.0, 0.86, 0.45, 0.55 * k))
+			_canvas.draw_circle(at + Vector2(PIP_SIZE, PIP_SIZE) * 0.5, PIP_SIZE * 0.5 + 3.0 + 6.0 * (1.0 - k), Color(0.45, 0.85, 1.0, 0.55 * k))
 		_canvas.draw_texture(tex, at)
 	_draw_abilities()
+	if edit_mode:
+		_draw_edit_outlines()
 
 
 ## Ability bar: slot 0 is Substitution Jutsu (log art). While a charge recharges the icon is grey and refills bottom to top.
+## Slots 1-4 are gold circles for R2 + Square / Triangle / Circle / Cross; slot 1 carries the Chidori icon (art only, no gameplay yet).
 func _draw_abilities() -> void:
-	var total := SLOT_SIZE * SLOT_COUNT + SLOT_GAP * (SLOT_COUNT - 1)
-	var x0 := (_canvas.size.x - total) * 0.5
+	var font := ThemeDB.fallback_font
 	for i in SLOT_COUNT:
-		var pos := Vector2(x0 + (SLOT_SIZE + SLOT_GAP) * i, SLOT_Y)
-		_canvas.draw_texture(_tex["slot_frame_gold" if i == 0 else "slot_frame"], pos)
-	var first := Vector2(x0, SLOT_Y)
+		var pos := slot_pos(i)
+		_canvas.draw_texture(_tex["slot_frame_gold" if i == 0 else "slot_circle_gold"], pos)
+		var lab := pos + Vector2(0.0, SLOT_SIZE + 15.0)
+		_canvas.draw_string_outline(font, lab, ABILITY_LABELS[i], HORIZONTAL_ALIGNMENT_CENTER, SLOT_SIZE, 13, 3, Color(0, 0, 0, 0.9))
+		_canvas.draw_string(font, lab, ABILITY_LABELS[i], HORIZONTAL_ALIGNMENT_CENTER, SLOT_SIZE, 13, COL_TEXT)
+	var chi: Texture2D = _tex["chidori_icon"]
+	_canvas.draw_texture(chi, slot_pos(1) + (Vector2(SLOT_SIZE, SLOT_SIZE) - chi.get_size()) * 0.5)
+	var first := slot_pos(0)
 	var icon: Texture2D = _tex["log_icon"]
 	var isz := icon.get_size()
 	var ipos := first + (Vector2(SLOT_SIZE, SLOT_SIZE) - isz) * 0.5
@@ -169,14 +195,10 @@ func _draw_abilities() -> void:
 			_canvas.draw_texture_rect_region(icon, Rect2(ipos + Vector2(0.0, top), Vector2(isz.x, isz.y - top)), Rect2(0.0, top, isz.x, isz.y - top))
 	else:
 		_canvas.draw_texture(icon, ipos)
-	var font := ThemeDB.fallback_font
-	var lab := first + Vector2(0.0, SLOT_SIZE + 15.0)
-	_canvas.draw_string_outline(font, lab, "L2", HORIZONTAL_ALIGNMENT_CENTER, SLOT_SIZE, 13, 3, Color(0, 0, 0, 0.9))
-	_canvas.draw_string(font, lab, "L2", HORIZONTAL_ALIGNMENT_CENTER, SLOT_SIZE, 13, COL_TEXT)
 
 
-func _bar(y: float, trail_f: float, fill_f: float, fill_tex: String, tint: Color, text: String) -> void:
-	var pos := Vector2(BAR_X, y)
+func _bar(id: String, trail_f: float, fill_f: float, fill_tex: String, tint: Color, text: String) -> void:
+	var pos := pos_of(id)
 	_canvas.draw_texture(_tex["bar_frame"], pos)
 	var inner := pos + FILL_INSET
 	if trail_f > fill_f:
@@ -188,3 +210,202 @@ func _bar(y: float, trail_f: float, fill_f: float, fill_tex: String, tint: Color
 	var at := pos + Vector2(BAR_TUCK, BAR_SIZE.y * 0.5 + 5.0)
 	_canvas.draw_string_outline(font, at, text, HORIZONTAL_ALIGNMENT_CENTER, BAR_SIZE.x - BAR_TUCK, 12, 3, Color(0, 0, 0, 0.9))
 	_canvas.draw_string(font, at, text, HORIZONTAL_ALIGNMENT_CENTER, BAR_SIZE.x - BAR_TUCK, 12, COL_TEXT)
+
+
+# ------------------------------------------------------------------ movable layout (builder)
+## Default top-left of an element before any saved offset is applied.
+func base_pos(id: String) -> Vector2:
+	match id:
+		"hp_bar":
+			return Vector2(BAR_X, HP_Y)
+		"chakra_bar":
+			return Vector2(BAR_X, CHAKRA_Y)
+		"portrait":
+			return ORIGIN
+		"pips":
+			return PIP_POS
+	var i := int(id.trim_prefix("ability_"))
+	var total := SLOT_SIZE * SLOT_COUNT + SLOT_GAP * (SLOT_COUNT - 1)
+	var w := _canvas.size.x if _canvas != null and _canvas.size.x > 0.0 else 1280.0
+	return Vector2((w - total) * 0.5 + (SLOT_SIZE + SLOT_GAP) * i, SLOT_Y)
+
+
+func pos_of(id: String) -> Vector2:
+	return base_pos(id) + (offsets.get(id, Vector2.ZERO) as Vector2)
+
+
+func slot_pos(i: int) -> Vector2:
+	return pos_of("ability_%d" % i)
+
+
+## Screen-space box of an element (what you click to pick it up).
+func element_rect(id: String) -> Rect2:
+	var p := pos_of(id)
+	match id:
+		"hp_bar", "chakra_bar":
+			return Rect2(p, BAR_SIZE)
+		"portrait":
+			return Rect2(p + Vector2(0.0, AVATAR_POS.y), Vector2(PORTRAIT_SIZE.x, PORTRAIT_SIZE.y - AVATAR_POS.y))
+		"pips":
+			return Rect2(p, Vector2(PIP_STEP * (max_pips - 1) + PIP_SIZE, PIP_SIZE))
+	return Rect2(p, Vector2(SLOT_SIZE, SLOT_SIZE + 20.0))
+
+
+## The topmost element under a screen point ("" when none).
+func element_at(point: Vector2) -> String:
+	for k in range(ELEMENTS.size() - 1, -1, -1):
+		if element_rect(ELEMENTS[k]).has_point(point):
+			return ELEMENTS[k]
+	return ""
+
+
+func select_element(id: String) -> void:
+	selected_element = id
+	_redraw()
+
+
+func set_edit_mode(on: bool) -> void:
+	edit_mode = on
+	if not on:
+		selected_element = ""
+		dragging_element = false
+	_redraw()
+
+
+func move_element(id: String, delta: Vector2) -> void:
+	set_piece_offset(id, (offsets.get(id, Vector2.ZERO) as Vector2) + delta)
+
+
+func set_piece_offset(id: String, v: Vector2) -> void:
+	if v.round() == Vector2.ZERO:
+		offsets.erase(id)
+	else:
+		offsets[id] = v.round()
+	_redraw()
+
+
+## Mouse press in edit mode: picks the element under the cursor and starts a drag. Returns true when it grabbed one.
+func press_at(point: Vector2) -> bool:
+	var id := element_at(point)
+	if id == "":
+		return false
+	selected_element = id
+	dragging_element = true
+	_drag_grab = point - pos_of(id)
+	_redraw()
+	return true
+
+
+func drag_at(point: Vector2, snap_on: bool = true) -> void:
+	if dragging_element and selected_element != "":
+		var target := point - _drag_grab
+		if snap_on and hud_snap > 0:
+			target = (target / float(hud_snap)).round() * float(hud_snap)
+		# keep the piece on screen so it can never be lost off an edge
+		if _canvas != null and _canvas.size.x > 0.0:
+			var r := element_rect(selected_element)
+			target.x = clampf(target.x, 0.0, maxf(_canvas.size.x - r.size.x, 0.0))
+			target.y = clampf(target.y, 0.0, maxf(_canvas.size.y - r.size.y, 0.0))
+		set_piece_offset(selected_element, target - base_pos(selected_element))
+
+
+func cycle_snap() -> void:
+	hud_snap = SNAPS[(SNAPS.find(hud_snap) + 1) % SNAPS.size()]
+	_redraw()
+
+
+## The four R2 pieces (ability_1..4) as one group.
+func r2_ids() -> Array[String]:
+	return ["ability_1", "ability_2", "ability_3", "ability_4"]
+
+
+func r2_bounds() -> Rect2:
+	var r := element_rect("ability_1")
+	for id in r2_ids():
+		r = r.merge(element_rect(id))
+	return r
+
+
+## Slide the whole R2 cluster (shape kept) to the right edge of the screen.
+func r2_to_right_edge(margin: float = 24.0) -> void:
+	var w := _canvas.size.x if _canvas != null and _canvas.size.x > 0.0 else 1280.0
+	var dx := (w - margin) - r2_bounds().end.x
+	for id in r2_ids():
+		move_element(id, Vector2(dx, 0.0))
+	save_layout()
+
+
+## Put the Substitution slot on the same horizontal line as the R2 cluster (centres level), same slot size.
+func align_substitution_with_r2() -> void:
+	var cy := r2_bounds().get_center().y
+	var sub := element_rect("ability_0")
+	move_element("ability_0", Vector2(0.0, cy - sub.get_center().y))
+	save_layout()
+
+
+func release_drag() -> void:
+	if dragging_element:
+		dragging_element = false
+		save_layout()
+
+
+func reset_layout() -> void:
+	offsets.clear()
+	save_layout()
+	_redraw()
+
+
+func layout_json() -> String:
+	var d := {}
+	for id: String in offsets:
+		var v: Vector2 = offsets[id]
+		d[id] = [v.x, v.y]
+	return JSON.stringify(d)
+
+
+func apply_layout_json(text: String) -> void:
+	offsets.clear()
+	var d: Variant = JSON.parse_string(text)
+	if d is Dictionary:
+		for id: String in d:
+			var a: Variant = d[id]
+			if id in ELEMENTS and a is Array and a.size() == 2:
+				offsets[id] = Vector2(float(a[0]), float(a[1]))
+	_redraw()
+
+
+func save_layout(path := "") -> bool:
+	if path == "":
+		path = layout_path
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	if f == null:
+		return false
+	f.store_string(layout_json())
+	return true
+
+
+func load_layout(path := "") -> void:
+	if path == "":
+		path = layout_path
+	if FileAccess.file_exists(path):
+		apply_layout_json(FileAccess.get_file_as_string(path))
+
+
+func _draw_edit_outlines() -> void:
+	if hud_snap > 0 and _canvas != null:
+		var sz := _canvas.size
+		var x := 0.0
+		while x <= sz.x:
+			_canvas.draw_line(Vector2(x, 0), Vector2(x, sz.y), Color(1, 1, 1, 0.16 if int(x) % (hud_snap * 4) == 0 else 0.06), 1.0)
+			x += hud_snap
+		var y := 0.0
+		while y <= sz.y:
+			_canvas.draw_line(Vector2(0, y), Vector2(sz.x, y), Color(1, 1, 1, 0.16 if int(y) % (hud_snap * 4) == 0 else 0.06), 1.0)
+			y += hud_snap
+	for id in ELEMENTS:
+		var r := element_rect(id).grow(2.0)
+		var sel := id == selected_element
+		_canvas.draw_rect(r, Color(1.0, 0.42, 0.0, 0.9) if sel else Color(1.0, 1.0, 1.0, 0.35), false, 2.0 if sel else 1.0)
+		if sel:
+			_canvas.draw_string_outline(ThemeDB.fallback_font, r.position + Vector2(2.0, -4.0), ELEMENT_NAMES[id], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, 3, Color(0, 0, 0, 0.9))
+			_canvas.draw_string(ThemeDB.fallback_font, r.position + Vector2(2.0, -4.0), ELEMENT_NAMES[id], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1.0, 0.6, 0.2))

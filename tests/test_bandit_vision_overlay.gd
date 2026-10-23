@@ -333,8 +333,8 @@ func _test_geometry_box() -> void:
 	ck.call("vision geometry: the polygon has a vertex on each front corner of the box (bisection found the silhouette), within 0.2 px", near_top < 0.2 and near_bot < 0.2, "top %.3f bottom %.3f" % [near_top, near_bot])
 	ck.call("vision geometry: just in front of the face is seen, just behind it is not (and both equal the AI)",
 		reg.contains(Vector2(1397, 500)) and not reg.contains(Vector2(1403, 500)) and bandit.can_see(Vector2(1397, 500), true) and not bandit.can_see(Vector2(1403, 500), true))
-	ck.call("vision geometry: the box's shadow is not seen (a point 150 px behind its centre), like the AI", not reg.contains(Vector2(1650, 500)) and not bandit.can_see(Vector2(1650, 500), true))
-	# shadow edges 400 px out, 0.5 px either side of the exact edge line
+	ck.call("vision geometry: the box's shadow is not seen (a point 20 px behind its centre), like the AI", not reg.contains(Vector2(1520, 500)) and not bandit.can_see(Vector2(1520, 500), true))
+	# shadow edges 300 px out, 0.5 px either side of the exact edge line
 	var edge_ok := true
 	var info := ""
 	for corner: Vector2 in [top_c, bot_c]:
@@ -342,7 +342,7 @@ func _test_geometry_box() -> void:
 		var dist := to.length()
 		var dir := to / dist
 		var perp := Vector2(-dir.y, dir.x)
-		var q := eye + dir * 400.0
+		var q := eye + dir * 300.0
 		var p_plus := q + perp * 0.5 - Bandit.EYE_OFFSET
 		var p_minus := q - perp * 0.5 - Bandit.EYE_OFFSET
 		var in_plus := reg.contains(p_plus)
@@ -352,7 +352,7 @@ func _test_geometry_box() -> void:
 		info += "[%s: poly %s/%s ai %s/%s] " % [str(corner), str(in_plus), str(in_minus), str(ai_plus), str(ai_minus)]
 		if in_plus == in_minus or in_plus != ai_plus or in_minus != ai_minus:
 			edge_ok = false
-	ck.call("vision geometry: 400 px out, points 0.5 px either side of each exact shadow edge are classified like the AI (one seen, one hidden)", edge_ok, info)
+	ck.call("vision geometry: 300 px out, points 0.5 px either side of each exact shadow edge are classified like the AI (one seen, one hidden)", edge_ok, info)
 	var uncapped := not reg.capped and reg.rays_cast <= BanditVisionRegion.MAX_RAYS
 	ck.call("vision geometry: the whole polygon cost %d rays (refinement budget %d), nothing capped" % [reg.rays_cast, BanditVisionRegion.MAX_RAYS], uncapped)
 	box.queue_free()
@@ -360,7 +360,7 @@ func _test_geometry_box() -> void:
 	await tree.physics_frame
 	_put(pos, _snap8(0), Bandit.State.PATROL)  # the AI ticked meanwhile: put it back exactly where the box test stood
 	var gone := BanditVisionRegion.compute(bandit, player)
-	ck.call("vision geometry: with the box gone the same spot is seen again (the polygon follows the world, not a cache)", gone.contains(Vector2(1650, 500)) and bandit.can_see(Vector2(1650, 500), true))
+	ck.call("vision geometry: with the box gone the same spot is seen again (the polygon follows the world, not a cache)", gone.contains(Vector2(1520, 500)) and bandit.can_see(Vector2(1520, 500), true))
 	_put(WorldScale.BANDIT_HOME, _snap8(4), Bandit.State.PATROL)
 
 
@@ -498,11 +498,11 @@ func _test_ai_flag() -> void:
 	var west := _snap8(4)
 	var home := Vector2(1500, 100)  # open ground; along y=100 the choke gap and the walls leave a clear line
 	var cases: Array = [
-		["ahead 600 px: beyond the cone reach 500, inside the chase reach 675", home, Vector2(900, 100), "chase_only"],
-		["ahead 400 px", home, Vector2(1100, 100), "both"],
+		["ahead 350 px: beyond the cone reach 320, inside the chase reach 384", home, Vector2(1150, 100), "chase_only"],
+		["ahead 250 px", home, Vector2(1250, 100), "both"],
 		["ahead 1000 px: beyond everything", home, Vector2(500, 100), "never"],
-		["behind 400 px: outside the cone, beyond close sense", home, Vector2(1900, 100), "chase_only"],
-		["behind 100 px: inside close sense", home, Vector2(1600, 100), "both"],
+		["behind 250 px: outside the cone, beyond close sense", home, Vector2(1750, 100), "chase_only"],
+		["behind 60 px: inside close sense", home, Vector2(1560, 100), "both"],
 		["north wall between them, 320 px", Vector2(1100, -300), Vector2(780, -300), "never"],
 	]
 	var mism := 0
@@ -533,7 +533,7 @@ func _test_ai_flag() -> void:
 			if ai != want:
 				table_bad += "%s/%s " % [String(c[0]).substr(0, 12), n]
 	ck.call("vision AI flag: the AI's own sees_player equals 'polygon contains the player' for all %d (state x place) rows" % rows, mism == 0 and rows == 6 * 12, "%d mismatches, first: %s" % [mism, first])
-	ck.call("vision AI flag: and those AI answers match the documented table (cone-only reach 500 / close sense 150 / chase reach 675 / walls block)", table_bad == "", table_bad)
+	ck.call("vision AI flag: and those AI answers match the documented table (cone-only reach 320 / close sense 70 / chase reach 384 / walls block)", table_bad == "", table_bad)
 	_put(WorldScale.BANDIT_HOME, west, Bandit.State.DEAD)
 	ov.refresh()
 	ck.call("vision AI flag: a DEAD Bandit has no view at all", ov.views.is_empty() and BanditVisionToggle.telemetry()["vision_bandits"] == 0)
@@ -548,14 +548,14 @@ func _test_sync_probe() -> void:
 	# a ray budget too small to refine the silhouettes is reported, never hidden
 	_put(Vector2(975, -300), _snap8(4), Bandit.State.APPROACH)  # hugging the north wall: many silhouettes
 	var full := BanditVisionRegion.compute(bandit, player)
-	var starved := BanditVisionRegion.compute(bandit, player, BanditVisionRegion.CHASE_REACH_MULT, 140)
+	var starved := BanditVisionRegion.compute(bandit, player, BanditVisionRegion.CHASE_REACH_MULT, 110)
 	_put(Vector2(600, 100), _snap8(4), Bandit.State.PATROL)  # nothing within 700 px ahead (clear of walls and tree trunks): the range arc is all there is
 	var open_spot := BanditVisionRegion.compute(bandit, player, BanditVisionRegion.CHASE_REACH_MULT, 140)
-	ck.call("vision budget: a starved ray budget (140) sets `capped` where silhouettes need more rays (the label and vision_capped then say so); the full budget does not", starved.capped and not full.capped and full.rays_cast > 140 and starved.rays_cast < full.rays_cast, "full %d rays capped=%s, starved %d rays capped=%s" % [full.rays_cast, str(full.capped), starved.rays_cast, str(starved.capped)])
+	ck.call("vision budget: a starved ray budget (110) sets `capped` where silhouettes need more rays (the label and vision_capped then say so); the full budget does not", starved.capped and not full.capped and full.rays_cast > 110 and starved.rays_cast < full.rays_cast, "full %d rays capped=%s, starved %d rays capped=%s" % [full.rays_cast, str(full.capped), starved.rays_cast, str(starved.capped)])
 	ck.call("vision budget: open ground needs no refinement, so even the starved budget is not capped (base fan only)", not open_spot.capped and open_spot.rays_cast <= 90)
 	ov.log_mismatches = false
 	_put(Vector2(1500, 100), _snap8(4), Bandit.State.APPROACH)
-	player.global_position = Vector2(900, 100)  # 600 px ahead: seen only with the true 1.35 reach
+	player.global_position = Vector2(1150, 100)  # 350 px ahead: seen only with the true 1.2 chase reach
 	ov.refresh()
 	var before := ov.mismatches
 	ck.call("vision sync: with the true numbers the probe and the player check agree with the AI", ov.views[0]["sync"] == "" and ov.mismatches == before)
@@ -871,7 +871,7 @@ func _test_telemetry_and_web() -> void:
 	ov.refresh()
 	var t := BanditVisionToggle.telemetry()
 	var reg: BanditVisionRegion = ov.views[0]["region"]
-	ck.call("vision state: ON publishes the live numbers (bandit count, polygon size, rays, mode, range, fov, close sense)", t["vision_on"] == true and t["vision_bandits"] == 1 and t["vision_points"] == reg.points.size() and reg.points.size() > 20 and t["vision_rays"] > 20 and t["vision_cone"] == reg.use_cone and is_equal_approx(float(t["vision_range"]), reg.reach) and is_equal_approx(float(t["vision_fov_deg"]), 90.0) and is_equal_approx(float(t["vision_close"]), 150.0) and float(t["vision_ms"]) >= 0.0)
+	ck.call("vision state: ON publishes the live numbers (bandit count, polygon size, rays, mode, range, fov, close sense)", t["vision_on"] == true and t["vision_bandits"] == 1 and t["vision_points"] == reg.points.size() and reg.points.size() > 20 and t["vision_rays"] > 20 and t["vision_cone"] == reg.use_cone and is_equal_approx(float(t["vision_range"]), reg.reach) and is_equal_approx(float(t["vision_fov_deg"]), 90.0) and is_equal_approx(float(t["vision_close"]), 70.0) and float(t["vision_ms"]) >= 0.0)
 	ck.call("vision state: ...the AI's own State name, facing and sees flag come from the same rebuild", t["vision_ai_state"] == bandit.get_state_name() and is_equal_approx(float(t["vision_facing_x"]), bandit.facing8.x) and is_equal_approx(float(t["vision_facing_y"]), bandit.facing8.y) and t["vision_sees"] == bandit.sees_player)
 	ck.call("vision state: ...and the polygon's apex (vision_origin_x/y) is the Bandit's position at that rebuild, which the browser run compares with bandit_x/y", is_equal_approx(float(t["vision_origin_x"]), bandit.global_position.x) and is_equal_approx(float(t["vision_origin_y"]), bandit.global_position.y) and reg.origin == bandit.global_position)
 	ck.call("vision state: ...and the overlay's category text and the polygon / can_see answers about the player", t["vision_state"] in BanditVisionOverlay.KEYS and t["vision_player_in"] == reg.contains(player.global_position) and t["vision_can_see"] == bandit.can_see(player.global_position, reg.use_cone))

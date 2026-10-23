@@ -5,7 +5,7 @@ extends RefCounted
 ##
 ## What `Bandit.can_see(target, use_cone)` accepts (scripts/enemy/bandit.gd, can_see + line_clear_to):
 ##   d = |target - position|
-##   reach = profile.sight_range * (1.0 if use_cone else 1.35)      d must not exceed it
+##   reach = profile.sight_range * (1.0 if use_cone else 1.2)      d must not exceed it
 ##   use_cone and d > profile.close_sense  ->  |facing8.angle_to(to)| must not exceed fov_deg / 2
 ##   a ray from position + EYE_OFFSET to target + EYE_OFFSET must hit nothing (own body and the player excluded,
 ##   default mask, bodies only)
@@ -18,8 +18,8 @@ extends RefCounted
 ## Mirrored from the AI (the AI does not expose them): CHASE_REACH_MULT and the chasing state list. Both are guarded:
 ## tests/test_bandit_vision_overlay.gd parses bandit.gd for them and compares the polygon with the live can_see.
 
-## Mirror of the literal `1.35` in Bandit.can_see: the reach multiplier while chasing (no cone).
-const CHASE_REACH_MULT := 1.35
+## Mirror of the literal `1.2` in Bandit.can_see: the reach multiplier while chasing (no cone).
+const CHASE_REACH_MULT := 1.2
 ## Mirror of the `chasing` list in Bandit._update_perception (look with range + line of sight only).
 const CHASING_STATES: Array = [
 	Bandit.State.NOTICE, Bandit.State.APPROACH, Bandit.State.THREATEN,
