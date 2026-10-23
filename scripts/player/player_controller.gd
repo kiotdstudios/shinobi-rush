@@ -123,6 +123,17 @@ var max_chakra: float = MAX_CHAKRA
 var chakra: float = MAX_CHAKRA
 var max_substitution_charges: int = MAX_SUBSTITUTIONS
 var substitution_charges: int = MAX_SUBSTITUTIONS
+## Substitution Jutsu (L2). A timed L2 press only pays off if an enemy attack lands inside the window.
+## Each success spends one charge and starts that charge's OWN cooldown; the others stay usable.
+signal substitution_triggered(old_pos: Vector2, new_pos: Vector2)
+const SUB_WINDOW := 0.25  ## L2 pressed up to this long BEFORE a hit lands counts as a timed evade
+const SUB_COOLDOWN := 12.0  ## PROVISIONAL: per-charge recharge seconds (design doc gives no number)
+const SUB_INVULN := 0.5  ## grace after a substitution so a simultaneous second hit cannot land
+const SUB_BEHIND_DIST := 72.0  ## how far behind the attacker the player reappears
+var _sub_buffer: float = 0.0
+var _sub_cooldowns: Array[float] = []  ## remaining seconds of each spent charge
+var _sub_reveal: float = 0.0  ## > 0 while the body is concealed between log swap and reappearance
+var substitution_count: int = 0
 var _flicker_hidden: bool = false
 var _flicker_moved: bool = false
 var flicker_count: int = 0
@@ -176,6 +187,7 @@ func _physics_process(delta: float) -> void:
 	sensed_enemy = null
 	kunai_drawn = false
 	_hit_invuln = maxf(_hit_invuln - delta, 0.0)
+	_tick_substitution(delta)
 	if hit_flash_timer > 0.0:
 		hit_flash_timer = maxf(hit_flash_timer - delta, 0.0)
 		visual.modulate = HIT_TINT if hit_flash_timer > 0.0 else Color.WHITE
@@ -189,6 +201,8 @@ func _physics_process(delta: float) -> void:
 		_jump_buffer = input_buffer_window
 	if Input.is_action_just_pressed("attack_light"):
 		_attack_buffer = input_buffer_window
+	if Input.is_action_just_pressed("substitution"):
+		_sub_buffer = SUB_WINDOW
 
 	# Local hitstop: pause this body's own velocity/position integration only -- NOT Engine.time_scale
 	# (the order forbids a global freeze). Buffers do not decay while frozen, so a press made just
@@ -618,8 +632,10 @@ func is_evading_melee() -> bool:
 
 ## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely; a
 ## hit that lands only tints the figure and adds a small shove -- control is never taken away.
-func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0) -> bool:
+func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: Variant = null) -> bool:
 	if is_evading_melee() or _hit_invuln > 0.0:
+		return false
+	if _try_substitution(attacker, from_dir):
 		return false
 	hits_taken += 1
 	_hit_invuln = HIT_INVULN_TIME
@@ -634,6 +650,83 @@ func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0) -> bool:
 		downed.emit()
 		restore_health(max_health)
 	return true
+
+
+func _tick_substitution(delta: float) -> void:
+	_sub_buffer = maxf(_sub_buffer - delta, 0.0)
+	if _sub_reveal > 0.0:
+		_sub_reveal = maxf(_sub_reveal - delta, 0.0)
+		if _sub_reveal <= 0.0:
+			visual.visible = true
+	if _sub_cooldowns.is_empty():
+		return
+	var before := _sub_cooldowns.size()
+	for i in range(_sub_cooldowns.size() - 1, -1, -1):
+		_sub_cooldowns[i] -= delta
+		if _sub_cooldowns[i] <= 0.0:
+			_sub_cooldowns.remove_at(i)
+	if _sub_cooldowns.size() != before:
+		substitution_charges = max_substitution_charges - _sub_cooldowns.size()
+		substitution_changed.emit(substitution_charges, max_substitution_charges)
+
+
+## Confirmed timed L2 evade: only reached from take_hit, i.e. an attack that would really have landed.
+## One call per attack, so one proc per attack. Returns true if the hit was swallowed by a log swap.
+func _try_substitution(attacker: Variant, from_dir: Vector2) -> bool:
+	if _sub_buffer <= 0.0 or substitution_charges <= 0 or _sub_cooldowns.size() >= max_substitution_charges:
+		return false
+	var old := global_position
+	var dest := _substitution_destination(attacker, from_dir)
+	_sub_buffer = 0.0
+	_sub_cooldowns.append(SUB_COOLDOWN)
+	substitution_charges = max_substitution_charges - _sub_cooldowns.size()
+	substitution_changed.emit(substitution_charges, max_substitution_charges)
+	substitution_count += 1
+	_hit_invuln = SUB_INVULN
+	global_position = dest
+	velocity = Vector2.ZERO
+	if _attacker_alive(attacker):
+		var to_att := (attacker as Node2D).global_position - dest
+		if to_att.length() > 1.0:
+			facing8 = _snap8(to_att)
+			visual.set_pose(facing8, false, false)
+	visual.visible = false
+	_sub_reveal = SubstitutionFx.ARRIVAL_DELAY
+	SubstitutionFx.spawn(get_parent(), old, dest)
+	substitution_triggered.emit(old, dest)
+	return true
+
+
+## Spot behind the attacker (opposite side from where the player stood). Validated against walls and the
+## arena bounds; shrinks the distance and swings the angle before giving up and staying in place (the
+## log swap still happens, just without the reposition). A dead / freed attacker also means "stay".
+func _substitution_destination(attacker: Variant, from_dir: Vector2) -> Vector2:
+	if not _attacker_alive(attacker):
+		return global_position
+	var toward := global_position - (attacker as Node2D).global_position
+	if toward.length() < 1.0:
+		toward = from_dir if from_dir.length() > 0.01 else Vector2(1, 1)
+	var behind := -toward.normalized()
+	for dist in [SUB_BEHIND_DIST, SUB_BEHIND_DIST * 0.7, SUB_BEHIND_DIST * 0.5]:
+		for ang in [0.0, 0.5, -0.5, 1.0, -1.0]:
+			var p: Vector2 = (attacker as Node2D).global_position + behind.rotated(ang) * dist
+			if _substitution_spot_ok(p):
+				return p
+	return global_position
+
+
+## Attackers can be freed mid-flight (killed bandit, expired thrower), so they travel as untyped Variants.
+static func _attacker_alive(attacker: Variant) -> bool:
+	return is_instance_valid(attacker) and attacker is Node2D and not (attacker as Node2D).is_queued_for_deletion()
+
+
+func _substitution_spot_ok(p: Vector2) -> bool:
+	var arena := get_parent()
+	if arena != null and arena.has_method("get_bounds"):
+		var b: Rect2 = arena.get_bounds()
+		if not b.grow(-8.0).has_point(p):
+			return false
+	return not test_move(Transform2D(0.0, p), Vector2(0.01, 0.0))
 
 
 ## Adds health (clamped to max_health). Returns the amount actually restored.

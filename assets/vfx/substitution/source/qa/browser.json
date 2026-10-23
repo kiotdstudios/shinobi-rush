@@ -1,0 +1,26 @@
+{
+  "result": "PASS",
+  "frames": 140,
+  "toggles": [
+    "log",
+    "departure",
+    "ribbons",
+    "arrival",
+    "player"
+  ],
+  "choreography": {
+    "noDoublePlayer": true,
+    "oldHidden": true,
+    "rearAppears": true,
+    "rearRootIsBehindLeftFacingMarker": true,
+    "loaded": 46
+  },
+  "layout": {
+    "width": 390,
+    "viewport": 390,
+    "w": 354,
+    "h": 202.28125
+  },
+  "loops": 2,
+  "errors": []
+}
