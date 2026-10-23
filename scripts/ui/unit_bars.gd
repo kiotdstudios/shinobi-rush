@@ -8,8 +8,8 @@ const SCALE := 0.5
 const BAR_SIZE := Vector2(196.0, 22.0)
 const FILL_INSET := Vector2(3.0, 3.0)
 const FILL_SIZE := Vector2(190.0, 16.0)
-const PIP_SIZE := 20.0
-const PIP_STEP := 24.0
+const PIP_SIZE := 16.0
+const PIP_STEP := 20.0
 const ROW_GAP := 1.0
 
 static var _tex: Dictionary = {}

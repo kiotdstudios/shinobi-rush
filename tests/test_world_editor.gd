@@ -24,6 +24,41 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("builder: panel is anchored to the right edge", editor.panel.anchor_left == 1.0 and editor.panel.anchor_right == 1.0)
 	editor.set_open(false)
 	ck.call("builder: hiding collapses it again", not editor.panel.visible and editor.tab.visible)
+	# HUD pieces are movable from the builder
+	var hud := editor.hud_bar() as HealthBar
+	ck.call("hud layout: the player's HUD is found by the builder and starts unedited", hud != null and not hud.edit_mode and hud.offsets.is_empty())
+	editor.set_open(true)
+	await root.get_tree().process_frame
+	ck.call("hud layout: opening the builder turns HUD edit mode on", hud.edit_mode)
+	var hp0 := hud.element_rect("hp_bar")
+	var ch0 := hud.element_rect("chakra_bar")
+	ck.call("hud layout: a click on the HP bar picks the HP bar, and the chakra bar independently", hud.element_at(hp0.get_center()) == "hp_bar" and hud.element_at(ch0.get_center()) == "chakra_bar")
+	ck.call("hud layout: the avatar sits over the bars' tucked ends (topmost wins)", hud.element_at(hud.element_rect("portrait").get_center()) == "portrait")
+	ck.call("hud layout: empty screen picks nothing", hud.element_at(Vector2(640, 300)) == "")
+	var grabbed := editor.press_hud(hp0.get_center())
+	hud.drag_at(hp0.get_center() + Vector2(40, 25))
+	editor.release_hud()
+	ck.call("hud layout: dragging the HP bar moves only the HP bar", grabbed and hud.offsets.get("hp_bar") == Vector2(40, 25) and not hud.offsets.has("chakra_bar") and hud.element_rect("hp_bar").position == hp0.position + Vector2(40, 25))
+	editor.set_tool("erase")
+	ck.call("hud layout: only the select tool picks HUD pieces", not editor.press_hud(hud.element_rect("chakra_bar").get_center()))
+	editor.set_tool("select")
+	editor.select_hud("pips")
+	hud.move_element("pips", Vector2(-6, 3))
+	ck.call("hud layout: a piece picked from the panel list nudges", hud.selected_element == "pips" and hud.offsets.get("pips") == Vector2(-6, 3))
+	var layout_path := "user://test_hud_layout.json"
+	ck.call("hud layout: saves", hud.save_layout(layout_path))
+	hud.offsets.clear()
+	hud.load_layout(layout_path)
+	ck.call("hud layout: reloads the same offsets", hud.offsets.get("hp_bar") == Vector2(40, 25) and hud.offsets.get("pips") == Vector2(-6, 3), hud.layout_json())
+	hud.apply_layout_json("{\"bogus\":[1,2],\"portrait\":[3,4]}")
+	ck.call("hud layout: unknown ids in a saved file are ignored", hud.offsets.size() == 1 and hud.offsets.get("portrait") == Vector2(3, 4))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(layout_path))
+	hud.offsets.clear()
+	ck.call("hud layout: the ability bar has Substitution plus four circle slots, each its own piece", HealthBar.ELEMENTS.has("ability_0") and HealthBar.ELEMENTS.has("ability_4") and HealthBar.ABILITY_LABELS.size() == HealthBar.SLOT_COUNT and HealthBar.SLOT_COUNT == 5)
+	editor.select_hud("pips")
+	editor.set_open(false)
+	await root.get_tree().process_frame
+	ck.call("hud layout: closing the builder ends HUD edit mode and clears the pick", not hud.edit_mode and hud.selected_element == "")
 	var every := true
 	for id: String in PlacedObjects.CATALOG:
 		every = every and (PlacedObjects.footprint_of(id).x > 0.0)
