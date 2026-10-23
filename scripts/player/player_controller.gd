@@ -304,7 +304,7 @@ func _physics_process(delta: float) -> void:
 			# animation exists in the active sprite set (PlayerVisual.play_action/has_action contract).
 			visual.play_action("kunai_ready", facing8)
 	if prev_state == State.JUMP and state != State.JUMP:
-		dust.burst(global_position, 1.2)  # landing kicks up a bit less dirt than the takeoff did
+		dust.landing(global_position)
 	_update_footsteps(delta)
 	if state != prev_state:
 		state_changed.emit(state)
@@ -385,7 +385,7 @@ func _begin_jump() -> void:
 	_action_duration = jump_duration if jump_duration > 0.0 else visual.action_duration("jump", jump_fallback_duration)
 	_action_timer = _action_duration
 	_play_jump_visual()
-	dust.burst(global_position, 1.5)
+	dust.takeoff(global_position)
 
 
 ## Begin a fresh attack (light1, or a dash attack triggered from/near a dodge). `input`, when given
@@ -472,7 +472,7 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 				return
 			if airborne:
 				visual.position.y = 0.0
-				dust.burst(global_position, 1.2)  # landed out of the swing
+				dust.landing(global_position)  # landed out of the swing
 			# The attack just ended: pick the state up where locomotion already is this instant (order:
 			# "continue running immediately after an attack ends" -- never a forced idle frame).
 			var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
@@ -561,7 +561,7 @@ func _update_footsteps(delta: float) -> void:
 		return
 	_footstep_timer -= delta
 	if _footstep_timer <= 0.0:
-		dust.burst(global_position, 0.8 if state == State.SPRINT else 0.6)
+		dust.footstep(global_position, state == State.SPRINT, facing)
 		_footstep_timer = footstep_interval_sprint if state == State.SPRINT else footstep_interval_walk
 
 
