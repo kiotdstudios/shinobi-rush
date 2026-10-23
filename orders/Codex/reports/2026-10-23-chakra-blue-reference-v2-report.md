@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-23-chakra-blue-reference-v2.md
 - Date:2026-10-23
 - Final status: REVIEW — finished isolated VFX candidate, owner visual review pending
-- Commit / PR: Not committed; recording completed pre-commit checks.
+- Commit / PR: bb8dde498b526a9fe56a13fe9cff5994fc2ec504; draft PR118 https://github.com/kiotdstudios/shinobi-rush/pull/118.
 
 ## Work completed
 Downloaded the exact owner-supplied CHARGE-VFX-PINK-V2.png (288x32 RGBA,1191bytes): nine32x32 frames. Preserved it as reference-pink.png; did not commit the Dropbox access-token URL. Built a blue-white charge candidate with96 unique generated drawings:16 buildup,64 sustained-loop and16 release. Native transparent VFX cells are256x256 with ground origin(128,224), larger than the unchanged128px character to accommodate aura overflow. Provided atlas, individual PNGs, timing/sequence/source manifest, six normal/half-speed/continuous GIFs, all-frame contact sheet, asset ZIP and interactive review.
@@ -43,4 +43,4 @@ Full gameplay regression/Web game deployment were not run for this isolated unbo
 None required to deliver the candidate. Owner visual review is the next decision.
 
 ## Outstanding work / next steps
-Commit/push and open a draft art-review PR with direct normal/half-speed GIF links. Production integration stays separate until owner feedback. Live deployment: not applicable; no runtime scene/script references the new assets. The rejected charging body remains untouched.
+Committed/pushed and opened draft art-review PR118 with direct normal/half-speed GIF links. Public half-speed GIF downloaded back and SHA256 matched the verified local artifact. Production integration stays separate until owner feedback. Live deployment: not applicable; no runtime scene/script references the new assets. The rejected charging body remains untouched.
