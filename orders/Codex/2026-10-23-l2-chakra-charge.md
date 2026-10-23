@@ -1,7 +1,7 @@
 # ORDER — L2 chakra charge integration
 - Agent: Codex
 - Owner: Codex, direct owner assignment for integration
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P0
 - Branch/PR: codex/charge-body-revision / PR126
 - Dependencies: owner confirms preserve substitution press, add L2 hold charge
@@ -20,3 +20,5 @@ Correct L2 behavior per owner clarification, planted feet, half-speed looping ch
 Direct user instruction authorizes integration touching player systems. Preserve other agent work and use reviewed PR pipeline.
 
 Owner confirmed existing press substitution must remain unchanged. Added0.30second hold on existing substitution input; no changes to substitution press/window/charges. Final native regressions and browser export checks in progress; see own report. No aura work.
+
+PR126 merged as19cfae4; configured Pages deployment succeeded. Live build SHA and browser tap/hold/release/movement probe verified2026-10-23 12:36EDT. Native2092checks passed. See own report; physical controller not available.

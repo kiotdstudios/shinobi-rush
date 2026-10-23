@@ -47,3 +47,7 @@ None. Owner can inspect the concrete normal/half-speed candidates; no blocking p
 Owner visual review, then gameplay owner can bind approved charge holds and coordinate entry/release timing. Keep rejected VFX disabled. Live deployment: not applicable; new package is unbound review art and cannot change the shared live game. Dedicated draft art PR for reviewed integration; no main merge claimed.
 
 Published preview verification: fetched SE-half-speed.gif from raw.githubusercontent.com at the exact implementation SHA on2026-10-23; downloaded SHA256 BB27F45E68A0B4CCB24A15F50ED31ED25DCAD59BA527F9EE2AFA9915999DF0CC matches local. This confirms published preview bytes, not a game deployment. Worktree clean after implementation push.
+
+
+## Owner approval and runtime follow-up
+Owner approved charge-body runtime integration2026-10-23. Assets and L2 hold charge integrated viaPR126, merge19cfae4, with2092native tests, configured Pages deployment and live charge/release/browser validation. Final body status DONE; earlier review status describes the initial art-only delivery. See2026-10-23-l2-chakra-charge-report.md. Rejected effects remain archived, no aura bound.

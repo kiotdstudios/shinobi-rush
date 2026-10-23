@@ -3,7 +3,7 @@
 - Order: ../2026-10-23-l2-chakra-charge.md
 - Date: 2026-10-23
 - Final status: REVIEW — waiting for owner input decision
-- Commit / PR: Not committed yet; this report precedes runtime implementation commit. PR126 will carry approved body art plus runtime integration. No live deployment claimed yet.
+- Commit / PR: Implementation423eddd89ff65cbc54fd39838353283aa1231000; PR https://github.com/kiotdstudios/shinobi-rush/pull/126 merged as19cfae480bc6a78e9335a1055f18d81780cf3e3d. Original report preceded implementation commit. Live charge verification passed at2026-10-23 12:36EDT.
 
 ## Work completed
 Owner explicitly authorized charge integration. Merged latest origin/main into dedicated art branch without conflicts. Bound approved body art as `charge` in player and enemy-only bandit manifests, all eight headings,16 frames each,6FPS. Added player CHARGE state with planted zero velocity, provisional20chakra/second capped at max, signal-driven HUD refresh, release into locomotion, attack/dodge/jump priority, and damage interruption requiring a release before charging again. No aura or rejected VFX included. Bandit art is reusable through its manifest; no new enemy charging AI invented.
@@ -42,3 +42,16 @@ None; owner clarified preserve substitution press, add hold charge.
 ## Outstanding work / next steps
 
 Commit/push tested runtime changes, ready PR126 with updated final scope, check CI, integrate through approved PR process, verify actual Pages deployment and rerun browser hold/release probe against live. Report final SHA/deployment evidence afterward. No VFX added.
+
+
+## Integration evidence
+PR126 Godot CI run39983222252 completed success: import/resource validation/native tests/Web export, pre-deploy smoke, controls probe and gate all passed. Repository checks39983222298 and pipeline self-test39983222342 succeeded. Merged exact tested head through GitHub merge API; no protection bypass. Main Godot CI39985338082 running for Pages deployment.
+
+
+## Live deployment and feature verification
+- Main Godot CI39985338082: import/validate/test/export PASS, pre-deploy smoke/controls/debug-log PASS, GitHub Pages deployment PASS. Separate pipeline post-deploy smoke job was still running at report update; its final conclusion is not claimed here.
+- Actual live build-info.json commit_sha equals19cfae480bc6a78e9335a1055f18d81780cf3e3d, fetched after deployment. Verification2026-10-23 12:36EDT.
+- Node scripts/ci/smoke/charge-probe.mjs https://kiotdstudios.github.io/shinobi-rush/?v=19cfae4: PASS on public Pages: real Q tap does not charge; sustained equivalent-action hold shows CHARGE, correct charge body/no weapon; feet stay planted; release goes IDLE; movement resumes.0browser console/page errors. Physical L2 hardware unavailable; existing unchanged axis4mapping and native mapped-action hold tests covered, no physical hardware claim.
+- Evidence committed under docs/visuals/charge-body/live-charge.png and live-charge-validation.json. Same body-only pose observed in exported live arena; no aura.
+- Live URL: https://kiotdstudios.github.io/shinobi-rush/?v=19cfae4
+- Runtime user goal fulfilled. No additional art or VFX changes required. Final report-only update pushed to delivery branch after implementation merge; it does not change the deployed game.

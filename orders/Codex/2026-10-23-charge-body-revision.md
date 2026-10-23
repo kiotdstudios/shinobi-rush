@@ -1,6 +1,6 @@
 # ORDER — Charge-body revision for player and bandit
 - Agent: Codex
-- Status: REVIEW
+- Status: DONE
 - Priority: P0 direct owner request
 - Owner: Codex art
 - Branch/PR: codex/charge-body-revision — https://github.com/kiotdstudios/shinobi-rush/pull/126 (draft); implementation e6d2105
@@ -20,3 +20,5 @@ Readably correct seal/arms and wide squat; stable grounded feet; no left/right r
 Builtin image generation for authored poses, deterministic extraction/registration only. PixelLab reviewed read-only; built-in reference workflow chosen for design/anchor matching. Old rejected VFX remain outside new body review. Owner clarified 'builder' meant bandit.
 
 Completed body-only art review package and verified Desktop archive. Automated native/frame/browser checks pass; see reports/2026-10-23-charge-body-revision-report.md. Await owner visual review before runtime binding. Live deployment: not applicable to this unbound art candidate.
+
+Owner approved integration; runtime charge action deployed through PR126/19cfae4 with native/frame/browser/live checks. See l2-chakra-charge report for runtime evidence.
