@@ -39,6 +39,7 @@ var palette_scroll: ScrollContainer
 var _clear_armed := false
 var _js_state: JavaScriptObject
 var _hud_buttons: Dictionary = {}
+var hud_snap_button: Button = null
 ## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
 const DIM_TYPES: Array[String] = ["Trees", "Walls & blocks", "Temple walls", "Grass", "Tall grass"]
@@ -233,7 +234,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			set_tool("select")
 			get_viewport().set_input_as_handled()
 	elif event is InputEventMouseMotion and hud_bar() != null and hud_bar().dragging_element:
-		hud_bar().drag_at(get_viewport().get_mouse_position())
+		hud_bar().drag_at(get_viewport().get_mouse_position(), not Input.is_key_pressed(KEY_SHIFT))
 	elif event is InputEventMouseMotion and dragging:
 		drag_to(_mouse_world())
 
@@ -672,12 +673,14 @@ func _build_ui() -> void:
 	var filters := GridContainer.new()
 	filters.columns = 2
 	outer.add_child(filters)
-	for category: Array in PlacedObjects.CATEGORIES:
+	var filter_cats: Array = PlacedObjects.CATEGORIES.duplicate()
+	filter_cats.append(["HUD layout", []])  # the HUD piece controls are a section like the others (hidden until ticked)
+	for category: Array in filter_cats:
 		var name := str(category[0])
 		var check := CheckBox.new()
 		check.text = "Walls" if name == "Walls & blocks" else name
 		check.tooltip_text = "Show/hide the " + name.to_lower() + " options in the build palette (the world is not affected)"
-		check.button_pressed = true
+		check.button_pressed = name != "HUD layout"
 		check.focus_mode = Control.FOCUS_NONE
 		check.add_theme_font_size_override("font_size", 11)
 		check.toggled.connect(func(shown: bool): set_type_filter(name, shown))
@@ -689,6 +692,7 @@ func _build_ui() -> void:
 	palette_scroll = scroll
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.custom_minimum_size = Vector2(0, 240)  # the palette never gets squeezed out by what sits below it
 	outer.add_child(scroll)
 	_fat_scrollbar(scroll)
 	var col := VBoxContainer.new()
@@ -776,12 +780,17 @@ func _build_ui() -> void:
 	ib.add_child(del)
 
 	# HUD pieces: pick one here (or click it in the game view) and drag it where it should go
-	_section(outer, "HUD pieces")
+	var hud_box := VBoxContainer.new()
+	hud_box.add_theme_constant_override("separation", 6)
+	hud_box.visible = false
+	outer.add_child(hud_box)
+	_category_sections["HUD layout"] = hud_box
+	_section(hud_box, "HUD pieces")
 	var hud_grid := GridContainer.new()
 	hud_grid.columns = 2
 	hud_grid.add_theme_constant_override("h_separation", 4)
 	hud_grid.add_theme_constant_override("v_separation", 4)
-	outer.add_child(hud_grid)
+	hud_box.add_child(hud_grid)
 	for id in HealthBar.ELEMENTS:
 		var hb := Button.new()
 		hb.text = HealthBar.ELEMENT_NAMES[id]
@@ -802,7 +811,33 @@ func _build_ui() -> void:
 		if hud_bar() != null:
 			hud_bar().reset_layout()
 		_flash("HUD layout reset"))
-	outer.add_child(hud_reset)
+	hud_box.add_child(hud_reset)
+	hud_snap_button = Button.new()
+	hud_snap_button.focus_mode = Control.FOCUS_NONE
+	_skin(hud_snap_button)
+	hud_snap_button.pressed.connect(func():
+		if hud_bar() != null:
+			hud_bar().cycle_snap()
+		_refresh())
+	hud_box.add_child(hud_snap_button)
+	var hud_inline := Button.new()
+	hud_inline.text = "ALIGN SUBSTITUTION WITH R2"
+	hud_inline.focus_mode = Control.FOCUS_NONE
+	_skin(hud_inline)
+	hud_inline.pressed.connect(func():
+		if hud_bar() != null:
+			hud_bar().align_substitution_with_r2()
+			_flash("Substitution lined up with the R2 buttons"))
+	hud_box.add_child(hud_inline)
+	var hud_right := Button.new()
+	hud_right.text = "R2 BUTTONS TO RIGHT EDGE"
+	hud_right.focus_mode = Control.FOCUS_NONE
+	_skin(hud_right)
+	hud_right.pressed.connect(func():
+		if hud_bar() != null:
+			hud_bar().r2_to_right_edge()
+			_flash("R2 buttons moved to the far right"))
+	hud_box.add_child(hud_right)
 
 	# save row
 	var saves := HBoxContainer.new()
@@ -897,6 +932,8 @@ func _build_ui() -> void:
 func set_type_filter(category: String, shown: bool) -> void:
 	# The filters only declutter the BUILD PALETTE; the game world is never hidden by them.
 	(_category_sections[category] as Control).visible = shown
+	if category == "HUD layout" and not shown and hud_bar() != null:
+		hud_bar().select_element("")
 	(_filter_buttons[category] as CheckBox).set_pressed_no_signal(shown)
 	if not shown:
 		if place_id != "" and PlacedObjects.type_of(place_id) == category:
@@ -969,6 +1006,9 @@ func _refresh() -> void:
 		(_tool_buttons[k] as Button).set_pressed_no_signal(tool == k)
 	for id: String in _palette_buttons:
 		(_palette_buttons[id] as Button).set_pressed_no_signal(tool == "place" and place_id == id)
+	if hud_snap_button != null:
+		var hs: int = hud_bar().hud_snap if hud_bar() != null else 0
+		hud_snap_button.text = "HUD GRID  %s" % (str(hs) if hs > 0 else "OFF")
 	snap_button.text = "GRASS GRID" if snap > 0 and _grass_tool() else "SNAP  %s" % (str(snap) if snap > 0 else "OFF")
 	clear_button.text = "SURE?" if _clear_armed else "CLEAR ALL"
 	reset_button.text = "SURE?" if _reset_armed else "RESET"

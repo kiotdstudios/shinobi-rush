@@ -60,6 +60,8 @@ var selected_element := ""
 var layout_path := LAYOUT_PATH  ## where drags are saved (tests point this elsewhere)
 var _drag_grab := Vector2.ZERO
 var dragging_element := false
+const SNAPS: Array[int] = [8, 16, 32, 0]
+var hud_snap: int = 8  ## builder drag grid in screen px (0 = free); hold Shift while dragging to bypass
 
 
 func _ready() -> void:
@@ -294,9 +296,51 @@ func press_at(point: Vector2) -> bool:
 	return true
 
 
-func drag_at(point: Vector2) -> void:
+func drag_at(point: Vector2, snap_on: bool = true) -> void:
 	if dragging_element and selected_element != "":
-		set_piece_offset(selected_element, point - _drag_grab - base_pos(selected_element))
+		var target := point - _drag_grab
+		if snap_on and hud_snap > 0:
+			target = (target / float(hud_snap)).round() * float(hud_snap)
+		# keep the piece on screen so it can never be lost off an edge
+		if _canvas != null and _canvas.size.x > 0.0:
+			var r := element_rect(selected_element)
+			target.x = clampf(target.x, 0.0, maxf(_canvas.size.x - r.size.x, 0.0))
+			target.y = clampf(target.y, 0.0, maxf(_canvas.size.y - r.size.y, 0.0))
+		set_piece_offset(selected_element, target - base_pos(selected_element))
+
+
+func cycle_snap() -> void:
+	hud_snap = SNAPS[(SNAPS.find(hud_snap) + 1) % SNAPS.size()]
+	_redraw()
+
+
+## The four R2 pieces (ability_1..4) as one group.
+func r2_ids() -> Array[String]:
+	return ["ability_1", "ability_2", "ability_3", "ability_4"]
+
+
+func r2_bounds() -> Rect2:
+	var r := element_rect("ability_1")
+	for id in r2_ids():
+		r = r.merge(element_rect(id))
+	return r
+
+
+## Slide the whole R2 cluster (shape kept) to the right edge of the screen.
+func r2_to_right_edge(margin: float = 24.0) -> void:
+	var w := _canvas.size.x if _canvas != null and _canvas.size.x > 0.0 else 1280.0
+	var dx := (w - margin) - r2_bounds().end.x
+	for id in r2_ids():
+		move_element(id, Vector2(dx, 0.0))
+	save_layout()
+
+
+## Put the Substitution slot on the same horizontal line as the R2 cluster (centres level), same slot size.
+func align_substitution_with_r2() -> void:
+	var cy := r2_bounds().get_center().y
+	var sub := element_rect("ability_0")
+	move_element("ability_0", Vector2(0.0, cy - sub.get_center().y))
+	save_layout()
 
 
 func release_drag() -> void:
@@ -348,6 +392,16 @@ func load_layout(path := "") -> void:
 
 
 func _draw_edit_outlines() -> void:
+	if hud_snap > 0 and _canvas != null:
+		var sz := _canvas.size
+		var x := 0.0
+		while x <= sz.x:
+			_canvas.draw_line(Vector2(x, 0), Vector2(x, sz.y), Color(1, 1, 1, 0.16 if int(x) % (hud_snap * 4) == 0 else 0.06), 1.0)
+			x += hud_snap
+		var y := 0.0
+		while y <= sz.y:
+			_canvas.draw_line(Vector2(0, y), Vector2(sz.x, y), Color(1, 1, 1, 0.16 if int(y) % (hud_snap * 4) == 0 else 0.06), 1.0)
+			y += hud_snap
 	for id in ELEMENTS:
 		var r := element_rect(id).grow(2.0)
 		var sel := id == selected_element
