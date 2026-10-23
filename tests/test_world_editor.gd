@@ -33,6 +33,76 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("builder: panel is anchored to the right edge", editor.panel.anchor_left == 1.0 and editor.panel.anchor_right == 1.0)
 	editor.set_open(false)
 	ck.call("builder: hiding collapses it again", not editor.panel.visible and editor.tab.visible)
+	# HUD pieces are movable from the builder
+	var hud := editor.hud_bar() as HealthBar
+	if hud != null:
+		hud.layout_path = "user://test_hud_layout_drag.json"
+		hud.offsets.clear()
+	ck.call("hud layout: the player's HUD is found by the builder and starts unedited", hud != null and not hud.edit_mode and hud.offsets.is_empty())
+	editor.set_open(true)
+	await root.get_tree().process_frame
+	ck.call("hud layout: opening the builder turns HUD edit mode on", hud.edit_mode)
+	var hp0 := hud.element_rect("hp_bar")
+	var ch0 := hud.element_rect("chakra_bar")
+	ck.call("hud layout: a click on the HP bar picks the HP bar, and the chakra bar independently", hud.element_at(hp0.get_center()) == "hp_bar" and hud.element_at(ch0.get_center()) == "chakra_bar")
+	ck.call("hud layout: the avatar sits over the bars' tucked ends (topmost wins)", hud.element_at(hud.element_rect("portrait").get_center()) == "portrait")
+	ck.call("hud layout: empty screen picks nothing", hud.element_at(Vector2(640, 300)) == "")
+	hud.hud_snap = 0  # free drag for the exact-offset checks below; grid behaviour is tested after
+	var grabbed := editor.press_hud(hp0.get_center())
+	hud.drag_at(hp0.get_center() + Vector2(40, 25))
+	editor.release_hud()
+	ck.call("hud layout: dragging the HP bar moves only the HP bar", grabbed and hud.offsets.get("hp_bar") == Vector2(40, 25) and not hud.offsets.has("chakra_bar") and hud.element_rect("hp_bar").position == hp0.position + Vector2(40, 25))
+	editor.set_tool("erase")
+	ck.call("hud layout: only the select tool picks HUD pieces", not editor.press_hud(hud.element_rect("chakra_bar").get_center()))
+	editor.set_tool("select")
+	editor.select_hud("pips")
+	hud.move_element("pips", Vector2(-6, 3))
+	ck.call("hud layout: a piece picked from the panel list nudges", hud.selected_element == "pips" and hud.offsets.get("pips") == Vector2(-6, 3))
+	var layout_path := "user://test_hud_layout.json"
+	ck.call("hud layout: saves", hud.save_layout(layout_path))
+	hud.offsets.clear()
+	hud.load_layout(layout_path)
+	ck.call("hud layout: reloads the same offsets", hud.offsets.get("hp_bar") == Vector2(40, 25) and hud.offsets.get("pips") == Vector2(-6, 3), hud.layout_json())
+	hud.apply_layout_json("{\"bogus\":[1,2],\"portrait\":[3,4]}")
+	ck.call("hud layout: unknown ids in a saved file are ignored", hud.offsets.size() == 1 and hud.offsets.get("portrait") == Vector2(3, 4))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(layout_path))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(hud.layout_path))
+	hud.offsets.clear()
+	ck.call("hud layout: the ability bar has Substitution plus four circle slots, each its own piece", HealthBar.ELEMENTS.has("ability_0") and HealthBar.ELEMENTS.has("ability_4") and HealthBar.ABILITY_LABELS.size() == HealthBar.SLOT_COUNT and HealthBar.SLOT_COUNT == 5)
+	editor.select_hud("pips")
+	editor.set_open(false)
+	await root.get_tree().process_frame
+	ck.call("hud layout: closing the builder ends HUD edit mode and clears the pick", not hud.edit_mode and hud.selected_element == "")
+	hud.hud_snap = 8
+	hud.offsets.clear()
+	hud.layout_path = "user://test_hud_layout_align.json"
+	editor.set_open(true)
+	editor.press_hud(hud.element_rect("hp_bar").get_center())
+	hud.drag_at(hud.element_rect("hp_bar").get_center() + Vector2(13, 11))
+	editor.release_hud()
+	var hp_p := hud.pos_of("hp_bar")
+	ck.call("hud grid: a snapped drag lands on the 8px grid", int(hp_p.x) % 8 == 0 and int(hp_p.y) % 8 == 0, str(hp_p))
+	hud.dragging_element = true
+	hud.selected_element = "hp_bar"
+	hud.drag_at(Vector2(99999, 99999))
+	hud.dragging_element = false
+	ck.call("hud grid: a piece can never be dragged off screen", hud.element_rect("hp_bar").end.x <= hud._canvas.size.x + 0.5 and hud.element_rect("hp_bar").end.y <= hud._canvas.size.y + 0.5)
+	hud.offsets.clear()
+	hud.r2_to_right_edge(24.0)
+	var wcanvas: float = hud._canvas.size.x if hud._canvas.size.x > 0.0 else 1280.0
+	ck.call("hud align: the R2 cluster right edge sits at the screen edge minus margin", absf(hud.r2_bounds().end.x - (wcanvas - 24.0)) < 0.6, str(hud.r2_bounds()))
+	hud.move_element("ability_0", Vector2(0, -90))
+	hud.align_substitution_with_r2()
+	ck.call("hud align: Substitution centre is level with the R2 cluster centre", absf(hud.element_rect("ability_0").get_center().y - hud.r2_bounds().get_center().y) < 0.6)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(hud.layout_path))
+	hud.offsets.clear()
+	var hud_check := editor._filter_buttons.get("HUD layout") as CheckBox
+	ck.call("builder: a HUD layout filter checkbox exists and starts unticked (HUD controls hidden)", hud_check != null and not hud_check.button_pressed and not (editor._category_sections["HUD layout"] as Control).visible)
+	editor.set_type_filter("HUD layout", true)
+	ck.call("builder: ticking it reveals the HUD controls", (editor._category_sections["HUD layout"] as Control).visible)
+	editor.set_type_filter("HUD layout", false)
+	ck.call("builder: the palette keeps a minimum height", editor.palette_scroll.custom_minimum_size.y >= 200.0)
+	editor.set_open(false)
 	var every := true
 	for id: String in PlacedObjects.CATALOG:
 		every = every and (PlacedObjects.footprint_of(id).x > 0.0)
@@ -249,18 +319,30 @@ func run(ck: Callable, root: Node) -> void:
 	var b_obj := placed.add("kit_se_2", v0 + run_a, false)
 	var c_obj := placed.add("kit_pillar", v0 + run_a + run_b, false)
 	var d_obj := placed.add("kit_sw_4", v0 + run_a + run_b, false)
-	ck.call("wall kit: pieces are added as sprite + collider and listed under Temple walls", placed.objects.size() == wall_n + 4 and a_obj.nodes.size() == 2 and a_obj.nodes[0] is Sprite2D and a_obj.nodes[1] is StaticBody2D and PlacedObjects.type_of("kit_se_3") == "Temple walls")
+	# Bug fix (2026-10-23): a long wall run now draws as multiple y-sort slices (one per kit cell,
+	# see PlacedObjects._wall_slice_count) instead of one sprite with a single whole-run-midpoint
+	# sort key -- that single key was the reported bug (player standing near either end of a long
+	# wall visibly drew OVER it instead of being hidden). nodes is now [slice..., body], size
+	# slice_count+1, not always exactly 2; the first node is still the piece's first (nearest) slice
+	# and the LAST node is still the body, regardless of how many slices a given run has.
+	var a_n := PlacedObjects._wall_slice_count(run_a)
+	ck.call("wall kit: pieces are added as N slices (one per kit cell) + collider, listed under Temple walls",
+		placed.objects.size() == wall_n + 4 and a_obj.nodes.size() == a_n + 1 and a_obj.nodes[0] is Sprite2D and a_obj.nodes[a_obj.nodes.size() - 1] is StaticBody2D and PlacedObjects.type_of("kit_se_3") == "Temple walls")
 	var sa := a_obj.nodes[0] as Sprite2D
 	var sb := b_obj.nodes[0] as Sprite2D
 	var start_a := sa.global_position + sa.offset + (PlacedObjects.CATALOG["kit_se_3"].anchor as Vector2)
 	var start_b := sb.global_position + sb.offset + (PlacedObjects.CATALOG["kit_se_2"].anchor as Vector2)
 	ck.call("wall kit: a piece placed at the previous piece's pos + run starts exactly where it ends", start_a.is_equal_approx(v0) and start_b.is_equal_approx(v0 + run_a))
 	ck.call("wall kit: nav gets one 36x36 box per crossed cell (3 + 2 + 1 pillar + 4)", placed.obstacles().size() == nav_n + 3 + 2 + 1 + 4)
-	var body_a := a_obj.nodes[1] as StaticBody2D
+	var body_a := a_obj.nodes[a_obj.nodes.size() - 1] as StaticBody2D
 	ck.call("wall kit: the collider is a parallelogram along the run", body_a.get_child_count() == 1 and ((body_a.get_child(0) as CollisionShape2D).shape as ConvexPolygonShape2D).points.size() == 4 and body_a.global_position == a_obj.pos)
 	ck.call("wall kit: clicking the picture selects the piece", placed.hit_test(a_obj.pos + Vector2(20, -60)).get("id", "") == "kit_se_3")
 	placed.move(a_obj, a_obj.pos + Vector2(72, 36), false)
-	ck.call("wall kit: moving carries sprite and collider", body_a.position == a_obj.pos and sa.position == a_obj.pos + run_a * 0.5)
+	# sa is the first (nearest) slice; per-slice correctness (monotonic keys, exact screen-pixel
+	# identity) is covered exhaustively in tests/test_wall_kit_sort.gd -- this just checks move()
+	# actually re-derives sa's position from the NEW pos via the shared helper, not a stale value.
+	var expect_sa: Vector2 = PlacedObjects._wall_slice_transform(PlacedObjects.CATALOG["kit_se_3"], a_obj.pos, sa.get_meta("x0"), sa.get_meta("w"), PlacedObjects.wall_texture("kit_se_3").get_width()).position
+	ck.call("wall kit: moving carries sprite and collider", body_a.position == a_obj.pos and sa.position.is_equal_approx(expect_sa))
 	var saved := placed.to_dict()
 	placed.remove(c_obj, false)
 	placed.remove(d_obj, false)
