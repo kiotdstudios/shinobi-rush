@@ -13,6 +13,11 @@ signal state_changed(new_state: State)
 signal camera_baseline_changed(zoom: float)
 ## An enemy attack connected (Level 1 Bandit order). There is deliberately no player HP/death here:
 ## the locked RPG/death rules are untouched; this only counts the hit and gives a short readable reaction.
+## Milestone B reusable combat events. `attack_event` fires at each authored marker of the active swing
+## ("startup","active","recovery","combo_open","combo_close","cancel_open","end"); `attack_hit` fires ONCE per
+## confirmed contact with a HitEvent -- sparks, silhouettes, slash arcs, audio and diagnostics all listen here.
+signal attack_event(event_name: String, attack_id: String)
+signal attack_hit(hit: HitEvent)
 signal hit_taken(damage: float, from_dir: Vector2)
 signal health_changed(current: float, maximum: float)
 signal chakra_changed(current: float, maximum: float)
@@ -112,6 +117,9 @@ var _combo_index: int = 0  ## 0 = no combo in progress; else 1/2/3 = which light
 var _attack_buffer: float = 0.0  ## seconds left that a buffered attack_light press is still eligible
 var _hit_targets: Array = []  ## enemies already damaged by the current swing (each swing hits once)
 var _dash_grace_timer: float = 0.0  ## seconds left of the post-dodge dash-attack window
+var _hit_confirmed: bool = false  ## the current swing has connected (opens hit-confirm follow-ups)
+var _swing_clock: float = 0.0  ## seconds since the current swing began (drives the event markers)
+var _fired_markers: Dictionary = {}  ## marker name -> true once emitted for the current swing
 var _hitstop_timer: float = 0.0  ## local-only pause (not Engine.time_scale): see _physics_process top
 const MAX_HEALTH := 100.0
 var max_health: float = MAX_HEALTH
@@ -174,6 +182,10 @@ func _ready() -> void:
 		camera.limit_bottom = int(b.end.y + WorldScale.CAMERA_FOOTROOM)  # foot room: feet and shadow at the bottom wall are not cut off
 	visual.set_pose(facing8, false, false)
 	_attack_table = AttackDef.build_table()
+	var hit_fx := HitFx.new()
+	hit_fx.name = "HitFx"
+	add_child(hit_fx)
+	hit_fx.bind(self)
 	var bar := HealthBar.new()
 	bar.name = "HealthBar"
 	add_child(bar)
@@ -429,7 +441,12 @@ func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
 	_attack_phase = AttackPhase.STARTUP
 	_attack_timer = _attack_def.startup
 	_hit_targets.clear()
+	_hit_confirmed = false
+	_swing_clock = 0.0
+	_fired_markers.clear()
 	velocity += facing8 * _attack_def.lunge
+	if _attack_def.displacement_cap > 0.0 and velocity.length() > _attack_def.displacement_cap:
+		velocity = velocity.limit_length(_attack_def.displacement_cap)
 	if state == State.AIR_ATTACK and not visual.has_action(attack_id):
 		_play_jump_visual()  # no air_attack art yet: stay on the jump at its current phase
 	else:
@@ -440,10 +457,10 @@ func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
 ## the current facing8 locked rather than re-aiming from input -- order: "chain attacks without
 ## returning to idle", not "re-aim every hit of the chain".
 func _begin_next_combo_attack() -> void:
-	var next_index := _combo_index + 1
-	if next_index > 3:
-		next_index = 1
-	_begin_attack("light%d" % next_index)
+	var next_id: String = _attack_def.chains_to
+	if next_id == "" or not _attack_table.has(next_id):
+		return  # finisher: nothing to chain into (the callers check combo_window_for first)
+	_begin_attack(next_id)
 
 
 ## Per-physics-frame update while `state` is one of the attack states. Startup/active/recovery timing,
@@ -451,6 +468,8 @@ func _begin_next_combo_attack() -> void:
 ## all live here.
 func _process_attack_state(delta: float, input: Vector2) -> void:
 	_attack_timer -= delta
+	_swing_clock += delta
+	_emit_due_markers()
 	var airborne := state == State.AIR_ATTACK
 	if airborne:
 		_action_timer -= delta  # the jump keeps ticking underneath the swing
@@ -470,7 +489,8 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 		var elapsed := _attack_def.recovery - maxf(_attack_timer, 0.0)
 		# Dodge-cancel: once recovery has committed past `dodge_cancel_from`, a fresh/buffered dodge
 		# press interrupts the remaining recovery outright (order: "Interrupt...with a dodge").
-		if not airborne and elapsed >= _attack_def.dodge_cancel_from and _dodge_buffer > 0.0:
+		var cancel_from := _attack_def.dodge_cancel_from_for(_hit_confirmed)
+		if not airborne and cancel_from >= 0.0 and elapsed >= cancel_from and _dodge_buffer > 0.0:
 			_dodge_buffer = 0.0
 			_begin_dodge(input)
 			move_and_slide()
@@ -478,7 +498,8 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 		# Combo continuation: a fresh/buffered attack press within `combo_window` of recovery starting
 		# cuts the remaining recovery short and begins the next hit (order: "chain attacks without
 		# returning to idle"). dash_attack's combo_window is 0 -- it never chains this way.
-		if _attack_def.combo_window > 0.0 and elapsed <= _attack_def.combo_window and _attack_buffer > 0.0:
+		var chain_window := _attack_def.combo_window_for(_hit_confirmed)
+		if chain_window > 0.0 and elapsed <= chain_window and _attack_buffer > 0.0:
 			_attack_buffer = 0.0
 			_begin_next_combo_attack()
 			move_and_slide()
@@ -518,6 +539,27 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 	visual.play_action(_attack_def.id, facing8)
 
 
+## Emit every authored marker whose time has been reached, once each per swing.
+func _emit_due_markers() -> void:
+	if _attack_def == null:
+		return
+	for m: Dictionary in _attack_def.event_markers():
+		var n: String = m.name
+		if _fired_markers.has(n):
+			continue
+		var t: float = m.t
+		if n == "cancel_open":
+			var cf := _attack_def.dodge_cancel_from_for(_hit_confirmed)
+			if cf < 0.0:
+				continue
+			t = _attack_def.startup + _attack_def.active + cf
+		elif n == "combo_close":
+			t = _attack_def.startup + _attack_def.active + _attack_def.combo_window_for(_hit_confirmed)
+		if _swing_clock + 0.000001 >= t:
+			_fired_markers[n] = true
+			attack_event.emit(n, _attack_def.id)
+
+
 ## STARTUP -> ACTIVE -> RECOVERY -> (ends the attack). Only the final step can change `state` away
 ## from an attack state; the caller checks `_is_attack_state(state)` right after calling this.
 func _advance_attack_phase() -> void:
@@ -529,6 +571,9 @@ func _advance_attack_phase() -> void:
 			_attack_phase = AttackPhase.RECOVERY
 			_attack_timer = _attack_def.recovery
 		AttackPhase.RECOVERY:
+			if not _fired_markers.has("end"):
+				_fired_markers["end"] = true
+				attack_event.emit("end", _attack_def.id)
 			_combo_index = 0
 			state = State.IDLE  # placeholder; overwritten by the caller based on current input
 
@@ -553,8 +598,10 @@ func _check_attack_hits() -> void:
 		if angle_diff > _attack_def.arc_half_angle_deg:
 			continue
 		_hit_targets.append(enemy)
+		_hit_confirmed = true
 		enemy.take_damage(_attack_def.damage, to_enemy.normalized(), _attack_def.knockback, _attack_def.hitstop_ms)
 		_hitstop_timer = maxf(_hitstop_timer, _attack_def.hitstop_ms / 1000.0)
+		attack_hit.emit(HitEvent.make(self, enemy, _attack_def, to_enemy.normalized(), _combo_index))
 
 
 func _state_for_attack_id(attack_id: String) -> State:
@@ -777,8 +824,10 @@ func cancel_eligibility() -> Dictionary:
 	var e := {"combo": false, "dodge_cancel": false, "dash_attack": false, "air_attack": false}
 	if _is_attack_state(state) and _attack_phase == AttackPhase.RECOVERY and _attack_def != null:
 		var elapsed := _attack_def.recovery - maxf(_attack_timer, 0.0)
-		e.combo = _attack_def.combo_window > 0.0 and elapsed <= _attack_def.combo_window
-		e.dodge_cancel = state != State.AIR_ATTACK and elapsed >= _attack_def.dodge_cancel_from
+		var chain_window := _attack_def.combo_window_for(_hit_confirmed)
+		e.combo = chain_window > 0.0 and elapsed <= chain_window
+		var cancel_from := _attack_def.dodge_cancel_from_for(_hit_confirmed)
+		e.dodge_cancel = state != State.AIR_ATTACK and cancel_from >= 0.0 and elapsed >= cancel_from
 	e.dash_attack = (state == State.DODGE and _action_timer <= dash_attack_late_window) or _dash_grace_timer > 0.0
 	e.air_attack = state == State.JUMP
 	return e
@@ -794,6 +843,7 @@ func debug_snapshot() -> Dictionary:
 		"dodge_buffer": _dodge_buffer,
 		"jump_buffer": _jump_buffer,
 		"hitstop": _hitstop_timer,
+		"hit_confirmed": _hit_confirmed,
 		"cancel": cancel_eligibility(),
 	}
 
