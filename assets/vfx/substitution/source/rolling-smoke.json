@@ -1,0 +1,807 @@
+{
+ "frames": [
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 0.png",
+   "frame": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 1.png",
+   "frame": {
+    "x": 190,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 2.png",
+   "frame": {
+    "x": 380,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 3.png",
+   "frame": {
+    "x": 570,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 4.png",
+   "frame": {
+    "x": 760,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 5.png",
+   "frame": {
+    "x": 950,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 6.png",
+   "frame": {
+    "x": 0,
+    "y": 201,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 7.png",
+   "frame": {
+    "x": 190,
+    "y": 201,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 8.png",
+   "frame": {
+    "x": 380,
+    "y": 201,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 9.png",
+   "frame": {
+    "x": 570,
+    "y": 201,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 10.png",
+   "frame": {
+    "x": 760,
+    "y": 201,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 11.png",
+   "frame": {
+    "x": 950,
+    "y": 201,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 12.png",
+   "frame": {
+    "x": 0,
+    "y": 402,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 13.png",
+   "frame": {
+    "x": 190,
+    "y": 402,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 14.png",
+   "frame": {
+    "x": 380,
+    "y": 402,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 15.png",
+   "frame": {
+    "x": 570,
+    "y": 402,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 16.png",
+   "frame": {
+    "x": 760,
+    "y": 402,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 17.png",
+   "frame": {
+    "x": 950,
+    "y": 402,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 18.png",
+   "frame": {
+    "x": 0,
+    "y": 603,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 19.png",
+   "frame": {
+    "x": 190,
+    "y": 603,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 20.png",
+   "frame": {
+    "x": 380,
+    "y": 603,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 21.png",
+   "frame": {
+    "x": 570,
+    "y": 603,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 22.png",
+   "frame": {
+    "x": 760,
+    "y": 603,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 23.png",
+   "frame": {
+    "x": 950,
+    "y": 603,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 24.png",
+   "frame": {
+    "x": 0,
+    "y": 804,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 25.png",
+   "frame": {
+    "x": 190,
+    "y": 804,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 26.png",
+   "frame": {
+    "x": 380,
+    "y": 804,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 27.png",
+   "frame": {
+    "x": 570,
+    "y": 804,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 28.png",
+   "frame": {
+    "x": 760,
+    "y": 804,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  },
+  {
+   "filename": "shinobi-summoning-rolling-smoke-v2 29.png",
+   "frame": {
+    "x": 950,
+    "y": 804,
+    "w": 190,
+    "h": 201
+   },
+   "rotated": false,
+   "trimmed": false,
+   "spriteSourceSize": {
+    "x": 0,
+    "y": 0,
+    "w": 190,
+    "h": 201
+   },
+   "sourceSize": {
+    "w": 190,
+    "h": 201
+   },
+   "pivot": {
+    "x": 0.49473684210526314,
+    "y": 0.681592039800995
+   },
+   "duration": 40
+  }
+ ],
+ "meta": {
+  "app": "PixelLab VFX Creator",
+  "image": "shinobi-summoning-rolling-smoke-v2.png",
+  "format": "RGBA8888",
+  "size": {
+   "w": 1140,
+   "h": 1005
+  },
+  "scale": "1",
+  "anchor": {
+   "kind": "origin",
+   "x": 94,
+   "y": 137
+  },
+  "frameTags": [
+   {
+    "name": "shinobi-summoning-rolling-smoke-v2",
+    "from": 0,
+    "to": 29,
+    "direction": "forward"
+   }
+  ]
+ }
+}
