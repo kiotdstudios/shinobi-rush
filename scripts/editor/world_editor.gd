@@ -138,6 +138,8 @@ func set_tool(t: String, id := "") -> void:
 func snapped_pos(p: Vector2) -> Vector2:
 	if snap > 0 and _grass_tool():
 		return iso_cell_center(p)
+	if snap > 0 and _wall_tool():
+		return PlacedObjects.iso_vertex(p)  # wall kit pieces sit on floor-diamond vertices so runs join
 	return p if snap <= 0 else (p / float(snap)).round() * float(snap)
 
 ## Centre of the floor-grid diamond (72 x 36 tiles, centres at (36k, 18m) with k and m of equal parity) nearest to p.
@@ -156,6 +158,11 @@ static func iso_cell_center(p: Vector2) -> Vector2:
 				best_d = d
 				best = c
 	return best
+
+
+func _wall_tool() -> bool:
+	var id := place_id if tool == "place" else str(selected.get("id", ""))
+	return id != "" and PlacedObjects.def_of(id).kind == "wall"
 
 
 func _grass_tool() -> bool:
@@ -340,6 +347,8 @@ func draw_overlay(c: Node2D) -> void:
 			var tex := load(str(info.texture)) as Texture2D
 			var anchor := Vector2(float(info.anchor[0]), float(info.anchor[1]))
 			c.draw_texture(tex, pos - anchor, Color(1, 1, 1, 0.55) if ok else Color(1, 0.5, 0.5, 0.55))
+		elif def.kind == "wall":
+			c.draw_texture(PlacedObjects.wall_texture(place_id), pos - (def.anchor as Vector2), Color(1, 1, 1, 0.55) if ok else Color(1, 0.5, 0.5, 0.55))
 		else:
 			c.draw_rect(PlacedObjects.hit_rect(place_id, pos), Color(tint, 0.25))
 		if def.kind == "grass":
@@ -591,6 +600,10 @@ func _build_ui() -> void:
 			b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 			if def.kind == "grass":
 				b.icon = load(WindGrassTileset.DIR + id + ".png") as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "wall":
+				b.icon = PlacedObjects.wall_texture(id)
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "tree":
