@@ -3,7 +3,7 @@
 - Status: REVIEW
 - Priority: P0 direct owner request
 - Owner: Codex art
-- Branch/PR: codex/charge-body-revision
+- Branch/PR: codex/charge-body-revision — https://github.com/kiotdstudios/shinobi-rush/pull/126 (draft); implementation e6d2105
 - Dependencies: owner rejects V2 VFX; confirms player and bandit
 
 ## Objective

@@ -3,7 +3,7 @@
 - Order: ../2026-10-23-charge-body-revision.md
 - Date: 2026-10-23
 - Final status: REVIEW — body-only art candidate, owner visual review pending
-- Commit / PR: Not committed yet; this report precedes implementation commit.
+- Commit / PR: Implementation e6d210529852ca814f2e9b447a045b84d0cce15b; https://github.com/kiotdstudios/shinobi-rush/pull/126 (draft, unmerged). Original report preceded implementation commit.
 
 ## Work completed
 
@@ -45,3 +45,5 @@ None. Owner can inspect the concrete normal/half-speed candidates; no blocking p
 ## Outstanding work / next steps
 
 Owner visual review, then gameplay owner can bind approved charge holds and coordinate entry/release timing. Keep rejected VFX disabled. Live deployment: not applicable; new package is unbound review art and cannot change the shared live game. Dedicated draft art PR for reviewed integration; no main merge claimed.
+
+Published preview verification: fetched SE-half-speed.gif from raw.githubusercontent.com at the exact implementation SHA on2026-10-23; downloaded SHA256 BB27F45E68A0B4CCB24A15F50ED31ED25DCAD59BA527F9EE2AFA9915999DF0CC matches local. This confirms published preview bytes, not a game deployment. Worktree clean after implementation push.
