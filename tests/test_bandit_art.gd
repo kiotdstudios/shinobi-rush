@@ -12,6 +12,8 @@ func run(ck: Callable, tree_root: Node) -> void:
 	var library := SpriteLibrary.new()
 	library.scan()
 	ck.call("bandit art: enemy does not replace player default", library.get_set("bandit_128") == null and library.first_valid().id != "bandit_128")
+	ck.call("bandit hud: starts with full chakra and 2 substitution pips", bandit.chakra == bandit.max_chakra and bandit.max_chakra == 100.0 and bandit.substitutions == 2 and bandit.max_substitutions == 2)
+	ck.call("bandit hud: the shared bar block is half-scale art with two bars and a pip row", UnitBars.size_for(2).x == 98.0 and UnitBars.size_for(2).y > 22.0)
 	var vectors := [Vector2.DOWN, Vector2(1, 1), Vector2.RIGHT, Vector2(1, -1), Vector2.UP, Vector2(-1, -1), Vector2.LEFT, Vector2(-1, 1)]
 	for i in 8:
 		bandit.facing8 = vectors[i].normalized()

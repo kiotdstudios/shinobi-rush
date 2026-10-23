@@ -87,6 +87,11 @@ var _evade_side := 1.0
 
 var state: State = State.PATROL
 var hp: float = max_hp
+## Display-only status stats (HUD parity with the player): the Bandit has no chakra spend or substitution logic yet.
+var max_chakra: float = 100.0
+var chakra: float = 100.0
+var max_substitutions: int = 2
+var substitutions: int = 2
 var facing8: Vector2 = Vector2.DOWN
 var profile: Dictionary = {}
 var nav: ArenaNav = null
