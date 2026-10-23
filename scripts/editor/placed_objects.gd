@@ -247,17 +247,86 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	return obj
 
 
-## [sprite, collider]. The sprite sorts at the MIDDLE of its ground run (one key for a long diagonal piece); the collider is a thin parallelogram along it.
+## Bug fix (owner 2026-10-23, screenshot: standing behind a long temple wall, player visibly drew
+## OVER the wall instead of being hidden by it): a single Sprite2D for a whole diagonal wall run had
+## ONE global y-sort key at the run's MIDPOINT (see the removed comment below). Godot's y-sort only
+## compares ONE position per node, so that single key can only be locally correct AT the midpoint --
+## everywhere else along a multi-cell run (the ends most of all, exactly where the report's
+## screenshot shows the player standing) the real local "am I in front of or behind the wall here"
+## answer diverges from what the midpoint key says, and the player visibly draws through the wall.
+## Fix: cut the texture into CELL_UNIT-aligned vertical slices (same `cell` grid the kit's own
+## kit.json already uses) and give each slice its OWN sort key, linearly interpolated from the near
+## corner's y to the far corner's y across the run -- the same idea as Block/BlockRear's two keys
+## (front edge, back edge), generalized from 2 keys to N because a diagonal edge isn't a single
+## constant-y line the way an axis-aligned box's edges are.
+## Math (verified before implementing): the kit's build script (tools/gen_wall_kit_v2.py) unshears
+## the source art (shift column x up by x//2), builds the run, then reshears it (shift column x DOWN
+## by x//2) -- a strictly linear, content-independent mapping from image column to world position
+## along the run for EVERY column of the final PNG, including the non-uniform end-cap regions. That
+## means slicing evenly by PIXEL COLUMN (not needing to know the kit's internal cap/panel pixel
+## layout) still gives a proportionally correct world position -- and therefore sort key -- per
+## slice. `position_i + offset_i` is solved per slice to reproduce the EXACT same final screen pixels
+## as the original single sprite (verified algebraically, see PR), so the only thing this changes is
+## the sort key granularity; the baked-in art is pixel-identical to before.
+const CELL_UNIT := Vector2(36.0, 18.0)  ## matches wall_kit_v2/kit.json's own "cell" grid
+
+
+## Number of sort-key slices for a wall piece with ground run `col`. 1 (no slicing) for point pieces
+## (pillar/ruin, col == ZERO); otherwise the run length in kit cells, which is also the number of
+## distinct 36px-ish cell steps the kit's own generator chained together to build that piece.
+static func _wall_slice_count(col: Vector2) -> int:
+	if col == Vector2.ZERO:
+		return 1
+	return maxi(1, roundi(col.length() / CELL_UNIT.length()))
+
+
+## Position + offset for slice `i` of `n` (texture columns [x0, x0+w)) so it draws at EXACTLY the
+## same screen pixels as the original single sprite would have for that column range, while its own
+## y-sort key is the LOCAL ground y at that slice's midpoint along the run (not the whole run's
+## midpoint) -- see the derivation in the comment above `_make_wall`.
+static func _wall_slice_transform(def: Dictionary, pos: Vector2, x0: float, w: float, full_w: float) -> Dictionary:
+	var anchor: Vector2 = def.anchor
+	var col: Vector2 = def.col
+	var t := (x0 + w * 0.5) / full_w
+	var sort_key := lerpf(pos.y, pos.y + col.y, t)
+	var position := Vector2(pos.x, sort_key)
+	var offset := Vector2(x0 - anchor.x, pos.y - anchor.y - sort_key)
+	return {"position": position, "offset": offset, "sort_key": sort_key}
+
+
+## [slice sprites..., collider]. Each slice sorts at its OWN local ground y (see _wall_slice_count/
+## _wall_slice_transform); the collider stays a single thin parallelogram along the whole run --
+## only the VISUAL sort is diagonal-aware, collision is already geometry-correct as-is.
 func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 	var def := def_of(id)
 	var col: Vector2 = def.col
-	var sprite := Sprite2D.new()
-	sprite.name = "PlacedWall%d" % _serial
-	sprite.texture = wall_texture(id)
-	sprite.centered = false
-	sprite.offset = -(def.anchor as Vector2) - col * 0.5
-	sprite.position = pos + col * 0.5
-	arena.add_child(sprite)
+	var tex := wall_texture(id)
+	var full_w: float = tex.get_width()
+	var n := _wall_slice_count(col)
+	var nodes: Array[Node] = []
+	var x0 := 0.0
+	for i in n:
+		var w: float = full_w / float(n) if i < n - 1 else full_w - x0
+		var sprite := Sprite2D.new()
+		sprite.name = "PlacedWall%d_%d" % [_serial, i]
+		sprite.centered = false
+		if n == 1:
+			sprite.texture = tex
+			sprite.offset = -(def.anchor as Vector2) - col * 0.5
+			sprite.position = pos + col * 0.5
+		else:
+			var atlas := AtlasTexture.new()
+			atlas.atlas = tex
+			atlas.region = Rect2(x0, 0, w, tex.get_height())
+			sprite.texture = atlas
+			var t := _wall_slice_transform(def, pos, x0, w, full_w)
+			sprite.offset = t.offset
+			sprite.position = t.position
+			sprite.set_meta("x0", x0)
+			sprite.set_meta("w", w)
+		arena.add_child(sprite)
+		nodes.append(sprite)
+		x0 += w
 	var body := StaticBody2D.new()
 	body.name = "PlacedWallBody%d" % _serial
 	var shape := ConvexPolygonShape2D.new()
@@ -270,7 +339,8 @@ func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 	body.add_child(cs)
 	body.position = pos
 	arena.add_child(body)
-	return [sprite, body]
+	nodes.append(body)
+	return nodes
 
 
 func _make_trunk(pos: Vector2) -> StaticBody2D:
@@ -365,7 +435,6 @@ func remove(obj: Dictionary, commit := true) -> void:
 	if commit:
 		_changed()
 
-
 func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 	if not objects.has(obj):
 		return
@@ -376,13 +445,27 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 		(nodes[0] as Node2D).position = pos
 		(nodes[1] as Node2D).position = ArenaSort.rear_position(pos, def.footprint)
 	elif def.kind == "wall":
-		(nodes[0] as Node2D).position = pos + (def.col as Vector2) * 0.5
-		(nodes[1] as Node2D).position = pos
+		# nodes = [slice sprites..., body]. Each slice re-derives its own position/offset from the
+		# x0/w it was built with (stashed as metadata at creation -- see _make_wall) via the SAME
+		# formula used to create it, so a moved multi-cell wall keeps its per-slice sort keys correct
+		# instead of collapsing back to a single whole-piece key.
+		var full_w: float = wall_texture(obj.id).get_width()
+		for i in nodes.size() - 1:
+			var sprite := nodes[i] as Sprite2D
+			if sprite.has_meta("x0"):
+				var t := _wall_slice_transform(def, pos, sprite.get_meta("x0"), sprite.get_meta("w"), full_w)
+				sprite.position = t.position
+				sprite.offset = t.offset
+			else:
+				sprite.position = pos + (def.col as Vector2) * 0.5
+				sprite.offset = -(def.anchor as Vector2) - (def.col as Vector2) * 0.5
+		(nodes[nodes.size() - 1] as Node2D).position = pos
 	else:
 		for n: Node2D in nodes:
 			n.position = pos
 	if commit:
 		_changed()
+
 
 
 ## Topmost object under a world point: the solid base wins over the (larger) picture so crowded trees stay pickable.

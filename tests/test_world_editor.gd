@@ -309,18 +309,30 @@ func run(ck: Callable, root: Node) -> void:
 	var b_obj := placed.add("kit_se_2", v0 + run_a, false)
 	var c_obj := placed.add("kit_pillar", v0 + run_a + run_b, false)
 	var d_obj := placed.add("kit_sw_4", v0 + run_a + run_b, false)
-	ck.call("wall kit: pieces are added as sprite + collider and listed under Temple walls", placed.objects.size() == wall_n + 4 and a_obj.nodes.size() == 2 and a_obj.nodes[0] is Sprite2D and a_obj.nodes[1] is StaticBody2D and PlacedObjects.type_of("kit_se_3") == "Temple walls")
+	# Bug fix (2026-10-23): a long wall run now draws as multiple y-sort slices (one per kit cell,
+	# see PlacedObjects._wall_slice_count) instead of one sprite with a single whole-run-midpoint
+	# sort key -- that single key was the reported bug (player standing near either end of a long
+	# wall visibly drew OVER it instead of being hidden). nodes is now [slice..., body], size
+	# slice_count+1, not always exactly 2; the first node is still the piece's first (nearest) slice
+	# and the LAST node is still the body, regardless of how many slices a given run has.
+	var a_n := PlacedObjects._wall_slice_count(run_a)
+	ck.call("wall kit: pieces are added as N slices (one per kit cell) + collider, listed under Temple walls",
+		placed.objects.size() == wall_n + 4 and a_obj.nodes.size() == a_n + 1 and a_obj.nodes[0] is Sprite2D and a_obj.nodes[a_obj.nodes.size() - 1] is StaticBody2D and PlacedObjects.type_of("kit_se_3") == "Temple walls")
 	var sa := a_obj.nodes[0] as Sprite2D
 	var sb := b_obj.nodes[0] as Sprite2D
 	var start_a := sa.global_position + sa.offset + (PlacedObjects.CATALOG["kit_se_3"].anchor as Vector2)
 	var start_b := sb.global_position + sb.offset + (PlacedObjects.CATALOG["kit_se_2"].anchor as Vector2)
 	ck.call("wall kit: a piece placed at the previous piece's pos + run starts exactly where it ends", start_a.is_equal_approx(v0) and start_b.is_equal_approx(v0 + run_a))
 	ck.call("wall kit: nav gets one 36x36 box per crossed cell (3 + 2 + 1 pillar + 4)", placed.obstacles().size() == nav_n + 3 + 2 + 1 + 4)
-	var body_a := a_obj.nodes[1] as StaticBody2D
+	var body_a := a_obj.nodes[a_obj.nodes.size() - 1] as StaticBody2D
 	ck.call("wall kit: the collider is a parallelogram along the run", body_a.get_child_count() == 1 and ((body_a.get_child(0) as CollisionShape2D).shape as ConvexPolygonShape2D).points.size() == 4 and body_a.global_position == a_obj.pos)
 	ck.call("wall kit: clicking the picture selects the piece", placed.hit_test(a_obj.pos + Vector2(20, -60)).get("id", "") == "kit_se_3")
 	placed.move(a_obj, a_obj.pos + Vector2(72, 36), false)
-	ck.call("wall kit: moving carries sprite and collider", body_a.position == a_obj.pos and sa.position == a_obj.pos + run_a * 0.5)
+	# sa is the first (nearest) slice; per-slice correctness (monotonic keys, exact screen-pixel
+	# identity) is covered exhaustively in tests/test_wall_kit_sort.gd -- this just checks move()
+	# actually re-derives sa's position from the NEW pos via the shared helper, not a stale value.
+	var expect_sa: Vector2 = PlacedObjects._wall_slice_transform(PlacedObjects.CATALOG["kit_se_3"], a_obj.pos, sa.get_meta("x0"), sa.get_meta("w"), PlacedObjects.wall_texture("kit_se_3").get_width()).position
+	ck.call("wall kit: moving carries sprite and collider", body_a.position == a_obj.pos and sa.position.is_equal_approx(expect_sa))
 	var saved := placed.to_dict()
 	placed.remove(c_obj, false)
 	placed.remove(d_obj, false)
