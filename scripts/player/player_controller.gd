@@ -29,7 +29,7 @@ signal respawned(at: Vector2)  ## emitted after a respawn has put the player bac
 ## No player death/HP system exists here (locked RPG rules); this only tracks the stat.
 signal ryo_changed(new_amount: int)
 
-enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK, AIR_ATTACK }
+enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK, AIR_ATTACK, CHARGE }
 ## Phase of the current attack (LIGHT1/LIGHT2/LIGHT3/DASH_ATTACK states only). Startup/active/recovery
 ## lengths come from the matching AttackDef in `_attack_table` (see combat order's frame table).
 enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
@@ -134,6 +134,11 @@ const MAX_CHAKRA := 100.0
 const MAX_SUBSTITUTIONS := 3
 var max_chakra: float = MAX_CHAKRA
 var chakra: float = MAX_CHAKRA
+## Provisional chakra recovery while holding charge; no aura is bound yet.
+@export var chakra_charge_per_second: float = 20.0
+var _charge_interrupted := false
+const CHARGE_HOLD_DELAY := 0.30  ## press keeps existing substitution; sustained L2 adds charge
+var _charge_hold_time := 0.0
 var max_substitution_charges: int = MAX_SUBSTITUTIONS
 var substitution_charges: int = MAX_SUBSTITUTIONS
 ## Substitution Jutsu (L2). A timed L2 press only pays off if an enemy attack lands inside the window.
@@ -200,6 +205,10 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var prev_state := state
+	var charge_held := Input.is_action_pressed("substitution")
+	_charge_hold_time = _charge_hold_time + delta if charge_held else 0.0
+	if not charge_held and not Input.is_action_pressed("chakra_charge"):
+		_charge_interrupted = false
 	# Cleared every frame, only re-populated below in the plain-SPRINT locomotion branch: sensing is a
 	# fresh, every-frame read, never a sticky flag that survives into dodge/attack/jump/idle frames.
 	sensed_enemy = null
@@ -316,6 +325,8 @@ func _physics_process(delta: float) -> void:
 		else:
 			_jump_buffer = 0.0
 			_begin_jump()
+	elif (Input.is_action_pressed("chakra_charge") or _charge_hold_time >= CHARGE_HOLD_DELAY) and not _charge_interrupted and _sub_reveal <= 0.0:
+		_process_charge(delta)
 	elif input != Vector2.ZERO:
 		velocity = velocity.move_toward(input * target_speed, acceleration * delta)
 		facing = input.normalized()
@@ -338,6 +349,8 @@ func _physics_process(delta: float) -> void:
 		_play_jump_visual()
 	elif _is_attack_state(state):
 		visual.play_action(_attack_def.id, facing8)
+	elif state == State.CHARGE:
+		visual.play_action("charge", facing8)
 	else:
 		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
 		if kunai_drawn:
@@ -683,14 +696,31 @@ func is_evading_melee() -> bool:
 	return state == State.DODGE or state == State.JUMP or state == State.AIR_ATTACK
 
 
-## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely; a
-## hit that lands only tints the figure and adds a small shove -- control is never taken away.
+## Planted charge hold. Called only after grounded actions have completed; attack/dodge/jump
+## keep priority. Animation runs at the approved 6FPS through the normal SpriteActor clock.
+func _process_charge(delta: float) -> void:
+	state = State.CHARGE
+	velocity = Vector2.ZERO
+	_footstep_timer = 0.0
+	visual.position.y = 0.0
+	visual.play_action("charge", facing8)
+	var restored := minf(max_chakra, chakra + chakra_charge_per_second * delta)
+	if not is_equal_approx(restored, chakra):
+		chakra = restored
+		chakra_changed.emit(chakra, max_chakra)
+
+
+## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely.
 func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: Variant = null) -> bool:
 	if is_evading_melee() or _hit_invuln > 0.0:
 		return false
 	if _try_substitution(attacker, from_dir):
 		return false
 	hits_taken += 1
+	if state == State.CHARGE:
+		state = State.IDLE
+		_charge_interrupted = true  # release before starting another charge after being hit
+		visual.set_pose(facing8, false, false)
 	_hit_invuln = HIT_INVULN_TIME
 	hit_flash_timer = HIT_FLASH_TIME
 	visual.modulate = HIT_TINT
@@ -796,6 +826,7 @@ func _substitution_spot_ok(p: Vector2) -> bool:
 ## Puts a downed player back at `spawn_position` with full health, no leftover motion / action / combo
 ## state and a short grace period. Safe to call any time (the hit path calls it when health reaches 0).
 func respawn() -> void:
+	_charge_interrupted = true
 	dust.landing(global_position)
 	global_position = spawn_position
 	velocity = Vector2.ZERO
