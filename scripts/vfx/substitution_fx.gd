@@ -117,7 +117,10 @@ func _process(delta: float) -> void:
 		var local: float = _age - float(t["delay"])
 		if t["name"] == "log" and _age >= LOG_POOF:
 			s.visible = false
-			alive.append(t) if _age < LOG_SMOKE_END else s.queue_free()
+			if _age < LOG_SMOKE_END:
+				alive.append(t)
+			else:
+				s.queue_free()
 			continue
 		if local < 0.0:
 			alive.append(t)
