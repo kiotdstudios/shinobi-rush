@@ -38,6 +38,7 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("hud layout: a click on the HP bar picks the HP bar, and the chakra bar independently", hud.element_at(hp0.get_center()) == "hp_bar" and hud.element_at(ch0.get_center()) == "chakra_bar")
 	ck.call("hud layout: the avatar sits over the bars' tucked ends (topmost wins)", hud.element_at(hud.element_rect("portrait").get_center()) == "portrait")
 	ck.call("hud layout: empty screen picks nothing", hud.element_at(Vector2(640, 300)) == "")
+	hud.hud_snap = 0  # free drag for the exact-offset checks below; grid behaviour is tested after
 	var grabbed := editor.press_hud(hp0.get_center())
 	hud.drag_at(hp0.get_center() + Vector2(40, 25))
 	editor.release_hud()
@@ -63,6 +64,36 @@ func run(ck: Callable, root: Node) -> void:
 	editor.set_open(false)
 	await root.get_tree().process_frame
 	ck.call("hud layout: closing the builder ends HUD edit mode and clears the pick", not hud.edit_mode and hud.selected_element == "")
+	hud.hud_snap = 8
+	hud.offsets.clear()
+	hud.layout_path = "user://test_hud_layout_align.json"
+	editor.set_open(true)
+	editor.press_hud(hud.element_rect("hp_bar").get_center())
+	hud.drag_at(hud.element_rect("hp_bar").get_center() + Vector2(13, 11))
+	editor.release_hud()
+	var hp_p := hud.pos_of("hp_bar")
+	ck.call("hud grid: a snapped drag lands on the 8px grid", int(hp_p.x) % 8 == 0 and int(hp_p.y) % 8 == 0, str(hp_p))
+	hud.dragging_element = true
+	hud.selected_element = "hp_bar"
+	hud.drag_at(Vector2(99999, 99999))
+	hud.dragging_element = false
+	ck.call("hud grid: a piece can never be dragged off screen", hud.element_rect("hp_bar").end.x <= hud._canvas.size.x + 0.5 and hud.element_rect("hp_bar").end.y <= hud._canvas.size.y + 0.5)
+	hud.offsets.clear()
+	hud.r2_to_right_edge(24.0)
+	var wcanvas: float = hud._canvas.size.x if hud._canvas.size.x > 0.0 else 1280.0
+	ck.call("hud align: the R2 cluster right edge sits at the screen edge minus margin", absf(hud.r2_bounds().end.x - (wcanvas - 24.0)) < 0.6, str(hud.r2_bounds()))
+	hud.move_element("ability_0", Vector2(0, -90))
+	hud.align_substitution_with_r2()
+	ck.call("hud align: Substitution centre is level with the R2 cluster centre", absf(hud.element_rect("ability_0").get_center().y - hud.r2_bounds().get_center().y) < 0.6)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(hud.layout_path))
+	hud.offsets.clear()
+	var hud_check := editor._filter_buttons.get("HUD layout") as CheckBox
+	ck.call("builder: a HUD layout filter checkbox exists and starts unticked (HUD controls hidden)", hud_check != null and not hud_check.button_pressed and not (editor._category_sections["HUD layout"] as Control).visible)
+	editor.set_type_filter("HUD layout", true)
+	ck.call("builder: ticking it reveals the HUD controls", (editor._category_sections["HUD layout"] as Control).visible)
+	editor.set_type_filter("HUD layout", false)
+	ck.call("builder: the palette keeps a minimum height", editor.palette_scroll.custom_minimum_size.y >= 200.0)
+	editor.set_open(false)
 	var every := true
 	for id: String in PlacedObjects.CATALOG:
 		every = every and (PlacedObjects.footprint_of(id).x > 0.0)
