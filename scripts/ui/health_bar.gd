@@ -57,6 +57,7 @@ var _tex: Dictionary = {}
 var offsets: Dictionary = {}  ## element id -> Vector2 shift from its default spot (saved to LAYOUT_PATH)
 var edit_mode := false  ## true while the builder is open: pieces get outlines and can be picked and dragged
 var selected_element := ""
+var layout_path := LAYOUT_PATH  ## where drags are saved (tests point this elsewhere)
 var _drag_grab := Vector2.ZERO
 var dragging_element := false
 
@@ -329,7 +330,9 @@ func apply_layout_json(text: String) -> void:
 	_redraw()
 
 
-func save_layout(path := LAYOUT_PATH) -> bool:
+func save_layout(path := "") -> bool:
+	if path == "":
+		path = layout_path
 	var f := FileAccess.open(path, FileAccess.WRITE)
 	if f == null:
 		return false
@@ -337,7 +340,9 @@ func save_layout(path := LAYOUT_PATH) -> bool:
 	return true
 
 
-func load_layout(path := LAYOUT_PATH) -> void:
+func load_layout(path := "") -> void:
+	if path == "":
+		path = layout_path
 	if FileAccess.file_exists(path):
 		apply_layout_json(FileAccess.get_file_as_string(path))
 

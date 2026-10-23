@@ -26,6 +26,9 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("builder: hiding collapses it again", not editor.panel.visible and editor.tab.visible)
 	# HUD pieces are movable from the builder
 	var hud := editor.hud_bar() as HealthBar
+	if hud != null:
+		hud.layout_path = "user://test_hud_layout_drag.json"
+		hud.offsets.clear()
 	ck.call("hud layout: the player's HUD is found by the builder and starts unedited", hud != null and not hud.edit_mode and hud.offsets.is_empty())
 	editor.set_open(true)
 	await root.get_tree().process_frame
@@ -53,6 +56,7 @@ func run(ck: Callable, root: Node) -> void:
 	hud.apply_layout_json("{\"bogus\":[1,2],\"portrait\":[3,4]}")
 	ck.call("hud layout: unknown ids in a saved file are ignored", hud.offsets.size() == 1 and hud.offsets.get("portrait") == Vector2(3, 4))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(layout_path))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(hud.layout_path))
 	hud.offsets.clear()
 	ck.call("hud layout: the ability bar has Substitution plus four circle slots, each its own piece", HealthBar.ELEMENTS.has("ability_0") and HealthBar.ELEMENTS.has("ability_4") and HealthBar.ABILITY_LABELS.size() == HealthBar.SLOT_COUNT and HealthBar.SLOT_COUNT == 5)
 	editor.select_hud("pips")
