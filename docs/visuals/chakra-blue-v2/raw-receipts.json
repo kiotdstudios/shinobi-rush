@@ -1,0 +1,65 @@
+{
+  "buildup.png": {
+    "generator": "builtin image_gen",
+    "receipt": "exec-a132e66a-610a-4010-a88b-32149e7884c2.png",
+    "sha256": "ec4c68e3d89a7fc1ab7f8a2942e72ed47a19e63dc3fbeee8bb24c8fadd793930",
+    "selected": false,
+    "rejection_reason": "tight framing; cross-cell tips or insufficient safe padding"
+  },
+  "sustain-a.png": {
+    "generator": "builtin image_gen",
+    "receipt": "exec-72cc4178-191f-42e2-817c-f4928e7b0f52.png",
+    "sha256": "a4e9bcb17191fe0cb9d5a961cf7b4ae37d8358f33c79c09669270f27b09735a0",
+    "selected": false,
+    "rejection_reason": "tight framing; cross-cell tips or insufficient safe padding"
+  },
+  "sustain-b.png": {
+    "generator": "builtin image_gen",
+    "receipt": "exec-22ffd992-3a71-449c-81e6-2d61495ede41.png",
+    "sha256": "9fcfc0b7eacec010df3020cda9b490f3c03a7424c6b31c4b25d0905bc6a226da",
+    "selected": false,
+    "rejection_reason": "tight framing; cross-cell tips or insufficient safe padding"
+  },
+  "buildup-final.png": {
+    "generator": "builtin image_gen",
+    "receipt": "exec-f9f5fc27-907e-4c22-b59e-a517a00c6280.png",
+    "sha256": "12e668c25d285117260b8146c005b98d9d893be0b341e9e134debce8da7d2fdc",
+    "selected": true,
+    "rejection_reason": null
+  },
+  "sustain-a-final.png": {
+    "generator": "builtin image_gen",
+    "receipt": "exec-5ce76e1c-bfa3-498e-8570-f30393a6d321.png",
+    "sha256": "580f93a909e550e133a9a0efd667527dea2e513f265b35e90a9f61bddb36b0b8",
+    "selected": true,
+    "rejection_reason": null
+  },
+  "sustain-b-final.png": {
+    "generator": "builtin image_gen",
+    "receipt": "exec-a9135b67-44ad-4a37-8a96-3dd6f87b721b.png",
+    "sha256": "72e487a5f5ff54b35096095c6244139019a11364340ffcb68d9acd6092da9519",
+    "selected": true,
+    "rejection_reason": null
+  },
+  "sustain-c-final.png": {
+    "generator": "builtin image_gen",
+    "receipt": "exec-46cea7be-043b-49a1-8b58-c4032fc3d497.png",
+    "sha256": "b6e79105423936cad2d91ae843d46b40575cca86db57d4a79ca42d7d1d4f1ec7",
+    "selected": true,
+    "rejection_reason": null
+  },
+  "sustain-d-final.png": {
+    "generator": "builtin image_gen",
+    "receipt": "exec-a67bce98-4cd9-4e49-85e9-1b9a3e755b5d.png",
+    "sha256": "caff394b2d8619c425a037be7649d9135698cf80f8745cbb89450f59ba88e470",
+    "selected": true,
+    "rejection_reason": null
+  },
+  "release-final.png": {
+    "generator": "builtin image_gen",
+    "receipt": "exec-8097ef90-ddf0-4a01-961a-e0dc1e5e3d22.png",
+    "sha256": "4e7e8146d111b65f03af8ef281825f5b9ccce1f121d27bafd1b43f2c870ea931",
+    "selected": true,
+    "rejection_reason": null
+  }
+}
