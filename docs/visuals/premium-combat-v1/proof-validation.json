@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "poses": {
+    "run": 18,
+    "light1": 6,
+    "light2": 8,
+    "light3": 8,
+    "dodge": 11,
+    "dash_attack": 7
+  },
+  "composites": 116,
+  "source_pngs_hash_checked": true,
+  "body_alpha": "binary 128RGBA",
+  "sockets": "opaque native body pixel for every pose",
+  "timing": "exact milliseconds; all four contacts coincide with active start",
+  "intentional_reuse": [],
+  "visual_limitations": [
+    "Dash is an explicit reused-pose proof, not dedicated production art.",
+    "Existing light3 turns toward south in the finishing extreme; owner must review SE read.",
+    "No gameplay hitboxes/controller/event adapter installed; timing remains a proposal."
+  ]
+}

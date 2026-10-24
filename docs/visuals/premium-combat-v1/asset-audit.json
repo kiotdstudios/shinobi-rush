@@ -1,0 +1,152 @@
+{
+  "scope": "inventory checkpoint; not finished prototype or runtime integration",
+  "sources": {
+    "modular_pr": 33,
+    "modular_commit": "2e5717d6e844de0a94c954a520aad131f3162873",
+    "bandit_pr": 38,
+    "bandit_sprint_art_revision": "sprint-arms-v3",
+    "legacy_dash": "workspace-only untracked candidate; not shipped/approved"
+  },
+  "player": {
+    "frame_size": [
+      128,
+      128
+    ],
+    "foot_anchor": [
+      64,
+      116
+    ],
+    "body_height_px": 104,
+    "unique_locomotion_files": 847,
+    "states": {
+      "idle": {
+        "directions": {
+          "S": 16,
+          "SE": 16,
+          "E": 16,
+          "NE": 16,
+          "N": 16,
+          "NW": 16,
+          "W": 16,
+          "SW": 16
+        },
+        "fps": 12
+      },
+      "walk": {
+        "directions": {
+          "S": 16,
+          "SE": 16,
+          "E": 16,
+          "NE": 16,
+          "N": 16,
+          "NW": 16,
+          "W": 16,
+          "SW": 16
+        },
+        "fps": 12
+      },
+      "run": {
+        "directions": {
+          "S": 20,
+          "SE": 20,
+          "E": 20,
+          "NE": 20,
+          "N": 20,
+          "NW": 20,
+          "W": 20,
+          "SW": 20
+        },
+        "fps": 12
+      },
+      "sprint": {
+        "directions": {
+          "S": 20,
+          "SE": 20,
+          "E": 20,
+          "NE": 20,
+          "N": 20,
+          "NW": 11,
+          "W": 20,
+          "SW": 20
+        },
+        "fps": 12
+      },
+      "jump": {
+        "directions": {
+          "S": 24,
+          "SE": 24,
+          "E": 24,
+          "NE": 24,
+          "N": 24,
+          "NW": 24,
+          "W": 24,
+          "SW": 24
+        },
+        "fps": 12
+      },
+      "dodge": {
+        "directions": {
+          "S": 12,
+          "SE": 12,
+          "E": 12,
+          "NE": 12,
+          "N": 12,
+          "NW": 12,
+          "W": 12,
+          "SW": 12
+        },
+        "fps": 12
+      }
+    }
+  },
+  "modular": {
+    "body_frames": 24,
+    "weapons": [
+      "katana",
+      "straight_sword"
+    ],
+    "animations": {
+      "light_attack_1": {
+        "direction": "SE",
+        "frames": 8,
+        "source_contact_frames": [
+          4
+        ],
+        "timing_status": "pending_aki_configuration"
+      },
+      "light_attack_2": {
+        "direction": "SE",
+        "frames": 8,
+        "source_contact_frames": [
+          1
+        ],
+        "timing_status": "pending_aki_configuration"
+      },
+      "light_attack_3": {
+        "direction": "SE",
+        "frames": 8,
+        "source_contact_frames": [
+          2
+        ],
+        "timing_status": "pending_aki_configuration"
+      }
+    }
+  },
+  "vfx": {
+    "sword_trail_light": 8,
+    "sword_trail_heavy": 8,
+    "hit_spark": 4
+  },
+  "dash_candidate": {
+    "frames": 8,
+    "direction": "SE",
+    "status": "CANDIDATE_VISUAL_REVIEW_REQUIRED",
+    "layering": "baked sword; separate weaponless dash/socket track not delivered"
+  },
+  "bandit": {
+    "idle": 8,
+    "run": 8,
+    "sprint": 8
+  },
+  "validation": "PASS: referenced audited PNG dimensions/RGBA/binary alpha; modular body/weapon/VFX file hashes match source metadata"
+}
