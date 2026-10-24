@@ -245,9 +245,12 @@ func _ready() -> void:
 		placed.load_default_from_repo()  # no per-machine save yet: fall back to the last-published layout
 	rebuild_nav()
 	_spawn_bandit()
-	if placed.loaded_version < PlacedObjects.SAVE_VERSION:
+	var layout_version := placed.loaded_version
+	if layout_version < 6:
 		# first run / an older layout: a few gourds lie around (a v5 layout already has its health gourds)
-		placed.scatter_defaults(placed.loaded_version >= 5)
+		placed.scatter_defaults(layout_version >= 5)
+	if layout_version < 7:
+		placed.ensure_shrine()  # v7 added the Ancient Shrine landmark: every older layout gets one once
 	editor = WorldEditor.new()
 	editor.setup(self, placed)
 	add_child(editor)
