@@ -2,7 +2,7 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-24-blightwood-water.md
 - Date: 2026-10-24
-- Final status: REVIEW - validated and submitted; canonical deployment pending.
+- Final status: DONE - runtime merged and verified live; available for owner art review.
 - Commit / PR: initial implementation3337643981dbec5d76c66c88b8f29e171aa6b309; upstream integration2b892cf764ec1c84aae6e9fa8a7c80967b6f9cea; https://github.com/kiotdstudios/shinobi-rush/pull/162. Report was written before the implementation commit.
 
 ## Work completed
@@ -40,3 +40,20 @@ Merged origin/main56da29a without conflicts, preserving Aki's bandit combo/subst
 Upstream's unchanged BANDIT_L1_STATS.pdf is text-encoded PDF and triggers Git whitespace warnings in its xref records. Verified staged PDF exactly matches origin/main; did not alter PDF bytes. Whitespace check against origin/main (the actual PR diff) PASS.
 
 Environment: Windows, Godot4.7.2 GL Compatibility, Chromium Playwright1280x720, Python/Pillow/NumPy native artifact processing. Required PR checks running; no live-delivery claim yet.
+
+## Final deployment and canonical browser verification
+PR https://github.com/kiotdstudios/shinobi-rush/pull/162 merged as 0921f13afc8f3bf036e468e7661103eba662ca0f. Required PR Godot CI 40103196107, repository checks 40103196117 and pipeline self-test 40103196146 all PASS. Main Godot CI https://github.com/kiotdstudios/shinobi-rush/actions/runs/40103801393 ALL PASS, including deployment, smoke-postdeploy and gate. Canonical build-info.json returned the exact merge SHA.
+
+Builder exact URL: https://kiotdstudios.github.io/shinobi-rush/?editor=1&v=1792853565039
+Timestamp: 2026-10-24T14:53:27.185Z (UTC).
+Command: node scripts/ci/smoke/builder-water-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/blightwood-water-live-builder
+Result: 12/12 checks PASS, zero errors, matching build SHA. Palette filter, ten cards, scroll without zoom, placement, selection, movement, deletion, filter cancel, animation and save/reload all verified.
+
+Review exact URL: https://kiotdstudios.github.io/shinobi-rush/?water=review&paused=1
+Timestamp: 2026-10-24T14:53:00.764Z (UTC).
+Command: node docs/visuals/blightwood-water/browser-proof.mjs https://kiotdstudios.github.io/shinobi-rush/ build/blightwood-water-live-review --no-capture
+Result: 10/10 boolean checks PASS, zero errors. Actual flow, cascade/foam frames, moving droplets, normal/half speed, pause, step and independent foam/spray control. Captured=0 here intentionally; existing 192-frame preview captures were already verified locally. Added remote/no-capture mode and exact URL/time/SHA evidence to the review probe; actual remote run validates that follow-up. No game runtime/production art changes in the follow-up.
+
+Visually inspected both actual public screenshots: no dark source-grid seams; clear blue continuous river surface, narrow cascade, registered separate foam, crisp pixels; builder River water category and Save remain accessible. Evidence: docs/visuals/blightwood-water/live-builder-validation.json, live-builder.png, live-review-validation.json and live-review.png. These are dated observations of the exact runtime SHA, not claims about a later documentation deployment.
+
+Integration notes: select River water in World Builder; nine floor tiles use existing paint/move/delete tools. Small Waterfall is separately movable/deletable. Interactive preview: https://kiotdstudios.github.io/shinobi-rush/?water=review (default half speed). Water collision/swimming, banks, lilies, rocks and flowers remain outside this decorative art pass. No additional implementation blocker. Owner visual review remains available; approval is not claimed.

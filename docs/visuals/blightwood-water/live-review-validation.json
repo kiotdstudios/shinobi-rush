@@ -1,0 +1,31 @@
+{
+  "url": "https://kiotdstudios.github.io/shinobi-rush/?water=review&paused=1",
+  "tested_at": "2026-10-24T14:53:00.764Z",
+  "build_sha": "0921f13afc8f3bf036e468e7661103eba662ca0f",
+  "checks": {
+    "ready": true,
+    "flowing_cascade": true,
+    "foam_moves": true,
+    "spray_moves": true,
+    "normal_speed": true,
+    "half_speed": true,
+    "pause": true,
+    "step": true,
+    "separate_spray_toggle": true,
+    "captured": 0,
+    "no_errors": true
+  },
+  "errors": [],
+  "last": {
+    "ready": true,
+    "clock": 0,
+    "speed": 0.5,
+    "paused": true,
+    "spray": true,
+    "fall_frame": 0,
+    "foam_frame": 0,
+    "drops": 18,
+    "drop_x": -5,
+    "buttons_json": "{\"Half speed\":{\"x\":136.0,\"y\":56.5},\"Normal\":{\"x\":53.5,\"y\":56.5},\"Pause\":{\"x\":212.5,\"y\":56.5},\"Spray / foam\":{\"x\":344.5,\"y\":56.5},\"Step\":{\"x\":265.5,\"y\":56.5}}"
+  }
+}
