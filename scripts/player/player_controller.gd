@@ -166,6 +166,19 @@ const HIT_TINT := Color(1.0, 0.45, 0.4, 1.0)
 var sensed_enemy: Node2D = null  ## nearest enemy inside the sense circle this frame while SPRINTing, else null
 var kunai_drawn: bool = false  ## true the instant `sensed_enemy` is non-null (read by tests / web smoke state)
 
+## -- Inventory (D-pad slots) --
+## What the player carries and which D-pad / R2 slot holds what. A D-pad press (or the arrow keys) uses that slot's item.
+var inventory := PlayerInventory.new()
+signal item_used(item_id: String)
+const THROW_TIME := 0.34  ## total kunai throw (wind-up, release, follow-through)
+const THROW_RELEASE := 0.4  ## fraction of THROW_TIME at which the kunai leaves the hand
+const THROW_MOVE_MULT := 0.35  ## walk/run speed multiplier while the arm is busy
+const THROW_HAND := Vector2(0, 0)
+var _throw_t: float = 0.0  ## seconds left in the current throw (0 = not throwing)
+var _throw_released: bool = true
+var _throw_dir: Vector2 = Vector2.DOWN
+var kunai_thrown_count: int = 0
+
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
 @onready var dust: DustPuff = $DustPuff
@@ -201,6 +214,11 @@ func _ready() -> void:
 	bar.name = "HealthBar"
 	add_child(bar)
 	bar.bind(self)
+	inventory.load_saved()
+	var menu := PlayerMenu.new()
+	menu.name = "PlayerMenu"
+	add_child(menu)
+	menu.bind(self)
 
 
 func _physics_process(delta: float) -> void:
@@ -230,6 +248,10 @@ func _physics_process(delta: float) -> void:
 		_attack_buffer = input_buffer_window
 	if Input.is_action_just_pressed("substitution"):
 		_sub_buffer = SUB_WINDOW
+	for slot: String in PlayerInventory.DPAD_SLOTS:
+		if Input.is_action_just_pressed("slot_" + slot):
+			use_slot(slot)
+	_tick_throw(delta)
 
 	# Local hitstop: pause this body's own velocity/position integration only -- NOT Engine.time_scale
 	# (the order forbids a global freeze). Buffers do not decay while frozen, so a press made just
@@ -247,6 +269,8 @@ func _physics_process(delta: float) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
 	var target_speed := sprint_speed if sprinting else walk_speed
+	if _throw_t > 0.0:
+		target_speed *= THROW_MOVE_MULT
 
 	if _is_attack_state(state):
 		_process_attack_state(delta, input)
@@ -353,7 +377,9 @@ func _physics_process(delta: float) -> void:
 		visual.play_action("charge", facing8)
 	else:
 		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
-		if kunai_drawn:
+		if _throw_t > 0.0:
+			_play_throw_visual()
+		elif kunai_drawn:
 			# Cosmetic overlay only: falls back silently to the normal sprint pose until an "kunai_ready"
 			# animation exists in the active sprite set (PlayerVisual.play_action/has_action contract).
 			visual.play_action("kunai_ready", facing8)
@@ -866,6 +892,66 @@ func restore_chakra(amount: float) -> float:
 	if chakra != before:
 		chakra_changed.emit(chakra, max_chakra)
 	return chakra - before
+
+
+## Uses whatever sits on D-pad slot `slot` ("up"/"right"/"down"/"left"). Returns true when something happened.
+func use_slot(slot: String) -> bool:
+	var id := inventory.slot_item(slot)
+	if id == "" or health <= 0.0:
+		return false
+	var used := false
+	match id:
+		"health_gourd":
+			if health < max_health and inventory.consume(id):
+				var before := clampf(health / maxf(max_health, 0.001), 0.0, 1.0)
+				restore_health(max_health * HealthGourd.FRACTION)
+				var bar := get_node_or_null("HealthBar") as HealthBar
+				if bar != null:
+					bar.begin_heal_anim(before, 0.0)
+				used = true
+		"chakra_gourd":
+			if chakra < max_chakra and inventory.consume(id):
+				restore_chakra(max_chakra * HealthGourd.FRACTION)
+				used = true
+		"kunai":
+			used = _begin_throw()
+	if used:
+		item_used.emit(id)
+	return used
+
+
+## Start a forward kunai throw (costs one kunai). Only from plain locomotion/idle, one at a time.
+func _begin_throw() -> bool:
+	if _throw_t > 0.0 or inventory.count_of("kunai") <= 0:
+		return false
+	if state != State.IDLE and state != State.MOVE and state != State.SPRINT:
+		return false
+	inventory.consume("kunai")
+	_throw_t = THROW_TIME
+	_throw_released = false
+	_throw_dir = facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
+	return true
+
+
+func _tick_throw(delta: float) -> void:
+	if _throw_t <= 0.0:
+		return
+	_throw_t = maxf(_throw_t - delta, 0.0)
+	var progress := 1.0 - _throw_t / THROW_TIME
+	if not _throw_released and progress >= THROW_RELEASE:
+		_throw_released = true
+		kunai_thrown_count += 1
+		PlayerKunai.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+
+
+## No dedicated throw art exists yet: use the "throw" animation if a sprite set ever ships one, otherwise borrow the
+## first half of the light attack (arm drawn back, then forward) so the throw still reads as a throw.
+func _play_throw_visual() -> void:
+	var progress := clampf(1.0 - _throw_t / THROW_TIME, 0.0, 1.0)
+	if visual.has_action("throw"):
+		visual.play_action_progress("throw", _snap8(_throw_dir), progress)
+	else:
+		visual.play_action_progress("light1", _snap8(_throw_dir), progress * 0.5)
 
 
 func restore_health(amount: float) -> float:

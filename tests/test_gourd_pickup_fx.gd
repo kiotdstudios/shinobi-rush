@@ -18,9 +18,10 @@ func run(p_ck: Callable, root: Node) -> void:
 
 	player.global_position = g.global_position
 	player.health = 50.0
+	player.inventory.counts["health_gourd"] = 0
 	var gained := g.collect(player)
 	var fx := g.fx
-	ck.call("gourd fx: healing stays exact (+25) and the pickup is used up", is_equal_approx(gained, 25.0) and is_equal_approx(player.health, 75.0) and not g.available)
+	ck.call("gourd fx: the pickup goes in the bag (no instant heal) and is used up", is_equal_approx(gained, 1.0) and is_equal_approx(player.health, 50.0) and player.inventory.count_of("health_gourd") == 1 and not g.available)
 	ck.call("gourd fx: collecting starts the effect", fx != null and is_instance_valid(fx))
 	if fx == null:
 		main.queue_free()
@@ -61,8 +62,10 @@ func run(p_ck: Callable, root: Node) -> void:
 	ck.call("gourd fx: absorb - 6-10 healing sparks spiral up", spirals >= 6 and spirals <= 10, str(spirals))
 	ck.call("gourd fx: absorb - the gourd itself is gone", not v.visible)
 	# 5. HUD
+	ck.call("gourd fx: HUD - picking it up does not start a heal fill", not bar.heal_animating())
+	# Eating it from the D-pad slot (up) is what heals: true HP at once, the drawn bar fills smoothly.
+	ck.call("gourd fx: using the bagged gourd heals exactly 25%", player.use_slot("up") and is_equal_approx(player.health, 75.0) and player.inventory.count_of("health_gourd") == 0)
 	ck.call("gourd fx: HUD - true HP is restored at once, drawn bar waits at the old value", bar.heal_animating() and is_equal_approx(bar.shown_fraction(), 0.5) and is_equal_approx(bar.fraction, 0.75))
-	bar._process(0.5)  # past the wait
 	bar._process(0.125)
 	var mid := bar.shown_fraction()
 	ck.call("gourd fx: HUD - fill animates (about 250 ms) instead of jumping", mid > 0.5 and mid < 0.75, str(mid))
@@ -71,7 +74,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	bar._process(0.5)
 	ck.call("gourd fx: HUD - flash fades back to normal", bar._heal_flash == 0.0)
 	fx.advance(0.2)  # t = 0.57
-	ck.call("gourd fx: +HP label is still alive after the HUD fill starts", not fx.finished)
+	ck.call("gourd fx: +1 label is still alive after the HUD fill starts", not fx.finished)
 	fx.advance(1.0)
 	ck.call("gourd fx: it cleans itself up", fx.finished)
 

@@ -27,7 +27,7 @@ var gourd: HealthGourd
 ## Effect colours: green for a health gourd, blue for a chakra gourd (set in start()).
 var _green := Color(0.35, 1.0, 0.55)
 var _white_green := Color(0.85, 1.0, 0.9)
-var _label := "HP"
+var _label := "HEALTH GOURD"
 var player: Node2D
 var amount := 0.0
 var t := 0.0
@@ -52,11 +52,9 @@ static func start(p_gourd: HealthGourd, p_player: Node2D, p_amount: float, hp_be
 	if p_gourd.kind == "chakra":
 		fx._green = Color(0.3, 0.65, 1.0)
 		fx._white_green = Color(0.85, 0.95, 1.0)
-		fx._label = "CHAKRA"
 	p_gourd.add_child(fx)
-	var bar := p_player.get_node_or_null("HealthBar") as HealthBar
-	if bar != null and p_gourd.kind != "chakra":
-		bar.begin_heal_anim(hp_before_fraction, T_ABSORB)
+	# The gourd goes into the bag now (healing happens later, from its D-pad slot), so there is no HUD fill to schedule.
+	fx._label = "CHAKRA GOURD" if p_gourd.kind == "chakra" else "HEALTH GOURD"
 	return fx
 
 
@@ -318,8 +316,8 @@ func _draw() -> void:
 	var a := 1.0 - clampf((k - 0.6) / 0.4, 0.0, 1.0)
 	var font := ThemeDB.fallback_font
 	var txt := "+%d %s" % [int(roundf(amount)), _label]
-	draw_string_outline(font, pos - Vector2(60.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 120.0, 20, 5, Color(0.02, 0.15, 0.06, 0.9 * a) if _label == "HP" else Color(0.02, 0.06, 0.2, 0.9 * a))
-	draw_string(font, pos - Vector2(60.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 120.0, 20, Color(0.6, 1.0, 0.7, a) if _label == "HP" else Color(0.65, 0.85, 1.0, a))
+	draw_string_outline(font, pos - Vector2(90.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 180.0, 20, 5, Color(0.02, 0.15, 0.06, 0.9 * a) if _label == "HEALTH GOURD" else Color(0.02, 0.06, 0.2, 0.9 * a))
+	draw_string(font, pos - Vector2(90.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 180.0, 20, Color(0.6, 1.0, 0.7, a) if _label == "HEALTH GOURD" else Color(0.65, 0.85, 1.0, a))
 
 
 # ---------------------------------------------------------------- sound
