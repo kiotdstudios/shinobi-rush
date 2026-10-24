@@ -36,3 +36,8 @@ None. Visual approval remains for the delivered reference recreation.
 
 ## Outstanding work / next steps
 PR/required checks, normal protected merge, canonical Web deployment and exact public build/browser verification; update order/report with final SHA/links. Prior shoreline PR166 public review passed12checks; latest public builder probe had save_reload count mismatch after upstream map additions, final shoreline evidence/report remains separate outstanding work.
+
+## Latest-main integration — before publishing integrated branch
+Main f6a303b40ebce755d539f3028a2748c7267b8c54 (Aki's PR180 starting courtyard) was merged normally as83c6ca84fe216893b805924c2a4c21769f63ffba. Incoming courtyard code/tests kept intact. The merge commit was created by git merge before integration checks; no untested merged branch was pushed. Then executed focused native starting-area+shrine harness:21PASS0FAIL/no errors (build/shrine-integration.log). Fresh debug Web export to ../dynamic-shrine-integrated-web-20261024 passed. Re-ran all17review checks and11builder checks on the integrated build, all PASS/no console errors; integrated-browser/builder-validation.json stored in docs.
+
+Builder probe now starts outside the authored courtyard, which the existing map system reconstructs on reload. That existing behavior can clear custom props placed inside its reserved footprint; this art task does not change Aki's layout ownership. Both new shrine source/art and review rendering are unchanged by integration. The successful final native full suite remains2504on the pre-integration branch; exact integrated full suite is delegated to required fresh PR CI, not falsely claimed rerun locally.

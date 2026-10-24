@@ -1,0 +1,40 @@
+{
+  "url": "http://127.0.0.1:57858/?shrine=review&paused=1",
+  "tested_at": "2026-10-24T22:31:41.346Z",
+  "checks": {
+    "ready": true,
+    "three_swarms": true,
+    "animation_moves": true,
+    "rooted_stone": true,
+    "normal": true,
+    "half": true,
+    "pause": true,
+    "step": true,
+    "glow_off": true,
+    "glow_on": true,
+    "vines_off": true,
+    "vines_on": true,
+    "fireflies_off": true,
+    "fireflies_on": true,
+    "rays_off": true,
+    "rays_on": true,
+    "no_errors": true
+  },
+  "frames": 0,
+  "errors": [],
+  "last": {
+    "ready": true,
+    "clock": 0,
+    "speed": 0.5,
+    "paused": true,
+    "swarms": 3,
+    "pulse": 0.5,
+    "glow": true,
+    "vines": true,
+    "fireflies": true,
+    "rays": true,
+    "body_x": -272,
+    "body_y": -448,
+    "buttons_json": "{\"Fireflies\":{\"x\":430.5,\"y\":58.5},\"Glow\":{\"x\":314.5,\"y\":58.5},\"God rays\":{\"x\":507.5,\"y\":58.5},\"Half speed\":{\"x\":136.0,\"y\":58.5},\"Normal\":{\"x\":53.5,\"y\":58.5},\"Pause\":{\"x\":212.5,\"y\":58.5},\"Step\":{\"x\":265.5,\"y\":58.5},\"Vines\":{\"x\":367.0,\"y\":58.5}}"
+  }
+}

@@ -32,7 +32,7 @@ try{
  await page.mouse.move(initial.scroll_x,initial.scroll_y);await page.mouse.wheel(0,300);await wait(200);await page.mouse.wheel(0,-300);await wait(200);
  checks.scroll_no_zoom=(await state()).zoom===zoom;
  await card('dynamic_shrine');let px=750,py=550;
- for(const point of [[750,550],[750,650],[350,650],[150,650],[750,350]]){[px,py]=point;await click(px,py);if((await state()).shrine_count>initial.shrine_count)break}
+ for(const point of [[750,650],[350,650],[150,650],[750,550],[750,350]]){[px,py]=point;await click(px,py);if((await state()).shrine_count>initial.shrine_count)break}
  checks.place=(await state()).shrine_count===initial.shrine_count+1;
  await page.mouse.click(px,py,{button:'right'});await wait(200);await click(px,py-40);
  const selected=await state();checks.select=selected.selected_id==='dynamic_shrine';
