@@ -11,6 +11,13 @@ Folders that are NOT walked (a project at the repository root shares its tree wi
   * a folder whose name starts with "." (.git, .github, .godot, .agents, ...) and every node_modules folder
   * generated Web export output: res://exports and res://build/web
   * the CI tooling: res://scripts/ci (also while it has no .gdignore yet)
+  * third-party addons' editor-dock-only UI trees that reference EditorInterface (an editor-process-only
+    singleton that does not exist when Godot runs plain --headless without -e, the exact mode this walker
+    runs in -- NOT a parse error in the scripts themselves, and NOT something to patch in vendored
+    third-party code; the actually-played game never touches these classes, only the real Godot editor's
+    dock UI does, and that keeps working unaffected since this list is walker-only, not a .gdignore):
+    res://addons/dialogue_manager/views, res://addons/dialogue_manager/components (Dialogue Manager's
+    custom in-editor dialogue-script editor dock, added 2026-10-23 alongside the addon itself)
 Output contract (godot_ci.py parses it):
   VALIDATE_RESOURCES: scripts=N scenes=N resources=N failures=N
   VALIDATE_RESOURCES_SKIPPED: <sorted res:// folders that were not walked>
@@ -25,7 +32,10 @@ from pathlib import Path
 
 WALKER_FILE_NAME = "validate_resources.gd"
 SKIP_DIR_NAMES = ("node_modules",)
-SKIP_DIR_PATHS = ("res://exports", "res://build/web", "res://scripts/ci")
+SKIP_DIR_PATHS = (
+    "res://exports", "res://build/web", "res://scripts/ci",
+    "res://addons/dialogue_manager/views", "res://addons/dialogue_manager/components",
+)
 
 WALKER_LINES = [
     "extends SceneTree",
