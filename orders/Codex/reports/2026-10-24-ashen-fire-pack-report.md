@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-24-ashen-fire-pack.md
 - Date:2026-10-24
-- Final status: REVIEW
-- Commit / PR: Implementation commit follows this report; required CI and live verification next.
+- Final status: DONE (delivered live for owner art review)
+- Commit / PR: 59a0e13891f6427bdd1fbeedb7df02487ee87689; PR #153, merged as 4c3e1ed7d813b336ee6765dd72cb5e375dd87967.
 
 ## Work completed
 Five original PixelLab fixtures, using the existing floor's15-color stone palette. Separate12-frame12FPS flame atlas, coals and billowing smoke. Fixed24spark/18smoke pools per fixture, randomized upward/sideways embers, smoke curl/rise/fade, independently fluctuating orange tile light. One pop event synchronizes flash, coal brightness,6spark burst and positional crackle clip. Original synthesized4second ambient bed plus3crackle clips. No paid audio generation or copied Naruto audio.
@@ -36,3 +36,10 @@ Actual isolated Godot Web review: all10boolean checks PASS,192frames captured wi
 Final full native suite:2264PASS0FAIL via python scripts/ci/godot_ci.py tests --project . --log-dir build/ashen-fire-final-ready-tests. Final Web export PASS via export --project . --out ../ashen-fire-final-ready-web-20261024 --log-dir build/fire-final-ready-export. Browser command: node scripts/ci/smoke/builder-fire-probe.mjs --serve-dir ../ashen-fire-final-ready-web-20261024 --out-dir build/ashen-fire-complete-browser. All15checks PASS,0errors: five cards/filter, scrolling without zoom, place/select/move/delete, filter cancellation, all5variants, active pop events, synchronous backup, save/reload, invalid backup fallback and restoring a valid backup. Screenshot and full JSON copied to docs/visuals/ashen-fire. All debug prints removed before final export. Order validator and working diff whitespace check PASS.
 
 The Web mirror resolves the observed stale-writeback symptom without replacing existing native saves. Old users load their file normally until their next edit, when both copies are written. No remaining known local test failures. Owner art review follows delivery; no claim of owner approval for the new fire assets.
+
+## Verified live completion
+PR https://github.com/kiotdstudios/shinobi-rush/pull/153 passed required CI40074069277 and merged normally as4c3e1ed7d813b336ee6765dd72cb5e375dd87967. Main deployment CI40074663840 completed successfully, including post-deploy smoke and controls. Public build-info.json reported the exact merge SHA on2026-10-24.
+
+Live command: node scripts/ci/smoke/builder-fire-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/ashen-fire-live-browser. All15checks PASS,0console/runtime errors, including five cards, scroll without zoom, selection/move/delete/filter, all5fixtures, pop events, saved backup, reload, corrupt backup fallback and restoration. Live PNG visually inspected: all fixture bodies/flames, independent smoke, sparks, warm tile illumination and builder controls render correctly. Evidence copied to live-builder-validation.json and live-builder.png beside the previews. Existing HUD placeholders are outside this art task and were preserved.
+
+Published half-speed GIF downloaded from exact implementation SHA; SHA256 matches local. Normal preview8seconds, half-speed16seconds,192frames each. Audio event synchronization, mute and PCM integrity tested; subjective sound quality remains for owner listening. No claim of owner visual approval for this new pack. No required implementation, integration or deployment work remains; owner can review in the live Ashen fire builder filter.
