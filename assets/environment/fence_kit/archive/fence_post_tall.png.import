@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dgbv1cmbew5u2"
-path="res://.godot/imported/fence_post_tall.png-6e23ad6e80815618cb4fb14214272fb7.ctex"
+uid="uid://w37rug5u01nb"
+path="res://.godot/imported/fence_post_tall.png-21d90a3d02ef010cb1988bd6d27b9129.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/environment/fence_kit/fence_post_tall.png"
-dest_files=["res://.godot/imported/fence_post_tall.png-6e23ad6e80815618cb4fb14214272fb7.ctex"]
+source_file="res://assets/environment/fence_kit/archive/fence_post_tall.png"
+dest_files=["res://.godot/imported/fence_post_tall.png-21d90a3d02ef010cb1988bd6d27b9129.ctex"]
 
 [params]
 

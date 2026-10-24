@@ -40,3 +40,10 @@ Finish preview packaging and pre-commit checks, required reviewed PR/CI, exact l
 Isolated review browser controls: 13 boolean checks PASS plus192actual captured frames,0errors. Normal/half speed, pause/step, real insect flight, flicker, lantern sway and four effect toggles all passed. Previews verified192frames each: normal8000ms, half-speed16000ms, about7.4MB each. PNGs visually inspected at native size and against the actual floor/grass palette. Order validation and working diff whitespace checks PASS. All planned local acceptance checks pass before this implementation commit.
 
 Shared main advanced to3fcfd96 with larger fences and controls/canonical-URL documentation while this work ran. Implementation is locally tested against the previous base; will integrate the new main and rerun affected full-game checks before PR publication. The isolated light review and generation outputs are independent of those upstream changes.
+
+## Integration with shared main
+Merged origin/main3fcfd96 (larger fences, archived legacy posts, controls and canonical-site policy). One catalog-line conflict was resolved by preserving the new Blightwood category and upstream's eight active fence IDs, without restoring retired post cards. The prior untracked generated shot_fences UID exactly matched the incoming tracked UID; preserved its local copy under ignored build/ before integration. No personal files were deleted.
+
+Before completing the integration merge commit: Godot import PASS; full native suite2301PASS/0FAIL again (build/blightwood-integrated-tests). Fresh Web export PASS (../blightwood-integrated-web-20261024). Repeated full builder probe all16PASS/0errors (build/blightwood-integrated-browser); refreshed screenshot and JSON copied to docs. Order validation and whitespace checks PASS. Light art and isolated preview did not change. Published half-speed GIF fetched from the implementation commit8e0b0f6; SHA256 matches local.
+
+Canonical public game remains https://kiotdstudios.github.io/shinobi-rush/. This branch/preview is NOT LIVE yet; required PR/main CI, deploy/postdeploy success and exact live SHA verification will be recorded after integration.
