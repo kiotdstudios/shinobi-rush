@@ -13,12 +13,12 @@ func run(p_ck: Callable, root: Node) -> void:
 	var inv := PlayerInventory.new()
 	inv.save_path = "user://test_inventory.json"
 	ck.call("inventory: starts with 10 kunai and no gourds", inv.count_of("kunai") == 10 and inv.count_of("health_gourd") == 0 and inv.count_of("chakra_gourd") == 0)
-	ck.call("inventory: default slots are up=health, right=chakra, left=kunai, down=empty", inv.slot_item("up") == "health_gourd" and inv.slot_item("right") == "chakra_gourd" and inv.slot_item("left") == "kunai" and inv.slot_item("down") == "")
+	ck.call("inventory: default slots are up=health, right=chakra, left=kunai, down=paper tag", inv.slot_item("up") == "health_gourd" and inv.slot_item("right") == "chakra_gourd" and inv.slot_item("left") == "kunai" and inv.slot_item("down") == "paper_tag")
 	ck.call("inventory: add stops at the stack cap", inv.add("health_gourd", 20) == PlayerInventory.MAX_STACK and not inv.has_room("health_gourd") and inv.add("health_gourd") == 0)
 	ck.call("inventory: unknown items are refused", inv.add("banana") == 0)
 	ck.call("inventory: consume takes one, and refuses at zero", inv.consume("health_gourd") and inv.count_of("health_gourd") == PlayerInventory.MAX_STACK - 1 and not inv.consume("chakra_gourd"))
 	inv.assign_item("down", "kunai")
-	ck.call("inventory: an item sits on one slot only (kunai moved left -> down, left takes down's old empty)", inv.slot_item("down") == "kunai" and inv.slot_item("left") == "")
+	ck.call("inventory: an item sits on one slot only (kunai moved left -> down, left takes down's old paper tag)", inv.slot_item("down") == "kunai" and inv.slot_item("left") == "paper_tag")
 	inv.assign_item("up", "kunai")
 	ck.call("inventory: placing an item that is on another slot swaps them", inv.slot_item("up") == "kunai" and inv.slot_item("down") == "health_gourd")
 	inv.assign_jutsu("triangle", "chidori")
@@ -77,6 +77,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	player.chakra = 10.0
 	ck.call("use: right drinks a chakra gourd for 25% of max chakra", player.use_slot("right") and is_equal_approx(player.chakra, 35.0) and player.inventory.count_of("chakra_gourd") == 0)
 	ck.call("use: an empty bag does nothing", not player.use_slot("right"))
+	player.inventory.assign_item("down", "")
 	ck.call("use: an empty slot does nothing", not player.use_slot("down"))
 	player.health = player.max_health
 
@@ -131,7 +132,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	ck.call("menu: Cross picks the highlighted item", menu.placing)
 	menu.place_item_on("down")
 	ck.call("menu: pressing a D-pad direction puts the item there", player.inventory.slot_item("down") == "kunai" and not menu.placing)
-	menu.cursor = 3  # empty entry
+	menu.cursor = 4  # empty entry
 	menu.accept()
 	menu.place_item_on("down")
 	ck.call("menu: the (empty) entry clears a slot", player.inventory.slot_item("down") == "")

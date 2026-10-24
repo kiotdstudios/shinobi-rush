@@ -175,6 +175,8 @@ const THROW_HAND := Vector2(0, 0)
 var _throw_t: float = 0.0  ## seconds left in the current throw (0 = not throwing)
 var _throw_released: bool = true
 var _throw_dir: Vector2 = Vector2.DOWN
+var _throw_item := "kunai"  ## inventory id of what the current throw releases ("kunai" or "paper_tag")
+var tags_thrown_count: int = 0
 var kunai_thrown_count: int = 0
 
 @onready var visual: PlayerVisual = $PlayerVisual
@@ -887,18 +889,21 @@ func use_slot(slot: String) -> bool:
 				used = true
 		"kunai":
 			used = _begin_throw()
+		"paper_tag":
+			used = _begin_throw("paper_tag")
 	if used:
 		item_used.emit(id)
 	return used
 
 
 ## Start a forward kunai throw (costs one kunai). Only from plain locomotion/idle, one at a time.
-func _begin_throw() -> bool:
-	if _throw_t > 0.0 or inventory.count_of("kunai") <= 0:
+func _begin_throw(item := "kunai") -> bool:
+	if _throw_t > 0.0 or inventory.count_of(item) <= 0:
 		return false
 	if state != State.IDLE and state != State.MOVE and state != State.SPRINT:
 		return false
-	inventory.consume("kunai")
+	inventory.consume(item)
+	_throw_item = item
 	_throw_t = THROW_TIME
 	_throw_released = false
 	_throw_dir = facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
@@ -912,8 +917,12 @@ func _tick_throw(delta: float) -> void:
 	var progress := 1.0 - _throw_t / THROW_TIME
 	if not _throw_released and progress >= THROW_RELEASE:
 		_throw_released = true
-		kunai_thrown_count += 1
-		PlayerKunai.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+		if _throw_item == "paper_tag":
+			tags_thrown_count += 1
+			PaperTagBomb.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+		else:
+			kunai_thrown_count += 1
+			PlayerKunai.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
 
 
 ## No dedicated throw art exists yet: use the "throw" animation if a sprite set ever ships one, otherwise borrow the

@@ -52,9 +52,12 @@ static func start(p_gourd: HealthGourd, p_player: Node2D, p_amount: float, hp_be
 	if p_gourd.kind == "chakra":
 		fx._green = Color(0.3, 0.65, 1.0)
 		fx._white_green = Color(0.85, 0.95, 1.0)
+	elif p_gourd.kind == "paper_tag":
+		fx._green = Color(1.0, 0.55, 0.12)
+		fx._white_green = Color(1.0, 0.92, 0.7)
 	p_gourd.add_child(fx)
 	# The gourd goes into the bag now (healing happens later, from its D-pad slot), so there is no HUD fill to schedule.
-	fx._label = "CHAKRA GOURD" if p_gourd.kind == "chakra" else "HEALTH GOURD"
+	fx._label = {"chakra": "CHAKRA GOURD", "paper_tag": "PAPER TAG"}.get(p_gourd.kind, "HEALTH GOURD")
 	return fx
 
 
@@ -316,8 +319,26 @@ func _draw() -> void:
 	var a := 1.0 - clampf((k - 0.6) / 0.4, 0.0, 1.0)
 	var font := ThemeDB.fallback_font
 	var txt := "+%d %s" % [int(roundf(amount)), _label]
-	draw_string_outline(font, pos - Vector2(90.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 180.0, 20, 5, Color(0.02, 0.15, 0.06, 0.9 * a) if _label == "HEALTH GOURD" else Color(0.02, 0.06, 0.2, 0.9 * a))
-	draw_string(font, pos - Vector2(90.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 180.0, 20, Color(0.6, 1.0, 0.7, a) if _label == "HEALTH GOURD" else Color(0.65, 0.85, 1.0, a))
+	draw_string_outline(font, pos - Vector2(90.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 180.0, 20, 5, _label_outline(a))
+	draw_string(font, pos - Vector2(90.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 180.0, 20, _label_fill(a))
+
+
+func _label_outline(a: float) -> Color:
+	match _label:
+		"HEALTH GOURD":
+			return Color(0.02, 0.15, 0.06, 0.9 * a)
+		"PAPER TAG":
+			return Color(0.2, 0.06, 0.0, 0.9 * a)
+	return Color(0.02, 0.06, 0.2, 0.9 * a)
+
+
+func _label_fill(a: float) -> Color:
+	match _label:
+		"HEALTH GOURD":
+			return Color(0.6, 1.0, 0.7, a)
+		"PAPER TAG":
+			return Color(1.0, 0.8, 0.45, a)
+	return Color(0.65, 0.85, 1.0, a)
 
 
 # ---------------------------------------------------------------- sound
