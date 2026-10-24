@@ -42,3 +42,8 @@ None required to complete asset production. Visual review is next.
 
 ## Outstanding work / next steps
 Review tree silhouettes, heat pulse and ash at provided normal/half speed. Initial art package is unbound; builder registration and live world placement not implemented or claimed. Live deployment: not applicable; existing game has no references to this art-review scene/components. PR is for visual review, no merge/deploy requested for this set yet.
+
+Implementation commit:82fccddbf111861b540a388160ec216d85938db0
+Review PR:https://github.com/kiotdstudios/shinobi-rush/pull/148 (draft, not merged).
+Final import and native proof both PASS before implementation commit.
+
