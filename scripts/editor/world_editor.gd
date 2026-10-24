@@ -181,6 +181,14 @@ func _process(_d: float) -> void:
 				elif kind == "fireflies":
 					swarm_count += 1
 					fly_count += (obj.nodes[0] as ForestFireflies).flies.size()
+			var water_count := 0
+			var water_clock := 0.0
+			for obj in placed.objects:
+				if obj.nodes[0] is BlightwoodWater:
+					water_count += 1
+					water_clock = (obj.nodes[0] as BlightwoodWater).clock
+			_js_state.water_count = water_count
+			_js_state.water_clock = water_clock
 			_js_state.blight_count = blight_count
 			_js_state.swarm_count = swarm_count
 			_js_state.fly_count = fly_count
@@ -872,7 +880,7 @@ func _build_ui() -> void:
 
 	# Palette filters: hide/show the option cards by type; the world itself is untouched.
 	var filters := GridContainer.new()
-	filters.columns = 2
+	filters.columns = 3
 	outer.add_child(filters)
 	var filter_cats: Array = PlacedObjects.CATEGORIES.duplicate()
 	filter_cats.append(["HUD layout", []])  # the HUD piece controls are a section like the others (hidden until ticked)
@@ -930,6 +938,10 @@ func _build_ui() -> void:
 			b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 			if def.kind == "ground":
 				b.icon = PlacedObjects.ground_texture(id)
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "water_fx":
+				b.icon = load(BlightwoodWater.DIR + "waterfall-icon.png") as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "grass":
