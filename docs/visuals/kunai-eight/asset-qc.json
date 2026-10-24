@@ -1,0 +1,452 @@
+{
+  "player-E-combo-light1": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      103,
+      107
+    ],
+    "sole_y": 116,
+    "source_sha256": "7f133c3d2671a9cc434ffbb69988f71c80b36b6aec851f667d7373425ed651b4"
+  },
+  "player-E-combo-light2": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      96,
+      106
+    ],
+    "sole_y": 116,
+    "source_sha256": "7f133c3d2671a9cc434ffbb69988f71c80b36b6aec851f667d7373425ed651b4"
+  },
+  "player-E-combo-light3": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      102,
+      108
+    ],
+    "sole_y": 116,
+    "source_sha256": "7f133c3d2671a9cc434ffbb69988f71c80b36b6aec851f667d7373425ed651b4"
+  },
+  "player-E-combo-guard": {
+    "frames": 1,
+    "unique": 1,
+    "height_range": [
+      104,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "7f133c3d2671a9cc434ffbb69988f71c80b36b6aec851f667d7373425ed651b4"
+  },
+  "bandit-E-combo-light1": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      102,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "30eb496fbb45294a44ccae8450dcaf5da92fc99ca20c534df7ff5e080cd1a466"
+  },
+  "bandit-E-combo-light2": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      98,
+      105
+    ],
+    "sole_y": 116,
+    "source_sha256": "30eb496fbb45294a44ccae8450dcaf5da92fc99ca20c534df7ff5e080cd1a466"
+  },
+  "bandit-E-combo-light3": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      103,
+      105
+    ],
+    "sole_y": 116,
+    "source_sha256": "30eb496fbb45294a44ccae8450dcaf5da92fc99ca20c534df7ff5e080cd1a466"
+  },
+  "bandit-E-combo-guard": {
+    "frames": 1,
+    "unique": 1,
+    "height_range": [
+      104,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "30eb496fbb45294a44ccae8450dcaf5da92fc99ca20c534df7ff5e080cd1a466"
+  },
+  "player-S-combo-light1": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      101,
+      106
+    ],
+    "sole_y": 116,
+    "source_sha256": "a80ff1027c6254e29fd7ec04350c0d41b7a72629a2e4be0a00e8f06b5de2940f"
+  },
+  "player-S-combo-light2": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      95,
+      105
+    ],
+    "sole_y": 116,
+    "source_sha256": "a80ff1027c6254e29fd7ec04350c0d41b7a72629a2e4be0a00e8f06b5de2940f"
+  },
+  "player-S-combo-light3": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      97,
+      105
+    ],
+    "sole_y": 116,
+    "source_sha256": "a80ff1027c6254e29fd7ec04350c0d41b7a72629a2e4be0a00e8f06b5de2940f"
+  },
+  "player-S-combo-guard": {
+    "frames": 1,
+    "unique": 1,
+    "height_range": [
+      103,
+      103
+    ],
+    "sole_y": 116,
+    "source_sha256": "a80ff1027c6254e29fd7ec04350c0d41b7a72629a2e4be0a00e8f06b5de2940f"
+  },
+  "player-N-combo-light1": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      104,
+      112
+    ],
+    "sole_y": 116,
+    "source_sha256": "61661299014e9b7ece8397fd0d28c49ee0ae9de4bbb01a83241aacda9b45cb66"
+  },
+  "player-N-combo-light3": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      104,
+      116
+    ],
+    "sole_y": 116,
+    "source_sha256": "61661299014e9b7ece8397fd0d28c49ee0ae9de4bbb01a83241aacda9b45cb66"
+  },
+  "player-N-combo-guard": {
+    "frames": 1,
+    "unique": 1,
+    "height_range": [
+      104,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "61661299014e9b7ece8397fd0d28c49ee0ae9de4bbb01a83241aacda9b45cb66"
+  },
+  "player-N-light2-light2": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      103,
+      112
+    ],
+    "sole_y": 116,
+    "source_sha256": "f6d63c76a07664e39eed27966056cfbb6e598ddeaac88aa3ccca5e88410b6ea3"
+  },
+  "player-NE-combo-light1": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      102,
+      103
+    ],
+    "sole_y": 116,
+    "source_sha256": "6824afe4cbfa0e59623475e007e9955db2dd4d9bcb98db9ef432a7c96e2651fc"
+  },
+  "player-NE-combo-light2": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      99,
+      103
+    ],
+    "sole_y": 116,
+    "source_sha256": "6824afe4cbfa0e59623475e007e9955db2dd4d9bcb98db9ef432a7c96e2651fc"
+  },
+  "player-NE-combo-light3": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      95,
+      108
+    ],
+    "sole_y": 116,
+    "source_sha256": "6824afe4cbfa0e59623475e007e9955db2dd4d9bcb98db9ef432a7c96e2651fc"
+  },
+  "player-NE-combo-guard": {
+    "frames": 1,
+    "unique": 1,
+    "height_range": [
+      102,
+      102
+    ],
+    "sole_y": 116,
+    "source_sha256": "6824afe4cbfa0e59623475e007e9955db2dd4d9bcb98db9ef432a7c96e2651fc"
+  },
+  "player-E-dash-dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "height_range": [
+      86,
+      98
+    ],
+    "sole_y": 116,
+    "source_sha256": "2cfe4d2c98a919c0f8c16bb94aaf8e78929fb8f09631b818e6a1c48cc8b085a0"
+  },
+  "player-S-dash-dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "height_range": [
+      88,
+      108
+    ],
+    "sole_y": 116,
+    "source_sha256": "473722dfaf4d1d3017b61480cbea774da795a9ea6daf2b8be1a87111670691f4"
+  },
+  "player-N-dash-dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "height_range": [
+      85,
+      105
+    ],
+    "sole_y": 116,
+    "source_sha256": "e317105cbffe2fd8187eb5800f7db26b969b9d6408b61fbdc74fedf7887b35ef"
+  },
+  "player-NE-dash-dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "height_range": [
+      89,
+      97
+    ],
+    "sole_y": 116,
+    "source_sha256": "10761162a3d53465b56bc9f90872e0147c2a07089b69db3aff134e28a4fa10f4"
+  },
+  "bandit-S-combo-light1": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      102,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "2452a167d8f5445df02710ce032952968f8dba16040d437d73cac33de67b354f"
+  },
+  "bandit-S-combo-light2": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      100,
+      105
+    ],
+    "sole_y": 116,
+    "source_sha256": "2452a167d8f5445df02710ce032952968f8dba16040d437d73cac33de67b354f"
+  },
+  "bandit-S-combo-guard": {
+    "frames": 1,
+    "unique": 1,
+    "height_range": [
+      104,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "2452a167d8f5445df02710ce032952968f8dba16040d437d73cac33de67b354f"
+  },
+  "bandit-N-combo-light1": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      103,
+      109
+    ],
+    "sole_y": 116,
+    "source_sha256": "65ce99774b29529bd31d76e895353533d7eb2d2b65d944333c877c64485844c7"
+  },
+  "bandit-N-combo-light2": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      102,
+      108
+    ],
+    "sole_y": 116,
+    "source_sha256": "65ce99774b29529bd31d76e895353533d7eb2d2b65d944333c877c64485844c7"
+  },
+  "bandit-N-combo-light3": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      102,
+      113
+    ],
+    "sole_y": 116,
+    "source_sha256": "65ce99774b29529bd31d76e895353533d7eb2d2b65d944333c877c64485844c7"
+  },
+  "bandit-N-combo-guard": {
+    "frames": 1,
+    "unique": 1,
+    "height_range": [
+      104,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "65ce99774b29529bd31d76e895353533d7eb2d2b65d944333c877c64485844c7"
+  },
+  "bandit-NE-combo-light1": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      102,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "a4744eb19f4b93fb52aaf736c0f2d84e52ba4c8992ce422bfe0e8b959dea89b3"
+  },
+  "bandit-NE-combo-light2": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      103,
+      105
+    ],
+    "sole_y": 116,
+    "source_sha256": "a4744eb19f4b93fb52aaf736c0f2d84e52ba4c8992ce422bfe0e8b959dea89b3"
+  },
+  "bandit-NE-combo-light3": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      103,
+      110
+    ],
+    "sole_y": 116,
+    "source_sha256": "a4744eb19f4b93fb52aaf736c0f2d84e52ba4c8992ce422bfe0e8b959dea89b3"
+  },
+  "bandit-NE-combo-guard": {
+    "frames": 1,
+    "unique": 1,
+    "height_range": [
+      103,
+      103
+    ],
+    "sole_y": 116,
+    "source_sha256": "a4744eb19f4b93fb52aaf736c0f2d84e52ba4c8992ce422bfe0e8b959dea89b3"
+  },
+  "bandit-SE-combo-light1": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      100,
+      105
+    ],
+    "sole_y": 116,
+    "source_sha256": "717a0cba40204492a67739c1d399254919c02cfe1c7134edb334afbf1880d96d"
+  },
+  "bandit-SE-combo-light2": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      96,
+      105
+    ],
+    "sole_y": 116,
+    "source_sha256": "717a0cba40204492a67739c1d399254919c02cfe1c7134edb334afbf1880d96d"
+  },
+  "bandit-SE-combo-guard": {
+    "frames": 1,
+    "unique": 1,
+    "height_range": [
+      104,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "717a0cba40204492a67739c1d399254919c02cfe1c7134edb334afbf1880d96d"
+  },
+  "bandit-S-light3-light3": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      94,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "1e3108d59d5b9d199c5540b0f4512080b09ea91d850cb5b7f627ae8999804665"
+  },
+  "bandit-SE-light3-light3": {
+    "frames": 6,
+    "unique": 6,
+    "height_range": [
+      91,
+      104
+    ],
+    "sole_y": 116,
+    "source_sha256": "437ddb01c8f42a25486cc6624a8a7e4c1fd0a7814557262c5f95c52b6b2ceed1"
+  },
+  "bandit-E-dash-dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "height_range": [
+      88,
+      101
+    ],
+    "sole_y": 116,
+    "source_sha256": "7d2a6f90d534a118995cabb58f24325164f7c054139fdb3987b37b5acf11b6d5"
+  },
+  "bandit-S-dash-dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "height_range": [
+      92,
+      108
+    ],
+    "sole_y": 116,
+    "source_sha256": "3fbf1d31908dc1438acd6536de2276d7fb9dee8b5f3fd33b91c275b4c118baee"
+  },
+  "bandit-N-dash-dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "height_range": [
+      87,
+      110
+    ],
+    "sole_y": 116,
+    "source_sha256": "009a65289703612ec9302db31b5455988c67f69cbd63603af7a5d23af5414c9f"
+  },
+  "bandit-NE-dash-dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "height_range": [
+      91,
+      100
+    ],
+    "sole_y": 116,
+    "source_sha256": "0d12939ce7b7b53f34550d8fda4141cb2859333d1cb9d5efbb549bf846bb6ab1"
+  },
+  "bandit-SE-dash-dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "height_range": [
+      88,
+      99
+    ],
+    "sole_y": 116,
+    "source_sha256": "a2757ebc2b6be727b26f2f9cabfc13c149b17dadf99ed96558507ad2800fe371"
+  }
+}

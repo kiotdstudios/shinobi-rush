@@ -1,0 +1,93 @@
+{
+  "schema": "shinobi_falling_foliage_v1",
+  "generator": "built-in image_gen, two separate coherent 4x4 actions",
+  "processing": "fixed-cell nearest32, alpha170, saturated edge-spill cleanup; no per-frame scaling/fit",
+  "animations": [
+    {
+      "id": "petal_tumble",
+      "path": "res://assets/vfx/falling_foliage/petal_tumble.png",
+      "frames": 16,
+      "columns": 4,
+      "rows": 4,
+      "frame_size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "fps_range": [
+        3.5,
+        7
+      ],
+      "loop": true,
+      "frame_hashes": [
+        "26bc05e53e9a516161e2f3782204bf9dcf9e5aae8374fc7c8957c622eaa74445",
+        "8493c05ee7838219545426ba065767b850e2ce76bb91c047f3e6f2d041500db4",
+        "5df02423d35e548dbc8e5e150317f772897594da8072c8439d94f20836bcbbdc",
+        "51cde30377d91e462eec7adba05e6e9b6a3a8dea39a0ed987c5fe5d8c0146ce3",
+        "3d3d3ee6ff15fb62c5f95fbad6d201bde817a93ecdc9037ee2e4e23989af709e",
+        "a2501209bbdc48be654f7a53d54fb81604ef74a0d311d64a679d5e905f6734e6",
+        "0d785f9a7088bf150306947537750b12334ee48a1d284df3d3667bd6558c960f",
+        "257f0c12ffb5d43bd407361f550d8334667d234a45eb730b2f6f4b03aa4b1d4b",
+        "bf0ae326a3eaf2aa7d00faeeca5d7b970416847f67c9ae0d14aafde881edc3a9",
+        "bd2787e9f87efeabe08d667cc0fc3175ac1cd66fd56270865af14320124285a3",
+        "edae9214680c39494af12a69b8bfc84d94992e0f2fed07c724fdcef6c2d5b3d0",
+        "5f6e510f49d0cf09371aa145988ec45b48f4cf3a369b6dd73c5215d50191f3fc",
+        "0c9f9614c633304d80d6286536b00e6694f371678b509c2a5ccb4df46c2c8305",
+        "4bcc725272946dfe17d3c43a626854a6a6e790563fe2c904c592b6640c7ee1fe",
+        "9b51d940b3d17f7f01681847ce4ded65534d9bf2f9638522a059f110e0655d3b",
+        "a4bef40f058958f3352ae1a85f9d3cde49f3f1e57967079525b1070cfd6a505b"
+      ],
+      "sha256": "657add9f78b4d124800502fdfb9a0a6050a357db0cc4532e90f0d57081fe60af"
+    },
+    {
+      "id": "leaf_tumble",
+      "path": "res://assets/vfx/falling_foliage/leaf_tumble.png",
+      "frames": 16,
+      "columns": 4,
+      "rows": 4,
+      "frame_size": [
+        32,
+        32
+      ],
+      "anchor": [
+        16,
+        16
+      ],
+      "fps_range": [
+        3.5,
+        7
+      ],
+      "loop": true,
+      "frame_hashes": [
+        "f6d60675e965497549c84b7054e51fcc01a9cb29f39ab1136d563d052cb09dee",
+        "32adec46578e7b145050f47fcb20ce75fededa702fb3d7751082adea83b99d4e",
+        "cf3c97eb7e5a714a0d1a8a6f78d68e6fba341bf2f2ae8c9986edacc630246e8f",
+        "16987c6756012034fd42edd2479d7d8904dcfd24f2be44dd338b2587ce07c1f0",
+        "a841f0af66ccf0d506bbe4f6fb086fb9834d9fd9a3472e0c8cbae62e2dc81776",
+        "e40932aecf34ad547a2ab151d92be1cae0ad64a276e4f768883aee30484d2fce",
+        "b7d2bc88199d620db02661e82d3847fabc89be31cce75697f3e043d2d5bc0aa2",
+        "2918f612d5f7d31300d47e26d7cd02c616f9a4c3a3269f84a8c5e1a4238aa7b6",
+        "53645c8a0d5aea42eadb7a4652eae4629967775d77ef3e0d2e4f80b11d949167",
+        "89a6a4e6314530755d0eb0b72d251a39490d6bd313472e988d883bddde1410c9",
+        "3bbc96b101d9ab282604dd9ecdb74b3c611ee1d80fb979eb221783988694f273",
+        "0c6757de656d2e77b3abe94185791b06acdf8ced214d18893daf0c9b4cf1419a",
+        "0204960ecc28cf5b652390527549d59351531bf465af9f2ba050598c924612c2",
+        "0dc8aea1deeaa21238deee4ba1486f96cf32ad50e6ba2ae8128683708d7299c7",
+        "303375b35036041676a1db6852f66a70ffc3a3433acf9ca67f4dee1e8fd41786",
+        "de8c9de3d58edfe94f8fadb9d55745bdcf2ac36bc37a57419dac94a13750fae0"
+      ],
+      "sha256": "7cc34515e4b0fd6e104405778f6c49d98167e9e94fe89a41926dd5e657b78a41"
+    }
+  ],
+  "lifecycle_seconds": [
+    6,
+    10
+  ],
+  "max_particles_per_tree": 24,
+  "emission_per_second": 1.8,
+  "separation": "independent foliage sprites, optional separate emitter; not baked into tree textures",
+  "motion": "continuous downward drift, sinusoidal lateral sway, independent tumble/sleeve-like curl, ground fade"
+}

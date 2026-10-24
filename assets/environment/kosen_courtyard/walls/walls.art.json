@@ -1,0 +1,26 @@
+{
+  "schema": "shinobi_temple_wall_faces_v1",
+  "source_tool": "built-in image_gen; no paid PixelLab generation",
+  "palette_source": "assets/environment/kosen_courtyard/wall_kit_v2/wall_se_6.png (sampled, not guessed)",
+  "tile_size": [
+    64,
+    128
+  ],
+  "faces": {
+    "front": {
+      "path": "res://assets/environment/kosen_courtyard/walls/wall_front.png",
+      "sha256": "2700c09ea1d1276a04eb8c402739be2182c2645a642c48b981f5bc54cae15d2e"
+    },
+    "side": {
+      "path": "res://assets/environment/kosen_courtyard/walls/wall_side.png",
+      "derivation": "front tinted x0.72 (shadow), then requantized to the shared palette",
+      "sha256": "acd92dda8fac005f58ec5c5a9f9ce812c233b4a88ed43935a1c03de2653402e0"
+    },
+    "roof": {
+      "path": "res://assets/environment/kosen_courtyard/walls/wall_roof.png",
+      "derivation": "front tinted x1.22 (lit top), then requantized to the shared palette",
+      "sha256": "1d6474cc358c8dcb978dd312bd6cc16a98055b81be0238baf3c98eeed8fbb097"
+    }
+  },
+  "usage": "TrainingArena.Block/BlockRear tile `front` horizontally across the front rectangle (stretched vertically to each wall's own height) and texture-map `side`/`roof` onto the existing east-face/roof parallelograms (TrainingArena._draw_tiled_quad), replacing the flat grey placeholder color + caption. Applied only to WorldScale.BLOCKS entries with height >= 140 (indices 1, 4, 5, 6 as of this delivery) -- the ones the World Builder's own PlacedObjects.def_of() calls \"Wall\"; rocks/crates/other blocks are unaffected."
+}

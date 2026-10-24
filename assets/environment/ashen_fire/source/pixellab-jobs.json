@@ -1,0 +1,29 @@
+{
+  "bodies": {
+    "tall_pillar": "3394e78f-9e8b-464e-8d32-a82c7853adac",
+    "short_brazier": "125f5a56-4ab4-4e34-a2fc-35d31ea45295",
+    "tripod_brazier": "8de6fcb7-9a8f-435b-bfcc-7d36d086e28d",
+    "fire_pit": "e9ba06a8-0b96-44fb-8610-d1d427b40238",
+    "coals": "fbd51390-0be3-4292-89e1-58b3996f7b33"
+  },
+  "wall_source": "234f2a16-8525-4ca7-9a21-4eb9998bbe06",
+  "wall_cleanup": "3c2f46e8-5c8d-4d1c-b313-ae653c95e49f",
+  "flame_base": "f76555b1-e223-46b4-89f1-8f44b5a5e4d7",
+  "flame_animation": "d50d3320-4176-4955-9b24-4449a9ed18c1",
+  "smoke": {
+    "job": "b42d8772-6c5c-4ae4-ae20-7b5edefebdfc",
+    "selected_candidate": 0,
+    "candidates": 4
+  },
+  "corrective_jobs": [
+    "3394e78f-9e8b-464e-8d32-a82c7853adac",
+    "125f5a56-4ab4-4e34-a2fc-35d31ea45295",
+    "8de6fcb7-9a8f-435b-bfcc-7d36d086e28d",
+    "31e9f4dc-44f2-4b82-9fc4-df7dc1f8f4f5",
+    "e9ba06a8-0b96-44fb-8610-d1d427b40238"
+  ],
+  "rejected_smoke_jobs": [
+    "aa096c74-8d97-47dd-a204-5ee6369de782",
+    "1bca7d0d-6cff-4dbf-b8ad-0e576961b7b0"
+  ]
+}

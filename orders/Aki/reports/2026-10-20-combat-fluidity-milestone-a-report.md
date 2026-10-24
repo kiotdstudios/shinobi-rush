@@ -39,4 +39,4 @@ Commands: `python scripts/ci/godot_ci.py import|tests|export --project .`, `vali
 Hold D (run). Tap F to jump, then J mid-air: you should swing without stopping, land and keep running. Mash J on the ground to confirm no restarts. Press F1 (diagnostics toggle) to watch buffers and cancel flags live.
 
 ## 6. Commits / PR / deploy
-Filled in after merge (see PR).
+PR #43, merge commit `63bbd6c16f449d77d3e14e5a4c1afedb80864380`; post-deploy live smoke passed and live build-info `commit_sha` matched. The jump regression found afterwards is fixed in PR #47 (`91eb294`); the air_attack art request is `orders/Codex/2026-10-21-jump-recut-and-air-attack-art.md`.

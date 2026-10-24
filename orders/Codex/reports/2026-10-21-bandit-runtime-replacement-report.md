@@ -3,8 +3,8 @@
 - Agent: Codex
 - Date:2026-10-21
 - Order: `orders/Codex/2026-10-21-bandit-runtime-replacement.md`; explicit owner assignment in chat
-- Final status: IN_PROGRESS — local checks passed; integration/live verification pending
-- Commit / PR: Not committed when this pre-commit report was written
+- Final status: DONE — tested, committed, merged, deployed and live verified
+- Commit / PR: Implementation e4edc6b91321f26ee222ccd62c0dc9189f667956; PR45 https://github.com/kiotdstudios/shinobi-rush/pull/45; merge/live98add79d68bd3b04727f4db1d478c3604110ab31. This is a post-deployment report-only update; the original report preceded implementation commit.
 
 ## Work completed
 Copied160 corrected existing128×128 transparent bandit PNGs from art branch f1fed19 (idle32,run64,sprint64), with no body artwork changes. Explicitly loads bandit_128.art.json in BanditVisual through SpriteSet.parse rather than adding it to player-discovered manifests. Shared cached SpriteFrames, nearest filtering, native104px body and root64,116. Approaching movement uses run, stopping uses idle, eight facings. Editor option permits corrected arms-back sprint without changing AI/speed/state behavior. Hurt freezes/flashes current authored pose; hitstop pauses animation and then resumes. HP/name indicators remain above the new sprite. Existing procedural fallback remains for missing art/death; no dedicated new combat/death clip claimed.
@@ -35,4 +35,10 @@ No remaining local failures. Software-rendered headless browser runs slowly; no 
 None. Owner explicitly assigned replacing the in-game placeholder; this authorizes the minimal runtime art binding despite older art handoff assigning integration to Aki.
 
 ## Outstanding work
-Push dedicated PR, wait for required CI, integrate without bypassing review/protection requirements, deploy through existing main→Pages pipeline, verify live SHA and open actual live build. Update this report with SHAs/PR/deployment evidence. Do not claim live until verified.
+None for living-bandit replacement. Dedicated death/combat animations and selecting sprint AI behavior remain future art/gameplay work.
+
+## Integration and live deployment verification
+
+PR45 CI39578426922 and repository checks39578426916 succeeded before merge. Merged using expected head SHA through normal GitHub PR merge; no protections bypassed. Main Godot CI39578965414 completed successfully, including Pages deploy and post-deploy browser smoke. Live URL https://kiotdstudios.github.io/shinobi-rush/ ; live build-info.json commit98add79d68bd3b04727f4db1d478c3604110ab31.
+
+Ran `node scripts/ci/smoke/smoke.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 98add79d68bd3b04727f4db1d478c3604110ab31 --out-dir build/bandit-live --label bandit-live` after deploy: PASS exact commit, nine file SHA256s, engine/canvas/ready hook, nonblank/input effect,0fatal console. Four software-WebGL warnings only. Also opened actual published `?camera=close`, verified original player_128 remains selected, close zoom1.211538,0page errors, inspected new red-scarf bandit next to player. Evidence: docs/visuals/bandit-runtime/live-close-gameplay.png and live-web-smoke.json. Verified2026-10-21 (America/New_York). No physical-phone/gamepad hardware claim.

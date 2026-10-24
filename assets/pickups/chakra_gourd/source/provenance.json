@@ -1,0 +1,324 @@
+{
+  "tool": "PixelLab",
+  "base": {
+    "job_id": "6b3e6aaf-9a49-42d8-8ee3-9f4369816c9d",
+    "gallery_id": "74dc7180-0b42-57ff-971b-064e3e9d5f03",
+    "model": "Pixen edit",
+    "seed": 231026,
+    "prompt": "Preserve this small highly detailed pixel-art double gourd's silhouette, size, pixel clusters, perspective, cork and red braided cord/tassel. Replace red lacquer with weathered deep navy and teal BLUE glazed ceramic, bright cyan edge reflections and irregular thin antique gold kintsugi cracks. Remove the paper label and black writing; show blue ceramic there. Keep warm brown cork, RED cord and tassel. Match crisp original pixel style. Transparent background, no glow, no floor shadow, no text."
+  },
+  "body_motion": {
+    "drawing_id": "f06cb019-b14a-4cb0-b18a-4b0a02637d6d",
+    "tool": "PixelLab pixelart_workbench draw",
+    "source": "PixelLab generated blue gourd, unchanged palette",
+    "recipe": {
+      "job": {
+        "canvas": [
+          64,
+          96
+        ],
+        "frame_count": 17,
+        "durations_ms": [
+          70,
+          70,
+          70,
+          80,
+          70,
+          70,
+          70,
+          70,
+          70,
+          70,
+          80,
+          70,
+          70,
+          70,
+          70,
+          70,
+          70
+        ],
+        "views": [
+          {
+            "id": "south",
+            "offset": [
+              8,
+              8
+            ]
+          }
+        ],
+        "columns": 4,
+        "source_bookends_exact": true,
+        "return_to_rest": true,
+        "body_palette_exact": true,
+        "require_clear_border": true
+      },
+      "scene": {
+        "palette": {},
+        "layers": [
+          {
+            "id": "body",
+            "name": "Body - gourd"
+          }
+        ],
+        "views": {
+          "south": {
+            "parts": {
+              "original": {}
+            },
+            "nodes": {
+              "gourd": {
+                "layer": "body",
+                "at": [
+                  8,
+                  8
+                ],
+                "pivot": [
+                  24,
+                  40
+                ],
+                "draw": [
+                  {
+                    "op": "copy",
+                    "part": "original",
+                    "method": "nearest"
+                  }
+                ]
+              }
+            },
+            "poses": {
+              "f0": {
+                "gourd": {
+                  "angle": 0
+                }
+              },
+              "f1": {
+                "gourd": {
+                  "angle": 0.536
+                }
+              },
+              "f2": {
+                "gourd": {
+                  "angle": 0.99
+                }
+              },
+              "f3": {
+                "gourd": {
+                  "angle": 1.293
+                }
+              },
+              "f4": {
+                "gourd": {
+                  "angle": 1.4
+                }
+              },
+              "f5": {
+                "gourd": {
+                  "angle": 1.293
+                }
+              },
+              "f6": {
+                "gourd": {
+                  "angle": 0.99
+                }
+              },
+              "f7": {
+                "gourd": {
+                  "angle": 0.536
+                }
+              },
+              "f8": {
+                "gourd": {
+                  "angle": 0
+                }
+              },
+              "f9": {
+                "gourd": {
+                  "angle": -0.536
+                }
+              },
+              "f10": {
+                "gourd": {
+                  "angle": -0.99
+                }
+              },
+              "f11": {
+                "gourd": {
+                  "angle": -1.293
+                }
+              },
+              "f12": {
+                "gourd": {
+                  "angle": -1.4
+                }
+              },
+              "f13": {
+                "gourd": {
+                  "angle": -1.293
+                }
+              },
+              "f14": {
+                "gourd": {
+                  "angle": -0.99
+                }
+              },
+              "f15": {
+                "gourd": {
+                  "angle": -0.536
+                }
+              },
+              "f16": {
+                "gourd": {
+                  "angle": 0
+                }
+              }
+            },
+            "frames": [
+              "f0",
+              "f1",
+              "f2",
+              "f3",
+              "f4",
+              "f5",
+              "f6",
+              "f7",
+              "f8",
+              "f9",
+              "f10",
+              "f11",
+              "f12",
+              "f13",
+              "f14",
+              "f15",
+              "f16"
+            ]
+          }
+        }
+      }
+    },
+    "selected_export": "16 timed keys from 17-key closed source; identical last key omitted",
+    "note": "7 distinct raster poses intentionally reused through pendulum sway; no unique-frame claim"
+  },
+  "effects": {
+    "spark_join": "daa866cc-b116-4228-9487-024b7e6851c5",
+    "spark_palette_edit": "fde64121-a41a-42e8-9fd5-dfeb3d99b607",
+    "glow_palette_edit": "bd2ca79d-a46b-4df8-ac32-9848e59d3db2",
+    "spark_gallery": "34a16cdc-9220-4b41-8bee-9d34dfbd3be8",
+    "glow_gallery": "525221d4-1d4f-400e-809f-28e02cc28c91",
+    "color_maps": {
+      "ember": {
+        "#6a403cff": "#3c406aff",
+        "#6b1b14ff": "#141b6bff",
+        "#762b34ff": "#342b76ff",
+        "#800c18ff": "#180c80ff",
+        "#871f19ff": "#191f87ff",
+        "#895a52ff": "#525a89ff",
+        "#8b0c16ff": "#160c8bff",
+        "#9a0c10ff": "#100c9aff",
+        "#a1241fff": "#1f24a1ff",
+        "#a90813ff": "#1308a9ff",
+        "#ad3b36ff": "#363badff",
+        "#b14f3fff": "#3f4fb1ff",
+        "#b86058ff": "#5860b8ff",
+        "#b90b15ff": "#150bb9ff",
+        "#bb2622ff": "#2226bbff",
+        "#bd5454ff": "#5454bdff",
+        "#c44027ff": "#2740c4ff",
+        "#c71114ff": "#1411c7ff",
+        "#c7453cff": "#3c45c7ff",
+        "#c76048ff": "#4860c7ff",
+        "#d03c38ff": "#383cd0ff",
+        "#d12e29ff": "#292ed1ff",
+        "#d31b17ff": "#171bd3ff",
+        "#d9811eff": "#1e81d9ff",
+        "#dc5245ff": "#4552dcff",
+        "#e1261bff": "#1b26e1ff",
+        "#e1813fff": "#3f81e1ff",
+        "#e3382bff": "#2b38e3ff",
+        "#e35d03ff": "#035de3ff",
+        "#e9bb13ff": "#13bbe9ff",
+        "#eb5223ff": "#2352ebff",
+        "#eb962cff": "#2c96ebff",
+        "#ed624fff": "#4f62edff",
+        "#ef252bff": "#2b25efff",
+        "#f12d1eff": "#1e2df1ff",
+        "#f23a41ff": "#413af2ff",
+        "#f24c36ff": "#364cf2ff",
+        "#f53e25ff": "#253ef5ff",
+        "#f5d16cff": "#6cd1f5ff",
+        "#f5dc38ff": "#38dcf5ff",
+        "#f61d17ff": "#171df6ff",
+        "#f6e32eff": "#2ee3f6ff",
+        "#f7b203ff": "#03b2f7ff",
+        "#f7f136ff": "#36f1f7ff",
+        "#f88a08ff": "#088af8ff",
+        "#f88b79ff": "#798bf8ff",
+        "#f8f664ff": "#64f6f8ff",
+        "#f9663aff": "#3a66f9ff",
+        "#f9cd31ff": "#31cdf9ff",
+        "#f9d427ff": "#27d4f9ff",
+        "#fa6e1aff": "#1a6efaff",
+        "#fa823bff": "#3b82faff",
+        "#fbe64aff": "#4ae6fbff",
+        "#fc3324ff": "#2433fcff",
+        "#fcbe10ff": "#10befcff",
+        "#fd4319ff": "#1943fdff",
+        "#fd9b3cff": "#3c9bfdff",
+        "#fdac40ff": "#40acfdff",
+        "#fdbc4aff": "#4abcfdff",
+        "#fdbd34ff": "#34bdfdff",
+        "#fdc736ff": "#36c7fdff",
+        "#fdcf52ff": "#52cffdff",
+        "#fde876ff": "#76e8fdff",
+        "#fe9604ff": "#0496feff",
+        "#ff531dff": "#1d53ffff",
+        "#ff611cff": "#1c61ffff"
+      },
+      "glow": {
+        "#641828ff": "#281864ff",
+        "#741a22ff": "#221a74ff",
+        "#7a1f31ff": "#311f7aff",
+        "#821a1fff": "#1f1a82ff",
+        "#8e1b1eff": "#1e1b8eff",
+        "#942d43ff": "#432d94ff",
+        "#991b1dff": "#1d1b99ff",
+        "#a51d1eff": "#1e1da5ff",
+        "#b0485eff": "#5e48b0ff",
+        "#b61e1dff": "#1d1eb6ff",
+        "#c16276ff": "#7662c1ff",
+        "#ca221eff": "#1e22caff",
+        "#d0798aff": "#8a79d0ff",
+        "#e07173ff": "#7371e0ff",
+        "#e16e3eff": "#3e6ee1ff",
+        "#e296a1ff": "#a196e2ff",
+        "#e3281eff": "#1e28e3ff",
+        "#e85e54ff": "#545ee8ff",
+        "#efb5bcff": "#bcb5efff",
+        "#f28f73ff": "#738ff2ff",
+        "#f8d0d2ff": "#d2d0f8ff",
+        "#f93621ff": "#2136f9ff",
+        "#fa4f26ff": "#264ffaff",
+        "#fbebeaff": "#eaebfbff",
+        "#fbf9f9ff": "#f9f9fbff",
+        "#fd6b31ff": "#316bfdff",
+        "#fd9143ff": "#4391fdff",
+        "#fda749ff": "#49a7fdff",
+        "#fdb969ff": "#69b9fdff",
+        "#fec967ff": "#67c9feff",
+        "#fed48cff": "#8cd4feff",
+        "#fefefeff": "#fefefeff"
+      }
+    }
+  },
+  "unused": {
+    "glow_ai_job": "54cb9ef5-454a-47f8-b33e-11beb9832974",
+    "spark_ai_job": "b6c00071-6238-4866-81a7-4b1de53c14ab",
+    "spark_animation_cancelled": "ec605c8e-6a57-425c-8925-bb786cb57b62",
+    "body_animation_cancelled": [
+      "a47f1e13-4bff-4769-a0da-e56c41988c0a",
+      "d6329298-6931-423e-a13a-438574b460fb"
+    ]
+  },
+  "postprocessing": "PNG extraction from PixelLab layer archive, 3x3 effect-sheet split, exact closing-key omission, preview compositing and packaging only; no locally redrawn art.",
+  "health_reference_commit": "b53651d8f29bf0f07fbacc5323c2b7e7add7cbf7",
+  "owner_image": "Blue ceramic reference supplied in chat; not redistributed"
+}

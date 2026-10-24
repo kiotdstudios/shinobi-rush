@@ -1,0 +1,55 @@
+{
+  "body_frames_new": 17,
+  "source_clipped_dash_frame_omitted": 3,
+  "schema": "shared128px no per-frame scale; grounded sole translation",
+  "guard": {
+    "frames": 1,
+    "unique": 1,
+    "duration_ms": 400,
+    "contact_frames": []
+  },
+  "light1": {
+    "frames": 6,
+    "unique": 6,
+    "duration_ms": 300,
+    "contact_frames": [
+      2
+    ]
+  },
+  "light2": {
+    "frames": 6,
+    "unique": 6,
+    "duration_ms": 350.00000000000006,
+    "contact_frames": [
+      2
+    ]
+  },
+  "light3": {
+    "frames": 6,
+    "unique": 6,
+    "duration_ms": 483.3333333333333,
+    "contact_frames": [
+      2
+    ]
+  },
+  "dodge": {
+    "frames": 12,
+    "unique": 12,
+    "duration_ms": 1000.0000000000001,
+    "contact_frames": []
+  },
+  "dash_attack": {
+    "frames": 5,
+    "unique": 5,
+    "duration_ms": 399.99999999999994,
+    "contact_frames": [
+      2
+    ]
+  },
+  "run": {
+    "frames": 20,
+    "unique": 20,
+    "duration_ms": 1666.6666666666663,
+    "contact_frames": []
+  }
+}

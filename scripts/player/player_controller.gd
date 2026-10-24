@@ -11,8 +11,25 @@ extends CharacterBody2D
 signal state_changed(new_state: State)
 ## The camera baseline zoom was recomputed (preset switched, or the figure height changed with the sprite set).
 signal camera_baseline_changed(zoom: float)
+## An enemy attack connected (Level 1 Bandit order). There is deliberately no player HP/death here:
+## the locked RPG/death rules are untouched; this only counts the hit and gives a short readable reaction.
+## Milestone B reusable combat events. `attack_event` fires at each authored marker of the active swing
+## ("startup","active","recovery","combo_open","combo_close","cancel_open","end"); `attack_hit` fires ONCE per
+## confirmed contact with a HitEvent -- sparks, silhouettes, slash arcs, audio and diagnostics all listen here.
+signal attack_event(event_name: String, attack_id: String)
+signal attack_hit(hit: HitEvent)
+signal hit_taken(damage: float, from_dir: Vector2)
+signal health_changed(current: float, maximum: float)
+signal chakra_changed(current: float, maximum: float)
+## Substitution charges (shown as pips on the HUD). Only the stat exists so far; the Substitution jutsu will spend them.
+signal substitution_changed(charges: int, maximum: int)
+signal downed  ## health reached 0 (the player is respawned at the spawn point at full health right after; there is no death screen yet)
+signal respawned(at: Vector2)  ## emitted after a respawn has put the player back at `spawn_position`
+## Currency changed (spent, or stolen by an enemy via lose_ryo() -- see Bandit._steal_ryo/is_worth_robbing).
+## No player death/HP system exists here (locked RPG rules); this only tracks the stat.
+signal ryo_changed(new_amount: int)
 
-enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK, AIR_ATTACK }
+enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK, AIR_ATTACK, CHARGE }
 ## Phase of the current attack (LIGHT1/LIGHT2/LIGHT3/DASH_ATTACK states only). Startup/active/recovery
 ## lengths come from the matching AttackDef in `_attack_table` (see combat order's frame table).
 enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
@@ -27,6 +44,12 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## Dodge is a quick burst along the dodge direction; velocity then eases (at `dodge_recovery_accel`,
 ## not the generic ground `friction`) toward whatever speed current input calls for, or to a stop if none.
 @export var dodge_speed: float = WorldScale.SPRINT_SPEED * 1.6
+## Body Flicker dodge: the body vanishes, is displaced `flicker_distance` px along the dodge heading in
+## one step (stopped by walls), and reappears; no sliding. Invulnerable for the whole `flicker_duration`.
+@export var flicker_distance: float = 150.0
+@export var flicker_duration: float = 0.30
+@export var flicker_vanish_at: float = 0.04  ## seconds after the press that the body disappears (and moves)
+@export var flicker_reappear_at: float = 0.16
 @export var dodge_recovery_accel: float = WorldScale.ACCELERATION * 1.5
 ## Air control: fraction of normal ground `acceleration` used to steer velocity while airborne.
 ## Momentum itself is never reset on jump entry/exit; this only lets input bend an already-moving arc.
@@ -51,10 +74,15 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## Used only when the active sprite set has no matching action animation to time against (placeholder visual).
 @export var dodge_fallback_duration: float = 0.5
 @export var jump_fallback_duration: float = 0.6
+## Gameplay duration of a jump (s). The 24-frame jump art (2.0 s at its authored 12 fps) is played
+## compressed to this (frame follows jump progress, so no frames are lost and an air attack cannot
+## restart it). Owner target 0.7-1.0 s; <= 0 means "use the art's authored duration". A re-cut of the
+## art to this length is requested from Codex; this export is the single place to tune it.
+@export var jump_duration: float = 0.85
 ## Seconds between dirt-puff bursts while running on the ground (SPRINT uses a shorter interval,
 ## see `_update_footsteps()`), roughly matched to footstep cadence.
-@export var footstep_interval_walk: float = 0.28
-@export var footstep_interval_sprint: float = 0.18
+@export var footstep_interval_walk: float = 1.1  ## roughly every 4th step; +-jitter applied per puff
+@export var footstep_interval_sprint: float = 0.72
 ## Dash attack is available during the last stretch of an active dodge (seconds of `_action_timer`
 ## remaining counts as "late") -- order section 4: "available during an approved late-dodge ... window".
 @export var dash_attack_late_window: float = 0.08
@@ -62,6 +90,14 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## "... or post-dodge window". Expires fast enough that it never swallows a deliberate plain light1
 ## thrown a beat after the dodge has fully resolved.
 @export var dash_attack_post_grace: float = 0.15
+## Sense stat (owner: "the higher the stat the bigger the circle"): widens the omnidirectional
+## proximity-detection radius used while SPRINTing ("naruto running"), see ProximitySense/sense_radius().
+## PROVISIONAL PROTOTYPE value, not balance.
+@export var intelligence: int = 5
+## Currency (owner 2026-10-22: "bandit lvl 1 is looking for players with under 30 ryo to try to steal
+## it"). Default is deliberately above that threshold so a fresh player is not an automatic target.
+## PROVISIONAL PROTOTYPE value -- no economy/shop/save system exists yet, not balance.
+@export var ryo: int = 50
 
 var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
@@ -82,7 +118,53 @@ var _combo_index: int = 0  ## 0 = no combo in progress; else 1/2/3 = which light
 var _attack_buffer: float = 0.0  ## seconds left that a buffered attack_light press is still eligible
 var _hit_targets: Array = []  ## enemies already damaged by the current swing (each swing hits once)
 var _dash_grace_timer: float = 0.0  ## seconds left of the post-dodge dash-attack window
+var _hit_confirmed: bool = false  ## the current swing has connected (opens hit-confirm follow-ups)
+var _swing_clock: float = 0.0  ## seconds since the current swing began (drives the event markers)
+var _fired_markers: Dictionary = {}  ## marker name -> true once emitted for the current swing
 var _hitstop_timer: float = 0.0  ## local-only pause (not Engine.time_scale): see _physics_process top
+const MAX_HEALTH := 100.0
+var max_health: float = MAX_HEALTH
+var health: float = MAX_HEALTH
+var times_downed: int = 0
+var spawn_position: Vector2 = Vector2.ZERO  ## where a downed player comes back; defaults to where the player started (set in _ready)
+const RESPAWN_INVULN := 1.5  ## grace after a respawn so enemies camping the spawn cannot instantly chain-down the player
+const RESPAWN_FADE_IN := 0.5
+var respawn_count: int = 0
+const MAX_CHAKRA := 100.0
+const MAX_SUBSTITUTIONS := 3
+var max_chakra: float = MAX_CHAKRA
+var chakra: float = MAX_CHAKRA
+## Provisional chakra recovery while holding charge; no aura is bound yet.
+@export var chakra_charge_per_second: float = 20.0
+var _charge_interrupted := false
+const CHARGE_HOLD_DELAY := 0.30  ## press keeps existing substitution; sustained L2 adds charge
+var _charge_hold_time := 0.0
+var max_substitution_charges: int = MAX_SUBSTITUTIONS
+var substitution_charges: int = MAX_SUBSTITUTIONS
+## Substitution Jutsu (L2). A timed L2 press only pays off if an enemy attack lands inside the window.
+## Each success spends one charge and starts that charge's OWN cooldown; the others stay usable.
+signal substitution_triggered(old_pos: Vector2, new_pos: Vector2)
+const SUB_WINDOW := 0.25  ## L2 pressed up to this long BEFORE a hit lands counts as a timed evade
+const SUB_COOLDOWN := 20.0  ## per-charge recharge seconds (set to 20 by the designer)
+const SUB_INVULN := 0.5  ## grace after a substitution so a simultaneous second hit cannot land
+const SUB_BEHIND_DIST := 72.0  ## how far behind the attacker the player reappears
+var _sub_buffer: float = 0.0
+var _sub_cooldowns: Array[float] = []  ## remaining seconds of each spent charge
+var _sub_reveal: float = 0.0  ## > 0 while the body is concealed between log swap and reappearance
+var substitution_count: int = 0
+var _flicker_hidden: bool = false
+var _flicker_moved: bool = false
+var flicker_count: int = 0
+var hits_taken: int = 0  ## enemy hits that landed on the player (read by tests / web smoke state)
+var hit_flash_timer: float = 0.0
+var _hit_invuln: float = 0.0  ## brief grace after a hit so one combo cannot chain-stun the player
+const HIT_INVULN_TIME := 0.45
+const HIT_FLASH_TIME := 0.18
+const HIT_TINT := Color(1.0, 0.45, 0.4, 1.0)
+
+## -- Proximity sense ("naruto running" auto-detect) --
+var sensed_enemy: Node2D = null  ## nearest enemy inside the sense circle this frame while SPRINTing, else null
+var kunai_drawn: bool = false  ## true the instant `sensed_enemy` is non-null (read by tests / web smoke state)
 
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
@@ -91,6 +173,7 @@ var _hitstop_timer: float = 0.0  ## local-only pause (not Engine.time_scale): se
 
 func _ready() -> void:
 	add_to_group("player")
+	spawn_position = global_position
 	# Collider comes from the shared footprint constant (the scene values mirror it).
 	var feet := $CollisionShape2D as CollisionShape2D
 	(feet.shape as RectangleShape2D).size = WorldScale.FOOTPRINT
@@ -110,10 +193,31 @@ func _ready() -> void:
 		camera.limit_bottom = int(b.end.y + WorldScale.CAMERA_FOOTROOM)  # foot room: feet and shadow at the bottom wall are not cut off
 	visual.set_pose(facing8, false, false)
 	_attack_table = AttackDef.build_table()
+	var hit_fx := HitFx.new()
+	hit_fx.name = "HitFx"
+	add_child(hit_fx)
+	hit_fx.bind(self)
+	var bar := HealthBar.new()
+	bar.name = "HealthBar"
+	add_child(bar)
+	bar.bind(self)
 
 
 func _physics_process(delta: float) -> void:
 	var prev_state := state
+	var charge_held := Input.is_action_pressed("substitution")
+	_charge_hold_time = _charge_hold_time + delta if charge_held else 0.0
+	if not charge_held and not Input.is_action_pressed("chakra_charge"):
+		_charge_interrupted = false
+	# Cleared every frame, only re-populated below in the plain-SPRINT locomotion branch: sensing is a
+	# fresh, every-frame read, never a sticky flag that survives into dodge/attack/jump/idle frames.
+	sensed_enemy = null
+	kunai_drawn = false
+	_hit_invuln = maxf(_hit_invuln - delta, 0.0)
+	_tick_substitution(delta)
+	if hit_flash_timer > 0.0:
+		hit_flash_timer = maxf(hit_flash_timer - delta, 0.0)
+		visual.modulate = HIT_TINT if hit_flash_timer > 0.0 else Color.WHITE
 
 	# Presses are captured EVERY physics tick, including hitstop ticks (Milestone A fluidity order:
 	# "buffered inputs must survive hitstop"). Before this, a press landing inside the 3-4 tick
@@ -124,6 +228,8 @@ func _physics_process(delta: float) -> void:
 		_jump_buffer = input_buffer_window
 	if Input.is_action_just_pressed("attack_light"):
 		_attack_buffer = input_buffer_window
+	if Input.is_action_just_pressed("substitution"):
+		_sub_buffer = SUB_WINDOW
 
 	# Local hitstop: pause this body's own velocity/position integration only -- NOT Engine.time_scale
 	# (the order forbids a global freeze). Buffers do not decay while frozen, so a press made just
@@ -181,7 +287,9 @@ func _physics_process(delta: float) -> void:
 		else:  # DODGE
 			# Dedicated curve: the initial burst (set on trigger) eases toward whatever speed current
 			# input calls for (0 if none) at `dodge_recovery_accel`, not the generic ground `friction`.
-			velocity = velocity.move_toward(input * target_speed, dodge_recovery_accel * delta)
+			# Body Flicker: no lunge or slide. The displacement is a single step (see _flicker_step).
+			velocity = Vector2.ZERO
+			_flicker_step()
 		if input != Vector2.ZERO:
 			facing = input.normalized()
 			facing8 = _snap8(facing)
@@ -189,7 +297,8 @@ func _physics_process(delta: float) -> void:
 
 	if still_acting:
 		move_and_slide()
-		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)
+		if state == State.JUMP:
+			_play_jump_visual()
 		_update_jump_lift()
 		_footstep_timer = 0.0
 		if state != prev_state:
@@ -201,6 +310,7 @@ func _physics_process(delta: float) -> void:
 	# branch above returns early on every frame the dodge is still in progress.
 	if state == State.DODGE:
 		_dash_grace_timer = dash_attack_post_grace
+		_end_flicker_visual()
 
 	# Not mid-action this frame (either never was, or the action just finished above with velocity
 	# already correct) -> a buffered attack/dodge/jump takes priority over plain locomotion, then plain
@@ -215,24 +325,40 @@ func _physics_process(delta: float) -> void:
 		else:
 			_jump_buffer = 0.0
 			_begin_jump()
+	elif (Input.is_action_pressed("chakra_charge") or _charge_hold_time >= CHARGE_HOLD_DELAY) and not _charge_interrupted and _sub_reveal <= 0.0:
+		_process_charge(delta)
 	elif input != Vector2.ZERO:
 		velocity = velocity.move_toward(input * target_speed, acceleration * delta)
 		facing = input.normalized()
 		facing8 = _snap8(facing)
 		state = State.SPRINT if sprinting else State.MOVE
+		if state == State.SPRINT:
+			# Proximity "power level" sense: omnidirectional, no facing cone, no line-of-sight -- a
+			# sprinting body is felt/loud, not just seen (see ProximitySense). Owner: "when naruto
+			# running and near enemy ... player will auto detect and pull their kunai out".
+			sensed_enemy = ProximitySense.nearest_in_radius(global_position, sense_radius(), "enemy", get_tree(), self)
+			kunai_drawn = is_instance_valid(sensed_enemy)
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 		state = State.IDLE
 	move_and_slide()
 	_update_jump_lift()
-	if state == State.DODGE or state == State.JUMP:
-		visual.play_action("dodge" if state == State.DODGE else "jump", facing8)
+	if state == State.DODGE:
+		visual.play_action("dodge", facing8)
+	elif state == State.JUMP:
+		_play_jump_visual()
 	elif _is_attack_state(state):
 		visual.play_action(_attack_def.id, facing8)
+	elif state == State.CHARGE:
+		visual.play_action("charge", facing8)
 	else:
 		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
+		if kunai_drawn:
+			# Cosmetic overlay only: falls back silently to the normal sprint pose until an "kunai_ready"
+			# animation exists in the active sprite set (PlayerVisual.play_action/has_action contract).
+			visual.play_action("kunai_ready", facing8)
 	if prev_state == State.JUMP and state != State.JUMP:
-		dust.burst(global_position, 1.2)  # landing kicks up a bit less dirt than the takeoff did
+		dust.landing(global_position)
 	_update_footsteps(delta)
 	if state != prev_state:
 		state_changed.emit(state)
@@ -260,10 +386,49 @@ func _begin_dodge(input: Vector2) -> void:
 	if input != Vector2.ZERO:
 		facing = input.normalized()
 	state = State.DODGE
-	_action_duration = visual.action_duration("dodge", dodge_fallback_duration)
+	_action_duration = flicker_duration
 	_action_timer = _action_duration
-	velocity = facing8 * dodge_speed
-	visual.play_action("dodge", facing8)
+	velocity = Vector2.ZERO
+	_flicker_moved = false
+	_flicker_hidden = false
+	flicker_count += 1
+	_flicker_from = global_position
+	_flicker_dir = facing8.normalized()
+	visual.set_pose(facing8, false, false)
+	# Depart burst at the start point now; the arrival burst is timed to the reappearance.
+	_flicker_fx_pending = true
+
+
+var _flicker_from: Vector2 = Vector2.ZERO
+var _flicker_dir: Vector2 = Vector2.DOWN
+var _flicker_fx_pending: bool = false
+
+
+## Per-tick Body Flicker driver (called while State.DODGE): vanish + displace at `flicker_vanish_at`,
+## reappear at `flicker_reappear_at`. Collision is respected by move_and_collide, so a wall just
+## shortens the jump.
+func _flicker_step() -> void:
+	var elapsed := _action_duration - _action_timer
+	if not _flicker_moved and elapsed >= flicker_vanish_at:
+		_flicker_moved = true
+		_flicker_hidden = true
+		visual.visible = false
+		move_and_collide(_flicker_dir * flicker_distance)
+		var arrive_delay := maxf(flicker_reappear_at - elapsed, 0.0)
+		if _flicker_fx_pending:
+			_flicker_fx_pending = false
+			BodyFlickerFx.spawn(get_parent(), _flicker_from, global_position, _flicker_dir, arrive_delay)
+	if _flicker_hidden and elapsed >= flicker_reappear_at:
+		_flicker_hidden = false
+		visual.visible = true
+		visual.set_pose(facing8, false, false)
+
+
+## Safety net: the body is never left invisible once the dodge state is over.
+func _end_flicker_visual() -> void:
+	if _flicker_hidden:
+		_flicker_hidden = false
+		visual.visible = true
 
 
 ## Begin a jump. `velocity` is intentionally left untouched: whatever horizontal momentum the player
@@ -271,10 +436,10 @@ func _begin_dodge(input: Vector2) -> void:
 ## exiting the jump state").
 func _begin_jump() -> void:
 	state = State.JUMP
-	_action_duration = visual.action_duration("jump", jump_fallback_duration)
+	_action_duration = jump_duration if jump_duration > 0.0 else visual.action_duration("jump", jump_fallback_duration)
 	_action_timer = _action_duration
-	visual.play_action("jump", facing8)
-	dust.burst(global_position, 1.5)
+	_play_jump_visual()
+	dust.takeoff(global_position)
 
 
 ## Begin a fresh attack (light1, or a dash attack triggered from/near a dodge). `input`, when given
@@ -285,6 +450,7 @@ func _begin_jump() -> void:
 ## Velocity is never reset: `lunge` is ADDED to whatever velocity the player already had, exactly like
 ## a dodge's burst, so momentum from a run or a dodge carries straight into the swing.
 func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
+	_end_flicker_visual()
 	if input != Vector2.ZERO:
 		facing = input.normalized()
 		facing8 = _snap8(facing)
@@ -294,18 +460,26 @@ func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
 	_attack_phase = AttackPhase.STARTUP
 	_attack_timer = _attack_def.startup
 	_hit_targets.clear()
+	_hit_confirmed = false
+	_swing_clock = 0.0
+	_fired_markers.clear()
 	velocity += facing8 * _attack_def.lunge
-	visual.play_action(attack_id, facing8)
+	if _attack_def.displacement_cap > 0.0 and velocity.length() > _attack_def.displacement_cap:
+		velocity = velocity.limit_length(_attack_def.displacement_cap)
+	if state == State.AIR_ATTACK and not visual.has_action(attack_id):
+		_play_jump_visual()  # no air_attack art yet: stay on the jump at its current phase
+	else:
+		visual.play_action(attack_id, facing8)
 
 
 ## Advance to the next hit in the light combo (wraps light3 -> light1, there is no light4), keeping
 ## the current facing8 locked rather than re-aiming from input -- order: "chain attacks without
 ## returning to idle", not "re-aim every hit of the chain".
 func _begin_next_combo_attack() -> void:
-	var next_index := _combo_index + 1
-	if next_index > 3:
-		next_index = 1
-	_begin_attack("light%d" % next_index)
+	var next_id: String = _attack_def.chains_to
+	if next_id == "" or not _attack_table.has(next_id):
+		return  # finisher: nothing to chain into (the callers check combo_window_for first)
+	_begin_attack(next_id)
 
 
 ## Per-physics-frame update while `state` is one of the attack states. Startup/active/recovery timing,
@@ -313,6 +487,8 @@ func _begin_next_combo_attack() -> void:
 ## all live here.
 func _process_attack_state(delta: float, input: Vector2) -> void:
 	_attack_timer -= delta
+	_swing_clock += delta
+	_emit_due_markers()
 	var airborne := state == State.AIR_ATTACK
 	if airborne:
 		_action_timer -= delta  # the jump keeps ticking underneath the swing
@@ -332,7 +508,8 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 		var elapsed := _attack_def.recovery - maxf(_attack_timer, 0.0)
 		# Dodge-cancel: once recovery has committed past `dodge_cancel_from`, a fresh/buffered dodge
 		# press interrupts the remaining recovery outright (order: "Interrupt...with a dodge").
-		if not airborne and elapsed >= _attack_def.dodge_cancel_from and _dodge_buffer > 0.0:
+		var cancel_from := _attack_def.dodge_cancel_from_for(_hit_confirmed)
+		if not airborne and cancel_from >= 0.0 and elapsed >= cancel_from and _dodge_buffer > 0.0:
 			_dodge_buffer = 0.0
 			_begin_dodge(input)
 			move_and_slide()
@@ -340,7 +517,8 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 		# Combo continuation: a fresh/buffered attack press within `combo_window` of recovery starting
 		# cuts the remaining recovery short and begins the next hit (order: "chain attacks without
 		# returning to idle"). dash_attack's combo_window is 0 -- it never chains this way.
-		if _attack_def.combo_window > 0.0 and elapsed <= _attack_def.combo_window and _attack_buffer > 0.0:
+		var chain_window := _attack_def.combo_window_for(_hit_confirmed)
+		if chain_window > 0.0 and elapsed <= chain_window and _attack_buffer > 0.0:
 			_attack_buffer = 0.0
 			_begin_next_combo_attack()
 			move_and_slide()
@@ -357,7 +535,7 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 				return
 			if airborne:
 				visual.position.y = 0.0
-				dust.burst(global_position, 1.2)  # landed out of the swing
+				dust.landing(global_position)  # landed out of the swing
 			# The attack just ended: pick the state up where locomotion already is this instant (order:
 			# "continue running immediately after an attack ends" -- never a forced idle frame).
 			var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
@@ -372,7 +550,33 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 	move_and_slide()
 	if airborne:
 		_update_jump_lift()
+		# No dedicated air-attack art yet: keep showing the jump at its current phase (never the
+		# placeholder, never a restart from frame 0) until Codex delivers `air_attack`.
+		if not visual.has_action(_attack_def.id):
+			_play_jump_visual()
+			return
 	visual.play_action(_attack_def.id, facing8)
+
+
+## Emit every authored marker whose time has been reached, once each per swing.
+func _emit_due_markers() -> void:
+	if _attack_def == null:
+		return
+	for m: Dictionary in _attack_def.event_markers():
+		var n: String = m.name
+		if _fired_markers.has(n):
+			continue
+		var t: float = m.t
+		if n == "cancel_open":
+			var cf := _attack_def.dodge_cancel_from_for(_hit_confirmed)
+			if cf < 0.0:
+				continue
+			t = _attack_def.startup + _attack_def.active + cf
+		elif n == "combo_close":
+			t = _attack_def.startup + _attack_def.active + _attack_def.combo_window_for(_hit_confirmed)
+		if _swing_clock + 0.000001 >= t:
+			_fired_markers[n] = true
+			attack_event.emit(n, _attack_def.id)
 
 
 ## STARTUP -> ACTIVE -> RECOVERY -> (ends the attack). Only the final step can change `state` away
@@ -386,6 +590,9 @@ func _advance_attack_phase() -> void:
 			_attack_phase = AttackPhase.RECOVERY
 			_attack_timer = _attack_def.recovery
 		AttackPhase.RECOVERY:
+			if not _fired_markers.has("end"):
+				_fired_markers["end"] = true
+				attack_event.emit("end", _attack_def.id)
 			_combo_index = 0
 			state = State.IDLE  # placeholder; overwritten by the caller based on current input
 
@@ -410,8 +617,10 @@ func _check_attack_hits() -> void:
 		if angle_diff > _attack_def.arc_half_angle_deg:
 			continue
 		_hit_targets.append(enemy)
+		_hit_confirmed = true
 		enemy.take_damage(_attack_def.damage, to_enemy.normalized(), _attack_def.knockback, _attack_def.hitstop_ms)
 		_hitstop_timer = maxf(_hitstop_timer, _attack_def.hitstop_ms / 1000.0)
+		attack_hit.emit(HitEvent.make(self, enemy, _attack_def, to_enemy.normalized(), _combo_index))
 
 
 func _state_for_attack_id(attack_id: String) -> State:
@@ -441,13 +650,19 @@ func _update_footsteps(delta: float) -> void:
 		return
 	_footstep_timer -= delta
 	if _footstep_timer <= 0.0:
-		dust.burst(global_position, 0.8 if state == State.SPRINT else 0.6)
-		_footstep_timer = footstep_interval_sprint if state == State.SPRINT else footstep_interval_walk
+		dust.footstep(global_position, state == State.SPRINT, facing)
+		_footstep_timer = (footstep_interval_sprint if state == State.SPRINT else footstep_interval_walk) * randf_range(0.8, 1.25)
 
 
 ## Visual-only elevation arc for the current jump (0 outside JUMP). Applied to PlayerVisual's local
 ## position -- never to this body's position -- so the logical ground position used for collision and
 ## the arena's Y-sort (keyed off this node's own global_position.y, see arena_sort.gd) never moves.
+## Jump art frame follows the jump's own progress, so it is phase-correct through an air attack.
+func _play_jump_visual() -> void:
+	var progress := 0.0 if _action_duration <= 0.0 else 1.0 - _action_timer / _action_duration
+	visual.play_action_progress("jump", facing8, progress)
+
+
 func _update_jump_lift() -> void:
 	if (state != State.JUMP and state != State.AIR_ATTACK) or _action_duration <= 0.0:
 		visual.position.y = 0.0
@@ -476,8 +691,208 @@ func refresh_camera_baseline() -> void:
 	camera_baseline_changed.emit(camera_baseline)
 
 
+## True while the current action is a real evasion: a dodge, or airborne (jump / air attack).
+func is_evading_melee() -> bool:
+	return state == State.DODGE or state == State.JUMP or state == State.AIR_ATTACK
+
+
+## Planted charge hold. Called only after grounded actions have completed; attack/dodge/jump
+## keep priority. Animation runs at the approved 6FPS through the normal SpriteActor clock.
+func _process_charge(delta: float) -> void:
+	state = State.CHARGE
+	velocity = Vector2.ZERO
+	_footstep_timer = 0.0
+	visual.position.y = 0.0
+	visual.play_action("charge", facing8)
+	var restored := minf(max_chakra, chakra + chakra_charge_per_second * delta)
+	if not is_equal_approx(restored, chakra):
+		chakra = restored
+		chakra_changed.emit(chakra, max_chakra)
+
+
+## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely.
+func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: Variant = null) -> bool:
+	if is_evading_melee() or _hit_invuln > 0.0:
+		return false
+	if _try_substitution(attacker, from_dir):
+		return false
+	hits_taken += 1
+	if state == State.CHARGE:
+		state = State.IDLE
+		_charge_interrupted = true  # release before starting another charge after being hit
+		visual.set_pose(facing8, false, false)
+	_hit_invuln = HIT_INVULN_TIME
+	hit_flash_timer = HIT_FLASH_TIME
+	visual.modulate = HIT_TINT
+	velocity += from_dir.normalized() * shove
+	hit_taken.emit(damage, from_dir)
+	health = maxf(health - maxf(damage, 0.0), 0.0)
+	health_changed.emit(health, max_health)
+	if health <= 0.0:
+		times_downed += 1
+		downed.emit()
+		respawn()
+	return true
+
+
+## 0..1 refill of the charge that comes back first (1.0 when no charge is recharging). Drives the HUD slot.
+func substitution_progress() -> float:
+	if _sub_cooldowns.is_empty():
+		return 1.0
+	var soonest: float = _sub_cooldowns[0]
+	for c in _sub_cooldowns:
+		soonest = minf(soonest, c)
+	return clampf(1.0 - soonest / SUB_COOLDOWN, 0.0, 1.0)
+
+
+func _tick_substitution(delta: float) -> void:
+	_sub_buffer = maxf(_sub_buffer - delta, 0.0)
+	if _sub_reveal > 0.0:
+		_sub_reveal = maxf(_sub_reveal - delta, 0.0)
+		if _sub_reveal <= 0.0:
+			visual.visible = true
+	if _sub_cooldowns.is_empty():
+		return
+	var before := _sub_cooldowns.size()
+	for i in range(_sub_cooldowns.size() - 1, -1, -1):
+		_sub_cooldowns[i] -= delta
+		if _sub_cooldowns[i] <= 0.0:
+			_sub_cooldowns.remove_at(i)
+	if _sub_cooldowns.size() != before:
+		substitution_charges = max_substitution_charges - _sub_cooldowns.size()
+		substitution_changed.emit(substitution_charges, max_substitution_charges)
+
+
+## Confirmed timed L2 evade: only reached from take_hit, i.e. an attack that would really have landed.
+## One call per attack, so one proc per attack. Returns true if the hit was swallowed by a log swap.
+func _try_substitution(attacker: Variant, from_dir: Vector2) -> bool:
+	if _sub_buffer <= 0.0 or substitution_charges <= 0 or _sub_cooldowns.size() >= max_substitution_charges:
+		return false
+	var old := global_position
+	var dest := _substitution_destination(attacker, from_dir)
+	_sub_buffer = 0.0
+	_sub_cooldowns.append(SUB_COOLDOWN)
+	substitution_charges = max_substitution_charges - _sub_cooldowns.size()
+	substitution_changed.emit(substitution_charges, max_substitution_charges)
+	substitution_count += 1
+	_hit_invuln = SUB_INVULN
+	global_position = dest
+	velocity = Vector2.ZERO
+	if _attacker_alive(attacker):
+		var to_att := (attacker as Node2D).global_position - dest
+		if to_att.length() > 1.0:
+			facing8 = _snap8(to_att)
+			visual.set_pose(facing8, false, false)
+	visual.visible = false
+	_sub_reveal = SubstitutionFx.ARRIVAL_DELAY
+	SubstitutionFx.spawn(get_parent(), old, dest)
+	substitution_triggered.emit(old, dest)
+	return true
+
+
+## Spot behind the attacker (opposite side from where the player stood). Validated against walls and the
+## arena bounds; shrinks the distance and swings the angle before giving up and staying in place (the
+## log swap still happens, just without the reposition). A dead / freed attacker also means "stay".
+func _substitution_destination(attacker: Variant, from_dir: Vector2) -> Vector2:
+	if not _attacker_alive(attacker):
+		return global_position
+	var toward := global_position - (attacker as Node2D).global_position
+	if toward.length() < 1.0:
+		toward = from_dir if from_dir.length() > 0.01 else Vector2(1, 1)
+	var behind := -toward.normalized()
+	for dist in [SUB_BEHIND_DIST, SUB_BEHIND_DIST * 0.7, SUB_BEHIND_DIST * 0.5]:
+		for ang in [0.0, 0.5, -0.5, 1.0, -1.0]:
+			var p: Vector2 = (attacker as Node2D).global_position + behind.rotated(ang) * dist
+			if _substitution_spot_ok(p):
+				return p
+	return global_position
+
+
+## Attackers can be freed mid-flight (killed bandit, expired thrower), so they travel as untyped Variants.
+static func _attacker_alive(attacker: Variant) -> bool:
+	return is_instance_valid(attacker) and attacker is Node2D and not (attacker as Node2D).is_queued_for_deletion()
+
+
+func _substitution_spot_ok(p: Vector2) -> bool:
+	var arena := get_parent()
+	if arena != null and arena.has_method("get_bounds"):
+		var b: Rect2 = arena.get_bounds()
+		if not b.grow(-8.0).has_point(p):
+			return false
+	return not test_move(Transform2D(0.0, p), Vector2(0.01, 0.0))
+
+
+## Adds health (clamped to max_health). Returns the amount actually restored.
+## Puts a downed player back at `spawn_position` with full health, no leftover motion / action / combo
+## state and a short grace period. Safe to call any time (the hit path calls it when health reaches 0).
+func respawn() -> void:
+	_charge_interrupted = true
+	dust.landing(global_position)
+	global_position = spawn_position
+	velocity = Vector2.ZERO
+	state = State.IDLE
+	_action_timer = 0.0
+	_dodge_buffer = 0.0
+	_jump_buffer = 0.0
+	_attack_buffer = 0.0
+	_sub_buffer = 0.0
+	_sub_reveal = 0.0
+	_attack_timer = 0.0
+	_attack_def = null
+	_combo_index = 0
+	_hit_targets.clear()
+	_dash_grace_timer = 0.0
+	_hitstop_timer = 0.0
+	_footstep_timer = 0.0
+	hit_flash_timer = 0.0
+	_flicker_hidden = false
+	_flicker_moved = false
+	visual.visible = true
+	_hit_invuln = RESPAWN_INVULN
+	var base := Color.WHITE
+	visual.modulate = Color(base.r, base.g, base.b, 0.0)
+	create_tween().tween_property(visual, "modulate:a", 1.0, RESPAWN_FADE_IN)
+	restore_health(max_health)
+	reset_camera()
+	dust.landing(global_position)
+	respawn_count += 1
+	respawned.emit(global_position)
+
+
+## Adds chakra (clamped to max_chakra). Returns the amount actually restored.
+func restore_chakra(amount: float) -> float:
+	var before := chakra
+	chakra = clampf(chakra + maxf(amount, 0.0), 0.0, max_chakra)
+	if chakra != before:
+		chakra_changed.emit(chakra, max_chakra)
+	return chakra - before
+
+
+func restore_health(amount: float) -> float:
+	var before := health
+	health = clampf(health + maxf(amount, 0.0), 0.0, max_health)
+	if health != before:
+		health_changed.emit(health, max_health)
+	return health - before
+
+
 func reset_camera() -> void:
 	camera.reset_smoothing()
+
+## World-px radius of the proximity "power level" sense (see `_update_proximity_sense` note in
+## _physics_process): how far away a nearby enemy is auto-detected while sprinting ("naruto running").
+func sense_radius() -> float:
+	return ProximitySense.radius_for(intelligence)
+
+
+## Removes up to `amount` ryo (clamped to what is actually carried) and returns the amount actually
+## removed. Called by an enemy's steal action (see Bandit._steal_ryo); emits ryo_changed when it changes.
+func lose_ryo(amount: int) -> int:
+	var taken := clampi(amount, 0, ryo)
+	if taken > 0:
+		ryo -= taken
+		ryo_changed.emit(ryo)
+	return taken
 
 
 func get_state_name() -> String:
@@ -490,8 +905,10 @@ func cancel_eligibility() -> Dictionary:
 	var e := {"combo": false, "dodge_cancel": false, "dash_attack": false, "air_attack": false}
 	if _is_attack_state(state) and _attack_phase == AttackPhase.RECOVERY and _attack_def != null:
 		var elapsed := _attack_def.recovery - maxf(_attack_timer, 0.0)
-		e.combo = _attack_def.combo_window > 0.0 and elapsed <= _attack_def.combo_window
-		e.dodge_cancel = state != State.AIR_ATTACK and elapsed >= _attack_def.dodge_cancel_from
+		var chain_window := _attack_def.combo_window_for(_hit_confirmed)
+		e.combo = chain_window > 0.0 and elapsed <= chain_window
+		var cancel_from := _attack_def.dodge_cancel_from_for(_hit_confirmed)
+		e.dodge_cancel = state != State.AIR_ATTACK and cancel_from >= 0.0 and elapsed >= cancel_from
 	e.dash_attack = (state == State.DODGE and _action_timer <= dash_attack_late_window) or _dash_grace_timer > 0.0
 	e.air_attack = state == State.JUMP
 	return e
@@ -507,6 +924,7 @@ func debug_snapshot() -> Dictionary:
 		"dodge_buffer": _dodge_buffer,
 		"jump_buffer": _jump_buffer,
 		"hitstop": _hitstop_timer,
+		"hit_confirmed": _hit_confirmed,
 		"cancel": cancel_eligibility(),
 	}
 

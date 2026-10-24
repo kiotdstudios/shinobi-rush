@@ -16,6 +16,7 @@ func run(p_ck: Callable, tree_root: Node) -> void:
 	await test_direction_change(tree_root)
 	await test_dodge_then_jump(tree_root)
 	await test_repeated_jumps(tree_root)
+	await test_jump_anim_phase(tree_root)
 	# test_tick_rate_independent() (30/60/120 Hz) is run manually only: changing Engine.physics_ticks_per_second
 	# mid-suite wedged the headless runner intermittently, which is unacceptable in CI.
 
@@ -232,3 +233,51 @@ func test_tick_rate_independent(tree_root: Node) -> void:
 	var lo: float = results.min()
 	var hi: float = results.max()
 	ck.call("jump[tick rate]: sprint-jump displacement within 25%% across 30/60/120 Hz (%.0f..%.0f)" % [lo, hi], hi - lo <= 0.25 * hi)
+
+
+## Jump duration + animation phase: the jump lasts jump_duration, the art frame only moves forward
+## through jump -> air attack -> jump (no restart from frame 0), and the sprite never drops to the placeholder.
+func test_jump_anim_phase(tree_root: Node) -> void:
+	var r := await _boot(tree_root)
+	var main: Node = r[0]
+	var p: PlayerController = r[1]
+	var tree := main.get_tree()
+	await _reset(p, Vector2(-1200, 100))
+	Input.action_press("move_right")
+	for i in 30:
+		await tree.physics_frame
+	await _tap("jump")
+	var ticks := 3
+	var last_frame := -1
+	var regressions := 0
+	var placeholder_ticks := 0
+	var max_frame := 0
+	var saw_air := false
+	while _airborne(p) and ticks < 300:
+		if ticks == 20:
+			await _tap("attack_light")
+			ticks += 3
+			continue
+		await tree.physics_frame
+		ticks += 1
+		if not _airborne(p):
+			break
+		if p.state == PlayerController.State.AIR_ATTACK:
+			saw_air = true
+		var f: int = p.visual.actor.sprite.frame
+		if f < last_frame:
+			regressions += 1
+		last_frame = f
+		max_frame = maxi(max_frame, f)
+		if not p.visual.actor.visible:
+			placeholder_ticks += 1
+	var secs := float(ticks) / Engine.physics_ticks_per_second
+	print("MEASURE jump_anim duration=%.3fs ticks=%d max_frame=%d regressions=%d placeholder_ticks=%d" % [secs, ticks, max_frame, regressions, placeholder_ticks])
+	ck.call("jump anim: air attack happened mid-jump", saw_air)
+	ck.call("jump: duration matches jump_duration (%.3f s)" % secs, absf(secs - p.jump_duration) < 0.1)
+	ck.call("jump: duration inside owner's 0.7-1.0 s target", secs >= 0.7 and secs <= 1.0)
+	ck.call("jump anim: frame never restarts/rewinds across the air attack", regressions == 0, str(regressions))
+	ck.call("jump anim: reaches the late frames before landing", max_frame >= 18, str(max_frame))
+	ck.call("jump anim: never falls back to the placeholder figure", placeholder_ticks == 0, str(placeholder_ticks))
+	Input.action_release("move_right")
+	main.queue_free()

@@ -1,0 +1,15 @@
+{
+  "result": "PASS",
+  "clips": {
+    "log": 9,
+    "departure": 15,
+    "arrival": 8,
+    "ribbons": 12
+  },
+  "unique_drawn_frames": true,
+  "binary_alpha": true,
+  "transparent_borders": true,
+  "smoke_matches_summoning_pixels": true,
+  "no_resampling": true,
+  "runtime_changed": false
+}

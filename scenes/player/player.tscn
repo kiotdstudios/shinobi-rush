@@ -1,10 +1,13 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_ctrl"]
 [ext_resource type="Script" path="res://scripts/player/placeholder_visual.gd" id="2_vis"]
 
 [ext_resource type="Script" path="res://scripts/player/player_visual.gd" id="3_pv"]
 [ext_resource type="Script" path="res://scripts/vfx/dust_puff.gd" id="4_dust"]
+[ext_resource type="Script" path="res://scripts/player/player_lock_on.gd" id="5_lock"]
+[ext_resource type="Script" path="res://scripts/vfx/body_flicker_demo.gd" id="6_bfd"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_feet"]
 size = Vector2(50, 27)
 
@@ -23,5 +26,11 @@ script = ExtResource("2_vis")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="DustPuff" type="CPUParticles2D" parent="."]
+[node name="DustPuff" type="Node2D" parent="."]
 script = ExtResource("4_dust")
+
+[node name="LockOn" type="Node2D" parent="."]
+script = ExtResource("5_lock")
+
+[node name="BodyFlickerDemo" type="Node" parent="."]
+script = ExtResource("6_bfd")

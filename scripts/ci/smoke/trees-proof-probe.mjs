@@ -1,0 +1,51 @@
+import {chromium} from 'playwright';
+import {startStaticServer} from './lib/serve.mjs';
+import {analyzeInPage} from './lib/pixels.mjs';
+import {mkdirSync,writeFileSync} from 'node:fs';
+const arg=n=>{const i=process.argv.indexOf('--'+n);return i<0?undefined:process.argv[i+1]};
+const out=arg('out-dir');mkdirSync(out,{recursive:true});
+const server=arg('serve-dir')?await startStaticServer(arg('serve-dir'),{port:0}):null;
+const browser=await chromium.launch({headless:true});
+const page=await browser.newPage({viewport:{width:1280,height:720},serviceWorkers:'block'});
+const analysis=await browser.newPage();
+const errors=[],checks={},samples=[];
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const state=()=>page.evaluate(()=>({...window.__BLOSSOM_STATE__}));
+const click=async(x,y)=>{await page.mouse.click(x,y);await wait(220)};
+const diff=async(a,b,w,h)=>analysis.evaluate(analyzeInPage,{pngBase64:b.toString('base64'),prevPngBase64:a.toString('base64'),w,h,diffThreshold:24});
+page.on('pageerror',e=>errors.push(String(e)));
+page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+try{
+ await page.goto((server?server.url:arg('base-url'))+'?trees=review');
+ await page.waitForFunction(()=>window.__BLOSSOM_STATE__?.ready&&window.__BLOSSOM_STATE__.review,null,{timeout:90000});
+ const initial=await state();checks.five_trees=initial.trees===5&&initial.capacity===120;
+ checks.falling_on_arrival=initial.particles>0;
+ await page.screenshot({path:out+'/01-all-five.png'});
+ await click(127,649);checks.half_speed=(await state()).speed===0.5;
+ await click(203,649);const paused=await state();await wait(600);checks.pause=(await state()).time===paused.time;
+ await click(258,649);checks.single_step=Math.abs((await state()).time-paused.time-1/24)<0.002;
+ await click(438,649);checks.separate_foliage_toggle=!(await state()).leaves&&(await state()).wind;
+ await click(225,689);checks.individual_tree=(await state()).selected===2;
+ await page.screenshot({path:out+'/02-weeping-close.png'});
+ const canopy={x:485,y:205,width:310,height:310},root={x:570,y:520,width:150,height:75};
+ const a=await page.screenshot({clip:canopy}),ra=await page.screenshot({clip:root});
+ for(let i=0;i<24;i++)await page.mouse.click(258,649);
+ await wait(500);
+ const b=await page.screenshot({clip:canopy}),rb=await page.screenshot({clip:root});
+ const canopyStats=await diff(a,b,310,310),rootStats=await diff(ra,rb,150,75);
+ checks.visible_canopy_sway=canopyStats.changedRatio>0.003;
+ checks.fixed_root_pixels=rootStats.changedRatio<0.002;
+ await click(330,649);checks.independent_wind_toggle=!(await state()).wind;
+ await click(438,649);await click(46,649);await wait(1200);
+ checks.leaves_with_wind_off=(await state()).leaves&&(await state()).particles>0;
+ await click(330,649);
+ for(let i=0;i<5;i++){await click(105+i*60,689);samples.push(await state());await page.screenshot({path:out+`/tree-${i+1}.png`})}
+ checks.all_tours=samples.every((s,i)=>s.selected===i);
+ await click(443,689);checks.follow_player=(await state()).selected===-2;
+ await click(43,689);checks.all_view=(await state()).selected===-1;
+ for(let i=0;i<30;i++){samples.push(await state());await wait(100)}
+ checks.bounded_particles=samples.every(s=>s.particles>=0&&s.particles<=s.capacity);
+ checks.no_errors=errors.length===0;
+ writeFileSync(out+'/trees-proof-probe.json',JSON.stringify({checks,errors,initial,canopyStats,rootStats,samples},null,2));
+ console.log(JSON.stringify(checks));process.exitCode=Object.values(checks).every(Boolean)?0:1;
+}finally{await browser.close();if(server)await server.close()}

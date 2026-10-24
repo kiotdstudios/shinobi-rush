@@ -1,0 +1,24 @@
+{
+  "palette": [
+    "#3f4650",
+    "#4d535b",
+    "#3c3e49",
+    "#353a41",
+    "#0a0b17",
+    "#484c58",
+    "#1c202b",
+    "#575960",
+    "#121720",
+    "#212736",
+    "#2a303d",
+    "#586069",
+    "#0d0f16",
+    "#666e74",
+    "#787679"
+  ],
+  "sources": [
+    "assets\\environment\\kosen_courtyard\\floor_tiles\\floor9_center.png",
+    "assets\\environment\\kosen_courtyard\\floor_tiles\\floor9_cracked_a.png",
+    "assets\\environment\\kosen_courtyard\\floor_tiles\\floor9_cracked_b.png"
+  ]
+}

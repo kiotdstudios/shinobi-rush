@@ -68,4 +68,19 @@ Screenshots: `~/.aki/tmp/jump-before.png`, `jump-jumpfix.png` (local, not commit
 3. Should the 2.0 s jump art be shortened by Codex? Hang time is what made the old bug so large.
 
 ## Commits / PR / deploy
-Filled in after merge.
+PR #47, merge commit `91eb294f8c64192fe6b966b2f63486be01916725`. Godot CI run 39585195612 passed every
+job including the post-deploy live smoke test. Live `build-info.json` `commit_sha` = `91eb294...`. A live
+Chromium sprint jump travelled about 437 px (was about 1377 px), 0 errors.
+
+## Follow-up (2026-10-21): shorter jump + animation phase
+Branch `aki/jump-duration-and-anim-resume`.
+- `jump_duration = 0.85 s` (owner target 0.7-1.0 s). The 24-frame art is compressed to it: the sprite
+  frame now follows jump progress instead of free-running, so no frames are lost and it cannot restart.
+- Air attack: until `air_attack` art exists the swing keeps showing the jump at its current phase. Before,
+  it dropped to the placeholder figure for the swing and then restarted `jump` from frame 0 (no
+  `air_attack` sheet, and `show_animation` resets to frame 0 on every animation switch).
+- Cap kept at 0.4x walk as instructed. Distances (60 Hz headless): walk 150 px, sprint 167 px, sprint +
+  air attack 169 px, dodge -> jump 157 px, 3 sprint jumps 546 px. Bounded and non-stacking.
+- Tests: new `jump anim` checks (measured 0.90 s incl. tap frames, inside 0.7-1.0; frame never rewinds
+  across the air attack; reaches frame 23; placeholder never shown). Suite 748 / 0.
+- Codex request filed: `orders/Codex/2026-10-21-jump-recut-and-air-attack-art.md`.

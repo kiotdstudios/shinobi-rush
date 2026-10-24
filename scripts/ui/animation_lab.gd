@@ -5,12 +5,27 @@ extends Node
 ## The status line and metrics stay on screen even when the lab is hidden.
 
 const SPEEDS: Array[float] = [0.25, 0.5, 1.0, 1.5, 2.0]
-## Native 1:1 pixel steps. The zoom list is [active preset baseline] + these (see zoom_list); a baseline that
-## already equals 1.0 is not repeated.
-const NATIVE_ZOOMS: Array[float] = [1.0, 2.0, 3.0, 4.0]
+## Lab zoom steps. The zoom list is [active preset baseline] + these (see zoom_list); a baseline that already equals
+## one of them is not repeated. Whole steps (1x 2x 3x 4x) are native 1:1 pixels; half steps (1.5x 2.5x 3.5x) and
+## quarter steps (1.25x 1.75x 2.25x 2.75x 3.25x 3.75x) are NOT pixel-exact with the nearest-neighbour filter.
+## Owner: no zoom past 1.500 (the old list ran to 4.0).
+const ZOOM_CEILING := 1.5
+const NATIVE_ZOOMS: Array[float] = [1.0, 1.25, 1.5]
 ## Camera preset switch (wide <-> close). The action is registered at runtime so project.godot stays untouched.
 const PRESET_ACTION := "dbg_camera_preset"
 const PRESET_KEY := KEY_N
+## Camera-impact demo (CameraImpact): 7 light, 8 heavy, 9 burst of three, 0 the heavy kick stretched to CameraImpact.SLOW_MS so
+## it can be watched. Registered at runtime like N (project.godot stays untouched) and only active while the lab is open. They
+## kick along the player's facing, as a real hit would along attacker -> target. Digits, because H/G/B share their physical key
+## with the telemetry HUD's Ctrl+Alt+H/G/B (the repo's key-collision tests compare physical keys only).
+const IMPACT_ACTIONS: Dictionary = {
+	"dbg_camera_impact_light": KEY_7, "dbg_camera_impact_heavy": KEY_8,
+	"dbg_camera_impact_burst": KEY_9, "dbg_camera_impact_slow": KEY_0,
+}
+## Body Flicker demo key (Y -- "flash step"). Registered at runtime. B is taken (Ctrl+Alt+B = telemetry HUD).
+const FLICKER_ACTION := "dbg_body_flicker"
+const FLICKER_KEY := KEY_Y  ## Y = "flash step" mnemonic; B/Ctrl+Alt+B already taken by telemetry HUD
+const BURST_GAP_S := 0.04  ## the burst: three light hits this far apart
 ## Stands sit LEFT of the spawn so they stay clear of the lab panel (screen right) at 1x-2x zoom.
 ## Provisional prototype values scaled by WorldScale.SCALE (stands far enough apart for the 128 px frames).
 const STAND_OFFSETS: Array[Vector2] = WorldScale.STAND_OFFSETS
@@ -20,7 +35,7 @@ const OVERLAYS: Array = [
 	["iso", "1 iso grid"], ["square", "2 square grid"], ["anchor", "3 anchor"],
 	["footprint", "4 footprint"], ["ruler", "5 height ruler"], ["bbox", "6 frame box"],
 ]
-const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom | N camera preset | 1-6 overlays"
+const KEYS_HELP := "Tab lab | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z or wheel zoom (half/quarter steps are not pixel-exact) | N camera preset | 1-6 overlays | 7 8 9 0 camera kick: light heavy burst slow | Y body flicker normal (0.5x via button)"
 
 enum DirMode { FOLLOW, FIXED, SPIN }
 
@@ -47,6 +62,9 @@ var _panel: PanelContainer
 var _value_labels: Dictionary = {}
 var _toggle_buttons: Dictionary = {}
 var _lab_button: Button
+var vision: BanditVisionToggle  ## Bandit vision debug overlay switch (button in the Settings panel), default OFF
+var settings: SettingsPanel  ## bottom-edge Settings dock tab: click toggles for every vision/debug overlay (no hotkeys)
+var sense_vision: SenseVisionToggle  ## proximity "power level" sense overlay switch (button in the Settings panel), default OFF
 var _timer: float = 0.0
 var _actions: Dictionary = {}
 
@@ -155,6 +173,12 @@ func _build_actions() -> void:
 		"dbg_compare": toggle_compare,
 		"dbg_zoom_cycle": cycle_zoom,
 		PRESET_ACTION: cycle_preset,
+		"dbg_camera_impact_light": func() -> void: impact_demo("light"),
+		"dbg_camera_impact_heavy": func() -> void: impact_demo("heavy"),
+		"dbg_camera_impact_burst": func() -> void: impact_demo("burst"),
+		"dbg_camera_impact_slow": func() -> void: impact_demo("slow"),
+		FLICKER_ACTION: func() -> void: flicker_demo(1.0),
+		## half-speed flicker is button-only (no second key; avoids key-collision with the normal B action)
 		"dbg_overlay_iso_grid": func() -> void: toggle_overlay("iso"),
 		"dbg_overlay_square_grid": func() -> void: toggle_overlay("square"),
 		"dbg_overlay_anchor": func() -> void: toggle_overlay("anchor"),
@@ -174,8 +198,31 @@ static func _ensure_preset_action() -> void:
 	InputMap.action_add_event(PRESET_ACTION, ev)
 
 
+## Register the camera-impact demo actions once unless they already exist.
+static func _ensure_impact_actions() -> void:
+	for action: String in IMPACT_ACTIONS:
+		if InputMap.has_action(action):
+			continue
+		InputMap.add_action(action)
+		var ev := InputEventKey.new()
+		ev.physical_keycode = IMPACT_ACTIONS[action]
+		InputMap.action_add_event(action, ev)
+
+
+static func _ensure_flicker_action() -> void:
+	if not InputMap.has_action(FLICKER_ACTION):
+		InputMap.add_action(FLICKER_ACTION)
+		var ev := InputEventKey.new()
+		ev.physical_keycode = FLICKER_KEY
+		InputMap.action_add_event(FLICKER_ACTION, ev)
+	## Half-speed is triggered by the UI button only (no second key, to avoid key-collision tests).
+
+
+
 func _ready() -> void:
 	_ensure_preset_action()
+	_ensure_impact_actions()
+	_ensure_flicker_action()
 	_build_actions()
 	lib = SpriteLibrary.get_instance()
 	player = get_tree().get_first_node_in_group("player") as PlayerController
@@ -299,7 +346,23 @@ func _build_ui() -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 5
 	add_child(layer)
-	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, 8), Vector2(150, 26), toggle_lab)
+	_lab_button = _button(layer, "Lab (Tab)", Vector2(1120, DockTab.REST_Y), Vector2(150, 26), toggle_lab)
+	DockTab.style(_lab_button, Color("#3DDC84"))
+	SettingsPanel.adopt(_lab_button)  # the Lab tab moves under Settings too
+	# Bandit vision overlay (debug, default OFF): its toggle button lives in the Settings panel (bottom edge), no hotkey.
+	settings = SettingsPanel.new()
+	settings.name = "SettingsPanel"
+	layer.add_child(settings)
+	settings.build(layer)
+	vision = BanditVisionToggle.new()
+	vision.name = "BanditVisionToggle"
+	add_child(vision)
+	settings.add_row(vision.build_button(settings.rows))
+	# Proximity "power level" sense overlay (debug, default OFF): same pattern, second row.
+	sense_vision = SenseVisionToggle.new()
+	sense_vision.name = "SenseVisionToggle"
+	add_child(sense_vision)
+	settings.add_row(sense_vision.build_button(settings.rows))
 	_panel = PanelContainer.new()
 	_panel.position = Vector2(930, 40)
 	_panel.custom_minimum_size = Vector2(340, 0)
@@ -325,12 +388,40 @@ func _build_ui() -> void:
 		_toggle_buttons[key] = b
 	# After the overlay grid so the existing rows keep their indices (tests address them by position).
 	_row(box, "preset", "Cam preset  N", func() -> void: cycle_preset(), func() -> void: cycle_preset())
+	_impact_row(box)
+	_flicker_row(box)
 	var help := Label.new()
 	help.text = KEYS_HELP
 	help.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	help.custom_minimum_size = Vector2(320, 0)
 	help.add_theme_font_size_override("font_size", 10)
 	box.add_child(help)
+
+
+## "Cam kick  7 8 9 0": light, heavy, burst of three, slow heavy (the buttons do what the keys do).
+func _impact_row(box: Node) -> void:
+	var h := HBoxContainer.new()
+	box.add_child(h)
+	var t := Label.new()
+	t.text = "Cam kick  7 8 9 0"
+	t.custom_minimum_size = Vector2(112, 0)
+	t.add_theme_font_size_override("font_size", 11)
+	h.add_child(t)
+	for k: Array in [["light", "L"], ["heavy", "H"], ["burst", "x3"], ["slow", "S"]]:
+		var kind: String = k[0]
+		_button(h, k[1], Vector2.ZERO, Vector2(34, 24), func() -> void: impact_demo(kind))
+
+## "Body Flicker  B / Shift+B": normal-speed and half-speed triggers for the VFX demo.
+func _flicker_row(box: Node) -> void:
+	var h := HBoxContainer.new()
+	box.add_child(h)
+	var t := Label.new()
+	t.text = "Body Flicker  B"
+	t.custom_minimum_size = Vector2(112, 0)
+	t.add_theme_font_size_override("font_size", 11)
+	h.add_child(t)
+	_button(h, "Normal", Vector2.ZERO, Vector2(56, 24), func() -> void: flicker_demo(1.0))
+	_button(h, "0.5x", Vector2.ZERO, Vector2(44, 24), func() -> void: flicker_demo(0.5))
 
 
 func _label(parent: Node, pos: Vector2, size: int) -> Label:
@@ -412,8 +503,11 @@ func toggle_lab() -> void:
 
 func _set_lab(on: bool) -> void:
 	lab_on = on
-	if not on and zoom_index != 0:
-		set_zoom_index(0)  # closing the lab restores the gameplay baseline
+	DockTab.set_active(_lab_button, on)
+	if not on:
+		if zoom_index != 0:
+			set_zoom_index(0)  # closing the lab restores the gameplay baseline
+		BodyFlickerDemo.safe_cleanup()  ## ensure no stuck invisible player if lab closes mid-flicker
 	if _panel != null:
 		_panel.visible = on
 		overlay.visible = on
@@ -470,8 +564,8 @@ func _baseline() -> float:
 	return player.camera_baseline if player != null else CameraPreset.zoom_for(CameraPreset.active())
 
 
-## Index 0 is the gameplay baseline (active preset); the rest are native 1:1 pixel steps. A baseline that
-## already equals 1.0 (close preset snapped to pixel-exact) is not listed twice.
+## Index 0 is the gameplay baseline (active preset); the rest are NATIVE_ZOOMS in ascending order. A baseline that
+## already equals one of them (close preset snapped to pixel-exact 1.0, or ?camera=1.5) is not listed twice.
 static func zoom_list(baseline: float) -> Array[float]:
 	var out: Array[float] = [baseline]
 	for z in NATIVE_ZOOMS:
@@ -480,12 +574,15 @@ static func zoom_list(baseline: float) -> Array[float]:
 	return out
 
 
-## "wide 0.44x" / "close 1.17x" for the baseline, "1x".."4x" (native pixels) for the rest.
+## "wide 0.50x" / "close 1.17x" for the baseline, "1x" "1.25x" "1.5x" ... "4x" for the rest (a whole step has no decimals).
 static func zoom_label(i: int, baseline: float, spec: Variant = null) -> String:
 	var zl := zoom_list(baseline)
 	if i == 0:
 		return CameraPreset.label_for(CameraPreset.active() if spec == null else spec, baseline)
-	return "%dx" % int(zl[clampi(i, 0, zl.size() - 1)])
+	var z := zl[clampi(i, 0, zl.size() - 1)]
+	if is_equal_approx(z, roundf(z)):
+		return "%dx" % int(roundf(z))
+	return "%sx" % String.num(z, 2)
 
 
 func cycle_zoom() -> void:
@@ -502,7 +599,8 @@ func set_zoom_index(i: int) -> void:
 
 ## Switch the active camera preset (wide -> close -> wide). Back to the baseline, like closing the lab.
 func cycle_preset() -> void:
-	CameraPreset.set_active(CameraPreset.next_id(CameraPreset.active()))
+	# Owner: the game camera is permanently locked to the wide baseline (0.665); presets no longer switch.
+	CameraPreset.set_active(CameraPreset.DEFAULT_ID)
 	if player != null:
 		player.refresh_camera_baseline()
 	set_zoom_index(0)
@@ -528,10 +626,41 @@ func toggle_overlay(key: String) -> void:
 	_refresh_ui()
 
 
+## Camera-impact demo (keys 7 8 9 0 and the "Cam kick" buttons): "light", "heavy", "burst" (three light hits BURST_GAP_S apart)
+## or "slow" (the heavy kick stretched to CameraImpact.SLOW_MS: same peak, only the duration changes).
+func impact_demo(kind: String) -> void:
+	var dir := player.facing8 if player != null else Vector2.DOWN
+	match kind:
+		"light":
+			CameraImpact.light_hit(dir)
+		"heavy":
+			CameraImpact.heavy_hit(dir)
+		"slow":
+			CameraImpact.impulse(dir, CameraImpact.HEAVY_PEAK_PX, CameraImpact.SLOW_MS)
+		"burst":
+			CameraImpact.light_hit(dir)
+			for i in [1, 2]:
+				get_tree().create_timer(i * BURST_GAP_S).timeout.connect(func() -> void: CameraImpact.light_hit(dir))
+
+
+## speed_scale: 1.0 = normal (~417 ms total), 0.5 = half speed (~834 ms).
+func flicker_demo(speed_scale: float = 1.0) -> void:
+	if not lab_on or player == null:
+		return
+	BodyFlickerDemo.trigger(player, speed_scale)
+	## CombatCameraDirector.notify(JUTSU) intentionally omitted -- camera director lives in a
+	## separate PR (orcha/dynamic-combat-camera). Wire it when that PR merges.
+
 func _unhandled_input(event: InputEvent) -> void:
 	if player == null:
 		return
 	if event is InputEventMouseButton and event.pressed:
+		# Builder wheel input belongs to its scroll area, including when that area is at a limit.
+		var hovered := get_viewport().gui_get_hovered_control()
+		while hovered != null:
+			if hovered.is_in_group("world_builder_ui"):
+				return
+			hovered = hovered.get_parent_control()
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			set_zoom_index(zoom_index + 1)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
@@ -539,6 +668,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	for a: String in _actions:
 		if event.is_action_pressed(a):
+			if IMPACT_ACTIONS.has(a) and not lab_on:
+				continue  # the camera-kick demo keys only work while the lab is open
 			(_actions[a] as Callable).call()
 			get_viewport().set_input_as_handled()
 			return
