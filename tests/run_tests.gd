@@ -31,6 +31,7 @@ func _initialize() -> void:
 	test_sheet_slicing_and_lazy_cache()
 	test_discovery()
 	await test_anchor_stability()
+	Bandit.substitution_enabled = false  # random log swaps would flake combat tests; test_bandit_sub_kunai enables it locally
 	await test_main_scene_and_movement()
 	await test_jump_and_dodge_chaining()
 	await test_lab_and_pause()
@@ -57,6 +58,7 @@ func _initialize() -> void:
 	await load("res://tests/test_bandit_art.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_chase.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_robber.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_sub_kunai.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_vision_overlay.gd").new().run(ck, root)
 	await load("res://tests/test_sense_vision_overlay.gd").new().run(ck, root)
 	await load("res://tests/test_kunai_primary_proof.gd").new().run(ck, root)
@@ -72,6 +74,7 @@ func _initialize() -> void:
 	await load("res://tests/test_builder_ashen.gd").new().run(ck, root)
 	await load("res://tests/test_builder_fire.gd").new().run(ck, root)
 	await load("res://tests/test_builder_blightwood.gd").new().run(ck, root)
+	await load("res://tests/test_builder_water.gd").new().run(ck, root)
 	await load("res://tests/test_wall_kit_sort.gd").new().run(ck, root)
 	await load("res://tests/test_publish_to_github.gd").new().run(ck, root)
 	await load("res://tests/test_asset_store_plugins.gd").new().run(ck, root)

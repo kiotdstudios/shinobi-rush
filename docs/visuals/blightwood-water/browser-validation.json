@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "ready": true,
+    "flowing_cascade": true,
+    "foam_moves": true,
+    "spray_moves": true,
+    "normal_speed": true,
+    "half_speed": true,
+    "pause": true,
+    "step": true,
+    "separate_spray_toggle": true,
+    "captured": 192,
+    "no_errors": true
+  },
+  "errors": [],
+  "last": {
+    "ready": true,
+    "clock": 7.958333492279053,
+    "speed": 0.5,
+    "paused": true,
+    "spray": true,
+    "fall_frame": 15,
+    "foam_frame": 7,
+    "drops": 18,
+    "drop_x": -8,
+    "buttons_json": "{\"Half speed\":{\"x\":136.0,\"y\":56.5},\"Normal\":{\"x\":53.5,\"y\":56.5},\"Pause\":{\"x\":212.5,\"y\":56.5},\"Spray / foam\":{\"x\":344.5,\"y\":56.5},\"Step\":{\"x\":265.5,\"y\":56.5}}"
+  }
+}

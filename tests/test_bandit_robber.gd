@@ -361,6 +361,7 @@ func _test_double_flicker() -> void:
 	# Player damage interrupts the retreat state cleanly.
 	_put(Vector2(1300, 420), Vector2(1190, 420), Bandit.State.THREATEN)
 	bandit._begin_retreat()
+	bandit.substitutions = 0  # a log swap would swallow the hit this test needs
 	bandit.take_damage(1.0, Vector2.RIGHT, 0.0, 0.0)
 	ck.call("robber retreat: a hit during the telegraph cancels it", bandit.state == Bandit.State.HIT_REACT and bandit.retreat_phase == Bandit.RetreatPhase.NONE)
 	bandit.profile.retreat_chance = 0.25
