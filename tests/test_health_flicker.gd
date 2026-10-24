@@ -94,23 +94,30 @@ func test_flicker(p: PlayerController, tree: SceneTree) -> void:
 		await tree.physics_frame
 	Input.action_release("dodge")
 	var was_hidden := false
+	var streak_seen := false
 	var invuln := true
 	var frames := 0
 	while p.state == PlayerController.State.DODGE and frames < 90:
 		if not p.visual.visible:
 			was_hidden = true
+		for c in p.get_children():
+			if c is EvadeStreakFx:
+				streak_seen = true
 		invuln = invuln and not p.take_hit(8.0, Vector2.LEFT)
 		await tree.physics_frame
 		frames += 1
-	ck.call("flicker: the body disappears during the dodge and is visible again when it ends", was_hidden and p.visual.visible, "hidden=%s visible=%s" % [was_hidden, p.visual.visible])
+	ck.call("evade burst: the body stays visible the whole dodge and the streak plays on it", not was_hidden and streak_seen and p.visual.visible, "hidden=%s streak=%s" % [was_hidden, streak_seen])
 	ck.call("flicker: nothing lands during the whole dodge", invuln and p.health == p.max_health)
-	ck.call("flicker: the body moved along the heading in one step (about flicker_distance)", p.global_position.x - start.x > p.flicker_distance * 0.9, str(p.global_position - start))
+	ck.call("evade burst: the body moved along the heading about flicker_distance", p.global_position.x - start.x > p.flicker_distance * 0.9, str(p.global_position - start))
 	Input.action_release("move_right")
 	for i in 40:
 		await tree.physics_frame
 	var fx_left := 0
 	for c in p.get_parent().get_children():
-		if c is BodyFlickerFx:
+		if c is EvadeStreakFx:
+			fx_left += 1
+	for c in p.get_children():
+		if c is EvadeStreakFx:
 			fx_left += 1
 	ck.call("flicker: the effect node frees itself after it plays", fx_left == 0, str(fx_left))
 	# a wall stops the displacement short
@@ -134,6 +141,3 @@ func test_flicker(p: PlayerController, tree: SceneTree) -> void:
 		frames += 1
 	Input.action_release("move_right")
 	ck.call("flicker: a wall shortens the displacement and the body is visible afterwards", p.global_position.x - wall_start.x < p.flicker_distance * 0.6 and p.visual.visible and p.global_position.x <= b.end.x, str(p.global_position - wall_start))
-	var o := BodyFlickerFx.orientation(Vector2(1, 1))
-	var ow := BodyFlickerFx.orientation(Vector2(-1, 1))
-	ck.call("flicker fx: SE art is unrotated; SW is its mirror", is_zero_approx(o["rotation"]) and not o["mirror"] and is_zero_approx(ow["rotation"]) and ow["mirror"])
