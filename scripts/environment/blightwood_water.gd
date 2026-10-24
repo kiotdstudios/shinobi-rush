@@ -2,14 +2,18 @@ class_name BlightwoodWater
 extends Node2D
 ## Decorative water only. No terrain collision/swimming changes.
 const DIR := "res://assets/environment/blightwood_water/"
+const SHORE_DIR := "res://assets/environment/blightwood_shorelines/"
 static var shared_clock := 0.0
 static var shared_frame := -1
 var role := "center"
 var waterfall := false
+var shore_family := ""
+var shore_mask := 0
 var auto_advance := true
 var clock := 0.0
 var spray_on := true
 var surface: Sprite2D
+var bank: Sprite2D
 var fall: Sprite2D
 var foam: Sprite2D
 var drops: Array[Sprite2D] = []
@@ -28,12 +32,17 @@ func _ready() -> void:
 			drops.append(drop)
 	else:
 		surface = Sprite2D.new()
-		surface.texture = load(DIR + "tiles/water9_" + role + ".png") as Texture2D
+		var stem := "%s_%02d" % [shore_family, shore_mask]
+		surface.texture = load(DIR + "tiles/water9_" + role + ".png" if shore_family.is_empty() else SHORE_DIR + "water_masks/" + stem + ".png") as Texture2D
 		var mat := ShaderMaterial.new()
 		mat.shader = load("res://shaders/blightwood_water.gdshader") as Shader
 		mat.set_shader_parameter("current_atlas", load(DIR + "surface-atlas.png"))
 		surface.material = mat
 		add_child(surface)
+		if not shore_family.is_empty():
+			bank = Sprite2D.new()
+			bank.texture = load(SHORE_DIR + "land/" + stem + ".png") as Texture2D
+			add_child(bank)
 	advance(0.0)
 
 func _atlas(path: String, cols: int, rows: int) -> Sprite2D:
