@@ -90,6 +90,9 @@ var hp: float = max_hp
 ## Status stats (HUD parity with the player). Substitution is charge-based with a recharge timer and costs no chakra, exactly like the player; the chakra pool is currently display-only.
 var max_chakra: float = 100.0
 var chakra: float = 100.0
+var is_charging_chakra := false  ## true while he is standing still charging chakra (blue aura)
+var _chakra_wanted := false  ## set when a move could not be paid for: he charges as soon as it is safe
+var sub_use_age: Array[float] = []  ## seconds since each substitution pip was spent (-1 = idle); drives the log wiggle + smoke on his bar
 var max_substitutions: int = 2
 var substitutions: int = 2
 var facing8: Vector2 = Vector2.DOWN
@@ -258,6 +261,12 @@ func _physics_process(delta: float) -> void:
 
 	_find_player()
 	_update_perception()
+
+	if _tick_chakra_charge(delta):
+		velocity = Vector2.ZERO
+		move_and_slide()
+		visual.queue_redraw()
+		return
 
 	match state:
 		State.IDLE, State.PATROL:
@@ -692,7 +701,61 @@ func _release_kunai() -> void:
 	BanditKunai.spawn(get_parent(), global_position + dir * 18.0, dir, self, _player, float(profile.get("throw_damage", 6.0)), float(profile.get("throw_speed", 520.0)))
 
 
+## Pay for a chakra move. Returns false (and flags that he wants to charge) when the pool is short. Nothing uses it yet; substitution is free.
+func spend_chakra(amount: float) -> bool:
+	if chakra < amount:
+		_chakra_wanted = true
+		return false
+	chakra -= amount
+	if chakra < float(profile.get("chakra_charge_low", 0.0)) * max_chakra:
+		_chakra_wanted = true
+	return true
+
+
+## Low pool, or a move he could not afford: he should charge.
+func needs_chakra_charge() -> bool:
+	if state == State.DEAD or max_chakra <= 0.0:
+		return false
+	return _chakra_wanted or chakra < float(profile.get("chakra_charge_low", 0.0)) * max_chakra
+
+
+## Ninja chakra charge: when low (or a move was unaffordable) and the player is not on top of him he plants his feet and
+## charges. Returns true while charging (the caller then skips normal behaviour). Hits, a close player or a full pool end it.
+func _tick_chakra_charge(delta: float) -> bool:
+	var charge_rate := float(profile.get("chakra_charge_rate", 0.0))
+	if charge_rate <= 0.0:
+		is_charging_chakra = false
+		return false
+	var full := float(profile.get("chakra_charge_full", 0.9)) * max_chakra
+	if is_charging_chakra:
+		if chakra >= full or not _chakra_safe() or state in [State.HIT_REACT, State.DEAD, State.EVADE]:
+			is_charging_chakra = false
+			_chakra_wanted = false
+			_log("chakra charge done" if chakra >= full else "chakra charge interrupted")
+			return false
+		chakra = minf(chakra + charge_rate * delta, max_chakra)
+		return true
+	if needs_chakra_charge() and chakra < full and _chakra_safe() and state not in [State.HIT_REACT, State.DEAD, State.EVADE, State.ATTACK] and atk_phase == AtkPhase.NONE and not flicker_hopping:
+		is_charging_chakra = true
+		_log("charging chakra (%d/%d)" % [int(chakra), int(max_chakra)])
+		return true
+	if chakra >= full:
+		_chakra_wanted = false
+	return false
+
+
+func _chakra_safe() -> bool:
+	if _player == null or not is_instance_valid(_player):
+		return true
+	return global_position.distance_to(_player.global_position) > float(profile.get("chakra_charge_safe_dist", 220.0))
+
+
 func _tick_substitution(delta: float) -> void:
+	for i in sub_use_age.size():
+		if sub_use_age[i] >= 0.0:
+			sub_use_age[i] += delta
+			if sub_use_age[i] > LogPip.DURATION:
+				sub_use_age[i] = -1.0
 	_sub_gap = maxf(_sub_gap - delta, 0.0)
 	_sub_invuln = maxf(_sub_invuln - delta, 0.0)
 	if state != State.DEAD:
@@ -725,6 +788,10 @@ func _try_substitution() -> bool:
 	var dest := _substitution_destination()
 	substitutions -= 1
 	substitution_count += 1
+	while sub_use_age.size() < max_substitutions:
+		sub_use_age.append(-1.0)
+	if substitutions >= 0 and substitutions < sub_use_age.size():
+		sub_use_age[substitutions] = 0.0
 	_sub_cooldowns.append(float(profile.get("sub_recharge", 15.0)))
 	_sub_gap = float(profile.get("sub_min_gap", 1.0))
 	_sub_invuln = float(profile.get("sub_invuln", 0.5))

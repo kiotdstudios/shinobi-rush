@@ -61,6 +61,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	b.take_damage(10.0, Vector2.RIGHT, 140.0, 0.0)
 	ck.call("bandit sub: a hit is swallowed (no damage)", is_equal_approx(b.hp, b.max_hp))
 	ck.call("bandit sub: spends a charge but NO chakra (matches the player)", b.substitutions == 1 and b.chakra == b.max_chakra and b.substitution_count == 1)
+	ck.call("bandit sub: the spent pip starts its wiggle + smoke animation", b.sub_use_age.size() >= 2 and b.sub_use_age[1] == 0.0)
 	ck.call("bandit sub: he reappears behind the player", b.global_position.distance_to(old) > 40.0 and (b.global_position - p.global_position).dot(old - p.global_position) < 0.0)
 	ck.call("bandit sub: grace window blocks an immediate second hit", _hit_ignored(b))
 	b._sub_invuln = 0.0

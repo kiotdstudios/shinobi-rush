@@ -59,7 +59,11 @@ const LEVELS := {
 		"sub_behind_dist": 72.0,     # how far behind the player he reappears
 		"sub_invuln": 0.5,           # grace after a swap
 		"sub_min_gap": 1.0,          # minimum seconds between two swaps
-		"chakra_regen": 4.0,         # chakra per second
+		"chakra_regen": 4.0,         # chakra per second (passive)
+		"chakra_charge_low": 0.3,    # below this fraction of his pool he stops to charge chakra (ninja-style)
+		"chakra_charge_full": 0.9,   # keeps charging until the pool is back to this fraction
+		"chakra_charge_rate": 28.0,  # chakra per second while charging (far faster than passive regen)
+		"chakra_charge_safe_dist": 220.0,  # only charges while the player is farther away than this (or unaware of him)
 	},
 }
 

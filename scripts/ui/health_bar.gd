@@ -17,9 +17,9 @@ const CHAKRA_Y := 41.0
 const BAR_SIZE := Vector2(196.0, 22.0)
 const FILL_INSET := Vector2(3.0, 3.0)
 const FILL_SIZE := Vector2(190.0, 16.0)
-const PIP_POS := Vector2(112.0, 72.0)
-const PIP_SIZE := 16.0  ## the blue crystal pips are 16x16 pixel art, drawn 1:1
-const PIP_STEP := 24.0
+const PIP_POS := Vector2(124.0, 92.0)
+const PIP_SIZE := Vector2(38.0, 26.0)  ## the substitution pips are the log art (LogPip), drawn 1:1
+const PIP_STEP := 44.0
 const PIP_FLASH := 0.7  ## seconds a pip glows after it refills
 const SLOT_SIZE := 56.0  ## ability bar (bottom centre): Substitution (L2, square gold frame) + four gold circles for R2 + a face button
 const SLOT_GAP := 8.0
@@ -61,6 +61,7 @@ var _hold: float = 0.0
 var sub_progress: float = 1.0  ## 0..1: how far the soonest-recharging substitution charge has refilled (1 = nothing recharging)
 var _player: PlayerController
 var _flash: Array[float] = [0.0, 0.0, 0.0]
+var use_age: Array[float] = [-1.0, -1.0, -1.0]  ## seconds since each pip's charge was spent (log wiggle + smoke); -1 = idle
 var _canvas: Control
 var _tex: Dictionary = {}
 var offsets: Dictionary = {}  ## element id -> Vector2 shift from its default spot (saved to LAYOUT_PATH)
@@ -142,6 +143,9 @@ func _on_chakra_changed(current: float, maximum: float) -> void:
 func _on_substitution_changed(charges: int, maximum: int) -> void:
 	if charges > pips and charges >= 1 and charges <= _flash.size():
 		_flash[charges - 1] = PIP_FLASH  ## a charge just refilled: its pip lights up
+	if charges < pips:
+		for i in range(maxi(charges, 0), mini(pips, use_age.size())):
+			use_age[i] = 0.0  ## a charge was just spent: the log wiggles and pops in smoke
 	pips = clampi(charges, 0, maximum)
 	max_pips = maximum
 	_redraw()
@@ -161,6 +165,12 @@ func _process(delta: float) -> void:
 	for i in _flash.size():
 		if _flash[i] > 0.0:
 			_flash[i] = maxf(_flash[i] - delta, 0.0)
+	for i in use_age.size():
+		if use_age[i] >= 0.0:
+			use_age[i] += delta
+			if use_age[i] > LogPip.DURATION:
+				use_age[i] = -1.0
+			_redraw()
 			_redraw()
 	if _heal_t >= 0.0:
 		if _heal_wait > 0.0:
@@ -205,15 +215,14 @@ func _draw_hud() -> void:
 		pts.append(o + p)
 		uvs.append((o + p - av_origin) / 80.0)
 	_canvas.draw_colored_polygon(pts, Color.WHITE, uvs, _tex["portrait_avatar"])
-	# substitution pips: blue lit crystals in a gold rim
+	# substitution pips: the log art; spending a charge wiggles the log and pops it in smoke
 	var pp := pos_of("pips")
 	for i in max_pips:
-		var tex: Texture2D = _tex["pip_full"] if i < pips else _tex["pip_empty"]
 		var at := pp + Vector2(PIP_STEP * i, 0.0)
 		if i < _flash.size() and _flash[i] > 0.0:
 			var k: float = _flash[i] / PIP_FLASH
-			_canvas.draw_circle(at + Vector2(PIP_SIZE, PIP_SIZE) * 0.5, PIP_SIZE * 0.5 + 3.0 + 6.0 * (1.0 - k), Color(0.45, 0.85, 1.0, 0.55 * k))
-		_canvas.draw_texture(tex, at)
+			_canvas.draw_circle(at + PIP_SIZE * 0.5, PIP_SIZE.y * 0.5 + 3.0 + 6.0 * (1.0 - k), Color(0.45, 0.85, 1.0, 0.55 * k))
+		LogPip.draw(_canvas, at, 1.0, i < pips, use_age[i] if i < use_age.size() else -1.0)
 	_draw_abilities()
 	_draw_dpad()
 	if edit_mode:
@@ -340,7 +349,7 @@ func element_rect(id: String) -> Rect2:
 		"portrait":
 			return Rect2(p + Vector2(0.0, AVATAR_POS.y), Vector2(PORTRAIT_SIZE.x, PORTRAIT_SIZE.y - AVATAR_POS.y))
 		"pips":
-			return Rect2(p, Vector2(PIP_STEP * (max_pips - 1) + PIP_SIZE, PIP_SIZE))
+			return Rect2(p, Vector2(PIP_STEP * (max_pips - 1) + PIP_SIZE.x, PIP_SIZE.y))
 		"dpad":
 			return Rect2(p, Vector2(DPAD_CELL * 3.0 - 4.0, DPAD_CELL * 3.0 - 4.0))
 	return Rect2(p, Vector2(SLOT_SIZE, SLOT_SIZE + 20.0))
