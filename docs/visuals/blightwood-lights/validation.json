@@ -1,0 +1,8 @@
+{
+  "fixtures": 5,
+  "palette_colors": 33,
+  "unique_flame_frames": 12,
+  "unique_firefly_frames": 8,
+  "lossless_pendant_reassembly": true,
+  "transparent_margins": true
+}
