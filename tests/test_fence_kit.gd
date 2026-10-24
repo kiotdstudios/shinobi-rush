@@ -45,6 +45,14 @@ func run(p_ck: Callable, root: Node) -> void:
 			solid = false
 	ck.call("fence: all pieces are solid", solid)
 
+
+	# a fence just south of the shrine's front corner must draw in front of the shrine sprite
+	var shrine := placed.add("ancient_shrine", base + Vector2(400, 300), false)
+	var fence := placed.add("fence_se_1", base + Vector2(400, 300) + Vector2(-20, -15), false)
+	var shrine_key: float = (shrine.nodes[0] as Node2D).position.y
+	var fence_key: float = (fence.nodes[0] as Node2D).position.y
+	ck.call("fence: draws in front of the shrine when south of its front corner", fence_key > shrine_key, "%s vs %s" % [fence_key, shrine_key])
+
 	var json := placed.to_dict()
 	for o: Dictionary in objs.duplicate():
 		placed.remove(o, false)
@@ -55,6 +63,6 @@ func run(p_ck: Callable, root: Node) -> void:
 	for o in placed.objects:
 		if String(o.id).begins_with("fence_"):
 			n_fence += 1
-	ck.call("fence: pieces survive save/load", n_fence == 8, str(n_fence))
+	ck.call("fence: pieces survive save/load", n_fence == 9, str(n_fence))
 	main.queue_free()
 	await tree.process_frame

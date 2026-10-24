@@ -87,7 +87,7 @@ const CATALOG := {
 	"grass_tall_01": {"label": "Tall grass 2", "kind": "grass", "tall": true},
 	"grass_tall_02": {"label": "Tall grass 3", "kind": "grass", "tall": true},
 	"grass_tall_03": {"label": "Tall grass 4", "kind": "grass", "tall": true},
-	"ancient_shrine": {"label": "Ancient Shrine", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/ancient_shrine/", "art": "shrine_shelter_01", "size": Vector2(256, 256), "anchor": Vector2(129, 242), "col": Vector2(0, 0), "body": Vector2(87, 112), "poly": [Vector2(-87, -69), Vector2(0, -29), Vector2(86, -72), Vector2(0, -112)]},
+	"ancient_shrine": {"label": "Ancient Shrine", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/ancient_shrine/", "sort_dy": -29.0, "art": "shrine_shelter_01", "size": Vector2(256, 256), "anchor": Vector2(129, 242), "col": Vector2(0, 0), "body": Vector2(87, 112), "poly": [Vector2(-87, -69), Vector2(0, -29), Vector2(86, -72), Vector2(0, -112)]},
 	"ground9_corner_top": {"label": "Corner Top", "kind": "ground"},
 	"ground9_edge_ne": {"label": "Edge Ne", "kind": "ground"},
 	"ground9_corner_right": {"label": "Corner Right", "kind": "ground"},
@@ -524,8 +524,8 @@ func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 		sprite.centered = false
 		if n == 1:
 			sprite.texture = tex
-			sprite.offset = -(def.anchor as Vector2) - col * 0.5
-			sprite.position = pos + col * 0.5
+			sprite.offset = -(def.anchor as Vector2) - col * 0.5 - Vector2(0, float(def.get("sort_dy", 0.0)))
+			sprite.position = pos + col * 0.5 + Vector2(0, float(def.get("sort_dy", 0.0)))
 		else:
 			var atlas := AtlasTexture.new()
 			atlas.atlas = tex
@@ -702,8 +702,8 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 				sprite.position = t.position
 				sprite.offset = t.offset
 			else:
-				sprite.position = pos + (def.col as Vector2) * 0.5
-				sprite.offset = -(def.anchor as Vector2) - (def.col as Vector2) * 0.5
+				sprite.position = pos + (def.col as Vector2) * 0.5 + Vector2(0, float(def.get("sort_dy", 0.0)))
+				sprite.offset = -(def.anchor as Vector2) - (def.col as Vector2) * 0.5 - Vector2(0, float(def.get("sort_dy", 0.0)))
 		(nodes[nodes.size() - 1] as Node2D).position = pos
 	else:
 		for n: Node2D in nodes:

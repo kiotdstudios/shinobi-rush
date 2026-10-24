@@ -53,6 +53,7 @@ func run(ck: Callable, root: Node) -> void:
 	bandit._evade_cooldown = 0
 	bandit._physics_process(0.02)
 	ck.call("bandit evade: approaching without lock triggers", bandit.state == Bandit.State.EVADE and bandit.evade_count == 2)
+	bandit.substitutions = 0  # no log swap: these hits must land
 	bandit.take_damage(1, Vector2.LEFT, 20, 0)
 	visual._process(0)
 	ck.call("bandit evade: damage interrupts and hides streak", bandit.state == Bandit.State.HIT_REACT and not visual.streak.visible)
