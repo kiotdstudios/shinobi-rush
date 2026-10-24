@@ -10,9 +10,9 @@ extends RefCounted
 const LEVELS := {
 	1: {
 		"name": "Level 1 robber",
-		"sight_range": 500.0,        # how far it can see in its facing cone
+		"sight_range": 450.0,        # how far it can see in its facing cone
 		"fov_deg": 90.0,             # NARROW awareness: only what is in front of it
-		"close_sense": 150.0,        # it still notices someone right behind/next to it
+		"close_sense": 70.0,         # it still notices someone right behind/next to it
 		"notice_delay": 0.65,        # suspicion pause before it commits to a hunt (slow reaction)
 		"repath_interval": 0.7,      # slow re-acquisition / re-planning
 		"lose_sight_time": 2.2,      # chasing without seeing the player this long -> go search
@@ -41,6 +41,25 @@ const LEVELS := {
 		"patrol_speed": 130.0,
 		"attack_reach": 150.0,
 		"attack_arc_deg": 100.0,
+		# kunai throw (three-kunai combo): a fan of throw_burst_count kunai released throw_burst_gap apart
+		"throw_first_delay": 2.0,    # no kunai for this long after first spotting the player
+		"throw_min": 190.0,          # closer than this he melees instead
+		"throw_range": 420.0,        # farther than this he keeps chasing
+		"throw_windup": 0.42,        # tell; aim tracks the first half, then freezes
+		"throw_recovery": 0.3,       # punish window after the LAST kunai
+		"throw_cooldown": 3.5,       # between throw combos
+		"throw_damage": 6.0,         # per kunai
+		"throw_speed": 520.0,
+		"throw_burst_count": 3,      # kunai per throw combo
+		"throw_burst_gap": 0.14,     # seconds between kunai in the combo
+		"throw_spread_deg": 9.0,     # angle between neighbouring kunai in the fan
+		# substitution jutsu: when a hit would land he may swap with a log and reappear behind the player
+		"sub_chance": 0.6,           # chance he uses a charge when hit and able
+		"sub_recharge": 15.0,        # seconds for a spent charge to come back
+		"sub_behind_dist": 72.0,     # how far behind the player he reappears
+		"sub_invuln": 0.5,           # grace after a swap
+		"sub_min_gap": 1.0,          # minimum seconds between two swaps
+		"chakra_regen": 4.0,         # chakra per second
 	},
 }
 

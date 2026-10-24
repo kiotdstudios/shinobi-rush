@@ -31,6 +31,7 @@ func _initialize() -> void:
 	test_sheet_slicing_and_lazy_cache()
 	test_discovery()
 	await test_anchor_stability()
+	Bandit.substitution_enabled = false  # random log swaps would flake combat tests; test_bandit_sub_kunai enables it locally
 	await test_main_scene_and_movement()
 	await test_jump_and_dodge_chaining()
 	await test_lab_and_pause()
@@ -38,14 +39,25 @@ func _initialize() -> void:
 	await load("res://tests/test_camera_preset.gd").new().run(ck, root)
 	await load("res://tests/test_camera_impact.gd").new().run(ck, root)
 	await load("res://tests/test_arena_sorting.gd").new().run(ck, root)
+	await load("res://tests/test_wall_art.gd").new().run(ck, root)
 	await load("res://tests/test_combat.gd").new().run(ck, root)
 	await load("res://tests/test_jump.gd").new().run(ck, root)
 	await load("res://tests/test_health_flicker.gd").new().run(ck, root)
+	await load("res://tests/test_health_gourd.gd").new().run(ck, root)
+	await load("res://tests/test_gourd_pickup_fx.gd").new().run(ck, root)
+	await load("res://tests/test_inventory.gd").new().run(ck, root)
+	await load("res://tests/test_ancient_shrine.gd").new().run(ck, root)
+	await load("res://tests/test_fence_kit.gd").new().run(ck, root)
+	await load("res://tests/test_paint_tool.gd").new().run(ck, root)
 	await load("res://tests/test_substitution_throw.gd").new().run(ck, root)
+	await load("res://tests/test_chakra_charge.gd").new().run(ck, root)
 	await load("res://tests/test_settings_tabs.gd").new().run(ck, root)
+	await load("res://tests/test_combat_b.gd").new().run(ck, root)
+	await load("res://tests/test_builder_dims.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_art.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_chase.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_robber.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_sub_kunai.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_vision_overlay.gd").new().run(ck, root)
 	await load("res://tests/test_sense_vision_overlay.gd").new().run(ck, root)
 	await load("res://tests/test_kunai_primary_proof.gd").new().run(ck, root)
@@ -57,6 +69,15 @@ func _initialize() -> void:
 	await load("res://tests/test_wind_grass.gd").new().run(ck, root)
 	await load("res://tests/test_proximity_sense.gd").new().run(ck, root)
 	await load("res://tests/test_world_editor.gd").new().run(ck, root)
+	await load("res://tests/test_builder_ground.gd").new().run(ck, root)
+	await load("res://tests/test_builder_ashen.gd").new().run(ck, root)
+	await load("res://tests/test_builder_fire.gd").new().run(ck, root)
+	await load("res://tests/test_builder_blightwood.gd").new().run(ck, root)
+	await load("res://tests/test_builder_water.gd").new().run(ck, root)
+	await load("res://tests/test_builder_shorelines.gd").new().run(ck, root)
+	await load("res://tests/test_wall_kit_sort.gd").new().run(ck, root)
+	await load("res://tests/test_publish_to_github.gd").new().run(ck, root)
+	await load("res://tests/test_asset_store_plugins.gd").new().run(ck, root)
 	var debug_store_tests = load("res://tests/test_debug_store.gd").new()
 	debug_store_tests.run(ck)
 	var browser_debug_tests = load("res://tests/test_browser_debug.gd").new()
@@ -146,7 +167,7 @@ func _base_manifest() -> Dictionary:
 
 # ------------------------------------------------------------------ 3.6 tests
 func test_input_map() -> void:
-	var implemented := ["move_left", "move_right", "move_up", "move_down", "sprint", "pause"]
+	var implemented := ["move_left", "move_right", "move_up", "move_down", "sprint", "pause", "slot_up", "slot_right", "slot_down", "slot_left", "player_menu"]
 	var reserved := ["aim_left", "aim_right", "aim_up", "aim_down", "attack_light", "attack_heavy", "dodge", "jump", "heal", "substitution", "jutsu_modifier"]
 	for a: String in implemented:
 		var has_key := false

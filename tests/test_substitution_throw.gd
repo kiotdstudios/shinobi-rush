@@ -193,7 +193,12 @@ func test_throw(p: PlayerController, arena: Node) -> void:
 	while b.atk_phase == Bandit.AtkPhase.THROW_WINDUP and t < 2.0:
 		b._tick_throw(0.02)
 		t += 0.02
-	ck.call("throw: the windup releases exactly one kunai", b.kunai_thrown == before + 1 and b.atk_phase == Bandit.AtkPhase.THROW_RECOVERY)
+	ck.call("throw: the windup releases the first kunai of the combo", b.kunai_thrown == before + 1 and b.atk_phase == Bandit.AtkPhase.THROW_GAP)
+	t = 0.0
+	while b.atk_phase == Bandit.AtkPhase.THROW_GAP and t < 2.0:
+		b._tick_throw(0.02)
+		t += 0.02
+	ck.call("throw: the combo is three kunai, then recovery", b.kunai_thrown == before + 3 and b.atk_phase == Bandit.AtkPhase.THROW_RECOVERY)
 	ck.call("throw: progress is at the release point entering recovery", absf(b.get_throw_progress() - Bandit.THROW_RELEASE_AT) < 0.05)
 	t = 0.0
 	while b.atk_phase == Bandit.AtkPhase.THROW_RECOVERY and t < 2.0:

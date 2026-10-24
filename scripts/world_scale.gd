@@ -59,6 +59,13 @@ const STAND_OFFSETS: Array[Vector2] = [Vector2(-225, 0), Vector2(-518, 0)]
 const STAND_DIAMOND := Vector2(144, 72)
 
 ## Blocks: [bottom-centre position, footprint (w, depth), height]. Old values times SCALE, rounded.
+## Owner 2026-10-23 ("delete all placeholder walls and replace them with new temple wall assets"):
+## any block/placed-object at or above this height is a "Wall" (matches PlacedObjects.def_of()'s own
+## pre-existing Wall/Block label) and is drawn with real temple wall face art
+## (assets/environment/kosen_courtyard/walls/) by TrainingArena.Block/BlockRear instead of the flat
+## grey placeholder polygon + "PLACEHOLDER" caption. Shorter entries (rocks, crates, the lab stand)
+## are genuinely still placeholder and are unaffected -- this order only asked for walls.
+const WALL_ART_MIN_HEIGHT := 140.0
 const BLOCKS: Array = [
 	[Vector2(-585, -180), Vector2(270, 108), 126.0],
 	[Vector2(630, -270), Vector2(144, 144), 144.0],

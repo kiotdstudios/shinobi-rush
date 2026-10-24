@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "trees": 3,
+  "frame_size": [
+    320,
+    448
+  ],
+  "fixed_anchor": [
+    160,
+    416
+  ],
+  "shared_scale": 0.27467811158798283,
+  "transparent": true,
+  "clear_wind_margins": true,
+  "distinct_ash_poses": 16
+}

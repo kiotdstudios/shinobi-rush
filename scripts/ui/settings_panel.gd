@@ -32,6 +32,10 @@ const ZOOM_STEP := 0.005
 const SAVE_PATH := "user://settings.cfg"
 
 
+static func instance() -> SettingsPanel:
+	return _instance
+
+
 func _enter_tree() -> void:
 	_instance = self
 

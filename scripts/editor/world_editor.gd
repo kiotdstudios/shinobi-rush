@@ -12,7 +12,14 @@ const SNAPS: Array[int] = [30, 15, 0]
 var arena: TrainingArena
 var placed: PlacedObjects
 var open := false
-var tool := "select"  ## "select" | "erase" | "place" | "pan"
+var tool := "select"  ## "select" | "erase" | "place" | "paint" | "pan"
+const BRUSHES: Array[int] = [1, 3, 5]
+var brush := 1  ## paint tool: the brush is a brush x brush block of floor cells
+var _stroke := false
+var _stroke_changed := false
+var _last_cell := Vector2(INF, INF)
+var _paint_button: Button = null
+var brush_button: Button = null
 var _panning := false
 var _camera_free := false
 var _pan_camera_mode := Node.PROCESS_MODE_INHERIT
@@ -31,6 +38,7 @@ var save_button: Button
 var _note := ""
 var _note_until := 0
 var overlay: Node2D
+var grid_layer: Node2D
 var _tool_buttons: Dictionary = {}
 var _palette_buttons: Dictionary = {}
 var _filter_buttons: Dictionary = {}
@@ -38,6 +46,16 @@ var _category_sections: Dictionary = {}
 var palette_scroll: ScrollContainer
 var _clear_armed := false
 var _js_state: JavaScriptObject
+var _hud_buttons: Dictionary = {}
+var hud_snap_button: Button = null
+## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
+## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
+const DIM_TYPES: Array[String] = ["Blightwood lights", "Ashen fire", "Volcanic trees", "Trees", "Walls & blocks", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
+var show_grid := false
+var show_dims: Dictionary = {}  ## type name -> bool
+var _settings_rows_added := false
+var _grid_button: Button = null
+var _dim_buttons: Dictionary = {}
 
 
 class Overlay extends Node2D:
@@ -55,6 +73,24 @@ class Overlay extends Node2D:
 		editor.draw_overlay(self)
 
 
+## Floor grid layer: sits on the ground (same z_index as Ground, added after it) so walls, trees and every
+## other y-sorted object draw OVER the lines and hide the cells they cover.
+class GridLayer extends Node2D:
+	var editor: WorldEditor
+	func _init(e: WorldEditor) -> void:
+		editor = e
+		z_index = -1
+		name = "WorldEditorGrid"
+		process_mode = Node.PROCESS_MODE_ALWAYS
+	func _process(_d: float) -> void:
+		visible = editor.show_grid
+		if visible:
+			queue_redraw()
+	func _draw() -> void:
+		if editor.arena != null:
+			editor._draw_floor_grid(self)
+
+
 func setup(a: TrainingArena, p: PlacedObjects) -> void:
 	arena = a
 	placed = p
@@ -66,6 +102,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	overlay = Overlay.new(self)
 	arena.add_child(overlay)
+	grid_layer = GridLayer.new(self)
+	arena.add_child(grid_layer)
 	_build_ui()
 	set_open(false)
 	if OS.has_feature("web"):
@@ -77,6 +115,11 @@ func _ready() -> void:
 
 
 func _process(_d: float) -> void:
+	var hud := hud_bar()
+	if hud != null and hud.edit_mode != open:
+		hud.set_edit_mode(open)
+	if not _settings_rows_added and SettingsPanel.instance() != null:
+		_add_settings_rows(SettingsPanel.instance())
 	if _js_state != null:
 		_js_state.open = open
 		_js_state.count = placed.objects.size()
@@ -108,7 +151,57 @@ func _process(_d: float) -> void:
 			_js_state.panel_y = r.position.y
 			_js_state.panel_w = r.size.x
 			_js_state.panel_h = r.size.y
+			_js_state.save_accessible = save_button.is_visible_in_tree() and save_button.get_global_rect().end.y <= get_viewport().get_visible_rect().size.y
 			_js_state.grass_count = (arena.get_node("WindGrassField") as WindGrassField).ground_count()
+			var ashen_count := 0
+			var ashen_capacity := 0
+			var ashen_clock := 0.0
+			for obj in placed.objects:
+				if PlacedObjects.def_of(obj.id).kind == "ashen_tree":
+					var tree := obj.nodes[0] as AshenTree
+					ashen_count += 1
+					ashen_capacity += tree.flakes.size()
+					ashen_clock = tree.local_clock
+			var fire_count := 0
+			var fire_pops := 0
+			for obj in placed.objects:
+				if PlacedObjects.def_of(obj.id).kind == "ashen_fire":
+					fire_count += 1
+					fire_pops += (obj.nodes[0] as AshenFireProp).pop_count
+			var blight_count := 0
+			var swarm_count := 0
+			var fly_count := 0
+			var light_clock := 0.0
+			for obj in placed.objects:
+				var kind := str(PlacedObjects.def_of(obj.id).kind)
+				if kind == "blight_light":
+					var fixture := obj.nodes[0] as BlightwoodLight
+					blight_count += 1
+					fly_count += fixture.swarm.flies.size()
+					light_clock = fixture.clock
+				elif kind == "fireflies":
+					swarm_count += 1
+					fly_count += (obj.nodes[0] as ForestFireflies).flies.size()
+			var shore_count := 0
+			var water_count := 0
+			var water_clock := 0.0
+			for obj in placed.objects:
+				if obj.nodes[0] is BlightwoodWater:
+					water_count += 1
+					if not (obj.nodes[0] as BlightwoodWater).shore_family.is_empty():shore_count += 1
+					water_clock = (obj.nodes[0] as BlightwoodWater).clock
+			_js_state.shore_count = shore_count
+			_js_state.water_count = water_count
+			_js_state.water_clock = water_clock
+			_js_state.blight_count = blight_count
+			_js_state.swarm_count = swarm_count
+			_js_state.fly_count = fly_count
+			_js_state.light_clock = light_clock
+			_js_state.fire_count = fire_count
+			_js_state.fire_pops = fire_pops
+			_js_state.ashen_count = ashen_count
+			_js_state.ashen_capacity = ashen_capacity
+			_js_state.ashen_clock = ashen_clock
 			_js_state.tall_count = (arena.get_node("WindGrassField") as WindGrassField).tall_count()
 	if open and inspector != null and inspector.visible and not selected.is_empty():
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
@@ -119,6 +212,9 @@ func set_open(v: bool) -> void:
 	_set_camera_free(v)
 	panel.visible = v
 	tab.visible = not v
+	var hud := hud_bar()
+	if hud != null:
+		hud.set_edit_mode(v)
 	if not v:
 		dragging = false
 		selected = {}
@@ -129,7 +225,13 @@ func set_open(v: bool) -> void:
 
 func set_tool(t: String, id := "") -> void:
 	tool = t
-	place_id = id if t == "place" else ""
+	if t == "paint":
+		if id != "":
+			place_id = id
+		if place_id == "" or PlacedObjects.def_of(place_id).kind not in ["ground", "grass"]:
+			place_id = "temple_floor_center"  # nothing tile-like chosen yet: start with the stone floor
+	else:
+		place_id = id if t == "place" else ""
 	if t != "select":
 		selected = {}
 	_refresh()
@@ -161,13 +263,13 @@ static func iso_cell_center(p: Vector2) -> Vector2:
 
 
 func _wall_tool() -> bool:
-	var id := place_id if tool == "place" else str(selected.get("id", ""))
+	var id := place_id if tool in ["place", "paint"] else str(selected.get("id", ""))
 	return id != "" and PlacedObjects.def_of(id).kind == "wall"
 
 
 func _grass_tool() -> bool:
-	var id := place_id if tool == "place" else str(selected.get("id", ""))
-	return id != "" and PlacedObjects.def_of(id).kind == "grass"
+	var id := place_id if tool in ["place", "paint"] else str(selected.get("id", ""))
+	return id != "" and PlacedObjects.def_of(id).kind in ["grass", "ground"]
 
 
 func _mouse_world() -> Vector2:
@@ -179,6 +281,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if open and event.keycode == KEY_S and event.ctrl_pressed:
 			save_now()
+			get_viewport().set_input_as_handled()
+			return
+		if open and event.keycode in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN] and hud_bar() != null and hud_bar().selected_element != "":
+			var step := 10.0 if event.shift_pressed else 1.0
+			var dir := Vector2(float(event.keycode == KEY_RIGHT) - float(event.keycode == KEY_LEFT), float(event.keycode == KEY_DOWN) - float(event.keycode == KEY_UP))
+			hud_bar().move_element(hud_bar().selected_element, dir * step)
+			hud_bar().save_layout()
 			get_viewport().set_input_as_handled()
 			return
 		if open and (event.keycode == KEY_DELETE or event.keycode == KEY_BACKSPACE) and not selected.is_empty():
@@ -198,13 +307,22 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif mb.button_index == MOUSE_BUTTON_LEFT:
 			if mb.pressed:
-				press(_mouse_world())
+				if not press_hud(get_viewport().get_mouse_position()):
+					press(_mouse_world())
+			elif hud_bar() != null and hud_bar().dragging_element:
+				release_hud()
+			elif _stroke:
+				end_stroke()
 			else:
 				release()
 			get_viewport().set_input_as_handled()
 		elif mb.button_index == MOUSE_BUTTON_RIGHT and mb.pressed:
 			set_tool("select")
 			get_viewport().set_input_as_handled()
+	elif event is InputEventMouseMotion and hud_bar() != null and hud_bar().dragging_element:
+		hud_bar().drag_at(get_viewport().get_mouse_position(), not Input.is_key_pressed(KEY_SHIFT))
+	elif event is InputEventMouseMotion and _stroke:
+		paint_to(_mouse_world())
 	elif event is InputEventMouseMotion and dragging:
 		drag_to(_mouse_world())
 
@@ -240,8 +358,96 @@ func pan_by(screen_delta: Vector2) -> void:
 		cam.force_update_scroll()
 
 
+## The player's HUD (HealthBar canvas layer), or null when there is no player yet.
+func hud_bar() -> HealthBar:
+	var p := get_tree().get_first_node_in_group("player") if is_inside_tree() else null
+	return p.get_node_or_null("HealthBar") as HealthBar if p != null else null
+
+
+## Builder, select tool: a click on a HUD piece (bars, avatar, pips, ability slots) picks it up instead of a world object.
+func press_hud(screen: Vector2) -> bool:
+	var hud := hud_bar()
+	if not open or tool != "select" or hud == null:
+		return false
+	if not hud.press_at(screen):
+		return false
+	selected = {}
+	_refresh()
+	return true
+
+
+func release_hud() -> void:
+	var hud := hud_bar()
+	if hud != null:
+		hud.release_drag()
+	_refresh()
+
+
+func select_hud(id: String) -> void:
+	var hud := hud_bar()
+	if hud == null:
+		return
+	set_tool("select")
+	hud.select_element("" if hud.selected_element == id else id)
+	_flash("%s: drag it, or arrow keys (Shift = 10px)" % HealthBar.ELEMENT_NAMES[id] if hud.selected_element == id else "HUD piece deselected")
+	_refresh()
+
+
+## Floor cells a brush stamped at `world` covers: a brush x brush block of 72x36 diamonds, centred on the cell under it.
+func brush_cells(world: Vector2) -> Array[Vector2]:
+	var c := iso_cell_center(world)
+	var out: Array[Vector2] = []
+	var r := (brush - 1) / 2
+	for i in range(-r, r + 1):
+		for j in range(-r, r + 1):
+			out.append(c + Vector2(36.0, 18.0) * float(i) + Vector2(36.0, -18.0) * float(j))
+	return out
+
+
+## Stamp the brush at `world`; true if any tile changed.
+func paint_at(world: Vector2) -> bool:
+	var any := false
+	for cell in brush_cells(world):
+		if placed.paint_cell(place_id, cell):
+			any = true
+	if any:
+		_stroke_changed = true
+	return any
+
+
+## Paint along the mouse path since the last sample so a fast drag leaves no gaps.
+func paint_to(world: Vector2) -> void:
+	var cell := iso_cell_center(world)
+	if cell == _last_cell:
+		return
+	if _last_cell.is_finite():
+		var from := _last_cell
+		var steps := int(ceil(from.distance_to(cell) / 18.0))
+		for s in range(1, steps + 1):
+			paint_at(from.lerp(cell, float(s) / float(steps)))
+	else:
+		paint_at(world)
+	_last_cell = cell
+
+
+func end_stroke() -> void:
+	if not _stroke:
+		return
+	_stroke = false
+	_last_cell = Vector2(INF, INF)
+	if _stroke_changed:
+		_stroke_changed = false
+		placed._changed()  # one nav rebuild + one save for the whole stroke
+	_refresh()
+
+
 func press(world: Vector2) -> void:
 	match tool:
+		"paint":
+			_stroke = true
+			_stroke_changed = false
+			_last_cell = Vector2(INF, INF)
+			paint_to(world)
 		"place":
 			var pos := snapped_pos(world)
 			if placed.can_place(place_id, pos):
@@ -298,6 +504,71 @@ func download_layout() -> void:
 		_flash("Layout copied to clipboard")
 
 
+## Repo-tracked file this writes to and commits -- a real file under version control (unlike
+## PlacedObjects.SAVE_PATH, which is per-machine user:// data outside the repo entirely).
+const REPO_LAYOUT_PATH := "res://data/world_layout.json"
+
+
+## Pure interpretation of a `git commit` attempt's exit code/output text -- decides the user-facing
+## outcome without running git, so every branch (ok, benign no-op, real failure) is covered by a CI
+## test without ever executing a real git process. `done` means the whole publish is finished (no
+## push needed); otherwise the caller proceeds to push.
+static func _commit_outcome(code: int, output_text: String) -> Dictionary:
+	if code == 0:
+		return {"ok": true, "done": false, "message": ""}
+	if output_text.contains("nothing to commit") or output_text.contains("nothing added"):
+		return {"ok": true, "done": true, "message": "PUBLISH: no changes to publish"}
+	return {"ok": false, "done": true, "message": "PUBLISH FAILED (commit): %s" % output_text.left(90)}
+
+
+## Pure interpretation of a `git push` attempt's exit code/output text.
+static func _push_outcome(code: int, output_text: String, object_count: int) -> Dictionary:
+	if code != 0:
+		return {"ok": false, "message": "PUBLISH FAILED (push): %s" % output_text.left(90)}
+	return {"ok": true, "message": "PUBLISHED  %d objects -> GitHub" % object_count}
+
+
+## Desktop/editor only (owner 2026-10-23: "save button needs to commit and push straight to github
+## all new level changes"). Deliberately does NOT exist on Web (see the button that calls this,
+## created only when `not OS.has_feature("web")`) -- OS.execute has no effect in a Web export anyway,
+## and this must never be reachable from the publicly-playable browser build. Uses the machine's own
+## already-configured git identity (SSH key / credential manager / `gh auth`) -- no token is ever
+## read, stored, or embedded here or anywhere else in this project.
+##
+## Safety: `git add` is scoped to ONLY this one file (never `-A` or `.`), and the commit is further
+## restricted to that same single pathspec (`git commit -- <path>`) even if something else happens
+## to already be staged -- this can never sweep up or publish unrelated work-in-progress changes
+## elsewhere in the repo. Does not force-push and does not attempt to bypass branch protection; a
+## rejected push (e.g. a protected branch requiring a PR) is reported plainly, not retried.
+func publish_to_github() -> bool:
+	if OS.has_feature("web"):
+		return false
+	var abs_path := ProjectSettings.globalize_path(REPO_LAYOUT_PATH)
+	DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
+	var f := FileAccess.open(abs_path, FileAccess.WRITE)
+	if f == null:
+		_flash("PUBLISH FAILED (could not write %s)" % REPO_LAYOUT_PATH)
+		return false
+	f.store_string(placed.to_json_string())
+	f.close()
+	var repo_root := ProjectSettings.globalize_path("res://")
+	var rel_path := REPO_LAYOUT_PATH.trim_prefix("res://")
+	var out: Array = []
+	OS.execute("git", ["-C", repo_root, "add", "--", rel_path], out, true)
+	out.clear()
+	var msg := "World Builder: publish live layout (%d objects)" % placed.objects.size()
+	var commit_code := OS.execute("git", ["-C", repo_root, "commit", "-m", msg, "--", rel_path], out, true)
+	var commit := _commit_outcome(commit_code, "\n".join(out))
+	if commit.done:
+		_flash(commit.message)
+		return commit.ok
+	out.clear()
+	var push_code := OS.execute("git", ["-C", repo_root, "push"], out, true)
+	var push := _push_outcome(push_code, "\n".join(out), placed.objects.size())
+	_flash(push.message)
+	return push.ok
+
+
 func _flash(text: String) -> void:
 	_note = text
 	_note_until = Time.get_ticks_msec() + 2500
@@ -319,44 +590,109 @@ static func _diamond(c: Vector2) -> PackedVector2Array:
 
 
 # ------------------------------------------------------------------ overlay drawing
+## Floor grid + one "dimensions" switch per object type, living in the Settings tab (default off).
+func _add_settings_rows(sp: SettingsPanel) -> void:
+	_settings_rows_added = true
+	_grid_button = _settings_toggle("Floor grid (white)", Color("#DDDDDD"), func(on: bool) -> void: show_grid = on)
+	sp.add_row(_grid_button)
+	for t in DIM_TYPES:
+		show_dims[t] = false
+		var b := _settings_toggle("Dimensions: %s" % t, ACCENT, func(on: bool) -> void: show_dims[t] = on)
+		_dim_buttons[t] = b
+		sp.add_row(b)
+
+
+func _settings_toggle(text: String, color: Color, cb: Callable) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.focus_mode = Control.FOCUS_NONE
+	SettingsPanel.style_toggle(b, color)
+	b.toggled.connect(cb)
+	return b
+
+
+func dims_on(type_name: String) -> bool:
+	return bool(show_dims.get(type_name, false))
+
+
+## White 72x36 floor lattice (the diamond tile grid the walls and grass snap to) across the whole arena.
+func _draw_floor_grid(c: Node2D) -> void:
+	var b: Rect2 = arena.bounds
+	var col := Color(1, 1, 1, 0.38)
+	for family in [1.0, -1.0]:
+		# lines y = family * x / 2 + k * 18 with k odd pass through every diamond edge
+		var k_lo := int(floor((b.position.y - family * b.end.x * 0.5) / 18.0)) - 1
+		var k_hi := int(ceil((b.end.y - family * b.position.x * 0.5) / 18.0)) + 1
+		if family < 0.0:
+			k_lo = int(floor((b.position.y + b.position.x * 0.5) / 18.0)) - 1
+			k_hi = int(ceil((b.end.y + b.end.x * 0.5) / 18.0)) + 1
+		for k in range(k_lo, k_hi + 1):
+			if posmod(k, 2) != 1:
+				continue
+			var cst := float(k) * 18.0
+			var seg := _clip_line(b, family * 0.5, cst)
+			if seg.size() == 2:
+				c.draw_line(seg[0], seg[1], col, 1.0)
+
+
+## Clip the line y = m*x + c to rect r; returns [] or [a, b].
+static func _clip_line(r: Rect2, m: float, cst: float) -> Array:
+	var x0 := r.position.x
+	var x1 := r.end.x
+	var y0 := m * x0 + cst
+	var y1 := m * x1 + cst
+	var lo := 0.0
+	var hi := 1.0
+	for t in [[y0, y1, r.position.y, r.end.y]]:
+		var dy: float = t[1] - t[0]
+		if absf(dy) < 0.0001:
+			if t[0] < t[2] or t[0] > t[3]:
+				return []
+		else:
+			var ta: float = (t[2] - t[0]) / dy
+			var tb: float = (t[3] - t[0]) / dy
+			lo = maxf(lo, minf(ta, tb))
+			hi = minf(hi, maxf(ta, tb))
+	if lo >= hi:
+		return []
+	return [Vector2(lerpf(x0, x1, lo), lerpf(y0, y1, lo)), Vector2(lerpf(x0, x1, hi), lerpf(y0, y1, hi))]
+
+
 func draw_overlay(c: Node2D) -> void:
+	if not open:
+		return
 	for o in placed.objects:
 		if not placed.type_visible(o.id):
 			continue
 		var sel: bool = (o == selected)
-		if PlacedObjects.def_of(o.id).kind == "grass":
-			c.draw_polyline(_diamond(o.pos), Color(1, 0.84, 0.2, 0.95) if sel else Color(ACCENT, 0.6), 4.0 if sel else 2.0)
-		else:
-			c.draw_rect(PlacedObjects.footprint_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95) if sel else Color(ACCENT, 0.6), false, 4.0 if sel else 2.0)
 		if sel:
-			c.draw_rect(PlacedObjects.hit_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.5), false, 2.0)
+			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95), false, 3.0)
+		elif dims_on(PlacedObjects.type_of(o.id)):
+			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(ACCENT, 0.7), false, 2.0)
 	if tool == "erase" and get_viewport().gui_get_hovered_control() == null:
 		var h := placed.hit_test(_mouse_world())
 		if not h.is_empty():
-			c.draw_rect(PlacedObjects.hit_rect(h.id, h.pos), Color(1, 0.2, 0.2, 0.9), false, 3.0)
+			c.draw_rect(PlacedObjects.art_rect(h.id, h.pos), Color(1, 0.2, 0.2, 0.9), false, 3.0)
+	if tool == "paint" and place_id != "" and get_viewport().gui_get_hovered_control() == null:
+		var ptex: Texture2D = PlacedObjects.art_texture(place_id, Vector2.ZERO)[0]
+		for cell in brush_cells(_mouse_world()):
+			if ptex != null:
+				c.draw_texture(ptex, cell - Vector2(36, 18), Color(1, 1, 1, 0.65))
+			c.draw_polyline(_diamond(cell), Color(ACCENT, 0.9), 2.0)
 	if tool == "place" and place_id != "" and get_viewport().gui_get_hovered_control() == null:
 		var pos := snapped_pos(_mouse_world())
 		var ok := placed.can_place(place_id, pos)
-		var tint := Color(0.4, 1, 0.5, 0.55) if ok else Color(1, 0.3, 0.3, 0.55)
-		var def: Dictionary = PlacedObjects.CATALOG[place_id]
-		if def.kind == "grass":
-			var tex := load(WindGrassTileset.DIR + place_id + ".png") as Texture2D
-			c.draw_texture(tex, pos - Vector2(56, 136 if def.tall else 84), Color(1, 1, 1, 0.55))
-		elif def.kind == "tree":
-			var info := PlacedObjects.tree_info(int(def.tree))
-			var tex := load(str(info.texture)) as Texture2D
-			var anchor := Vector2(float(info.anchor[0]), float(info.anchor[1]))
-			c.draw_texture(tex, pos - anchor, Color(1, 1, 1, 0.55) if ok else Color(1, 0.5, 0.5, 0.55))
-		elif def.kind == "wall":
-			c.draw_texture(PlacedObjects.wall_texture(place_id), pos - (def.anchor as Vector2), Color(1, 1, 1, 0.55) if ok else Color(1, 0.5, 0.5, 0.55))
+		# The ghost is the art itself: normal tint when the spot is legal, red when it is not. No separate
+		# footprint square (it never covered the art and did not guide placement).
+		var at := PlacedObjects.art_texture(place_id, pos)
+		var gtex: Texture2D = at[0]
+		var gcol := Color(1, 1, 1, 0.6) if ok else Color(1, 0.4, 0.4, 0.6)
+		if gtex != null:
+			c.draw_texture(gtex, at[1], gcol)
 		else:
-			c.draw_rect(PlacedObjects.hit_rect(place_id, pos), Color(tint, 0.25))
-		if def.kind == "grass":
-			c.draw_colored_polygon(_diamond(pos).slice(0, 4), tint)
-			c.draw_polyline(_diamond(pos), Color(tint, 1.0), 3.0)
-		else:
-			c.draw_rect(PlacedObjects.footprint_rect(place_id, pos), tint, true)
-			c.draw_rect(PlacedObjects.footprint_rect(place_id, pos), Color(tint, 1.0), false, 3.0)
+			c.draw_rect(PlacedObjects.hit_rect(place_id, pos), Color(gcol, 0.3))
+		if dims_on(PlacedObjects.type_of(place_id)) or not ok:
+			c.draw_rect(PlacedObjects.art_rect(place_id, pos), Color(ACCENT, 0.9) if ok else Color(1, 0.3, 0.3, 0.95), false, 2.0)
 
 
 # ------------------------------------------------------------------ UI
@@ -541,18 +877,23 @@ func _build_ui() -> void:
 	outer.add_child(tools)
 	_tool_buttons["select"] = _toggle(tools, "SELECT / MOVE", func(): set_tool("select"))
 	_tool_buttons["erase"] = _toggle(tools, "ERASE", func(): set_tool("erase"))
+	_tool_buttons["paint"] = _toggle(tools, "PAINT", func(): set_tool("paint"))
 	_tool_buttons["pan"] = _toggle(tools, "PAN", func(): set_tool("pan"))
+	_paint_button = _tool_buttons["paint"]
+	brush_button = _toggle(outer, "BRUSH  1 x 1  (paint: drag to lay many tiles)", func(): cycle_brush())
 
 	# Palette filters: hide/show the option cards by type; the world itself is untouched.
 	var filters := GridContainer.new()
-	filters.columns = 2
+	filters.columns = 3
 	outer.add_child(filters)
-	for category: Array in PlacedObjects.CATEGORIES:
+	var filter_cats: Array = PlacedObjects.CATEGORIES.duplicate()
+	filter_cats.append(["HUD layout", []])  # the HUD piece controls are a section like the others (hidden until ticked)
+	for category: Array in filter_cats:
 		var name := str(category[0])
 		var check := CheckBox.new()
 		check.text = "Walls" if name == "Walls & blocks" else name
 		check.tooltip_text = "Show/hide the " + name.to_lower() + " options in the build palette (the world is not affected)"
-		check.button_pressed = true
+		check.button_pressed = name != "HUD layout"
 		check.focus_mode = Control.FOCUS_NONE
 		check.add_theme_font_size_override("font_size", 11)
 		check.toggled.connect(func(shown: bool): set_type_filter(name, shown))
@@ -564,6 +905,7 @@ func _build_ui() -> void:
 	palette_scroll = scroll
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.custom_minimum_size = Vector2(0, 240)  # the palette never gets squeezed out by what sits below it
 	outer.add_child(scroll)
 	_fat_scrollbar(scroll)
 	var col := VBoxContainer.new()
@@ -598,12 +940,40 @@ func _build_ui() -> void:
 			b.expand_icon = true
 			b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-			if def.kind == "grass":
+			if def.kind == "ground":
+				b.icon = PlacedObjects.ground_texture(id)
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "water_fx":
+				b.icon = load(BlightwoodWater.DIR + "waterfall-icon.png") as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "grass":
 				b.icon = load(WindGrassTileset.DIR + id + ".png") as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "wall":
 				b.icon = PlacedObjects.wall_texture(id)
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "pickup":
+				b.icon = HealthGourd.icon(str(def.get("gourd", "health")))
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "blight_light":
+				b.icon = load(str(PlacedObjects.blight_info(int(def.light)).path).replace(".png", "-assembled.png")) as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "fireflies":
+				b.icon = load("res://assets/vfx/blightwood_lights/firefly-icon.png") as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 76)
+			elif def.kind == "ashen_fire":
+				b.icon = load(str(PlacedObjects.fire_info(int(def.fire)).path)) as Texture2D
+				b.add_theme_constant_override("icon_max_width",64)
+				b.custom_minimum_size = Vector2(0,96)
+			elif def.kind == "ashen_tree":
+				b.icon = load(str(PlacedObjects.ashen_info(int(def.tree)).texture)) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "tree":
@@ -619,7 +989,7 @@ func _build_ui() -> void:
 				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_left = 3
 				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_right = 3
 			b.add_theme_font_size_override("font_size", 11)
-			b.pressed.connect(func(): set_tool("place", id))
+			b.pressed.connect(func(): set_tool("paint" if tool == "paint" and PlacedObjects.def_of(id).kind in ["ground", "grass"] else "place", id))
 			grid.add_child(b)
 			_palette_buttons[id] = b
 
@@ -650,6 +1020,66 @@ func _build_ui() -> void:
 	del.pressed.connect(delete_selected)
 	ib.add_child(del)
 
+	# HUD pieces: pick one here (or click it in the game view) and drag it where it should go
+	var hud_box := VBoxContainer.new()
+	hud_box.add_theme_constant_override("separation", 6)
+	hud_box.visible = false
+	outer.add_child(hud_box)
+	_category_sections["HUD layout"] = hud_box
+	_section(hud_box, "HUD pieces")
+	var hud_grid := GridContainer.new()
+	hud_grid.columns = 2
+	hud_grid.add_theme_constant_override("h_separation", 4)
+	hud_grid.add_theme_constant_override("v_separation", 4)
+	hud_box.add_child(hud_grid)
+	for id in HealthBar.ELEMENTS:
+		var hb := Button.new()
+		hb.text = HealthBar.ELEMENT_NAMES[id]
+		hb.toggle_mode = true
+		hb.focus_mode = Control.FOCUS_NONE
+		hb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		hb.clip_text = true
+		_skin(hb)
+		hb.add_theme_font_size_override("font_size", 11)
+		hb.pressed.connect(select_hud.bind(id))
+		hud_grid.add_child(hb)
+		_hud_buttons[id] = hb
+	var hud_reset := Button.new()
+	hud_reset.text = "RESET HUD LAYOUT"
+	hud_reset.focus_mode = Control.FOCUS_NONE
+	_skin(hud_reset)
+	hud_reset.pressed.connect(func():
+		if hud_bar() != null:
+			hud_bar().reset_layout()
+		_flash("HUD layout reset"))
+	hud_box.add_child(hud_reset)
+	hud_snap_button = Button.new()
+	hud_snap_button.focus_mode = Control.FOCUS_NONE
+	_skin(hud_snap_button)
+	hud_snap_button.pressed.connect(func():
+		if hud_bar() != null:
+			hud_bar().cycle_snap()
+		_refresh())
+	hud_box.add_child(hud_snap_button)
+	var hud_inline := Button.new()
+	hud_inline.text = "ALIGN SUBSTITUTION WITH R2"
+	hud_inline.focus_mode = Control.FOCUS_NONE
+	_skin(hud_inline)
+	hud_inline.pressed.connect(func():
+		if hud_bar() != null:
+			hud_bar().align_substitution_with_r2()
+			_flash("Substitution lined up with the R2 buttons"))
+	hud_box.add_child(hud_inline)
+	var hud_right := Button.new()
+	hud_right.text = "R2 BUTTONS TO RIGHT EDGE"
+	hud_right.focus_mode = Control.FOCUS_NONE
+	_skin(hud_right)
+	hud_right.pressed.connect(func():
+		if hud_bar() != null:
+			hud_bar().r2_to_right_edge()
+			_flash("R2 buttons moved to the far right"))
+	hud_box.add_child(hud_right)
+
 	# save row
 	var saves := HBoxContainer.new()
 	saves.add_theme_constant_override("separation", 6)
@@ -675,6 +1105,17 @@ func _build_ui() -> void:
 	_skin(dl)
 	dl.pressed.connect(download_layout)
 	saves.add_child(dl)
+	# Desktop/editor only -- deliberately not created at all on Web, so the publish path (and the
+	# git operations it runs) cannot exist in the publicly-playable browser build.
+	if not OS.has_feature("web"):
+		var pub := Button.new()
+		pub.text = "PUBLISH"
+		pub.tooltip_text = "Commit + push this layout to GitHub (desktop only, uses this machine's own git login)"
+		pub.focus_mode = Control.FOCUS_NONE
+		pub.custom_minimum_size = Vector2(0, 38)
+		_skin(pub)
+		pub.pressed.connect(publish_to_github)
+		saves.add_child(pub)
 
 	# options
 	var opts := HBoxContainer.new()
@@ -743,6 +1184,8 @@ func _build_ui() -> void:
 func set_type_filter(category: String, shown: bool) -> void:
 	# The filters only declutter the BUILD PALETTE; the game world is never hidden by them.
 	(_category_sections[category] as Control).visible = shown
+	if category == "HUD layout" and not shown and hud_bar() != null:
+		hud_bar().select_element("")
 	(_filter_buttons[category] as CheckBox).set_pressed_no_signal(shown)
 	if not shown:
 		if place_id != "" and PlacedObjects.type_of(place_id) == category:
@@ -774,6 +1217,11 @@ func _toggle(parent: Node, text: String, cb: Callable) -> Button:
 	return b
 
 
+func cycle_brush() -> void:
+	brush = BRUSHES[(BRUSHES.find(brush) + 1) % BRUSHES.size()]
+	_refresh()
+
+
 func _cycle_snap() -> void:
 	snap = SNAPS[(SNAPS.find(snap) + 1) % SNAPS.size()]
 	_refresh()
@@ -797,13 +1245,15 @@ func _clear_pressed() -> void:
 	_refresh()
 
 
-## Back to the original arena: the five starting trees, everything you built removed.
+## Back to the original arena: the five starting trees and a fresh scatter of health gourds, everything you built removed.
 func _reset_pressed() -> void:
 	if not _reset_armed:
 		_armed_button("_reset_armed")
 		return
 	_reset_armed = false
 	placed.load_dict({"version": 1, "items": []})
+	placed.scatter_defaults()  # the starting arena has its gourds lying around
+	placed.ensure_shrine()
 	selected = {}
 	_refresh()
 
@@ -814,14 +1264,23 @@ func _refresh() -> void:
 	for k: String in _tool_buttons:
 		(_tool_buttons[k] as Button).set_pressed_no_signal(tool == k)
 	for id: String in _palette_buttons:
-		(_palette_buttons[id] as Button).set_pressed_no_signal(tool == "place" and place_id == id)
+		(_palette_buttons[id] as Button).set_pressed_no_signal(tool in ["place", "paint"] and place_id == id)
+	if brush_button != null:
+		brush_button.text = "BRUSH  %d x %d" % [brush, brush]
+		brush_button.set_pressed_no_signal(false)
+	if hud_snap_button != null:
+		var hs: int = hud_bar().hud_snap if hud_bar() != null else 0
+		hud_snap_button.text = "HUD GRID  %s" % (str(hs) if hs > 0 else "OFF")
 	snap_button.text = "GRASS GRID" if snap > 0 and _grass_tool() else "SNAP  %s" % (str(snap) if snap > 0 else "OFF")
 	clear_button.text = "SURE?" if _clear_armed else "CLEAR ALL"
 	reset_button.text = "SURE?" if _reset_armed else "RESET"
+	var hud := hud_bar()
+	for id: String in _hud_buttons:
+		(_hud_buttons[id] as Button).set_pressed_no_signal(hud != null and hud.selected_element == id)
 	inspector.visible = not selected.is_empty()
 	if not selected.is_empty():
 		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
-	var what := "Placing: %s" % str(PlacedObjects.CATALOG[place_id].label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
+	var what := "Painting: %s  (drag to lay tiles, %d x %d brush)" % [str(PlacedObjects.CATALOG[place_id].label), brush, brush] if tool == "paint" else "Placing: %s" % str(PlacedObjects.CATALOG[place_id].label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
 	count_label.text = "%d objects" % placed.objects.size()
 	status.text = _note if Time.get_ticks_msec() < _note_until else what

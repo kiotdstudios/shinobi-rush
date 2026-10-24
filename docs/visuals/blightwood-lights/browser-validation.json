@@ -1,0 +1,35 @@
+{
+  "checks": {
+    "ready": true,
+    "insect_flight": true,
+    "flicker": true,
+    "lantern_sway": true,
+    "normal_speed": true,
+    "half_speed": true,
+    "pause": true,
+    "step": true,
+    "fireflies_toggle": true,
+    "lighting_toggle": true,
+    "sway_toggle": true,
+    "sound_toggle": true,
+    "captured": 192,
+    "no_errors": true
+  },
+  "errors": [],
+  "last": {
+    "ready": true,
+    "clock": 7.958333492279053,
+    "speed": 0.5,
+    "paused": true,
+    "fireflies": true,
+    "lighting": true,
+    "sway": true,
+    "sound": false,
+    "capacity": 92,
+    "pendant_angle": -0.010540289804339409,
+    "pulse": 0.7253808379173279,
+    "fly_x": 67.38655853271484,
+    "fly_y": -18.652193069458008,
+    "buttons_json": "{\"Fireflies\":{\"x\":325.5,\"y\":58.5},\"Half speed\":{\"x\":136.0,\"y\":58.5},\"Lighting\":{\"x\":399.5,\"y\":58.5},\"Normal\":{\"x\":53.5,\"y\":58.5},\"Pause\":{\"x\":212.5,\"y\":58.5},\"Sound\":{\"x\":519.5,\"y\":58.5},\"Step\":{\"x\":265.5,\"y\":58.5},\"Sway\":{\"x\":463.0,\"y\":58.5}}"
+  }
+}

@@ -49,15 +49,102 @@ class Ground extends Node2D:
 		arena.draw_ground_border(self)
 
 
-## PLACEHOLDER block, front piece: the front face and its caption, y-sorted at the front edge (the node position).
-## The east face and roof are drawn by the sibling BlockRear (see ArenaSort for the draw-order rule).
+## Temple wall face art (owner 2026-10-23: "delete all placeholder walls and replace them with new
+## temple wall assets"). Lazily loaded once and shared by every Block/BlockRear instance; see
+## assets/environment/kosen_courtyard/walls/walls.art.json for provenance (one AI-generated study
+## image, made seamless, palette-matched to the already-shipped wall_kit_v2 so both wall styles read
+## as the same world) and docs/visuals/walls/ for the contact sheet and processing script.
+class WallArt:
+	const DIR := "res://assets/environment/kosen_courtyard/walls/"
+	const TILE_W := 64.0  ## world px per horizontal repeat; matches the source tile's native width
+	static var _front: Texture2D
+	static var _side: Texture2D
+	static var _roof: Texture2D
+
+	static func front() -> Texture2D:
+		if _front == null:
+			_front = load(DIR + "wall_front.png") as Texture2D
+		return _front
+
+	static func side() -> Texture2D:
+		if _side == null:
+			_side = load(DIR + "wall_side.png") as Texture2D
+		return _side
+
+	static func roof() -> Texture2D:
+		if _roof == null:
+			_roof = load(DIR + "wall_roof.png") as Texture2D
+		return _roof
+
+## Pure math, no drawing: segment widths (each <= tile_w, summing to `total`) for tiling `total` world
+## px of repeat. Split out from draw_tiled_rect/draw_tiled_quad so the tiling math itself (boundary
+## cases: zero, sub-tile, exact multiple, partial remainder) can be unit-tested without a live
+## CanvasItem draw context -- calling draw_texture_rect_region/draw_polygon outside an active _draw()
+## is an engine error, not something a plain unit test can safely exercise directly.
+static func tile_segments(total: float, tile_w: float) -> Array[float]:
+	var out: Array[float] = []
+	if tile_w <= 0.0:
+		return out
+	var remaining := total
+	while remaining > 0.5:
+		var seg := minf(tile_w, remaining)
+		out.append(seg)
+		remaining -= seg
+	return out
+
+
+## Tiles `tex` horizontally across an axis-aligned `rect`, each repeat stretched to `rect`'s full
+## height (the source tile is a native ~128px-tall study image; walls range 90-162px, a mild and
+## visually acceptable stretch). The final partial repeat crops the SOURCE width proportionally
+## instead of stretching a short strip across the full texture, so bricks never squish at the seam.
+static func draw_tiled_rect(ci: CanvasItem, tex: Texture2D, rect: Rect2, tile_w: float = WallArt.TILE_W) -> void:
+	if tex == null:
+		return
+	var tsize := tex.get_size()
+	var x := rect.position.x
+	for seg: float in tile_segments(rect.size.x, tile_w):
+		var src_w := tsize.x * (seg / tile_w)
+		ci.draw_texture_rect_region(tex, Rect2(x, rect.position.y, seg, rect.size.y), Rect2(0, 0, src_w, tsize.y))
+		x += seg
+
+
+## Tiles `tex` along the p0->p1 edge of a (possibly sheared) quad, stretching the p0->p3 edge over
+## the full texture height -- the parallelogram equivalent of draw_tiled_rect, used for the east
+## face and roof (which are sheared, not axis-aligned, so draw_texture_rect_region cannot be used).
+static func draw_tiled_quad(ci: CanvasItem, tex: Texture2D, p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, tile_w: float = WallArt.TILE_W) -> void:
+	if tex == null:
+		return
+	var total_w := p0.distance_to(p1)
+	var white := Color.WHITE
+	var x := 0.0
+	for seg: float in tile_segments(total_w, tile_w):
+		var t0 := x / total_w
+		var t1 := (x + seg) / total_w
+		var a := p0.lerp(p1, t0)
+		var b := p0.lerp(p1, t1)
+		var d := p3.lerp(p2, t0)
+		var c := p3.lerp(p2, t1)
+		var u1 := seg / tile_w
+		ci.draw_polygon(PackedVector2Array([a, b, c, d]), PackedColorArray([white, white, white, white]),
+			PackedVector2Array([Vector2(0, 0), Vector2(u1, 0), Vector2(u1, 1), Vector2(0, 1)]), tex)
+		x += seg
+
+
+## Front piece: the front face, y-sorted at the front edge (the node position). Walls (height >=
+## WorldScale.WALL_ART_MIN_HEIGHT -- the same threshold PlacedObjects.def_of() already uses to label
+## an object "Wall") draw real temple wall face art (WallArt); everything shorter (rocks, crates,
+## the lab stand) is genuinely still placeholder and keeps the flat grey polygon + caption, since
+## this order only asked for walls. The east face and roof are drawn by the sibling BlockRear (see
+## ArenaSort for the draw-order rule).
 class Block extends StaticBody2D:
 	var footprint: Vector2
 	var height: float
+	var is_wall: bool
 
 	func _init(size: Vector2, h: float) -> void:
 		footprint = size
 		height = h
+		is_wall = h >= WorldScale.WALL_ART_MIN_HEIGHT
 		var shape := RectangleShape2D.new()
 		shape.size = size
 		var col := CollisionShape2D.new()
@@ -80,6 +167,9 @@ class Block extends StaticBody2D:
 		_drawn_zoom = _camera_zoom()
 		var w := footprint.x * 0.5
 		var h := height
+		if is_wall:
+			TrainingArena.draw_tiled_rect(self, WallArt.front(), Rect2(-w, -h, footprint.x, h))
+			return
 		draw_colored_polygon(PackedVector2Array([Vector2(-w, -h), Vector2(w, -h), Vector2(w, 0), Vector2(-w, 0)]), Color("#6b5b4a"))
 		# Fit the label to the front face: shrink the font until "PLACEHOLDER" is not wider than the face.
 		var font := ThemeDB.fallback_font
@@ -92,16 +182,20 @@ class Block extends StaticBody2D:
 		draw_string(font, Vector2(-w + 3, -h * 0.5), "PLACEHOLDER", HORIZONTAL_ALIGNMENT_LEFT, -1, fsize, Color(1, 1, 1, 0.6))
 
 
-## PLACEHOLDER block, rear piece: the east face and the roof (three-quarter look). It is a SIBLING of Block, not a
-## child, so it gets its own y-sort key at the back edge (ArenaSort.rear_position); no collider. The polygons keep
-## the coordinates they had when Block drew them, shifted down by the depth to undo the node offset.
+## Rear piece: the east face and the roof (three-quarter look). It is a SIBLING of Block, not a
+## child, so it gets its own y-sort key at the back edge (ArenaSort.rear_position); no collider. The
+## polygons keep the coordinates they had when Block drew them, shifted down by the depth to undo
+## the node offset. Walls texture-map WallArt.side()/roof() onto these same polygons via
+## draw_tiled_quad instead of flat colors -- see Block's is_wall comment for the threshold.
 class BlockRear extends Node2D:
 	var footprint: Vector2
 	var height: float
+	var is_wall: bool
 
 	func _init(size: Vector2, h: float) -> void:
 		footprint = size
 		height = h
+		is_wall = h >= WorldScale.WALL_ART_MIN_HEIGHT
 
 	func _draw() -> void:
 		var w := footprint.x * 0.5
@@ -109,8 +203,20 @@ class BlockRear extends Node2D:
 		var h := height
 		var s := d * 0.5
 		draw_set_transform(Vector2(0.0, d))
-		draw_colored_polygon(PackedVector2Array([Vector2(w, 0), Vector2(w + s, -d), Vector2(w + s, -d - h), Vector2(w, -h)]), Color("#4e4237"))
-		draw_colored_polygon(PackedVector2Array([Vector2(-w, -h), Vector2(w, -h), Vector2(w + s, -h - d), Vector2(-w + s, -h - d)]), Color("#9a8670"))
+		var east_p0 := Vector2(w, 0)
+		var east_p1 := Vector2(w + s, -d)
+		var east_p2 := Vector2(w + s, -d - h)
+		var east_p3 := Vector2(w, -h)
+		var roof_p0 := Vector2(-w, -h)
+		var roof_p1 := Vector2(w, -h)
+		var roof_p2 := Vector2(w + s, -h - d)
+		var roof_p3 := Vector2(-w + s, -h - d)
+		if is_wall:
+			TrainingArena.draw_tiled_quad(self, WallArt.side(), east_p0, east_p1, east_p2, east_p3)
+			TrainingArena.draw_tiled_quad(self, WallArt.roof(), roof_p0, roof_p1, roof_p2, roof_p3)
+			return
+		draw_colored_polygon(PackedVector2Array([east_p0, east_p1, east_p2, east_p3]), Color("#4e4237"))
+		draw_colored_polygon(PackedVector2Array([roof_p0, roof_p1, roof_p2, roof_p3]), Color("#9a8670"))
 
 
 func _ready() -> void:
@@ -135,9 +241,16 @@ func _ready() -> void:
 	add_child(placed)
 	placed.adopt_grove()  # the starting trees become editable objects (solid bases + nav come from them)
 	placed.adopt_grass()
-	placed.load_saved()
+	if placed.load_saved() == 0:
+		placed.load_default_from_repo()  # no per-machine save yet: fall back to the last-published layout
 	rebuild_nav()
 	_spawn_bandit()
+	var layout_version := placed.loaded_version
+	if layout_version < 6:
+		# first run / an older layout: a few gourds lie around (a v5 layout already has its health gourds)
+		placed.scatter_defaults(layout_version >= 5)
+	if layout_version < 7:
+		placed.ensure_shrine()  # v7 added the Ancient Shrine landmark: every older layout gets one once
 	editor = WorldEditor.new()
 	editor.setup(self, placed)
 	add_child(editor)

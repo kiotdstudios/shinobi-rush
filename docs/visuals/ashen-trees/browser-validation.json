@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "ready": true,
+    "half_speed": true,
+    "pause": true,
+    "step": true,
+    "wind_toggle": true,
+    "ash_toggle": true,
+    "heat_toggle": true,
+    "compare": true,
+    "game_zoom": true,
+    "captured": 192,
+    "no_errors": true
+  },
+  "errors": [],
+  "half_delta": 0.4075601175427437,
+  "normal_delta": 0.8273809552192688,
+  "last": {
+    "ready": true,
+    "clock": 7.958333492279053,
+    "speed": 0.5,
+    "paused": true,
+    "wind": true,
+    "ash": true,
+    "heat": true,
+    "compare": false,
+    "game_zoom": false,
+    "phase": 95,
+    "pool_size": 72,
+    "buttons_json": "{\"Ash\":{\"x\":361.5,\"y\":58.5},\"Compare Blightwood\":{\"x\":558.5,\"y\":58.5},\"Game zoom\":{\"x\":698.0,\"y\":58.5},\"Half speed\":{\"x\":136.0,\"y\":58.5},\"Normal\":{\"x\":53.5,\"y\":58.5},\"Pause\":{\"x\":212.5,\"y\":58.5},\"Root glow\":{\"x\":426.5,\"y\":58.5},\"Step\":{\"x\":265.5,\"y\":58.5},\"Wind\":{\"x\":315.0,\"y\":58.5}}"
+  }
+}

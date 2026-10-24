@@ -41,8 +41,15 @@ func test_health(p: PlayerController) -> void:
 	p.health = 5.0
 	p._hit_invuln = 0.0
 	var downs := p.times_downed
+	var respawns := p.respawn_count
+	var spawn := p.spawn_position
+	p.global_position = spawn + Vector2(300, 120)
+	p.velocity = Vector2(200, 50)
 	p.take_hit(8.0, Vector2.RIGHT)
 	ck.call("health: reaching 0 counts a knock-down and restores the player to full", p.times_downed == downs + 1 and p.health == p.max_health)
+	ck.call("respawn: a downed player is put back at the spawn point, at rest, in IDLE", p.respawn_count == respawns + 1 and p.global_position.is_equal_approx(spawn) and p.velocity == Vector2.ZERO and p.state == PlayerController.State.IDLE, str(p.global_position))
+	ck.call("respawn: the player gets a grace period after respawning", p._hit_invuln > 1.0)
+	ck.call("respawn: further hits during the grace period do not land", not p.take_hit(50.0, Vector2.LEFT) and p.health == p.max_health)
 	p._hit_invuln = 0.0
 	p.health = 20.0
 	p.max_health = 100.0
@@ -56,6 +63,17 @@ func test_health(p: PlayerController) -> void:
 	ck.call("hud: chakra_changed updates the chakra bar", is_equal_approx(bar.chakra_fraction, 0.64) and bar.chakra_text == "Chakra 64 / 100", bar.chakra_text)
 	p.substitution_changed.emit(2, 3)
 	ck.call("hud: substitution_changed updates the pips", bar.pips == 2 and bar.max_pips == 3, str(bar.pips))
+	ck.call("hud: substitution recharge is 20 seconds", is_equal_approx(PlayerController.SUB_COOLDOWN, 20.0))
+	ck.call("hud: nothing recharging reads as full progress", is_equal_approx(p.substitution_progress(), 1.0) and is_equal_approx(bar.sub_progress, 1.0))
+	var keep: Array = p._sub_cooldowns.duplicate()
+	p._sub_cooldowns.assign([15.0, 5.0])
+	ck.call("hud: progress follows the soonest charge (5s left of 20 = 0.75)", is_equal_approx(p.substitution_progress(), 0.75), str(p.substitution_progress()))
+	p._sub_cooldowns.assign(keep)
+	var before_pips: int = bar.pips
+	p.substitution_changed.emit(0, 3)
+	p.substitution_changed.emit(1, 3)
+	ck.call("hud: a refilled charge lights its pip (flash) and the slot reads recharging until all are back", bar.pips == 1 and bar._flash[0] > 0.0 and bar.pips < bar.max_pips)
+	p.substitution_changed.emit(before_pips, 3)
 	p.chakra_changed.emit(100.0, 100.0)
 	p.substitution_changed.emit(3, 3)
 
@@ -76,23 +94,30 @@ func test_flicker(p: PlayerController, tree: SceneTree) -> void:
 		await tree.physics_frame
 	Input.action_release("dodge")
 	var was_hidden := false
+	var streak_seen := false
 	var invuln := true
 	var frames := 0
 	while p.state == PlayerController.State.DODGE and frames < 90:
 		if not p.visual.visible:
 			was_hidden = true
+		for c in p.get_children():
+			if c is EvadeStreakFx:
+				streak_seen = true
 		invuln = invuln and not p.take_hit(8.0, Vector2.LEFT)
 		await tree.physics_frame
 		frames += 1
-	ck.call("flicker: the body disappears during the dodge and is visible again when it ends", was_hidden and p.visual.visible, "hidden=%s visible=%s" % [was_hidden, p.visual.visible])
+	ck.call("evade burst: the body stays visible the whole dodge and the streak plays on it", not was_hidden and streak_seen and p.visual.visible, "hidden=%s streak=%s" % [was_hidden, streak_seen])
 	ck.call("flicker: nothing lands during the whole dodge", invuln and p.health == p.max_health)
-	ck.call("flicker: the body moved along the heading in one step (about flicker_distance)", p.global_position.x - start.x > p.flicker_distance * 0.9, str(p.global_position - start))
+	ck.call("evade burst: the body moved along the heading about flicker_distance", p.global_position.x - start.x > p.flicker_distance * 0.9, str(p.global_position - start))
 	Input.action_release("move_right")
 	for i in 40:
 		await tree.physics_frame
 	var fx_left := 0
 	for c in p.get_parent().get_children():
-		if c is BodyFlickerFx:
+		if c is EvadeStreakFx:
+			fx_left += 1
+	for c in p.get_children():
+		if c is EvadeStreakFx:
 			fx_left += 1
 	ck.call("flicker: the effect node frees itself after it plays", fx_left == 0, str(fx_left))
 	# a wall stops the displacement short
@@ -116,6 +141,3 @@ func test_flicker(p: PlayerController, tree: SceneTree) -> void:
 		frames += 1
 	Input.action_release("move_right")
 	ck.call("flicker: a wall shortens the displacement and the body is visible afterwards", p.global_position.x - wall_start.x < p.flicker_distance * 0.6 and p.visual.visible and p.global_position.x <= b.end.x, str(p.global_position - wall_start))
-	var o := BodyFlickerFx.orientation(Vector2(1, 1))
-	var ow := BodyFlickerFx.orientation(Vector2(-1, 1))
-	ck.call("flicker fx: SE art is unrotated; SW is its mirror", is_zero_approx(o["rotation"]) and not o["mirror"] and is_zero_approx(ow["rotation"]) and ow["mirror"])

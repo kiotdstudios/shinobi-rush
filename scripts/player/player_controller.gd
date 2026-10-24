@@ -13,17 +13,23 @@ signal state_changed(new_state: State)
 signal camera_baseline_changed(zoom: float)
 ## An enemy attack connected (Level 1 Bandit order). There is deliberately no player HP/death here:
 ## the locked RPG/death rules are untouched; this only counts the hit and gives a short readable reaction.
+## Milestone B reusable combat events. `attack_event` fires at each authored marker of the active swing
+## ("startup","active","recovery","combo_open","combo_close","cancel_open","end"); `attack_hit` fires ONCE per
+## confirmed contact with a HitEvent -- sparks, silhouettes, slash arcs, audio and diagnostics all listen here.
+signal attack_event(event_name: String, attack_id: String)
+signal attack_hit(hit: HitEvent)
 signal hit_taken(damage: float, from_dir: Vector2)
 signal health_changed(current: float, maximum: float)
 signal chakra_changed(current: float, maximum: float)
 ## Substitution charges (shown as pips on the HUD). Only the stat exists so far; the Substitution jutsu will spend them.
 signal substitution_changed(charges: int, maximum: int)
-signal downed  ## health reached 0 (the player is restored to full right after; there is no death screen yet)
+signal downed  ## health reached 0 (the player is respawned at the spawn point at full health right after; there is no death screen yet)
+signal respawned(at: Vector2)  ## emitted after a respawn has put the player back at `spawn_position`
 ## Currency changed (spent, or stolen by an enemy via lose_ryo() -- see Bandit._steal_ryo/is_worth_robbing).
 ## No player death/HP system exists here (locked RPG rules); this only tracks the stat.
 signal ryo_changed(new_amount: int)
 
-enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK, AIR_ATTACK }
+enum State { IDLE, MOVE, SPRINT, DODGE, JUMP, LIGHT1, LIGHT2, LIGHT3, DASH_ATTACK, AIR_ATTACK, CHARGE }
 ## Phase of the current attack (LIGHT1/LIGHT2/LIGHT3/DASH_ATTACK states only). Startup/active/recovery
 ## lengths come from the matching AttackDef in `_attack_table` (see combat order's frame table).
 enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
@@ -38,12 +44,12 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## Dodge is a quick burst along the dodge direction; velocity then eases (at `dodge_recovery_accel`,
 ## not the generic ground `friction`) toward whatever speed current input calls for, or to a stop if none.
 @export var dodge_speed: float = WorldScale.SPRINT_SPEED * 1.6
-## Body Flicker dodge: the body vanishes, is displaced `flicker_distance` px along the dodge heading in
-## one step (stopped by walls), and reappears; no sliding. Invulnerable for the whole `flicker_duration`.
+## Body Flicker dodge = the evade burst: the body stays visible and bursts `flicker_distance` px along the
+## dodge heading over `flicker_burst_time` (walls stop it) with the ninja_evade streak on top, then stands
+## still. Invulnerable for the whole `flicker_duration`.
 @export var flicker_distance: float = 150.0
 @export var flicker_duration: float = 0.30
-@export var flicker_vanish_at: float = 0.04  ## seconds after the press that the body disappears (and moves)
-@export var flicker_reappear_at: float = 0.16
+@export var flicker_burst_time: float = 0.20  ## how long the burst lasts (speed = flicker_distance / this)
 @export var dodge_recovery_accel: float = WorldScale.ACCELERATION * 1.5
 ## Air control: fraction of normal ground `acceleration` used to steer velocity while airborne.
 ## Momentum itself is never reset on jump entry/exit; this only lets input bend an already-moving arc.
@@ -112,30 +118,40 @@ var _combo_index: int = 0  ## 0 = no combo in progress; else 1/2/3 = which light
 var _attack_buffer: float = 0.0  ## seconds left that a buffered attack_light press is still eligible
 var _hit_targets: Array = []  ## enemies already damaged by the current swing (each swing hits once)
 var _dash_grace_timer: float = 0.0  ## seconds left of the post-dodge dash-attack window
+var _hit_confirmed: bool = false  ## the current swing has connected (opens hit-confirm follow-ups)
+var _swing_clock: float = 0.0  ## seconds since the current swing began (drives the event markers)
+var _fired_markers: Dictionary = {}  ## marker name -> true once emitted for the current swing
 var _hitstop_timer: float = 0.0  ## local-only pause (not Engine.time_scale): see _physics_process top
 const MAX_HEALTH := 100.0
 var max_health: float = MAX_HEALTH
 var health: float = MAX_HEALTH
 var times_downed: int = 0
+var spawn_position: Vector2 = Vector2.ZERO  ## where a downed player comes back; defaults to where the player started (set in _ready)
+const RESPAWN_INVULN := 1.5  ## grace after a respawn so enemies camping the spawn cannot instantly chain-down the player
+const RESPAWN_FADE_IN := 0.5
+var respawn_count: int = 0
 const MAX_CHAKRA := 100.0
 const MAX_SUBSTITUTIONS := 3
 var max_chakra: float = MAX_CHAKRA
 var chakra: float = MAX_CHAKRA
+## Provisional chakra recovery while holding charge; no aura is bound yet.
+@export var chakra_charge_per_second: float = 20.0
+var _charge_interrupted := false
+const CHARGE_HOLD_DELAY := 0.30  ## press keeps existing substitution; sustained L2 adds charge
+var _charge_hold_time := 0.0
 var max_substitution_charges: int = MAX_SUBSTITUTIONS
 var substitution_charges: int = MAX_SUBSTITUTIONS
 ## Substitution Jutsu (L2). A timed L2 press only pays off if an enemy attack lands inside the window.
 ## Each success spends one charge and starts that charge's OWN cooldown; the others stay usable.
 signal substitution_triggered(old_pos: Vector2, new_pos: Vector2)
 const SUB_WINDOW := 0.25  ## L2 pressed up to this long BEFORE a hit lands counts as a timed evade
-const SUB_COOLDOWN := 12.0  ## PROVISIONAL: per-charge recharge seconds (design doc gives no number)
+const SUB_COOLDOWN := 20.0  ## per-charge recharge seconds (set to 20 by the designer)
 const SUB_INVULN := 0.5  ## grace after a substitution so a simultaneous second hit cannot land
 const SUB_BEHIND_DIST := 72.0  ## how far behind the attacker the player reappears
 var _sub_buffer: float = 0.0
 var _sub_cooldowns: Array[float] = []  ## remaining seconds of each spent charge
 var _sub_reveal: float = 0.0  ## > 0 while the body is concealed between log swap and reappearance
 var substitution_count: int = 0
-var _flicker_hidden: bool = false
-var _flicker_moved: bool = false
 var flicker_count: int = 0
 var hits_taken: int = 0  ## enemy hits that landed on the player (read by tests / web smoke state)
 var hit_flash_timer: float = 0.0
@@ -148,6 +164,19 @@ const HIT_TINT := Color(1.0, 0.45, 0.4, 1.0)
 var sensed_enemy: Node2D = null  ## nearest enemy inside the sense circle this frame while SPRINTing, else null
 var kunai_drawn: bool = false  ## true the instant `sensed_enemy` is non-null (read by tests / web smoke state)
 
+## -- Inventory (D-pad slots) --
+## What the player carries and which D-pad / R2 slot holds what. A D-pad press (or the arrow keys) uses that slot's item.
+var inventory := PlayerInventory.new()
+signal item_used(item_id: String)
+const THROW_TIME := 0.34  ## total kunai throw (wind-up, release, follow-through)
+const THROW_RELEASE := 0.4  ## fraction of THROW_TIME at which the kunai leaves the hand
+const THROW_MOVE_MULT := 0.35  ## walk/run speed multiplier while the arm is busy
+const THROW_HAND := Vector2(0, 0)
+var _throw_t: float = 0.0  ## seconds left in the current throw (0 = not throwing)
+var _throw_released: bool = true
+var _throw_dir: Vector2 = Vector2.DOWN
+var kunai_thrown_count: int = 0
+
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
 @onready var dust: DustPuff = $DustPuff
@@ -155,6 +184,7 @@ var kunai_drawn: bool = false  ## true the instant `sensed_enemy` is non-null (r
 
 func _ready() -> void:
 	add_to_group("player")
+	spawn_position = global_position
 	# Collider comes from the shared footprint constant (the scene values mirror it).
 	var feet := $CollisionShape2D as CollisionShape2D
 	(feet.shape as RectangleShape2D).size = WorldScale.FOOTPRINT
@@ -174,14 +204,27 @@ func _ready() -> void:
 		camera.limit_bottom = int(b.end.y + WorldScale.CAMERA_FOOTROOM)  # foot room: feet and shadow at the bottom wall are not cut off
 	visual.set_pose(facing8, false, false)
 	_attack_table = AttackDef.build_table()
+	var hit_fx := HitFx.new()
+	hit_fx.name = "HitFx"
+	add_child(hit_fx)
+	hit_fx.bind(self)
 	var bar := HealthBar.new()
 	bar.name = "HealthBar"
 	add_child(bar)
 	bar.bind(self)
+	inventory.load_saved()
+	var menu := PlayerMenu.new()
+	menu.name = "PlayerMenu"
+	add_child(menu)
+	menu.bind(self)
 
 
 func _physics_process(delta: float) -> void:
 	var prev_state := state
+	var charge_held := Input.is_action_pressed("substitution")
+	_charge_hold_time = _charge_hold_time + delta if charge_held else 0.0
+	if not charge_held and not Input.is_action_pressed("chakra_charge"):
+		_charge_interrupted = false
 	# Cleared every frame, only re-populated below in the plain-SPRINT locomotion branch: sensing is a
 	# fresh, every-frame read, never a sticky flag that survives into dodge/attack/jump/idle frames.
 	sensed_enemy = null
@@ -203,6 +246,10 @@ func _physics_process(delta: float) -> void:
 		_attack_buffer = input_buffer_window
 	if Input.is_action_just_pressed("substitution"):
 		_sub_buffer = SUB_WINDOW
+	for slot: String in PlayerInventory.DPAD_SLOTS:
+		if Input.is_action_just_pressed("slot_" + slot):
+			use_slot(slot)
+	_tick_throw(delta)
 
 	# Local hitstop: pause this body's own velocity/position integration only -- NOT Engine.time_scale
 	# (the order forbids a global freeze). Buffers do not decay while frozen, so a press made just
@@ -220,6 +267,8 @@ func _physics_process(delta: float) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
 	var target_speed := sprint_speed if sprinting else walk_speed
+	if _throw_t > 0.0:
+		target_speed *= THROW_MOVE_MULT
 
 	if _is_attack_state(state):
 		_process_attack_state(delta, input)
@@ -260,8 +309,7 @@ func _physics_process(delta: float) -> void:
 		else:  # DODGE
 			# Dedicated curve: the initial burst (set on trigger) eases toward whatever speed current
 			# input calls for (0 if none) at `dodge_recovery_accel`, not the generic ground `friction`.
-			# Body Flicker: no lunge or slide. The displacement is a single step (see _flicker_step).
-			velocity = Vector2.ZERO
+			# Evade burst: constant speed along the heading for `flicker_burst_time`, then stop dead.
 			_flicker_step()
 		if input != Vector2.ZERO:
 			facing = input.normalized()
@@ -283,7 +331,6 @@ func _physics_process(delta: float) -> void:
 	# branch above returns early on every frame the dodge is still in progress.
 	if state == State.DODGE:
 		_dash_grace_timer = dash_attack_post_grace
-		_end_flicker_visual()
 
 	# Not mid-action this frame (either never was, or the action just finished above with velocity
 	# already correct) -> a buffered attack/dodge/jump takes priority over plain locomotion, then plain
@@ -298,6 +345,8 @@ func _physics_process(delta: float) -> void:
 		else:
 			_jump_buffer = 0.0
 			_begin_jump()
+	elif (Input.is_action_pressed("chakra_charge") or _charge_hold_time >= CHARGE_HOLD_DELAY) and not _charge_interrupted and _sub_reveal <= 0.0:
+		_process_charge(delta)
 	elif input != Vector2.ZERO:
 		velocity = velocity.move_toward(input * target_speed, acceleration * delta)
 		facing = input.normalized()
@@ -320,9 +369,13 @@ func _physics_process(delta: float) -> void:
 		_play_jump_visual()
 	elif _is_attack_state(state):
 		visual.play_action(_attack_def.id, facing8)
+	elif state == State.CHARGE:
+		visual.play_action("charge", facing8)
 	else:
 		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
-		if kunai_drawn:
+		if _throw_t > 0.0:
+			_play_throw_visual()
+		elif kunai_drawn:
 			# Cosmetic overlay only: falls back silently to the normal sprint pose until an "kunai_ready"
 			# animation exists in the active sprite set (PlayerVisual.play_action/has_action contract).
 			visual.play_action("kunai_ready", facing8)
@@ -358,46 +411,25 @@ func _begin_dodge(input: Vector2) -> void:
 	_action_duration = flicker_duration
 	_action_timer = _action_duration
 	velocity = Vector2.ZERO
-	_flicker_moved = false
-	_flicker_hidden = false
 	flicker_count += 1
 	_flicker_from = global_position
 	_flicker_dir = facing8.normalized()
 	visual.set_pose(facing8, false, false)
-	# Depart burst at the start point now; the arrival burst is timed to the reappearance.
-	_flicker_fx_pending = true
+	EvadeStreakFx.spawn(self, _flicker_dir)
 
 
 var _flicker_from: Vector2 = Vector2.ZERO
 var _flicker_dir: Vector2 = Vector2.DOWN
-var _flicker_fx_pending: bool = false
 
 
-## Per-tick Body Flicker driver (called while State.DODGE): vanish + displace at `flicker_vanish_at`,
-## reappear at `flicker_reappear_at`. Collision is respected by move_and_collide, so a wall just
-## shortens the jump.
+## Per-tick evade-burst driver (called while State.DODGE): constant velocity along the heading during the
+## burst, zero afterwards. Walls stop the body through the normal move_and_slide.
 func _flicker_step() -> void:
 	var elapsed := _action_duration - _action_timer
-	if not _flicker_moved and elapsed >= flicker_vanish_at:
-		_flicker_moved = true
-		_flicker_hidden = true
-		visual.visible = false
-		move_and_collide(_flicker_dir * flicker_distance)
-		var arrive_delay := maxf(flicker_reappear_at - elapsed, 0.0)
-		if _flicker_fx_pending:
-			_flicker_fx_pending = false
-			BodyFlickerFx.spawn(get_parent(), _flicker_from, global_position, _flicker_dir, arrive_delay)
-	if _flicker_hidden and elapsed >= flicker_reappear_at:
-		_flicker_hidden = false
-		visual.visible = true
-		visual.set_pose(facing8, false, false)
-
-
-## Safety net: the body is never left invisible once the dodge state is over.
-func _end_flicker_visual() -> void:
-	if _flicker_hidden:
-		_flicker_hidden = false
-		visual.visible = true
+	if elapsed < flicker_burst_time:
+		velocity = _flicker_dir * (flicker_distance / flicker_burst_time)
+	else:
+		velocity = Vector2.ZERO
 
 
 ## Begin a jump. `velocity` is intentionally left untouched: whatever horizontal momentum the player
@@ -419,7 +451,6 @@ func _begin_jump() -> void:
 ## Velocity is never reset: `lunge` is ADDED to whatever velocity the player already had, exactly like
 ## a dodge's burst, so momentum from a run or a dodge carries straight into the swing.
 func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
-	_end_flicker_visual()
 	if input != Vector2.ZERO:
 		facing = input.normalized()
 		facing8 = _snap8(facing)
@@ -429,7 +460,12 @@ func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
 	_attack_phase = AttackPhase.STARTUP
 	_attack_timer = _attack_def.startup
 	_hit_targets.clear()
+	_hit_confirmed = false
+	_swing_clock = 0.0
+	_fired_markers.clear()
 	velocity += facing8 * _attack_def.lunge
+	if _attack_def.displacement_cap > 0.0 and velocity.length() > _attack_def.displacement_cap:
+		velocity = velocity.limit_length(_attack_def.displacement_cap)
 	if state == State.AIR_ATTACK and not visual.has_action(attack_id):
 		_play_jump_visual()  # no air_attack art yet: stay on the jump at its current phase
 	else:
@@ -440,10 +476,10 @@ func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
 ## the current facing8 locked rather than re-aiming from input -- order: "chain attacks without
 ## returning to idle", not "re-aim every hit of the chain".
 func _begin_next_combo_attack() -> void:
-	var next_index := _combo_index + 1
-	if next_index > 3:
-		next_index = 1
-	_begin_attack("light%d" % next_index)
+	var next_id: String = _attack_def.chains_to
+	if next_id == "" or not _attack_table.has(next_id):
+		return  # finisher: nothing to chain into (the callers check combo_window_for first)
+	_begin_attack(next_id)
 
 
 ## Per-physics-frame update while `state` is one of the attack states. Startup/active/recovery timing,
@@ -451,6 +487,8 @@ func _begin_next_combo_attack() -> void:
 ## all live here.
 func _process_attack_state(delta: float, input: Vector2) -> void:
 	_attack_timer -= delta
+	_swing_clock += delta
+	_emit_due_markers()
 	var airborne := state == State.AIR_ATTACK
 	if airborne:
 		_action_timer -= delta  # the jump keeps ticking underneath the swing
@@ -470,7 +508,8 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 		var elapsed := _attack_def.recovery - maxf(_attack_timer, 0.0)
 		# Dodge-cancel: once recovery has committed past `dodge_cancel_from`, a fresh/buffered dodge
 		# press interrupts the remaining recovery outright (order: "Interrupt...with a dodge").
-		if not airborne and elapsed >= _attack_def.dodge_cancel_from and _dodge_buffer > 0.0:
+		var cancel_from := _attack_def.dodge_cancel_from_for(_hit_confirmed)
+		if not airborne and cancel_from >= 0.0 and elapsed >= cancel_from and _dodge_buffer > 0.0:
 			_dodge_buffer = 0.0
 			_begin_dodge(input)
 			move_and_slide()
@@ -478,7 +517,8 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 		# Combo continuation: a fresh/buffered attack press within `combo_window` of recovery starting
 		# cuts the remaining recovery short and begins the next hit (order: "chain attacks without
 		# returning to idle"). dash_attack's combo_window is 0 -- it never chains this way.
-		if _attack_def.combo_window > 0.0 and elapsed <= _attack_def.combo_window and _attack_buffer > 0.0:
+		var chain_window := _attack_def.combo_window_for(_hit_confirmed)
+		if chain_window > 0.0 and elapsed <= chain_window and _attack_buffer > 0.0:
 			_attack_buffer = 0.0
 			_begin_next_combo_attack()
 			move_and_slide()
@@ -518,6 +558,27 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 	visual.play_action(_attack_def.id, facing8)
 
 
+## Emit every authored marker whose time has been reached, once each per swing.
+func _emit_due_markers() -> void:
+	if _attack_def == null:
+		return
+	for m: Dictionary in _attack_def.event_markers():
+		var n: String = m.name
+		if _fired_markers.has(n):
+			continue
+		var t: float = m.t
+		if n == "cancel_open":
+			var cf := _attack_def.dodge_cancel_from_for(_hit_confirmed)
+			if cf < 0.0:
+				continue
+			t = _attack_def.startup + _attack_def.active + cf
+		elif n == "combo_close":
+			t = _attack_def.startup + _attack_def.active + _attack_def.combo_window_for(_hit_confirmed)
+		if _swing_clock + 0.000001 >= t:
+			_fired_markers[n] = true
+			attack_event.emit(n, _attack_def.id)
+
+
 ## STARTUP -> ACTIVE -> RECOVERY -> (ends the attack). Only the final step can change `state` away
 ## from an attack state; the caller checks `_is_attack_state(state)` right after calling this.
 func _advance_attack_phase() -> void:
@@ -529,6 +590,9 @@ func _advance_attack_phase() -> void:
 			_attack_phase = AttackPhase.RECOVERY
 			_attack_timer = _attack_def.recovery
 		AttackPhase.RECOVERY:
+			if not _fired_markers.has("end"):
+				_fired_markers["end"] = true
+				attack_event.emit("end", _attack_def.id)
 			_combo_index = 0
 			state = State.IDLE  # placeholder; overwritten by the caller based on current input
 
@@ -553,8 +617,10 @@ func _check_attack_hits() -> void:
 		if angle_diff > _attack_def.arc_half_angle_deg:
 			continue
 		_hit_targets.append(enemy)
+		_hit_confirmed = true
 		enemy.take_damage(_attack_def.damage, to_enemy.normalized(), _attack_def.knockback, _attack_def.hitstop_ms)
 		_hitstop_timer = maxf(_hitstop_timer, _attack_def.hitstop_ms / 1000.0)
+		attack_hit.emit(HitEvent.make(self, enemy, _attack_def, to_enemy.normalized(), _combo_index))
 
 
 func _state_for_attack_id(attack_id: String) -> State:
@@ -630,14 +696,31 @@ func is_evading_melee() -> bool:
 	return state == State.DODGE or state == State.JUMP or state == State.AIR_ATTACK
 
 
-## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely; a
-## hit that lands only tints the figure and adds a small shove -- control is never taken away.
+## Planted charge hold. Called only after grounded actions have completed; attack/dodge/jump
+## keep priority. Animation runs at the approved 6FPS through the normal SpriteActor clock.
+func _process_charge(delta: float) -> void:
+	state = State.CHARGE
+	velocity = Vector2.ZERO
+	_footstep_timer = 0.0
+	visual.position.y = 0.0
+	visual.play_action("charge", facing8)
+	var restored := minf(max_chakra, chakra + chakra_charge_per_second * delta)
+	if not is_equal_approx(restored, chakra):
+		chakra = restored
+		chakra_changed.emit(chakra, max_chakra)
+
+
+## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely.
 func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: Variant = null) -> bool:
 	if is_evading_melee() or _hit_invuln > 0.0:
 		return false
 	if _try_substitution(attacker, from_dir):
 		return false
 	hits_taken += 1
+	if state == State.CHARGE:
+		state = State.IDLE
+		_charge_interrupted = true  # release before starting another charge after being hit
+		visual.set_pose(facing8, false, false)
 	_hit_invuln = HIT_INVULN_TIME
 	hit_flash_timer = HIT_FLASH_TIME
 	visual.modulate = HIT_TINT
@@ -648,8 +731,18 @@ func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: 
 	if health <= 0.0:
 		times_downed += 1
 		downed.emit()
-		restore_health(max_health)
+		respawn()
 	return true
+
+
+## 0..1 refill of the charge that comes back first (1.0 when no charge is recharging). Drives the HUD slot.
+func substitution_progress() -> float:
+	if _sub_cooldowns.is_empty():
+		return 1.0
+	var soonest: float = _sub_cooldowns[0]
+	for c in _sub_cooldowns:
+		soonest = minf(soonest, c)
+	return clampf(1.0 - soonest / SUB_COOLDOWN, 0.0, 1.0)
 
 
 func _tick_substitution(delta: float) -> void:
@@ -730,6 +823,109 @@ func _substitution_spot_ok(p: Vector2) -> bool:
 
 
 ## Adds health (clamped to max_health). Returns the amount actually restored.
+## Puts a downed player back at `spawn_position` with full health, no leftover motion / action / combo
+## state and a short grace period. Safe to call any time (the hit path calls it when health reaches 0).
+func respawn() -> void:
+	_charge_interrupted = true
+	dust.landing(global_position)
+	global_position = spawn_position
+	velocity = Vector2.ZERO
+	state = State.IDLE
+	_action_timer = 0.0
+	_dodge_buffer = 0.0
+	_jump_buffer = 0.0
+	_attack_buffer = 0.0
+	_sub_buffer = 0.0
+	_sub_reveal = 0.0
+	_attack_timer = 0.0
+	_attack_def = null
+	_combo_index = 0
+	_hit_targets.clear()
+	_dash_grace_timer = 0.0
+	_hitstop_timer = 0.0
+	_footstep_timer = 0.0
+	hit_flash_timer = 0.0
+	visual.visible = true
+	_hit_invuln = RESPAWN_INVULN
+	var base := Color.WHITE
+	visual.modulate = Color(base.r, base.g, base.b, 0.0)
+	create_tween().tween_property(visual, "modulate:a", 1.0, RESPAWN_FADE_IN)
+	restore_health(max_health)
+	reset_camera()
+	dust.landing(global_position)
+	respawn_count += 1
+	respawned.emit(global_position)
+
+
+## Adds chakra (clamped to max_chakra). Returns the amount actually restored.
+func restore_chakra(amount: float) -> float:
+	var before := chakra
+	chakra = clampf(chakra + maxf(amount, 0.0), 0.0, max_chakra)
+	if chakra != before:
+		chakra_changed.emit(chakra, max_chakra)
+	return chakra - before
+
+
+## Uses whatever sits on D-pad slot `slot` ("up"/"right"/"down"/"left"). Returns true when something happened.
+func use_slot(slot: String) -> bool:
+	var id := inventory.slot_item(slot)
+	if id == "" or health <= 0.0:
+		return false
+	var used := false
+	match id:
+		"health_gourd":
+			if health < max_health and inventory.consume(id):
+				var before := clampf(health / maxf(max_health, 0.001), 0.0, 1.0)
+				restore_health(max_health * HealthGourd.FRACTION)
+				var bar := get_node_or_null("HealthBar") as HealthBar
+				if bar != null:
+					bar.begin_heal_anim(before, 0.0)
+				used = true
+		"chakra_gourd":
+			if chakra < max_chakra and inventory.consume(id):
+				restore_chakra(max_chakra * HealthGourd.FRACTION)
+				used = true
+		"kunai":
+			used = _begin_throw()
+	if used:
+		item_used.emit(id)
+	return used
+
+
+## Start a forward kunai throw (costs one kunai). Only from plain locomotion/idle, one at a time.
+func _begin_throw() -> bool:
+	if _throw_t > 0.0 or inventory.count_of("kunai") <= 0:
+		return false
+	if state != State.IDLE and state != State.MOVE and state != State.SPRINT:
+		return false
+	inventory.consume("kunai")
+	_throw_t = THROW_TIME
+	_throw_released = false
+	_throw_dir = facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
+	return true
+
+
+func _tick_throw(delta: float) -> void:
+	if _throw_t <= 0.0:
+		return
+	_throw_t = maxf(_throw_t - delta, 0.0)
+	var progress := 1.0 - _throw_t / THROW_TIME
+	if not _throw_released and progress >= THROW_RELEASE:
+		_throw_released = true
+		kunai_thrown_count += 1
+		PlayerKunai.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+
+
+## No dedicated throw art exists yet: use the "throw" animation if a sprite set ever ships one, otherwise borrow the
+## first half of the light attack (arm drawn back, then forward) so the throw still reads as a throw.
+func _play_throw_visual() -> void:
+	var progress := clampf(1.0 - _throw_t / THROW_TIME, 0.0, 1.0)
+	if visual.has_action("throw"):
+		visual.play_action_progress("throw", _snap8(_throw_dir), progress)
+	else:
+		visual.play_action_progress("light1", _snap8(_throw_dir), progress * 0.5)
+
+
 func restore_health(amount: float) -> float:
 	var before := health
 	health = clampf(health + maxf(amount, 0.0), 0.0, max_health)
@@ -767,8 +963,10 @@ func cancel_eligibility() -> Dictionary:
 	var e := {"combo": false, "dodge_cancel": false, "dash_attack": false, "air_attack": false}
 	if _is_attack_state(state) and _attack_phase == AttackPhase.RECOVERY and _attack_def != null:
 		var elapsed := _attack_def.recovery - maxf(_attack_timer, 0.0)
-		e.combo = _attack_def.combo_window > 0.0 and elapsed <= _attack_def.combo_window
-		e.dodge_cancel = state != State.AIR_ATTACK and elapsed >= _attack_def.dodge_cancel_from
+		var chain_window := _attack_def.combo_window_for(_hit_confirmed)
+		e.combo = chain_window > 0.0 and elapsed <= chain_window
+		var cancel_from := _attack_def.dodge_cancel_from_for(_hit_confirmed)
+		e.dodge_cancel = state != State.AIR_ATTACK and cancel_from >= 0.0 and elapsed >= cancel_from
 	e.dash_attack = (state == State.DODGE and _action_timer <= dash_attack_late_window) or _dash_grace_timer > 0.0
 	e.air_attack = state == State.JUMP
 	return e
@@ -784,6 +982,7 @@ func debug_snapshot() -> Dictionary:
 		"dodge_buffer": _dodge_buffer,
 		"jump_buffer": _jump_buffer,
 		"hitstop": _hitstop_timer,
+		"hit_confirmed": _hit_confirmed,
 		"cancel": cancel_eligibility(),
 	}
 

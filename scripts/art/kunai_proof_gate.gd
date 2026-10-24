@@ -7,7 +7,9 @@ func _ready() -> void:
 	var query := str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
 	var enabled := "--kunai-proof" in OS.get_cmdline_user_args() or "kunai=proof" in query or "flicker=proof" in query
 	var target := ""
-	if "kunai=directions" in query or "--kunai-directions" in OS.get_cmdline_user_args():target="res://scenes/art/kunai_eight_review.tscn"
+	if "shore=review" in query or "--shore-review" in OS.get_cmdline_user_args():target="res://scenes/art/blightwood_shorelines_review.tscn"
+	elif "water=review" in query or "--water-review" in OS.get_cmdline_user_args():target="res://scenes/art/blightwood_water_review.tscn"
+	elif "kunai=directions" in query or "--kunai-directions" in OS.get_cmdline_user_args():target="res://scenes/art/kunai_eight_review.tscn"
 	elif "kunai=legacy" in query:target="res://scenes/art/kunai_primary_proof.tscn"
 	elif enabled:target="res://scenes/art/flicker_combat_proof.tscn"
 	if not target.is_empty():
