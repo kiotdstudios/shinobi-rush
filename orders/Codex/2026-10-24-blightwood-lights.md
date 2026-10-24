@@ -1,7 +1,7 @@
 # Order - Blightwood Forest lighting decor
 - Agent: Codex
 - Owner: Codex
-- Status: REVIEW
+- Status: DONE
 - Priority: P1 - latest direct owner request
 - Branch: codex/blightwood-lights
 - Dependencies: PixelLab authenticated, existing approved forest/grass palette and camera; satisfied.
@@ -23,3 +23,6 @@ This latest owner request is the active scope; historical queued combat/jump/wal
 
 ## Local validation
 2301native checks PASS,16builder browser checks PASS,13review controls/effect checks PASS,192actual frames in each preview (8s normal/16s half). Upstream fence update will be integrated and retested before publishing.
+
+## Live delivery
+PR #155 merged; runtime SHA 1cf0ec0a4515e84eebdaf930ed8e2b7a8164b8a4. Main Godot CI 40097103408 including deploy and smoke-postdeploy succeeded. Canonical browser verified 2026-10-24T13:23:02.375Z, all16 checks PASS with matching build SHA. Exact URL and evidence: docs/visuals/blightwood-lights/live-validation.json and live-builder.png. Owner art approval remains separate.
