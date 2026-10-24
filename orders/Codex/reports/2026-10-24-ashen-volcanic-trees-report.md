@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-24-ashen-volcanic-trees.md
 - Date: 2026-10-24
-- Final status: REVIEW (technical work complete; visual approval pending)
-- Commit / PR: pending implementation commit below
+- Final status: DONE (owner approved; live builder verification passed)
+- Commit / PR: PR #148; merged as 49f0efd435596e67ef0b53fba7bb87b3b525e55b.
 
 ## Work completed
 Created3original volcanic tree silhouettes for the Village Hidden in the Cinders: upright sentinel, wind-bent tree and split-trunk elder. Native320x448RGBA with shared source-to-native nearest scale and fixed160,416root anchor. Barren intricately forked branches, charcoal/slate bark, molten-red root/lower-trunk cracks, compact basalt chips. No surrounding terrain, baked shadow or flame effect.
