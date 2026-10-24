@@ -12,7 +12,14 @@ const SNAPS: Array[int] = [30, 15, 0]
 var arena: TrainingArena
 var placed: PlacedObjects
 var open := false
-var tool := "select"  ## "select" | "erase" | "place" | "pan"
+var tool := "select"  ## "select" | "erase" | "place" | "paint" | "pan"
+const BRUSHES: Array[int] = [1, 3, 5]
+var brush := 1  ## paint tool: the brush is a brush x brush block of floor cells
+var _stroke := false
+var _stroke_changed := false
+var _last_cell := Vector2(INF, INF)
+var _paint_button: Button = null
+var brush_button: Button = null
 var _panning := false
 var _camera_free := false
 var _pan_camera_mode := Node.PROCESS_MODE_INHERIT
@@ -43,7 +50,7 @@ var _hud_buttons: Dictionary = {}
 var hud_snap_button: Button = null
 ## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
-const DIM_TYPES: Array[String] = ["Trees", "Walls & blocks", "Temple walls", "Grass", "Tall grass", "Ground / paths"]
+const DIM_TYPES: Array[String] = ["Trees", "Walls & blocks", "Temple walls", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
 var show_grid := false
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false
@@ -168,7 +175,13 @@ func set_open(v: bool) -> void:
 
 func set_tool(t: String, id := "") -> void:
 	tool = t
-	place_id = id if t == "place" else ""
+	if t == "paint":
+		if id != "":
+			place_id = id
+		if place_id == "" or PlacedObjects.def_of(place_id).kind not in ["ground", "grass"]:
+			place_id = "temple_floor_center"  # nothing tile-like chosen yet: start with the stone floor
+	else:
+		place_id = id if t == "place" else ""
 	if t != "select":
 		selected = {}
 	_refresh()
@@ -200,12 +213,12 @@ static func iso_cell_center(p: Vector2) -> Vector2:
 
 
 func _wall_tool() -> bool:
-	var id := place_id if tool == "place" else str(selected.get("id", ""))
+	var id := place_id if tool in ["place", "paint"] else str(selected.get("id", ""))
 	return id != "" and PlacedObjects.def_of(id).kind == "wall"
 
 
 func _grass_tool() -> bool:
-	var id := place_id if tool == "place" else str(selected.get("id", ""))
+	var id := place_id if tool in ["place", "paint"] else str(selected.get("id", ""))
 	return id != "" and PlacedObjects.def_of(id).kind in ["grass", "ground"]
 
 
@@ -248,6 +261,8 @@ func _unhandled_input(event: InputEvent) -> void:
 					press(_mouse_world())
 			elif hud_bar() != null and hud_bar().dragging_element:
 				release_hud()
+			elif _stroke:
+				end_stroke()
 			else:
 				release()
 			get_viewport().set_input_as_handled()
@@ -256,6 +271,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 	elif event is InputEventMouseMotion and hud_bar() != null and hud_bar().dragging_element:
 		hud_bar().drag_at(get_viewport().get_mouse_position(), not Input.is_key_pressed(KEY_SHIFT))
+	elif event is InputEventMouseMotion and _stroke:
+		paint_to(_mouse_world())
 	elif event is InputEventMouseMotion and dragging:
 		drag_to(_mouse_world())
 
@@ -326,8 +343,61 @@ func select_hud(id: String) -> void:
 	_refresh()
 
 
+## Floor cells a brush stamped at `world` covers: a brush x brush block of 72x36 diamonds, centred on the cell under it.
+func brush_cells(world: Vector2) -> Array[Vector2]:
+	var c := iso_cell_center(world)
+	var out: Array[Vector2] = []
+	var r := (brush - 1) / 2
+	for i in range(-r, r + 1):
+		for j in range(-r, r + 1):
+			out.append(c + Vector2(36.0, 18.0) * float(i) + Vector2(36.0, -18.0) * float(j))
+	return out
+
+
+## Stamp the brush at `world`; true if any tile changed.
+func paint_at(world: Vector2) -> bool:
+	var any := false
+	for cell in brush_cells(world):
+		if placed.paint_cell(place_id, cell):
+			any = true
+	if any:
+		_stroke_changed = true
+	return any
+
+
+## Paint along the mouse path since the last sample so a fast drag leaves no gaps.
+func paint_to(world: Vector2) -> void:
+	var cell := iso_cell_center(world)
+	if cell == _last_cell:
+		return
+	if _last_cell.is_finite():
+		var from := _last_cell
+		var steps := int(ceil(from.distance_to(cell) / 18.0))
+		for s in range(1, steps + 1):
+			paint_at(from.lerp(cell, float(s) / float(steps)))
+	else:
+		paint_at(world)
+	_last_cell = cell
+
+
+func end_stroke() -> void:
+	if not _stroke:
+		return
+	_stroke = false
+	_last_cell = Vector2(INF, INF)
+	if _stroke_changed:
+		_stroke_changed = false
+		placed._changed()  # one nav rebuild + one save for the whole stroke
+	_refresh()
+
+
 func press(world: Vector2) -> void:
 	match tool:
+		"paint":
+			_stroke = true
+			_stroke_changed = false
+			_last_cell = Vector2(INF, INF)
+			paint_to(world)
 		"place":
 			var pos := snapped_pos(world)
 			if placed.can_place(place_id, pos):
@@ -553,6 +623,12 @@ func draw_overlay(c: Node2D) -> void:
 		var h := placed.hit_test(_mouse_world())
 		if not h.is_empty():
 			c.draw_rect(PlacedObjects.art_rect(h.id, h.pos), Color(1, 0.2, 0.2, 0.9), false, 3.0)
+	if tool == "paint" and place_id != "" and get_viewport().gui_get_hovered_control() == null:
+		var ptex: Texture2D = PlacedObjects.art_texture(place_id, Vector2.ZERO)[0]
+		for cell in brush_cells(_mouse_world()):
+			if ptex != null:
+				c.draw_texture(ptex, cell - Vector2(36, 18), Color(1, 1, 1, 0.65))
+			c.draw_polyline(_diamond(cell), Color(ACCENT, 0.9), 2.0)
 	if tool == "place" and place_id != "" and get_viewport().gui_get_hovered_control() == null:
 		var pos := snapped_pos(_mouse_world())
 		var ok := placed.can_place(place_id, pos)
@@ -751,7 +827,10 @@ func _build_ui() -> void:
 	outer.add_child(tools)
 	_tool_buttons["select"] = _toggle(tools, "SELECT / MOVE", func(): set_tool("select"))
 	_tool_buttons["erase"] = _toggle(tools, "ERASE", func(): set_tool("erase"))
+	_tool_buttons["paint"] = _toggle(tools, "PAINT", func(): set_tool("paint"))
 	_tool_buttons["pan"] = _toggle(tools, "PAN", func(): set_tool("pan"))
+	_paint_button = _tool_buttons["paint"]
+	brush_button = _toggle(outer, "BRUSH  1 x 1  (paint: drag to lay many tiles)", func(): cycle_brush())
 
 	# Palette filters: hide/show the option cards by type; the world itself is untouched.
 	var filters := GridContainer.new()
@@ -812,7 +891,7 @@ func _build_ui() -> void:
 			b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 			if def.kind == "ground":
-				b.icon = load(PlacedObjects.GROUND_DIR + id + ".png") as Texture2D
+				b.icon = PlacedObjects.ground_texture(id)
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "grass":
@@ -840,7 +919,7 @@ func _build_ui() -> void:
 				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_left = 3
 				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_right = 3
 			b.add_theme_font_size_override("font_size", 11)
-			b.pressed.connect(func(): set_tool("place", id))
+			b.pressed.connect(func(): set_tool("paint" if tool == "paint" and PlacedObjects.def_of(id).kind in ["ground", "grass"] else "place", id))
 			grid.add_child(b)
 			_palette_buttons[id] = b
 
@@ -1068,6 +1147,11 @@ func _toggle(parent: Node, text: String, cb: Callable) -> Button:
 	return b
 
 
+func cycle_brush() -> void:
+	brush = BRUSHES[(BRUSHES.find(brush) + 1) % BRUSHES.size()]
+	_refresh()
+
+
 func _cycle_snap() -> void:
 	snap = SNAPS[(SNAPS.find(snap) + 1) % SNAPS.size()]
 	_refresh()
@@ -1110,7 +1194,10 @@ func _refresh() -> void:
 	for k: String in _tool_buttons:
 		(_tool_buttons[k] as Button).set_pressed_no_signal(tool == k)
 	for id: String in _palette_buttons:
-		(_palette_buttons[id] as Button).set_pressed_no_signal(tool == "place" and place_id == id)
+		(_palette_buttons[id] as Button).set_pressed_no_signal(tool in ["place", "paint"] and place_id == id)
+	if brush_button != null:
+		brush_button.text = "BRUSH  %d x %d" % [brush, brush]
+		brush_button.set_pressed_no_signal(false)
 	if hud_snap_button != null:
 		var hs: int = hud_bar().hud_snap if hud_bar() != null else 0
 		hud_snap_button.text = "HUD GRID  %s" % (str(hs) if hs > 0 else "OFF")
@@ -1124,6 +1211,6 @@ func _refresh() -> void:
 	if not selected.is_empty():
 		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
-	var what := "Placing: %s" % str(PlacedObjects.CATALOG[place_id].label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
+	var what := "Painting: %s  (drag to lay tiles, %d x %d brush)" % [str(PlacedObjects.CATALOG[place_id].label), brush, brush] if tool == "paint" else "Placing: %s" % str(PlacedObjects.CATALOG[place_id].label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
 	count_label.text = "%d objects" % placed.objects.size()
 	status.text = _note if Time.get_ticks_msec() < _note_until else what
