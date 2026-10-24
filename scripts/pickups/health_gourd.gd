@@ -50,6 +50,7 @@ var _glow: Sprite2D
 var _body: Sprite2D
 var _embers: Sprite2D
 var _tween: Tween
+var fx: GourdPickupFx  ## the take-it animation while it plays
 
 
 ## Frames of one layer ("gourd", "glow", "ember"), loaded once and shared by every gourd.
@@ -89,6 +90,7 @@ func _ready() -> void:
 	_body = _layer("Body", null)
 	_embers = _layer("Embers", add_mat)
 	_pool.draw.connect(_draw_pool)
+	GourdPickupFx.pickup_sound.call_deferred()  # synthesize the layered clip once, not in the middle of a pickup
 	_clock = randf() * 10.0  # gourds placed together do not pulse in lockstep
 	_apply_frames()
 
@@ -179,27 +181,38 @@ func _try_collect() -> void:
 ## Returns the amount actually restored (HP or chakra, depending on kind).
 func collect(player: Node) -> float:
 	var gained: float
+	var before_fraction := 1.0
 	if kind == "chakra":
 		gained = player.call("restore_chakra", float(player.get("max_chakra")) * FRACTION)
 	else:
+		before_fraction = clampf(float(player.get("health")) / maxf(float(player.get("max_health")), 0.001), 0.0, 1.0)
 		gained = player.call("restore_health", float(player.get("max_health")) * FRACTION)
 	available = false
 	respawn_left = RESPAWN_SECONDS
 	collected.emit(gained)
 	if _tween != null:
 		_tween.kill()
+	if fx != null and is_instance_valid(fx):
+		fx.queue_free()
 	_visual.modulate = Color.WHITE
-	_tween = create_tween().set_parallel(true)
-	_tween.tween_property(_visual, "position:y", -FLOAT_HEIGHT - 46.0, 0.35).set_ease(Tween.EASE_OUT)
-	_tween.tween_property(_visual, "scale", Vector2(1.5, 1.5), 0.35)
-	_tween.tween_property(_visual, "modulate:a", 0.0, 0.35)
+	# The gourd does not just vanish: GourdPickupFx squashes it, bursts it, warps it into the player's chest and
+	# drives its visual; only the floor light fades out here.
+	_tween = create_tween()
 	_tween.tween_property(_pool, "modulate:a", 0.0, 0.25)
-	_tween.chain().tween_callback(func() -> void: _visual.visible = false; _pool.visible = false)
+	_tween.tween_callback(func() -> void: _pool.visible = false)
+	fx = GourdPickupFx.start(self, player as Node2D, gained, before_fraction) if player is Node2D else null
+	if fx == null:
+		_visual.visible = false
 	return gained
 
 
 func _return() -> void:
 	available = true
+	if fx != null and is_instance_valid(fx):
+		fx.queue_free()
+	fx = null
+	_visual.rotation = 0.0
+	_glow.modulate = Color.WHITE
 	if _tween != null:
 		_tween.kill()
 	_visual.position = Vector2(0, -FLOAT_HEIGHT)
