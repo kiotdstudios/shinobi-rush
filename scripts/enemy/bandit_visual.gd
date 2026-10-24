@@ -205,8 +205,21 @@ func _draw() -> void:
 	_draw_hp_and_label()
 
 
+## Blue chakra-charge aura: pulsing ring at his feet and rising sparks.
+func _draw_chakra_aura() -> void:
+	var t := bandit.clock
+	var pulse := 0.5 + 0.5 * sin(t * 9.0)
+	draw_arc(Vector2(0, -6), 20.0 + 4.0 * pulse, 0.0, TAU, 28, Color(0.35, 0.75, 1.0, 0.55 + 0.3 * pulse), 2.0)
+	draw_circle(Vector2(0, -6), 14.0, Color(0.3, 0.6, 1.0, 0.12 + 0.1 * pulse))
+	for i in 5:
+		var ph := fmod(t * 1.3 + float(i) * 0.2, 1.0)
+		draw_circle(Vector2(sin(float(i) * 2.4) * 12.0, -6.0 - ph * 46.0), 2.0 * (1.0 - ph) + 0.5, Color(0.6, 0.9, 1.0, 1.0 - ph))
+
+
 func _draw_hp_and_label(top_y: float = -78.0) -> void:
 	var font := ThemeDB.fallback_font
+	if bandit.is_charging_chakra and bandit.state != Bandit.State.DEAD:
+		_draw_chakra_aura()
 	var block := UnitBars.size_for(bandit.max_substitutions)
 	var y0 := top_y - block.y + 6.0  ## bars sit on the old HP-bar line, growing upward over the head
 	draw_string(font, Vector2(-30.0, y0 - 4.0), "BANDIT L%d (%s)" % [bandit.intelligence_level, bandit.get_state_name()], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.75))
@@ -214,7 +227,7 @@ func _draw_hp_and_label(top_y: float = -78.0) -> void:
 		return
 	var frac := clampf(bandit.hp / bandit.max_hp, 0.0, 1.0)
 	var cfrac := clampf(bandit.chakra / maxf(bandit.max_chakra, 0.001), 0.0, 1.0)
-	UnitBars.draw(self, Vector2(-block.x * 0.5, y0), frac, cfrac, bandit.substitutions, bandit.max_substitutions)
+	UnitBars.draw(self, Vector2(-block.x * 0.5, y0), frac, cfrac, bandit.substitutions, bandit.max_substitutions, bandit.sub_use_age)
 
 
 ## Code-drawn telegraphs and status marks. These are placeholders for Codex's dedicated alert/attack

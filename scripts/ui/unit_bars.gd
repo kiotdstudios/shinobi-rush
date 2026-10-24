@@ -1,15 +1,16 @@
 class_name UnitBars
 extends RefCounted
 ## World-space status bars for non-player units (the Bandit): an enemy-specific plate (steel frame, crimson corner
-## brackets), segmented HP and Chakra fills and substitution pips. Art lives in assets/ui/enemy_bars/ (tools/gen_enemy_bars.py),
+## brackets), segmented HP and Chakra fills and substitution log pips (LogPip, the real log art). Art lives in assets/ui/enemy_bars/ (tools/gen_enemy_bars.py),
 ## drawn 1:1 -- about 30% larger than the old half-scale reuse of the player HUD art. Pure drawing helper; callers pass fractions.
 
 const DIR := "res://assets/ui/enemy_bars/"
 const BAR_SIZE := Vector2(128.0, 14.0)
 const FILL_INSET := Vector2(2.0, 2.0)
 const FILL_SIZE := Vector2(124.0, 10.0)
-const PIP_SIZE := 12.0
-const PIP_STEP := 15.0
+const PIP_SCALE := 0.5  ## the log pips are the real 38x26 log art drawn at half size
+const PIP_SIZE := 13.0  ## row height (26 * PIP_SCALE)
+const PIP_STEP := 22.0
 const ROW_GAP := 2.0
 
 static var _tex: Dictionary = {}
@@ -26,13 +27,13 @@ static func _t(n: String) -> Texture2D:
 
 
 ## `origin` is the top-left of the block. Returns its size.
-static func draw(ci: CanvasItem, origin: Vector2, hp_frac: float, chakra_frac: float, pips: int, max_pips: int) -> Vector2:
+static func draw(ci: CanvasItem, origin: Vector2, hp_frac: float, chakra_frac: float, pips: int, max_pips: int, use_ages: Array = []) -> Vector2:
 	_bar(ci, origin, hp_frac, "enemy_hp_fill")
 	_bar(ci, origin + Vector2(0.0, BAR_SIZE.y + ROW_GAP), chakra_frac, "enemy_chakra_fill")
 	var py := origin.y + (BAR_SIZE.y + ROW_GAP) * 2.0
 	for i in max_pips:
-		var tex := _t("enemy_pip_full" if i < pips else "enemy_pip_empty")
-		ci.draw_texture_rect(tex, Rect2(Vector2(origin.x + PIP_STEP * i, py), Vector2(PIP_SIZE, PIP_SIZE)), false)
+		var age: float = float(use_ages[i]) if i < use_ages.size() else -1.0
+		LogPip.draw(ci, Vector2(origin.x + PIP_STEP * i, py), PIP_SCALE, i < pips, age)
 	return size_for(max_pips)
 
 
