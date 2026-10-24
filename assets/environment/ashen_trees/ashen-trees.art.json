@@ -1,7 +1,7 @@
 {
   "schema": "shinobi_ashen_trees_v1",
-  "status": "art_review",
-  "production_bound": false,
+  "status": "owner_approved",
+  "production_bound": true,
   "source_tool": "built-in image_gen, three separate tree images and one coherent16-pose ash sheet",
   "processing": "magenta key, fixed shared nearest scale, root registration; no painted tree/VFX substitutes",
   "render_filter": "nearest",
@@ -430,5 +430,6 @@
       "b381d6139066318f588997270c1c338cee3a9718fbcc7eb39bb5a0905f419274"
     ],
     "sha256": "919f88f4c1bb7cbb1be18cfc772b15718e212cce186a4b4353cd73496f7d358c"
-  }
+  },
+  "runtime_integration": "World Builder > Volcanic trees; three catalog IDs, animated trunk props with save/load"
 }

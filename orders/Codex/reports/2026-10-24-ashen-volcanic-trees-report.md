@@ -47,3 +47,14 @@ Implementation commit:82fccddbf111861b540a388160ec216d85938db0
 Review PR:https://github.com/kiotdstudios/shinobi-rush/pull/148 (draft, not merged).
 Final import and native proof both PASS before implementation commit.
 Published half-speed GIF fetched from exact implementation SHA; SHA256 matches local:563C07E344ECA53CAE95180CBCD9200C7D202CEBB3B092C8995BD1B1C85FAA96.
+
+## Owner-approved live integration (2026-10-24)
+Owner passed the trees and explicitly assigned builder filter and live deployment to Codex. Integrated latest origin/main8880def before changes, preserving new fence/temple-ground/editor features. Added own Volcanic trees category and three thumbnail cards. Each placed tree uses the approved art, automatic local animation clock,24bounded ash sprites, root-based Y sorting, existing tree-sized trunk collider and bandit-nav obstacle. Standard selection, movement, erase/delete, save/reload and dimensions are supported. No automatic map repaint or replacement of existing trees; owner can place them through builder.
+
+Files changed for integration: scripts/editor/placed_objects.gd, world_editor.gd, scripts/environment/ashen_tree.gd; new tests/test_builder_ashen.gd and scripts/ci/smoke/builder-ashen-probe.mjs; art approval/runtime metadata and README. No combat or camera modifications.
+
+Initial tests caught a category-lookup mismatch after integration with the latest editor:3category assertions plus filter-cancels-painting failed (2228passed/4failed). Fixed type_of to map ashen_tree to Volcanic trees. Initial browser check identified the same failure; all other12checks passed. Re-exported and reran browser: all13checks PASS, no errors, including filter cancellation, three cards, scrolling without zoom, placement/selection/move/delete, all3variants,72bounded ash sprites, advancing animation clock and save/reload. Full native suite rerun pending at this point; final results below before implementation commit.
+
+Local export first included ignored prior capture artifacts under build/, warning about109MiB PCK. Added local-only ignored build/.gdignore and exported fresh, matching clean CI source export; final PCK about11MiB. No tracked project export policy changed. Godot4.7.2 import PASS and Web exports PASS. Native exact commands use scripts/ci/godot_ci.py tests --project . --log-dir build/ashen-builder-fixed; browser uses node scripts/ci/smoke/builder-ashen-probe.mjs --serve-dir ../ashen-builder-web-fixed-20261024 --out-dir build/ashen-builder-browser-fixed. PNG evidence visually reviewed; order validator PASS. Unrelated generated tools/shot_fences.gd.uid excluded.
+
+Final pre-commit integration validation:2232native tests passed,0failed, including17new volcanic-builder checks. Web export and all13real-UI browser checks PASS with0errors. Order validator PASS. Staged whitespace check PASS before implementation commit. Required CI, merge and exact live-build verification next.

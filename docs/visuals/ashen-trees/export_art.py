@@ -68,10 +68,11 @@ def main():
     assert len(set(hashes)) == 16
     sheet.save(FX / 'ash_tumble.png')
     sheet.resize((512,512),Image.Resampling.NEAREST).save(DOC / 'ash-contact.png')
-    manifest = {'schema':'shinobi_ashen_trees_v1', 'status':'art_review', 'production_bound':False,
+    manifest = {'schema':'shinobi_ashen_trees_v1', 'status':'owner_approved', 'production_bound':True,
                 'source_tool':'built-in image_gen, three separate tree images and one coherent16-pose ash sheet',
                 'processing':'magenta key, fixed shared nearest scale, root registration; no painted tree/VFX substitutes',
                 'render_filter':'nearest', 'trees':records,
+                'runtime_integration':'World Builder > Volcanic trees; three catalog IDs, animated trunk props with save/load',
                 'wind':{'fps':24,'phases':96,'cycle_seconds':4,'fixed_from_y':346,'max_horizontal_px':5.5},
                 'heat':{'cycle_seconds':4,'levels':8,'mask':'existing red source pixels in lower150px above roots'},
                 'ash':{'texture':'res://assets/vfx/ashen_foliage/ash_tumble.png','frame_size':[32,32],

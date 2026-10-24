@@ -1,7 +1,7 @@
 # Order — Ashen Ruins volcanic trees
 - Agent: Codex
 - Owner: Codex
-- Status: REVIEW
+- Status: IN_PROGRESS
 - Priority: P1
 - Branch: codex/ashen-volcanic-trees
 - Dependencies: User reference, approved Blightwood scale/camera and ash animation source; satisfied.
@@ -19,4 +19,4 @@ Three native320×448RGBA tree silhouettes;96phase rooted wind, molten root pulse
 Crisp transparent art, consistent root anchors and size, barren branches and readable red roots, detailed independent ash, stable rooted motion, wrap-continuity and bounded pool, Godot and browser previews without errors. Owner visual review follows technical validation.
 
 ## Handoff
-Asset manifest assets/environment/ashen_trees/ashen-trees.art.json. Runtime placement/builder registration not part of this initial art review. No live deployment: unbound review assets only.
+Asset manifest assets/environment/ashen_trees/ashen-trees.art.json. Owner approved the trees and explicitly requested builder registration, dedicated filter and live deployment. Integration checks in progress; deploy after required CI and verify exact live build.

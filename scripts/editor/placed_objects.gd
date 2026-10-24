@@ -17,6 +17,9 @@ const DEFAULT_LAYOUT_PATH := "res://data/world_layout.json"
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
 const SAVE_VERSION := 7
 const CATALOG := {
+	"ashen_sentinel": {"label": "Volcanic sentinel", "kind": "ashen_tree", "tree": 0},
+	"ashen_windbent": {"label": "Wind-bent volcanic", "kind": "ashen_tree", "tree": 1},
+	"ashen_elder": {"label": "Volcanic elder", "kind": "ashen_tree", "tree": 2},
 	"tree_1": {"label": "Tiered tree", "kind": "tree", "tree": 0},
 	"tree_2": {"label": "Windswept tree", "kind": "tree", "tree": 1},
 	"tree_3": {"label": "Weeping tree", "kind": "tree", "tree": 2},
@@ -89,7 +92,7 @@ const CATALOG := {
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4", "fence_post", "fence_post_tall"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
+const CATEGORIES := [["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4", "fence_post", "fence_post_tall"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -100,6 +103,14 @@ const DEFAULT_GOURDS := 5
 const DEFAULT_CHAKRA_GOURDS := 3
 
 static var _tree_cache: Array = []
+static var _ashen_cache: Array = []
+
+
+static func ashen_info(index: int) -> Dictionary:
+	if _ashen_cache.is_empty():
+		var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/environment/ashen_trees/ashen-trees.art.json"))
+		_ashen_cache = manifest.trees
+	return _ashen_cache[index]
 
 
 ## Catalog entry for an id, including the arena's own placeholder walls ("base_N").
@@ -188,7 +199,7 @@ static func footprint_of(id: String) -> Vector2:
 		return wall_rect(def, Vector2.ZERO).size
 	if def.kind == "pickup":
 		return PICKUP_FOOTPRINT
-	return Vector2(72, 36) if def.kind in ["grass", "ground"] else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind == "tree" else def.footprint
+	return Vector2(72, 36) if def.kind in ["grass", "ground"] else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind in ["tree", "ashen_tree"] else def.footprint
 
 
 ## The solid ground rectangle (BLOCKS convention: bottom-centre `pos`, extends `depth` upward).
@@ -212,6 +223,9 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 			return [ground_texture(id), pos - Vector2(36, 18)]
 		"grass":
 			return [load(WindGrassTileset.DIR + id + ".png") as Texture2D, pos - Vector2(56, 136 if def.tall else 84)]
+		"ashen_tree":
+			var info := ashen_info(int(def.tree))
+			return [load(str(info.texture)) as Texture2D, pos - Vector2(float(info.anchor[0]), float(info.anchor[1]))]
 		"tree":
 			var info := tree_info(int(def.tree))
 			return [load(str(info.texture)) as Texture2D, pos - Vector2(float(info.anchor[0]), float(info.anchor[1]))]
@@ -254,6 +268,8 @@ static func hit_rect(id: String, pos: Vector2) -> Rect2:
 		return Rect2(pos - Vector2(56, 136 if def.tall else 84), Vector2(112, 160 if def.tall else 112))
 	if def.kind == "pickup":
 		return Rect2(pos.x - 40.0, pos.y - 140.0, 80.0, 150.0)
+	if def.kind == "ashen_tree":
+		return Rect2(pos - Vector2(160,416),Vector2(320,448))
 	if def.kind == "tree":
 		return Rect2(pos.x - 110.0, pos.y - 330.0, 220.0, 350.0)
 	if def.kind == "wall":
@@ -301,6 +317,14 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		var sprite := field.make_editable_sprite(id, pos)
 		arena.add_child(sprite)
 		nodes = [sprite]
+	elif def.kind == "ashen_tree":
+		var tree := AshenTree.new()
+		tree.name = "PlacedVolcanic%d" % _serial
+		tree.data = ashen_info(int(def.tree))
+		tree.auto_advance = true
+		tree.position = pos
+		arena.add_child(tree)
+		nodes = [tree, _make_trunk(pos)]
 	elif def.kind == "block":
 		var fp: Vector2 = def.footprint
 		var front := TrainingArena.Block.new(fp, float(def.height))
@@ -485,7 +509,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Walls & blocks"
+	return "Volcanic trees" if def.kind == "ashen_tree" else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Walls & blocks"
 
 
 func type_visible(id: String) -> bool:

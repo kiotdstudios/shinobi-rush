@@ -6,7 +6,8 @@ var data: Dictionary
 var sprite: Sprite2D
 var material_wind: ShaderMaterial
 var flakes: Array[Sprite2D] = []
-var ash_clock_offset := 0.0
+var auto_advance := false
+var local_clock := 0.0
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -30,6 +31,11 @@ func _ready() -> void:
 		add_child(flake)
 		flakes.append(flake)
 	advance(0.0)
+	set_process(auto_advance)
+
+func _process(delta: float) -> void:
+	local_clock += delta
+	advance(local_clock)
 
 func advance(time: float, wind_on := true, ash_on := true, heat_on := true) -> void:
 	material_wind.set_shader_parameter("clock", time)
