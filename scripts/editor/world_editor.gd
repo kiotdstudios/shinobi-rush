@@ -1095,6 +1095,7 @@ func _reset_pressed() -> void:
 	_reset_armed = false
 	placed.load_dict({"version": 1, "items": []})
 	placed.scatter_defaults()  # the starting arena has its gourds lying around
+	placed.ensure_shrine()
 	selected = {}
 	_refresh()
 

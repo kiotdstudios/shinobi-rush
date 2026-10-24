@@ -88,13 +88,13 @@ func run(p_ck: Callable, root: Node) -> void:
 	for o in placed.objects:
 		if o.id == "health_gourd":
 			total_gourds += 1
-	ck.call("gourd builder: saves into the layout (version 6)", n_saved == total_gourds and int(json.version) == 6)
+	ck.call("gourd builder: saves into the layout (current version)", n_saved == total_gourds and int(json.version) == PlacedObjects.SAVE_VERSION)
 	placed.load_dict(json)
 	var back := 0
 	for o in placed.objects:
 		if o.id == "health_gourd":
 			back += 1
-	ck.call("gourd builder: loading the layout restores the same gourds without re-scattering", back == total_gourds and placed.loaded_version == 6, "%d vs %d" % [back, total_gourds])
+	ck.call("gourd builder: loading the layout restores the same gourds without re-scattering", back == total_gourds and placed.loaded_version == PlacedObjects.SAVE_VERSION, "%d vs %d" % [back, total_gourds])
 	placed.remove(placed.objects[placed.objects.size() - 1], false)
 	await tree.process_frame
 	var left := 0
