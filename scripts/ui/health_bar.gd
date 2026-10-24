@@ -448,20 +448,13 @@ func load_layout(path := "") -> void:
 
 
 func _draw_edit_outlines() -> void:
-	if hud_snap > 0 and _canvas != null:
-		var sz := _canvas.size
-		var x := 0.0
-		while x <= sz.x:
-			_canvas.draw_line(Vector2(x, 0), Vector2(x, sz.y), Color(1, 1, 1, 0.16 if int(x) % (hud_snap * 4) == 0 else 0.06), 1.0)
-			x += hud_snap
-		var y := 0.0
-		while y <= sz.y:
-			_canvas.draw_line(Vector2(0, y), Vector2(sz.x, y), Color(1, 1, 1, 0.16 if int(y) % (hud_snap * 4) == 0 else 0.06), 1.0)
-			y += hud_snap
+	# No screen-wide snap grid and no boxes around idle pieces (builder opens clean); only the picked piece is outlined.
 	for id in ELEMENTS:
 		var r := element_rect(id).grow(2.0)
 		var sel := id == selected_element
-		_canvas.draw_rect(r, Color(1.0, 0.42, 0.0, 0.9) if sel else Color(1.0, 1.0, 1.0, 0.35), false, 2.0 if sel else 1.0)
+		if not sel:
+			continue
+		_canvas.draw_rect(r, Color(1.0, 0.42, 0.0, 0.9), false, 2.0)
 		if sel:
 			_canvas.draw_string_outline(ThemeDB.fallback_font, r.position + Vector2(2.0, -4.0), ELEMENT_NAMES[id], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, 3, Color(0, 0, 0, 0.9))
 			_canvas.draw_string(ThemeDB.fallback_font, r.position + Vector2(2.0, -4.0), ELEMENT_NAMES[id], HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1.0, 0.6, 0.2))
