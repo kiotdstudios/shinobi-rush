@@ -50,7 +50,7 @@ var _hud_buttons: Dictionary = {}
 var hud_snap_button: Button = null
 ## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
-const DIM_TYPES: Array[String] = ["Ashen fire", "Volcanic trees", "Trees", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
+const DIM_TYPES: Array[String] = ["Blightwood lights", "Ashen fire", "Volcanic trees", "Trees", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
 var show_grid := false
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false
@@ -167,6 +167,24 @@ func _process(_d: float) -> void:
 				if PlacedObjects.def_of(obj.id).kind == "ashen_fire":
 					fire_count += 1
 					fire_pops += (obj.nodes[0] as AshenFireProp).pop_count
+			var blight_count := 0
+			var swarm_count := 0
+			var fly_count := 0
+			var light_clock := 0.0
+			for obj in placed.objects:
+				var kind := str(PlacedObjects.def_of(obj.id).kind)
+				if kind == "blight_light":
+					var fixture := obj.nodes[0] as BlightwoodLight
+					blight_count += 1
+					fly_count += fixture.swarm.flies.size()
+					light_clock = fixture.clock
+				elif kind == "fireflies":
+					swarm_count += 1
+					fly_count += (obj.nodes[0] as ForestFireflies).flies.size()
+			_js_state.blight_count = blight_count
+			_js_state.swarm_count = swarm_count
+			_js_state.fly_count = fly_count
+			_js_state.light_clock = light_clock
 			_js_state.fire_count = fire_count
 			_js_state.fire_pops = fire_pops
 			_js_state.ashen_count = ashen_count
@@ -926,6 +944,14 @@ func _build_ui() -> void:
 				b.icon = HealthGourd.icon(str(def.get("gourd", "health")))
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "blight_light":
+				b.icon = load(str(PlacedObjects.blight_info(int(def.light)).path).replace(".png", "-assembled.png")) as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "fireflies":
+				b.icon = load("res://assets/vfx/blightwood_lights/firefly-icon.png") as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 76)
 			elif def.kind == "ashen_fire":
 				b.icon = load(str(PlacedObjects.fire_info(int(def.fire)).path)) as Texture2D
 				b.add_theme_constant_override("icon_max_width",64)

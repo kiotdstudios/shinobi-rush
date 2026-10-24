@@ -1,0 +1,23 @@
+{
+  "base_props": {
+    "wooden_post": "b43f0a7b-edd7-4561-a6b0-d2aa27bd781f",
+    "stone_pagoda": "5badb001-aa10-45db-b68c-d886445b56a5",
+    "branch_lantern": "24ee5ece-1657-455e-8827-df8b898f98a7",
+    "stone_brazier": "752a1d9f-5168-499e-aa6b-79e4add1cdd0",
+    "spirit_totem": "754cdecb-ac7d-488a-a738-cbc6bc8967af"
+  },
+  "protected_edge_completion": {
+    "wooden_post": "3b69d32d-7fd2-411b-af5e-7e1829c5c51c",
+    "stone_pagoda": "c7808a7e-30c8-4b92-b7f1-e120738331b9",
+    "branch_lantern": "0a3de793-e095-4b20-8547-fa022569927f",
+    "spirit_totem": "f0c03afb-7b8c-47ae-8c32-7ff6f4ab209a"
+  },
+  "flame_base": "7ff3e635-00b5-4090-837a-5999b3dda3b0",
+  "flame_wick_removal": "fc8c4074-64ab-4d12-89e4-4aebb12cc010",
+  "flame_animation": "be5fb054-55ac-4f0d-84b0-d7d9ddb73017",
+  "unused_initial_flame_animation": "e393e48e-e4ee-4969-afcb-113177351a20",
+  "firefly_base": "bd007fd7-4312-499d-9f8d-a6459a1ca5f3",
+  "firefly_animation": "68f43c7c-76ad-49ee-95a5-ece3acae9556",
+  "reference": "Owner supplied five-panel concept573BBE00-8961-4B45-9471-98F07DC00980. Each prop generated with its cropped concept as a labelled PixelLab Pro reference.",
+  "postprocess": "Protected edge completion composited only where original silhouette was clipped; original clear margins not filled with new scenery. Binary alpha cleanup, palette mapping, native layer extraction and atlas registration only; no creative geometry/code painting."
+}
