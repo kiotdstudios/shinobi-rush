@@ -11,3 +11,5 @@ The surface has 16 unique frames at 16 FPS plus an integer-pixel current drift. 
 Interactive review: canonical game query `?water=review` after integration. Normal/Half speed, Pause, Step, and Spray/foam controls. GIFs are actual Godot Web captures, with a visible clock. They are previews; only a verified canonical deployment is live.
 
 Production metadata: `assets/environment/blightwood_water/water.art.json`. Source jobs and unprocessed PNGs are preserved under its ignored source directory. Report: `orders/Codex/reports/2026-10-24-blightwood-water-report.md`.
+
+Live runtime verified 2026-10-24 at 0921f13: [interactive normal/half-speed review](https://kiotdstudios.github.io/shinobi-rush/?water=review). Builder: River water. Main deployment/postdeploy PASS; 22 targeted live checks PASS. See dated live validation JSON and report for exact URLs/time/build identity.

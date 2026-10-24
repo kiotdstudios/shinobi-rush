@@ -1,7 +1,7 @@
 # Order - Blightwood flowing river and small waterfall
 - Agent: Codex
 - Owner: Codex
-- Status: REVIEW
+- Status: DONE
 - Priority: P1 - latest owner request
 - Branch: codex/blightwood-water
 - Dependencies: PixelLab active; approved forest palette and existing diamond grid available.
@@ -22,4 +22,7 @@ Transparent modular river tiles, falling-water and landing-foam layers, animatio
 Detailed readable continuous flow, crisp native pixels, registered looping frames, seam-safe adjoining water tiles, clear blue palette, no baked scenery. Validate assets, Godot import/native tests/Web export, actual browser animation and builder persistence. Record exact deployment identity and failures honestly before DONE.
 
 ## Validation and PR
-Implementation3337643, integration2b892cf; PR https://github.com/kiotdstudios/shinobi-rush/pull/162. Integrated native2393 PASS;12builder browser checks and10review checks PASS. Actual192-frame normal/half previews published. Await required CI/main deployment and exact public-browser verification before DONE.
+Implementation3337643, integration2b892cf; PR https://github.com/kiotdstudios/shinobi-rush/pull/162. Integrated native2393 PASS; 12builder browser checks and10review checks PASS. Actual192-frame normal/half previews published. Await required CI/main deployment and exact public-browser verification before DONE.
+
+## Verified live delivery
+Runtime merged as 0921f13afc8f3bf036e468e7661103eba662ca0f via PR #162. Main Godot CI https://github.com/kiotdstudios/shinobi-rush/actions/runs/40103801393 including deploy and smoke-postdeploy PASS. Canonical builder verified 2026-10-24T14:53:27.185Z; 12/12 checks PASS. Interactive water review verified 2026-10-24T14:53:00.764Z; 10/10 checks PASS. Both returned the exact runtime SHA, with zero errors. Evidence and exact URLs in docs/visuals/blightwood-water/live-*-validation.json. Delivered for owner art review; no owner visual approval claimed.
