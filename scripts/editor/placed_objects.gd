@@ -135,6 +135,7 @@ const CATALOG := {
 	"blight_rock_01": {"label": "Blightwood Rock 1", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": -3.0, "art": "rock_01", "size": Vector2(114, 128), "anchor": Vector2(57, 124), "col": Vector2(0, 0), "body": Vector2(41, 43), "poly": [Vector2(-41, -23), Vector2(0, -3), Vector2(41, -23), Vector2(0, -43)]},
 	"blight_rock_02": {"label": "Blightwood Rock 2", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": 3.0, "art": "rock_02", "size": Vector2(133, 115), "anchor": Vector2(66, 111), "col": Vector2(0, 0), "body": Vector2(48, 45), "poly": [Vector2(-48, -21), Vector2(0, 3), Vector2(48, -21), Vector2(0, -45)]},
 	"blight_rock_03": {"label": "Blightwood Rock 3", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": 7.0, "art": "rock_03", "size": Vector2(180, 137), "anchor": Vector2(90, 133), "col": Vector2(0, 0), "body": Vector2(65, 57), "poly": [Vector2(-65, -25), Vector2(0, 7), Vector2(65, -25), Vector2(0, -57)]},
+	"dynamic_shrine": {"label":"Ancient Flame Shrine", "kind":"dynamic_shrine", "landmark":true, "footprint":Vector2(340,160)},
 	"ancient_shrine": {"label": "Ancient Shrine", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/ancient_shrine/", "sort_dy": -29.0, "art": "shrine_shelter_01", "size": Vector2(256, 256), "anchor": Vector2(129, 242), "col": Vector2(0, 0), "body": Vector2(87, 112), "poly": [Vector2(-87, -69), Vector2(0, -29), Vector2(86, -72), Vector2(0, -112)]},
 	"ground9_corner_top": {"label": "Corner Top", "kind": "ground"},
 	"ground9_edge_ne": {"label": "Edge Ne", "kind": "ground"},
@@ -163,7 +164,7 @@ const CATALOG := {
 	"paper_tag": {"label": "Paper tag (throwable bomb)", "kind": "pickup", "gourd": "paper_tag"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
+const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -318,6 +319,8 @@ static var _art_cache: Dictionary = {}
 static func art_texture(id: String, pos: Vector2) -> Array:
 	var def := def_of(id)
 	match String(def.kind):
+		"dynamic_shrine":
+			return [load(DynamicShrine.DIR + "assembled.png") as Texture2D,pos-DynamicShrine.FOOT]
 		"water_fx":
 			return [load(BlightwoodWater.DIR + "waterfall-icon.png") as Texture2D, pos-Vector2(64,169)]
 		"ground":
@@ -371,6 +374,8 @@ static func art_rect(id: String, pos: Vector2) -> Rect2:
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
 static func hit_rect(id: String, pos: Vector2) -> Rect2:
 	var def := def_of(id)
+	if def.kind == "dynamic_shrine":
+		return Rect2(pos-DynamicShrine.FOOT,Vector2(544,480))
 	if def.kind == "water_fx":
 		return Rect2(pos-Vector2(64,169),Vector2(128,192))
 	if def.kind == "ground":
@@ -420,7 +425,13 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	var def := def_of(id)
 	var nodes: Array[Node] = []
 	_serial += 1
-	if def.kind == "water_fx":
+	if def.kind == "dynamic_shrine":
+		var shrine := DynamicShrine.new()
+		shrine.name = "PlacedDynamicShrine%d" % _serial
+		shrine.position = pos
+		arena.add_child(shrine)
+		nodes = [shrine]
+	elif def.kind == "water_fx":
 		var water := BlightwoodWater.new()
 		water.waterfall = true
 		water.position = pos
@@ -673,7 +684,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "River water" if def.kind == "water_fx" else "Blightwood lights" if def.kind in ["blight_light", "fireflies"] else "Ashen fire" if def.kind == "ashen_fire" else "Volcanic trees" if def.kind == "ashen_tree" else "Blightwood rocks" if def.get("rock", false) else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Temple walls"
+	return "Dynamic shrine" if def.kind == "dynamic_shrine" else "River water" if def.kind == "water_fx" else "Blightwood lights" if def.kind in ["blight_light", "fireflies"] else "Ashen fire" if def.kind == "ashen_fire" else "Volcanic trees" if def.kind == "ashen_tree" else "Blightwood rocks" if def.get("rock", false) else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Temple walls"
 
 
 func type_visible(id: String) -> bool:

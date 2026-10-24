@@ -1,0 +1,71 @@
+{
+  "id": "blightwood_ancient_flame_shrine",
+  "canvas": [
+    544,
+    480
+  ],
+  "native_art_canvas": [
+    512,
+    448
+  ],
+  "padding": [
+    16,
+    16
+  ],
+  "anchor": [
+    272,
+    448
+  ],
+  "generator": "PixelLab create_image_pro",
+  "job_id": "9dc92012-7393-4431-9c7a-47c947d93bde",
+  "asset_id": "a85caa78-d1cf-55b4-b935-85bc998768cd",
+  "seed": 2412401,
+  "generation_cost": 25,
+  "source_sha256": "7382015b970557b336d55f9c0e070ae97d2c5aec963a0fc2aa987fe941cf0331",
+  "layers": {
+    "stone": "stone.png",
+    "emission": "emission.png",
+    "foliage": [
+      {
+        "index": 0,
+        "pixels": 568,
+        "top": 67,
+        "bottom": 121
+      },
+      {
+        "index": 1,
+        "pixels": 312,
+        "top": 105,
+        "bottom": 153
+      },
+      {
+        "index": 2,
+        "pixels": 625,
+        "top": 114,
+        "bottom": 176
+      },
+      {
+        "index": 3,
+        "pixels": 190,
+        "top": 145,
+        "bottom": 179
+      }
+    ]
+  },
+  "animation": {
+    "update": "continuous runtime; preview sampled at24fps",
+    "glow_period_s": 12,
+    "vine_period_s": 8,
+    "firefly_groups": 3,
+    "fireflies_per_group": 14,
+    "firefly_art": "existing PixelLab blightwood_lights firefly_atlas, reused",
+    "rays": "independent procedural additive shader"
+  },
+  "qc": {
+    "reassembly_pixel_exact": true,
+    "no_resampling": true,
+    "emissive_pixels": 1869,
+    "transparent_border": true
+  },
+  "integration": "Separate optional builder landmark. Does not replace shelter or change map layout."
+}
