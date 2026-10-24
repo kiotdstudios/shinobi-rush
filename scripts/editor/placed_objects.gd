@@ -72,11 +72,24 @@ const CATALOG := {
 	"ground9_corner_left": {"label": "Corner Left", "kind": "ground"},
 	"ground9_edge_sw": {"label": "Edge Sw", "kind": "ground"},
 	"ground9_corner_bottom": {"label": "Corner Bottom", "kind": "ground"},
+	"temple_floor_center": {"label": "Center", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_center"},
+	"temple_floor_center_b": {"label": "Center B", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_center_b"},
+	"temple_floor_cracked_a": {"label": "Cracked A", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_cracked_a"},
+	"temple_floor_cracked_b": {"label": "Cracked B", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_cracked_b"},
+	"temple_floor_moss_a": {"label": "Mossy", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_moss_a"},
+	"temple_floor_edge_nw": {"label": "Edge NW", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_edge_nw"},
+	"temple_floor_edge_ne": {"label": "Edge NE", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_edge_ne"},
+	"temple_floor_edge_se": {"label": "Edge SE", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_edge_se"},
+	"temple_floor_edge_sw": {"label": "Edge SW", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_edge_sw"},
+	"temple_floor_corner_top": {"label": "Corner Top", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_top"},
+	"temple_floor_corner_right": {"label": "Corner Right", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_right"},
+	"temple_floor_corner_bottom": {"label": "Corner Bottom", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_bottom"},
+	"temple_floor_corner_left": {"label": "Corner Left", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_left"},
 	"health_gourd": {"label": "Health gourd +25%", "kind": "pickup", "gourd": "health"},
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4", "fence_post", "fence_post_tall"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
+const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4", "fence_post", "fence_post_tall"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -121,6 +134,13 @@ static func tree_info(index: int) -> Dictionary:
 const GROUND_DIR := "res://assets/environment/blightwood/ground_path/"
 
 const FENCE_DIR := "res://assets/environment/fence_kit/"
+
+## The picture file of a ground tile: Blightwood path tiles live in GROUND_DIR, the stone temple floor
+## (Ashen Ruins) names its own folder and file in the catalog.
+static func ground_texture(id: String) -> Texture2D:
+	var def := def_of(id)
+	return load(String(def.get("dir", GROUND_DIR)) + String(def.get("file", id)) + ".png") as Texture2D
+
 const KIT_DIR := "res://assets/environment/kosen_courtyard/wall_kit_v2/"
 const WALL_THICKNESS := 18.0
 
@@ -189,7 +209,7 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 	var def := def_of(id)
 	match String(def.kind):
 		"ground":
-			return [load(GROUND_DIR + id + ".png") as Texture2D, pos - Vector2(36, 18)]
+			return [ground_texture(id), pos - Vector2(36, 18)]
 		"grass":
 			return [load(WindGrassTileset.DIR + id + ".png") as Texture2D, pos - Vector2(56, 136 if def.tall else 84)]
 		"tree":
@@ -268,7 +288,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	if def.kind == "ground":
 		var sprite := Sprite2D.new()
 		sprite.name = "PlacedGround%d" % _serial
-		sprite.texture = load(GROUND_DIR + id + ".png") as Texture2D
+		sprite.texture = ground_texture(id)
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		sprite.position = pos
 		# Ground owns the floor at z=-1. Draw after its floor, below grass/actors.
@@ -465,7 +485,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Landmarks" if def.get("landmark", false) else "Ground / paths" if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Walls & blocks"
+	return "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Walls & blocks"
 
 
 func type_visible(id: String) -> bool:
@@ -483,6 +503,35 @@ func set_type_visible(category: String, shown: bool) -> void:
 	for obj in objects:
 		if type_of(obj.id) == category:
 			_apply_visibility(obj)
+
+
+## The ground tile (any kind of floor tile) sitting on the floor cell centred at `cell`, or {}.
+func ground_at(cell: Vector2) -> Dictionary:
+	for o in objects:
+		if def_of(o.id).kind == "ground" and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
+			return o
+	return {}
+
+
+## Lay `id` on the floor cell centred at `cell`, replacing a different tile already there.
+## Returns true when something changed. Never commits: the caller does one `_changed()` after a whole stroke.
+func paint_cell(id: String, cell: Vector2) -> bool:
+	var def := def_of(id)
+	if def.is_empty() or def.kind not in ["ground", "grass"] or arena == null:
+		return false
+	if not arena.bounds.encloses(Rect2(cell - Vector2(36, 18), Vector2(72, 36))):
+		return false
+	if def.kind == "ground":
+		var old := ground_at(cell)
+		if not old.is_empty():
+			if old.id == id:
+				return false
+			remove(old, false)
+	else:
+		for o in objects:
+			if o.id == id and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
+				return false
+	return not add(id, cell, false).is_empty()
 
 
 func remove(obj: Dictionary, commit := true) -> void:
