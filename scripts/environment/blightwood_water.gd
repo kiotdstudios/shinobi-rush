@@ -20,6 +20,8 @@ var drops: Array[Sprite2D] = []
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	if auto_advance:
+		clock = shared_clock  # placement while paused must join the existing frozen flow field
 	if waterfall:
 		fall = _atlas("waterfall-atlas.png", 4, 4)
 		fall.position = Vector2(0, -73)

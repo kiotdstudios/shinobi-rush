@@ -23,6 +23,20 @@ func run(ck: Callable, root: Node) -> void:
 			ck.call("shore: native separate layers "+id,water.bank!=null and water.bank.texture.get_size()==Vector2(72,36) and water.surface.texture.get_size()==Vector2(72,36) and water.get_parent().name=="Ground")
 			ck.call("shore: correct catalog identity "+id,water.shore_family==family and water.shore_mask==mask and PlacedObjects.type_of(id)==category)
 	ck.call("shore: all48 decorative cells stay nonblocking",placed.objects.size()==count+48 and placed.obstacles().size()==obstacles)
+	var previous_clock := BlightwoodWater.shared_clock
+	var previous_pause := root.get_tree().paused
+	BlightwoodWater.shared_clock = 9.25
+	root.get_tree().paused = true
+	var frozen_shore := placed.add("shore_dirt_12",Vector2(1450,900),false)
+	var frozen_river := placed.add("water9_center",Vector2(1522,936),false)
+	var shore_node := frozen_shore.nodes[0] as BlightwoodWater
+	var river_node := frozen_river.nodes[0] as BlightwoodWater
+	ck.call("shore: paused placement inherits frozen current phase",shore_node.clock==9.25 and float((shore_node.surface.material as ShaderMaterial).get_shader_parameter("motion_time"))==9.25)
+	ck.call("shore: paused shore and river meet at the same phase",shore_node.clock==river_node.clock)
+	placed.remove(frozen_shore,false)
+	placed.remove(frozen_river,false)
+	root.get_tree().paused = previous_pause
+	BlightwoodWater.shared_clock = previous_clock
 	var first := owned[8].nodes[0] as BlightwoodWater
 	var origin := first.position
 	first.clock=0
