@@ -11,6 +11,10 @@ const JSON_PATH := "res://assets/vfx/substitution/substitution.json"
 const ARRIVAL_DELAY := 0.08
 const LOG_LIFETIME := 3.0
 const FADE := 0.4
+const LOG_DROP_H := 90.0  ## the log falls from this high above the foot origin
+const LOG_FALL := 0.2  ## seconds in the air (frames 0-1 tumble)
+const LOG_BOUNCES: Array = [[0.12, 16.0], [0.09, 6.0]]  ## [duration, height] of the two hops after it lands
+const LOG_SLOW := 2.0  ## wobble frames play this many times slower so the settle is readable
 const Z := 20
 
 static var _clips: Dictionary = {}
@@ -69,7 +73,9 @@ func _add_track(name: String, foot: Vector2, delay: float, hold_for: float) -> v
 	s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(s)
 	s.global_position = foot - (c["pivot"] as Vector2)
-	_tracks.append({"sprite": s, "clip": c, "delay": delay, "hold_for": hold_for})
+	if name == "log":
+		s.z_index = 1  ## above the smoke: the log must stay visible
+	_tracks.append({"sprite": s, "clip": c, "delay": delay, "hold_for": hold_for, "name": name, "foot": foot})
 
 
 func live_tracks() -> int:
@@ -88,6 +94,16 @@ func _process(delta: float) -> void:
 			continue
 		var tex: Array = c["tex"]
 		var dur: Array = c["dur"]
+		if t["name"] == "log":
+			_tick_log(t, local)
+			if local > float(t["hold_for"]):
+				s.queue_free()
+				continue
+			var hold_l: float = float(t["hold_for"])
+			if local > hold_l - FADE:
+				s.modulate.a = clampf((hold_l - local) / FADE, 0.0, 1.0)
+			alive.append(t)
+			continue
 		var acc := 0.0
 		var idx := -1
 		for i in tex.size():
@@ -110,3 +126,37 @@ func _process(delta: float) -> void:
 	_tracks = alive
 	if _tracks.is_empty():
 		queue_free()
+
+
+## The log drops from above, hits the ground, hops twice and wobbles to a stop (frames 2-8 played slowed).
+func _tick_log(t: Dictionary, local: float) -> void:
+	var s: Sprite2D = t["sprite"]
+	var c: Dictionary = t["clip"]
+	var tex: Array = c["tex"]
+	var base: Vector2 = (t["foot"] as Vector2) - (c["pivot"] as Vector2)
+	var lift := 0.0
+	var idx := 0
+	if local < LOG_FALL:
+		var k := local / LOG_FALL
+		lift = LOG_DROP_H * (1.0 - k * k)
+		idx = 0 if k < 0.5 else 1
+	else:
+		var after := local - LOG_FALL
+		var start := 0.0
+		for b: Array in LOG_BOUNCES:
+			var d: float = b[0]
+			if after >= start and after < start + d:
+				var u := (after - start) / d
+				lift = float(b[1]) * 4.0 * u * (1.0 - u)
+			start += d
+		var acc := 0.0
+		idx = tex.size() - 1
+		var dur: Array = c["dur"]
+		for i in range(2, tex.size() - 1):
+			acc += float(dur[i] if i < dur.size() else 40) / 1000.0 * LOG_SLOW
+			if after < acc:
+				idx = i
+				break
+	s.visible = true
+	s.texture = tex[idx]
+	s.global_position = base - Vector2(0.0, lift)
