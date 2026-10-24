@@ -50,7 +50,7 @@ var _hud_buttons: Dictionary = {}
 var hud_snap_button: Button = null
 ## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
-const DIM_TYPES: Array[String] = ["Volcanic trees", "Trees", "Walls & blocks", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
+const DIM_TYPES: Array[String] = ["Ashen fire", "Volcanic trees", "Trees", "Walls & blocks", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
 var show_grid := false
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false
@@ -161,6 +161,14 @@ func _process(_d: float) -> void:
 					ashen_count += 1
 					ashen_capacity += tree.flakes.size()
 					ashen_clock = tree.local_clock
+			var fire_count := 0
+			var fire_pops := 0
+			for obj in placed.objects:
+				if PlacedObjects.def_of(obj.id).kind == "ashen_fire":
+					fire_count += 1
+					fire_pops += (obj.nodes[0] as AshenFireProp).pop_count
+			_js_state.fire_count = fire_count
+			_js_state.fire_pops = fire_pops
 			_js_state.ashen_count = ashen_count
 			_js_state.ashen_capacity = ashen_capacity
 			_js_state.ashen_clock = ashen_clock
@@ -918,6 +926,10 @@ func _build_ui() -> void:
 				b.icon = HealthGourd.icon(str(def.get("gourd", "health")))
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "ashen_fire":
+				b.icon = load(str(PlacedObjects.fire_info(int(def.fire)).path)) as Texture2D
+				b.add_theme_constant_override("icon_max_width",64)
+				b.custom_minimum_size = Vector2(0,96)
 			elif def.kind == "ashen_tree":
 				b.icon = load(str(PlacedObjects.ashen_info(int(def.tree)).texture)) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)

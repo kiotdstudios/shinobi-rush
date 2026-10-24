@@ -1,7 +1,7 @@
 # Order — Ashen Ruins volcanic trees
 - Agent: Codex
 - Owner: Codex
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
 - Branch: codex/ashen-volcanic-trees
 - Dependencies: User reference, approved Blightwood scale/camera and ash animation source; satisfied.
@@ -20,3 +20,6 @@ Crisp transparent art, consistent root anchors and size, barren branches and rea
 
 ## Handoff
 Asset manifest assets/environment/ashen_trees/ashen-trees.art.json. Owner approved the trees and explicitly requested builder registration, dedicated filter and live deployment. Integration checks in progress; deploy after required CI and verify exact live build.
+
+## Live completion
+PR #148 merged as49f0efd435596e67ef0b53fba7bb87b3b525e55b. Pages build-info verified exactSHA on2026-10-24. All13live browser builder checks passed,0errors (build/ashen-builder-live/result.json): filter/cards, scrolling without zoom, placement/selection/move/delete, all3variants, bounded ash, animation clock, save/reload.

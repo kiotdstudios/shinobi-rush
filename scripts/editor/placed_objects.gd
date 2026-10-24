@@ -17,6 +17,12 @@ const DEFAULT_LAYOUT_PATH := "res://data/world_layout.json"
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
 const SAVE_VERSION := 7
 const CATALOG := {
+	"fire_tall_pillar": {"label": "Tall Pillar", "kind": "ashen_fire", "fire": 0, "footprint": Vector2(42, 22)},
+	"fire_short_brazier": {"label": "Short Brazier", "kind": "ashen_fire", "fire": 1, "footprint": Vector2(92, 38)},
+	"fire_tripod_brazier": {"label": "Tripod Brazier", "kind": "ashen_fire", "fire": 2, "footprint": Vector2(100, 44)},
+	"fire_wall_brazier": {"label": "Wall Brazier", "kind": "ashen_fire", "fire": 3, "footprint": Vector2(64, 34)},
+	"fire_fire_pit": {"label": "Fire Pit", "kind": "ashen_fire", "fire": 4, "footprint": Vector2(130, 50)},
+
 	"ashen_sentinel": {"label": "Volcanic sentinel", "kind": "ashen_tree", "tree": 0},
 	"ashen_windbent": {"label": "Wind-bent volcanic", "kind": "ashen_tree", "tree": 1},
 	"ashen_elder": {"label": "Volcanic elder", "kind": "ashen_tree", "tree": 2},
@@ -90,7 +96,7 @@ const CATALOG := {
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
+const CATEGORIES := [["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -102,6 +108,13 @@ const DEFAULT_CHAKRA_GOURDS := 3
 
 static var _tree_cache: Array = []
 static var _ashen_cache: Array = []
+static var _fire_cache: Array = []
+
+static func fire_info(index: int) -> Dictionary:
+	if _fire_cache.is_empty():
+		var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(AshenFireProp.MANIFEST))
+		_fire_cache = manifest.fixtures
+	return _fire_cache[index]
 
 
 static func ashen_info(index: int) -> Dictionary:
@@ -221,6 +234,9 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 			return [ground_texture(id), pos - Vector2(36, 18)]
 		"grass":
 			return [load(WindGrassTileset.DIR + id + ".png") as Texture2D, pos - Vector2(56, 136 if def.tall else 84)]
+		"ashen_fire":
+			var info := fire_info(int(def.fire))
+			return [load(str(info.path)) as Texture2D,pos-Vector2(float(info.foot_anchor[0]),float(info.foot_anchor[1]))]
 		"ashen_tree":
 			var info := ashen_info(int(def.tree))
 			return [load(str(info.texture)) as Texture2D, pos - Vector2(float(info.anchor[0]), float(info.anchor[1]))]
@@ -266,6 +282,9 @@ static func hit_rect(id: String, pos: Vector2) -> Rect2:
 		return Rect2(pos - Vector2(56, 136 if def.tall else 84), Vector2(112, 160 if def.tall else 112))
 	if def.kind == "pickup":
 		return Rect2(pos.x - 40.0, pos.y - 140.0, 80.0, 150.0)
+	if def.kind == "ashen_fire":
+		var info := fire_info(int(def.fire))
+		return Rect2(pos-Vector2(float(info.foot_anchor[0]),float(info.foot_anchor[1])),Vector2(float(info.size[0]),float(info.size[1])))
 	if def.kind == "ashen_tree":
 		return Rect2(pos - Vector2(160,416),Vector2(320,448))
 	if def.kind == "tree":
@@ -315,6 +334,17 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		var sprite := field.make_editable_sprite(id, pos)
 		arena.add_child(sprite)
 		nodes = [sprite]
+	elif def.kind == "ashen_fire":
+		var fire := AshenFireProp.new()
+		fire.name = "PlacedAshenFire%d" % _serial
+		fire.data = fire_info(int(def.fire))
+		fire.position = pos
+		arena.add_child(fire)
+		var body := _make_trunk(pos)
+		var shape := body.get_child(0) as CollisionShape2D
+		(shape.shape as RectangleShape2D).size = def.footprint
+		shape.position.y = -(def.footprint as Vector2).y*0.5
+		nodes = [fire,body]
 	elif def.kind == "ashen_tree":
 		var tree := AshenTree.new()
 		tree.name = "PlacedVolcanic%d" % _serial
@@ -510,7 +540,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Volcanic trees" if def.kind == "ashen_tree" else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Walls & blocks"
+	return "Ashen fire" if def.kind == "ashen_fire" else "Volcanic trees" if def.kind == "ashen_tree" else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Walls & blocks"
 
 
 func type_visible(id: String) -> bool:
@@ -688,16 +718,36 @@ func to_json_string() -> String:
 	return JSON.stringify(to_dict(), "\t")
 
 
+## A synchronous Web backup avoids losing recent edits to delayed IDBFS writeback.
+## Existing installations without a backup still load their normal user:// file.
+func _web_layout_read() -> String:
+	if not OS.has_feature("web") or save_path != SAVE_PATH:
+		return ""
+	var result: Variant = JavaScriptBridge.eval("(function(){try{return localStorage.getItem('shinobi-rush:world-layout:v1')||''}catch(e){return ''}})()",true)
+	return str(result) if result != null else ""
+
+func _web_layout_write(text: String) -> void:
+	if not OS.has_feature("web") or save_path != SAVE_PATH:
+		return
+	# JSON quoting keeps layout data out of executable source. Storage may be denied/full;
+	# the original FileAccess save remains available in that case.
+	var action := "localStorage.removeItem('shinobi-rush:world-layout:v1')" if text.is_empty() else "localStorage.setItem('shinobi-rush:world-layout:v1',"+JSON.stringify(text)+")"
+	JavaScriptBridge.eval("(function(){try{"+action+";return true}catch(e){return false}})()",true)
+
 func save() -> bool:
 	# An empty world is never persisted: it would make the next boot start with no trees or walls.
 	if objects.is_empty():
+		_web_layout_write("")
 		if FileAccess.file_exists(save_path):
 			DirAccess.remove_absolute(save_path)
 		return true
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
-	f.store_string(to_json_string())
+	var text := to_json_string()
+	f.store_string(text)
+	f.close()  # complete the write before the Web filesystem schedules persistence
+	_web_layout_write(text)
 	return true
 
 ## Rebuild a layout. Entries with an unknown id, bad numbers, outside the arena or on top of the spawn are skipped.
@@ -827,6 +877,16 @@ func _gourd_spot_ok(pos: Vector2, taken: Array[Vector2]) -> bool:
 
 
 func load_saved() -> int:
+	var backup: Variant = null
+	var snapshot := _web_layout_read()
+	if not snapshot.is_empty():
+		var parser := JSON.new()
+		if parser.parse(snapshot) == OK:
+			backup = parser.data
+	if typeof(backup) == TYPE_DICTIONARY and typeof(backup.get("items")) == TYPE_ARRAY and not backup.items.is_empty():
+		var restored := load_dict(backup)
+		if restored > 0:
+			return restored
 	if not FileAccess.file_exists(save_path):
 		return 0
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(save_path))
