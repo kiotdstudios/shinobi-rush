@@ -76,7 +76,7 @@ func _put(bandit_pos: Vector2, player_pos: Vector2, state: Bandit.State = Bandit
 
 
 func _inside_any_block(p: Vector2, margin: float = 0.0) -> bool:
-	for b: Array in WorldScale.BLOCKS:
+	for b: Array in WorldScale.live_blocks():
 		var pos: Vector2 = b[0]
 		var fp: Vector2 = b[1]
 		if Rect2(pos.x - fp.x * 0.5, pos.y - fp.y, fp.x, fp.y).grow(margin).has_point(p):
@@ -90,8 +90,8 @@ func _test_arena_layout() -> void:
 	ck.call("robber layout: player spawn unchanged at (0,135)", spawn.is_equal_approx(Vector2(0, 135)), str(spawn))
 	var dist := WorldScale.BANDIT_HOME.distance_to(spawn)
 	ck.call("robber layout: Bandit lives far from the player spawn (> 1000 px)", dist > 1000.0, "%.0f px" % dist)
-	ck.call("robber layout: at least 3 NEW placeholder blockers were added", WorldScale.BLOCKS.size() >= 8, str(WorldScale.BLOCKS.size()))
-	for i in range(5, WorldScale.BLOCKS.size()):
+	ck.call("robber layout: the two long walls are still there (placeholder rocks removed)", WorldScale.live_blocks().size() >= 4, str(WorldScale.live_blocks().size()))
+	for i in range(5, 7):
 		ck.call("robber layout: blocker %d exists as a real collider" % i, arena.get_node_or_null(NodePath("Block%d" % i)) is StaticBody2D)
 	ck.call("robber layout: the spawn is not inside or hugging a blocker", not _inside_any_block(spawn, 80.0))
 	ck.call("robber layout: Bandit home is not inside a blocker", not _inside_any_block(WorldScale.BANDIT_HOME, 60.0))
@@ -191,10 +191,6 @@ func _test_sight_and_walls() -> void:
 	bandit.facing8 = Vector2.LEFT
 	await _frames(3)
 	ck.call("robber sight: the same distance through the choke gap IS visible", bandit.sees_player)
-	# The rock covering the choke's east mouth breaks line of sight too.
-	_put(Vector2(1300, 40), Vector2(1060, 40))
-	bandit.facing8 = Vector2.LEFT
-	ck.call("robber sight: cover (rock) breaks line of sight", not bandit.can_see(player.global_position, true))
 
 
 func _test_acquisition_delay() -> void:
@@ -361,6 +357,7 @@ func _test_double_flicker() -> void:
 	# Player damage interrupts the retreat state cleanly.
 	_put(Vector2(1300, 420), Vector2(1190, 420), Bandit.State.THREATEN)
 	bandit._begin_retreat()
+	bandit.substitutions = 0  # a log swap would swallow the hit this test needs
 	bandit.take_damage(1.0, Vector2.RIGHT, 0.0, 0.0)
 	ck.call("robber retreat: a hit during the telegraph cancels it", bandit.state == Bandit.State.HIT_REACT and bandit.retreat_phase == Bandit.RetreatPhase.NONE)
 	bandit.profile.retreat_chance = 0.25

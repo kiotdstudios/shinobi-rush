@@ -1,0 +1,17 @@
+{
+  "png_count": 9,
+  "unique_tiles": 9,
+  "dimensions": [
+    72,
+    36
+  ],
+  "palette_colors": 22,
+  "exact_grass_palette": true,
+  "consistent_diamond_coverage": true,
+  "opaque_pixels_per_tile": 1296,
+  "alpha_values": [
+    0,
+    255
+  ],
+  "result": "PASS"
+}

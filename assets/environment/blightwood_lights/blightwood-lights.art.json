@@ -1,0 +1,287 @@
+{
+  "schema": "shinobi_blightwood_lights_v1",
+  "status": "technical_validation",
+  "source_tool": "PixelLab Pro/Pixen/inpaint and animate_image",
+  "palette": [
+    "#0a101b",
+    "#131c25",
+    "#1a2d2f",
+    "#283e31",
+    "#364c3e",
+    "#485f55",
+    "#587262",
+    "#728872",
+    "#89a087",
+    "#9db399",
+    "#4f5846",
+    "#30382c",
+    "#454e3e",
+    "#283026",
+    "#5a6351",
+    "#3c4437",
+    "#68705c",
+    "#777e6b",
+    "#888f79",
+    "#9aa08b",
+    "#c2c6b2",
+    "#b0b59e",
+    "#1e241a",
+    "#242b1c",
+    "#203a57",
+    "#38547c",
+    "#476898",
+    "#5f82b5",
+    "#7699ca",
+    "#808eac",
+    "#99a7c2",
+    "#b9cbe2",
+    "#e2f2ff"
+  ],
+  "palette_sources": [
+    "owner concept palette",
+    "assets/environment/kosen_courtyard/grass/tiles/grass9_center.png"
+  ],
+  "fixtures": [
+    {
+      "id": "wooden_post",
+      "path": "res://assets/environment/blightwood_lights/props/wooden_post.png",
+      "size": [
+        256,
+        320
+      ],
+      "foot_anchor": [
+        106,
+        290
+      ],
+      "light_anchor": [
+        179,
+        149
+      ],
+      "footprint": [
+        54,
+        30
+      ],
+      "flame_scale": 0.0,
+      "glass": "res://assets/environment/blightwood_lights/props/wooden_post-glass.png",
+      "light_radius": 130,
+      "light_energy": 1.0,
+      "halo_scale": 0.85,
+      "fly_radius": [
+        72,
+        64
+      ],
+      "pendant": {
+        "path": "res://assets/environment/blightwood_lights/props/wooden_post-pendant.png",
+        "glass": "res://assets/environment/blightwood_lights/props/wooden_post-pendant-glass.png",
+        "pivot": [
+          179,
+          92
+        ],
+        "offset": [
+          -22,
+          0
+        ],
+        "crop": [
+          157,
+          92,
+          202,
+          179
+        ]
+      },
+      "sha256": "3c18f695660a3d18a93be8d59cbfe411b47f14468d2fcec6f1af3481c43a7f07"
+    },
+    {
+      "id": "stone_pagoda",
+      "path": "res://assets/environment/blightwood_lights/props/stone_pagoda.png",
+      "size": [
+        240,
+        288
+      ],
+      "foot_anchor": [
+        120,
+        235
+      ],
+      "light_anchor": [
+        122,
+        141
+      ],
+      "footprint": [
+        84,
+        42
+      ],
+      "flame_scale": 0.0,
+      "glass": "res://assets/environment/blightwood_lights/props/stone_pagoda-glass.png",
+      "light_radius": 130,
+      "light_energy": 1.0,
+      "halo_scale": 0.85,
+      "fly_radius": [
+        72,
+        64
+      ],
+      "sha256": "7e6a0ce6f26eadadfaf3a4c4874a022c05261c968c732d44dc64bd4e350a8df4"
+    },
+    {
+      "id": "branch_lantern",
+      "path": "res://assets/environment/blightwood_lights/props/branch_lantern.png",
+      "size": [
+        288,
+        352
+      ],
+      "foot_anchor": [
+        112,
+        311
+      ],
+      "light_anchor": [
+        197,
+        184
+      ],
+      "footprint": [
+        70,
+        38
+      ],
+      "flame_scale": 0.0,
+      "glass": "res://assets/environment/blightwood_lights/props/branch_lantern-glass.png",
+      "light_radius": 130,
+      "light_energy": 1.0,
+      "halo_scale": 0.85,
+      "fly_radius": [
+        72,
+        64
+      ],
+      "pendant": {
+        "path": "res://assets/environment/blightwood_lights/props/branch_lantern-pendant.png",
+        "glass": "res://assets/environment/blightwood_lights/props/branch_lantern-pendant-glass.png",
+        "pivot": [
+          197,
+          125
+        ],
+        "offset": [
+          -22,
+          0
+        ],
+        "crop": [
+          175,
+          125,
+          222,
+          213
+        ]
+      },
+      "sha256": "1b86c1323a939606061376ec0a760c43ff7160c7686bd599239fceb07bb13312"
+    },
+    {
+      "id": "stone_brazier",
+      "path": "res://assets/environment/blightwood_lights/props/stone_brazier.png",
+      "size": [
+        176,
+        192
+      ],
+      "foot_anchor": [
+        88,
+        177
+      ],
+      "light_anchor": [
+        88,
+        54
+      ],
+      "footprint": [
+        96,
+        46
+      ],
+      "flame_scale": 0.92,
+      "glass": "res://assets/environment/blightwood_lights/props/stone_brazier-glass.png",
+      "light_radius": 150,
+      "light_energy": 1.25,
+      "halo_scale": 1.5,
+      "fly_radius": [
+        72,
+        64
+      ],
+      "sha256": "acc6d42f3793b9eaf94088a5481c34f706f3281e38a8b1acd092fadfa3536c9d"
+    },
+    {
+      "id": "spirit_totem",
+      "path": "res://assets/environment/blightwood_lights/props/spirit_totem.png",
+      "size": [
+        240,
+        320
+      ],
+      "foot_anchor": [
+        120,
+        287
+      ],
+      "light_anchor": [
+        120,
+        119
+      ],
+      "footprint": [
+        75,
+        40
+      ],
+      "flame_scale": 0.82,
+      "glass": "res://assets/environment/blightwood_lights/props/spirit_totem-glass.png",
+      "light_radius": 150,
+      "light_energy": 1.25,
+      "halo_scale": 1.5,
+      "fly_radius": [
+        72,
+        64
+      ],
+      "sha256": "0a726b37cf5df4b2685e72d8ab309141e191021bc4949251bfa3f175cea2b149"
+    }
+  ],
+  "flame": {
+    "path": "res://assets/vfx/blightwood_lights/spirit_flame_atlas.png",
+    "frames": 12,
+    "fps": 12,
+    "frame_size": [
+      128,
+      160
+    ],
+    "anchor": [
+      64,
+      144
+    ],
+    "columns": 4,
+    "rows": 3,
+    "unique_hashes": [
+      "fb155112426bce836c7182508cbdd678ada6d8395206be951d4f985df0a2275c",
+      "f97c8ee05d6df094179b5d8512da0defd274adeff2d6d79a5a5f3febf2c817f8",
+      "56150ae023b6bbf29a0d62edaddd4b8aa513124c0aa274e0905025ba6a41734a",
+      "2b9700af5869d40aca64cdb79e70b39cd25ea7e060ff238e0ccd8258efab1061",
+      "bca79c6e00bac5fdfd34c7d92e877f93ddd1a2e88034544fdfdc4fe855ff52e8",
+      "5c3a59c6c782c01a1bb2e423c258ec2cab88e2df86a91b211ead61614cdd53e1",
+      "b65c9aafc10552f4d277f835acb82825fcf5ae18eb30cc6a795c319d9ec0c188",
+      "5b522bf81be18328f34adac047a46003ef21c858db8fdf4cd77e85eeab55b4da",
+      "83ae79578b123da0f30255f86596b29662c883aac2db5ba254b1085dbcd77e6d",
+      "9c55d69d3f61aa53b84f8f8ee221c741f7f6d03e870263e967dff8c79ec25f7e",
+      "ed242373f3230284ac7832eddb6a3f19ffdd370a804c382b1a6fa94a2f73bf23",
+      "7df3555bd9222c7bf05b1b66725af27a3a6d5fa7a7168c63bebe4a80f2d7ddf4"
+    ]
+  },
+  "firefly": {
+    "path": "res://assets/vfx/blightwood_lights/firefly_atlas.png",
+    "frames": 8,
+    "fps": 18,
+    "frame_size": [
+      32,
+      32
+    ],
+    "columns": 4,
+    "rows": 2,
+    "unique_hashes": [
+      "585ad5e3161af35c928191cc136d6b9ccdcc3f9fbd296789c9f5f0e474f3ac50",
+      "df1ddae5e8fd9298847d41d0721423adbf85c5fbe5c717be13466a5f542e06d5",
+      "a130366eeb057739c85a89504ed76f2dfb747f33e4b7735b9bcdb09e93e5867f",
+      "0cddee215d6a0a63ea3dd132da3ce83633d4ec453c70e77f29acfdc0f723b36e",
+      "9e7145fcee36648f35946de8bc1f95d5272675beac23dd182a74641a0d2ab70c",
+      "e126e1ede2fc522227495c65a7a64d3def8a04863bff0625824032ab3672c4ce",
+      "da1df9ae02d78d9ba788176e06bf465d15f9c09a40d1f684678961eb4cc15b33",
+      "8f32fd887a42e86d1b1ebfb6f5eccb1ac19d9bb39c115b4eff2a3dd3798686cd"
+    ],
+    "per_fixture": 12,
+    "standalone_count": 32,
+    "flight": "independent continuous bounded multi-frequency paths and staggered bioluminescent pulses"
+  },
+  "source_endpoint_policy": "Pinned final key omitted from each atlas, preserving12and8unique frames.",
+  "body_animation": "Fixed rooted fixture; extracted hanging pendants move independently; emissive glass masks pulse independently."
+}

@@ -223,6 +223,8 @@ func _ready() -> void:
 	y_sort_enabled = true
 	add_child(Ground.new(self))
 	for i in BLOCKS.size():
+		if WorldScale.is_placeholder_block(i):
+			continue  # owner: no placeholder boxes in the level
 		var b: Array = BLOCKS[i]
 		var block := Block.new(b[1], b[2])
 		block.name = "Block%d" % i
@@ -234,7 +236,7 @@ func _ready() -> void:
 		rear.position = ArenaSort.rear_position(b[0], b[1])
 		add_child(rear)
 	_build_bounds_walls()
-	nav = ArenaNav.build(bounds, BLOCKS)
+	nav = ArenaNav.build(bounds, WorldScale.live_blocks())
 	placed = PlacedObjects.new()
 	placed.name = "PlacedObjects"
 	placed.arena = self
@@ -245,9 +247,15 @@ func _ready() -> void:
 		placed.load_default_from_repo()  # no per-machine save yet: fall back to the last-published layout
 	rebuild_nav()
 	_spawn_bandit()
-	if placed.loaded_version < PlacedObjects.SAVE_VERSION:
+	var layout_version := placed.loaded_version
+	if layout_version < 6:
 		# first run / an older layout: a few gourds lie around (a v5 layout already has its health gourds)
-		placed.scatter_defaults(placed.loaded_version >= 5)
+		placed.scatter_defaults(layout_version >= 5)
+	if layout_version < 7:
+		placed.ensure_shrine()  # v7 added the Ancient Shrine landmark: every older layout gets one once
+	# Add the Ancient Shrine reference section using existing catalog art.
+	# The authored layer is rebuilt on boot; it does not overwrite user:// editor saves.
+	AncientShrineSection.populate(self)
 	editor = WorldEditor.new()
 	editor.setup(self, placed)
 	add_child(editor)
@@ -289,7 +297,7 @@ func _on_bandit_defeated(bandit: Bandit) -> void:
 
 ## Rebuild the bandit nav after the player-built layout changed; live enemies get the new grid at once.
 func rebuild_nav() -> void:
-	nav = ArenaNav.build(bounds, BLOCKS + (placed.obstacles() if placed != null else []))
+	nav = ArenaNav.build(bounds, WorldScale.live_blocks() + (placed.obstacles() if placed != null else []))
 	for e in get_tree().get_nodes_in_group("enemy"):
 		if "nav" in e:
 			e.nav = nav

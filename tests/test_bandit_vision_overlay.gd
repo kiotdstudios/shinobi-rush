@@ -894,6 +894,7 @@ func _test_lifecycle(root: Node) -> void:
 	ck.call("vision lifecycle: one live Bandit -> one view, something is drawn", ov.views.size() == 1 and ov.draw_items > 0)
 	var one_items := ov.draw_items
 	# the Bandit dies: no ghost polygon
+	bandit.substitutions = 0  # no log swap: this test needs the kill to land
 	bandit.take_damage(100000.0, Vector2.RIGHT, 0.0, 0.0)
 	await _frames(2)
 	ck.call("vision lifecycle: the Bandit dies -> no view, nothing drawn, telemetry empty (no ghost polygon)", bandit.state == Bandit.State.DEAD and ov.views.is_empty() and ov.draw_items == 0 and BanditVisionToggle.telemetry()["vision_points"] == 0 and BanditVisionToggle.telemetry()["vision_bandits"] == 0)

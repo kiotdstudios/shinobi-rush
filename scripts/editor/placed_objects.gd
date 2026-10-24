@@ -15,17 +15,97 @@ const SAVE_PATH := "user://world_builder_layout.json"
 const DEFAULT_LAYOUT_PATH := "res://data/world_layout.json"
 ## v4 adds editable grass to v3 saves, which list EVERY solid object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
-const SAVE_VERSION := 6
+const SAVE_VERSION := 7
 const CATALOG := {
+	"shore_grass_00": {"label": "Water fill", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 0},
+	"shore_grass_01": {"label": "Outer Bottom", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 1},
+	"shore_grass_02": {"label": "Outer Left", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 2},
+	"shore_grass_03": {"label": "Bank SW", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 3},
+	"shore_grass_04": {"label": "Outer Right", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 4},
+	"shore_grass_05": {"label": "Bank SE", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 5},
+	"shore_grass_06": {"label": "Split L/R", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 6},
+	"shore_grass_07": {"label": "Inner Top", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 7},
+	"shore_grass_08": {"label": "Outer Top", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 8},
+	"shore_grass_09": {"label": "Split T/B", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 9},
+	"shore_grass_10": {"label": "Bank NW", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 10},
+	"shore_grass_11": {"label": "Inner Right", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 11},
+	"shore_grass_12": {"label": "Bank NE", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 12},
+	"shore_grass_13": {"label": "Inner Left", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 13},
+	"shore_grass_14": {"label": "Inner Bottom", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 14},
+	"shore_grass_15": {"label": "Land fill", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 15},
+	"shore_dirt_00": {"label": "Water fill", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 0},
+	"shore_dirt_01": {"label": "Outer Bottom", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 1},
+	"shore_dirt_02": {"label": "Outer Left", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 2},
+	"shore_dirt_03": {"label": "Bank SW", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 3},
+	"shore_dirt_04": {"label": "Outer Right", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 4},
+	"shore_dirt_05": {"label": "Bank SE", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 5},
+	"shore_dirt_06": {"label": "Split L/R", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 6},
+	"shore_dirt_07": {"label": "Inner Top", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 7},
+	"shore_dirt_08": {"label": "Outer Top", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 8},
+	"shore_dirt_09": {"label": "Split T/B", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 9},
+	"shore_dirt_10": {"label": "Bank NW", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 10},
+	"shore_dirt_11": {"label": "Inner Right", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 11},
+	"shore_dirt_12": {"label": "Bank NE", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 12},
+	"shore_dirt_13": {"label": "Inner Left", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 13},
+	"shore_dirt_14": {"label": "Inner Bottom", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 14},
+	"shore_dirt_15": {"label": "Land fill", "kind": "ground", "group": "Dirt banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "dirt", "shore_mask": 15},
+	"shore_rock_00": {"label": "Water fill", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 0},
+	"shore_rock_01": {"label": "Outer Bottom", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 1},
+	"shore_rock_02": {"label": "Outer Left", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 2},
+	"shore_rock_03": {"label": "Bank SW", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 3},
+	"shore_rock_04": {"label": "Outer Right", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 4},
+	"shore_rock_05": {"label": "Bank SE", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 5},
+	"shore_rock_06": {"label": "Split L/R", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 6},
+	"shore_rock_07": {"label": "Inner Top", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 7},
+	"shore_rock_08": {"label": "Outer Top", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 8},
+	"shore_rock_09": {"label": "Split T/B", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 9},
+	"shore_rock_10": {"label": "Bank NW", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 10},
+	"shore_rock_11": {"label": "Inner Right", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 11},
+	"shore_rock_12": {"label": "Bank NE", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 12},
+	"shore_rock_13": {"label": "Inner Left", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 13},
+	"shore_rock_14": {"label": "Inner Bottom", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 14},
+	"shore_rock_15": {"label": "Land fill", "kind": "ground", "group": "Rocky banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "rock", "shore_mask": 15},
+
+	"water9_corner_top": {"label": "Water Corner Top", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "corner_top"},
+	"water9_edge_ne": {"label": "Water Edge Ne", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "edge_ne"},
+	"water9_corner_right": {"label": "Water Corner Right", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "corner_right"},
+	"water9_edge_nw": {"label": "Water Edge Nw", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "edge_nw"},
+	"water9_center": {"label": "Water Center", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "center"},
+	"water9_edge_se": {"label": "Water Edge Se", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "edge_se"},
+	"water9_corner_left": {"label": "Water Corner Left", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "corner_left"},
+	"water9_edge_sw": {"label": "Water Edge Sw", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "edge_sw"},
+	"water9_corner_bottom": {"label": "Water Corner Bottom", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "corner_bottom"},
+	"waterfall_small": {"label": "Small Waterfall", "kind": "water_fx", "footprint": Vector2(80, 32)},
+
+	"blight_wooden_post": {"label": "Wooden Lantern", "kind": "blight_light", "light": 0, "footprint": Vector2(54, 30)},
+	"blight_stone_pagoda": {"label": "Pagoda Lantern", "kind": "blight_light", "light": 1, "footprint": Vector2(84, 42)},
+	"blight_branch_lantern": {"label": "Branch Lantern", "kind": "blight_light", "light": 2, "footprint": Vector2(70, 38)},
+	"blight_stone_brazier": {"label": "Spirit Brazier", "kind": "blight_light", "light": 3, "footprint": Vector2(96, 46)},
+	"blight_spirit_totem": {"label": "Spirit Totem", "kind": "blight_light", "light": 4, "footprint": Vector2(75, 40)},
+	"blight_fireflies": {"label": "Forest Fireflies", "kind": "fireflies", "footprint": Vector2(32, 16)},
+
+	"fire_tall_pillar": {"label": "Tall Pillar", "kind": "ashen_fire", "fire": 0, "footprint": Vector2(42, 22)},
+	"fire_short_brazier": {"label": "Short Brazier", "kind": "ashen_fire", "fire": 1, "footprint": Vector2(92, 38)},
+	"fire_tripod_brazier": {"label": "Tripod Brazier", "kind": "ashen_fire", "fire": 2, "footprint": Vector2(100, 44)},
+	"fire_wall_brazier": {"label": "Wall Brazier", "kind": "ashen_fire", "fire": 3, "footprint": Vector2(64, 34)},
+	"fire_fire_pit": {"label": "Fire Pit", "kind": "ashen_fire", "fire": 4, "footprint": Vector2(130, 50)},
+
+	"ashen_sentinel": {"label": "Volcanic sentinel", "kind": "ashen_tree", "tree": 0},
+	"ashen_windbent": {"label": "Wind-bent volcanic", "kind": "ashen_tree", "tree": 1},
+	"ashen_elder": {"label": "Volcanic elder", "kind": "ashen_tree", "tree": 2},
 	"tree_1": {"label": "Tiered tree", "kind": "tree", "tree": 0},
 	"tree_2": {"label": "Windswept tree", "kind": "tree", "tree": 1},
 	"tree_3": {"label": "Weeping tree", "kind": "tree", "tree": 2},
 	"tree_4": {"label": "Branching tree", "kind": "tree", "tree": 3},
 	"tree_5": {"label": "Sparse tree", "kind": "tree", "tree": 4},
-	"wall_h": {"label": "Wall (wide)", "kind": "block", "footprint": Vector2(270, 90), "height": 150.0},
-	"wall_v": {"label": "Wall (deep)", "kind": "block", "footprint": Vector2(90, 270), "height": 150.0},
-	"rock": {"label": "Rock", "kind": "block", "footprint": Vector2(120, 110), "height": 110.0},
-	"crate": {"label": "Crate", "kind": "block", "footprint": Vector2(108, 108), "height": 108.0},
+	"fence_se_1": {"label": "Fence SE x1", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_se_1", "size": Vector2(116, 116), "anchor": Vector2(22, 66), "col": Vector2(72, 36)},
+	"fence_se_2": {"label": "Fence SE x2", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_se_2", "size": Vector2(188, 152), "anchor": Vector2(22, 66), "col": Vector2(144, 72)},
+	"fence_se_3": {"label": "Fence SE x3", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_se_3", "size": Vector2(260, 188), "anchor": Vector2(22, 66), "col": Vector2(216, 108)},
+	"fence_se_4": {"label": "Fence SE x4", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_se_4", "size": Vector2(332, 224), "anchor": Vector2(22, 66), "col": Vector2(288, 144)},
+	"fence_sw_1": {"label": "Fence SW x1", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_1", "size": Vector2(116, 116), "anchor": Vector2(92, 66), "col": Vector2(-72, 36)},
+	"fence_sw_2": {"label": "Fence SW x2", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_2", "size": Vector2(188, 152), "anchor": Vector2(164, 66), "col": Vector2(-144, 72)},
+	"fence_sw_3": {"label": "Fence SW x3", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_3", "size": Vector2(260, 188), "anchor": Vector2(236, 66), "col": Vector2(-216, 108)},
+	"fence_sw_4": {"label": "Fence SW x4", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_4", "size": Vector2(332, 224), "anchor": Vector2(308, 66), "col": Vector2(-288, 144)},
 	"kit_se_2": {"label": "Wall SE x2", "kind": "wall", "art": "wall_se_2", "size": Vector2(110, 152), "anchor": Vector2(8, 118), "col": Vector2(72, 36)},
 	"kit_se_3": {"label": "Wall SE x3", "kind": "wall", "art": "wall_se_3", "size": Vector2(146, 170), "anchor": Vector2(8, 118), "col": Vector2(108, 54)},
 	"kit_se_4": {"label": "Wall SE x4", "kind": "wall", "art": "wall_se_4", "size": Vector2(182, 188), "anchor": Vector2(8, 118), "col": Vector2(144, 72)},
@@ -52,11 +132,38 @@ const CATALOG := {
 	"grass_tall_01": {"label": "Tall grass 2", "kind": "grass", "tall": true},
 	"grass_tall_02": {"label": "Tall grass 3", "kind": "grass", "tall": true},
 	"grass_tall_03": {"label": "Tall grass 4", "kind": "grass", "tall": true},
+	"blight_rock_01": {"label": "Blightwood Rock 1", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": -3.0, "art": "rock_01", "size": Vector2(114, 128), "anchor": Vector2(57, 124), "col": Vector2(0, 0), "body": Vector2(41, 43), "poly": [Vector2(-41, -23), Vector2(0, -3), Vector2(41, -23), Vector2(0, -43)]},
+	"blight_rock_02": {"label": "Blightwood Rock 2", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": 3.0, "art": "rock_02", "size": Vector2(133, 115), "anchor": Vector2(66, 111), "col": Vector2(0, 0), "body": Vector2(48, 45), "poly": [Vector2(-48, -21), Vector2(0, 3), Vector2(48, -21), Vector2(0, -45)]},
+	"blight_rock_03": {"label": "Blightwood Rock 3", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": 7.0, "art": "rock_03", "size": Vector2(180, 137), "anchor": Vector2(90, 133), "col": Vector2(0, 0), "body": Vector2(65, 57), "poly": [Vector2(-65, -25), Vector2(0, 7), Vector2(65, -25), Vector2(0, -57)]},
+	"ancient_shrine": {"label": "Ancient Shrine", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/ancient_shrine/", "sort_dy": -29.0, "art": "shrine_shelter_01", "size": Vector2(256, 256), "anchor": Vector2(129, 242), "col": Vector2(0, 0), "body": Vector2(87, 112), "poly": [Vector2(-87, -69), Vector2(0, -29), Vector2(86, -72), Vector2(0, -112)]},
+	"ground9_corner_top": {"label": "Corner Top", "kind": "ground"},
+	"ground9_edge_ne": {"label": "Edge Ne", "kind": "ground"},
+	"ground9_corner_right": {"label": "Corner Right", "kind": "ground"},
+	"ground9_edge_nw": {"label": "Edge Nw", "kind": "ground"},
+	"ground9_center": {"label": "Center", "kind": "ground"},
+	"ground9_edge_se": {"label": "Edge Se", "kind": "ground"},
+	"ground9_corner_left": {"label": "Corner Left", "kind": "ground"},
+	"ground9_edge_sw": {"label": "Edge Sw", "kind": "ground"},
+	"ground9_corner_bottom": {"label": "Corner Bottom", "kind": "ground"},
+	"temple_floor_center": {"label": "Center", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_center"},
+	"temple_floor_center_b": {"label": "Center B", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_center_b"},
+	"temple_floor_cracked_a": {"label": "Cracked A", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_cracked_a"},
+	"temple_floor_cracked_b": {"label": "Cracked B", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_cracked_b"},
+	"temple_floor_moss_a": {"label": "Mossy", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_moss_a"},
+	"temple_floor_edge_nw": {"label": "Edge NW", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_edge_nw"},
+	"temple_floor_edge_ne": {"label": "Edge NE", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_edge_ne"},
+	"temple_floor_edge_se": {"label": "Edge SE", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_edge_se"},
+	"temple_floor_edge_sw": {"label": "Edge SW", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_edge_sw"},
+	"temple_floor_corner_top": {"label": "Corner Top", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_top"},
+	"temple_floor_corner_right": {"label": "Corner Right", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_right"},
+	"temple_floor_corner_bottom": {"label": "Corner Bottom", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_bottom"},
+	"temple_floor_corner_left": {"label": "Corner Left", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_left"},
 	"health_gourd": {"label": "Health gourd +25%", "kind": "pickup", "gourd": "health"},
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
+	"paper_tag": {"label": "Paper tag (throwable bomb)", "kind": "pickup", "gourd": "paper_tag"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
+const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -67,6 +174,29 @@ const DEFAULT_GOURDS := 5
 const DEFAULT_CHAKRA_GOURDS := 3
 
 static var _tree_cache: Array = []
+static var _ashen_cache: Array = []
+static var _fire_cache: Array = []
+
+static func fire_info(index: int) -> Dictionary:
+	if _fire_cache.is_empty():
+		var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(AshenFireProp.MANIFEST))
+		_fire_cache = manifest.fixtures
+	return _fire_cache[index]
+
+
+static var _blight_cache: Array = []
+static func blight_info(index: int) -> Dictionary:
+	if _blight_cache.is_empty():
+		var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(BlightwoodLight.MANIFEST))
+		_blight_cache = manifest.fixtures
+	return _blight_cache[index]
+
+
+static func ashen_info(index: int) -> Dictionary:
+	if _ashen_cache.is_empty():
+		var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/environment/ashen_trees/ashen-trees.art.json"))
+		_ashen_cache = manifest.trees
+	return _ashen_cache[index]
 
 
 ## Catalog entry for an id, including the arena's own placeholder walls ("base_N").
@@ -75,7 +205,7 @@ static func def_of(id: String) -> Dictionary:
 		return CATALOG[id]
 	if id.begins_with("base_") and id.substr(5).is_valid_int():
 		var n := id.substr(5).to_int()
-		if n >= 0 and n < WorldScale.BLOCKS.size():
+		if n >= 0 and n < WorldScale.BLOCKS.size() and not WorldScale.is_placeholder_block(n):
 			var b: Array = WorldScale.BLOCKS[n]
 			return {"label": "Wall" if float(b[2]) >= WorldScale.WALL_ART_MIN_HEIGHT else "Block", "kind": "block", "footprint": b[1], "height": float(b[2])}
 	return {}
@@ -98,12 +228,23 @@ static func tree_info(index: int) -> Dictionary:
 	return _tree_cache[index]
 
 
+const GROUND_DIR := "res://assets/environment/blightwood/ground_path/"
+
+const FENCE_DIR := "res://assets/environment/fence_kit/"
+
+## The picture file of a ground tile: Blightwood path tiles live in GROUND_DIR, the stone temple floor
+## (Ashen Ruins) names its own folder and file in the catalog.
+static func ground_texture(id: String) -> Texture2D:
+	var def := def_of(id)
+	return load(String(def.get("dir", GROUND_DIR)) + String(def.get("file", id)) + ".png") as Texture2D
+
 const KIT_DIR := "res://assets/environment/kosen_courtyard/wall_kit_v2/"
 const WALL_THICKNESS := 18.0
 
 
 static func wall_texture(id: String) -> Texture2D:
-	return load(KIT_DIR + String(def_of(id).art) + ".png") as Texture2D
+	var def := def_of(id)
+	return load(String(def.get("dir", KIT_DIR)) + String(def.art) + ".png") as Texture2D
 
 
 ## Ground rectangle covering a wall piece's collider (a strip along `col`, WALL_THICKNESS deep).
@@ -114,8 +255,9 @@ static func wall_rect(def: Dictionary, pos: Vector2) -> Rect2:
 	var lo := Vector2(minf(a.x, b.x), minf(a.y, b.y) - WALL_THICKNESS)
 	var hi := Vector2(maxf(a.x, b.x), maxf(a.y, b.y))
 	if col == Vector2.ZERO:
-		lo.x -= 16.0
-		hi.x += 16.0
+		var body: Vector2 = def.get("body", Vector2(16.0, WALL_THICKNESS))
+		lo = Vector2(pos.x - body.x, pos.y - body.y)
+		hi = Vector2(pos.x + body.x, pos.y)
 	return Rect2(lo, hi - lo)
 
 
@@ -143,7 +285,7 @@ static func footprint_of(id: String) -> Vector2:
 		return wall_rect(def, Vector2.ZERO).size
 	if def.kind == "pickup":
 		return PICKUP_FOOTPRINT
-	return Vector2(72, 36) if def.kind == "grass" else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind == "tree" else def.footprint
+	return Vector2(72, 36) if def.kind in ["grass", "ground"] else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind in ["tree", "ashen_tree"] else def.footprint
 
 
 ## The solid ground rectangle (BLOCKS convention: bottom-centre `pos`, extends `depth` upward).
@@ -151,7 +293,7 @@ static func footprint_rect(id: String, pos: Vector2) -> Rect2:
 	var fp := footprint_of(id)
 	if def_of(id).kind == "wall":
 		return wall_rect(def_of(id), pos)
-	if def_of(id).kind == "grass":
+	if def_of(id).kind in ["grass", "ground"]:
 		return Rect2(pos - fp * 0.5, fp)  # a grass tile is centred on its diamond cell, not standing on it
 	return Rect2(pos.x - fp.x * 0.5, pos.y - fp.y, fp.x, fp.y)
 
@@ -163,8 +305,23 @@ static var _art_cache: Dictionary = {}
 static func art_texture(id: String, pos: Vector2) -> Array:
 	var def := def_of(id)
 	match String(def.kind):
+		"water_fx":
+			return [load(BlightwoodWater.DIR + "waterfall-icon.png") as Texture2D, pos-Vector2(64,169)]
+		"ground":
+			return [ground_texture(id), pos - Vector2(36, 18)]
 		"grass":
 			return [load(WindGrassTileset.DIR + id + ".png") as Texture2D, pos - Vector2(56, 136 if def.tall else 84)]
+		"blight_light":
+			var info := blight_info(int(def.light))
+			return [load(str(info.path).replace(".png", "-assembled.png")) as Texture2D, pos-Vector2(float(info.foot_anchor[0]), float(info.foot_anchor[1]))]
+		"fireflies":
+			return [load("res://assets/vfx/blightwood_lights/firefly-icon.png") as Texture2D, pos-Vector2(16, 16)]
+		"ashen_fire":
+			var info := fire_info(int(def.fire))
+			return [load(str(info.path)) as Texture2D,pos-Vector2(float(info.foot_anchor[0]),float(info.foot_anchor[1]))]
+		"ashen_tree":
+			var info := ashen_info(int(def.tree))
+			return [load(str(info.texture)) as Texture2D, pos - Vector2(float(info.anchor[0]), float(info.anchor[1]))]
 		"tree":
 			var info := tree_info(int(def.tree))
 			return [load(str(info.texture)) as Texture2D, pos - Vector2(float(info.anchor[0]), float(info.anchor[1]))]
@@ -201,10 +358,24 @@ static func art_rect(id: String, pos: Vector2) -> Rect2:
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
 static func hit_rect(id: String, pos: Vector2) -> Rect2:
 	var def := def_of(id)
+	if def.kind == "water_fx":
+		return Rect2(pos-Vector2(64,169),Vector2(128,192))
+	if def.kind == "ground":
+		return Rect2(pos - Vector2(36, 18), Vector2(72, 36))
 	if def.kind == "grass":
 		return Rect2(pos - Vector2(56, 136 if def.tall else 84), Vector2(112, 160 if def.tall else 112))
 	if def.kind == "pickup":
 		return Rect2(pos.x - 40.0, pos.y - 140.0, 80.0, 150.0)
+	if def.kind == "blight_light":
+		var info := blight_info(int(def.light))
+		return Rect2(pos-Vector2(float(info.foot_anchor[0]), float(info.foot_anchor[1])), Vector2(float(info.size[0]),float(info.size[1])))
+	if def.kind == "fireflies":
+		return Rect2(pos-Vector2(110, 90), Vector2(220, 180))
+	if def.kind == "ashen_fire":
+		var info := fire_info(int(def.fire))
+		return Rect2(pos-Vector2(float(info.foot_anchor[0]),float(info.foot_anchor[1])),Vector2(float(info.size[0]),float(info.size[1])))
+	if def.kind == "ashen_tree":
+		return Rect2(pos - Vector2(160,416),Vector2(320,448))
 	if def.kind == "tree":
 		return Rect2(pos.x - 110.0, pos.y - 330.0, 220.0, 350.0)
 	if def.kind == "wall":
@@ -219,7 +390,7 @@ func can_place(id: String, pos: Vector2) -> bool:
 	var rect := footprint_rect(id, pos).grow(8.0)
 	if not arena.bounds.encloses(rect):
 		return false
-	if def_of(id).kind in ["grass", "pickup"]:
+	if def_of(id).kind in ["grass", "ground", "pickup", "fireflies", "water_fx"]:
 		return true  # grass and floating pickups never block anyone
 	var actors: Array[Node] = []
 	actors.append_array(get_tree().get_nodes_in_group("player"))
@@ -236,13 +407,75 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	var def := def_of(id)
 	var nodes: Array[Node] = []
 	_serial += 1
-	if def.kind == "grass":
+	if def.kind == "water_fx":
+		var water := BlightwoodWater.new()
+		water.waterfall = true
+		water.position = pos
+		arena.add_child(water)
+		nodes = [water]
+	elif def.has("water_role"):
+		var water := BlightwoodWater.new()
+		water.role = str(def.water_role)
+		water.shore_family = str(def.get("shore_family", ""))
+		water.shore_mask = int(def.get("shore_mask", 0))
+		water.position = pos
+		arena.get_node("Ground").add_child(water)
+		nodes = [water]
+	elif def.kind == "ground":
+		var sprite := Sprite2D.new()
+		sprite.name = "PlacedGround%d" % _serial
+		sprite.texture = ground_texture(id)
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		sprite.position = pos
+		# Ground owns the floor at z=-1. Draw after its floor, below grass/actors.
+		arena.get_node("Ground").add_child(sprite)
+		nodes = [sprite]
+	elif def.kind == "grass":
 		var field := arena.get_node_or_null("WindGrassField") as WindGrassField
 		if field == null:
 			return {}
 		var sprite := field.make_editable_sprite(id, pos)
 		arena.add_child(sprite)
 		nodes = [sprite]
+	elif def.kind == "blight_light":
+		var fixture := BlightwoodLight.new()
+		fixture.name = "PlacedBlightwoodLight%d" % _serial
+		fixture.data = blight_info(int(def.light))
+		fixture.position = pos
+		arena.add_child(fixture)
+		var body := _make_trunk(pos)
+		var shape := body.get_child(0) as CollisionShape2D
+		(shape.shape as RectangleShape2D).size = def.footprint
+		shape.position.y = -(def.footprint as Vector2).y*0.5
+		nodes = [fixture, body]
+	elif def.kind == "fireflies":
+		var swarm := ForestFireflies.new()
+		swarm.name = "PlacedForestFireflies%d" % _serial
+		swarm.count = 32
+		swarm.radius = Vector2(110, 90)
+		swarm.position = pos
+		swarm.seed_value = int(pos.x*37+pos.y*17)
+		arena.add_child(swarm)
+		nodes = [swarm]
+	elif def.kind == "ashen_fire":
+		var fire := AshenFireProp.new()
+		fire.name = "PlacedAshenFire%d" % _serial
+		fire.data = fire_info(int(def.fire))
+		fire.position = pos
+		arena.add_child(fire)
+		var body := _make_trunk(pos)
+		var shape := body.get_child(0) as CollisionShape2D
+		(shape.shape as RectangleShape2D).size = def.footprint
+		shape.position.y = -(def.footprint as Vector2).y*0.5
+		nodes = [fire,body]
+	elif def.kind == "ashen_tree":
+		var tree := AshenTree.new()
+		tree.name = "PlacedVolcanic%d" % _serial
+		tree.data = ashen_info(int(def.tree))
+		tree.auto_advance = true
+		tree.position = pos
+		arena.add_child(tree)
+		nodes = [tree, _make_trunk(pos)]
 	elif def.kind == "block":
 		var fp: Vector2 = def.footprint
 		var front := TrainingArena.Block.new(fp, float(def.height))
@@ -342,8 +575,8 @@ func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 		sprite.centered = false
 		if n == 1:
 			sprite.texture = tex
-			sprite.offset = -(def.anchor as Vector2) - col * 0.5
-			sprite.position = pos + col * 0.5
+			sprite.offset = -(def.anchor as Vector2) - col * 0.5 - Vector2(0, float(def.get("sort_dy", 0.0)))
+			sprite.position = pos + col * 0.5 + Vector2(0, float(def.get("sort_dy", 0.0)))
 		else:
 			var atlas := AtlasTexture.new()
 			atlas.atlas = tex
@@ -360,8 +593,12 @@ func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 	var body := StaticBody2D.new()
 	body.name = "PlacedWallBody%d" % _serial
 	var shape := ConvexPolygonShape2D.new()
-	if col == Vector2.ZERO:
-		shape.points = PackedVector2Array([Vector2(-14, 0), Vector2(14, 0), Vector2(14, -14), Vector2(-14, -14)])
+	if col == Vector2.ZERO and def.has("poly"):
+		# whole ground footprint (the plinth diamond), so nobody can stand "inside" the building under its art
+		shape.points = PackedVector2Array(def.poly)
+	elif col == Vector2.ZERO:
+		var half: Vector2 = def.get("body", Vector2(14.0, 14.0))
+		shape.points = PackedVector2Array([Vector2(-half.x, 0), Vector2(half.x, 0), Vector2(half.x, -half.y), Vector2(-half.x, -half.y)])
 	else:
 		shape.points = PackedVector2Array([Vector2.ZERO, col, col + Vector2(0, -WALL_THICKNESS), Vector2(0, -WALL_THICKNESS)])
 	var cs := CollisionShape2D.new()
@@ -426,7 +663,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Temple walls" if def.kind == "wall" else "Walls & blocks"
+	return "River water" if def.kind == "water_fx" else "Blightwood lights" if def.kind in ["blight_light", "fireflies"] else "Ashen fire" if def.kind == "ashen_fire" else "Volcanic trees" if def.kind == "ashen_tree" else "Blightwood rocks" if def.get("rock", false) else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Temple walls"
 
 
 func type_visible(id: String) -> bool:
@@ -444,6 +681,35 @@ func set_type_visible(category: String, shown: bool) -> void:
 	for obj in objects:
 		if type_of(obj.id) == category:
 			_apply_visibility(obj)
+
+
+## The ground tile (any kind of floor tile) sitting on the floor cell centred at `cell`, or {}.
+func ground_at(cell: Vector2) -> Dictionary:
+	for o in objects:
+		if def_of(o.id).kind == "ground" and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
+			return o
+	return {}
+
+
+## Lay `id` on the floor cell centred at `cell`, replacing a different tile already there.
+## Returns true when something changed. Never commits: the caller does one `_changed()` after a whole stroke.
+func paint_cell(id: String, cell: Vector2) -> bool:
+	var def := def_of(id)
+	if def.is_empty() or def.kind not in ["ground", "grass"] or arena == null:
+		return false
+	if not arena.bounds.encloses(Rect2(cell - Vector2(36, 18), Vector2(72, 36))):
+		return false
+	if def.kind == "ground":
+		var old := ground_at(cell)
+		if not old.is_empty():
+			if old.id == id:
+				return false
+			remove(old, false)
+	else:
+		for o in objects:
+			if o.id == id and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
+				return false
+	return not add(id, cell, false).is_empty()
 
 
 func remove(obj: Dictionary, commit := true) -> void:
@@ -487,8 +753,8 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 				sprite.position = t.position
 				sprite.offset = t.offset
 			else:
-				sprite.position = pos + (def.col as Vector2) * 0.5
-				sprite.offset = -(def.anchor as Vector2) - (def.col as Vector2) * 0.5
+				sprite.position = pos + (def.col as Vector2) * 0.5 + Vector2(0, float(def.get("sort_dy", 0.0)))
+				sprite.offset = -(def.anchor as Vector2) - (def.col as Vector2) * 0.5 - Vector2(0, float(def.get("sort_dy", 0.0)))
 		(nodes[nodes.size() - 1] as Node2D).position = pos
 	else:
 		for n: Node2D in nodes:
@@ -504,7 +770,7 @@ func hit_test(point: Vector2) -> Dictionary:
 	for picture: bool in [false, true]:
 		for i in range(objects.size() - 1, -1, -1):
 			var o := objects[i]
-			if not type_visible(o.id) or def_of(o.id).kind == "grass":
+			if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
 				continue
 			var rect := hit_rect(o.id, o.pos) if picture else footprint_rect(o.id, o.pos).grow(10.0)
 			if rect.has_point(point):
@@ -519,7 +785,15 @@ func hit_test(point: Vector2) -> Dictionary:
 			if d < distance:
 				distance = d
 				closest = o
-	return closest
+	if not closest.is_empty():
+		return closest
+	for i in range(objects.size() - 1, -1, -1):
+		var o := objects[i]
+		if def_of(o.id).kind == "ground" and type_visible(o.id):
+			var delta: Vector2 = point - o.pos
+			if absf(delta.x) / 36.0 + absf(delta.y) / 18.0 <= 1.0:
+				return o
+	return {}
 
 
 ## BLOCKS-style entries [pos, footprint, height] for the bandit nav.
@@ -529,7 +803,7 @@ func obstacles() -> Array:
 		var kind: String = def_of(o.id).kind
 		if kind == "wall":
 			out.append_array(_wall_obstacles(def_of(o.id), o.pos))
-		elif kind != "grass" and kind != "pickup":
+		elif kind not in ["grass", "ground", "pickup", "fireflies", "water_fx"]:
 			out.append([o.pos, footprint_of(o.id), 0.0])
 	return out
 
@@ -538,7 +812,8 @@ func obstacles() -> Array:
 static func _wall_obstacles(def: Dictionary, pos: Vector2) -> Array:
 	var col: Vector2 = def.col
 	if col == Vector2.ZERO:
-		return [[pos, Vector2(32, 16), 0.0]]
+		var body: Vector2 = def.get("body", Vector2(16.0, 16.0))
+		return [[pos, Vector2(body.x * 2.0, body.y), 0.0]]
 	var out: Array = []
 	var steps := int(round(absf(col.x) / 36.0))
 	var step := col / float(steps)
@@ -566,16 +841,36 @@ func to_json_string() -> String:
 	return JSON.stringify(to_dict(), "\t")
 
 
+## A synchronous Web backup avoids losing recent edits to delayed IDBFS writeback.
+## Existing installations without a backup still load their normal user:// file.
+func _web_layout_read() -> String:
+	if not OS.has_feature("web") or save_path != SAVE_PATH:
+		return ""
+	var result: Variant = JavaScriptBridge.eval("(function(){try{return localStorage.getItem('shinobi-rush:world-layout:v1')||''}catch(e){return ''}})()",true)
+	return str(result) if result != null else ""
+
+func _web_layout_write(text: String) -> void:
+	if not OS.has_feature("web") or save_path != SAVE_PATH:
+		return
+	# JSON quoting keeps layout data out of executable source. Storage may be denied/full;
+	# the original FileAccess save remains available in that case.
+	var action := "localStorage.removeItem('shinobi-rush:world-layout:v1')" if text.is_empty() else "localStorage.setItem('shinobi-rush:world-layout:v1',"+JSON.stringify(text)+")"
+	JavaScriptBridge.eval("(function(){try{"+action+";return true}catch(e){return false}})()",true)
+
 func save() -> bool:
 	# An empty world is never persisted: it would make the next boot start with no trees or walls.
 	if objects.is_empty():
+		_web_layout_write("")
 		if FileAccess.file_exists(save_path):
 			DirAccess.remove_absolute(save_path)
 		return true
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		return false
-	f.store_string(to_json_string())
+	var text := to_json_string()
+	f.store_string(text)
+	f.close()  # complete the write before the Web filesystem schedules persistence
+	_web_layout_write(text)
 	return true
 
 ## Rebuild a layout. Entries with an unknown id, bad numbers, outside the arena or on top of the spawn are skipped.
@@ -587,7 +882,8 @@ func load_dict(data: Dictionary) -> int:
 			add("tree_%d" % (i + 1), WorldScale.TREE_POSITIONS[i], false)
 	if int(data.get("version", 1)) < 3:
 		for i in WorldScale.BLOCKS.size():
-			add("base_%d" % i, WorldScale.BLOCKS[i][0], false)
+			if not WorldScale.is_placeholder_block(i):
+				add("base_%d" % i, WorldScale.BLOCKS[i][0], false)
 	if int(data.get("version", 1)) < 4:
 		adopt_grass()
 	var made := 0
@@ -602,12 +898,48 @@ func load_dict(data: Dictionary) -> int:
 		var id := str(item.id)
 		var pos := Vector2(float(item.x), float(item.y))
 		var rect := footprint_rect(id, pos)
-		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind not in ["grass", "pickup"] and rect.grow(60.0).has_point(spawn)):
+		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind not in ["grass", "ground", "pickup", "fireflies", "water_fx"] and rect.grow(60.0).has_point(spawn)):
 			continue
 		if not add(id, pos, false).is_empty():
 			made += 1
 	_changed(false)
 	return made
+
+
+## Where the Ancient Shrine stands in the starting level, best spot first: north-east of the spawn, off the
+## due-up and due-right lanes and clear of the Level 1 walls. The first one that fits is used.
+const SHRINE_SPOTS: Array[Vector2] = [Vector2(330, -330), Vector2(-120, -400), Vector2(380, 560), Vector2(-700, -420)]
+
+
+func has_id(id: String) -> bool:
+	for o in objects:
+		if o.id == id:
+			return true
+	return false
+
+
+## Put the Ancient Shrine into the level if it is not there yet. Returns true when one was added.
+func ensure_shrine() -> bool:
+	if arena == null or has_id("ancient_shrine"):
+		return false
+	for spot in SHRINE_SPOTS:
+		if can_place("ancient_shrine", spot) and not _overlaps_solid(footprint_rect("ancient_shrine", spot).grow(40.0)):
+			add("ancient_shrine", spot, false)
+			_changed(false)
+			return true
+	return false
+
+
+func _overlaps_solid(rect: Rect2) -> bool:
+	for b in WorldScale.live_blocks():
+		var fp: Vector2 = b[1]
+		if rect.intersects(Rect2(b[0].x - fp.x * 0.5, b[0].y - fp.y, fp.x, fp.y)):
+			return true
+	for o in objects:
+		var kind: String = def_of(o.id).kind
+		if kind not in ["grass", "pickup", "fireflies"] and rect.intersects(footprint_rect(o.id, o.pos)):
+			return true
+	return false
 
 
 ## Drop `count` health gourds at random spots clear of the spawn, enemies, other gourds and every solid object.
@@ -661,7 +993,7 @@ func _gourd_spot_ok(pos: Vector2, taken: Array[Vector2]) -> bool:
 			return false
 	var gourd_box := Rect2(pos.x - 40.0, pos.y - 140.0, 80.0, 150.0)  # what a click on the gourd would hit
 	for o in objects:
-		if def_of(o.id).kind in ["grass", "pickup"]:
+		if def_of(o.id).kind in ["grass", "ground", "pickup", "fireflies", "water_fx"]:
 			continue
 		if footprint_rect(o.id, o.pos).grow(90.0).has_point(pos) or hit_rect(o.id, o.pos).grow(20.0).has_point(pos) or hit_rect(o.id, o.pos).intersects(gourd_box):
 			return false
@@ -669,6 +1001,16 @@ func _gourd_spot_ok(pos: Vector2, taken: Array[Vector2]) -> bool:
 
 
 func load_saved() -> int:
+	var backup: Variant = null
+	var snapshot := _web_layout_read()
+	if not snapshot.is_empty():
+		var parser := JSON.new()
+		if parser.parse(snapshot) == OK:
+			backup = parser.data
+	if typeof(backup) == TYPE_DICTIONARY and typeof(backup.get("items")) == TYPE_ARRAY and not backup.items.is_empty():
+		var restored := load_dict(backup)
+		if restored > 0:
+			return restored
 	if not FileAccess.file_exists(save_path):
 		return 0
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(save_path))

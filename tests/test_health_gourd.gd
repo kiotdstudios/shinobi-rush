@@ -1,5 +1,5 @@
 extends RefCounted
-## Health gourd pickup: +25 HP on touch (never past max, only when hurt), respawn, random scatter, builder placement + filter.
+## Health gourd pickup: goes into the inventory on touch (stack cap), respawn, random scatter, builder placement + filter.
 
 var ck: Callable
 
@@ -43,27 +43,28 @@ func run(p_ck: Callable, root: Node) -> void:
 	await tree.process_frame
 	gourds = tree.get_nodes_in_group(HealthGourd.GROUP)
 	var g := gourds[0] as HealthGourd
-	player.health = player.max_health
+	player.inventory.counts["health_gourd"] = PlayerInventory.MAX_STACK
 	player.global_position = g.global_position
-	ck.call("gourd: full-health player cannot take one", not g.can_collect(player) and g.available)
-	player.health = 40.0
-	ck.call("gourd: a hurt player standing on it can", g.can_collect(player))
+	ck.call("gourd: a full bag cannot take another", not g.can_collect(player) and g.available)
+	player.inventory.counts["health_gourd"] = 0
+	ck.call("gourd: a player with room standing on it can (even at full health)", g.can_collect(player))
 	player.global_position = g.global_position + (arena.bounds.get_center() - g.global_position).normalized() * 120.0  # toward the middle: stays inside the arena
 	ck.call("gourd: far away it cannot be taken", not g.can_collect(player))
+	player.health = 40.0
 	player.global_position = g.global_position + Vector2(0, 15)
 	await tree.process_frame
 	await tree.process_frame
-	ck.call("gourd: touching it heals exactly 25 and it is used up", is_equal_approx(player.health, 65.0) and not g.available, str(player.health))
+	ck.call("gourd: touching it puts one in the bag and does NOT heal", player.inventory.count_of("health_gourd") == 1 and is_equal_approx(player.health, 40.0) and not g.available, "%d / %s" % [player.inventory.count_of("health_gourd"), str(player.health)])
 	player.global_position = g.global_position
 	await tree.process_frame
-	ck.call("gourd: a used gourd heals nothing more", is_equal_approx(player.health, 65.0))
+	ck.call("gourd: a used gourd gives nothing more", player.inventory.count_of("health_gourd") == 1)
 	player.global_position = spawn  # step off it, or the returning gourd is taken again at once
 	g.respawn_left = 0.01
 	await tree.create_timer(0.15).timeout
 	ck.call("gourd: it comes back after its cooldown", g.available)
-	player.health = 90.0
 	var gained := g.collect(player)
-	ck.call("gourd: healing is capped at max health (90 -> 100, +10)", player.health == player.max_health and is_equal_approx(gained, 10.0))
+	ck.call("gourd: collect reports the one item added", is_equal_approx(gained, 1.0) and player.inventory.count_of("health_gourd") == 2)
+	player.inventory.counts["health_gourd"] = 0
 	player.health = player.max_health
 
 	# --- builder
@@ -88,13 +89,13 @@ func run(p_ck: Callable, root: Node) -> void:
 	for o in placed.objects:
 		if o.id == "health_gourd":
 			total_gourds += 1
-	ck.call("gourd builder: saves into the layout (version 6)", n_saved == total_gourds and int(json.version) == 6)
+	ck.call("gourd builder: saves into the layout (current version)", n_saved == total_gourds and int(json.version) == PlacedObjects.SAVE_VERSION)
 	placed.load_dict(json)
 	var back := 0
 	for o in placed.objects:
 		if o.id == "health_gourd":
 			back += 1
-	ck.call("gourd builder: loading the layout restores the same gourds without re-scattering", back == total_gourds and placed.loaded_version == 6, "%d vs %d" % [back, total_gourds])
+	ck.call("gourd builder: loading the layout restores the same gourds without re-scattering", back == total_gourds and placed.loaded_version == PlacedObjects.SAVE_VERSION, "%d vs %d" % [back, total_gourds])
 	placed.remove(placed.objects[placed.objects.size() - 1], false)
 	await tree.process_frame
 	var left := 0
@@ -109,24 +110,19 @@ func run(p_ck: Callable, root: Node) -> void:
 	ck.call("chakra gourd scatter: a fresh arena lies %d chakra gourds around (health ones unchanged at %d)" % [PlacedObjects.DEFAULT_CHAKRA_GOURDS, PlacedObjects.DEFAULT_GOURDS], blues.size() == PlacedObjects.DEFAULT_CHAKRA_GOURDS and tree.get_nodes_in_group(HealthGourd.GROUP).size() >= PlacedObjects.DEFAULT_GOURDS, str(blues.size()))
 	var cg := blues[0] as HealthGourd
 	cg.available = true
-	player.health = 40.0
-	player.chakra = player.max_chakra
+	player.inventory.counts["chakra_gourd"] = 0
 	player.global_position = cg.global_position
-	ck.call("chakra gourd: full-chakra player cannot take one (even when hurt)", not cg.can_collect(player))
 	player.chakra = 30.0
-	ck.call("chakra gourd: a player missing chakra can", cg.can_collect(player))
+	ck.call("chakra gourd: a player with room can take one", cg.can_collect(player))
 	var hp_before := player.health
 	var got := cg.collect(player)
-	ck.call("chakra gourd: gives exactly 25% of max chakra (30 -> 55), no health", is_equal_approx(player.chakra, 55.0) and is_equal_approx(got, 25.0) and player.health == hp_before and not cg.available, str(player.chakra))
-	player.chakra = 90.0
+	ck.call("chakra gourd: goes into the bag, no chakra or health yet", is_equal_approx(got, 1.0) and player.inventory.count_of("chakra_gourd") == 1 and is_equal_approx(player.chakra, 30.0) and player.health == hp_before and not cg.available, str(player.chakra))
+	player.inventory.counts["chakra_gourd"] = PlayerInventory.MAX_STACK
 	cg.available = true
 	var capped := cg.collect(player)
-	ck.call("chakra gourd: capped at max chakra (90 -> 100, +10)", player.chakra == player.max_chakra and is_equal_approx(capped, 10.0))
-	player.health = 60.0
-	var hg := tree.get_nodes_in_group(HealthGourd.GROUP)[0] as HealthGourd
-	var h_got := hg.collect(player)
-	ck.call("health gourd: heals 25% of max health and leaves chakra alone", is_equal_approx(player.health, 85.0) and is_equal_approx(h_got, 25.0) and player.chakra == player.max_chakra)
-	player.health = player.max_health
+	ck.call("chakra gourd: a full stack takes nothing (cap %d)" % PlayerInventory.MAX_STACK, is_equal_approx(capped, 0.0) and player.inventory.count_of("chakra_gourd") == PlayerInventory.MAX_STACK)
+	player.inventory.counts["chakra_gourd"] = 0
+	player.chakra = player.max_chakra
 	ck.call("chakra gourd builder: in the catalog under Pickups", PlacedObjects.CATALOG.has("chakra_gourd") and PlacedObjects.type_of("chakra_gourd") == "Pickups")
 	var cobj := placed.add("chakra_gourd", Vector2(-300, 400), false)
 	ck.call("chakra gourd builder: placing makes a chakra-kind gourd", not cobj.is_empty() and (cobj.nodes[0] as HealthGourd).kind == "chakra")

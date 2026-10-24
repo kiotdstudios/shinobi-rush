@@ -16,7 +16,7 @@ extends CharacterBody2D
 
 enum State { IDLE, APPROACH, HIT_REACT, DEAD, EVADE, PATROL, NOTICE, THREATEN, ATTACK, REPOSITION, RETREAT, SEARCH, RETURN }
 const THROW_RELEASE_AT := 0.7  ## fraction of the throw animation at which the kunai leaves the hand
-enum AtkPhase { NONE, WINDUP1, ACTIVE1, GAP, WINDUP2, ACTIVE2, RECOVERY, THROW_WINDUP, THROW_RECOVERY }
+enum AtkPhase { NONE, WINDUP1, ACTIVE1, GAP, WINDUP2, ACTIVE2, RECOVERY, THROW_WINDUP, THROW_RECOVERY, THROW_GAP }
 enum RetreatPhase { NONE, TELEGRAPH, HOP1, PAUSE, HOP2, RECOVER }
 
 signal intent_changed(state_name: String, reason: String)
@@ -87,9 +87,12 @@ var _evade_side := 1.0
 
 var state: State = State.PATROL
 var hp: float = max_hp
-## Display-only status stats (HUD parity with the player): the Bandit has no chakra spend or substitution logic yet.
+## Status stats (HUD parity with the player). Substitution is charge-based with a recharge timer and costs no chakra, exactly like the player; the chakra pool is currently display-only.
 var max_chakra: float = 100.0
 var chakra: float = 100.0
+var is_charging_chakra := false  ## true while he is standing still charging chakra (blue aura)
+var _chakra_wanted := false  ## set when a move could not be paid for: he charges as soon as it is safe
+var sub_use_age: Array[float] = []  ## seconds since each substitution pip was spent (-1 = idle); drives the log wiggle + smoke on his bar
 var max_substitutions: int = 2
 var substitutions: int = 2
 var facing8: Vector2 = Vector2.DOWN
@@ -147,6 +150,14 @@ var _threaten_timer := 0.0
 var _atk_cooldown := 0.0
 var _throw_cooldown := 2.0  ## seconds until the next kunai throw is allowed
 var kunai_thrown := 0  ## kunai released this life (read by tests / telemetry)
+var _burst_left := 0  ## kunai still to release in the current throw combo
+var _burst_index := 0
+var _sub_cooldowns: Array[float] = []  ## seconds until each spent substitution charge returns
+var _sub_gap := 0.0  ## lockout between two swaps
+var _sub_invuln := 0.0  ## grace after a swap
+var substitution_count := 0  ## swaps used this life (tests / telemetry)
+static var substitution_enabled := true  ## master switch (the test suite turns it off so random swaps cannot flake unrelated tests)
+signal substituted(old_pos: Vector2, new_pos: Vector2)
 var _atk_timer := 0.0
 var _atk_dir := Vector2.DOWN
 var _atk_hit_done := [false, false]
@@ -215,6 +226,7 @@ func _physics_process(delta: float) -> void:
 	_evade_cooldown = maxf(_evade_cooldown - delta, 0.0)
 	_atk_cooldown = maxf(_atk_cooldown - delta, 0.0)
 	_throw_cooldown = maxf(_throw_cooldown - delta, 0.0)
+	_tick_substitution(delta)
 	taunt_timer = maxf(taunt_timer - delta, 0.0)
 	_turn_pause = maxf(_turn_pause - delta, 0.0)
 	_state_time += delta
@@ -249,6 +261,12 @@ func _physics_process(delta: float) -> void:
 
 	_find_player()
 	_update_perception()
+
+	if _tick_chakra_charge(delta):
+		velocity = Vector2.ZERO
+		move_and_slide()
+		visual.queue_redraw()
+		return
 
 	match state:
 		State.IDLE, State.PATROL:
@@ -629,6 +647,8 @@ func _can_throw(dist: float) -> bool:
 func _begin_throw() -> void:
 	_enter(State.ATTACK, "kunai")
 	atk_phase = AtkPhase.THROW_WINDUP
+	_burst_left = 0
+	_burst_index = 0
 	_atk_timer = float(profile.get("throw_windup", 0.42))
 	_atk_dir = (_player.global_position - global_position).normalized()
 	velocity = Vector2.ZERO
@@ -644,9 +664,15 @@ func _tick_throw(delta: float) -> void:
 			_atk_dir = (_player.global_position - global_position).normalized()
 		facing8 = WorldScale.snap8(_atk_dir)
 		if _atk_timer <= 0.0:
+			_burst_left = maxi(int(profile.get("throw_burst_count", 1)), 1)
+			_burst_index = 0
 			_release_kunai()
-			atk_phase = AtkPhase.THROW_RECOVERY
-			_atk_timer = float(profile.get("throw_recovery", 0.3))
+			_after_release()
+	elif atk_phase == AtkPhase.THROW_GAP:
+		facing8 = WorldScale.snap8(_atk_dir)
+		if _atk_timer <= 0.0:
+			_release_kunai()
+			_after_release()
 	elif _atk_timer <= 0.0:
 		atk_phase = AtkPhase.NONE
 		_throw_cooldown = float(profile.get("throw_cooldown", 3.5))
@@ -654,10 +680,157 @@ func _tick_throw(delta: float) -> void:
 		_enter(State.APPROACH, "after throw")
 
 
+## After each kunai: more to throw -> short gap, otherwise the recovery.
+func _after_release() -> void:
+	if _burst_left > 0:
+		atk_phase = AtkPhase.THROW_GAP
+		_atk_timer = float(profile.get("throw_burst_gap", 0.14))
+	else:
+		atk_phase = AtkPhase.THROW_RECOVERY
+		_atk_timer = float(profile.get("throw_recovery", 0.3))
+
+
 func _release_kunai() -> void:
 	kunai_thrown += 1
-	_log("kunai thrown")
-	BanditKunai.spawn(get_parent(), global_position + _atk_dir * 18.0, _atk_dir, self, _player, float(profile.get("throw_damage", 6.0)), float(profile.get("throw_speed", 520.0)))
+	var n := maxi(int(profile.get("throw_burst_count", 1)), 1)
+	var spread := deg_to_rad(float(profile.get("throw_spread_deg", 9.0)))
+	var dir := _atk_dir.rotated((float(_burst_index) - float(n - 1) * 0.5) * spread)
+	_burst_index += 1
+	_burst_left = maxi(_burst_left - 1, 0)
+	_log("kunai thrown %d/%d" % [_burst_index, n])
+	BanditKunai.spawn(get_parent(), global_position + dir * 18.0, dir, self, _player, float(profile.get("throw_damage", 6.0)), float(profile.get("throw_speed", 520.0)))
+
+
+## Pay for a chakra move. Returns false (and flags that he wants to charge) when the pool is short. Nothing uses it yet; substitution is free.
+func spend_chakra(amount: float) -> bool:
+	if chakra < amount:
+		_chakra_wanted = true
+		return false
+	chakra -= amount
+	if chakra < float(profile.get("chakra_charge_low", 0.0)) * max_chakra:
+		_chakra_wanted = true
+	return true
+
+
+## Low pool, or a move he could not afford: he should charge.
+func needs_chakra_charge() -> bool:
+	if state == State.DEAD or max_chakra <= 0.0:
+		return false
+	return _chakra_wanted or chakra < float(profile.get("chakra_charge_low", 0.0)) * max_chakra
+
+
+## Ninja chakra charge: when low (or a move was unaffordable) and the player is not on top of him he plants his feet and
+## charges. Returns true while charging (the caller then skips normal behaviour). Hits, a close player or a full pool end it.
+func _tick_chakra_charge(delta: float) -> bool:
+	var charge_rate := float(profile.get("chakra_charge_rate", 0.0))
+	if charge_rate <= 0.0:
+		is_charging_chakra = false
+		return false
+	var full := float(profile.get("chakra_charge_full", 0.9)) * max_chakra
+	if is_charging_chakra:
+		if chakra >= full or not _chakra_safe() or state in [State.HIT_REACT, State.DEAD, State.EVADE]:
+			is_charging_chakra = false
+			_chakra_wanted = false
+			_log("chakra charge done" if chakra >= full else "chakra charge interrupted")
+			return false
+		chakra = minf(chakra + charge_rate * delta, max_chakra)
+		return true
+	if needs_chakra_charge() and chakra < full and _chakra_safe() and state not in [State.HIT_REACT, State.DEAD, State.EVADE, State.ATTACK] and atk_phase == AtkPhase.NONE and not flicker_hopping:
+		is_charging_chakra = true
+		_log("charging chakra (%d/%d)" % [int(chakra), int(max_chakra)])
+		return true
+	if chakra >= full:
+		_chakra_wanted = false
+	return false
+
+
+func _chakra_safe() -> bool:
+	if _player == null or not is_instance_valid(_player):
+		return true
+	return global_position.distance_to(_player.global_position) > float(profile.get("chakra_charge_safe_dist", 220.0))
+
+
+func _tick_substitution(delta: float) -> void:
+	for i in sub_use_age.size():
+		if sub_use_age[i] >= 0.0:
+			sub_use_age[i] += delta
+			if sub_use_age[i] > LogPip.DURATION:
+				sub_use_age[i] = -1.0
+	_sub_gap = maxf(_sub_gap - delta, 0.0)
+	_sub_invuln = maxf(_sub_invuln - delta, 0.0)
+	if state != State.DEAD:
+		chakra = minf(chakra + float(profile.get("chakra_regen", 0.0)) * delta, max_chakra)
+	for i in range(_sub_cooldowns.size() - 1, -1, -1):
+		_sub_cooldowns[i] -= delta
+		if _sub_cooldowns[i] <= 0.0:
+			_sub_cooldowns.remove_at(i)
+			substitutions = mini(substitutions + 1, max_substitutions)
+
+
+## True when he is able to swap right now (a free charge and lockout; like the player, a swap costs NO chakra), ignoring the dice.
+func can_substitute() -> bool:
+	return (
+		substitution_enabled
+		and state != State.DEAD
+		and _player != null
+		and substitutions > 0
+		and _sub_gap <= 0.0
+	)
+
+
+## Called from take_damage: swallow the hit with a log swap and reappear behind the player.
+func _try_substitution() -> bool:
+	if not can_substitute():
+		return false
+	if _rng.randf() >= float(profile.get("sub_chance", 0.0)):
+		return false
+	var old := global_position
+	var dest := _substitution_destination()
+	substitutions -= 1
+	substitution_count += 1
+	while sub_use_age.size() < max_substitutions:
+		sub_use_age.append(-1.0)
+	if substitutions >= 0 and substitutions < sub_use_age.size():
+		sub_use_age[substitutions] = 0.0
+	_sub_cooldowns.append(float(profile.get("sub_recharge", 15.0)))
+	_sub_gap = float(profile.get("sub_min_gap", 1.0))
+	_sub_invuln = float(profile.get("sub_invuln", 0.5))
+	global_position = dest
+	velocity = Vector2.ZERO
+	atk_phase = AtkPhase.NONE
+	retreat_phase = RetreatPhase.NONE
+	flicker_hopping = false
+	_burst_left = 0
+	_log("substitution jutsu (%d left)" % substitutions)
+	SubstitutionFx.spawn(get_parent(), old, dest)
+	substituted.emit(old, dest)
+	# Counter-position: he is now behind the player and re-threatens straight away.
+	_atk_cooldown = 0.0
+	_enter(State.THREATEN, "substituted")
+	return true
+
+
+func _substitution_destination() -> Vector2:
+	var away := global_position - _player.global_position
+	if away.length() < 1.0:
+		away = Vector2.RIGHT
+	var behind := -away.normalized()
+	var dist0 := float(profile.get("sub_behind_dist", 72.0))
+	for d in [dist0, dist0 * 0.7, dist0 * 0.5]:
+		for ang in [0.0, 0.5, -0.5, 1.0, -1.0]:
+			var p: Vector2 = _player.global_position + behind.rotated(ang) * d
+			if _substitution_spot_ok(p):
+				return p
+	return global_position
+
+
+func _substitution_spot_ok(p: Vector2) -> bool:
+	var arena := get_parent()
+	if arena != null and arena.has_method("get_bounds"):
+		var b: Rect2 = arena.get_bounds()
+		if not b.grow(-8.0).has_point(p):
+			return false
+	return not test_move(Transform2D(0.0, p), Vector2(0.01, 0.0))
 
 
 ## 0..1 through the throw animation (windup 0..0.7, release at ~0.7, recovery to 1); -1 when not throwing.
@@ -670,6 +843,8 @@ func get_throw_progress() -> float:
 	if atk_phase == AtkPhase.THROW_RECOVERY:
 		var rec: float = float(profile.get("throw_recovery", 0.3))
 		return THROW_RELEASE_AT + clampf(1.0 - _atk_timer / rec, 0.0, 1.0) * (1.0 - THROW_RELEASE_AT)
+	if atk_phase == AtkPhase.THROW_GAP:
+		return THROW_RELEASE_AT
 	return -1.0
 
 
@@ -685,7 +860,7 @@ func _begin_attack() -> void:
 
 
 func _tick_attack(delta: float) -> void:
-	if atk_phase == AtkPhase.THROW_WINDUP or atk_phase == AtkPhase.THROW_RECOVERY:
+	if atk_phase == AtkPhase.THROW_WINDUP or atk_phase == AtkPhase.THROW_RECOVERY or atk_phase == AtkPhase.THROW_GAP:
 		_tick_throw(delta)
 		return
 	_atk_timer -= delta
@@ -1021,8 +1196,10 @@ func _begin_evade(to_player: Vector2) -> bool:
 func take_damage(amount: float, knockback_dir: Vector2, knockback_speed: float, hitstop_ms: float) -> void:
 	if state == State.DEAD:
 		return
-	if flicker_hopping:
-		return  # mid-flicker the body is not there to be hit
+	if flicker_hopping or _sub_invuln > 0.0:
+		return  # mid-flicker (or just after a log swap) the body is not there to be hit
+	if _try_substitution():
+		return  # log took the hit
 	hp = maxf(hp - amount, 0.0)
 	_hit_flash_timer = hit_flash_duration
 	_hitstop_timer = maxf(_hitstop_timer, hitstop_ms / 1000.0)

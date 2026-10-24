@@ -44,12 +44,12 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 ## Dodge is a quick burst along the dodge direction; velocity then eases (at `dodge_recovery_accel`,
 ## not the generic ground `friction`) toward whatever speed current input calls for, or to a stop if none.
 @export var dodge_speed: float = WorldScale.SPRINT_SPEED * 1.6
-## Body Flicker dodge: the body vanishes, is displaced `flicker_distance` px along the dodge heading in
-## one step (stopped by walls), and reappears; no sliding. Invulnerable for the whole `flicker_duration`.
+## Body Flicker dodge = the evade burst: the body stays visible and bursts `flicker_distance` px along the
+## dodge heading over `flicker_burst_time` (walls stop it) with the ninja_evade streak on top, then stands
+## still. Invulnerable for the whole `flicker_duration`.
 @export var flicker_distance: float = 150.0
 @export var flicker_duration: float = 0.30
-@export var flicker_vanish_at: float = 0.04  ## seconds after the press that the body disappears (and moves)
-@export var flicker_reappear_at: float = 0.16
+@export var flicker_burst_time: float = 0.20  ## how long the burst lasts (speed = flicker_distance / this)
 @export var dodge_recovery_accel: float = WorldScale.ACCELERATION * 1.5
 ## Air control: fraction of normal ground `acceleration` used to steer velocity while airborne.
 ## Momentum itself is never reset on jump entry/exit; this only lets input bend an already-moving arc.
@@ -152,8 +152,6 @@ var _sub_buffer: float = 0.0
 var _sub_cooldowns: Array[float] = []  ## remaining seconds of each spent charge
 var _sub_reveal: float = 0.0  ## > 0 while the body is concealed between log swap and reappearance
 var substitution_count: int = 0
-var _flicker_hidden: bool = false
-var _flicker_moved: bool = false
 var flicker_count: int = 0
 var hits_taken: int = 0  ## enemy hits that landed on the player (read by tests / web smoke state)
 var hit_flash_timer: float = 0.0
@@ -165,6 +163,21 @@ const HIT_TINT := Color(1.0, 0.45, 0.4, 1.0)
 ## -- Proximity sense ("naruto running" auto-detect) --
 var sensed_enemy: Node2D = null  ## nearest enemy inside the sense circle this frame while SPRINTing, else null
 var kunai_drawn: bool = false  ## true the instant `sensed_enemy` is non-null (read by tests / web smoke state)
+
+## -- Inventory (D-pad slots) --
+## What the player carries and which D-pad / R2 slot holds what. A D-pad press (or the arrow keys) uses that slot's item.
+var inventory := PlayerInventory.new()
+signal item_used(item_id: String)
+const THROW_TIME := 0.34  ## total kunai throw (wind-up, release, follow-through)
+const THROW_RELEASE := 0.4  ## fraction of THROW_TIME at which the kunai leaves the hand
+const THROW_MOVE_MULT := 0.35  ## walk/run speed multiplier while the arm is busy
+const THROW_HAND := Vector2(0, 0)
+var _throw_t: float = 0.0  ## seconds left in the current throw (0 = not throwing)
+var _throw_released: bool = true
+var _throw_dir: Vector2 = Vector2.DOWN
+var _throw_item := "kunai"  ## inventory id of what the current throw releases ("kunai" or "paper_tag")
+var tags_thrown_count: int = 0
+var kunai_thrown_count: int = 0
 
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
@@ -201,6 +214,11 @@ func _ready() -> void:
 	bar.name = "HealthBar"
 	add_child(bar)
 	bar.bind(self)
+	inventory.load_saved()
+	var menu := PlayerMenu.new()
+	menu.name = "PlayerMenu"
+	add_child(menu)
+	menu.bind(self)
 
 
 func _physics_process(delta: float) -> void:
@@ -230,6 +248,10 @@ func _physics_process(delta: float) -> void:
 		_attack_buffer = input_buffer_window
 	if Input.is_action_just_pressed("substitution"):
 		_sub_buffer = SUB_WINDOW
+	for slot: String in PlayerInventory.DPAD_SLOTS:
+		if Input.is_action_just_pressed("slot_" + slot):
+			use_slot(slot)
+	_tick_throw(delta)
 
 	# Local hitstop: pause this body's own velocity/position integration only -- NOT Engine.time_scale
 	# (the order forbids a global freeze). Buffers do not decay while frozen, so a press made just
@@ -247,6 +269,8 @@ func _physics_process(delta: float) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var sprinting := Input.is_action_pressed("sprint") and input != Vector2.ZERO
 	var target_speed := sprint_speed if sprinting else walk_speed
+	if _throw_t > 0.0:
+		target_speed *= THROW_MOVE_MULT
 
 	if _is_attack_state(state):
 		_process_attack_state(delta, input)
@@ -287,8 +311,7 @@ func _physics_process(delta: float) -> void:
 		else:  # DODGE
 			# Dedicated curve: the initial burst (set on trigger) eases toward whatever speed current
 			# input calls for (0 if none) at `dodge_recovery_accel`, not the generic ground `friction`.
-			# Body Flicker: no lunge or slide. The displacement is a single step (see _flicker_step).
-			velocity = Vector2.ZERO
+			# Evade burst: constant speed along the heading for `flicker_burst_time`, then stop dead.
 			_flicker_step()
 		if input != Vector2.ZERO:
 			facing = input.normalized()
@@ -310,7 +333,6 @@ func _physics_process(delta: float) -> void:
 	# branch above returns early on every frame the dodge is still in progress.
 	if state == State.DODGE:
 		_dash_grace_timer = dash_attack_post_grace
-		_end_flicker_visual()
 
 	# Not mid-action this frame (either never was, or the action just finished above with velocity
 	# already correct) -> a buffered attack/dodge/jump takes priority over plain locomotion, then plain
@@ -353,7 +375,9 @@ func _physics_process(delta: float) -> void:
 		visual.play_action("charge", facing8)
 	else:
 		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
-		if kunai_drawn:
+		if _throw_t > 0.0:
+			_play_throw_visual()
+		elif kunai_drawn:
 			# Cosmetic overlay only: falls back silently to the normal sprint pose until an "kunai_ready"
 			# animation exists in the active sprite set (PlayerVisual.play_action/has_action contract).
 			visual.play_action("kunai_ready", facing8)
@@ -389,46 +413,25 @@ func _begin_dodge(input: Vector2) -> void:
 	_action_duration = flicker_duration
 	_action_timer = _action_duration
 	velocity = Vector2.ZERO
-	_flicker_moved = false
-	_flicker_hidden = false
 	flicker_count += 1
 	_flicker_from = global_position
 	_flicker_dir = facing8.normalized()
 	visual.set_pose(facing8, false, false)
-	# Depart burst at the start point now; the arrival burst is timed to the reappearance.
-	_flicker_fx_pending = true
+	EvadeStreakFx.spawn(self, _flicker_dir)
 
 
 var _flicker_from: Vector2 = Vector2.ZERO
 var _flicker_dir: Vector2 = Vector2.DOWN
-var _flicker_fx_pending: bool = false
 
 
-## Per-tick Body Flicker driver (called while State.DODGE): vanish + displace at `flicker_vanish_at`,
-## reappear at `flicker_reappear_at`. Collision is respected by move_and_collide, so a wall just
-## shortens the jump.
+## Per-tick evade-burst driver (called while State.DODGE): constant velocity along the heading during the
+## burst, zero afterwards. Walls stop the body through the normal move_and_slide.
 func _flicker_step() -> void:
 	var elapsed := _action_duration - _action_timer
-	if not _flicker_moved and elapsed >= flicker_vanish_at:
-		_flicker_moved = true
-		_flicker_hidden = true
-		visual.visible = false
-		move_and_collide(_flicker_dir * flicker_distance)
-		var arrive_delay := maxf(flicker_reappear_at - elapsed, 0.0)
-		if _flicker_fx_pending:
-			_flicker_fx_pending = false
-			BodyFlickerFx.spawn(get_parent(), _flicker_from, global_position, _flicker_dir, arrive_delay)
-	if _flicker_hidden and elapsed >= flicker_reappear_at:
-		_flicker_hidden = false
-		visual.visible = true
-		visual.set_pose(facing8, false, false)
-
-
-## Safety net: the body is never left invisible once the dodge state is over.
-func _end_flicker_visual() -> void:
-	if _flicker_hidden:
-		_flicker_hidden = false
-		visual.visible = true
+	if elapsed < flicker_burst_time:
+		velocity = _flicker_dir * (flicker_distance / flicker_burst_time)
+	else:
+		velocity = Vector2.ZERO
 
 
 ## Begin a jump. `velocity` is intentionally left untouched: whatever horizontal momentum the player
@@ -450,7 +453,6 @@ func _begin_jump() -> void:
 ## Velocity is never reset: `lunge` is ADDED to whatever velocity the player already had, exactly like
 ## a dodge's burst, so momentum from a run or a dodge carries straight into the swing.
 func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
-	_end_flicker_visual()
 	if input != Vector2.ZERO:
 		facing = input.normalized()
 		facing8 = _snap8(facing)
@@ -845,8 +847,6 @@ func respawn() -> void:
 	_hitstop_timer = 0.0
 	_footstep_timer = 0.0
 	hit_flash_timer = 0.0
-	_flicker_hidden = false
-	_flicker_moved = false
 	visual.visible = true
 	_hit_invuln = RESPAWN_INVULN
 	var base := Color.WHITE
@@ -866,6 +866,73 @@ func restore_chakra(amount: float) -> float:
 	if chakra != before:
 		chakra_changed.emit(chakra, max_chakra)
 	return chakra - before
+
+
+## Uses whatever sits on D-pad slot `slot` ("up"/"right"/"down"/"left"). Returns true when something happened.
+func use_slot(slot: String) -> bool:
+	var id := inventory.slot_item(slot)
+	if id == "" or health <= 0.0:
+		return false
+	var used := false
+	match id:
+		"health_gourd":
+			if health < max_health and inventory.consume(id):
+				var before := clampf(health / maxf(max_health, 0.001), 0.0, 1.0)
+				restore_health(max_health * HealthGourd.FRACTION)
+				var bar := get_node_or_null("HealthBar") as HealthBar
+				if bar != null:
+					bar.begin_heal_anim(before, 0.0)
+				used = true
+		"chakra_gourd":
+			if chakra < max_chakra and inventory.consume(id):
+				restore_chakra(max_chakra * HealthGourd.FRACTION)
+				used = true
+		"kunai":
+			used = _begin_throw()
+		"paper_tag":
+			used = _begin_throw("paper_tag")
+	if used:
+		item_used.emit(id)
+	return used
+
+
+## Start a forward kunai throw (costs one kunai). Only from plain locomotion/idle, one at a time.
+func _begin_throw(item := "kunai") -> bool:
+	if _throw_t > 0.0 or inventory.count_of(item) <= 0:
+		return false
+	if state != State.IDLE and state != State.MOVE and state != State.SPRINT:
+		return false
+	inventory.consume(item)
+	_throw_item = item
+	_throw_t = THROW_TIME
+	_throw_released = false
+	_throw_dir = facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
+	return true
+
+
+func _tick_throw(delta: float) -> void:
+	if _throw_t <= 0.0:
+		return
+	_throw_t = maxf(_throw_t - delta, 0.0)
+	var progress := 1.0 - _throw_t / THROW_TIME
+	if not _throw_released and progress >= THROW_RELEASE:
+		_throw_released = true
+		if _throw_item == "paper_tag":
+			tags_thrown_count += 1
+			PaperTagBomb.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+		else:
+			kunai_thrown_count += 1
+			PlayerKunai.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+
+
+## No dedicated throw art exists yet: use the "throw" animation if a sprite set ever ships one, otherwise borrow the
+## first half of the light attack (arm drawn back, then forward) so the throw still reads as a throw.
+func _play_throw_visual() -> void:
+	var progress := clampf(1.0 - _throw_t / THROW_TIME, 0.0, 1.0)
+	if visual.has_action("throw"):
+		visual.play_action_progress("throw", _snap8(_throw_dir), progress)
+	else:
+		visual.play_action_progress("light1", _snap8(_throw_dir), progress * 0.5)
 
 
 func restore_health(amount: float) -> float:

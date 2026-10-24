@@ -23,6 +23,7 @@ const FRACTION := 0.25
 const KINDS := {
 	"health": {"dir": "res://assets/pickups/health_gourd/", "group": "health_pickup", "color": Color(1.0, 0.18, 0.1), "aura": Color(1.0, 0.5, 0.4)},
 	"chakra": {"dir": "res://assets/pickups/chakra_gourd/", "group": "chakra_pickup", "color": Color(0.15, 0.55, 1.0), "aura": Color(0.45, 0.8, 1.0)},
+	"paper_tag": {"dir": "res://assets/pickups/paper_tag/", "group": "tag_pickup", "color": Color(1.0, 0.45, 0.08), "aura": Color(1.0, 0.7, 0.3)},
 }
 ## Floor-plane pick-up radius (the iso floor is squashed 2:1, so y is doubled before measuring).
 const PICKUP_RADIUS := 40.0
@@ -159,15 +160,23 @@ func _draw_pool() -> void:
 
 ## Is this gourd currently able to be taken by a player standing at `feet`?
 func can_collect(player: Node) -> bool:
-	var restore := "restore_chakra" if kind == "chakra" else "restore_health"
-	if not available or not is_visible_in_tree() or not (player is Node2D) or not player.has_method(restore):
+	if not available or not is_visible_in_tree() or not (player is Node2D):
 		return false
-	var have := "chakra" if kind == "chakra" else "health"
-	var cap := "max_chakra" if kind == "chakra" else "max_health"
-	if float(player.get(have)) >= float(player.get(cap)):
+	var inv: Variant = player.get("inventory")
+	if not (inv is PlayerInventory) or not (inv as PlayerInventory).has_room(item_id()):
 		return false
 	var d: Vector2 = (player as Node2D).global_position - global_position
 	return Vector2(d.x, d.y * 2.0).length() <= PICKUP_RADIUS
+
+
+## The inventory item this gourd turns into.
+func item_id() -> String:
+	match kind:
+		"chakra":
+			return "chakra_gourd"
+		"paper_tag":
+			return "paper_tag"
+	return "health_gourd"
 
 
 func _try_collect() -> void:
@@ -177,16 +186,14 @@ func _try_collect() -> void:
 			return
 
 
-## Refill `player` by FRACTION of their maximum, play the take-it animation and start the respawn timer.
-## Returns the amount actually restored (HP or chakra, depending on kind).
+## Put this gourd in `player`'s inventory (it is eaten later from its D-pad slot, see PlayerController.use_slot), play
+## the take-it animation and start the respawn timer. Returns how many items went into the bag (0 when it is full).
 func collect(player: Node) -> float:
-	var gained: float
+	var inv: Variant = player.get("inventory")
+	var gained := 0.0
+	if inv is PlayerInventory:
+		gained = float((inv as PlayerInventory).add(item_id(), 1))
 	var before_fraction := 1.0
-	if kind == "chakra":
-		gained = player.call("restore_chakra", float(player.get("max_chakra")) * FRACTION)
-	else:
-		before_fraction = clampf(float(player.get("health")) / maxf(float(player.get("max_health")), 0.001), 0.0, 1.0)
-		gained = player.call("restore_health", float(player.get("max_health")) * FRACTION)
 	available = false
 	respawn_left = RESPAWN_SECONDS
 	collected.emit(gained)

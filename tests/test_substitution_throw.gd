@@ -22,6 +22,14 @@ func run(p_ck: Callable, tree_root: Node) -> void:
 
 
 func _reset(p: PlayerController) -> void:
+	# Each scenario starts with a clean arena. Physical substitution logs now
+	# block movement, so a previous scenario's still-live log must not affect
+	# the next scenario's swap/teleport collision probe.
+	var arena := p.get_parent()
+	if arena != null:
+		for child in arena.get_children():
+			if child is SubstitutionFx:
+				child.free()
 	p.state = PlayerController.State.IDLE
 	p._hit_invuln = 0.0
 	p._sub_buffer = 0.0
@@ -185,7 +193,12 @@ func test_throw(p: PlayerController, arena: Node) -> void:
 	while b.atk_phase == Bandit.AtkPhase.THROW_WINDUP and t < 2.0:
 		b._tick_throw(0.02)
 		t += 0.02
-	ck.call("throw: the windup releases exactly one kunai", b.kunai_thrown == before + 1 and b.atk_phase == Bandit.AtkPhase.THROW_RECOVERY)
+	ck.call("throw: the windup releases the first kunai of the combo", b.kunai_thrown == before + 1 and b.atk_phase == Bandit.AtkPhase.THROW_GAP)
+	t = 0.0
+	while b.atk_phase == Bandit.AtkPhase.THROW_GAP and t < 2.0:
+		b._tick_throw(0.02)
+		t += 0.02
+	ck.call("throw: the combo is three kunai, then recovery", b.kunai_thrown == before + 3 and b.atk_phase == Bandit.AtkPhase.THROW_RECOVERY)
 	ck.call("throw: progress is at the release point entering recovery", absf(b.get_throw_progress() - Bandit.THROW_RELEASE_AT) < 0.05)
 	t = 0.0
 	while b.atk_phase == Bandit.AtkPhase.THROW_RECOVERY and t < 2.0:
