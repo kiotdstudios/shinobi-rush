@@ -251,6 +251,9 @@ func _ready() -> void:
 		placed.scatter_defaults(layout_version >= 5)
 	if layout_version < 7:
 		placed.ensure_shrine()  # v7 added the Ancient Shrine landmark: every older layout gets one once
+	# Add the Ancient Shrine reference section using existing catalog art.
+	# The authored layer is rebuilt on boot; it does not overwrite user:// editor saves.
+	AncientShrineSection.populate(self)
 	editor = WorldEditor.new()
 	editor.setup(self, placed)
 	add_child(editor)
