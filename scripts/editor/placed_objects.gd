@@ -106,19 +106,19 @@ const CATALOG := {
 	"fence_sw_2": {"label": "Fence SW x2", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_2", "size": Vector2(188, 152), "anchor": Vector2(164, 66), "col": Vector2(-144, 72)},
 	"fence_sw_3": {"label": "Fence SW x3", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_3", "size": Vector2(260, 188), "anchor": Vector2(236, 66), "col": Vector2(-216, 108)},
 	"fence_sw_4": {"label": "Fence SW x4", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_4", "size": Vector2(332, 224), "anchor": Vector2(308, 66), "col": Vector2(-288, 144)},
-	"kit_se_2": {"label": "Wall SE x2", "kind": "wall", "art": "wall_se_2", "size": Vector2(110, 152), "anchor": Vector2(8, 118), "col": Vector2(72, 36)},
-	"kit_se_3": {"label": "Wall SE x3", "kind": "wall", "art": "wall_se_3", "size": Vector2(146, 170), "anchor": Vector2(8, 118), "col": Vector2(108, 54)},
-	"kit_se_4": {"label": "Wall SE x4", "kind": "wall", "art": "wall_se_4", "size": Vector2(182, 188), "anchor": Vector2(8, 118), "col": Vector2(144, 72)},
-	"kit_se_5": {"label": "Wall SE x5", "kind": "wall", "art": "wall_se_5", "size": Vector2(218, 206), "anchor": Vector2(8, 118), "col": Vector2(180, 90)},
-	"kit_se_6": {"label": "Wall SE x6", "kind": "wall", "art": "wall_se_6", "size": Vector2(254, 224), "anchor": Vector2(8, 118), "col": Vector2(216, 108)},
-	"kit_sw_2": {"label": "Wall SW x2", "kind": "wall", "art": "wall_sw_2", "size": Vector2(110, 152), "anchor": Vector2(102, 118), "col": Vector2(-72, 36)},
-	"kit_sw_3": {"label": "Wall SW x3", "kind": "wall", "art": "wall_sw_3", "size": Vector2(146, 170), "anchor": Vector2(138, 118), "col": Vector2(-108, 54)},
-	"kit_sw_4": {"label": "Wall SW x4", "kind": "wall", "art": "wall_sw_4", "size": Vector2(182, 188), "anchor": Vector2(174, 118), "col": Vector2(-144, 72)},
-	"kit_sw_5": {"label": "Wall SW x5", "kind": "wall", "art": "wall_sw_5", "size": Vector2(218, 206), "anchor": Vector2(210, 118), "col": Vector2(-180, 90)},
-	"kit_sw_6": {"label": "Wall SW x6", "kind": "wall", "art": "wall_sw_6", "size": Vector2(254, 224), "anchor": Vector2(246, 118), "col": Vector2(-216, 108)},
+	"kit_se_2": {"label": "Wall SE x2", "kind": "wall", "art": "wall_se_2", "size": Vector2(110, 152), "anchor": Vector2(8, 118), "col": Vector2(72, 36), "depth": Vector2(29, -14.5)},
+	"kit_se_3": {"label": "Wall SE x3", "kind": "wall", "art": "wall_se_3", "size": Vector2(146, 170), "anchor": Vector2(8, 118), "col": Vector2(108, 54), "depth": Vector2(29, -14.5)},
+	"kit_se_4": {"label": "Wall SE x4", "kind": "wall", "art": "wall_se_4", "size": Vector2(182, 188), "anchor": Vector2(8, 118), "col": Vector2(144, 72), "depth": Vector2(29, -14.5)},
+	"kit_se_5": {"label": "Wall SE x5", "kind": "wall", "art": "wall_se_5", "size": Vector2(218, 206), "anchor": Vector2(8, 118), "col": Vector2(180, 90), "depth": Vector2(29, -14.5)},
+	"kit_se_6": {"label": "Wall SE x6", "kind": "wall", "art": "wall_se_6", "size": Vector2(254, 224), "anchor": Vector2(8, 118), "col": Vector2(216, 108), "depth": Vector2(29, -14.5)},
+	"kit_sw_2": {"label": "Wall SW x2", "kind": "wall", "art": "wall_sw_2", "size": Vector2(110, 152), "anchor": Vector2(102, 118), "col": Vector2(-72, 36), "depth": Vector2(-30, -15)},
+	"kit_sw_3": {"label": "Wall SW x3", "kind": "wall", "art": "wall_sw_3", "size": Vector2(146, 170), "anchor": Vector2(138, 118), "col": Vector2(-108, 54), "depth": Vector2(-30, -15)},
+	"kit_sw_4": {"label": "Wall SW x4", "kind": "wall", "art": "wall_sw_4", "size": Vector2(182, 188), "anchor": Vector2(174, 118), "col": Vector2(-144, 72), "depth": Vector2(-30, -15)},
+	"kit_sw_5": {"label": "Wall SW x5", "kind": "wall", "art": "wall_sw_5", "size": Vector2(218, 206), "anchor": Vector2(210, 118), "col": Vector2(-180, 90), "depth": Vector2(-30, -15)},
+	"kit_sw_6": {"label": "Wall SW x6", "kind": "wall", "art": "wall_sw_6", "size": Vector2(254, 224), "anchor": Vector2(246, 118), "col": Vector2(-216, 108), "depth": Vector2(-30, -15)},
 	"kit_pillar": {"label": "Pillar", "kind": "wall", "art": "pillar", "size": Vector2(64, 120), "anchor": Vector2(31, 119), "col": Vector2(0, 0)},
-	"kit_ruin_se": {"label": "Ruin SE", "kind": "wall", "art": "ruin_se", "size": Vector2(182, 158), "anchor": Vector2(-7, 143), "col": Vector2(144, 72)},
-	"kit_ruin_sw": {"label": "Ruin SW", "kind": "wall", "art": "ruin_sw", "size": Vector2(182, 158), "anchor": Vector2(188, 143), "col": Vector2(-144, 72)},
+	"kit_ruin_se": {"label": "Ruin SE", "kind": "wall", "art": "ruin_se", "size": Vector2(182, 158), "anchor": Vector2(-7, 143), "col": Vector2(144, 72), "poly": [Vector2(11, -56), Vector2(37, -69), Vector2(209, -17), Vector2(181, -2), Vector2(155, 11), Vector2(143, 11), Vector2(91, -4), Vector2(79, -9), Vector2(71, -13), Vector2(15, -53)]},
+	"kit_ruin_sw": {"label": "Ruin SW", "kind": "wall", "art": "ruin_sw", "size": Vector2(182, 158), "anchor": Vector2(188, 143), "col": Vector2(-144, 72), "poly": [Vector2(-210, -18), Vector2(-38, -68), Vector2(-12, -55), Vector2(-72, -13), Vector2(-80, -8), Vector2(-88, -5), Vector2(-144, 11), Vector2(-152, 11), Vector2(-156, 10), Vector2(-182, -3)]},
 	"grass9_corner_top": {"label": "Corner Top", "kind": "grass", "tall": false},
 	"grass9_edge_ne": {"label": "Edge Ne", "kind": "grass", "tall": false},
 	"grass9_corner_right": {"label": "Corner Right", "kind": "grass", "tall": false},
@@ -249,16 +249,29 @@ static func wall_texture(id: String) -> Texture2D:
 
 ## Ground rectangle covering a wall piece's collider (a strip along `col`, WALL_THICKNESS deep).
 static func wall_rect(def: Dictionary, pos: Vector2) -> Rect2:
-	var col: Vector2 = def.col
-	var a := pos
-	var b := pos + col
-	var lo := Vector2(minf(a.x, b.x), minf(a.y, b.y) - WALL_THICKNESS)
-	var hi := Vector2(maxf(a.x, b.x), maxf(a.y, b.y))
-	if col == Vector2.ZERO:
+	var pts := wall_collider_points(def)
+	if pts.is_empty():
 		var body: Vector2 = def.get("body", Vector2(16.0, WALL_THICKNESS))
-		lo = Vector2(pos.x - body.x, pos.y - body.y)
-		hi = Vector2(pos.x + body.x, pos.y)
+		return Rect2(pos.x - body.x, pos.y - body.y, body.x * 2.0, body.y)
+	var lo := pos + pts[0]
+	var hi := lo
+	for q: Vector2 in pts:
+		lo = Vector2(minf(lo.x, pos.x + q.x), minf(lo.y, pos.y + q.y))
+		hi = Vector2(maxf(hi.x, pos.x + q.x), maxf(hi.y, pos.y + q.y))
 	return Rect2(lo, hi - lo)
+
+
+## Collider polygon of a wall piece relative to its ground point (empty = point piece, a box from "body").
+## An explicit "poly" wins (ruins, plinths); otherwise a parallelogram along `col` pushed back by `depth`
+## (default straight up WALL_THICKNESS) so it covers the wall's end cap and thickness.
+static func wall_collider_points(def: Dictionary) -> PackedVector2Array:
+	var col: Vector2 = def.col
+	if def.has("poly"):
+		return PackedVector2Array(def.poly)
+	if col == Vector2.ZERO:
+		return PackedVector2Array()
+	var depth: Vector2 = def.get("depth", Vector2(0.0, -WALL_THICKNESS))
+	return PackedVector2Array([Vector2.ZERO, col, col + depth, depth])
 
 
 ## Nearest floor-diamond VERTEX (36a, 18b with a + b odd): where a wall piece's front-bottom-left corner sits.
@@ -593,14 +606,11 @@ func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 	var body := StaticBody2D.new()
 	body.name = "PlacedWallBody%d" % _serial
 	var shape := ConvexPolygonShape2D.new()
-	if col == Vector2.ZERO and def.has("poly"):
-		# whole ground footprint (the plinth diamond), so nobody can stand "inside" the building under its art
-		shape.points = PackedVector2Array(def.poly)
-	elif col == Vector2.ZERO:
+	var pts := wall_collider_points(def)
+	if pts.is_empty():
 		var half: Vector2 = def.get("body", Vector2(14.0, 14.0))
-		shape.points = PackedVector2Array([Vector2(-half.x, 0), Vector2(half.x, 0), Vector2(half.x, -half.y), Vector2(-half.x, -half.y)])
-	else:
-		shape.points = PackedVector2Array([Vector2.ZERO, col, col + Vector2(0, -WALL_THICKNESS), Vector2(0, -WALL_THICKNESS)])
+		pts = PackedVector2Array([Vector2(-half.x, 0), Vector2(half.x, 0), Vector2(half.x, -half.y), Vector2(-half.x, -half.y)])
+	shape.points = pts
 	var cs := CollisionShape2D.new()
 	cs.shape = shape
 	body.add_child(cs)
@@ -815,10 +825,16 @@ static func _wall_obstacles(def: Dictionary, pos: Vector2) -> Array:
 		var body: Vector2 = def.get("body", Vector2(16.0, 16.0))
 		return [[pos, Vector2(body.x * 2.0, body.y), 0.0]]
 	var out: Array = []
-	var steps := int(round(absf(col.x) / 36.0))
-	var step := col / float(steps)
+	var run := col
+	var start := pos
+	if def.has("poly"):
+		var pp: PackedVector2Array = wall_collider_points(def)
+		start = pos + pp[0]
+		run = pp[1] - pp[0]
+	var steps := maxi(1, int(round(absf(run.x) / 36.0)))
+	var step := run / float(steps)
 	for i in steps:
-		var a := pos + step * float(i)
+		var a := start + step * float(i)
 		out.append([Vector2(a.x + step.x * 0.5, maxf(a.y, a.y + step.y)), Vector2(36, 36), 0.0])
 	return out
 
