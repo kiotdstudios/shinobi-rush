@@ -26,6 +26,16 @@ const CATALOG := {
 	"wall_v": {"label": "Wall (deep)", "kind": "block", "footprint": Vector2(90, 270), "height": 150.0},
 	"rock": {"label": "Rock", "kind": "block", "footprint": Vector2(120, 110), "height": 110.0},
 	"crate": {"label": "Crate", "kind": "block", "footprint": Vector2(108, 108), "height": 108.0},
+	"fence_se_1": {"label": "Fence SE x1", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_se_1", "size": Vector2(58, 58), "anchor": Vector2(11, 33), "col": Vector2(36, 18)},
+	"fence_se_2": {"label": "Fence SE x2", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_se_2", "size": Vector2(94, 76), "anchor": Vector2(11, 33), "col": Vector2(72, 36)},
+	"fence_se_3": {"label": "Fence SE x3", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_se_3", "size": Vector2(130, 94), "anchor": Vector2(11, 33), "col": Vector2(108, 54)},
+	"fence_se_4": {"label": "Fence SE x4", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_se_4", "size": Vector2(166, 112), "anchor": Vector2(11, 33), "col": Vector2(144, 72)},
+	"fence_sw_1": {"label": "Fence SW x1", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_1", "size": Vector2(58, 58), "anchor": Vector2(46, 33), "col": Vector2(-36, 18)},
+	"fence_sw_2": {"label": "Fence SW x2", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_2", "size": Vector2(94, 76), "anchor": Vector2(82, 33), "col": Vector2(-72, 36)},
+	"fence_sw_3": {"label": "Fence SW x3", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_3", "size": Vector2(130, 94), "anchor": Vector2(118, 33), "col": Vector2(-108, 54)},
+	"fence_sw_4": {"label": "Fence SW x4", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_4", "size": Vector2(166, 112), "anchor": Vector2(154, 33), "col": Vector2(-144, 72)},
+	"fence_post": {"label": "Fence post", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_post", "size": Vector2(22, 40), "anchor": Vector2(11, 33), "col": Vector2(0, 0), "body": Vector2(8, 6)},
+	"fence_post_tall": {"label": "Fence post (tall)", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_post_tall", "size": Vector2(35, 74), "anchor": Vector2(17, 67), "col": Vector2(0, 0), "body": Vector2(8, 6)},
 	"kit_se_2": {"label": "Wall SE x2", "kind": "wall", "art": "wall_se_2", "size": Vector2(110, 152), "anchor": Vector2(8, 118), "col": Vector2(72, 36)},
 	"kit_se_3": {"label": "Wall SE x3", "kind": "wall", "art": "wall_se_3", "size": Vector2(146, 170), "anchor": Vector2(8, 118), "col": Vector2(108, 54)},
 	"kit_se_4": {"label": "Wall SE x4", "kind": "wall", "art": "wall_se_4", "size": Vector2(182, 188), "anchor": Vector2(8, 118), "col": Vector2(144, 72)},
@@ -79,7 +89,7 @@ const CATALOG := {
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
+const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4", "fence_post", "fence_post_tall"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -123,6 +133,7 @@ static func tree_info(index: int) -> Dictionary:
 
 const GROUND_DIR := "res://assets/environment/blightwood/ground_path/"
 
+const FENCE_DIR := "res://assets/environment/fence_kit/"
 
 ## The picture file of a ground tile: Blightwood path tiles live in GROUND_DIR, the stone temple floor
 ## (Ashen Ruins) names its own folder and file in the catalog.
@@ -474,7 +485,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Temple walls" if def.kind == "wall" else "Walls & blocks"
+	return "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Walls & blocks"
 
 
 func type_visible(id: String) -> bool:
