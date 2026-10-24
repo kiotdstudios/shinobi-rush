@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-24-blightwood-water.md
 - Date: 2026-10-24
-- Final status: REVIEW - local validation and preview packaging; not yet integrated/live.
-- Commit / PR: Not committed yet; this report precedes implementation commit.
+- Final status: REVIEW - validated and submitted; canonical deployment pending.
+- Commit / PR: initial implementation3337643981dbec5d76c66c88b8f29e171aa6b309; upstream integration2b892cf764ec1c84aae6e9fa8a7c80967b6f9cea; https://github.com/kiotdstudios/shinobi-rush/pull/162. Report was written before the implementation commit.
 
 ## Work completed
 Three original PixelLab Pro sources reproduce only water from the owner's reference: detailed blue river surface, narrow small waterfall and separate foamy landing. Three 16-frame animation jobs supply48 distinct native frames. Existing72x36 grid supports nine edge/corner/center river masks. The native128x192 cascade uses a fixed64,169anchor. The surface128x128, cascade128x192 and foam128x64 sources export as separate4x4atlases at 16/18/13 FPS. Eighteen bounded droplets add independent spray, extracted from authored water highlights. No scenery, plants, stones or banks baked in.
@@ -38,3 +38,5 @@ Preview packaging verified: normal192 frames/8000ms, half-speed192 frames/16000m
 ## Shared-main integration validation
 Merged origin/main56da29a without conflicts, preserving Aki's bandit combo/substitution and fence/shrine sorting. Godot import PASS (build/blightwood-water-integrated-import). Full native suite2393 PASS,0 FAIL (build/blightwood-water-integrated-tests/tests-builtin.log). Fresh Web export PASS (../blightwood-water-integrated-web-20261024). Repeated actual browser builder probe all12 checks PASS,0 errors (build/blightwood-water-integrated-browser); refreshed screenshot/JSON copied to docs. No water art/review changes from that merge. Untracked generated tools/shot_fence_shrine.gd.uid belongs to incoming tooling and is excluded alongside the unrelated ancient-shrine report.
 Upstream's unchanged BANDIT_L1_STATS.pdf is text-encoded PDF and triggers Git whitespace warnings in its xref records. Verified staged PDF exactly matches origin/main; did not alter PDF bytes. Whitespace check against origin/main (the actual PR diff) PASS.
+
+Environment: Windows, Godot4.7.2 GL Compatibility, Chromium Playwright1280x720, Python/Pillow/NumPy native artifact processing. Required PR checks running; no live-delivery claim yet.

@@ -1,7 +1,7 @@
 # Order - Blightwood flowing river and small waterfall
 - Agent: Codex
 - Owner: Codex
-- Status: IN_PROGRESS
+- Status: REVIEW
 - Priority: P1 - latest owner request
 - Branch: codex/blightwood-water
 - Dependencies: PixelLab active; approved forest palette and existing diamond grid available.
@@ -20,3 +20,6 @@ Transparent modular river tiles, falling-water and landing-foam layers, animatio
 
 ## Acceptance Criteria / Tests
 Detailed readable continuous flow, crisp native pixels, registered looping frames, seam-safe adjoining water tiles, clear blue palette, no baked scenery. Validate assets, Godot import/native tests/Web export, actual browser animation and builder persistence. Record exact deployment identity and failures honestly before DONE.
+
+## Validation and PR
+Implementation3337643, integration2b892cf; PR https://github.com/kiotdstudios/shinobi-rush/pull/162. Integrated native2393 PASS;12builder browser checks and10review checks PASS. Actual192-frame normal/half previews published. Await required CI/main deployment and exact public-browser verification before DONE.
