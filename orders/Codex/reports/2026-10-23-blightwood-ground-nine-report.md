@@ -29,3 +29,15 @@ Owner art approval; runtime/world-builder placement separate from this requested
 
 Implementation commit:1a8ca323f1d1c7ef95c6589b1e86b5beac659a49
 Review PR:https://github.com/kiotdstudios/shinobi-rush/pull/144 (draft; no merge/deployment).
+
+## Owner approval and runtime integration
+Owner approved art and explicitly assigned Codex to publish it live with its own builder filter. Scope expanded to scripts/editor/placed_objects.gd and world_editor.gd. Status IN_PROGRESS until deployed verification. All nine tiles now have catalog IDs, native thumbnail cards, Ground / paths checkbox, diamond-center snapping, correct floor/grass/actor layering, passable placement, selection, move/delete and saved-layout persistence. Existing layouts are retained; no schema migration or automatic map repaint.
+
+### Integration checks BEFORE implementation commit
+- Godot4.7.2 import: PASS (scripts/ci/godot_ci.py import --project . --log-dir build/ground-builder).
+- Full native suite:2166 passed,0failed (scripts/ci/godot_ci.py tests --project . --log-dir build/ground-builder). Includes25new ground-builder checks. Only expected deliberate bad-sheet fixture warning.
+- Web debug export: PASS (scripts/ci/godot_ci.py export --project . --out ../ground-builder-web-20261023 --log-dir build/ground-builder-export).
+- Browser Playwright real UI input: node scripts/ci/smoke/builder-ground-probe.mjs --serve-dir ../ground-builder-web-20261023 --out-dir build/ground-builder-browser-review. Eleven checks PASS: filter, nine cards, scroll without zoom, place, select, move, delete, hide cancels painting, all nine placed, save/reload, no errors. Screenshot visually reviewed in clear floor area. Previous run also passed; review capture moved patch away from an existing placeholder wall.
+- Order structure validator PASS. Staged whitespace check before commit.
+- No gameplay/combat/camera behavior modified. New ground sprites belong to existing Ground parent atz=-1, after its floor tiles and below grass/actors. No collider or bandit-nav obstacle created.
+- Remaining: PR required CI, reviewed integration, deployment, live exact-build verification. Not yet claimed live.

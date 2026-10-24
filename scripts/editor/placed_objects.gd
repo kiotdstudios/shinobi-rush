@@ -52,11 +52,20 @@ const CATALOG := {
 	"grass_tall_01": {"label": "Tall grass 2", "kind": "grass", "tall": true},
 	"grass_tall_02": {"label": "Tall grass 3", "kind": "grass", "tall": true},
 	"grass_tall_03": {"label": "Tall grass 4", "kind": "grass", "tall": true},
+	"ground9_corner_top": {"label": "Corner Top", "kind": "ground"},
+	"ground9_edge_ne": {"label": "Edge Ne", "kind": "ground"},
+	"ground9_corner_right": {"label": "Corner Right", "kind": "ground"},
+	"ground9_edge_nw": {"label": "Edge Nw", "kind": "ground"},
+	"ground9_center": {"label": "Center", "kind": "ground"},
+	"ground9_edge_se": {"label": "Edge Se", "kind": "ground"},
+	"ground9_corner_left": {"label": "Corner Left", "kind": "ground"},
+	"ground9_edge_sw": {"label": "Edge Sw", "kind": "ground"},
+	"ground9_corner_bottom": {"label": "Corner Bottom", "kind": "ground"},
 	"health_gourd": {"label": "Health gourd +25%", "kind": "pickup", "gourd": "health"},
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
+const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -97,6 +106,8 @@ static func tree_info(index: int) -> Dictionary:
 		_tree_cache = manifest.trees
 	return _tree_cache[index]
 
+
+const GROUND_DIR := "res://assets/environment/blightwood/ground_path/"
 
 const KIT_DIR := "res://assets/environment/kosen_courtyard/wall_kit_v2/"
 const WALL_THICKNESS := 18.0
@@ -143,7 +154,7 @@ static func footprint_of(id: String) -> Vector2:
 		return wall_rect(def, Vector2.ZERO).size
 	if def.kind == "pickup":
 		return PICKUP_FOOTPRINT
-	return Vector2(72, 36) if def.kind == "grass" else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind == "tree" else def.footprint
+	return Vector2(72, 36) if def.kind in ["grass", "ground"] else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind == "tree" else def.footprint
 
 
 ## The solid ground rectangle (BLOCKS convention: bottom-centre `pos`, extends `depth` upward).
@@ -151,7 +162,7 @@ static func footprint_rect(id: String, pos: Vector2) -> Rect2:
 	var fp := footprint_of(id)
 	if def_of(id).kind == "wall":
 		return wall_rect(def_of(id), pos)
-	if def_of(id).kind == "grass":
+	if def_of(id).kind in ["grass", "ground"]:
 		return Rect2(pos - fp * 0.5, fp)  # a grass tile is centred on its diamond cell, not standing on it
 	return Rect2(pos.x - fp.x * 0.5, pos.y - fp.y, fp.x, fp.y)
 
@@ -163,6 +174,8 @@ static var _art_cache: Dictionary = {}
 static func art_texture(id: String, pos: Vector2) -> Array:
 	var def := def_of(id)
 	match String(def.kind):
+		"ground":
+			return [load(GROUND_DIR + id + ".png") as Texture2D, pos - Vector2(36, 18)]
 		"grass":
 			return [load(WindGrassTileset.DIR + id + ".png") as Texture2D, pos - Vector2(56, 136 if def.tall else 84)]
 		"tree":
@@ -201,6 +214,8 @@ static func art_rect(id: String, pos: Vector2) -> Rect2:
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
 static func hit_rect(id: String, pos: Vector2) -> Rect2:
 	var def := def_of(id)
+	if def.kind == "ground":
+		return Rect2(pos - Vector2(36, 18), Vector2(72, 36))
 	if def.kind == "grass":
 		return Rect2(pos - Vector2(56, 136 if def.tall else 84), Vector2(112, 160 if def.tall else 112))
 	if def.kind == "pickup":
@@ -219,7 +234,7 @@ func can_place(id: String, pos: Vector2) -> bool:
 	var rect := footprint_rect(id, pos).grow(8.0)
 	if not arena.bounds.encloses(rect):
 		return false
-	if def_of(id).kind in ["grass", "pickup"]:
+	if def_of(id).kind in ["grass", "ground", "pickup"]:
 		return true  # grass and floating pickups never block anyone
 	var actors: Array[Node] = []
 	actors.append_array(get_tree().get_nodes_in_group("player"))
@@ -236,7 +251,16 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	var def := def_of(id)
 	var nodes: Array[Node] = []
 	_serial += 1
-	if def.kind == "grass":
+	if def.kind == "ground":
+		var sprite := Sprite2D.new()
+		sprite.name = "PlacedGround%d" % _serial
+		sprite.texture = load(GROUND_DIR + id + ".png") as Texture2D
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		sprite.position = pos
+		# Ground owns the floor at z=-1. Draw after its floor, below grass/actors.
+		arena.get_node("Ground").add_child(sprite)
+		nodes = [sprite]
+	elif def.kind == "grass":
 		var field := arena.get_node_or_null("WindGrassField") as WindGrassField
 		if field == null:
 			return {}
@@ -426,7 +450,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Temple walls" if def.kind == "wall" else "Walls & blocks"
+	return "Ground / paths" if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Temple walls" if def.kind == "wall" else "Walls & blocks"
 
 
 func type_visible(id: String) -> bool:
@@ -504,7 +528,7 @@ func hit_test(point: Vector2) -> Dictionary:
 	for picture: bool in [false, true]:
 		for i in range(objects.size() - 1, -1, -1):
 			var o := objects[i]
-			if not type_visible(o.id) or def_of(o.id).kind == "grass":
+			if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
 				continue
 			var rect := hit_rect(o.id, o.pos) if picture else footprint_rect(o.id, o.pos).grow(10.0)
 			if rect.has_point(point):
@@ -519,7 +543,15 @@ func hit_test(point: Vector2) -> Dictionary:
 			if d < distance:
 				distance = d
 				closest = o
-	return closest
+	if not closest.is_empty():
+		return closest
+	for i in range(objects.size() - 1, -1, -1):
+		var o := objects[i]
+		if def_of(o.id).kind == "ground" and type_visible(o.id):
+			var delta: Vector2 = point - o.pos
+			if absf(delta.x) / 36.0 + absf(delta.y) / 18.0 <= 1.0:
+				return o
+	return {}
 
 
 ## BLOCKS-style entries [pos, footprint, height] for the bandit nav.
@@ -529,7 +561,7 @@ func obstacles() -> Array:
 		var kind: String = def_of(o.id).kind
 		if kind == "wall":
 			out.append_array(_wall_obstacles(def_of(o.id), o.pos))
-		elif kind != "grass" and kind != "pickup":
+		elif kind not in ["grass", "ground", "pickup"]:
 			out.append([o.pos, footprint_of(o.id), 0.0])
 	return out
 
@@ -602,7 +634,7 @@ func load_dict(data: Dictionary) -> int:
 		var id := str(item.id)
 		var pos := Vector2(float(item.x), float(item.y))
 		var rect := footprint_rect(id, pos)
-		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind not in ["grass", "pickup"] and rect.grow(60.0).has_point(spawn)):
+		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind not in ["grass", "ground", "pickup"] and rect.grow(60.0).has_point(spawn)):
 			continue
 		if not add(id, pos, false).is_empty():
 			made += 1
@@ -661,7 +693,7 @@ func _gourd_spot_ok(pos: Vector2, taken: Array[Vector2]) -> bool:
 			return false
 	var gourd_box := Rect2(pos.x - 40.0, pos.y - 140.0, 80.0, 150.0)  # what a click on the gourd would hit
 	for o in objects:
-		if def_of(o.id).kind in ["grass", "pickup"]:
+		if def_of(o.id).kind in ["grass", "ground", "pickup"]:
 			continue
 		if footprint_rect(o.id, o.pos).grow(90.0).has_point(pos) or hit_rect(o.id, o.pos).grow(20.0).has_point(pos) or hit_rect(o.id, o.pos).intersects(gourd_box):
 			return false

@@ -77,15 +77,15 @@ def main():
     for i, rgb in enumerate(palette):
         pdraw.rectangle((16+i*37, 480, 48+i*37, 503), fill=tuple(rgb))
     preview.save(DOC / 'assembled-preview.png')
-    manifest = {'schema': 'shinobi_ground_path_nine_v1', 'status': 'art_review',
-                'production_bound': False, 'logical_tile_size': [72, 36],
+    manifest = {'schema': 'shinobi_ground_path_nine_v1', 'status': 'approved',
+                'production_bound': True, 'logical_tile_size': [72, 36],
                 'texture_filter': 'nearest', 'tiles': entries,
                 'palette': ['#%02x%02x%02x' % tuple(rgb) for rgb in palette],
                 'palette_sources': inputs,
                 'source_tool': 'built-in image_gen; deterministic nearest extraction and exact grass palette mapping',
                 'topology': 'nine-slice rectangular patch in diamond grid; same role order as grass',
                 'seams': 'continuous source across assembled 3x3 patch; center repetitions are organic, not edge-identical',
-                'runtime_integration': 'not wired into world builder or game; art review delivery'}
+                'runtime_integration': 'World Builder Ground / paths category; scripts/editor/placed_objects.gd'}
     (OUT / 'ground-nine.art.json').write_text(json.dumps(manifest, indent=2)+'\n')
     qc = {'png_count': 9, 'unique_tiles': 9, 'dimensions': [72, 36],
           'palette_colors': len(palette), 'exact_grass_palette': True,
