@@ -241,7 +241,8 @@ func _ready() -> void:
 	add_child(placed)
 	placed.adopt_grove()  # the starting trees become editable objects (solid bases + nav come from them)
 	placed.adopt_grass()
-	placed.load_saved()
+	if placed.load_saved() == 0:
+		placed.load_default_from_repo()  # no per-machine save yet: fall back to the last-published layout
 	rebuild_nav()
 	_spawn_bandit()
 	if placed.loaded_version < PlacedObjects.SAVE_VERSION:

@@ -384,6 +384,71 @@ func download_layout() -> void:
 		_flash("Layout copied to clipboard")
 
 
+## Repo-tracked file this writes to and commits -- a real file under version control (unlike
+## PlacedObjects.SAVE_PATH, which is per-machine user:// data outside the repo entirely).
+const REPO_LAYOUT_PATH := "res://data/world_layout.json"
+
+
+## Pure interpretation of a `git commit` attempt's exit code/output text -- decides the user-facing
+## outcome without running git, so every branch (ok, benign no-op, real failure) is covered by a CI
+## test without ever executing a real git process. `done` means the whole publish is finished (no
+## push needed); otherwise the caller proceeds to push.
+static func _commit_outcome(code: int, output_text: String) -> Dictionary:
+	if code == 0:
+		return {"ok": true, "done": false, "message": ""}
+	if output_text.contains("nothing to commit") or output_text.contains("nothing added"):
+		return {"ok": true, "done": true, "message": "PUBLISH: no changes to publish"}
+	return {"ok": false, "done": true, "message": "PUBLISH FAILED (commit): %s" % output_text.left(90)}
+
+
+## Pure interpretation of a `git push` attempt's exit code/output text.
+static func _push_outcome(code: int, output_text: String, object_count: int) -> Dictionary:
+	if code != 0:
+		return {"ok": false, "message": "PUBLISH FAILED (push): %s" % output_text.left(90)}
+	return {"ok": true, "message": "PUBLISHED  %d objects -> GitHub" % object_count}
+
+
+## Desktop/editor only (owner 2026-10-23: "save button needs to commit and push straight to github
+## all new level changes"). Deliberately does NOT exist on Web (see the button that calls this,
+## created only when `not OS.has_feature("web")`) -- OS.execute has no effect in a Web export anyway,
+## and this must never be reachable from the publicly-playable browser build. Uses the machine's own
+## already-configured git identity (SSH key / credential manager / `gh auth`) -- no token is ever
+## read, stored, or embedded here or anywhere else in this project.
+##
+## Safety: `git add` is scoped to ONLY this one file (never `-A` or `.`), and the commit is further
+## restricted to that same single pathspec (`git commit -- <path>`) even if something else happens
+## to already be staged -- this can never sweep up or publish unrelated work-in-progress changes
+## elsewhere in the repo. Does not force-push and does not attempt to bypass branch protection; a
+## rejected push (e.g. a protected branch requiring a PR) is reported plainly, not retried.
+func publish_to_github() -> bool:
+	if OS.has_feature("web"):
+		return false
+	var abs_path := ProjectSettings.globalize_path(REPO_LAYOUT_PATH)
+	DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
+	var f := FileAccess.open(abs_path, FileAccess.WRITE)
+	if f == null:
+		_flash("PUBLISH FAILED (could not write %s)" % REPO_LAYOUT_PATH)
+		return false
+	f.store_string(placed.to_json_string())
+	f.close()
+	var repo_root := ProjectSettings.globalize_path("res://")
+	var rel_path := REPO_LAYOUT_PATH.trim_prefix("res://")
+	var out: Array = []
+	OS.execute("git", ["-C", repo_root, "add", "--", rel_path], out, true)
+	out.clear()
+	var msg := "World Builder: publish live layout (%d objects)" % placed.objects.size()
+	var commit_code := OS.execute("git", ["-C", repo_root, "commit", "-m", msg, "--", rel_path], out, true)
+	var commit := _commit_outcome(commit_code, "\n".join(out))
+	if commit.done:
+		_flash(commit.message)
+		return commit.ok
+	out.clear()
+	var push_code := OS.execute("git", ["-C", repo_root, "push"], out, true)
+	var push := _push_outcome(push_code, "\n".join(out), placed.objects.size())
+	_flash(push.message)
+	return push.ok
+
+
 func _flash(text: String) -> void:
 	_note = text
 	_note_until = Time.get_ticks_msec() + 2500
@@ -887,6 +952,17 @@ func _build_ui() -> void:
 	_skin(dl)
 	dl.pressed.connect(download_layout)
 	saves.add_child(dl)
+	# Desktop/editor only -- deliberately not created at all on Web, so the publish path (and the
+	# git operations it runs) cannot exist in the publicly-playable browser build.
+	if not OS.has_feature("web"):
+		var pub := Button.new()
+		pub.text = "PUBLISH"
+		pub.tooltip_text = "Commit + push this layout to GitHub (desktop only, uses this machine's own git login)"
+		pub.focus_mode = Control.FOCUS_NONE
+		pub.custom_minimum_size = Vector2(0, 38)
+		_skin(pub)
+		pub.pressed.connect(publish_to_github)
+		saves.add_child(pub)
 
 	# options
 	var opts := HBoxContainer.new()

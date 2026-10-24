@@ -6,8 +6,13 @@ extends Node
 ##   kind "block": a placeholder box (TrainingArena.Block/BlockRear) with `footprint` (w, depth) and `height`.
 ##   kind "wall":  a pre-drawn isometric wall piece from wall_kit_v2 (art, size, anchor = pixel of the front-bottom-left ground corner, col = ground vector of its collider).
 ##                 `pos` is that ground corner, snapped to a floor-diamond vertex, so a piece placed at the previous piece's pos + run joins it.
-##   kind "tree":  one of the five Codex blossom trees (index into blossom_trees.art.json); solid trunk base only.
 const SAVE_PATH := "user://world_builder_layout.json"
+## Repo-tracked layout published via WorldEditor.publish_to_github() (owner 2026-10-23: desktop/editor
+## only, never read or written from a Web export). A fresh boot with no per-machine user:// save yet
+## falls back to this committed file instead of only the hand-authored defaults, so a layout Diel
+## publishes from his own machine shows up for every player once the site redeploys. Never used to
+## overwrite an existing user:// save -- that would silently discard a player's own local edits.
+const DEFAULT_LAYOUT_PATH := "res://data/world_layout.json"
 ## v4 adds editable grass to v3 saves, which list EVERY solid object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
 const SAVE_VERSION := 6
@@ -573,7 +578,6 @@ func save() -> bool:
 	f.store_string(to_json_string())
 	return true
 
-
 ## Rebuild a layout. Entries with an unknown id, bad numbers, outside the arena or on top of the spawn are skipped.
 func load_dict(data: Dictionary) -> int:
 	clear_all(false)
@@ -677,6 +681,23 @@ func load_saved() -> int:
 	if objects.is_empty():
 		load_dict({"version": 1, "items": []})  # every entry was rejected: fall back to the defaults
 	return made
+
+## Fallback for a fresh boot with no per-machine user:// save (load_saved() returned 0): loads
+## whatever layout was last published to GitHub (DEFAULT_LAYOUT_PATH), if any. Absent file is a
+## normal, expected case (nothing has been published yet) -- just keeps the hand-authored defaults.
+## `path` defaults to the real repo file; overridable so tests can point at a scratch user:// path
+## instead of ever reading/writing the actual tracked res:// file during a test run.
+func load_default_from_repo(path := DEFAULT_LAYOUT_PATH) -> int:
+	if not FileAccess.file_exists(path):
+		return 0
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return 0
+	var items: Variant = parsed.get("items", [])
+	if typeof(items) != TYPE_ARRAY or items.is_empty():
+		return 0
+	return load_dict(parsed)
+
 
 
 func _changed(write := true) -> void:
