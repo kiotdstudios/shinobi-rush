@@ -4,22 +4,23 @@ Source: `project.godot` input map on main. Xbox / PlayStation gamepad equivalent
 
 | Action | Keyboard | Controller |
 |---|---|---|
-| Move | W A S D | Left stick / D-pad |
-| Sprint | Shift | L3 |
+| Move | W A S D | Left stick / D-pad (planned: D-pad becomes 4 inventory slots) |
+| Sprint | Shift | R1 / RB |
 | Light attack | J | X / Square |
 | Heavy attack | K | Y / Triangle |
 | Dodge | Space | B / Circle |
 | Jump | F | A / Cross |
-| Heal | E | R3 |
-| Substitution | Q | LT / L2 |
+| Heal | E | L1 / LB |
+| Substitution (tap) | Q | LT / L2 (tap) |
+| Chakra charge | C | Hold LT / L2 |
 | Jutsu modifier | — | RT / R2 |
 | Pause | Esc | Menu / Start |
 | Aim | Arrow keys | Right stick |
 
 ## Testing shortcuts (keyboard)
 
-- F1: Toggle animation/combat lab
-- C: Visual comparison; Z: camera zoom
+- Tab (keyboard) / Select-Back (controller): Toggle animation/combat lab
+- C: visual comparison (NOTE: C is also bound to chakra charge, both fire); Z: camera zoom
 - [ / ]: sprite set; , / .: animation; ; / ': direction; V: follow facing
 - 1–6: visual overlays; P / O: pause / step animation
 
