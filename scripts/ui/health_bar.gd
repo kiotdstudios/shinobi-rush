@@ -43,6 +43,12 @@ const TRAIL_SPEED := 0.9  ## fraction per second
 
 var fraction: float = 1.0  ## shown HP fill, 0..1
 var trail: float = 1.0
+const HEAL_FILL_TIME := 0.25
+const HEAL_FLASH_TIME := 0.22
+var _heal_from := 0.0
+var _heal_wait := 0.0  ## time until the fill starts (the gourd is still flying in)
+var _heal_t := -1.0  ## 0..1 fill progress, -1 = idle
+var _heal_flash := 0.0
 var label_text: String = "HP 100 / 100"
 var chakra_fraction: float = 1.0
 var chakra_text: String = "Chakra 100 / 100"
@@ -100,6 +106,29 @@ func _on_health_changed(current: float, maximum: float) -> void:
 	_redraw()
 
 
+## Gourd pickup: the true `fraction` is already restored; the drawn bar stays at `from_fraction`
+## for `delay` seconds, then fills smoothly over HEAL_FILL_TIME with a green sweep and one flash.
+func begin_heal_anim(from_fraction: float, delay: float) -> void:
+	_heal_from = clampf(from_fraction, 0.0, 1.0)
+	_heal_wait = maxf(delay, 0.0)
+	_heal_t = 0.0
+	_heal_flash = 0.0
+	_redraw()
+
+
+func heal_animating() -> bool:
+	return _heal_t >= 0.0
+
+
+## The fraction actually drawn for HP (equals `fraction` unless a heal animation is running).
+func shown_fraction() -> float:
+	if _heal_t < 0.0 or _heal_wait > 0.0:
+		return _heal_from if _heal_t >= 0.0 else fraction
+	var k := clampf(_heal_t, 0.0, 1.0)
+	k = 1.0 - pow(1.0 - k, 2.0)
+	return lerpf(_heal_from, fraction, k)
+
+
 func _on_chakra_changed(current: float, maximum: float) -> void:
 	chakra_fraction = clampf(current / maxf(maximum, 0.001), 0.0, 1.0)
 	chakra_text = "Chakra %d / %d" % [ceili(current), int(maximum)]
@@ -129,6 +158,18 @@ func _process(delta: float) -> void:
 		if _flash[i] > 0.0:
 			_flash[i] = maxf(_flash[i] - delta, 0.0)
 			_redraw()
+	if _heal_t >= 0.0:
+		if _heal_wait > 0.0:
+			_heal_wait -= delta
+		else:
+			_heal_t += delta / HEAL_FILL_TIME
+			if _heal_t >= 1.0:
+				_heal_t = -1.0
+				_heal_flash = HEAL_FLASH_TIME
+		_redraw()
+	elif _heal_flash > 0.0:
+		_heal_flash = maxf(_heal_flash - delta, 0.0)
+		_redraw()
 	if trail > fraction:
 		_hold -= delta
 		if _hold <= 0.0:
@@ -142,7 +183,9 @@ func fill_color() -> Color:
 
 func _draw_hud() -> void:
 	# bars first: the portrait is drawn over their left ends
-	_bar("hp_bar", trail, fraction, "hp_fill", fill_color(), label_text)
+	var shown := shown_fraction()
+	_bar("hp_bar", trail, shown, "hp_fill", fill_color(), label_text)
+	_draw_heal_fx(shown)
 	_bar("chakra_bar", chakra_fraction, chakra_fraction, "chakra_fill", COL_FILL, chakra_text)
 	# portrait: dark backing diamond, the player's face clipped to the diamond opening, then the gold frame on top
 	var o := pos_of("portrait")
@@ -195,6 +238,19 @@ func _draw_abilities() -> void:
 			_canvas.draw_texture_rect_region(icon, Rect2(ipos + Vector2(0.0, top), Vector2(isz.x, isz.y - top)), Rect2(0.0, top, isz.x, isz.y - top))
 	else:
 		_canvas.draw_texture(icon, ipos)
+
+
+func _draw_heal_fx(shown: float) -> void:
+	var inner := pos_of("hp_bar") + FILL_INSET
+	if _heal_t >= 0.0 and _heal_wait <= 0.0 and fraction > _heal_from:
+		# bright band over the newly restored stretch, with a sweeping highlight riding its leading edge
+		var x0 := FILL_SIZE.x * _heal_from
+		var x1 := FILL_SIZE.x * shown
+		_canvas.draw_rect(Rect2(inner + Vector2(x0, 0), Vector2(maxf(x1 - x0, 0.0), FILL_SIZE.y)), Color(0.7, 1.0, 0.75, 0.45))
+		_canvas.draw_rect(Rect2(inner + Vector2(maxf(x1 - 14.0, x0), 0), Vector2(14.0, FILL_SIZE.y)), Color(0.9, 1.0, 0.92, 0.8))
+	if _heal_flash > 0.0:
+		var a := _heal_flash / HEAL_FLASH_TIME
+		_canvas.draw_rect(Rect2(inner, Vector2(FILL_SIZE.x * shown, FILL_SIZE.y)), Color(0.8, 1.0, 0.85, 0.55 * a))
 
 
 func _bar(id: String, trail_f: float, fill_f: float, fill_tex: String, tint: Color, text: String) -> void:
