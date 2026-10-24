@@ -1,0 +1,193 @@
+{
+  "schema": "shinobi_ashen_fire_v1",
+  "status": "technical_validation",
+  "source_tool": "PixelLab Pixflux/Pixen; transparent wall cleanup via free PixelLab pixel tools",
+  "stone_palette": [
+    "#3f4650",
+    "#4d535b",
+    "#3c3e49",
+    "#353a41",
+    "#0a0b17",
+    "#484c58",
+    "#1c202b",
+    "#575960",
+    "#121720",
+    "#212736",
+    "#2a303d",
+    "#586069",
+    "#0d0f16",
+    "#666e74",
+    "#787679"
+  ],
+  "palette_sources": [
+    "assets\\environment\\kosen_courtyard\\floor_tiles\\floor9_center.png",
+    "assets\\environment\\kosen_courtyard\\floor_tiles\\floor9_cracked_a.png",
+    "assets\\environment\\kosen_courtyard\\floor_tiles\\floor9_cracked_b.png"
+  ],
+  "fixtures": [
+    {
+      "id": "tall_pillar",
+      "path": "res://assets/environment/ashen_fire/props/tall_pillar.png",
+      "size": [
+        128,
+        224
+      ],
+      "foot_anchor": [
+        64,
+        211
+      ],
+      "bowl_anchor": [
+        64,
+        35
+      ],
+      "flame_scale": 0.65,
+      "footprint": [
+        42,
+        22
+      ],
+      "sha256": "12600e3a1a41855c31093117adc73309a50d83e2b0ee7195a15d6e71246f0e85"
+    },
+    {
+      "id": "short_brazier",
+      "path": "res://assets/environment/ashen_fire/props/short_brazier.png",
+      "size": [
+        160,
+        144
+      ],
+      "foot_anchor": [
+        80,
+        132
+      ],
+      "bowl_anchor": [
+        80,
+        50
+      ],
+      "flame_scale": 0.75,
+      "footprint": [
+        92,
+        38
+      ],
+      "sha256": "2c0d61dce5fc8920e99fd7b30b229854adf977796d6b2cb695b431220da3a7b0"
+    },
+    {
+      "id": "tripod_brazier",
+      "path": "res://assets/environment/ashen_fire/props/tripod_brazier.png",
+      "size": [
+        176,
+        192
+      ],
+      "foot_anchor": [
+        88,
+        179
+      ],
+      "bowl_anchor": [
+        88,
+        61
+      ],
+      "flame_scale": 1.0,
+      "footprint": [
+        100,
+        44
+      ],
+      "sha256": "73b47c63c071451b62c4bc9fb74ef5c86a1fd2f87d3b6bd8258bdd2432d31cde"
+    },
+    {
+      "id": "wall_brazier",
+      "path": "res://assets/environment/ashen_fire/props/wall_brazier.png",
+      "size": [
+        160,
+        256
+      ],
+      "foot_anchor": [
+        80,
+        246
+      ],
+      "bowl_anchor": [
+        47,
+        91
+      ],
+      "flame_scale": 0.45,
+      "footprint": [
+        64,
+        34
+      ],
+      "sha256": "922a7a9dbb1697b6f16994357176d8ef460576c7bf57bde524af451097ccc50b"
+    },
+    {
+      "id": "fire_pit",
+      "path": "res://assets/environment/ashen_fire/props/fire_pit.png",
+      "size": [
+        192,
+        128
+      ],
+      "foot_anchor": [
+        96,
+        119
+      ],
+      "bowl_anchor": [
+        96,
+        66
+      ],
+      "flame_scale": 1.15,
+      "footprint": [
+        130,
+        50
+      ],
+      "sha256": "364f79247f182f1f886eec6d9496cb3f2f13d7ff22d5cf1cfc693b649792f2c3"
+    }
+  ],
+  "flame": {
+    "path": "res://assets/vfx/ashen_fire/flame_atlas.png",
+    "frames": 12,
+    "columns": 4,
+    "rows": 3,
+    "frame_size": [
+      128,
+      160
+    ],
+    "foot_anchor": [
+      64,
+      144
+    ],
+    "fps": 12,
+    "unique_hashes": [
+      "8205c0a3bfc04c35f37c58e02381a0ff9528b30f2042e3ba60a5dd728be60fc5",
+      "951c63784700413f221bf89c5f4fadf96b1cb40233adbdb0d76a1f2030e1888e",
+      "0e212c1a4278f132e2a440a7fcca8ea0803c4d0b32d21c5d0edc058bdfac5651",
+      "c27ac6658e64228b27c1a86a9179dbe89c2b06f79034d9f9d026dffde59b7139",
+      "8f26a3843cbac138ce1d03dff96679dc91e88d2ffb03740571cecaea1d62d88a",
+      "0a1e251a6b509f5b1bb873dc57b61bb4f32af6f38f3076d39b1c557a543eeb59",
+      "bf7bf1b5b695877504aab70ab484ea6150b5216d0a41533deb470a3849b3ff8d",
+      "d77d59aa330d783fa9f743a5cbf023c270e74342a68e996510ba23f6d2df9b42",
+      "b4712b208607eb6108c34d57a7a16e3af0f85ef4eee732b3a921ecd85ad5c656",
+      "32ed4dd9a41403a5fb52bdb52f750519edf2feda08eccec1f248a71a0f1fce5a",
+      "dcc754d0ebbfe20b158b7f441e2bb7620eeffca8f26021eec21120f31f1993b4",
+      "070b9b0b9255e96d6a98335fb6a9232149734e9cdee65ac27760729651ff4388"
+    ],
+    "source_generated_frames": 13,
+    "endpoint_policy": "omit final pinned closure key"
+  },
+  "smoke": {
+    "path": "res://assets/vfx/ashen_fire/smoke.png",
+    "max_particles": 18,
+    "lifetime_seconds": 3.2
+  },
+  "embers": {
+    "max_particles": 24,
+    "pop_burst": 6,
+    "lifetime_seconds": [
+      0.5,
+      1.4
+    ]
+  },
+  "audio": {
+    "ambient": "res://assets/audio/ashen_fire/fire-bed.wav",
+    "crackles": [
+      "res://assets/audio/ashen_fire/crackle-0.wav",
+      "res://assets/audio/ashen_fire/crackle-1.wav",
+      "res://assets/audio/ashen_fire/crackle-2.wav"
+    ],
+    "provenance": "Original deterministic NumPy synthesis, not stock audio or PixelLab audio",
+    "synchronization": "one pop event triggers light flash, spark burst and one crackle player together"
+  }
+}
