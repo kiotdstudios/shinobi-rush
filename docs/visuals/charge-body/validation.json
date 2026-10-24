@@ -1,0 +1,91 @@
+{
+  "result": "PASS",
+  "frame_references": 256,
+  "native_size": [
+    128,
+    128
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "characters": [
+    "player",
+    "bandit"
+  ],
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "fps": 12,
+  "half_speed_fps": 6,
+  "all_keys_unique_per_heading": true,
+  "western_mirrors_exact": true,
+  "gif_timing_ms": {
+    "E-half-speed.gif": 2670,
+    "E-normal.gif": 1330,
+    "N-half-speed.gif": 2670,
+    "N-normal.gif": 1330,
+    "NE-half-speed.gif": 2670,
+    "NE-normal.gif": 1330,
+    "NW-half-speed.gif": 2670,
+    "NW-normal.gif": 1330,
+    "S-half-speed.gif": 2670,
+    "S-normal.gif": 1330,
+    "SE-half-speed.gif": 2670,
+    "SE-normal.gif": 1330,
+    "SW-half-speed.gif": 2670,
+    "SW-normal.gif": 1330,
+    "W-half-speed.gif": 2670,
+    "W-normal.gif": 1330
+  },
+  "within_clip_height_range": {
+    "player-S": [
+      101,
+      102
+    ],
+    "player-SE": [
+      91,
+      92
+    ],
+    "player-E": [
+      93,
+      94
+    ],
+    "player-NE": [
+      94,
+      95
+    ],
+    "player-N": [
+      94,
+      95
+    ],
+    "bandit-S": [
+      101,
+      105
+    ],
+    "bandit-SE": [
+      90,
+      92
+    ],
+    "bandit-E": [
+      103,
+      104
+    ],
+    "bandit-NE": [
+      97,
+      98
+    ],
+    "bandit-N": [
+      95,
+      96
+    ]
+  },
+  "visual_review_note": "Height includes view-dependent hair/ponytail and stance foreshortening; no per-frame resizing."
+}

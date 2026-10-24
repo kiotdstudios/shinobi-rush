@@ -1022,6 +1022,452 @@
           "sprites/production/dodge/SW_011.png"
         ]
       }
+    },
+    "light1": {
+      "fps": 20.0,
+      "authored_fps": 24,
+      "loop": false,
+      "status": "owner_requested_eight_direction_kunai",
+      "source_art_json": "res://assets/combat/kunai/kunai-combat.art.json",
+      "authored_duration_ms": 300.0,
+      "frames": {
+        "S": [
+          "kunai_eight/body/light1/S_000.png",
+          "kunai_eight/body/light1/S_001.png",
+          "kunai_eight/body/light1/S_002.png",
+          "kunai_eight/body/light1/S_003.png",
+          "kunai_eight/body/light1/S_004.png",
+          "kunai_eight/body/light1/S_005.png"
+        ],
+        "SE": [
+          "kunai_poc/body/SE_000.png",
+          "kunai_poc/body/SE_001.png",
+          "kunai_poc/body/SE_002.png",
+          "kunai_poc/body/SE_003.png",
+          "kunai_poc/body/SE_004.png",
+          "kunai_poc/body/SE_005.png"
+        ],
+        "E": [
+          "kunai_eight/body/light1/E_000.png",
+          "kunai_eight/body/light1/E_001.png",
+          "kunai_eight/body/light1/E_002.png",
+          "kunai_eight/body/light1/E_003.png",
+          "kunai_eight/body/light1/E_004.png",
+          "kunai_eight/body/light1/E_005.png"
+        ],
+        "NE": [
+          "kunai_eight/body/light1/NE_000.png",
+          "kunai_eight/body/light1/NE_001.png",
+          "kunai_eight/body/light1/NE_002.png",
+          "kunai_eight/body/light1/NE_003.png",
+          "kunai_eight/body/light1/NE_004.png",
+          "kunai_eight/body/light1/NE_005.png"
+        ],
+        "N": [
+          "kunai_eight/body/light1/N_000.png",
+          "kunai_eight/body/light1/N_001.png",
+          "kunai_eight/body/light1/N_002.png",
+          "kunai_eight/body/light1/N_003.png",
+          "kunai_eight/body/light1/N_004.png",
+          "kunai_eight/body/light1/N_005.png"
+        ],
+        "NW": [
+          "kunai_eight/body/light1/NW_000.png",
+          "kunai_eight/body/light1/NW_001.png",
+          "kunai_eight/body/light1/NW_002.png",
+          "kunai_eight/body/light1/NW_003.png",
+          "kunai_eight/body/light1/NW_004.png",
+          "kunai_eight/body/light1/NW_005.png"
+        ],
+        "W": [
+          "kunai_eight/body/light1/W_000.png",
+          "kunai_eight/body/light1/W_001.png",
+          "kunai_eight/body/light1/W_002.png",
+          "kunai_eight/body/light1/W_003.png",
+          "kunai_eight/body/light1/W_004.png",
+          "kunai_eight/body/light1/W_005.png"
+        ],
+        "SW": [
+          "kunai_eight/body/light1/SW_000.png",
+          "kunai_eight/body/light1/SW_001.png",
+          "kunai_eight/body/light1/SW_002.png",
+          "kunai_eight/body/light1/SW_003.png",
+          "kunai_eight/body/light1/SW_004.png",
+          "kunai_eight/body/light1/SW_005.png"
+        ]
+      }
+    },
+    "light2": {
+      "fps": 17.14285714285714,
+      "authored_fps": 24,
+      "loop": false,
+      "status": "owner_requested_eight_direction_kunai",
+      "source_art_json": "res://assets/combat/kunai/kunai-combat.art.json",
+      "authored_duration_ms": 350.00000000000006,
+      "frames": {
+        "S": [
+          "kunai_eight/body/light2/S_000.png",
+          "kunai_eight/body/light2/S_001.png",
+          "kunai_eight/body/light2/S_002.png",
+          "kunai_eight/body/light2/S_003.png",
+          "kunai_eight/body/light2/S_004.png",
+          "kunai_eight/body/light2/S_005.png"
+        ],
+        "SE": [
+          "kunai_primary_se/body/light2/SE_000.png",
+          "kunai_primary_se/body/light2/SE_001.png",
+          "kunai_primary_se/body/light2/SE_002.png",
+          "kunai_primary_se/body/light2/SE_003.png",
+          "kunai_primary_se/body/light2/SE_004.png",
+          "kunai_primary_se/body/light2/SE_005.png"
+        ],
+        "E": [
+          "kunai_eight/body/light2/E_000.png",
+          "kunai_eight/body/light2/E_001.png",
+          "kunai_eight/body/light2/E_002.png",
+          "kunai_eight/body/light2/E_003.png",
+          "kunai_eight/body/light2/E_004.png",
+          "kunai_eight/body/light2/E_005.png"
+        ],
+        "NE": [
+          "kunai_eight/body/light2/NE_000.png",
+          "kunai_eight/body/light2/NE_001.png",
+          "kunai_eight/body/light2/NE_002.png",
+          "kunai_eight/body/light2/NE_003.png",
+          "kunai_eight/body/light2/NE_004.png",
+          "kunai_eight/body/light2/NE_005.png"
+        ],
+        "N": [
+          "kunai_eight/body/light2/N_000.png",
+          "kunai_eight/body/light2/N_001.png",
+          "kunai_eight/body/light2/N_002.png",
+          "kunai_eight/body/light2/N_003.png",
+          "kunai_eight/body/light2/N_004.png",
+          "kunai_eight/body/light2/N_005.png"
+        ],
+        "NW": [
+          "kunai_eight/body/light2/NW_000.png",
+          "kunai_eight/body/light2/NW_001.png",
+          "kunai_eight/body/light2/NW_002.png",
+          "kunai_eight/body/light2/NW_003.png",
+          "kunai_eight/body/light2/NW_004.png",
+          "kunai_eight/body/light2/NW_005.png"
+        ],
+        "W": [
+          "kunai_eight/body/light2/W_000.png",
+          "kunai_eight/body/light2/W_001.png",
+          "kunai_eight/body/light2/W_002.png",
+          "kunai_eight/body/light2/W_003.png",
+          "kunai_eight/body/light2/W_004.png",
+          "kunai_eight/body/light2/W_005.png"
+        ],
+        "SW": [
+          "kunai_eight/body/light2/SW_000.png",
+          "kunai_eight/body/light2/SW_001.png",
+          "kunai_eight/body/light2/SW_002.png",
+          "kunai_eight/body/light2/SW_003.png",
+          "kunai_eight/body/light2/SW_004.png",
+          "kunai_eight/body/light2/SW_005.png"
+        ]
+      }
+    },
+    "light3": {
+      "fps": 12.413793103448276,
+      "authored_fps": 24,
+      "loop": false,
+      "status": "owner_requested_eight_direction_kunai",
+      "source_art_json": "res://assets/combat/kunai/kunai-combat.art.json",
+      "authored_duration_ms": 483.3333333333333,
+      "frames": {
+        "S": [
+          "kunai_eight/body/light3/S_000.png",
+          "kunai_eight/body/light3/S_001.png",
+          "kunai_eight/body/light3/S_002.png",
+          "kunai_eight/body/light3/S_003.png",
+          "kunai_eight/body/light3/S_004.png",
+          "kunai_eight/body/light3/S_005.png"
+        ],
+        "SE": [
+          "kunai_primary_se/body/light3/SE_000.png",
+          "kunai_primary_se/body/light3/SE_001.png",
+          "kunai_primary_se/body/light3/SE_002.png",
+          "kunai_primary_se/body/light3/SE_003.png",
+          "kunai_primary_se/body/light3/SE_004.png",
+          "kunai_primary_se/body/light3/SE_005.png"
+        ],
+        "E": [
+          "kunai_eight/body/light3/E_000.png",
+          "kunai_eight/body/light3/E_001.png",
+          "kunai_eight/body/light3/E_002.png",
+          "kunai_eight/body/light3/E_003.png",
+          "kunai_eight/body/light3/E_004.png",
+          "kunai_eight/body/light3/E_005.png"
+        ],
+        "NE": [
+          "kunai_eight/body/light3/NE_000.png",
+          "kunai_eight/body/light3/NE_001.png",
+          "kunai_eight/body/light3/NE_002.png",
+          "kunai_eight/body/light3/NE_003.png",
+          "kunai_eight/body/light3/NE_004.png",
+          "kunai_eight/body/light3/NE_005.png"
+        ],
+        "N": [
+          "kunai_eight/body/light3/N_000.png",
+          "kunai_eight/body/light3/N_001.png",
+          "kunai_eight/body/light3/N_002.png",
+          "kunai_eight/body/light3/N_003.png",
+          "kunai_eight/body/light3/N_004.png",
+          "kunai_eight/body/light3/N_005.png"
+        ],
+        "NW": [
+          "kunai_eight/body/light3/NW_000.png",
+          "kunai_eight/body/light3/NW_001.png",
+          "kunai_eight/body/light3/NW_002.png",
+          "kunai_eight/body/light3/NW_003.png",
+          "kunai_eight/body/light3/NW_004.png",
+          "kunai_eight/body/light3/NW_005.png"
+        ],
+        "W": [
+          "kunai_eight/body/light3/W_000.png",
+          "kunai_eight/body/light3/W_001.png",
+          "kunai_eight/body/light3/W_002.png",
+          "kunai_eight/body/light3/W_003.png",
+          "kunai_eight/body/light3/W_004.png",
+          "kunai_eight/body/light3/W_005.png"
+        ],
+        "SW": [
+          "kunai_eight/body/light3/SW_000.png",
+          "kunai_eight/body/light3/SW_001.png",
+          "kunai_eight/body/light3/SW_002.png",
+          "kunai_eight/body/light3/SW_003.png",
+          "kunai_eight/body/light3/SW_004.png",
+          "kunai_eight/body/light3/SW_005.png"
+        ]
+      }
+    },
+    "dash_attack": {
+      "fps": 12.500000000000002,
+      "authored_fps": 24,
+      "loop": false,
+      "status": "owner_requested_eight_direction_kunai",
+      "source_art_json": "res://assets/combat/kunai/kunai-combat.art.json",
+      "authored_duration_ms": 399.99999999999994,
+      "frames": {
+        "S": [
+          "kunai_eight/body/dash_attack/S_000.png",
+          "kunai_eight/body/dash_attack/S_001.png",
+          "kunai_eight/body/dash_attack/S_002.png",
+          "kunai_eight/body/dash_attack/S_003.png",
+          "kunai_eight/body/dash_attack/S_004.png"
+        ],
+        "SE": [
+          "kunai_primary_se/body/dash_attack/SE_000.png",
+          "kunai_primary_se/body/dash_attack/SE_001.png",
+          "kunai_primary_se/body/dash_attack/SE_002.png",
+          "kunai_primary_se/body/dash_attack/SE_003.png",
+          "kunai_primary_se/body/dash_attack/SE_004.png"
+        ],
+        "E": [
+          "kunai_eight/body/dash_attack/E_000.png",
+          "kunai_eight/body/dash_attack/E_001.png",
+          "kunai_eight/body/dash_attack/E_002.png",
+          "kunai_eight/body/dash_attack/E_003.png",
+          "kunai_eight/body/dash_attack/E_004.png"
+        ],
+        "NE": [
+          "kunai_eight/body/dash_attack/NE_000.png",
+          "kunai_eight/body/dash_attack/NE_001.png",
+          "kunai_eight/body/dash_attack/NE_002.png",
+          "kunai_eight/body/dash_attack/NE_003.png",
+          "kunai_eight/body/dash_attack/NE_004.png"
+        ],
+        "N": [
+          "kunai_eight/body/dash_attack/N_000.png",
+          "kunai_eight/body/dash_attack/N_001.png",
+          "kunai_eight/body/dash_attack/N_002.png",
+          "kunai_eight/body/dash_attack/N_003.png",
+          "kunai_eight/body/dash_attack/N_004.png"
+        ],
+        "NW": [
+          "kunai_eight/body/dash_attack/NW_000.png",
+          "kunai_eight/body/dash_attack/NW_001.png",
+          "kunai_eight/body/dash_attack/NW_002.png",
+          "kunai_eight/body/dash_attack/NW_003.png",
+          "kunai_eight/body/dash_attack/NW_004.png"
+        ],
+        "W": [
+          "kunai_eight/body/dash_attack/W_000.png",
+          "kunai_eight/body/dash_attack/W_001.png",
+          "kunai_eight/body/dash_attack/W_002.png",
+          "kunai_eight/body/dash_attack/W_003.png",
+          "kunai_eight/body/dash_attack/W_004.png"
+        ],
+        "SW": [
+          "kunai_eight/body/dash_attack/SW_000.png",
+          "kunai_eight/body/dash_attack/SW_001.png",
+          "kunai_eight/body/dash_attack/SW_002.png",
+          "kunai_eight/body/dash_attack/SW_003.png",
+          "kunai_eight/body/dash_attack/SW_004.png"
+        ]
+      }
+    },
+    "charge": {
+      "fps": 6,
+      "loop": true,
+      "frame_size": [
+        128,
+        128
+      ],
+      "foot_anchor": [
+        64,
+        116
+      ],
+      "frames": {
+        "S": [
+          "charge_body/frames/S/000.png",
+          "charge_body/frames/S/001.png",
+          "charge_body/frames/S/002.png",
+          "charge_body/frames/S/003.png",
+          "charge_body/frames/S/004.png",
+          "charge_body/frames/S/005.png",
+          "charge_body/frames/S/006.png",
+          "charge_body/frames/S/007.png",
+          "charge_body/frames/S/008.png",
+          "charge_body/frames/S/009.png",
+          "charge_body/frames/S/010.png",
+          "charge_body/frames/S/011.png",
+          "charge_body/frames/S/012.png",
+          "charge_body/frames/S/013.png",
+          "charge_body/frames/S/014.png",
+          "charge_body/frames/S/015.png"
+        ],
+        "SE": [
+          "charge_body/frames/SE/000.png",
+          "charge_body/frames/SE/001.png",
+          "charge_body/frames/SE/002.png",
+          "charge_body/frames/SE/003.png",
+          "charge_body/frames/SE/004.png",
+          "charge_body/frames/SE/005.png",
+          "charge_body/frames/SE/006.png",
+          "charge_body/frames/SE/007.png",
+          "charge_body/frames/SE/008.png",
+          "charge_body/frames/SE/009.png",
+          "charge_body/frames/SE/010.png",
+          "charge_body/frames/SE/011.png",
+          "charge_body/frames/SE/012.png",
+          "charge_body/frames/SE/013.png",
+          "charge_body/frames/SE/014.png",
+          "charge_body/frames/SE/015.png"
+        ],
+        "E": [
+          "charge_body/frames/E/000.png",
+          "charge_body/frames/E/001.png",
+          "charge_body/frames/E/002.png",
+          "charge_body/frames/E/003.png",
+          "charge_body/frames/E/004.png",
+          "charge_body/frames/E/005.png",
+          "charge_body/frames/E/006.png",
+          "charge_body/frames/E/007.png",
+          "charge_body/frames/E/008.png",
+          "charge_body/frames/E/009.png",
+          "charge_body/frames/E/010.png",
+          "charge_body/frames/E/011.png",
+          "charge_body/frames/E/012.png",
+          "charge_body/frames/E/013.png",
+          "charge_body/frames/E/014.png",
+          "charge_body/frames/E/015.png"
+        ],
+        "NE": [
+          "charge_body/frames/NE/000.png",
+          "charge_body/frames/NE/001.png",
+          "charge_body/frames/NE/002.png",
+          "charge_body/frames/NE/003.png",
+          "charge_body/frames/NE/004.png",
+          "charge_body/frames/NE/005.png",
+          "charge_body/frames/NE/006.png",
+          "charge_body/frames/NE/007.png",
+          "charge_body/frames/NE/008.png",
+          "charge_body/frames/NE/009.png",
+          "charge_body/frames/NE/010.png",
+          "charge_body/frames/NE/011.png",
+          "charge_body/frames/NE/012.png",
+          "charge_body/frames/NE/013.png",
+          "charge_body/frames/NE/014.png",
+          "charge_body/frames/NE/015.png"
+        ],
+        "N": [
+          "charge_body/frames/N/000.png",
+          "charge_body/frames/N/001.png",
+          "charge_body/frames/N/002.png",
+          "charge_body/frames/N/003.png",
+          "charge_body/frames/N/004.png",
+          "charge_body/frames/N/005.png",
+          "charge_body/frames/N/006.png",
+          "charge_body/frames/N/007.png",
+          "charge_body/frames/N/008.png",
+          "charge_body/frames/N/009.png",
+          "charge_body/frames/N/010.png",
+          "charge_body/frames/N/011.png",
+          "charge_body/frames/N/012.png",
+          "charge_body/frames/N/013.png",
+          "charge_body/frames/N/014.png",
+          "charge_body/frames/N/015.png"
+        ],
+        "NW": [
+          "charge_body/frames/NW/000.png",
+          "charge_body/frames/NW/001.png",
+          "charge_body/frames/NW/002.png",
+          "charge_body/frames/NW/003.png",
+          "charge_body/frames/NW/004.png",
+          "charge_body/frames/NW/005.png",
+          "charge_body/frames/NW/006.png",
+          "charge_body/frames/NW/007.png",
+          "charge_body/frames/NW/008.png",
+          "charge_body/frames/NW/009.png",
+          "charge_body/frames/NW/010.png",
+          "charge_body/frames/NW/011.png",
+          "charge_body/frames/NW/012.png",
+          "charge_body/frames/NW/013.png",
+          "charge_body/frames/NW/014.png",
+          "charge_body/frames/NW/015.png"
+        ],
+        "W": [
+          "charge_body/frames/W/000.png",
+          "charge_body/frames/W/001.png",
+          "charge_body/frames/W/002.png",
+          "charge_body/frames/W/003.png",
+          "charge_body/frames/W/004.png",
+          "charge_body/frames/W/005.png",
+          "charge_body/frames/W/006.png",
+          "charge_body/frames/W/007.png",
+          "charge_body/frames/W/008.png",
+          "charge_body/frames/W/009.png",
+          "charge_body/frames/W/010.png",
+          "charge_body/frames/W/011.png",
+          "charge_body/frames/W/012.png",
+          "charge_body/frames/W/013.png",
+          "charge_body/frames/W/014.png",
+          "charge_body/frames/W/015.png"
+        ],
+        "SW": [
+          "charge_body/frames/SW/000.png",
+          "charge_body/frames/SW/001.png",
+          "charge_body/frames/SW/002.png",
+          "charge_body/frames/SW/003.png",
+          "charge_body/frames/SW/004.png",
+          "charge_body/frames/SW/005.png",
+          "charge_body/frames/SW/006.png",
+          "charge_body/frames/SW/007.png",
+          "charge_body/frames/SW/008.png",
+          "charge_body/frames/SW/009.png",
+          "charge_body/frames/SW/010.png",
+          "charge_body/frames/SW/011.png",
+          "charge_body/frames/SW/012.png",
+          "charge_body/frames/SW/013.png",
+          "charge_body/frames/SW/014.png",
+          "charge_body/frames/SW/015.png"
+        ]
+      }
     }
   }
 }

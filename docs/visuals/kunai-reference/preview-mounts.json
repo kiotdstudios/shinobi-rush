@@ -1,0 +1,38 @@
+[
+  {
+    "character": "player",
+    "direction": "SE",
+    "body_frame": "assets\\characters\\player\\sprites\\production\\idle\\SE_000.png",
+    "hand_px": [
+      49,
+      80
+    ],
+    "angle_deg": 135,
+    "weapon_layer": "front",
+    "hand_occluder": [
+      47,
+      78,
+      5,
+      5
+    ],
+    "preview_only": true
+  },
+  {
+    "character": "bandit",
+    "direction": "SE",
+    "body_frame": "assets\\characters\\bandit\\sprites\\idle\\SE_000.png",
+    "hand_px": [
+      52,
+      81
+    ],
+    "angle_deg": 135,
+    "weapon_layer": "front",
+    "hand_occluder": [
+      50,
+      79,
+      5,
+      5
+    ],
+    "preview_only": true
+  }
+]

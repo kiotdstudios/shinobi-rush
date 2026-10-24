@@ -1,0 +1,462 @@
+{
+  "schema": "shinobi_wind_grass_nine_v1",
+  "logical_tile_size": [
+    72,
+    36
+  ],
+  "roles": [
+    "corner_top",
+    "edge_ne",
+    "corner_right",
+    "edge_nw",
+    "center",
+    "edge_se",
+    "corner_left",
+    "edge_sw",
+    "corner_bottom"
+  ],
+  "tiles": [
+    {
+      "role": "corner_top",
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass9_corner_top.png",
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        84
+      ],
+      "logical_size": [
+        72,
+        36
+      ],
+      "source_cell": [
+        0,
+        0,
+        512,
+        341
+      ],
+      "shared_scale": 0.15625,
+      "registration": [
+        16,
+        49
+      ],
+      "bbox": [
+        22,
+        54,
+        91,
+        102
+      ],
+      "sha256": "43bfa6445eaadfd1e15e8dc603acebf1d03855a3427633c2abce88d9f3384c8f"
+    },
+    {
+      "role": "edge_ne",
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass9_edge_ne.png",
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        84
+      ],
+      "logical_size": [
+        72,
+        36
+      ],
+      "source_cell": [
+        512,
+        0,
+        512,
+        341
+      ],
+      "shared_scale": 0.15625,
+      "registration": [
+        16,
+        49
+      ],
+      "bbox": [
+        21,
+        53,
+        92,
+        102
+      ],
+      "sha256": "bad0c146b5a6327df6c151f3dab1b664d82f12f4d3702835dd0a81dd3e7bacfb"
+    },
+    {
+      "role": "corner_right",
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass9_corner_right.png",
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        84
+      ],
+      "logical_size": [
+        72,
+        36
+      ],
+      "source_cell": [
+        1024,
+        0,
+        512,
+        341
+      ],
+      "shared_scale": 0.15625,
+      "registration": [
+        16,
+        49
+      ],
+      "bbox": [
+        21,
+        54,
+        91,
+        102
+      ],
+      "sha256": "0edc33d6ac6a0ac2f057bbde6ed6b2fe19bdbf66187801ab5b98813560e1409d"
+    },
+    {
+      "role": "edge_nw",
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass9_edge_nw.png",
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        84
+      ],
+      "logical_size": [
+        72,
+        36
+      ],
+      "source_cell": [
+        0,
+        341,
+        512,
+        341
+      ],
+      "shared_scale": 0.15625,
+      "registration": [
+        16,
+        49
+      ],
+      "bbox": [
+        21,
+        49,
+        92,
+        102
+      ],
+      "sha256": "ef97f8d9daa2b3ef6c8cfdb25aa874de1389aea55cd5fff1bf50dfb5b88ec2b1"
+    },
+    {
+      "role": "center",
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass9_center.png",
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        84
+      ],
+      "logical_size": [
+        72,
+        36
+      ],
+      "source_cell": [
+        512,
+        341,
+        512,
+        341
+      ],
+      "shared_scale": 0.15625,
+      "registration": [
+        16,
+        49
+      ],
+      "bbox": [
+        19,
+        49,
+        95,
+        102
+      ],
+      "sha256": "6ca468e5d8ba7b5a07bab5a024841d615e880bbae1e7a363bc74ec5cad5104ad"
+    },
+    {
+      "role": "edge_se",
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass9_edge_se.png",
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        84
+      ],
+      "logical_size": [
+        72,
+        36
+      ],
+      "source_cell": [
+        1024,
+        341,
+        512,
+        341
+      ],
+      "shared_scale": 0.15625,
+      "registration": [
+        16,
+        49
+      ],
+      "bbox": [
+        18,
+        49,
+        92,
+        102
+      ],
+      "sha256": "643a66114df38a5b51081fb96ecab0d9e383f4564934b49b3c7fc4e45a044a7f"
+    },
+    {
+      "role": "corner_left",
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass9_corner_left.png",
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        84
+      ],
+      "logical_size": [
+        72,
+        36
+      ],
+      "source_cell": [
+        0,
+        682,
+        512,
+        341
+      ],
+      "shared_scale": 0.15625,
+      "registration": [
+        16,
+        62
+      ],
+      "bbox": [
+        20,
+        62,
+        93,
+        101
+      ],
+      "sha256": "2cb451c41dea1eb98dbd81fe1d491b211525b8b3d244d8d28fe0d8b78633bf12"
+    },
+    {
+      "role": "edge_sw",
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass9_edge_sw.png",
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        84
+      ],
+      "logical_size": [
+        72,
+        36
+      ],
+      "source_cell": [
+        512,
+        682,
+        512,
+        341
+      ],
+      "shared_scale": 0.15625,
+      "registration": [
+        16,
+        62
+      ],
+      "bbox": [
+        21,
+        62,
+        93,
+        102
+      ],
+      "sha256": "da792d3acc2c72550aff7110b0ca0e275f94b43de70db8f5c9f061430740ba93"
+    },
+    {
+      "role": "corner_bottom",
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass9_corner_bottom.png",
+      "size": [
+        112,
+        112
+      ],
+      "anchor": [
+        56,
+        84
+      ],
+      "logical_size": [
+        72,
+        36
+      ],
+      "source_cell": [
+        1024,
+        682,
+        512,
+        341
+      ],
+      "shared_scale": 0.15625,
+      "registration": [
+        16,
+        62
+      ],
+      "bbox": [
+        20,
+        62,
+        92,
+        101
+      ],
+      "sha256": "c56e2aacd6949c5e329a0a9ad00a0406dbb570fa867fa380de2e2e735c63a8b3"
+    }
+  ],
+  "tall_accents": [
+    {
+      "id": 0,
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass_tall_00.png",
+      "size": [
+        112,
+        160
+      ],
+      "anchor": [
+        56,
+        136
+      ],
+      "bbox": [
+        16,
+        57,
+        95,
+        136
+      ],
+      "shared_scale": 0.1467304625199362,
+      "registration": [
+        10,
+        50
+      ],
+      "sha256": "6d0b4a0b1a880facc269988c3ce3d36445ad46aa5da70e769f1db8952e43cfcb"
+    },
+    {
+      "id": 1,
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass_tall_01.png",
+      "size": [
+        112,
+        160
+      ],
+      "anchor": [
+        56,
+        136
+      ],
+      "bbox": [
+        12,
+        57,
+        97,
+        136
+      ],
+      "shared_scale": 0.1467304625199362,
+      "registration": [
+        10,
+        50
+      ],
+      "sha256": "24fcf17e913ed345c9c762aa86461802c1ff10c7eca0c78de986094aa4ed856b"
+    },
+    {
+      "id": 2,
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass_tall_02.png",
+      "size": [
+        112,
+        160
+      ],
+      "anchor": [
+        56,
+        136
+      ],
+      "bbox": [
+        15,
+        54,
+        99,
+        136
+      ],
+      "shared_scale": 0.1467304625199362,
+      "registration": [
+        10,
+        51
+      ],
+      "sha256": "ab64453ec2b4188a0067a387973ae8259b9154a1f6af08a52865c62b83e7f8b0"
+    },
+    {
+      "id": 3,
+      "path": "res://assets/environment/kosen_courtyard/grass/tiles/grass_tall_03.png",
+      "size": [
+        112,
+        160
+      ],
+      "anchor": [
+        56,
+        136
+      ],
+      "bbox": [
+        11,
+        52,
+        98,
+        136
+      ],
+      "shared_scale": 0.1467304625199362,
+      "registration": [
+        10,
+        51
+      ],
+      "sha256": "178355bf5f3d59bd48de27c1dc4d8a7fb19d28f7eece722cb376e252d9644ed8"
+    }
+  ],
+  "palette": [
+    "#0a0b17",
+    "#121720",
+    "#1c202b",
+    "#1e241a",
+    "#242b1c",
+    "#283026",
+    "#30382c",
+    "#383d35",
+    "#3f4650",
+    "#3c4437",
+    "#454e3e",
+    "#4f5846",
+    "#5a6351",
+    "#68705c",
+    "#777e6b",
+    "#888f79",
+    "#9aa08b",
+    "#b0b59e",
+    "#c2c6b2",
+    "#4d535b",
+    "#586069",
+    "#677077"
+  ],
+  "palette_basis": "exact Aki slate/moss shadows plus derived desaturated sage/straw light ramp; no neon greens",
+  "floor_reference_commit": "661ba9e4efadfe875cc9cd5e87342c6662718248",
+  "source_tool": "built-in image_gen; no paid PixelLab generation",
+  "wind": {
+    "phases": 144,
+    "fps": 24,
+    "cycle_seconds": 6,
+    "technique": "world-space gust wave with rooted nearest-sampled blade deformation",
+    "tall_fixed_from_y": 116,
+    "ground_fixed_from_y": 67,
+    "normal_strength": 1.0,
+    "gust_strength": 1.6
+  },
+  "architecture": "nine semantic terrain pieces plus four optional tall blade accents, separate ground/tall Y-sorted layers"
+}
