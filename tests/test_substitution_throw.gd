@@ -66,6 +66,18 @@ func test_substitution(p: PlayerController, arena: Node) -> void:
 	p._tick_substitution(0.2)
 	ck.call("sub: the body is revealed again after the swap beat", p.visual.visible)
 	ck.call("sub: a swap spawns the effect node", arena.get_node_or_null("SubstitutionFx") != null or _has_child_named(arena, "SubstitutionFx"))
+	var fxn := arena.get_node_or_null("SubstitutionFx") as SubstitutionFx
+	if fxn != null:
+		var foot := Vector2(1234, 567)
+		var far := SubstitutionFx.spawn(arena, foot, foot + Vector2(80, 0))
+		for i in 30:
+			far._process(0.05)
+			var ls: Sprite2D = far._log_sprite
+			if ls != null and ls.visible:
+				ck.call("sub: the log stays near its drop point (t=%.2f)" % far._age, ls.global_position.distance_to(foot) < 90.0, str(ls.global_position))
+				if far._age > 0.6:
+					break
+		far.queue_free()
 	p._tick_substitution(PlayerController.SUB_COOLDOWN + 0.1)
 	ck.call("sub: the spent charge recharges on its own cooldown", p.substitution_charges == 3 and p._sub_cooldowns.is_empty())
 
