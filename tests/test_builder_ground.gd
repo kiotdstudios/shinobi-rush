@@ -14,7 +14,7 @@ func run(ck: Callable, root: Node) -> void:
 	var before := placed.obstacles().size()
 	var count := 0
 	for id: String in PlacedObjects.CATALOG:
-		if PlacedObjects.def_of(id).kind != "ground":
+		if PlacedObjects.def_of(id).kind != "ground" or not String(id).begins_with("ground9_"):
 			continue
 		count += 1
 		var pos := Vector2(-216 + count * 72, 900)
@@ -31,7 +31,7 @@ func run(ck: Callable, root: Node) -> void:
 	placed.load_dict(data)
 	var found := 0
 	for obj in placed.objects.duplicate():
-		if PlacedObjects.def_of(obj.id).kind == "ground":
+		if PlacedObjects.def_of(obj.id).kind == "ground" and String(obj.id).begins_with("ground9_"):
 			found += 1
 			placed.remove(obj, false)
 	ck.call("ground builder: save/load retains nine ground tiles", found == 9)
