@@ -21,7 +21,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	p.set_physics_process(false)
 	b.set_physics_process(false)
 	var prof := EnemyIntelligence.profile(1)
-	ck.call("bandit sub: profile exposes burst + sub tunables", int(prof.throw_burst_count) == 3 and float(prof.sub_chance) > 0.0 and float(prof.sub_recharge) > 0.0 and float(prof.sub_chakra_cost) > 0.0)
+	ck.call("bandit sub: profile exposes burst + sub tunables", int(prof.throw_burst_count) == 3 and float(prof.sub_chance) > 0.0 and float(prof.sub_recharge) > 0.0 and not prof.has("sub_chakra_cost"))
 
 	# --- three-kunai combo
 	b._player = p
@@ -60,7 +60,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	var old := b.global_position
 	b.take_damage(10.0, Vector2.RIGHT, 140.0, 0.0)
 	ck.call("bandit sub: a hit is swallowed (no damage)", is_equal_approx(b.hp, b.max_hp))
-	ck.call("bandit sub: spends a charge and chakra", b.substitutions == 1 and b.chakra < b.max_chakra and b.substitution_count == 1)
+	ck.call("bandit sub: spends a charge but NO chakra (matches the player)", b.substitutions == 1 and b.chakra == b.max_chakra and b.substitution_count == 1)
 	ck.call("bandit sub: he reappears behind the player", b.global_position.distance_to(old) > 40.0 and (b.global_position - p.global_position).dot(old - p.global_position) < 0.0)
 	ck.call("bandit sub: grace window blocks an immediate second hit", _hit_ignored(b))
 	b._sub_invuln = 0.0
@@ -78,7 +78,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	b.chakra = 0.0
 	b._sub_gap = 0.0
 	b._sub_invuln = 0.0
-	ck.call("bandit sub: no chakra means no swap", not b.can_substitute())
+	ck.call("bandit sub: an empty chakra pool does NOT stop a swap (substitution is charge-based, like the player)", b.can_substitute())
 	b.chakra = b.max_chakra
 	b.profile["sub_chance"] = 0.0
 	b.hp = b.max_hp
