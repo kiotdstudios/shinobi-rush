@@ -1,0 +1,247 @@
+{
+  "schema": "shinobi_ground_path_nine_v1",
+  "status": "art_review",
+  "production_bound": false,
+  "logical_tile_size": [
+    72,
+    36
+  ],
+  "texture_filter": "nearest",
+  "tiles": [
+    {
+      "role": "corner_top",
+      "path": "res://assets/environment/blightwood/ground_path/ground9_corner_top.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "atlas_coords": [
+        0,
+        0
+      ],
+      "sha256": "bfed94057d399e9fbb37b243a9e4ac5f1335554fa2af585b970f78dc51cdb395"
+    },
+    {
+      "role": "edge_ne",
+      "path": "res://assets/environment/blightwood/ground_path/ground9_edge_ne.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "atlas_coords": [
+        1,
+        0
+      ],
+      "sha256": "13aed75595ebbe5af7f007a010fb26d8ff1e5d74953fa06903ff732689e8aa29"
+    },
+    {
+      "role": "corner_right",
+      "path": "res://assets/environment/blightwood/ground_path/ground9_corner_right.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "atlas_coords": [
+        2,
+        0
+      ],
+      "sha256": "0b38d94cdebebf298b86ff9c9d30ff1eeb0e796cd00338cf6c39f200b3cbefb1"
+    },
+    {
+      "role": "edge_nw",
+      "path": "res://assets/environment/blightwood/ground_path/ground9_edge_nw.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "atlas_coords": [
+        0,
+        1
+      ],
+      "sha256": "6ddf828d9c88a763810f3eb746d310f95dba3e6d4ee6473b03cc2d052becc49e"
+    },
+    {
+      "role": "center",
+      "path": "res://assets/environment/blightwood/ground_path/ground9_center.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "atlas_coords": [
+        1,
+        1
+      ],
+      "sha256": "f2c589e286d59b02f3e1f740633791f3b8aaa3754b5c8b1b31f2eec81844541d"
+    },
+    {
+      "role": "edge_se",
+      "path": "res://assets/environment/blightwood/ground_path/ground9_edge_se.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "atlas_coords": [
+        2,
+        1
+      ],
+      "sha256": "d433550cf51f190f8d8c07febd7fa9391fc0f1b73a855bbc7efadf39dc6964e5"
+    },
+    {
+      "role": "corner_left",
+      "path": "res://assets/environment/blightwood/ground_path/ground9_corner_left.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "atlas_coords": [
+        0,
+        2
+      ],
+      "sha256": "698b0fda45d7157ad6f79c633b82cd7d60ab48e5872079565f5f5655bc7c4cd4"
+    },
+    {
+      "role": "edge_sw",
+      "path": "res://assets/environment/blightwood/ground_path/ground9_edge_sw.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "atlas_coords": [
+        1,
+        2
+      ],
+      "sha256": "cf0b398225e4286abf1222f26800e6f6968d7b03abea96eb687a43c1144427ac"
+    },
+    {
+      "role": "corner_bottom",
+      "path": "res://assets/environment/blightwood/ground_path/ground9_corner_bottom.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "atlas_coords": [
+        2,
+        2
+      ],
+      "sha256": "83376811cfb0917a2ab4eabb9040f60dbbb5b132aad1381ba8090847146c3bd9"
+    }
+  ],
+  "palette": [
+    "#0a0b17",
+    "#121720",
+    "#1c202b",
+    "#1e241a",
+    "#242b1c",
+    "#283026",
+    "#30382c",
+    "#383d35",
+    "#3c4437",
+    "#3f4650",
+    "#454e3e",
+    "#4d535b",
+    "#4f5846",
+    "#586069",
+    "#5a6351",
+    "#677077",
+    "#68705c",
+    "#777e6b",
+    "#888f79",
+    "#9aa08b",
+    "#b0b59e",
+    "#c2c6b2"
+  ],
+  "palette_sources": [
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_center.png",
+      "sha256": "6ca468e5d8ba7b5a07bab5a024841d615e880bbae1e7a363bc74ec5cad5104ad"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_corner_bottom.png",
+      "sha256": "c56e2aacd6949c5e329a0a9ad00a0406dbb570fa867fa380de2e2e735c63a8b3"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_corner_left.png",
+      "sha256": "2cb451c41dea1eb98dbd81fe1d491b211525b8b3d244d8d28fe0d8b78633bf12"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_corner_right.png",
+      "sha256": "0edc33d6ac6a0ac2f057bbde6ed6b2fe19bdbf66187801ab5b98813560e1409d"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_corner_top.png",
+      "sha256": "43bfa6445eaadfd1e15e8dc603acebf1d03855a3427633c2abce88d9f3384c8f"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_edge_ne.png",
+      "sha256": "bad0c146b5a6327df6c151f3dab1b664d82f12f4d3702835dd0a81dd3e7bacfb"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_edge_nw.png",
+      "sha256": "ef97f8d9daa2b3ef6c8cfdb25aa874de1389aea55cd5fff1bf50dfb5b88ec2b1"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_edge_se.png",
+      "sha256": "643a66114df38a5b51081fb96ecab0d9e383f4564934b49b3c7fc4e45a044a7f"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_edge_sw.png",
+      "sha256": "da792d3acc2c72550aff7110b0ca0e275f94b43de70db8f5c9f061430740ba93"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass_tall_00.png",
+      "sha256": "6d0b4a0b1a880facc269988c3ce3d36445ad46aa5da70e769f1db8952e43cfcb"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass_tall_01.png",
+      "sha256": "24fcf17e913ed345c9c762aa86461802c1ff10c7eca0c78de986094aa4ed856b"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass_tall_02.png",
+      "sha256": "ab64453ec2b4188a0067a387973ae8259b9154a1f6af08a52865c62b83e7f8b0"
+    },
+    {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass_tall_03.png",
+      "sha256": "178355bf5f3d59bd48de27c1dc4d8a7fb19d28f7eece722cb376e252d9644ed8"
+    }
+  ],
+  "source_tool": "built-in image_gen; deterministic nearest extraction and exact grass palette mapping",
+  "topology": "nine-slice rectangular patch in diamond grid; same role order as grass",
+  "seams": "continuous source across assembled 3x3 patch; center repetitions are organic, not edge-identical",
+  "runtime_integration": "not wired into world builder or game; art review delivery"
+}
