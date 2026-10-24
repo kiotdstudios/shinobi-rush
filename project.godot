@@ -17,6 +17,8 @@ config/icon="res://icon.svg"
 WebBridge="*res://scripts/web/web_bridge.gd"
 DebugTelemetry="*res://scripts/debug/debug_telemetry.gd"
 BrowserDebug="*res://scripts/web/browser_debug.gd"
+Juicee="*res://addons/juicee/core/juicee.gd"
+DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
 
 [display]
 
@@ -217,3 +219,8 @@ common/physics_ticks_per_second=60
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/breakable_2d_sprites/plugin.cfg", "res://addons/dialogue_manager/plugin.cfg", "res://addons/juicee/plugin.cfg")
