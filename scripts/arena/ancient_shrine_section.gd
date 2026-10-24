@@ -45,7 +45,13 @@ const PROPS: Array = [
 	["blight_fireflies", Vector2(110, 545)]
 ]
 
+## Master switch: the test suite turns it off so the default-arena object counts its tests assume stay put.
+static var enabled := true
+
+
 static func populate(arena: TrainingArena) -> int:
+	if not enabled:
+		return 0
 	if arena == null or arena.placed == null:
 		return 0
 	var anchor := Vector2(330, -330)
