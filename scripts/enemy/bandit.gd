@@ -87,7 +87,7 @@ var _evade_side := 1.0
 
 var state: State = State.PATROL
 var hp: float = max_hp
-## Display-only status stats (HUD parity with the player): the Bandit has no chakra spend or substitution logic yet.
+## Status stats (HUD parity with the player). Substitution is charge-based with a recharge timer and costs no chakra, exactly like the player; the chakra pool is currently display-only.
 var max_chakra: float = 100.0
 var chakra: float = 100.0
 var max_substitutions: int = 2
@@ -704,14 +704,13 @@ func _tick_substitution(delta: float) -> void:
 			substitutions = mini(substitutions + 1, max_substitutions)
 
 
-## True when he is able to swap right now (charge, chakra and lockout), ignoring the dice.
+## True when he is able to swap right now (a free charge and lockout; like the player, a swap costs NO chakra), ignoring the dice.
 func can_substitute() -> bool:
 	return (
 		substitution_enabled
 		and state != State.DEAD
 		and _player != null
 		and substitutions > 0
-		and chakra >= float(profile.get("sub_chakra_cost", 25.0))
 		and _sub_gap <= 0.0
 	)
 
@@ -726,7 +725,6 @@ func _try_substitution() -> bool:
 	var dest := _substitution_destination()
 	substitutions -= 1
 	substitution_count += 1
-	chakra -= float(profile.get("sub_chakra_cost", 25.0))
 	_sub_cooldowns.append(float(profile.get("sub_recharge", 15.0)))
 	_sub_gap = float(profile.get("sub_min_gap", 1.0))
 	_sub_invuln = float(profile.get("sub_invuln", 0.5))
