@@ -4,7 +4,7 @@ Source: `project.godot` input map on main. Xbox / PlayStation gamepad equivalent
 
 | Action | Keyboard | Controller |
 |---|---|---|
-| Move | W A S D | Left stick / D-pad (planned: D-pad becomes 4 inventory slots) |
+| Move | W A S D | Left stick |
 | Sprint | Shift | R1 / RB |
 | Light attack | J | X / Square |
 | Heavy attack | K | Y / Triangle |
@@ -15,7 +15,9 @@ Source: `project.godot` input map on main. Xbox / PlayStation gamepad equivalent
 | Chakra charge | C | Hold LT / L2 |
 | Jutsu modifier | — | RT / R2 |
 | Pause | Esc | Menu / Start |
-| Aim | Arrow keys | Right stick |
+| Item slots (up / right / down / left) | Arrow keys | D-pad (default: health gourd / chakra gourd / empty / kunai) |
+| Player menu (Inventory + Jutsu tabs) | I | Touchpad (the large black button) |
+| Aim | not used yet | Right stick (reserved) |
 
 ## Testing shortcuts (keyboard)
 
