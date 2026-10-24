@@ -46,4 +46,4 @@ Review tree silhouettes, heat pulse and ash at provided normal/half speed. Initi
 Implementation commit:82fccddbf111861b540a388160ec216d85938db0
 Review PR:https://github.com/kiotdstudios/shinobi-rush/pull/148 (draft, not merged).
 Final import and native proof both PASS before implementation commit.
-
+Published half-speed GIF fetched from exact implementation SHA; SHA256 matches local:563C07E344ECA53CAE95180CBCD9200C7D202CEBB3B092C8995BD1B1C85FAA96.
