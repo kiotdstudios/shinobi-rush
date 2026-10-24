@@ -1,0 +1,27 @@
+{
+  "provider": "PixelLab create_tiles_pro terrain transitions",
+  "tile_size": [
+    72,
+    36
+  ],
+  "view_angle": 30,
+  "depth_ratio": 0,
+  "production_jobs": {
+    "grass": "51372a6f-7221-4c5b-98d3-936cecf8537d",
+    "dirt": "7218731e-526f-4099-a0b3-e8401381ce70",
+    "rock": "449d7ed3-1510-4537-a907-4c4780080ef2"
+  },
+  "rejected_initial_geometry": {
+    "reason": "top-down yields72x72; corrected explicit30degree2:1 geometry before production",
+    "tileset_ids": [
+      "ff764e78-7c3c-4e12-a4ef-0abdae10b7d9",
+      "9891b57e-44d1-46a7-a94f-5ff63600d1a7",
+      "87ae7f72-fc47-4608-afb1-13859d6d4b83"
+    ],
+    "background_job_ids": [
+      "4dd8e510-6a07-4ad8-afca-ba373a748fd3",
+      "7c5141d0-62e9-4816-a8ff-1e62606941c0",
+      "f4baf88e-ef96-4370-a40a-bd70bc614026"
+    ]
+  }
+}
