@@ -60,3 +60,6 @@ Local export first included ignored prior capture artifacts under build/, warnin
 Final pre-commit integration validation:2232native tests passed,0failed, including17new volcanic-builder checks. Web export and all13real-UI browser checks PASS with0errors. Order validator PASS. Staged whitespace check PASS before implementation commit. Required CI, merge and exact live-build verification next.
 
 Tree deployment update: GitHub rejected merge because two required checks were expected after shared main advanced. No protections bypassed. Merged origin/main35696e1 (shrine sorting and HUD change); full native rerun2233passed/0failed. Tree integration unchanged. Repushing synchronized branch for fresh required checks.
+
+## Final deployed result
+Supersedes original art-only review status above: DONE. PR148 merged normally as49f0efd435596e67ef0b53fba7bb87b3b525e55b after required CI40070347796 passed. Main deployment40070910815 published this exactSHA, verified using public build-info.json. Live command: node scripts/ci/smoke/builder-ashen-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/ashen-builder-live. All13checks PASS,0errors, including save/reload. Live screenshot and JSON retained locally; no outstanding integration work.
