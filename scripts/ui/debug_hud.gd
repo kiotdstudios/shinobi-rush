@@ -14,7 +14,7 @@ extends CanvasLayer
 ## Also owns the tiny pause toggle (runs while paused).
 
 const REFRESH := 0.1
-const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | Arrow keys = D-pad item slots | I player menu | Esc pause\nGamepad: left stick move | R1 sprint | D-pad item slots | touchpad (big black button) player menu | Options pause\nReserved (no behavior yet): K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nBottom tabs: Settings (Bandit vision / Sense vision, click on/off, default OFF) | Diagnostics | ?vision=1 starts Bandit vision on"
+const LEGEND := "Keyboard: WASD move | Shift sprint | Space dodge | F jump | J light attack | Arrow keys = D-pad item slots | I player menu | Esc pause\nGamepad: left stick move | R1 or L3 (left stick click) sprint | D-pad item slots | touchpad (big black button) player menu | Options pause\nReserved (no behavior yet): K heavy, Q substitution, E heal\nLab (art): Tab panel | [ ] set | , . anim | ; ' dir | V follow/spin | - = speed | P pause | O step | C compare | Z/wheel zoom | 1-6 overlays\nBottom tabs: Settings (Bandit vision / Sense vision, click on/off, default OFF) | Diagnostics | ?vision=1 starts Bandit vision on"
 
 const PANEL_BG := Color(0.03, 0.03, 0.05, 0.8)
 const ACCENT := Color("#FF6B00")
