@@ -1,0 +1,292 @@
+{
+  "result": "PASS",
+  "frames": [
+    {
+      "frame": 0,
+      "animation": "light_attack_1",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 338,
+      "bodyPixels": 2395,
+      "sameBody": true
+    },
+    {
+      "frame": 1,
+      "animation": "light_attack_1",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 350,
+      "bodyPixels": 2496,
+      "sameBody": true
+    },
+    {
+      "frame": 2,
+      "animation": "light_attack_1",
+      "layer": "behind",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 68,
+      "bodyPixels": 2479,
+      "sameBody": true
+    },
+    {
+      "frame": 3,
+      "animation": "light_attack_1",
+      "layer": "behind",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 68,
+      "bodyPixels": 2489,
+      "sameBody": true
+    },
+    {
+      "frame": 4,
+      "animation": "light_attack_1",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 345,
+      "bodyPixels": 2508,
+      "sameBody": true
+    },
+    {
+      "frame": 5,
+      "animation": "light_attack_1",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 349,
+      "bodyPixels": 2526,
+      "sameBody": true
+    },
+    {
+      "frame": 6,
+      "animation": "light_attack_1",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 344,
+      "bodyPixels": 2515,
+      "sameBody": true
+    },
+    {
+      "frame": 7,
+      "animation": "light_attack_1",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 349,
+      "bodyPixels": 2507,
+      "sameBody": true
+    },
+    {
+      "frame": 8,
+      "animation": "light_attack_2",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 352,
+      "bodyPixels": 2457,
+      "sameBody": true
+    },
+    {
+      "frame": 9,
+      "animation": "light_attack_2",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 340,
+      "bodyPixels": 2581,
+      "sameBody": true
+    },
+    {
+      "frame": 10,
+      "animation": "light_attack_2",
+      "layer": "behind",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 307,
+      "bodyPixels": 2575,
+      "sameBody": true
+    },
+    {
+      "frame": 11,
+      "animation": "light_attack_2",
+      "layer": "behind",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 300,
+      "bodyPixels": 2614,
+      "sameBody": true
+    },
+    {
+      "frame": 12,
+      "animation": "light_attack_2",
+      "layer": "behind",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 307,
+      "bodyPixels": 2593,
+      "sameBody": true
+    },
+    {
+      "frame": 13,
+      "animation": "light_attack_2",
+      "layer": "behind",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 307,
+      "bodyPixels": 2574,
+      "sameBody": true
+    },
+    {
+      "frame": 14,
+      "animation": "light_attack_2",
+      "layer": "behind",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 305,
+      "bodyPixels": 2578,
+      "sameBody": true
+    },
+    {
+      "frame": 15,
+      "animation": "light_attack_2",
+      "layer": "behind",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 305,
+      "bodyPixels": 2576,
+      "sameBody": true
+    },
+    {
+      "frame": 16,
+      "animation": "light_attack_3",
+      "layer": "behind",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 290,
+      "bodyPixels": 2534,
+      "sameBody": true
+    },
+    {
+      "frame": 17,
+      "animation": "light_attack_3",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 343,
+      "bodyPixels": 2476,
+      "sameBody": true
+    },
+    {
+      "frame": 18,
+      "animation": "light_attack_3",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 351,
+      "bodyPixels": 2317,
+      "sameBody": true
+    },
+    {
+      "frame": 19,
+      "animation": "light_attack_3",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 352,
+      "bodyPixels": 2293,
+      "sameBody": true
+    },
+    {
+      "frame": 20,
+      "animation": "light_attack_3",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 346,
+      "bodyPixels": 2341,
+      "sameBody": true
+    },
+    {
+      "frame": 21,
+      "animation": "light_attack_3",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 347,
+      "bodyPixels": 2351,
+      "sameBody": true
+    },
+    {
+      "frame": 22,
+      "animation": "light_attack_3",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 346,
+      "bodyPixels": 2366,
+      "sameBody": true
+    },
+    {
+      "frame": 23,
+      "animation": "light_attack_3",
+      "layer": "front",
+      "badAlpha": 0,
+      "badHand": 0,
+      "badBehind": 0,
+      "differentWeaponPixels": 346,
+      "bodyPixels": 2360,
+      "sameBody": true
+    }
+  ],
+  "layout": {
+    "width": 390,
+    "viewport": 390,
+    "canvases": [
+      {
+        "w": 326,
+        "h": 326
+      },
+      {
+        "w": 326,
+        "h": 326
+      },
+      {
+        "w": 326,
+        "h": 326
+      },
+      {
+        "w": 326,
+        "h": 326
+      }
+    ]
+  },
+  "errors": []
+}

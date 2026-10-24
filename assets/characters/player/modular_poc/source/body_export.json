@@ -1,0 +1,410 @@
+[
+  {
+    "animation": "light_attack_1",
+    "frame_index": 0,
+    "body_frame": "body/light_attack_1/SE_000.png",
+    "body_sha256": "397ecc6d50ba5f5f5376f3e411960ba3608b80c9717866090e293544d3e77194",
+    "padding_restoration": [
+      0,
+      0
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      47,
+      11,
+      88,
+      115
+    ]
+  },
+  {
+    "animation": "light_attack_1",
+    "frame_index": 1,
+    "body_frame": "body/light_attack_1/SE_001.png",
+    "body_sha256": "5278f3ddfbba1c2e08321246bbe6d0e53c493c9a1428c23d6583b47cd94a8c37",
+    "padding_restoration": [
+      -1,
+      5
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      48,
+      11,
+      97,
+      117
+    ]
+  },
+  {
+    "animation": "light_attack_1",
+    "frame_index": 2,
+    "body_frame": "body/light_attack_1/SE_002.png",
+    "body_sha256": "7b07cc50d8208d1b9e23be92aef5427c8378d564ac882b5cb6075c73eaf4b55d",
+    "padding_restoration": [
+      13,
+      0
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      48,
+      12,
+      95,
+      117
+    ]
+  },
+  {
+    "animation": "light_attack_1",
+    "frame_index": 3,
+    "body_frame": "body/light_attack_1/SE_003.png",
+    "body_sha256": "a96f4764c032b73442f558b86c15932be0323ba93aadabe752a7ace4ba456558",
+    "padding_restoration": [
+      13,
+      -1
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      48,
+      12,
+      95,
+      117
+    ]
+  },
+  {
+    "animation": "light_attack_1",
+    "frame_index": 4,
+    "body_frame": "body/light_attack_1/SE_004.png",
+    "body_sha256": "1f774ca3b396ca8483dedf419496a6d7cc2a0d0a0f546338abdb9231b72b1c54",
+    "padding_restoration": [
+      -3,
+      4
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      43,
+      17,
+      99,
+      119
+    ]
+  },
+  {
+    "animation": "light_attack_1",
+    "frame_index": 5,
+    "body_frame": "body/light_attack_1/SE_005.png",
+    "body_sha256": "f1d62eb21c49b4c70042e977a0ace7fa34aa102d84bc2115c76fd19d7bf5bd51",
+    "padding_restoration": [
+      22,
+      -1
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      40,
+      18,
+      87,
+      119
+    ]
+  },
+  {
+    "animation": "light_attack_1",
+    "frame_index": 6,
+    "body_frame": "body/light_attack_1/SE_006.png",
+    "body_sha256": "67be78bbdfd8e0a55e2a5e3617430f46e533ab1b7b76934d9ccb127c468819fe",
+    "padding_restoration": [
+      23,
+      -1
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      40,
+      18,
+      87,
+      119
+    ]
+  },
+  {
+    "animation": "light_attack_1",
+    "frame_index": 7,
+    "body_frame": "body/light_attack_1/SE_007.png",
+    "body_sha256": "41b391ef83b6ee602cc5c6219f2f678d64c700f639592ad56ad23b38dcd4deba",
+    "padding_restoration": [
+      22,
+      -1
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      40,
+      18,
+      87,
+      119
+    ]
+  },
+  {
+    "animation": "light_attack_2",
+    "frame_index": 0,
+    "body_frame": "body/light_attack_2/SE_000.png",
+    "body_sha256": "745d4adc04c8a793f52fc32a2515902f240b78e0d5063a6a9ccc687b7d79cd5b",
+    "padding_restoration": [
+      27,
+      -2
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      40,
+      21,
+      91,
+      119
+    ]
+  },
+  {
+    "animation": "light_attack_2",
+    "frame_index": 1,
+    "body_frame": "body/light_attack_2/SE_001.png",
+    "body_sha256": "3c3930946f6659b2601ce019ab73738a07a74c1cfc5564eff20b4e9b0ecb99e7",
+    "padding_restoration": [
+      -1,
+      -2
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      41,
+      22,
+      102,
+      121
+    ]
+  },
+  {
+    "animation": "light_attack_2",
+    "frame_index": 2,
+    "body_frame": "body/light_attack_2/SE_002.png",
+    "body_sha256": "fb75ab932e03759299e5cfcce099256c89a4830a3c822fac14bf1fbf9fd1ec50",
+    "padding_restoration": [
+      -1,
+      16
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      41,
+      19,
+      95,
+      121
+    ]
+  },
+  {
+    "animation": "light_attack_2",
+    "frame_index": 3,
+    "body_frame": "body/light_attack_2/SE_003.png",
+    "body_sha256": "e6e3e4093c13b1e71aa928e1b041a4ca6f66f6a32f9e875608c645d40c21b186",
+    "padding_restoration": [
+      -1,
+      15
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      41,
+      21,
+      96,
+      121
+    ]
+  },
+  {
+    "animation": "light_attack_2",
+    "frame_index": 4,
+    "body_frame": "body/light_attack_2/SE_004.png",
+    "body_sha256": "8d2afb3b072924c69c3cce0d2048d4080f33947b714cb68b7514aa8d14351c9a",
+    "padding_restoration": [
+      0,
+      16
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      41,
+      21,
+      97,
+      121
+    ]
+  },
+  {
+    "animation": "light_attack_2",
+    "frame_index": 5,
+    "body_frame": "body/light_attack_2/SE_005.png",
+    "body_sha256": "997ca67d10e2e9309441d7ca22d3514b5c156c8fc7c4a85adc6aa96f151c0875",
+    "padding_restoration": [
+      0,
+      16
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      41,
+      21,
+      97,
+      121
+    ]
+  },
+  {
+    "animation": "light_attack_2",
+    "frame_index": 6,
+    "body_frame": "body/light_attack_2/SE_006.png",
+    "body_sha256": "75a5c3abb604e118159a326a413fec495bff49c7bb1e8d463c6e17fc9c38bf17",
+    "padding_restoration": [
+      0,
+      16
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      41,
+      21,
+      97,
+      121
+    ]
+  },
+  {
+    "animation": "light_attack_2",
+    "frame_index": 7,
+    "body_frame": "body/light_attack_2/SE_007.png",
+    "body_sha256": "de275dfaf47cc2c921a4296dd5c8999a873288250fa5fbaf3f3561e48cf6e0e0",
+    "padding_restoration": [
+      0,
+      16
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      41,
+      21,
+      97,
+      121
+    ]
+  },
+  {
+    "animation": "light_attack_3",
+    "frame_index": 0,
+    "body_frame": "body/light_attack_3/SE_000.png",
+    "body_sha256": "a5fb2259f35819582bf676e213b9e31e84c71eafb1082130f13f542fc3008892",
+    "padding_restoration": [
+      -5,
+      16
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      42,
+      20,
+      92,
+      121
+    ]
+  },
+  {
+    "animation": "light_attack_3",
+    "frame_index": 1,
+    "body_frame": "body/light_attack_3/SE_001.png",
+    "body_sha256": "4c6dc1298fd103ab44b5a6be167d531cb761f704111b2f96986a65096656c999",
+    "padding_restoration": [
+      -2,
+      0
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      39,
+      17,
+      96,
+      124
+    ]
+  },
+  {
+    "animation": "light_attack_3",
+    "frame_index": 2,
+    "body_frame": "body/light_attack_3/SE_002.png",
+    "body_sha256": "755dd1e300a17642c9dbd6173ab71cc272ee75c3c59e9edf04e38e5697f35f4c",
+    "padding_restoration": [
+      3,
+      7
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      38,
+      23,
+      93,
+      124
+    ]
+  },
+  {
+    "animation": "light_attack_3",
+    "frame_index": 3,
+    "body_frame": "body/light_attack_3/SE_003.png",
+    "body_sha256": "032c99e341dba37e6213cfb24c7641ea02357e3b049b2f8e8bbf00e73b052977",
+    "padding_restoration": [
+      3,
+      7
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      37,
+      24,
+      92,
+      124
+    ]
+  },
+  {
+    "animation": "light_attack_3",
+    "frame_index": 4,
+    "body_frame": "body/light_attack_3/SE_004.png",
+    "body_sha256": "77ba7bf3c472957bfab76cb05c38379fd41e7abb602d18fe07804b42947dda95",
+    "padding_restoration": [
+      20,
+      -1
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      37,
+      23,
+      93,
+      124
+    ]
+  },
+  {
+    "animation": "light_attack_3",
+    "frame_index": 5,
+    "body_frame": "body/light_attack_3/SE_005.png",
+    "body_sha256": "ecd5a23ced8e5c18ed295477850eeb2422300aa87e38d5451b8e3259c4f9224c",
+    "padding_restoration": [
+      20,
+      0
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      37,
+      22,
+      93,
+      124
+    ]
+  },
+  {
+    "animation": "light_attack_3",
+    "frame_index": 6,
+    "body_frame": "body/light_attack_3/SE_006.png",
+    "body_sha256": "a4cf18ee0519d4aff477c36a5c5c50df850b2ac2dbcad952e8334beb9a457ce0",
+    "padding_restoration": [
+      20,
+      0
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      37,
+      22,
+      93,
+      124
+    ]
+  },
+  {
+    "animation": "light_attack_3",
+    "frame_index": 7,
+    "body_frame": "body/light_attack_3/SE_007.png",
+    "body_sha256": "2f7bb39968134eb73f477190ce08f07a2b89c86324a61b3ef16a95f049f72adb",
+    "padding_restoration": [
+      20,
+      0
+    ],
+    "removed_detached_pixel_components": [],
+    "body_bounds": [
+      37,
+      22,
+      93,
+      124
+    ]
+  }
+]

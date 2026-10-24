@@ -1,0 +1,44 @@
+[
+  {
+    "action": "light_attack_1",
+    "start": 0,
+    "frames": 4,
+    "job_id": "0a6abc77-70da-4247-8357-f3554ca23dac",
+    "receipt": "id: 0a6abc77-70da-4247-8357-f3554ca23dac\njob_id: 0a6abc77-70da-4247-8357-f3554ca23dac\nmode: text\nframes: 4\nsize: 128x128px\ntransparent: True\nedit: Make these four consecutive ninja animation poses WEAPONLESS BODY LAYERS. Remove every sword/katana blade, hilt, pommel, guard and slash effect, making weapon-only pixels fully transparent. Reconstruct any underlying clothing or hand pixels that the weapon covered. Preserve EXACT character pose, both hands and fingers, forearms, face, dreadlocks, fitted olive vest, palette, body size, feet position and original pixel alignment in EACH frame. The empty hand grip positions must stay where they were so a separate equipment layer can be attached later. Do not rotate, recenter, scale, redesign, add objects or change motion. Transparent128x128 crisp pixel art. Empty hands only, no weapon, sheath, shadow, arc or trail.\nasset_id: 257a98b3-6eb7-57cb-a28b-cb0eaae6f372\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"0a6abc77-70da-4247-8357-f3554ca23dac\")"
+  },
+  {
+    "action": "light_attack_1",
+    "start": 4,
+    "frames": 4,
+    "job_id": "63a6c42c-dc01-4676-b4f3-22b223a50a5a",
+    "receipt": "id: 63a6c42c-dc01-4676-b4f3-22b223a50a5a\njob_id: 63a6c42c-dc01-4676-b4f3-22b223a50a5a\nmode: text\nframes: 4\nsize: 128x128px\ntransparent: True\nedit: Make these four consecutive ninja animation poses WEAPONLESS BODY LAYERS. Remove every sword/katana blade, hilt, pommel, guard and slash effect, making weapon-only pixels fully transparent. Reconstruct any underlying clothing or hand pixels that the weapon covered. Preserve EXACT character pose, both hands and fingers, forearms, face, dreadlocks, fitted olive vest, palette, body size, feet position and original pixel alignment in EACH frame. The empty hand grip positions must stay where they were so a separate equipment layer can be attached later. Do not rotate, recenter, scale, redesign, add objects or change motion. Transparent128x128 crisp pixel art. Empty hands only, no weapon, sheath, shadow, arc or trail.\nasset_id: 1995d587-4105-5012-9ede-14ef38e247ea\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"63a6c42c-dc01-4676-b4f3-22b223a50a5a\")"
+  },
+  {
+    "action": "light_attack_2",
+    "start": 0,
+    "frames": 4,
+    "job_id": "461f5458-3204-4174-8b3e-a955b0fd40b6",
+    "receipt": "id: 461f5458-3204-4174-8b3e-a955b0fd40b6\njob_id: 461f5458-3204-4174-8b3e-a955b0fd40b6\nmode: text\nframes: 4\nsize: 128x128px\ntransparent: True\nedit: Make these four consecutive ninja animation poses WEAPONLESS BODY LAYERS. Remove every sword/katana blade, hilt, pommel, guard and slash effect, making weapon-only pixels fully transparent. Reconstruct any underlying clothing or hand pixels that the weapon covered. Preserve EXACT character pose, both hands and fingers, forearms, face, dreadlocks, fitted olive vest, palette, body size, feet position and original pixel alignment in EACH frame. The empty hand grip positions must stay where they were so a separate equipment layer can be attached later. Do not rotate, recenter, scale, redesign, add objects or change motion. Transparent128x128 crisp pixel art. Empty hands only, no weapon, sheath, shadow, arc or trail.\nasset_id: 5dd18702-907c-57e5-bf9d-7348891c4bec\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"461f5458-3204-4174-8b3e-a955b0fd40b6\")"
+  },
+  {
+    "action": "light_attack_2",
+    "start": 4,
+    "frames": 4,
+    "job_id": "bb9cb929-d493-4c73-8109-95141745b9cc",
+    "receipt": "id: bb9cb929-d493-4c73-8109-95141745b9cc\njob_id: bb9cb929-d493-4c73-8109-95141745b9cc\nmode: text\nframes: 4\nsize: 128x128px\ntransparent: True\nedit: Make these four consecutive ninja animation poses WEAPONLESS BODY LAYERS. Remove every sword/katana blade, hilt, pommel, guard and slash effect, making weapon-only pixels fully transparent. Reconstruct any underlying clothing or hand pixels that the weapon covered. Preserve EXACT character pose, both hands and fingers, forearms, face, dreadlocks, fitted olive vest, palette, body size, feet position and original pixel alignment in EACH frame. The empty hand grip positions must stay where they were so a separate equipment layer can be attached later. Do not rotate, recenter, scale, redesign, add objects or change motion. Transparent128x128 crisp pixel art. Empty hands only, no weapon, sheath, shadow, arc or trail.\nasset_id: 03e4638f-17f0-5260-8226-f434beeb8f16\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"bb9cb929-d493-4c73-8109-95141745b9cc\")"
+  },
+  {
+    "action": "light_attack_3",
+    "start": 0,
+    "frames": 4,
+    "job_id": "f19f6590-2a19-48d8-96a1-19ce72fdb92c",
+    "receipt": "id: f19f6590-2a19-48d8-96a1-19ce72fdb92c\njob_id: f19f6590-2a19-48d8-96a1-19ce72fdb92c\nmode: text\nframes: 4\nsize: 128x128px\ntransparent: True\nedit: Make these four consecutive ninja animation poses WEAPONLESS BODY LAYERS. Remove every sword/katana blade, hilt, pommel, guard and slash effect, making weapon-only pixels fully transparent. Reconstruct any underlying clothing or hand pixels that the weapon covered. Preserve EXACT character pose, both hands and fingers, forearms, face, dreadlocks, fitted olive vest, palette, body size, feet position and original pixel alignment in EACH frame. The empty hand grip positions must stay where they were so a separate equipment layer can be attached later. Do not rotate, recenter, scale, redesign, add objects or change motion. Transparent128x128 crisp pixel art. Empty hands only, no weapon, sheath, shadow, arc or trail.\nasset_id: b8ffc13c-a734-5db9-9b57-af610736bec1\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"f19f6590-2a19-48d8-96a1-19ce72fdb92c\")"
+  },
+  {
+    "action": "light_attack_3",
+    "start": 4,
+    "frames": 4,
+    "job_id": "098053c9-cb0e-43ee-8c9b-10592cb9f3b8",
+    "receipt": "id: 098053c9-cb0e-43ee-8c9b-10592cb9f3b8\njob_id: 098053c9-cb0e-43ee-8c9b-10592cb9f3b8\nmode: text\nframes: 4\nsize: 128x128px\ntransparent: True\nedit: Make these four consecutive ninja animation poses WEAPONLESS BODY LAYERS. Remove every sword/katana blade, hilt, pommel, guard and slash effect, making weapon-only pixels fully transparent. Reconstruct any underlying clothing or hand pixels that the weapon covered. Preserve EXACT character pose, both hands and fingers, forearms, face, dreadlocks, fitted olive vest, palette, body size, feet position and original pixel alignment in EACH frame. The empty hand grip positions must stay where they were so a separate equipment layer can be attached later. Do not rotate, recenter, scale, redesign, add objects or change motion. Transparent128x128 crisp pixel art. Empty hands only, no weapon, sheath, shadow, arc or trail.\nasset_id: d349932b-1989-51dc-b9de-0ad0e15643a1\nasset_status: pending (saved when generation completes)\ncost: ~10 generations\nstatus: processing (~30-90s)\n\nhint: get_image(job_id=\"098053c9-cb0e-43ee-8c9b-10592cb9f3b8\")"
+  }
+]
