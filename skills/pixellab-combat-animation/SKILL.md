@@ -1,8 +1,10 @@
 ---
 name: pixellab-combat-animation
-description: Orcha's controlled PixelLab API workflow for premium 128x128 ninja combat/jutsu animation with pose-first planning, smear frames, alignment QA and Godot handoff.
+description: Controlled PixelLab API workflow for premium 128x128 ninja combat/jutsu animation with pose-first planning, smear frames, alignment QA and Godot handoff.
 ---
 # PixelLab Combat Animation — Shinobi Rush
+
+For Aki or Codex art tasks. Orcha is not assigned art work.
 
 ## Read first
 - `skills/three-quarter-game-art/SKILL.md`
@@ -26,7 +28,7 @@ description: Orcha's controlled PixelLab API workflow for premium 128x128 ninja 
 5. **Generate minimally.** First make one short hand-sign sequence using an approved existing direction and start frame; then one lightning/thrust sequence only if first passes QA. Save endpoint, redacted request metadata, job ID, reported usage, and source hash. Async jobs: poll documented background-job endpoint until completed; handle 401/402/422/429 and abort on repeated failures; never retry paid calls automatically.
 6. **Visual QA before expansion.** Build nearest-neighbor contact sheet and GIF/video preview at 1x and approved close camera scale. Check identity/palette, transparent background, 128×128 dimensions, foot anchor drift (aim <=2 px except deliberate airborne/thrust displacement), frame-to-frame limb consistency, silhouette readability, no duplicate or malformed frames, no ghosted limbs unless deliberately marked smear frame, lightning correctly attached to dominant hand.
 7. **Hybrid layering.** Keep lightning, trails, impact bursts as separate transparent VFX when possible. If hands/body cannot be cleanly composited, use a few full-body key poses; do not regenerate 847 locomotion frames. Separate physical root motion (Aki) from sprite visual offsets; provide frame events `sign_start`, `charge_start`, `thrust_start`, `hit_active`, `recover`.
-8. **Deliver prototype, not a full production move.** Include source frames, PNGs, frame-timing manifest, contact sheet, animated preview, PixelLab usage/cost summary, comparison to existing ninja, Godot import notes, and an Orcha report. Aki integrates gameplay. Owner approves before expanding directions or spending more.
+8. **Deliver prototype, not a full production move.** Include source frames, PNGs, frame-timing manifest, contact sheet, animated preview, PixelLab usage/cost summary, comparison to existing ninja, Godot import notes, and a report. Aki integrates gameplay. Owner approves before expanding directions or spending more.
 
 ## Prompt scaffold (adapt to actual API schema)
 "Animate the PROVIDED approved Shinobi Rush ninja, same face, clothing, silhouette, palette, perspective, and pixel cluster style, on a transparent 128x128 canvas. The ninja CONTINUES SPRINTING FORWARD while upper arms snap through two contrasting stylized ninja hand-sign poses. Include a deliberate one-frame multiple-arm smear conveying supernatural hand speed; crisp nearest-neighbor pixels, stable body size and foot position, no idle pose, no costume changes, no added weapon, no background, no blur. End in a forward-leaning lightning-charge preparation pose. Preserve lower-body running cadence."

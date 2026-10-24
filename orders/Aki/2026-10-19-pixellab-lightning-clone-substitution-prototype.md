@@ -1,6 +1,6 @@
-# ORCHA — QUEUED: Lightning Clone Substitution Art Prototype (2026-10-19)
+# AKI / CODEX — QUEUED: Lightning Clone Substitution Art Prototype (2026-10-19)
 
-**Assigned:** Orcha. **Status:** QUEUED (pending PR merge). **Scope:** PixelLab visual animation prototype only. **Codex owns Chidori.** Do not duplicate Codex's work.
+**Assigned:** Aki or Codex (owner picks). NOT Orcha: art tasks are not assigned to Orcha. **Status:** QUEUED (pending PR merge). **Scope:** PixelLab visual animation prototype only. **Codex owns Chidori.** Do not duplicate Codex's work.
 
 ## Source references and mechanic
 - Naruto: Ultimate Ninja Storm: timed L2/R2 substitution just before an incoming hit; close-range substitution reappears behind attacker. See https://www.neoseeker.com/naruto-ultimate-ninja-storm/faqs/183345-naruto-uns-a.html
@@ -25,10 +25,10 @@
 - Read `skills/pixellab-combat-animation/SKILL.md` from this PR and current PixelLab API docs before choosing an endpoint. Use existing approved sprite reference, never a newly invented character.
 - Verify authorized credentials without printing secrets; prepare an endpoint/cost/credit estimate and **ask owner before any paid generation**. Stop if credentials, budget or API support are missing. No automatic paid retries.
 - First storyboard the full effect. Then generate **one short prototype**, not all directions.
-- No gameplay implementation: **Aki** owns L2 mapping, precise hit validation, cooldown/consumption, invulnerability, safe rear spawn, attacker stun and counter window. Coordinate frame-event handoff with Aki.
-- No edits to camera, occlusion, Chidori art, movement or combat controller. Follow Orcha reporting and PR rules.
+- No gameplay implementation in the art task: **Aki** owns L2 mapping, precise hit validation, cooldown/consumption, invulnerability, safe rear spawn, attacker stun and counter window. Coordinate frame-event handoff with Aki.
+- No edits to camera, occlusion, Chidori art, movement or combat controller. Follow the assignee's usual reporting and PR rules.
 
-## Proposed gameplay parameters for Aki to evaluate (NOT Orcha art requirements)
+## Proposed gameplay parameters for Aki to evaluate (NOT art requirements)
 - L2 press window around 100–150 ms before eligible incoming melee contact; tune in playtest.
 - Successful substitute negates incoming damage, briefly stuns attacker, repositions player to a collision-safe spot behind target and offers an immediate counterattack.
 - Failed timing does not trigger the clone effect. Cooldown/charges prevent spamming. Determine projectile behavior separately; don't assume rear teleport always works.
