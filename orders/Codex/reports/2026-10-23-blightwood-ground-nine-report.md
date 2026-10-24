@@ -41,3 +41,16 @@ Owner approved art and explicitly assigned Codex to publish it live with its own
 - Order structure validator PASS. Staged whitespace check before commit.
 - No gameplay/combat/camera behavior modified. New ground sprites belong to existing Ground parent atz=-1, after its floor tiles and below grass/actors. No collider or bandit-nav obstacle created.
 - Remaining: PR required CI, reviewed integration, deployment, live exact-build verification. Not yet claimed live.
+
+## Final live delivery — DONE
+- Integration commit:e570b374888f2a1aec5c67ee6010c17f2ee9a6e6.
+- PR144 merged after required game CI and repository checks passed; separate pipeline self-test also passed.
+- Merge/deployed commit:4fd5e7cbc8bd75e12cbabb168157ade451ecce0a.
+- PR CI run40058625068: detect, build/tests/export, predeploy browser and godot-ci-gate PASS.
+- Main CI run40059243548: build/tests/export, predeploy browser and Pages deployment PASS. Its broad postdeploy smoke still running when this report was written; no claim that this last CI job finished.
+- Public build-info.json independently returned exact merge SHA before own live browser probe.
+- Live URL:https://kiotdstudios.github.io/shinobi-rush/?editor=1&v=4fd5e7c
+- Time:2026-10-23 23:49 EDT /2026-10-24 03:49 UTC.
+- Executed real browser check: node scripts/ci/smoke/builder-ground-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/ground-builder-live. All11checks PASS, zero errors; filter exists, nine cards, scrolling preserves zoom, placement, selection, dragging, deletion, filter cancels painting, all nine place, save/reload succeeds. Live screenshot visually inspected.
+- Evidence:docs/visuals/blightwood-ground-nine/live-builder.png and live-validation.json.
+- Final status:DONE. Questions:None. No outstanding work for requested integration. Existing world is unchanged until the user places the new tiles in BUILD > Ground / paths.
