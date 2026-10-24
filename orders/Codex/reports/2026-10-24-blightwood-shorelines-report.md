@@ -34,3 +34,8 @@ None required. Delivered for visual review; owner approval is not claimed.
 Required reviewed PR/CI, main deployment/postdeploy and exact canonical-site visual/builder verification. Final report will record the exact tested SHA/URLs/timestamp. Decorative shoreline visuals do not introduce terrain physics.
 
 Final GIF packaging:192 frames each,8s normal and16s half, about2.59MB each. Actual screenshot review confirms all three families and coherent current across shore/river joins. Shared main remains6274dbf, matching the tested base; no integration conflict.
+
+## Shared-main integration and final pre-merge validation
+PR https://github.com/kiotdstudios/shinobi-rush/pull/166 initially passed required CI40110908405, repository checks40110908481 and pipeline self-test40110908397. Normal merge was refused with two checks expected while shared main advanced to16d76a9 (Aki enemy-bar art/update). Strict up-to-date policy requires the newer main. Merged origin/main16d76a9 without conflicts, preserving Aki's files unchanged. No rule/CI bypass used.
+
+Godot import PASS (build/blightwood-shorelines-integrated-import); full native suite2502 PASS,0 FAIL (build/blightwood-shorelines-integrated-tests/tests-builtin.log); fresh Web export PASS (../blightwood-shorelines-integrated-web-20261024); repeated real builder probe14/14 PASS,0 errors (build/blightwood-shorelines-integrated-browser). Screenshot/JSON refreshed in docs. Review scene, production shore pixels and GIFs unchanged. Generated untracked shot_enemy_bars UID belongs to incoming tooling and remains excluded alongside existing unrelated artifacts. Await fresh PR CI and main deploy/postdeploy/live verification.
