@@ -28,8 +28,8 @@ Present day = Year 0. The player is **12**.
 ## Family (Canon + Resolved)
 - **Great-grandfather:** the Fifth Hokage. He mastered a power that nobody since has mastered; it is written in scrolls in the Ashen Ruins. (Resolved: "grandfather" in earlier notes now means him. There is no separate grandfather.)
 - **Parents:** died in the war.
-- **Sister:** about 5 years older (about 17 now). The war left her hating that ninja must fight and kill. She chose **the healing side of the ninja world** and studies medical ninja arts. She lives in a **hamlet**; **as the player progresses, the hamlet grows into the new village**. She stays behind when he leaves. Her name is open.
-- **The player:** a determined 12-year-old, no name yet. He wants to become **Hokage**. All he knows of his people comes from the old man's stories and from random ninja who passed through the hamlet.
+- **Sister:** about 5 years older (about 17 now). The war left her hating that ninja must fight and kill. She chose **the healing side of the ninja world** and studies medical ninja arts. She lives in a **hamlet**; **as the player progresses, the hamlet grows into the new village**. She stays behind when he leaves. Her name: **Hotaru** (proposal, can change).
+- **The player:** a determined 12-year-old, name: **Ren Kagari** (proposal, can change). He wants to become **Hokage**. All he knows of his people comes from the old man's stories and from random ninja who passed through the hamlet.
 
 ## The Old Man (Resolved, proposed backstory)
 Owner: "one of his friends, you can come up with a name and backstory."
@@ -53,12 +53,12 @@ The old man taught only the basics:
 - Before the player sets out, the old man gives him the Fifth Hokage's old headband with the village crest.
 - Later, people who see the crest react: "you're from there? We never see anyone with that crest; they all died."
 
-## The Power (Open)
-Undecided, so it stays unnamed. In the opening it is only ever "the power in the scrolls of the Ashen Ruins". The Chidori test jutsu is not tied to it.
+## The Power (Hidden for now)
+Deliberately kept hidden by the owner; not decided or named in the bible yet. Candidate ideas live in the chat history only. In the opening it is only ever "the power in the scrolls of the Ashen Ruins". The Chidori test jutsu is not tied to it.
 
 ## The Opening (Canon)
 1. **The Ancient Shrine** at the edge of Blightwood: the old man used to bring the children here.
-2. **The memorial:** built on the Fifth's last orders, for the **whole village**, dedicated to the fallen. It lists the council members, known doctors, skilled tradesmen and other important figures. (Open: whether the parents' names appear.)
+2. **The memorial:** built on the Fifth's last orders, for the **whole village**, dedicated to the fallen. It lists the council members, known doctors, skilled tradesmen and other important figures. **The parents' names ARE on it (canon).**
 3. The player pays his respects and sets out through Blightwood Forest toward the Ashen Ruins.
 4. **Tutorial** runs through Blightwood against the Level 1 bandits.
 
@@ -71,11 +71,11 @@ Enemies are not parked in one place. Like real people they have objectives and m
 - Implication for the game: the Level 1 Bandit currently guards a home spot and roams briefly. Giving bandits routes and goals (search an area, move on, stash loot) is a future AI task.
 
 ## Open Questions
-1. The player's name, the sister's name, the hamlet's name.
-2. What the power is.
-3. Whether the parents' names are on the memorial.
-4. Which ninja nations destroyed the village and why (left unresolved on purpose).
-5. Whether to confirm "Genzō" and the backstory above.
+Resolved (all changeable later):
+1. Names: player **Ren Kagari**, sister **Hotaru**, hamlet **Kindle**.
+2. The power: hidden on purpose, stays unnamed.
+3. Parents' names are on the memorial: yes.
+4. Who destroyed the village: **Village Hidden in the Iron** and **Village Hidden in the Thunderheads** (proposal, owner delegated the pick). Their reason is left unresolved on purpose. The Village Hidden in the Petals is a separate, neutral village.
 
 ## Proposed Structure (Not Yet Canon)
 - **Prologue:** the hamlet and a short scene with the sister; flashback of the old man's last day.
