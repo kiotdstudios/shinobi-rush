@@ -100,6 +100,8 @@ func test_scene(tree_root: Node) -> void:
 	var structure: Array[String] = []
 	var pairs: Array = []
 	for i in n:
+		if WorldScale.is_placeholder_block(i):
+			continue  # placeholder boxes were removed from the level
 		var block := arena.get_node_or_null(NodePath("Block%d" % i)) as Node2D
 		var rear := arena.get_node_or_null(NodePath("BlockRear%d" % i)) as Node2D
 		if block == null or rear == null:
