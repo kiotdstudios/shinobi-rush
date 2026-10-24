@@ -55,7 +55,6 @@ const LEVELS := {
 		"throw_spread_deg": 9.0,     # angle between neighbouring kunai in the fan
 		# substitution jutsu: when a hit would land he may swap with a log and reappear behind the player
 		"sub_chance": 0.6,           # chance he uses a charge when hit and able
-		"sub_chakra_cost": 25.0,     # chakra per use
 		"sub_recharge": 15.0,        # seconds for a spent charge to come back
 		"sub_behind_dist": 72.0,     # how far behind the player he reappears
 		"sub_invuln": 0.5,           # grace after a swap

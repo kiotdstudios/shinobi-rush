@@ -1,0 +1,993 @@
+{
+  "schema": "shinobi_blightwood_shorelines_v1",
+  "status": "review",
+  "tile_size": [
+    72,
+    36
+  ],
+  "anchor": [
+    36,
+    18
+  ],
+  "corner_bits": {
+    "top": 8,
+    "right": 4,
+    "left": 2,
+    "bottom": 1
+  },
+  "terrain_one": "land",
+  "terrain_zero": "existing animated water",
+  "families": [
+    "grass",
+    "dirt",
+    "rock"
+  ],
+  "tiles": [
+    {
+      "id": "shore_grass_00",
+      "family": "grass",
+      "mask": 0,
+      "label": "Water fill",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_00.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_00.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_00.png",
+      "land_pixels": 0,
+      "water_pixels": 1296,
+      "land_sha256": "3b8b40b17f089bb594741d74ef45006e9f7bdbf1e4c59306cbaceeb5a29285c3"
+    },
+    {
+      "id": "shore_grass_01",
+      "family": "grass",
+      "mask": 1,
+      "label": "Outer Bottom",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_01.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_01.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_01.png",
+      "land_pixels": 369,
+      "water_pixels": 927,
+      "land_sha256": "a50082cb430f4c6f4576a4ae5bfa2829660c2cbf746629b7ace2feb303c777dc"
+    },
+    {
+      "id": "shore_grass_02",
+      "family": "grass",
+      "mask": 2,
+      "label": "Outer Left",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_02.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_02.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_02.png",
+      "land_pixels": 364,
+      "water_pixels": 932,
+      "land_sha256": "a29e2b7d7b4cc8e4008752fe4b3816e143c56209a05a02d7ff6ce92db0374aa4"
+    },
+    {
+      "id": "shore_grass_03",
+      "family": "grass",
+      "mask": 3,
+      "label": "Bank SW",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_03.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_03.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_03.png",
+      "land_pixels": 680,
+      "water_pixels": 616,
+      "land_sha256": "6d0a7b69f7849e853c306a4269151d23686056902eff59681299d886a799813d"
+    },
+    {
+      "id": "shore_grass_04",
+      "family": "grass",
+      "mask": 4,
+      "label": "Outer Right",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_04.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_04.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_04.png",
+      "land_pixels": 375,
+      "water_pixels": 921,
+      "land_sha256": "348ae0ba5b128001efe9df639a8c486b96f75435ed61e115111eb474338bdd70"
+    },
+    {
+      "id": "shore_grass_05",
+      "family": "grass",
+      "mask": 5,
+      "label": "Bank SE",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_05.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_05.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_05.png",
+      "land_pixels": 685,
+      "water_pixels": 611,
+      "land_sha256": "643cff6ade8f2772a1fb1383fec4cc1736642dfdb6091b4b707c596e559d2600"
+    },
+    {
+      "id": "shore_grass_06",
+      "family": "grass",
+      "mask": 6,
+      "label": "Split L/R",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_06.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_06.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_06.png",
+      "land_pixels": 782,
+      "water_pixels": 514,
+      "land_sha256": "8aafe398da9684fc57eb39eee49b593af4fd776d7a0ebe7857c843a175ff4e85"
+    },
+    {
+      "id": "shore_grass_07",
+      "family": "grass",
+      "mask": 7,
+      "label": "Inner Top",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_07.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_07.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_07.png",
+      "land_pixels": 997,
+      "water_pixels": 299,
+      "land_sha256": "6ca7ef1ee0a608681e90aa826ae56c399a04ac699432ba391152293705f57398"
+    },
+    {
+      "id": "shore_grass_08",
+      "family": "grass",
+      "mask": 8,
+      "label": "Outer Top",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_08.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_08.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_08.png",
+      "land_pixels": 412,
+      "water_pixels": 884,
+      "land_sha256": "662bde2d9c0540ce3d73ed5cbfa976b663099b506eebbcf034b154eec6b3e238"
+    },
+    {
+      "id": "shore_grass_09",
+      "family": "grass",
+      "mask": 9,
+      "label": "Split T/B",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_09.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_09.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_09.png",
+      "land_pixels": 817,
+      "water_pixels": 479,
+      "land_sha256": "b6e06e425c8a7cbab64fb7de19b21795355a78d0395bf6f9d98d60a20360b2bf"
+    },
+    {
+      "id": "shore_grass_10",
+      "family": "grass",
+      "mask": 10,
+      "label": "Bank NW",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_10.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_10.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_10.png",
+      "land_pixels": 744,
+      "water_pixels": 552,
+      "land_sha256": "ab6d60a2368dc9b8f41de90f3014556c1dda16e6b8d8c8eeabd2e5411b4d2c7d"
+    },
+    {
+      "id": "shore_grass_11",
+      "family": "grass",
+      "mask": 11,
+      "label": "Inner Right",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_11.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_11.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_11.png",
+      "land_pixels": 1056,
+      "water_pixels": 240,
+      "land_sha256": "3369fe1c2e33623d66cbaa61eb5db9a15f2572291da03eabe6f9b093e084da60"
+    },
+    {
+      "id": "shore_grass_12",
+      "family": "grass",
+      "mask": 12,
+      "label": "Bank NE",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_12.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_12.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_12.png",
+      "land_pixels": 737,
+      "water_pixels": 559,
+      "land_sha256": "15101d8b3c4b002f1607c2dce0a1d2aabde033d2128a712a9d189e0171b1a754"
+    },
+    {
+      "id": "shore_grass_13",
+      "family": "grass",
+      "mask": 13,
+      "label": "Inner Left",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_13.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_13.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_13.png",
+      "land_pixels": 1055,
+      "water_pixels": 241,
+      "land_sha256": "b1037cd0adb72200fcd3ca791bca52e841ae0899883d9fa12d53a6eb72085876"
+    },
+    {
+      "id": "shore_grass_14",
+      "family": "grass",
+      "mask": 14,
+      "label": "Inner Bottom",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_14.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_14.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_14.png",
+      "land_pixels": 1075,
+      "water_pixels": 221,
+      "land_sha256": "3d3d8d28fcc10783b7994cf79e3c21398c88b6bca5cb43317915c840e59bd9de"
+    },
+    {
+      "id": "shore_grass_15",
+      "family": "grass",
+      "mask": 15,
+      "label": "Land fill",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/grass_15.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/grass_15.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_grass_15.png",
+      "land_pixels": 1296,
+      "water_pixels": 0,
+      "land_sha256": "1c5170b99133f9c8da30cf92e1e3bef93b1dcbf5f21d946c9e6ef9b5a4523bae"
+    },
+    {
+      "id": "shore_dirt_00",
+      "family": "dirt",
+      "mask": 0,
+      "label": "Water fill",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_00.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_00.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_00.png",
+      "land_pixels": 0,
+      "water_pixels": 1296,
+      "land_sha256": "3b8b40b17f089bb594741d74ef45006e9f7bdbf1e4c59306cbaceeb5a29285c3"
+    },
+    {
+      "id": "shore_dirt_01",
+      "family": "dirt",
+      "mask": 1,
+      "label": "Outer Bottom",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_01.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_01.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_01.png",
+      "land_pixels": 357,
+      "water_pixels": 939,
+      "land_sha256": "dd3af0ab408b83005c8c3e838b0cd0ba2a0da07d050c0ae028fb59afc69505c8"
+    },
+    {
+      "id": "shore_dirt_02",
+      "family": "dirt",
+      "mask": 2,
+      "label": "Outer Left",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_02.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_02.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_02.png",
+      "land_pixels": 322,
+      "water_pixels": 974,
+      "land_sha256": "aa8a62aae15782aca4fc099ce2b3274a1298ca166918322f48fe41df8869808f"
+    },
+    {
+      "id": "shore_dirt_03",
+      "family": "dirt",
+      "mask": 3,
+      "label": "Bank SW",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_03.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_03.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_03.png",
+      "land_pixels": 673,
+      "water_pixels": 623,
+      "land_sha256": "b2f75c3dae08c97368828dfd78c51341b573a3d8f871744b8317d61e4ac1cfdb"
+    },
+    {
+      "id": "shore_dirt_04",
+      "family": "dirt",
+      "mask": 4,
+      "label": "Outer Right",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_04.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_04.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_04.png",
+      "land_pixels": 323,
+      "water_pixels": 973,
+      "land_sha256": "98011ccb9a031b0c747b9732a54b2eade12cfb89802c8cc6133e7c8d004847d2"
+    },
+    {
+      "id": "shore_dirt_05",
+      "family": "dirt",
+      "mask": 5,
+      "label": "Bank SE",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_05.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_05.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_05.png",
+      "land_pixels": 660,
+      "water_pixels": 636,
+      "land_sha256": "767ad7e14a82810724336d8f40205d2875824ca8d341f37755a4eada114afa00"
+    },
+    {
+      "id": "shore_dirt_06",
+      "family": "dirt",
+      "mask": 6,
+      "label": "Split L/R",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_06.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_06.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_06.png",
+      "land_pixels": 645,
+      "water_pixels": 651,
+      "land_sha256": "6ed27bbbc9eb4be451376b571b89abf33017e1e49e9d4c24b96c9b075feace4e"
+    },
+    {
+      "id": "shore_dirt_07",
+      "family": "dirt",
+      "mask": 7,
+      "label": "Inner Top",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_07.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_07.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_07.png",
+      "land_pixels": 973,
+      "water_pixels": 323,
+      "land_sha256": "bebbc3bfc0ea767450ad7bc67c3038010e616195aed6414d50f59b9273a1662a"
+    },
+    {
+      "id": "shore_dirt_08",
+      "family": "dirt",
+      "mask": 8,
+      "label": "Outer Top",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_08.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_08.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_08.png",
+      "land_pixels": 333,
+      "water_pixels": 963,
+      "land_sha256": "787b2d7d4697007c7660e11b32d5df2e80862b069796b36b74e08258de507847"
+    },
+    {
+      "id": "shore_dirt_09",
+      "family": "dirt",
+      "mask": 9,
+      "label": "Split T/B",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_09.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_09.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_09.png",
+      "land_pixels": 654,
+      "water_pixels": 642,
+      "land_sha256": "27ebc501cede4bf935c87a1dcaf91d25397c8a7f0288406eca4d07c792a03570"
+    },
+    {
+      "id": "shore_dirt_10",
+      "family": "dirt",
+      "mask": 10,
+      "label": "Bank NW",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_10.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_10.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_10.png",
+      "land_pixels": 655,
+      "water_pixels": 641,
+      "land_sha256": "e86fdb48700009c620f29eb45bb17388a499c2d409dcf6048a6bedbc7d89c7bf"
+    },
+    {
+      "id": "shore_dirt_11",
+      "family": "dirt",
+      "mask": 11,
+      "label": "Inner Right",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_11.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_11.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_11.png",
+      "land_pixels": 978,
+      "water_pixels": 318,
+      "land_sha256": "3da6077c92771e281da99d751a4c2390b0058e0fa153bdf8e85f5eb711082f93"
+    },
+    {
+      "id": "shore_dirt_12",
+      "family": "dirt",
+      "mask": 12,
+      "label": "Bank NE",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_12.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_12.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_12.png",
+      "land_pixels": 650,
+      "water_pixels": 646,
+      "land_sha256": "5cf20f0a1e654b786a19fb2db9c1cc022cbb25949b4ed2cb9925e5383e25b757"
+    },
+    {
+      "id": "shore_dirt_13",
+      "family": "dirt",
+      "mask": 13,
+      "label": "Inner Left",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_13.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_13.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_13.png",
+      "land_pixels": 977,
+      "water_pixels": 319,
+      "land_sha256": "1a2df62db9d719b5f0d0c1389e795e75df79112ee969eded56cd3aef71891762"
+    },
+    {
+      "id": "shore_dirt_14",
+      "family": "dirt",
+      "mask": 14,
+      "label": "Inner Bottom",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_14.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_14.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_14.png",
+      "land_pixels": 970,
+      "water_pixels": 326,
+      "land_sha256": "b16ef39465293a14e1063eb1078fc1f8258e6194f3e471754cbbda6768f1b5b7"
+    },
+    {
+      "id": "shore_dirt_15",
+      "family": "dirt",
+      "mask": 15,
+      "label": "Land fill",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/dirt_15.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_15.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_dirt_15.png",
+      "land_pixels": 1296,
+      "water_pixels": 0,
+      "land_sha256": "c130583a57211c5136256f5ffe27fc6378d3f741a9181c3808b0d16fb28e2c8b"
+    },
+    {
+      "id": "shore_rock_00",
+      "family": "rock",
+      "mask": 0,
+      "label": "Water fill",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_00.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_00.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_00.png",
+      "land_pixels": 0,
+      "water_pixels": 1296,
+      "land_sha256": "3b8b40b17f089bb594741d74ef45006e9f7bdbf1e4c59306cbaceeb5a29285c3"
+    },
+    {
+      "id": "shore_rock_01",
+      "family": "rock",
+      "mask": 1,
+      "label": "Outer Bottom",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_01.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_01.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_01.png",
+      "land_pixels": 336,
+      "water_pixels": 960,
+      "land_sha256": "d275dd61ef6d96df028b583812f5dbdbdca4914140f07a9477935bbcec18656a"
+    },
+    {
+      "id": "shore_rock_02",
+      "family": "rock",
+      "mask": 2,
+      "label": "Outer Left",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_02.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_02.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_02.png",
+      "land_pixels": 320,
+      "water_pixels": 976,
+      "land_sha256": "b2bf89aa499b269fd63c907089f1c00bab49efdc194852c2dfc800ff52174d7e"
+    },
+    {
+      "id": "shore_rock_03",
+      "family": "rock",
+      "mask": 3,
+      "label": "Bank SW",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_03.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_03.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_03.png",
+      "land_pixels": 646,
+      "water_pixels": 650,
+      "land_sha256": "a1537cd682deb5d78de17dedf88ca597dbb402a583c87b9d5697c03c8d830cc8"
+    },
+    {
+      "id": "shore_rock_04",
+      "family": "rock",
+      "mask": 4,
+      "label": "Outer Right",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_04.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_04.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_04.png",
+      "land_pixels": 329,
+      "water_pixels": 967,
+      "land_sha256": "246f691b61b074d7ad2066b7e6cdce5430ed873f0128cc9f977ea73fa71fc4ff"
+    },
+    {
+      "id": "shore_rock_05",
+      "family": "rock",
+      "mask": 5,
+      "label": "Bank SE",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_05.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_05.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_05.png",
+      "land_pixels": 647,
+      "water_pixels": 649,
+      "land_sha256": "f28c4d0e3793bdef8cf84f39ce395738a5730725e2d0e329ea0081a2be4e7d07"
+    },
+    {
+      "id": "shore_rock_06",
+      "family": "rock",
+      "mask": 6,
+      "label": "Split L/R",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_06.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_06.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_06.png",
+      "land_pixels": 640,
+      "water_pixels": 656,
+      "land_sha256": "8968768be90c5b5a57be8b62b76de7fccfa5408029106939b576866bfc1ada44"
+    },
+    {
+      "id": "shore_rock_07",
+      "family": "rock",
+      "mask": 7,
+      "label": "Inner Top",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_07.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_07.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_07.png",
+      "land_pixels": 971,
+      "water_pixels": 325,
+      "land_sha256": "e684de1dac1edce1a9bee2e5c62cd49519c62e263843ed2bf719c8ac74668451"
+    },
+    {
+      "id": "shore_rock_08",
+      "family": "rock",
+      "mask": 8,
+      "label": "Outer Top",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_08.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_08.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_08.png",
+      "land_pixels": 328,
+      "water_pixels": 968,
+      "land_sha256": "716d05f83fe787c5e450364c011468aa59eb05b3c3e07d04e8200031986c3a60"
+    },
+    {
+      "id": "shore_rock_09",
+      "family": "rock",
+      "mask": 9,
+      "label": "Split T/B",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_09.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_09.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_09.png",
+      "land_pixels": 655,
+      "water_pixels": 641,
+      "land_sha256": "26e50fe0aa9e4870cbfe1eabd2e848c66f6d75aa693a1b0dfcfb5e966c366fa4"
+    },
+    {
+      "id": "shore_rock_10",
+      "family": "rock",
+      "mask": 10,
+      "label": "Bank NW",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_10.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_10.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_10.png",
+      "land_pixels": 649,
+      "water_pixels": 647,
+      "land_sha256": "927d6fdb3429da27b8aad0777849d9d2cc0b802768a9af90387437ad3245e390"
+    },
+    {
+      "id": "shore_rock_11",
+      "family": "rock",
+      "mask": 11,
+      "label": "Inner Right",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_11.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_11.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_11.png",
+      "land_pixels": 976,
+      "water_pixels": 320,
+      "land_sha256": "d2a6b52df279d7686966cda1f5c9373f9c2225ef1de45f2b128bd882bd0125f2"
+    },
+    {
+      "id": "shore_rock_12",
+      "family": "rock",
+      "mask": 12,
+      "label": "Bank NE",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_12.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_12.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_12.png",
+      "land_pixels": 648,
+      "water_pixels": 648,
+      "land_sha256": "22d98ecbfeb29e28cffcf4ff074ada02e2a9fe6e7c95f438e0d0b7e25e2e253d"
+    },
+    {
+      "id": "shore_rock_13",
+      "family": "rock",
+      "mask": 13,
+      "label": "Inner Left",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_13.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_13.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_13.png",
+      "land_pixels": 980,
+      "water_pixels": 316,
+      "land_sha256": "4ed4614d5f887fea92464419cea66c10805032a58ea8a1fa9b07e998d4f457e4"
+    },
+    {
+      "id": "shore_rock_14",
+      "family": "rock",
+      "mask": 14,
+      "label": "Inner Bottom",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_14.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_14.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_14.png",
+      "land_pixels": 967,
+      "water_pixels": 329,
+      "land_sha256": "8b8286fba14394af65237a3ad53053ffb806328883a71f22ba2df166b4722219"
+    },
+    {
+      "id": "shore_rock_15",
+      "family": "rock",
+      "mask": 15,
+      "label": "Land fill",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "land": "res://assets/environment/blightwood_shorelines/land/rock_15.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/rock_15.png",
+      "thumbnail": "res://assets/environment/blightwood_shorelines/tiles/shore_rock_15.png",
+      "land_pixels": 1296,
+      "water_pixels": 0,
+      "land_sha256": "560fede3607e511f90996feb91e70ba740193b2d9a487e087f39db8a35ce2550"
+    }
+  ],
+  "animation_reference": "res://assets/environment/blightwood_water/water.art.json",
+  "water_fps": 16,
+  "texture_filter": "nearest",
+  "source_tool": "PixelLab create_tiles_pro",
+  "processing": "Native palette classification, land/water separation, exact two-pixel boundary signature with nearest authored land-pixel repair. No scaling or painted substitute geometry.",
+  "physics": "Decorative only; no swimming, terrain collision or map layout change."
+}
