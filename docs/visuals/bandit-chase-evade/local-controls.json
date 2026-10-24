@@ -1,0 +1,138 @@
+{
+  "results": [
+    {
+      "name": "ready-flag",
+      "ok": true,
+      "detail": "__SHINOBI_READY__ true after 2272 ms"
+    },
+    {
+      "name": "state-object",
+      "ok": true,
+      "detail": "{\"frame\":11,\"physics_frame\":96,\"x\":0,\"y\":135,\"state\":\"IDLE\",\"sprinting\":false,\"fps\":6,\"zoom\":0.4444444477558136,\"view_w\":2880,\"view_h\":1620,\"camera_preset\":\"wide\",\"figure_height_px\":104,\"sprite_set_id\":\"player_128\",\"target_locked\":false,\"bandit_state\":\"APPROACH\",\"bandit_x\":67.00518035888672,\"bandit_y\":193.2653045654297,\"bandit_evades\":0,\"bandit_animation\":\"idle\",\"bandit_frame\":3,\"lab_open\":false,\"lab_animation\":\"idle\"}"
+    },
+    {
+      "name": "camera-preset-default-is-wide",
+      "ok": true,
+      "detail": "no ?camera= parameter: state.camera_preset=\"wide\", expected \"wide\""
+    },
+    {
+      "name": "camera-baseline-at-start",
+      "ok": true,
+      "detail": "expected zoom ~0.4444 and view 2880x1620; got zoom=0.4444444477558136, view=2880x1620"
+    },
+    {
+      "name": "move-right",
+      "ok": true,
+      "detail": "dx 262.5 over a700ms sample (KeyD held ~1000ms), state=MOVE"
+    },
+    {
+      "name": "sprint-faster",
+      "ok": true,
+      "detail": "sprint 607.5px/physics-sec vs walk 393.8px/physics-sec; state=SPRINT, sprinting=true"
+    },
+    {
+      "name": "wall-stops-player",
+      "ok": true,
+      "detail": "y 135.0 -> -1098.0 with W held; 3 later samples spread 0.00"
+    },
+    {
+      "name": "lab-open-keeps-baseline",
+      "ok": true,
+      "detail": "after Tab (lab open) zoom=0.4444444477558136, expected ~0.4444 (opening the lab must not change the camera)"
+    },
+    {
+      "name": "lab-z-changes-zoom",
+      "ok": true,
+      "detail": "after Z zoom=1, expected 1 (native 1:1, the first non-baseline lab zoom)"
+    },
+    {
+      "name": "lab-close-restores-baseline",
+      "ok": true,
+      "detail": "after Tab (lab closed) zoom=0.4444444477558136, expected ~0.4444"
+    },
+    {
+      "name": "lab-jump-available",
+      "ok": true,
+      "detail": "selected jump"
+    },
+    {
+      "name": "lab-dodge-available",
+      "ok": true,
+      "detail": "selected dodge"
+    },
+    {
+      "name": "camera-figure-height",
+      "ok": true,
+      "detail": "loaded figure height=104px"
+    },
+    {
+      "name": "camera-close-via-query",
+      "ok": true,
+      "detail": "?camera=close expected preset=close zoom ~1.2115 view 1056.5x594.3; got preset=close zoom=1.2115384340286255 view=1056.5079345703125x594.2857055664062"
+    },
+    {
+      "name": "camera-garbage-falls-back-to-wide",
+      "ok": true,
+      "detail": "?camera=bogus expected preset=wide zoom ~0.4444 view 2880x1620; got preset=wide zoom=0.4444444477558136 view=2880x1620"
+    },
+    {
+      "name": "no-console-errors",
+      "ok": true,
+      "detail": "13 console messages, 0 error/pageerror"
+    }
+  ],
+  "console": [
+    {
+      "type": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    {
+      "type": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+    },
+    {
+      "type": "log",
+      "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x648c01fb6200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x648c01fb6200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x648c01fb6200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x648c01fb6200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    },
+    {
+      "type": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    {
+      "type": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+    },
+    {
+      "type": "log",
+      "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+    },
+    {
+      "type": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    {
+      "type": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+    },
+    {
+      "type": "log",
+      "text": "Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+    }
+  ]
+}

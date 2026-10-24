@@ -75,6 +75,18 @@ func show_animation(s: SpriteSet, aid: String, want_dir: String, freeze: bool = 
 	return true
 
 
+## Show `aid` with the frame DRIVEN by `progress` (0..1) instead of free-running: the animation can
+## then be stretched/compressed to any gameplay duration and survives interruptions (an air attack
+## mid-jump) without restarting from frame 0.
+func show_animation_at(s: SpriteSet, aid: String, want_dir: String, progress: float) -> bool:
+	if not show_animation(s, aid, want_dir, false):
+		return false
+	var n := sprite.sprite_frames.get_frame_count(sprite.animation)
+	sprite.pause()
+	sprite.frame = clampi(int(clampf(progress, 0.0, 1.0) * n), 0, maxi(n - 1, 0))
+	return true
+
+
 func set_playback(speed: float, paused: bool) -> void:
 	sprite.speed_scale = speed
 	if paused and sprite.is_playing():
@@ -94,3 +106,9 @@ func current_frame_text() -> String:
 	if sprite.sprite_frames == null or not sprite.visible:
 		return "-"
 	return "%d/%d" % [sprite.frame + 1, sprite.sprite_frames.get_frame_count(sprite.animation)]
+
+
+## Raw current frame index (0-based) of the currently playing animation. 0 if nothing is loaded yet.
+## Used by weapon/prop overlays that must track the body's exact frame (see WeaponRig).
+func current_frame() -> int:
+	return sprite.frame if sprite.sprite_frames != null else 0

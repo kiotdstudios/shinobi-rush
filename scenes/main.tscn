@@ -1,10 +1,12 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/arena/training_arena.tscn" id="1_arena"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
 [ext_resource type="Script" path="res://scripts/ui/debug_hud.gd" id="3_hud"]
 
 [ext_resource type="Script" path="res://scripts/ui/animation_lab.gd" id="4_lab"]
+
+[ext_resource type="Script" path="res://scripts/art/kunai_proof_gate.gd" id="5_kunai"]
 
 [node name="Main" type="Node"]
 
@@ -18,3 +20,6 @@ script = ExtResource("3_hud")
 
 [node name="AnimationLab" type="Node" parent="."]
 script = ExtResource("4_lab")
+
+[node name="KunaiProofGate" type="Node" parent="."]
+script = ExtResource("5_kunai")

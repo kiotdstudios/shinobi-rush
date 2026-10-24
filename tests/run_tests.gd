@@ -32,10 +32,42 @@ func _initialize() -> void:
 	test_discovery()
 	await test_anchor_stability()
 	await test_main_scene_and_movement()
+	await test_jump_and_dodge_chaining()
 	await test_lab_and_pause()
 	await test_camera_framing()
 	await load("res://tests/test_camera_preset.gd").new().run(ck, root)
+	await load("res://tests/test_camera_impact.gd").new().run(ck, root)
 	await load("res://tests/test_arena_sorting.gd").new().run(ck, root)
+	await load("res://tests/test_wall_art.gd").new().run(ck, root)
+	await load("res://tests/test_combat.gd").new().run(ck, root)
+	await load("res://tests/test_jump.gd").new().run(ck, root)
+	await load("res://tests/test_health_flicker.gd").new().run(ck, root)
+	await load("res://tests/test_health_gourd.gd").new().run(ck, root)
+	await load("res://tests/test_gourd_pickup_fx.gd").new().run(ck, root)
+	await load("res://tests/test_ancient_shrine.gd").new().run(ck, root)
+	await load("res://tests/test_paint_tool.gd").new().run(ck, root)
+	await load("res://tests/test_substitution_throw.gd").new().run(ck, root)
+	await load("res://tests/test_chakra_charge.gd").new().run(ck, root)
+	await load("res://tests/test_settings_tabs.gd").new().run(ck, root)
+	await load("res://tests/test_combat_b.gd").new().run(ck, root)
+	await load("res://tests/test_builder_dims.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_art.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_chase.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_robber.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_vision_overlay.gd").new().run(ck, root)
+	await load("res://tests/test_sense_vision_overlay.gd").new().run(ck, root)
+	await load("res://tests/test_kunai_primary_proof.gd").new().run(ck, root)
+	await load("res://tests/test_player_flicker_proof.gd").new().run(ck, root)
+	await load("res://tests/test_kunai_attack_wiring.gd").new().run(ck, root)
+	await load("res://tests/test_kunai_eight.gd").new().run(ck, root)
+	await load("res://tests/test_blossom_trees.gd").new().run(ck, root)
+	await load("res://tests/test_fire_pillar.gd").new().run(ck, root)
+	await load("res://tests/test_wind_grass.gd").new().run(ck, root)
+	await load("res://tests/test_proximity_sense.gd").new().run(ck, root)
+	await load("res://tests/test_world_editor.gd").new().run(ck, root)
+	await load("res://tests/test_builder_ground.gd").new().run(ck, root)
+	await load("res://tests/test_wall_kit_sort.gd").new().run(ck, root)
+	await load("res://tests/test_publish_to_github.gd").new().run(ck, root)
 	var debug_store_tests = load("res://tests/test_debug_store.gd").new()
 	debug_store_tests.run(ck)
 	var browser_debug_tests = load("res://tests/test_browser_debug.gd").new()
@@ -394,6 +426,22 @@ func test_main_scene_and_movement() -> void:
 	await _hold(["move_right"], 60)
 	var px := player.global_position.x
 	ck("a wall (block) blocks the player", px > wall_start and px < wall_face, "x=%.1f face=%.1f" % [px, wall_face])
+	# blossom tree trunks are solid: walk west-to-east and north-to-south into each base
+	for ti in WorldScale.TREE_POSITIONS.size():
+		var tp: Vector2 = WorldScale.TREE_POSITIONS[ti]
+		var half := WorldScale.TREE_TRUNK_FOOTPRINT * 0.5
+		var mid_y := tp.y - half.y
+		_place(player, Vector2(tp.x - half.x - 90.0, mid_y))
+		await _hold(["move_right"], 60)
+		ck("tree %d trunk blocks the player (from west)" % ti, player.global_position.x < tp.x - half.x + 1.0, "x=%.1f left=%.1f" % [player.global_position.x, tp.x - half.x])
+		_place(player, Vector2(tp.x, tp.y + 90.0))
+		await _hold(["move_up"], 60)
+		ck("tree %d trunk blocks the player (from south)" % ti, player.global_position.y > tp.y - 1.0, "y=%.1f base=%.1f" % [player.global_position.y, tp.y])
+		await _hold([], 20)
+	var nav_blocked := true
+	for tp in WorldScale.TREE_POSITIONS:
+		nav_blocked = nav_blocked and not arena.nav.is_walkable(tp + Vector2(0, -20))
+	ck("bandit nav treats tree bases as solid", nav_blocked)
 	_place(player, Vector2(arena.bounds.end.x - 150.0, 0))
 	await _hold(["move_right"], 90)
 	ck("arena bounds wall blocks the player", player.global_position.x <= arena.bounds.end.x, "x=%.1f" % player.global_position.x)
@@ -405,6 +453,208 @@ func test_main_scene_and_movement() -> void:
 
 	main.queue_free()
 	await process_frame
+
+
+# ------------------------------------------------------------------ jump / dodge chaining (fluid movement)
+func test_jump_and_dodge_chaining() -> void:
+	var packed := load("res://scenes/main.tscn") as PackedScene
+	var main := packed.instantiate()
+	root.add_child(main)
+	for i in 5:
+		await process_frame
+	var arena := main.get_node_or_null("TrainingArena") as TrainingArena
+	var player := main.get_node_or_null("TrainingArena/Player") as PlayerController
+	ck("jump/dodge: scene has arena and player", arena != null and player != null)
+	if arena == null or player == null:
+		main.queue_free()
+		return
+
+	# Hold `action` for a few frames then release (a same-frame press+release is faster than this
+	# headless harness can reliably register as a just_pressed edge; a real keypress always spans
+	# several frames). Samples state every frame; returns [reached_target, saw_idle_first, frames].
+	var _tap := func(action: String, target: PlayerController.State, max_frames: int) -> Array:
+		Input.action_press(action)
+		var saw_idle := false
+		var reached := false
+		for i in max_frames:
+			await physics_frame
+			if player.state == PlayerController.State.IDLE:
+				saw_idle = true
+			if player.state == target:
+				reached = true
+				Input.action_release(action)
+				return [reached, saw_idle]
+		Input.action_release(action)
+		return [reached, saw_idle]
+
+	# Fully clears FSM + buffer state between scenarios so one block's input never bleeds into the next.
+	var _reset := func(pos: Vector2) -> void:
+		Input.action_release("move_left")
+		Input.action_release("move_right")
+		Input.action_release("move_up")
+		Input.action_release("move_down")
+		Input.action_release("sprint")
+		Input.action_release("dodge")
+		Input.action_release("jump")
+		player._dodge_buffer = 0.0
+		player._jump_buffer = 0.0
+		player._action_timer = 0.0
+		player.state = PlayerController.State.IDLE
+		_place(player, pos)
+
+	# Idle -> Run -> Jump -> Run: state must go straight from MOVE to JUMP (never an idle detour), and
+	# momentum must never collapse toward 0 across the transition.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	for i in 20:
+		await physics_frame
+	var run_speed := player.velocity.length()
+	ck("run builds up to walk_speed before jumping", is_equal_approx(run_speed, player.walk_speed), str(run_speed))
+	var r1: Array = await _tap.call("jump", PlayerController.State.JUMP, 8)
+	ck("jump fires directly from MOVE (no idle detour)", r1[0] and not r1[1], str(r1))
+	ck("jump preserves run momentum on entry (no stop-before-jump)", player.velocity.length() > run_speed * 0.9, str(player.velocity.length()))
+	var min_v_during_jump := player.velocity.length()
+	var jump_frames := 0
+	while player.state == PlayerController.State.JUMP and jump_frames < 150:
+		await physics_frame
+		jump_frames += 1
+		min_v_during_jump = minf(min_v_during_jump, player.velocity.length())
+	ck("velocity never collapses toward 0 while airborne with input held", min_v_during_jump > player.jump_air_speed_cap * 0.9, str(min_v_during_jump))
+	ck("landing resumes MOVE immediately with input held (no idle frame)", player.state == PlayerController.State.MOVE, player.get_state_name())
+	Input.action_release("move_right")
+
+	# Sprint -> Jump -> Land -> Sprint: same guarantee at sprint speed; landing resumes SPRINT (not MOVE).
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	Input.action_press("sprint")
+	for i in 20:
+		await physics_frame
+	var sprint_v := player.velocity.length()
+	ck("sprint builds up to sprint_speed before jumping", is_equal_approx(sprint_v, player.sprint_speed), str(sprint_v))
+	var r2: Array = await _tap.call("jump", PlayerController.State.JUMP, 8)
+	ck("jump fires directly from SPRINT (no idle detour)", r2[0] and not r2[1], str(r2))
+	ck("jump preserves sprint momentum on entry", player.velocity.length() > sprint_v * 0.9, str(player.velocity.length()))
+	var jf := 0
+	while player.state == PlayerController.State.JUMP and jf < 150:
+		await physics_frame
+		jf += 1
+	ck("landing resumes SPRINT immediately with sprint+move held", player.state == PlayerController.State.SPRINT, player.get_state_name())
+	Input.action_release("move_right")
+	Input.action_release("sprint")
+
+	# Run -> Dodge -> Run: a real directional burst that displaces the player, not just an animation,
+	# recovering toward run speed (not a dead stop) while input is still held.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	for i in 20:
+		await physics_frame
+	var dodge_start_x := player.global_position.x
+	var r3: Array = await _tap.call("dodge", PlayerController.State.DODGE, 8)
+	ck("dodge fires directly from MOVE (no idle detour)", r3[0] and not r3[1], str(r3))
+	var burst_v := player.velocity.length()
+	ck("dodge is a Body Flicker: an instant displacement, no lunge or slide (velocity stays 0)", burst_v == 0.0 and player.flicker_count >= 1, "v=%s" % burst_v)
+	var dodge_frames := 0
+	while player.state == PlayerController.State.DODGE and dodge_frames < 60:
+		await physics_frame
+		dodge_frames += 1
+	ck("dodge actually displaces the player through the world", player.global_position.x > dodge_start_x + player.flicker_distance * 0.9, str(player.global_position.x - dodge_start_x))
+	ck("dodge recovery blends back into MOVE immediately with input held", player.state == PlayerController.State.MOVE, player.get_state_name())
+	Input.action_release("move_right")
+
+	# Sprint -> Dodge -> Sprint: same burst/displacement guarantee, recovering into SPRINT.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	Input.action_press("sprint")
+	for i in 20:
+		await physics_frame
+	var r4: Array = await _tap.call("dodge", PlayerController.State.DODGE, 8)
+	ck("sprint-dodge fires directly from SPRINT (no idle detour)", r4[0] and not r4[1], str(r4))
+	var sdodge_frames := 0
+	while player.state == PlayerController.State.DODGE and sdodge_frames < 60:
+		await physics_frame
+		sdodge_frames += 1
+	ck("sprint-dodge recovery blends back into SPRINT immediately with sprint+move held", player.state == PlayerController.State.SPRINT, player.get_state_name())
+	Input.action_release("move_right")
+	Input.action_release("sprint")
+
+	# Releasing movement input mid-dodge: recovery target becomes 0, so the dodge eases to a stop and
+	# lands IDLE rather than staying stuck at burst speed or freezing mid-pose.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	for i in 10:
+		await physics_frame
+	Input.action_press("dodge")
+	for i in 3:
+		await physics_frame
+	Input.action_release("dodge")
+	Input.action_release("move_right")
+	var release_frames := 0
+	while player.state == PlayerController.State.DODGE and release_frames < 60:
+		await physics_frame
+		release_frames += 1
+	ck("dodge recovery with input released eases to IDLE, not a frozen pose", player.state == PlayerController.State.IDLE, player.get_state_name())
+
+	# Dodge/jump into a wall: must be blocked at the wall face, never clip through it.
+	var wall: Array = TrainingArena.BLOCKS[1]
+	var wall_face: float = (wall[0] as Vector2).x - (wall[1] as Vector2).x * 0.5
+	var wall_y: float = (wall[0] as Vector2).y - (wall[1] as Vector2).y * 0.5
+	await _reset.call(Vector2(wall_face - 60.0, wall_y))
+	Input.action_press("move_right")
+	for i in 5:
+		await physics_frame
+	Input.action_press("dodge")
+	for i in 3:
+		await physics_frame
+	Input.action_release("dodge")
+	for i in 40:
+		await physics_frame
+	Input.action_release("move_right")
+	ck("dodging into a wall does not clip through it", player.global_position.x < wall_face + 1.0, "x=%.1f face=%.1f" % [player.global_position.x, wall_face])
+
+	await _reset.call(Vector2(wall_face - 60.0, wall_y))
+	Input.action_press("move_right")
+	for i in 5:
+		await physics_frame
+	Input.action_press("jump")
+	for i in 3:
+		await physics_frame
+	Input.action_release("jump")
+	for i in 100:
+		await physics_frame
+	Input.action_release("move_right")
+	ck("jumping into a wall does not clip through it (collision preserved while airborne)", player.global_position.x < wall_face + 1.0, "x=%.1f face=%.1f" % [player.global_position.x, wall_face])
+
+	# Run -> Jump -> Dodge, when the action rules permit it: a dodge press buffered near the tail end
+	# of a jump is remembered and fires the instant the jump ends, instead of being silently dropped.
+	await _reset.call(Vector2(-900, 100))
+	Input.action_press("move_right")
+	for i in 10:
+		await physics_frame
+	var r5: Array = await _tap.call("jump", PlayerController.State.JUMP, 8)
+	ck("jump fires before buffering a chained dodge", r5[0], str(r5))
+	var jump_dur: float = player._action_duration
+	var wait_frames := int(maxf(jump_dur * Engine.physics_ticks_per_second - 4.0, 0.0))
+	for i in wait_frames:
+		await physics_frame
+	Input.action_press("dodge")
+	for i in 3:
+		await physics_frame
+	Input.action_release("dodge")
+	var saw_dodge := false
+	var chase_frames := 0
+	while chase_frames < 30:
+		await physics_frame
+		chase_frames += 1
+		if player.state == PlayerController.State.DODGE:
+			saw_dodge = true
+			break
+	ck("a dodge press buffered near the end of a jump fires the instant the jump ends", saw_dodge, player.get_state_name())
+	Input.action_release("move_right")
+
+	main.queue_free()
+	await process_frame
+
+
 
 
 # ------------------------------------------------------------------ lab controls + pause (real AnimationLab / DebugHud)
@@ -479,16 +729,25 @@ func test_lab_and_pause() -> void:
 	ck("lab direction: ; ' step switches to FIXED and moves one heading", lab.dir_mode == AnimationLab.DirMode.FIXED and lab.current_dir_name() == "SE", lab.current_dir_name())
 	_restore(lab, base)
 
-	# mouse wheel zoom
+	# mouse wheel zoom: one notch = one entry of the lab zoom list (whole and half steps), clamped at both ends
 	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
 	ck("lab zoom: wheel up -> native 1x on the camera", lab.zoom_index == 1 and player.camera.zoom == Vector2.ONE)
-	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
-	_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
+	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
+	ck("lab zoom: the next wheel notch is the 1.25x quarter step", lab.zoom_index == 2 and player.camera.zoom == Vector2(1.25, 1.25))
+	for i in 3:
+		_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
 	ck("lab zoom: wheel down clamps at the wide baseline", lab.zoom_index == 0 and is_equal_approx(player.camera.zoom.x, CameraPreset.zoom_for(CameraPreset.WIDE)))
-	for i in 6:
+	var wheel_seen: Array[float] = []
+	for i in 15:
 		_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
-	ck("lab zoom: wheel up clamps at 4x", lab.zoom_index == 4 and player.camera.zoom == Vector2(4, 4))
-	_restore(lab, base)
+		wheel_seen.append(player.camera.zoom.x)
+	ck("lab zoom: the wheel walks 1, 1.25, 1.5 and stays at the 1.5x ceiling", str(wheel_seen) == str([1.0, 1.25, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5]), str(wheel_seen))
+	ck("lab zoom: wheel up clamps at 1.5x (the last of the 4 list entries)", lab.zoom_index == 3 and player.camera.zoom == Vector2(1.5, 1.5))
+	var wheel_back: Array[float] = []
+	for i in 5:
+		_wheel(lab, MOUSE_BUTTON_WHEEL_DOWN)
+		wheel_back.append(player.camera.zoom.x)
+	ck("lab zoom: the wheel walks back 1.25, 1, baseline", str(wheel_back.slice(0, 2)) == str([1.25, 1.0]) and lab.zoom_index == 0 and is_equal_approx(wheel_back[4], CameraPreset.zoom_for(CameraPreset.WIDE)), str(wheel_back))
 
 	# every panel button does exactly what its dbg_* key does
 	var rows: Array = lab._panel.get_child(0).get_children()
@@ -558,14 +817,14 @@ func test_camera_framing() -> void:
 	var base := CameraPreset.zoom_for(CameraPreset.WIDE)  # the wide preset, read from the preset table
 
 	# baseline zoom at scene start
-	ck("camera: the wide preset in the table is 1/SCALE and the default preset is wide", is_equal_approx(base, 1.0 / WorldScale.SCALE) and is_equal_approx(float(CameraPreset.TABLE[CameraPreset.WIDE]["zoom"]), 1.0 / WorldScale.SCALE) and CameraPreset.DEFAULT_ID == CameraPreset.WIDE and CameraPreset.active_id() == "wide")
-	ck("camera: baseline zoom equals 1/SCALE within 1e-6 at scene start", absf(cam.zoom.x - 1.0 / WorldScale.SCALE) < 1e-6 and absf(cam.zoom.y - 1.0 / WorldScale.SCALE) < 1e-6, "zoom=%s expected %.6f" % [cam.zoom, 1.0 / WorldScale.SCALE])
+	ck("camera: the wide preset in the table is 0.665 (locked) and the default preset is wide", is_equal_approx(base, 0.665) and is_equal_approx(float(CameraPreset.TABLE[CameraPreset.WIDE]["zoom"]), 0.665) and CameraPreset.DEFAULT_ID == CameraPreset.WIDE and CameraPreset.active_id() == "wide")
+	ck("camera: baseline zoom equals 0.665 within 1e-6 at scene start", absf(cam.zoom.x - 0.665) < 1e-6 and absf(cam.zoom.y - 0.665) < 1e-6, "zoom=%s expected 0.665000" % cam.zoom)
 
 	# visible rect = pre-scale view * SCALE, and it fits inside the arena
 	var vp := root.get_visible_rect().size
 	var view := vp / cam.zoom.x
 	ck("camera: viewport is the 1280x720 base size", vp == Vector2(1280, 720), str(vp))
-	ck("camera: visible world rect at baseline is 2880x1620 (= pre-scale 1280x720 times SCALE)", view.is_equal_approx(Vector2(1280, 720) * WorldScale.SCALE) and view.is_equal_approx(Vector2(2880, 1620)), "view=%s" % view)
+	ck("camera: visible world rect at baseline is 1924.8x1082.7", view.is_equal_approx(Vector2(1280.0 / 0.665, 720.0 / 0.665)), "view=%s" % view)
 	ck("camera: visible rect fits inside ARENA_BOUNDS", view.x <= WorldScale.ARENA_BOUNDS.size.x and view.y <= WorldScale.ARENA_BOUNDS.size.y, "view=%s bounds=%s" % [view, WorldScale.ARENA_BOUNDS.size])
 
 	# camera limits equal the arena bounds (CAMERA_HEADROOM above the top, CAMERA_FOOTROOM below the bottom)
@@ -576,42 +835,54 @@ func test_camera_framing() -> void:
 	ck("camera: limit_top is the arena top minus CAMERA_HEADROOM", cam.limit_top == int(b.position.y - WorldScale.CAMERA_HEADROOM), str(cam.limit_top))
 	ck("camera: limited area is at least as large as the visible rect (no void can show)", (cam.limit_right - cam.limit_left) >= view.x and (cam.limit_bottom - cam.limit_top) >= view.y)
 
-	# lab zoom list and labels
+	# lab zoom list and labels (whole steps stay, half steps in between, the first Z from the baseline is exactly 1.0)
 	var zl := AnimationLab.zoom_list(base)
-	ck("lab zoom list is [baseline, 1, 2, 3, 4]", zl.size() == 5 and zl[0] == base and zl.slice(1) == [1.0, 2.0, 3.0, 4.0], str(zl))
-	ck("lab zoom labels: 'wide 0.44x' then 1x..4x", AnimationLab.zoom_label(0, base) == "wide 0.44x" and AnimationLab.zoom_label(1, base) == "1x" and AnimationLab.zoom_label(2, base) == "2x" and AnimationLab.zoom_label(3, base) == "3x" and AnimationLab.zoom_label(4, base) == "4x", AnimationLab.zoom_label(0, base))
+	ck("lab zoom list is [baseline, 1, 1.25, 1.5]", zl.size() == 4 and zl[0] == base and zl.slice(1) == [1.0, 1.25, 1.5], str(zl))
+	var step_labels: Array[String] = []
+	for i in zl.size():
+		step_labels.append(AnimationLab.zoom_label(i, base))
+	ck("lab zoom labels: 'wide 0.67x' then 1x 1.25x 1.5x", str(step_labels) == str(["wide 0.67x", "1x", "1.25x", "1.5x"]), str(step_labels))
 
 	# opening the lab must not change the camera; the panel shows the real zoom
 	var zoom_value := lab._value_labels["zoom"] as Label
-	ck("lab: closed at scene start with baseline zoom and label", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x", "%s idx=%d" % [zoom_value.text, lab.zoom_index])
+	ck("lab: closed at scene start with baseline zoom and label", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.67x", "%s idx=%d" % [zoom_value.text, lab.zoom_index])
 	_press(lab, "dbg_toggle_lab")
-	ck("lab: opening explicitly leaves the camera at baseline", lab.lab_on and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.44x")
+	ck("lab: opening explicitly leaves the camera at baseline", lab.lab_on and is_equal_approx(cam.zoom.x, base) and zoom_value.text == "wide 0.67x")
 
-	# Z cycles 1x, 2x, 3x, 4x and wraps to baseline; label and camera agree at every step
+	# Z cycles 1x, 1.25x, 1.5x ... 4x and wraps to baseline; label and camera agree at every step
 	var seen: Array[float] = []
 	var labels: Array[String] = []
-	for i in 6:
+	for i in 9:
 		_press(lab, "dbg_zoom_cycle")
 		seen.append(cam.zoom.x)
 		labels.append(zoom_value.text)
-	ck("lab: Z cycles 1,2,3,4, baseline, 1 on the camera", seen.size() == 6 and seen[0] == 1.0 and seen[1] == 2.0 and seen[2] == 3.0 and seen[3] == 4.0 and is_equal_approx(seen[4], base) and seen[5] == 1.0, str(seen))
-	ck("lab: panel label matches the real zoom at every step", str(labels) == str(["1x", "2x", "3x", "4x", "wide 0.44x", "1x"]), str(labels))
-
-	# opening while zoomed keeps the zoom; closing restores baseline
-	_press(lab, "dbg_zoom_cycle")  # 1x -> 2x
-	var zoom_2x := cam.zoom.x
+	ck("lab: the first Z from the baseline is exactly 1.0", seen[0] == 1.0, str(seen))
+	ck("lab: Z cycles 1,1.25,1.5, baseline, 1 on the camera", str(seen.slice(0, 3)) == str([1.0, 1.25, 1.5]) and is_equal_approx(seen[3], base) and seen[4] == 1.0, str(seen))
+	ck("lab: panel label matches the real zoom at every step", str(labels.slice(0, 5)) == str(["1x", "1.25x", "1.5x", "wide 0.67x", "1x"]), str(labels))
+	# opening while zoomed keeps the zoom; closing restores baseline (from a quarter step and from a whole step)
+	# after the Z-walk loop above (9 presses on a 4-entry cycle), lab is at zoom_index=1 (1.0x). one more press lands at idx2 = 1.25x.
+	_press(lab, "dbg_zoom_cycle")  # 1x(idx1) -> 1.25x(idx2)
+	var zoom_half := cam.zoom.x
 	_press(lab, "dbg_toggle_lab")  # close
-	ck("lab: closing the lab restores the baseline zoom", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_2x == 2.0, "zoom=%s" % cam.zoom)
+	ck("lab: closing the lab at a quarter step restores the baseline zoom", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_half == 1.25, "zoom=%s" % cam.zoom)
 	_press(lab, "dbg_toggle_lab")  # open
 	ck("lab: re-opening does not change the camera", lab.lab_on and is_equal_approx(cam.zoom.x, base))
-	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)
+	for i in 3:
+		_press(lab, "dbg_zoom_cycle")  # 1x, 1.25x, 1.5x (the ceiling)
+	var zoom_2x := cam.zoom.x
+	_press(lab, "dbg_toggle_lab")  # close
+	ck("lab: closing the lab at the 1.5x ceiling restores the baseline zoom", not lab.lab_on and lab.zoom_index == 0 and is_equal_approx(cam.zoom.x, base) and zoom_2x == 1.5, "zoom=%s" % cam.zoom)
+	_press(lab, "dbg_toggle_lab")  # open
+	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)  # baseline -> 1x
+	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)  # 1x -> 1.25x
+	_wheel(lab, MOUSE_BUTTON_WHEEL_UP)  # 1.25x -> 1.5x
+	var wheel_half := cam.zoom.x
 	_press(lab, "dbg_toggle_lab")
-	ck("lab: closing after a wheel zoom restores the baseline", is_equal_approx(cam.zoom.x, base) and lab.zoom_index == 0)
-
+	ck("lab: closing after a wheel zoom (to the 1.5x half step) restores the baseline", wheel_half == 1.5 and is_equal_approx(cam.zoom.x, base) and lab.zoom_index == 0)
 	# __SHINOBI_STATE__ framing fields (WebBridge is inert outside the browser, so test the publisher's helper + source)
 	var bridge_script := load("res://scripts/web/web_bridge.gd")
 	var fr: Dictionary = bridge_script.camera_framing(cam.zoom.x, vp)
-	ck("state: camera_framing publishes zoom/view_w/view_h at baseline", absf(fr["zoom"] - base) < 1e-6 and absf(fr["view_w"] - 2880.0) < 0.01 and absf(fr["view_h"] - 1620.0) < 0.01, str(fr))
+	ck("state: camera_framing publishes zoom/view_w/view_h at baseline", absf(fr["zoom"] - base) < 1e-6 and absf(fr["view_w"] - 1280.0 / 0.665) < 0.01 and absf(fr["view_h"] - 720.0 / 0.665) < 0.01, str(fr))
 	var fr2: Dictionary = bridge_script.camera_framing(2.0, Vector2(1280, 720))
 	ck("state: camera_framing at 2x gives a 640x360 view", fr2 == {"zoom": 2.0, "view_w": 640.0, "view_h": 360.0}, str(fr2))
 	var src := FileAccess.get_file_as_string("res://scripts/web/web_bridge.gd")

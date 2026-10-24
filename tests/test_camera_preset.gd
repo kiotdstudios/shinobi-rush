@@ -18,6 +18,7 @@ func run(p_ck: Callable, tree_root: Node) -> void:
 	test_zoom_for()
 	test_parse_query()
 	test_metrics_and_labels()
+	test_lab_zoom_list()
 	await test_scene(tree_root)
 
 
@@ -29,7 +30,7 @@ func _near(a: float, b: float, eps: float = 1e-4) -> bool:
 func test_table_and_default() -> void:
 	ck.call("camera preset: DEFAULT_ID is wide", CameraPreset.DEFAULT_ID == "wide" and CameraPreset.WIDE == "wide")
 	ck.call("camera preset: the table has exactly wide and close, in that order", CameraPreset.IDS == ["wide", "close"] and CameraPreset.TABLE.has("wide") and CameraPreset.TABLE.has("close"))
-	ck.call("camera preset: wide is 1/SCALE (0.4444), read from the table", _near(CameraPreset.zoom_for("wide"), 1.0 / 2.25, 1e-9) and _near(float(CameraPreset.TABLE["wide"]["zoom"]), 1.0 / WorldScale.SCALE, 1e-9))
+	ck.call("camera preset: wide is 0.6650 (owner-locked)", _near(CameraPreset.zoom_for("wide"), 0.665, 1e-9) and _near(float(CameraPreset.TABLE["wide"]["zoom"]), 0.665, 1e-9))
 	ck.call("camera preset: the default id resolves to the wide zoom", CameraPreset.zoom_for(CameraPreset.DEFAULT_ID) == CameraPreset.zoom_for("wide"))
 	ck.call("camera preset: provisional tunables (fraction 0.175, band 16-19 %, range 0.25-4)", CameraPreset.CLOSE_FIGURE_FRACTION == 0.175 and CameraPreset.BAND_MIN_FRACTION == 0.16 and CameraPreset.BAND_MAX_FRACTION == 0.19 and CameraPreset.MIN_ZOOM == 0.25 and CameraPreset.MAX_ZOOM == 4.0)
 	ck.call("camera preset: base viewport height comes from the project (720)", CameraPreset.base_viewport_height() == VIEWPORT_H)
@@ -115,22 +116,52 @@ func test_metrics_and_labels() -> void:
 	var m := CameraPreset.metrics(z, WorldScale.BODY_HEIGHT)
 	ck.call("metrics: close/108 px is 126 px, 17.5 %, in band, view 1097x617", _near(m["figure_screen_px"], 126.0) and _near(m["fraction"], 0.175) and m["in_band"] == true and _near(m["view_w"], 1280.0 / z, 0.01) and _near(m["view_h"], 617.14, 0.01), str(m))
 	var w := CameraPreset.metrics(CameraPreset.zoom_for("wide"), WorldScale.BODY_HEIGHT)
-	ck.call("metrics: wide/108 px is 48 px, 6.7 %, outside the band, view 2880x1620", _near(w["figure_screen_px"], 48.0) and _near(w["fraction"], 48.0 / 720.0) and w["in_band"] == false and _near(w["view_w"], 2880.0, 0.01) and _near(w["view_h"], 1620.0, 0.01), str(w))
+	ck.call("metrics: wide/108 px is 71.8 px, 9.98 %, outside the band, view 1924.8x1082.7", _near(w["figure_screen_px"], 71.82) and _near(w["fraction"], 71.82 / 720.0) and w["in_band"] == false and _near(w["view_w"], 1280.0 / 0.665, 0.01) and _near(w["view_h"], 720.0 / 0.665, 0.01), str(w))
 	var r := CameraPreset.visible_world_rect(CameraPreset.zoom_for("wide"), Vector2(0, 135))
-	ck.call("visible_world_rect: wide centred on the spawn is 2880x1620", r.is_equal_approx(Rect2(-1440.0, 135.0 - 810.0, 2880.0, 1620.0)), str(r))
-	ck.call("label_for: 'wide 0.44x', 'close 1.17x', 'custom 2.00x'", CameraPreset.label_for("wide", CameraPreset.zoom_for("wide")) == "wide 0.44x" and CameraPreset.label_for("close", z) == "close 1.17x" and CameraPreset.label_for(2.0, 2.0) == "custom 2.00x")
+	ck.call("visible_world_rect: wide centred on the spawn is 1924.8x1082.7", r.is_equal_approx(Rect2(-1280.0 / 0.665 * 0.5, 135.0 - 720.0 / 0.665 * 0.5, 1280.0 / 0.665, 720.0 / 0.665)), str(r))
+	ck.call("label_for: 'wide 0.67x', 'close 1.17x', 'custom 2.00x'", CameraPreset.label_for("wide", CameraPreset.zoom_for("wide")) == "wide 0.67x" and CameraPreset.label_for("close", z) == "close 1.17x" and CameraPreset.label_for(2.0, 2.0) == "custom 2.00x")
 	var src := FileAccess.get_file_as_string("res://scripts/web/web_bridge.gd")
 	ck.call("state: WebBridge publishes camera_preset next to the existing fields", src.contains("_state.camera_preset = ") and src.contains("_state.zoom = ") and src.contains("_state.view_w = "))
 	var bridge := load("res://scripts/web/web_bridge.gd")
-	bridge.apply_camera_query("?camera=close")
-	var chose_close := CameraPreset.active_id() == "close"
-	bridge.apply_camera_query("?camera=2")
-	var chose_custom: bool = CameraPreset.active_id() == "custom" and float(CameraPreset.active()) == 2.0
-	bridge.apply_camera_query("?camera=garbage")
-	var back_to_wide := CameraPreset.active_id() == "wide"
-	bridge.apply_camera_query("")
-	ck.call("WebBridge.apply_camera_query: close, custom number, garbage -> wide, empty -> wide", chose_close and chose_custom and back_to_wide and CameraPreset.active_id() == "wide")
+	var locked := true
+	for q in ["?camera=close", "?camera=2", "?camera=garbage", ""]:
+		bridge.apply_camera_query(q)
+		locked = locked and CameraPreset.active_id() == "wide"
+	ck.call("WebBridge.apply_camera_query: the camera is locked - every query (close, number, garbage, empty) stays wide", locked)
 	CameraPreset.set_active(CameraPreset.DEFAULT_ID)
+
+
+## The animation lab's zoom list and labels (pure statics): [baseline, 1, 1.5, 2, 2.5, 3, 3.5, 4].
+func test_lab_zoom_list() -> void:
+	var wide := CameraPreset.zoom_for("wide")
+	var steps: Array[float] = [1.0, 1.25, 1.5]
+	var zl := AnimationLab.zoom_list(wide)
+	ck.call("lab zoom list: [wide, 1, 1.25, 1.5]; the first step after the baseline is exactly 1.0, the cap is 1.5", zl.size() == 4 and zl[0] == wide and zl[1] == 1.0 and str(zl.slice(1)) == str(steps) and zl.max() == AnimationLab.ZOOM_CEILING, str(zl))
+	var names: Array[String] = []
+	for i in zl.size():
+		names.append(AnimationLab.zoom_label(i, wide, "wide"))
+	ck.call("lab zoom labels: 'wide 0.67x' then 1x 1.25x 1.5x", str(names) == str(["wide 0.67x", "1x", "1.25x", "1.5x"]), str(names))
+	ck.call("lab zoom labels: the close baseline reads 'close 1.21x' (104 px art) and an index past the end clamps to 1.5x", AnimationLab.zoom_label(0, CameraPreset.close_zoom(104.0), "close") == "close 1.21x" and AnimationLab.zoom_label(99, wide) == "1.5x")
+	# a baseline equal to ANY step (whole, half, or quarter -- exactly or within float noise) is listed once, in front; the other steps stay
+	var dedupe_bad := ""
+	for s: float in steps:
+		for b: float in [s, s + 1e-7, s - 1e-7]:
+			var l := AnimationLab.zoom_list(b)
+			var same := 0
+			for e: float in l:
+				if is_equal_approx(e, s):
+					same += 1
+			if dedupe_bad == "" and (l.size() != steps.size() or l[0] != b or same != 1):
+				dedupe_bad = "baseline %s -> %s" % [b, str(l)]
+	ck.call("lab zoom list: a baseline equal to any step (1, 1.25, 1.5) is not listed twice", dedupe_bad == "", dedupe_bad)
+	var keep_ok := true
+	for b: float in [0.25, 0.6, 0.8, 1.1, CameraPreset.close_zoom(108.0), wide]:
+		keep_ok = keep_ok and AnimationLab.zoom_list(b).size() == steps.size() + 1
+	ck.call("lab zoom list: a baseline that is not a step (0.25, 0.6, 0.8, 1.1, close 1.17, wide 0.665) keeps all three steps", keep_ok)
+	var half_labels: Array[String] = []
+	for i in 3:
+		half_labels.append(AnimationLab.zoom_label(i, 1.5, 1.5))
+	ck.call("lab zoom labels: with a 1.5 baseline the list reads 'custom 1.50x', '1x', '1.25x'", str(half_labels) == str(["custom 1.50x", "1x", "1.25x"]), str(half_labels))
 
 
 # ------------------------------------------------------------------ (b) scene level
@@ -203,7 +234,7 @@ func test_scene(tree_root: Node) -> void:
 	var set108 := _make_set("t_cp_108", 108)
 	var set120 := _make_set("t_cp_120", 120)
 	var vp: Vector2 = tree_root.get_viewport().get_visible_rect().size
-	var wide := 1.0 / WorldScale.SCALE
+	var wide := CameraPreset.zoom_for("wide")
 	var close108 := 0.175 * 720.0 / 108.0
 
 	# ---- default: no parameter / nothing chosen -> wide, exactly today's numbers
@@ -211,11 +242,11 @@ func test_scene(tree_root: Node) -> void:
 	var lab := main.get_node("AnimationLab") as AnimationLab
 	var player := main.get_node("TrainingArena/Player") as PlayerController
 	var cam := player.camera
-	ck.call("camera scene: default preset is wide and the camera zoom equals the wide preset (0.4444)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and absf(cam.zoom.x - CameraPreset.zoom_for(CameraPreset.active(), player.figure_height_px())) < 1e-6 and absf(player.camera_baseline - wide) < 1e-9, "zoom=%s id=%s" % [cam.zoom, CameraPreset.active_id()])
-	ck.call("camera scene: default view is 2880x1620", (vp / cam.zoom.x).is_equal_approx(Vector2(2880, 1620)), str(vp / cam.zoom.x))
+	ck.call("camera scene: default preset is wide and the camera zoom equals the wide preset (0.6650)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and absf(cam.zoom.x - CameraPreset.zoom_for(CameraPreset.active(), player.figure_height_px())) < 1e-6 and absf(player.camera_baseline - wide) < 1e-9, "zoom=%s id=%s" % [cam.zoom, CameraPreset.active_id()])
+	ck.call("camera scene: default view is 1924.8x1082.7", (vp / cam.zoom.x).is_equal_approx(Vector2(1280.0 / 0.665, 720.0 / 0.665)), str(vp / cam.zoom.x))
 	var zoom_label := lab._value_labels["zoom"] as Label
 	var preset_label := lab._value_labels["preset"] as Label
-	ck.call("camera scene: lab shows 'wide 0.44x' and the preset row says wide", zoom_label.text == "wide 0.44x" and preset_label.text == "wide", "%s / %s" % [zoom_label.text, preset_label.text])
+	ck.call("camera scene: lab shows 'wide 0.67x' and the preset row says wide", zoom_label.text == "wide 0.67x" and preset_label.text == "wide", "%s / %s" % [zoom_label.text, preset_label.text])
 	# a wide camera does not care about the figure height (set120 would change a close zoom)
 	lab._select_set(-1)
 	ck.call("camera scene: wide does not move when the figure height changes", absf(cam.zoom.x - wide) < 1e-6)
@@ -234,34 +265,38 @@ func test_scene(tree_root: Node) -> void:
 	var view: Vector2 = vp / cam.zoom.x
 	ck.call("camera scene: close view is 1097x617 and the figure is 126 px (17.5 %) of 720", absf(view.x - 1097.14) < 0.01 and absf(view.y - 617.14) < 0.01 and absf(player.figure_height_px() * cam.zoom.x - 126.0) < 1e-3, str(view))
 	ck.call("camera scene: close keeps the head/foot room and limits (limited area >= view, no void)", (cam.limit_right - cam.limit_left) >= view.x and (cam.limit_bottom - cam.limit_top) >= view.y and cam.limit_top == int(WorldScale.ARENA_BOUNDS.position.y - WorldScale.CAMERA_HEADROOM) and cam.limit_bottom == int(WorldScale.ARENA_BOUNDS.end.y + WorldScale.CAMERA_FOOTROOM))
-	ck.call("camera scene: lab list is [close baseline, 1, 2, 3, 4] and the label says 'close 1.17x'", AnimationLab.zoom_list(player.camera_baseline).size() == 5 and zoom_label.text == "close 1.17x" and preset_label.text == "close", "%s / %s" % [zoom_label.text, preset_label.text])
+	ck.call("camera scene: lab list is [close baseline, 1, 1.25, 1.5] and the label says 'close 1.17x'", AnimationLab.zoom_list(player.camera_baseline).size() == 4 and zoom_label.text == "close 1.17x" and preset_label.text == "close", "%s / %s" % [zoom_label.text, preset_label.text])
 	var seen: Array[float] = []
 	var labels: Array[String] = []
-	for i in 5:
+	for i in 4:
 		_press(lab, "dbg_zoom_cycle")
 		seen.append(cam.zoom.x)
 		labels.append(zoom_label.text)
-	ck.call("camera scene: Z walks 1,2,3,4 and back to the close baseline", seen.size() == 5 and seen[0] == 1.0 and seen[1] == 2.0 and seen[2] == 3.0 and seen[3] == 4.0 and absf(seen[4] - close108) < 1e-6 and str(labels) == str(["1x", "2x", "3x", "4x", "close 1.17x"]), str(seen) + str(labels))
-	_press(lab, "dbg_zoom_cycle")
-	_press(lab, "dbg_zoom_cycle")  # 2x
-	ck.call("camera scene: lab at 2x", cam.zoom.x == 2.0 and lab.zoom_index == 2)
+	ck.call("camera scene: Z walks 1,1.25,1.5 and back to the close baseline", seen.size() == 4 and seen[0] == 1.0 and str(seen.slice(0, 3)) == str([1.0, 1.25, 1.5]) and absf(seen[3] - close108) < 1e-6 and str(labels) == str(["1x", "1.25x", "1.5x", "close 1.17x"]), str(seen) + str(labels))
+	for i in 3:
+		_press(lab, "dbg_zoom_cycle")  # 1x, 1.25x, 1.5x
+	ck.call("camera scene: lab at the 1.5x ceiling", cam.zoom.x == 1.5 and lab.zoom_index == 3)
 	_press(lab, "dbg_toggle_lab")  # close the lab
 	ck.call("camera scene: closing the lab restores the ACTIVE (close) baseline", not lab.lab_on and lab.zoom_index == 0 and absf(cam.zoom.x - close108) < 1e-6, str(cam.zoom))
 	_press(lab, "dbg_toggle_lab")  # re-open
 	ck.call("camera scene: opening the lab keeps the close baseline", lab.lab_on and absf(cam.zoom.x - close108) < 1e-6)
-
 	# ---- the close zoom follows the figure height when the sprite set changes (no restart)
 	lab._select_set(1)  # 120 px set: 1.0 is inside 16-19 %, so the zoom snaps to pixel-exact 1.0
 	ck.call("camera follow: switching to a 120 px set snaps the close zoom to exactly 1.0", player.figure_height_px() == 120.0 and cam.zoom.x == 1.0 and player.camera_baseline == 1.0, "zoom=%s" % cam.zoom)
-	ck.call("camera follow: the lab list drops the duplicate 1.0 (4 entries) and labels 'close 1.00x'", AnimationLab.zoom_list(player.camera_baseline).size() == 4 and zoom_label.text == "close 1.00x" and lab.zoom_index == 0, zoom_label.text)
+	ck.call("camera follow: the lab list drops the duplicate 1.0 (3 entries) and labels 'close 1.00x'", AnimationLab.zoom_list(player.camera_baseline).size() == 3 and zoom_label.text == "close 1.00x" and lab.zoom_index == 0, zoom_label.text)
 	var seen2: Array[float] = []
-	for i in 4:
+	for i in 3:
 		_press(lab, "dbg_zoom_cycle")
 		seen2.append(cam.zoom.x)
-	ck.call("camera follow: Z walks 2,3,4 and back to the snapped baseline 1.0", str(seen2) == str([2.0, 3.0, 4.0, 1.0]), str(seen2))
-	_press(lab, "dbg_zoom_cycle")  # 2x
+	ck.call("camera follow: Z walks 1.25,1.5 and back to the snapped baseline 1.0", str(seen2) == str([1.25, 1.5, 1.0]), str(seen2))
+	for i in 2:
+		_press(lab, "dbg_zoom_cycle")  # 1.25x, 1.5x
 	lab._select_set(0)  # back to the 108 px set while the lab is at 2x: the camera stays at 2x, the baseline moves
-	ck.call("camera follow: a set change at 2x does not overwrite the lab zoom, but the baseline moves", cam.zoom.x == 2.0 and absf(player.camera_baseline - close108) < 1e-6 and zoom_label.text == "2x" and lab.zoom_index == 2, "zoom=%s base=%s label=%s idx=%d" % [cam.zoom, player.camera_baseline, zoom_label.text, lab.zoom_index])
+	ck.call("camera follow: a set change at 1.5x does not overwrite the lab zoom, but the baseline moves", cam.zoom.x == 1.5 and absf(player.camera_baseline - close108) < 1e-6 and zoom_label.text == "1.5x" and lab.zoom_index == 3, "zoom=%s base=%s label=%s idx=%d" % [cam.zoom, player.camera_baseline, zoom_label.text, lab.zoom_index])
+	lab._select_set(1)  # 120 px set again: the baseline snaps to 1.0 while the lab sits on the 3.5x step
+	ck.call("camera follow: a baseline change at the 1.5x step keeps it, and the index follows the new list", cam.zoom.x == 1.5 and player.camera_baseline == 1.0 and zoom_label.text == "1.5x" and lab.zoom_index == 2, "zoom=%s base=%s label=%s idx=%d" % [cam.zoom, player.camera_baseline, zoom_label.text, lab.zoom_index])
+	lab._select_set(0)  # and back to the 108 px set
+	ck.call("camera follow: ...and back again it is still 1.5x at index 3 of the 4-entry list", cam.zoom.x == 1.5 and absf(player.camera_baseline - close108) < 1e-6 and zoom_label.text == "1.5x" and lab.zoom_index == 3, "zoom=%s label=%s idx=%d" % [cam.zoom, zoom_label.text, lab.zoom_index])
 	_press(lab, "dbg_toggle_lab")
 	ck.call("camera follow: closing the lab then restores the NEW baseline", absf(cam.zoom.x - close108) < 1e-6 and lab.zoom_index == 0)
 	_press(lab, "dbg_toggle_lab")
@@ -271,18 +306,18 @@ func test_scene(tree_root: Node) -> void:
 	# ---- runtime switch with the lab key (action dbg_camera_preset, key N)
 	ck.call("lab key: the preset action exists with the N key", InputMap.has_action(AnimationLab.PRESET_ACTION) and AnimationLab.PRESET_KEY == KEY_N)
 	_press(lab, AnimationLab.PRESET_ACTION)
-	ck.call("lab key: N switches close -> wide (zoom, id, labels)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and zoom_label.text == "wide 0.44x" and preset_label.text == "wide", "%s %s %s" % [CameraPreset.active_id(), cam.zoom, zoom_label.text])
+	ck.call("lab key: N snaps back to the locked wide camera (zoom, id, labels)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and zoom_label.text == "wide 0.67x" and preset_label.text == "wide", "%s %s %s" % [CameraPreset.active_id(), cam.zoom, zoom_label.text])
 	_press(lab, AnimationLab.PRESET_ACTION)
-	ck.call("lab key: N switches wide -> close again", CameraPreset.active_id() == "close" and absf(cam.zoom.x - close108) < 1e-6 and zoom_label.text == "close 1.17x")
+	ck.call("lab key: N again stays wide (camera is locked)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and zoom_label.text == "wide 0.67x")
 	_press(lab, "dbg_zoom_cycle")
-	_press(lab, "dbg_zoom_cycle")  # 2x
+	_press(lab, "dbg_zoom_cycle")  # 1x, 1.5x (a half step)
 	_press(lab, AnimationLab.PRESET_ACTION)
 	ck.call("lab key: N while zoomed goes to the new baseline (index 0)", lab.zoom_index == 0 and absf(cam.zoom.x - wide) < 1e-6 and CameraPreset.active_id() == "wide")
 	# the panel row (buttons < >) does what the key does
 	var prow: Node = lab._panel.get_child(0).get_children()[9]
 	ck.call("lab button: the 'Cam preset' row (title, <, >, value) exists after the overlay grid and the preset is wide", prow.get_child_count() == 4 and CameraPreset.active_id() == "wide")
 	(prow.get_child(2) as Button).pressed.emit()
-	ck.call("lab button: '>' switches the preset like N (close, zoom 1.1667, row text)", CameraPreset.active_id() == "close" and absf(cam.zoom.x - close108) < 1e-6 and preset_label.text == "close")
+	ck.call("lab button: '>' like N stays wide (locked)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6 and preset_label.text == "wide")
 	(prow.get_child(1) as Button).pressed.emit()
 	ck.call("lab button: '<' switches it back (wide)", CameraPreset.active_id() == "wide" and absf(cam.zoom.x - wide) < 1e-6)
 	main.queue_free()
@@ -296,6 +331,26 @@ func test_scene(tree_root: Node) -> void:
 	ck.call("camera scene: a numeric preset (2) sets zoom 2.0, id 'custom', label 'custom 2.00x'", player.camera.zoom.x == 2.0 and CameraPreset.active_id() == "custom" and (lab._value_labels["zoom"] as Label).text == "custom 2.00x" and (lab._value_labels["preset"] as Label).text == "custom", "%s %s" % [player.camera.zoom, (lab._value_labels["zoom"] as Label).text])
 	_press(lab, AnimationLab.PRESET_ACTION)
 	ck.call("lab key: N from a numeric preset continues with wide", CameraPreset.active_id() == "wide" and absf(player.camera.zoom.x - wide) < 1e-6)
+	main.queue_free()
+	await tree_root.get_tree().process_frame
+
+	# ---- a plain number that is also a lab half step (?camera=1.5): the lab list shows it once, in front
+	main = await _boot(tree_root, 1.5, [set108])
+	lab = main.get_node("AnimationLab") as AnimationLab
+	_press(lab, "dbg_toggle_lab")  # Lab now starts closed even with loaded art.
+	player = main.get_node("TrainingArena/Player") as PlayerController
+	cam = player.camera
+	zoom_label = lab._value_labels["zoom"] as Label
+	ck.call("camera scene: ?camera=1.5 sets zoom 1.5 ('custom 1.50x') and the lab list shows 1.5 once, in front", cam.zoom.x == 1.5 and zoom_label.text == "custom 1.50x" and str(AnimationLab.zoom_list(player.camera_baseline)) == str([1.5, 1.0, 1.25]), "%s %s %s" % [cam.zoom, zoom_label.text, AnimationLab.zoom_list(player.camera_baseline)])
+	var seen3: Array[float] = []
+	var labels3: Array[String] = []
+	for i in 3:
+		_press(lab, "dbg_zoom_cycle")
+		seen3.append(cam.zoom.x)
+		labels3.append(zoom_label.text)
+	ck.call("camera scene: Z from a 1.5 baseline walks 1,1.25 and back to 1.5 (1.5 is never visited twice)", str(seen3) == str([1.0, 1.25, 1.5]) and str(labels3) == str(["1x", "1.25x", "custom 1.50x"]), str(seen3) + str(labels3))
+	_press(lab, "dbg_toggle_lab")  # close
+	ck.call("camera scene: closing the lab restores the 1.5 baseline", not lab.lab_on and lab.zoom_index == 0 and cam.zoom.x == 1.5, str(cam.zoom))
 	main.queue_free()
 	await tree_root.get_tree().process_frame
 

@@ -200,9 +200,15 @@ def validate_manifest(path: Path, exempt: bool | None = None, warnings: list | N
         else:
             errors.append(f'{pre} needs either "frames" or "sheet"')
             continue
-        for c in CARDINALS:
-            if c not in dirs and mirror.get(c) not in dirs:
-                errors.append(f'{pre}: cardinal direction {c} missing (provide it or a "mirror" entry)')
+        # Owner 2026-10-22 ("wire it to the controller"): mirrors scripts/sprites/sprite_set.gd's
+        # allow_partial_directions opt-out -- proof-stage combat art that is deliberately SE-only
+        # (Codex's kunai order gates expansion to the other 7 directions behind separate owner
+        # approval) can skip the cardinal check for that one animation. Default false, so every
+        # pre-existing production animation keeps the strict full-coverage requirement unchanged.
+        if not a.get("allow_partial_directions", False):
+            for c in CARDINALS:
+                if c not in dirs and mirror.get(c) not in dirs:
+                    errors.append(f'{pre}: cardinal direction {c} missing (provide it or a "mirror" entry)')
     return set_id, errors
 
 

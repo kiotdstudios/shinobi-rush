@@ -1,0 +1,26 @@
+{
+  "result": "PASS",
+  "results": [
+    {
+      "viewport": {
+        "width": 1000,
+        "height": 800
+      },
+      "stepped_headings": 8,
+      "frames_per_heading": 16,
+      "normal_clock_500ms": 0.5,
+      "half_clock_500ms": 0.2500000000000002
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "stepped_headings": 8,
+      "frames_per_heading": 16,
+      "normal_clock_500ms": 0.5,
+      "half_clock_500ms": 0.2500000000000002
+    }
+  ],
+  "errors": []
+}

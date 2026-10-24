@@ -1,0 +1,153 @@
+{
+  "schema": "shinobi_body_flicker_pose_v1",
+  "direction": "SE",
+  "frame_size": [
+    128,
+    128
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "standing_body_height_px": 104,
+  "frames": [
+    {
+      "frame_index": 0,
+      "body_frame": "res://assets/characters/player/sprites/production/body_flicker/SE_000.png",
+      "right_hand_px": [
+        57,
+        70
+      ],
+      "weapon_angle_deg": 140,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        55,
+        68,
+        5,
+        5
+      ],
+      "phase": "brace",
+      "duration_ms": 12,
+      "root_registration_px": [
+        0,
+        1
+      ],
+      "body_sha256": "c71f0c1dc07614baa8a754adc36a2ceab8cebe26373fb585c8adef1a542babc7"
+    },
+    {
+      "frame_index": 1,
+      "body_frame": "res://assets/characters/player/sprites/production/body_flicker/SE_001.png",
+      "right_hand_px": [
+        59,
+        64
+      ],
+      "weapon_angle_deg": 130,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        57,
+        62,
+        5,
+        5
+      ],
+      "phase": "compress",
+      "duration_ms": 12,
+      "root_registration_px": [
+        0,
+        1
+      ],
+      "body_sha256": "3ce7a3fc90122b93335cb6043ad9b5c3797b4e87fed19796fb85f8ff56da2add"
+    },
+    {
+      "frame_index": 2,
+      "body_frame": "res://assets/characters/player/sprites/production/body_flicker/SE_002.png",
+      "right_hand_px": [
+        53,
+        54
+      ],
+      "weapon_angle_deg": 135,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        51,
+        52,
+        5,
+        5
+      ],
+      "phase": "reappear",
+      "duration_ms": 24,
+      "root_registration_px": [
+        0,
+        1
+      ],
+      "body_sha256": "077b5484861d5087ec6e353a8cf8acdd0a65f0453e662b63f34a2a2c2f5a23f6"
+    },
+    {
+      "frame_index": 3,
+      "body_frame": "res://assets/characters/player/sprites/production/body_flicker/SE_003.png",
+      "right_hand_px": [
+        60,
+        68
+      ],
+      "weapon_angle_deg": 140,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        58,
+        66,
+        5,
+        5
+      ],
+      "phase": "recover",
+      "duration_ms": 24,
+      "root_registration_px": [
+        0,
+        1
+      ],
+      "body_sha256": "99b35e4e4d3ef6c3b754178711d54ce16060ff3ac9e9f371a00333caabde7ae1"
+    }
+  ],
+  "single_duration_ms": 120,
+  "double_second_start_ms": 160,
+  "double_duration_ms": 280,
+  "events": [
+    {
+      "ms": 0,
+      "event": "flicker_start"
+    },
+    {
+      "ms": 12,
+      "event": "vanish_and_request_swept_traverse"
+    },
+    {
+      "ms": 84,
+      "event": "reappear"
+    },
+    {
+      "ms": 120,
+      "event": "complete"
+    }
+  ],
+  "single_afterimage": {
+    "duration_ms": 100,
+    "source": "snapshot of exact body and independent weapon; one reusable ghost node"
+  },
+  "double_events_ms": [
+    0,
+    12,
+    84,
+    120,
+    160,
+    172,
+    244,
+    280
+  ],
+  "vfx_baseline": "res://assets/vfx/body_flicker/body_flicker_SE.art.json",
+  "vfx_source_sha": "43c316a9c2309f1cafa2918c6ecd8d0ff08a5a97",
+  "movement_and_damage_owner": "Aki; timing is a visual proposal, not gameplay balance",
+  "source": {
+    "tool": "built-in image_gen",
+    "raw_size": [
+      1254,
+      1254
+    ],
+    "processing": "shared fixed-grid nearest to128, approved palette, alpha160, explicit planted sole translation; no per-frame scaling or body interpolation"
+  }
+}
