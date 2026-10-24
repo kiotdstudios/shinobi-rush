@@ -1,9 +1,9 @@
 # ORDER — Reference Blightwood dynamic shrine
 - Agent: Codex
 - Owner: Codex
-- Status: IN_PROGRESS
+- Status: REVIEW � local checks passed; PR181 CI/live pending
 - Priority: P1 — latest direct owner request
-- Branch: codex/blightwood-dynamic-shrine
+- Branch/PR: codex/blightwood-dynamic-shrine / https://github.com/kiotdstudios/shinobi-rush/pull/181
 - Dependencies: Connected PixelLab generation; existing Blightwood art/runtime.
 
 ## Objective

@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-24-dynamic-shrine.md
 - Date: 2026-10-24
 - Final status: REVIEW — local acceptance passed; required PR CI/integration/public deployment outstanding. Owner visual approval not yet received.
-- Commit / PR: Not committed yet; this report is written before implementation commit.
+- Commit / PR: implementation fd1c4894f2dd34314375a619e94f3e928674a807 / https://github.com/kiotdstudios/shinobi-rush/pull/181. Initial report was written before implementation commit.
 
 ## Work completed
 PixelLab reference-matched broken-arch shrine with central red-orange flame monolith, front stairs, dark blue-gray stone, sage foliage and pale blue hanging flowers. Native512x448 source is padded16pixels to544x480 without resampling. Four hanging foliage bands are split by palette and exterior region; rest-pose reconstruction is pixel-exact to padded source.1869authored emissive pixels get a gentle12second pulse. Separate halo, four rooted8second foliage bends, three independently seeded14-insect groups (42total), independent blue-white god rays. Existing PixelLab Blightwood firefly art reused; runtime animation/shaders are authored code, not generated-frame claims.
