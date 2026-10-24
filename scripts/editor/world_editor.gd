@@ -43,7 +43,7 @@ var _hud_buttons: Dictionary = {}
 var hud_snap_button: Button = null
 ## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
-const DIM_TYPES: Array[String] = ["Trees", "Walls & blocks", "Temple walls", "Grass", "Tall grass"]
+const DIM_TYPES: Array[String] = ["Trees", "Walls & blocks", "Temple walls", "Grass", "Tall grass", "Ground / paths"]
 var show_grid := false
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false
@@ -206,7 +206,7 @@ func _wall_tool() -> bool:
 
 func _grass_tool() -> bool:
 	var id := place_id if tool == "place" else str(selected.get("id", ""))
-	return id != "" and PlacedObjects.def_of(id).kind == "grass"
+	return id != "" and PlacedObjects.def_of(id).kind in ["grass", "ground"]
 
 
 func _mouse_world() -> Vector2:
@@ -811,7 +811,11 @@ func _build_ui() -> void:
 			b.expand_icon = true
 			b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-			if def.kind == "grass":
+			if def.kind == "ground":
+				b.icon = load(PlacedObjects.GROUND_DIR + id + ".png") as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "grass":
 				b.icon = load(WindGrassTileset.DIR + id + ".png") as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
