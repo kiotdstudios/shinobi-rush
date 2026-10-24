@@ -363,8 +363,8 @@ class WalkerTests(unittest.TestCase):
     def test_the_skip_rules_are_in_the_script(self):
         src = gw.walker_source()
         self.assertIn('const SKIP_DIR_NAMES := ["node_modules"]', src)
-        self.assertIn('const SKIP_DIR_PATHS := ["res://exports", "res://build/web", "res://scripts/ci"]', src)
-        self.assertEqual(gw.SKIP_DIR_PATHS, ("res://exports", "res://build/web", "res://scripts/ci"))
+        self.assertIn('const SKIP_DIR_PATHS := ["res://exports", "res://build/web", "res://scripts/ci", "res://addons/dialogue_manager/views", "res://addons/dialogue_manager/components"]', src)
+        self.assertEqual(gw.SKIP_DIR_PATHS, ("res://exports", "res://build/web", "res://scripts/ci", "res://addons/dialogue_manager/views", "res://addons/dialogue_manager/components"))
         self.assertIn('entry.begins_with(".")', src, "dot folders (.git, .godot, .github, .agents, ...)")
         self.assertIn('full.path_join(".gdignore")', src, "a folder with a .gdignore is not walked")
         self.assertIn('full.path_join("project.godot")', src, "a nested project is not walked")
