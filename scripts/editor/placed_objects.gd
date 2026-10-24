@@ -15,7 +15,7 @@ const SAVE_PATH := "user://world_builder_layout.json"
 const DEFAULT_LAYOUT_PATH := "res://data/world_layout.json"
 ## v4 adds editable grass to v3 saves, which list EVERY solid object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
-const SAVE_VERSION := 6
+const SAVE_VERSION := 7
 const CATALOG := {
 	"tree_1": {"label": "Tiered tree", "kind": "tree", "tree": 0},
 	"tree_2": {"label": "Windswept tree", "kind": "tree", "tree": 1},
@@ -52,6 +52,7 @@ const CATALOG := {
 	"grass_tall_01": {"label": "Tall grass 2", "kind": "grass", "tall": true},
 	"grass_tall_02": {"label": "Tall grass 3", "kind": "grass", "tall": true},
 	"grass_tall_03": {"label": "Tall grass 4", "kind": "grass", "tall": true},
+	"ancient_shrine": {"label": "Ancient Shrine", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/ancient_shrine/", "art": "shrine_shelter_01", "size": Vector2(256, 256), "anchor": Vector2(129, 242), "col": Vector2(0, 0), "body": Vector2(78, 34)},
 	"ground9_corner_top": {"label": "Corner Top", "kind": "ground"},
 	"ground9_edge_ne": {"label": "Edge Ne", "kind": "ground"},
 	"ground9_corner_right": {"label": "Corner Right", "kind": "ground"},
@@ -65,7 +66,7 @@ const CATALOG := {
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
+const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -114,7 +115,8 @@ const WALL_THICKNESS := 18.0
 
 
 static func wall_texture(id: String) -> Texture2D:
-	return load(KIT_DIR + String(def_of(id).art) + ".png") as Texture2D
+	var def := def_of(id)
+	return load(String(def.get("dir", KIT_DIR)) + String(def.art) + ".png") as Texture2D
 
 
 ## Ground rectangle covering a wall piece's collider (a strip along `col`, WALL_THICKNESS deep).
@@ -125,8 +127,9 @@ static func wall_rect(def: Dictionary, pos: Vector2) -> Rect2:
 	var lo := Vector2(minf(a.x, b.x), minf(a.y, b.y) - WALL_THICKNESS)
 	var hi := Vector2(maxf(a.x, b.x), maxf(a.y, b.y))
 	if col == Vector2.ZERO:
-		lo.x -= 16.0
-		hi.x += 16.0
+		var body: Vector2 = def.get("body", Vector2(16.0, WALL_THICKNESS))
+		lo = Vector2(pos.x - body.x, pos.y - body.y)
+		hi = Vector2(pos.x + body.x, pos.y)
 	return Rect2(lo, hi - lo)
 
 
@@ -385,7 +388,8 @@ func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 	body.name = "PlacedWallBody%d" % _serial
 	var shape := ConvexPolygonShape2D.new()
 	if col == Vector2.ZERO:
-		shape.points = PackedVector2Array([Vector2(-14, 0), Vector2(14, 0), Vector2(14, -14), Vector2(-14, -14)])
+		var half: Vector2 = def.get("body", Vector2(14.0, 14.0))
+		shape.points = PackedVector2Array([Vector2(-half.x, 0), Vector2(half.x, 0), Vector2(half.x, -half.y), Vector2(-half.x, -half.y)])
 	else:
 		shape.points = PackedVector2Array([Vector2.ZERO, col, col + Vector2(0, -WALL_THICKNESS), Vector2(0, -WALL_THICKNESS)])
 	var cs := CollisionShape2D.new()
@@ -450,7 +454,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Ground / paths" if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Temple walls" if def.kind == "wall" else "Walls & blocks"
+	return "Landmarks" if def.get("landmark", false) else "Ground / paths" if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Temple walls" if def.kind == "wall" else "Walls & blocks"
 
 
 func type_visible(id: String) -> bool:
@@ -570,7 +574,8 @@ func obstacles() -> Array:
 static func _wall_obstacles(def: Dictionary, pos: Vector2) -> Array:
 	var col: Vector2 = def.col
 	if col == Vector2.ZERO:
-		return [[pos, Vector2(32, 16), 0.0]]
+		var body: Vector2 = def.get("body", Vector2(16.0, 16.0))
+		return [[pos, Vector2(body.x * 2.0, body.y), 0.0]]
 	var out: Array = []
 	var steps := int(round(absf(col.x) / 36.0))
 	var step := col / float(steps)
@@ -640,6 +645,42 @@ func load_dict(data: Dictionary) -> int:
 			made += 1
 	_changed(false)
 	return made
+
+
+## Where the Ancient Shrine stands in the starting level, best spot first: north-east of the spawn, off the
+## due-up and due-right lanes and clear of the Level 1 walls. The first one that fits is used.
+const SHRINE_SPOTS: Array[Vector2] = [Vector2(330, -330), Vector2(-120, -400), Vector2(380, 560), Vector2(-700, -420)]
+
+
+func has_id(id: String) -> bool:
+	for o in objects:
+		if o.id == id:
+			return true
+	return false
+
+
+## Put the Ancient Shrine into the level if it is not there yet. Returns true when one was added.
+func ensure_shrine() -> bool:
+	if arena == null or has_id("ancient_shrine"):
+		return false
+	for spot in SHRINE_SPOTS:
+		if can_place("ancient_shrine", spot) and not _overlaps_solid(footprint_rect("ancient_shrine", spot).grow(40.0)):
+			add("ancient_shrine", spot, false)
+			_changed(false)
+			return true
+	return false
+
+
+func _overlaps_solid(rect: Rect2) -> bool:
+	for b in WorldScale.BLOCKS:
+		var fp: Vector2 = b[1]
+		if rect.intersects(Rect2(b[0].x - fp.x * 0.5, b[0].y - fp.y, fp.x, fp.y)):
+			return true
+	for o in objects:
+		var kind: String = def_of(o.id).kind
+		if kind != "grass" and kind != "pickup" and rect.intersects(footprint_rect(o.id, o.pos)):
+			return true
+	return false
 
 
 ## Drop `count` health gourds at random spots clear of the spawn, enemies, other gourds and every solid object.
