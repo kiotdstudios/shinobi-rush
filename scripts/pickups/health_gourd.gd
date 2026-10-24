@@ -23,6 +23,7 @@ const FRACTION := 0.25
 const KINDS := {
 	"health": {"dir": "res://assets/pickups/health_gourd/", "group": "health_pickup", "color": Color(1.0, 0.18, 0.1), "aura": Color(1.0, 0.5, 0.4)},
 	"chakra": {"dir": "res://assets/pickups/chakra_gourd/", "group": "chakra_pickup", "color": Color(0.15, 0.55, 1.0), "aura": Color(0.45, 0.8, 1.0)},
+	"paper_tag": {"dir": "res://assets/pickups/paper_tag/", "group": "tag_pickup", "color": Color(1.0, 0.45, 0.08), "aura": Color(1.0, 0.7, 0.3)},
 }
 ## Floor-plane pick-up radius (the iso floor is squashed 2:1, so y is doubled before measuring).
 const PICKUP_RADIUS := 40.0
@@ -170,7 +171,12 @@ func can_collect(player: Node) -> bool:
 
 ## The inventory item this gourd turns into.
 func item_id() -> String:
-	return "chakra_gourd" if kind == "chakra" else "health_gourd"
+	match kind:
+		"chakra":
+			return "chakra_gourd"
+		"paper_tag":
+			return "paper_tag"
+	return "health_gourd"
 
 
 func _try_collect() -> void:

@@ -9,18 +9,22 @@ extends Node2D
 const DIR := "res://assets/vfx/substitution/"
 const JSON_PATH := "res://assets/vfx/substitution/substitution.json"
 const ARRIVAL_DELAY := 0.08
-const LOG_LIFETIME := 3.0
+const LOG_LIFETIME := 2.95
+const LOG_FALL_START := 0.48
+const LOG_IMPACT := 1.02
+const LOG_POOF := 1.88
+const LOG_SMOKE_END := 2.95
 const FADE := 0.4
-const LOG_DROP_H := 90.0  ## the log falls from this high above the foot origin
-const LOG_FALL := 0.2  ## seconds in the air (frames 0-1 tumble)
-const LOG_BOUNCES: Array = [[0.12, 16.0], [0.09, 6.0]]  ## [duration, height] of the two hops after it lands
-const LOG_SLOW := 2.0  ## wobble frames play this many times slower so the settle is readable
 const Z := 20
 
 static var _clips: Dictionary = {}
 
 var _tracks: Array = []
 var _age: float = 0.0
+var _log_foot := Vector2.ZERO
+var _log_sprite: Sprite2D
+var _log_body: StaticBody2D
+var _smoke_seed := 0
 
 
 ## Spawns the effect under `parent`; `old_foot`/`new_foot` are world foot origins.
@@ -56,7 +60,10 @@ static func clip(name: String) -> Dictionary:
 
 
 func _run(old_foot: Vector2, new_foot: Vector2) -> void:
+	_log_foot = old_foot
+	_smoke_seed = int(absf(old_foot.x * 17.0 + old_foot.y * 31.0)) % 997
 	_add_track("log", old_foot, 0.04, LOG_LIFETIME)
+	_create_log_collider()
 	_add_track("departure", old_foot, 0.0, 0.0)
 	_add_track("ribbons", old_foot, 0.0, 0.0)
 	_add_track("arrival", new_foot, ARRIVAL_DELAY, 0.0)
@@ -73,9 +80,26 @@ func _add_track(name: String, foot: Vector2, delay: float, hold_for: float) -> v
 	s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(s)
 	s.global_position = foot - (c["pivot"] as Vector2)
+	_tracks.append({"sprite": s, "clip": c, "delay": delay, "hold_for": hold_for, "name": name})
 	if name == "log":
-		s.z_index = 1  ## above the smoke: the log must stay visible
-	_tracks.append({"sprite": s, "clip": c, "delay": delay, "hold_for": hold_for, "name": name, "foot": foot})
+		_log_sprite = s
+
+
+## The discarded log is a physical object until it dissolves. It is deliberately
+## placed at the departure point, not the teleport destination.
+func _create_log_collider() -> void:
+	_log_body = StaticBody2D.new()
+	_log_body.name = "SubstitutionLogCollision"
+	_log_body.collision_layer = 1
+	_log_body.collision_mask = 0
+	add_child(_log_body)
+	_log_body.global_position = _log_foot
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(28, 17)
+	shape.shape = rect
+	shape.position = Vector2(0, -8)
+	_log_body.add_child(shape)
 
 
 func live_tracks() -> int:
@@ -84,26 +108,25 @@ func live_tracks() -> int:
 
 func _process(delta: float) -> void:
 	_age += delta
+	_update_log_motion()
+	queue_redraw()
 	var alive: Array = []
 	for t in _tracks:
 		var s: Sprite2D = t["sprite"]
 		var c: Dictionary = t["clip"]
 		var local: float = _age - float(t["delay"])
+		if t["name"] == "log" and _age >= LOG_POOF:
+			s.visible = false
+			if _age < LOG_SMOKE_END:
+				alive.append(t)
+			else:
+				s.queue_free()
+			continue
 		if local < 0.0:
 			alive.append(t)
 			continue
 		var tex: Array = c["tex"]
 		var dur: Array = c["dur"]
-		if t["name"] == "log":
-			_tick_log(t, local)
-			if local > float(t["hold_for"]):
-				s.queue_free()
-				continue
-			var hold_l: float = float(t["hold_for"])
-			if local > hold_l - FADE:
-				s.modulate.a = clampf((hold_l - local) / FADE, 0.0, 1.0)
-			alive.append(t)
-			continue
 		var acc := 0.0
 		var idx := -1
 		for i in tex.size():
@@ -124,39 +147,70 @@ func _process(delta: float) -> void:
 			s.modulate.a = clampf((hold - local) / FADE, 0.0, 1.0)
 		alive.append(t)
 	_tracks = alive
-	if _tracks.is_empty():
+	if _tracks.is_empty() and _age >= LOG_SMOKE_END:
 		queue_free()
 
 
-## The log drops from above, hits the ground, hops twice and wobbles to a stop (frames 2-8 played slowed).
-func _tick_log(t: Dictionary, local: float) -> void:
-	var s: Sprite2D = t["sprite"]
-	var c: Dictionary = t["clip"]
-	var tex: Array = c["tex"]
-	var base: Vector2 = (t["foot"] as Vector2) - (c["pivot"] as Vector2)
-	var lift := 0.0
-	var idx := 0
-	if local < LOG_FALL:
-		var k := local / LOG_FALL
-		lift = LOG_DROP_H * (1.0 - k * k)
-		idx = 0 if k < 0.5 else 1
+## Four beats: startled wobble -> off-axis topple -> ground bounce -> smoke poof.
+## All movement is relative to the same foot pivot; the log never pops through
+## the floor, and the collider disappears at the exact poof frame.
+func _update_log_motion() -> void:
+	if _log_sprite == null or not is_instance_valid(_log_sprite):
+		return
+	if _age < LOG_FALL_START:
+		# Big anticipation: a violent stagger followed by a split-second hang.
+		var t := _age / LOG_FALL_START
+		var shake := sin(t * TAU * 4.0) * (1.0 - t * 0.3)
+		_log_sprite.rotation = shake * 0.23 + sin(t * PI) * -0.15
+		_log_sprite.position = Vector2(shake * 6.0, -sin(t * PI) * 9.0)
+		_log_sprite.scale = Vector2(1.0 + 0.12 * sin(t * PI), 1.0 - 0.13 * sin(t * PI))
+	elif _age < LOG_IMPACT:
+		# Quick airborne whip and near-horizontal slam; acceleration increases
+		# sharply in the last half rather than gently easing to the floor.
+		var t := clampf((_age - LOG_FALL_START) / (LOG_IMPACT - LOG_FALL_START), 0.0, 1.0)
+		var drop := t * t
+		_log_sprite.rotation = lerpf(-0.12, 1.78, drop) + sin(t * PI) * 0.22
+		_log_sprite.position = Vector2(25.0 * drop, -25.0 * sin(t * PI) + 16.0 * drop)
+		_log_sprite.scale = Vector2(1.0 + 0.16 * t, 1.0 - 0.12 * t)
+	elif _age < LOG_POOF:
+		# Crunch on impact, rebound, then two increasingly tiny rattles.
+		var t := (_age - LOG_IMPACT) / (LOG_POOF - LOG_IMPACT)
+		var bounce := absf(sin(t * PI * 4.0)) * exp(-5.2 * t)
+		var impact_compress := exp(-22.0 * t)
+		_log_sprite.rotation = 1.78 + bounce * 0.25 - impact_compress * 0.12
+		_log_sprite.position = Vector2(25.0 + t * 5.0, 16.0 - bounce * 15.0 + impact_compress * 5.0)
+		_log_sprite.scale = Vector2(1.0 + impact_compress * 0.35, 1.0 - impact_compress * 0.35)
+		_log_sprite.modulate = Color.WHITE
 	else:
-		var after := local - LOG_FALL
-		var start := 0.0
-		for b: Array in LOG_BOUNCES:
-			var d: float = b[0]
-			if after >= start and after < start + d:
-				var u := (after - start) / d
-				lift = float(b[1]) * 4.0 * u * (1.0 - u)
-			start += d
-		var acc := 0.0
-		idx = tex.size() - 1
-		var dur: Array = c["dur"]
-		for i in range(2, tex.size() - 1):
-			acc += float(dur[i] if i < dur.size() else 40) / 1000.0 * LOG_SLOW
-			if after < acc:
-				idx = i
-				break
-	s.visible = true
-	s.texture = tex[idx]
-	s.global_position = base - Vector2(0.0, lift)
+		_log_sprite.visible = false
+		if _log_body != null and is_instance_valid(_log_body):
+			_log_body.queue_free()
+			_log_body = null
+
+## Pixel-like smoke puffs, small sparks and ground impact ring. Drawn in
+## world coordinates through to_local so FX stays anchored even with a
+## transformed parent. No random() per frame: reproducible puff trajectories.
+func _draw() -> void:
+	var p := to_local(_log_foot)
+	if _age >= LOG_IMPACT and _age < LOG_IMPACT + 0.52:
+		var t := (_age - LOG_IMPACT) / 0.52
+		draw_arc(p + Vector2(25, 3), lerpf(7, 57, t), 0.0, TAU, 22, Color(0.78, 0.82, 0.88, (1.0 - t) * 0.55), 2.0)
+		for i in 13:
+			var a := TAU * float(i) / 13.0
+			var q := p + Vector2(25, 3) + Vector2(cos(a) * 52.0 * t, sin(a) * 22.0 * t - sin(t * PI) * 14.0)
+			draw_rect(Rect2(q, Vector2(4, 4)), Color(0.91, 0.87, 0.76, 1.0 - t))
+	if _age >= LOG_IMPACT and _age < LOG_IMPACT + 0.14:
+		var flash := 1.0 - (_age - LOG_IMPACT) / 0.14
+		draw_circle(p + Vector2(25, 3), 17.0 * flash, Color(1.0, 0.95, 0.78, flash * 0.48))
+	if _age < LOG_POOF or _age >= LOG_SMOKE_END:
+		return
+	var t := clampf((_age - LOG_POOF) / (LOG_SMOKE_END - LOG_POOF), 0.0, 1.0)
+	var fade := pow(1.0 - t, 1.3)
+	for i in 14:
+		var a := TAU * float(i) / 14.0 + float(_smoke_seed % 13) * 0.09
+		var offset := Vector2(cos(a) * (7.0 + 36.0 * t), sin(a) * (4.0 + 17.0 * t) - 30.0 * t)
+		var wobble := sin(t * 11.0 + float(i) * 1.8) * 4.0 * t
+		var q := p + Vector2(10, -8) + offset + Vector2(wobble, 0)
+		var radius := (9.0 + float(i % 4) * 2.5) * (0.55 + t * 0.65)
+		var shade := Color(0.77, 0.83, 0.91, fade * 0.82) if i % 3 else Color(0.98, 0.98, 1.0, fade * 0.9)
+		draw_circle(q, radius, shade)

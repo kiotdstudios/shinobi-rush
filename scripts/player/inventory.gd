@@ -15,13 +15,14 @@ const ITEMS := {
 	"health_gourd": {"name": "Health Gourd", "short": "HP", "desc": "Restores 25% of max health."},
 	"chakra_gourd": {"name": "Chakra Gourd", "short": "CK", "desc": "Restores 25% of max chakra."},
 	"kunai": {"name": "Kunai", "short": "KN", "desc": "Throw one forward for light damage."},
+	"paper_tag": {"name": "Paper Tag", "short": "PT", "desc": "Throw it; it lands and explodes after a short fuse."},
 }
 ## Jutsu you can place on an R2 slot. `ready` false = listed and assignable but not playable yet.
 const JUTSU := {
 	"chidori": {"name": "Chidori", "ready": false},
 }
-const START_COUNTS := {"health_gourd": 0, "chakra_gourd": 0, "kunai": 10}
-const DEFAULT_DPAD := {"up": "health_gourd", "right": "chakra_gourd", "down": "", "left": "kunai"}
+const START_COUNTS := {"health_gourd": 0, "chakra_gourd": 0, "kunai": 10, "paper_tag": 3}
+const DEFAULT_DPAD := {"up": "health_gourd", "right": "chakra_gourd", "down": "paper_tag", "left": "kunai"}
 const DEFAULT_JUTSU := {"square": "chidori", "triangle": "", "circle": "", "cross": ""}
 const SAVE_PATH := "user://inventory.json"
 
@@ -137,6 +138,8 @@ static func icon(id: String) -> Texture2D:
 			return HealthGourd.icon("health")
 		"chakra_gourd":
 			return HealthGourd.icon("chakra")
+		"paper_tag":
+			return HealthGourd.icon("paper_tag")
 		"kunai":
 			return load("res://assets/weapons/kunai/black_kunai.png") as Texture2D
 	return null

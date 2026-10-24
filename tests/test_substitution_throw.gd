@@ -22,6 +22,14 @@ func run(p_ck: Callable, tree_root: Node) -> void:
 
 
 func _reset(p: PlayerController) -> void:
+	# Each scenario starts with a clean arena. Physical substitution logs now
+	# block movement, so a previous scenario's still-live log must not affect
+	# the next scenario's swap/teleport collision probe.
+	var arena := p.get_parent()
+	if arena != null:
+		for child in arena.get_children():
+			if child is SubstitutionFx:
+				child.free()
 	p.state = PlayerController.State.IDLE
 	p._hit_invuln = 0.0
 	p._sub_buffer = 0.0

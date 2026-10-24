@@ -50,7 +50,7 @@ var _hud_buttons: Dictionary = {}
 var hud_snap_button: Button = null
 ## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
-const DIM_TYPES: Array[String] = ["Blightwood lights", "Ashen fire", "Volcanic trees", "Trees", "Walls & blocks", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
+const DIM_TYPES: Array[String] = ["Blightwood lights", "Blightwood rocks", "Ashen fire", "Volcanic trees", "Trees", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
 var show_grid := false
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false
@@ -151,6 +151,7 @@ func _process(_d: float) -> void:
 			_js_state.panel_y = r.position.y
 			_js_state.panel_w = r.size.x
 			_js_state.panel_h = r.size.y
+			_js_state.save_accessible = save_button.is_visible_in_tree() and save_button.get_global_rect().end.y <= get_viewport().get_visible_rect().size.y
 			_js_state.grass_count = (arena.get_node("WindGrassField") as WindGrassField).ground_count()
 			var ashen_count := 0
 			var ashen_capacity := 0
@@ -181,12 +182,15 @@ func _process(_d: float) -> void:
 				elif kind == "fireflies":
 					swarm_count += 1
 					fly_count += (obj.nodes[0] as ForestFireflies).flies.size()
+			var shore_count := 0
 			var water_count := 0
 			var water_clock := 0.0
 			for obj in placed.objects:
 				if obj.nodes[0] is BlightwoodWater:
 					water_count += 1
+					if not (obj.nodes[0] as BlightwoodWater).shore_family.is_empty():shore_count += 1
 					water_clock = (obj.nodes[0] as BlightwoodWater).clock
+			_js_state.shore_count = shore_count
 			_js_state.water_count = water_count
 			_js_state.water_clock = water_clock
 			_js_state.blight_count = blight_count

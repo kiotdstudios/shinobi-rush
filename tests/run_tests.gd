@@ -31,6 +31,7 @@ func _initialize() -> void:
 	test_sheet_slicing_and_lazy_cache()
 	test_discovery()
 	await test_anchor_stability()
+	AncientShrineSection.enabled = false  # the shrine section adds ~40 objects to the default arena; layout tests assume the plain arena
 	Bandit.substitution_enabled = false  # random log swaps would flake combat tests; test_bandit_sub_kunai enables it locally
 	await test_main_scene_and_movement()
 	await test_jump_and_dodge_chaining()
@@ -46,7 +47,9 @@ func _initialize() -> void:
 	await load("res://tests/test_health_gourd.gd").new().run(ck, root)
 	await load("res://tests/test_gourd_pickup_fx.gd").new().run(ck, root)
 	await load("res://tests/test_inventory.gd").new().run(ck, root)
+	await load("res://tests/test_paper_tag.gd").new().run(ck, root)
 	await load("res://tests/test_ancient_shrine.gd").new().run(ck, root)
+	await load("res://tests/test_blightwood_rocks.gd").new().run(ck, root)
 	await load("res://tests/test_fence_kit.gd").new().run(ck, root)
 	await load("res://tests/test_paint_tool.gd").new().run(ck, root)
 	await load("res://tests/test_substitution_throw.gd").new().run(ck, root)
@@ -76,6 +79,7 @@ func _initialize() -> void:
 	await load("res://tests/test_builder_fire.gd").new().run(ck, root)
 	await load("res://tests/test_builder_blightwood.gd").new().run(ck, root)
 	await load("res://tests/test_builder_water.gd").new().run(ck, root)
+	await load("res://tests/test_builder_shorelines.gd").new().run(ck, root)
 	await load("res://tests/test_wall_kit_sort.gd").new().run(ck, root)
 	await load("res://tests/test_publish_to_github.gd").new().run(ck, root)
 	await load("res://tests/test_asset_store_plugins.gd").new().run(ck, root)
