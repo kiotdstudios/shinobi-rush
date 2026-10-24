@@ -1,0 +1,11 @@
+{
+  "tree_0_roots_fixed": true,
+  "tree_0_branches_move": true,
+  "tree_0_loop_closes": true,
+  "tree_1_roots_fixed": true,
+  "tree_1_branches_move": true,
+  "tree_1_loop_closes": true,
+  "tree_2_roots_fixed": true,
+  "tree_2_branches_move": true,
+  "tree_2_loop_closes": true
+}

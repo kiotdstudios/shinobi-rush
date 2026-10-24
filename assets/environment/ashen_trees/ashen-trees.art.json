@@ -1,0 +1,434 @@
+{
+  "schema": "shinobi_ashen_trees_v1",
+  "status": "art_review",
+  "production_bound": false,
+  "source_tool": "built-in image_gen, three separate tree images and one coherent16-pose ash sheet",
+  "processing": "magenta key, fixed shared nearest scale, root registration; no painted tree/VFX substitutes",
+  "render_filter": "nearest",
+  "trees": [
+    {
+      "id": "sentinel",
+      "texture": "res://assets/environment/ashen_trees/textures/sentinel.png",
+      "size": [
+        320,
+        448
+      ],
+      "anchor": [
+        160,
+        416
+      ],
+      "bbox": [
+        29,
+        32,
+        293,
+        416
+      ],
+      "shared_scale": 0.27467811158798283,
+      "source_bbox": [
+        47,
+        42,
+        1014,
+        1440
+      ],
+      "source_sha256": "3e29bdcb659983d044e6ecb5e94d46790f6a2b63acd01fd1a7b1d262dc8eccf3",
+      "sha256": "75b9e0b13c1d952f344e27c1a9c5ab15c1d0ae4059dfc47930f3458d7af5cba1",
+      "ash_emission": [
+        [
+          20,
+          -384
+        ],
+        [
+          -7,
+          -324
+        ],
+        [
+          36,
+          -300
+        ],
+        [
+          -2,
+          -286
+        ],
+        [
+          -60,
+          -272
+        ],
+        [
+          103,
+          -263
+        ],
+        [
+          -32,
+          -255
+        ],
+        [
+          44,
+          -248
+        ],
+        [
+          -93,
+          -239
+        ],
+        [
+          1,
+          -231
+        ],
+        [
+          104,
+          -225
+        ],
+        [
+          44,
+          -219
+        ],
+        [
+          81,
+          -213
+        ],
+        [
+          -62,
+          -206
+        ],
+        [
+          -14,
+          -201
+        ],
+        [
+          18,
+          -196
+        ],
+        [
+          -44,
+          -190
+        ],
+        [
+          44,
+          -185
+        ],
+        [
+          11,
+          -178
+        ],
+        [
+          9,
+          -171
+        ],
+        [
+          1,
+          -164
+        ],
+        [
+          -9,
+          -157
+        ],
+        [
+          77,
+          -149
+        ],
+        [
+          81,
+          -137
+        ]
+      ],
+      "wind_phase": 0.0,
+      "wind_strength": 0.9
+    },
+    {
+      "id": "windbent",
+      "texture": "res://assets/environment/ashen_trees/textures/windbent.png",
+      "size": [
+        320,
+        448
+      ],
+      "anchor": [
+        160,
+        416
+      ],
+      "bbox": [
+        19,
+        55,
+        301,
+        416
+      ],
+      "shared_scale": 0.27467811158798283,
+      "source_bbox": [
+        17,
+        117,
+        1042,
+        1441
+      ],
+      "source_sha256": "bc241611d4e2cbca3f5b7b3099cba7d1f9d2fc16fb6fc15101ae1d099bed04e7",
+      "sha256": "955185087a981aa23cb8a2fe073264dd217d38826abc8d0e61ed6b2391dea057",
+      "ash_emission": [
+        [
+          -65,
+          -361
+        ],
+        [
+          -84,
+          -326
+        ],
+        [
+          -35,
+          -308
+        ],
+        [
+          -72,
+          -297
+        ],
+        [
+          -17,
+          -287
+        ],
+        [
+          -14,
+          -278
+        ],
+        [
+          -45,
+          -270
+        ],
+        [
+          -71,
+          -262
+        ],
+        [
+          125,
+          -256
+        ],
+        [
+          97,
+          -249
+        ],
+        [
+          106,
+          -242
+        ],
+        [
+          129,
+          -234
+        ],
+        [
+          -14,
+          -227
+        ],
+        [
+          -67,
+          -220
+        ],
+        [
+          -16,
+          -213
+        ],
+        [
+          89,
+          -208
+        ],
+        [
+          -16,
+          -201
+        ],
+        [
+          5,
+          -194
+        ],
+        [
+          -101,
+          -187
+        ],
+        [
+          36,
+          -180
+        ],
+        [
+          68,
+          -172
+        ],
+        [
+          76,
+          -162
+        ],
+        [
+          52,
+          -150
+        ],
+        [
+          75,
+          -137
+        ]
+      ],
+      "wind_phase": 1.7,
+      "wind_strength": 1.05
+    },
+    {
+      "id": "elder",
+      "texture": "res://assets/environment/ashen_trees/textures/elder.png",
+      "size": [
+        320,
+        448
+      ],
+      "anchor": [
+        160,
+        416
+      ],
+      "bbox": [
+        20,
+        47,
+        299,
+        416
+      ],
+      "shared_scale": 0.27467811158798283,
+      "source_bbox": [
+        24,
+        98,
+        1038,
+        1443
+      ],
+      "source_sha256": "5df23d85ccfe339069ca1b624abd586f97f3c5227d5c18097a684bda3bbeca28",
+      "sha256": "003aee84ae54fe75462a600925e70229170505ff8e55e8bca5bf91613fb9fe08",
+      "ash_emission": [
+        [
+          -30,
+          -369
+        ],
+        [
+          -106,
+          -320
+        ],
+        [
+          -113,
+          -307
+        ],
+        [
+          -32,
+          -293
+        ],
+        [
+          54,
+          -282
+        ],
+        [
+          -62,
+          -272
+        ],
+        [
+          -29,
+          -261
+        ],
+        [
+          -48,
+          -249
+        ],
+        [
+          -19,
+          -241
+        ],
+        [
+          -46,
+          -234
+        ],
+        [
+          74,
+          -226
+        ],
+        [
+          -91,
+          -218
+        ],
+        [
+          -58,
+          -212
+        ],
+        [
+          80,
+          -207
+        ],
+        [
+          93,
+          -201
+        ],
+        [
+          -40,
+          -194
+        ],
+        [
+          54,
+          -187
+        ],
+        [
+          40,
+          -180
+        ],
+        [
+          -16,
+          -173
+        ],
+        [
+          54,
+          -167
+        ],
+        [
+          51,
+          -161
+        ],
+        [
+          -16,
+          -154
+        ],
+        [
+          -3,
+          -146
+        ],
+        [
+          100,
+          -137
+        ]
+      ],
+      "wind_phase": 3.4,
+      "wind_strength": 0.82
+    }
+  ],
+  "wind": {
+    "fps": 24,
+    "phases": 96,
+    "cycle_seconds": 4,
+    "fixed_from_y": 346,
+    "max_horizontal_px": 5.5
+  },
+  "heat": {
+    "cycle_seconds": 4,
+    "levels": 8,
+    "mask": "existing red source pixels in lower150px above roots"
+  },
+  "ash": {
+    "texture": "res://assets/vfx/ashen_foliage/ash_tumble.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "frames": 16,
+    "fps": 6,
+    "life_seconds": 8,
+    "max_particles_per_tree": 24,
+    "birth_points": "branch pixels from each tree; separate emitter and independent controls",
+    "frame_hashes": [
+      "3ba2fa2f9033e529150fa49abb1cc238c1318737d85df1c4d5e028cd0515c227",
+      "4e918c55b5636d044b8995feaba8de841403f56b87507079f88275bc4a7bbc38",
+      "27d6ca55060169853de878652696c1f588ee8d6217e0a9e87b8d83877c5b23dc",
+      "51fd9540bf6a6eaa45ddd4e0c82b4af54eb5ad892017131de222e522dc4b6a53",
+      "95545f98bb3a30a560914646ef4711ef14d3559481c8a9b55a63f6677f213971",
+      "bb8cda872cc107f160fa4f7bd1b5944c4cd8bd5940959574fee0fcd0e7050aa6",
+      "a5431132fbf9cd78e6fb23249f990c1d398129186960f5a0b4cab32c10ef426b",
+      "fd4dd4f692469b65d22d7b3af2511f72617fe7c80cae3af3b1a4a01b069df2b2",
+      "092b932424d25a8735ccd90412cf8979e3261efee8110de99564ef7acd9b9c2e",
+      "a39633c85ba6a0617d365c3d4e767a855140878a93876ba7949d4449fe517dff",
+      "7a3d03c2ac70259959bb82c897f7158efa2b5b84b9e9bada4cdd30c80d0ca327",
+      "aa663259a3313559d43c5d4574b1a1014cb5bebdc096d409d4342d7c6271cc92",
+      "2cbf26cf5c9b69b16cfff9531f64883434a5303686b2734cc12b568a1fec2514",
+      "71c37a338b8dfc05884a61cbe0ef53759f1cae552e92423f5a39acdd768d71ab",
+      "e90bb8ae0324698be03f8ee3adfb46258b749e385e9a185b54a5b0084000e491",
+      "b381d6139066318f588997270c1c338cee3a9718fbcc7eb39bb5a0905f419274"
+    ],
+    "sha256": "919f88f4c1bb7cbb1be18cfc772b15718e212cce186a4b4353cd73496f7d358c"
+  }
+}
