@@ -2,7 +2,7 @@
 - Agent: Aki
 - Order: `orders/Aki/2026-10-21-bandit-level1-robber-arena.md` (PR #64 text)
 - Date: 2026-10-21
-- Final status: REVIEW until the live build is verified (see "Live deployment" at the bottom, updated after deploy)
+- Final status: DONE (live verified, see "Live deployment")
 - Commit / PR: filled in after push (see bottom)
 
 ## Work completed
@@ -48,4 +48,7 @@ New: `scripts/enemy/arena_nav.gd`, `scripts/enemy/enemy_intelligence.gd` (+ .uid
 Codex action art; swap to Orcha's Body Flicker; tune timings after owner playtest; Fluidity Milestone B stays held until the owner confirms the jump fix.
 
 ## Live deployment
-Pending (filled after merge and deploy verification).
+- PR: https://github.com/kiotdstudios/shinobi-rush/pull/66, merge commit c16d54b299c1643e2e0e90af10af7c5e8ef31489
+- Live URL: https://kiotdstudios.github.io/shinobi-rush/ (build-info.json commit_sha matches, built 2026-10-22T04:04:27Z)
+- Godot CI run 39720132381: pre-deploy smoke, deploy and post-deploy live smoke all passed.
+- Not verified: feel/balance (needs owner playtest); flicker retreat seen only in Godot tests, not in browser probe.
