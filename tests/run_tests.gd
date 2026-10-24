@@ -31,6 +31,7 @@ func _initialize() -> void:
 	test_sheet_slicing_and_lazy_cache()
 	test_discovery()
 	await test_anchor_stability()
+	Bandit.substitution_enabled = false  # random log swaps would flake combat tests; test_bandit_sub_kunai enables it locally
 	await test_main_scene_and_movement()
 	await test_jump_and_dodge_chaining()
 	await test_lab_and_pause()
@@ -56,6 +57,7 @@ func _initialize() -> void:
 	await load("res://tests/test_bandit_art.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_chase.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_robber.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_sub_kunai.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_vision_overlay.gd").new().run(ck, root)
 	await load("res://tests/test_sense_vision_overlay.gd").new().run(ck, root)
 	await load("res://tests/test_kunai_primary_proof.gd").new().run(ck, root)

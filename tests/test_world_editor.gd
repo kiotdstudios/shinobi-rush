@@ -367,6 +367,7 @@ func run(ck: Callable, root: Node) -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(placed.save_path))
 	editor.set_open(false)
 	var old_b := arena.get_node("Bandit") as Bandit
+	old_b.substitutions = 0  # no log swap: the kill must land
 	old_b.take_damage(old_b.max_hp + 1.0, Vector2.RIGHT, 0.0, 0.0)
 	ck.call("bandit respawn: defeated bandit is down and still present until the delay passes", not old_b.is_alive() and is_instance_valid(old_b))
 	await root.get_tree().create_timer(TrainingArena.BANDIT_RESPAWN_DELAY + 0.6).timeout
