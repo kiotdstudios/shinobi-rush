@@ -35,8 +35,8 @@ func _init() -> void:
 	placed.add("tree_2", c + Vector2(0, -100), false)
 	# a pen: back-left run SE, back-right run SW, front-left SW... corners meet at posts
 	var top := c + Vector2(0, -20)
-	placed.add("fence_se_4", top + Vector2(-180, 0) + Vector2(0, 0), false)
-	placed.add("fence_sw_4", top + Vector2(180, 0), false)
+	placed.add("fence_se_4", top + Vector2(-300, -60) + Vector2(0, 0), false)
+	placed.add("fence_sw_4", top + Vector2(300, -60), false)
 	placed.add("fence_post_tall", top, false)
 	placed.add("fence_se_2", c + Vector2(-60, 150), false)
 	placed.add("fence_post", c + Vector2(12, 186), false)

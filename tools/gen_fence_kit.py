@@ -12,6 +12,7 @@ from PIL import Image
 D = 'assets/environment/fence_kit/'
 SRC = Image.open(D + 'src/rail2.png').convert('RGBA')
 CELL = 36
+SCALE = 2
 M = 6
 POST_X0, POST_X1 = 43, 52
 POST_Y0, POST_Y1 = 2, 29
@@ -64,14 +65,23 @@ def main():
             kit[name] = {'size': list(im.size), 'anchor': list(anchor), 'run': list(run)}
     im = Image.new('RGBA', (PW + 2 * M, PH + 2 * M), (0, 0, 0, 0))
     im.alpha_composite(POST, (M, M))
-    im.save(D + 'fence_post.png')
+    im.save(D + 'archive/fence_post.png')
     kit['fence_post'] = {'size': list(im.size), 'anchor': [M + CX, M + PH - 1], 'run': [0, 0]}
     tall = Image.open(D + 'src/post3.png').convert('RGBA')
     bb = tall.getbbox()
     t = Image.new('RGBA', (bb[2] - bb[0] + 2 * M, bb[3] - bb[1] + 2 * M), (0, 0, 0, 0))
     t.alpha_composite(tall.crop(bb), (M, M))
-    t.save(D + 'fence_post_tall.png')
+    t.save(D + 'archive/fence_post_tall.png')
     kit['fence_post_tall'] = {'size': list(t.size), 'anchor': [t.width // 2, t.height - M - 1], 'run': [0, 0]}
+    # Everything is drawn at 1x then enlarged with nearest-neighbour so pixels match the trees and the
+    # fences read at human scale next to the player (SCALE=2: a post is ~1.6x the player's calf height).
+    kit.pop('fence_post'); kit.pop('fence_post_tall')  # archived: kept in archive/, not in the builder
+    for name, v in kit.items():
+        im = Image.open(D + name + '.png').convert('RGBA')
+        im.resize((im.width * SCALE, im.height * SCALE), Image.NEAREST).save(D + name + '.png')
+        v['size'] = [c * SCALE for c in v['size']]
+        v['anchor'] = [c * SCALE for c in v['anchor']]
+        v['run'] = [c * SCALE for c in v['run']]
     json.dump(kit, open(D + 'kit.json', 'w'), indent=1)
 
 
