@@ -26,3 +26,6 @@ None. Visual review of the supplied previews is next.
 
 ## Outstanding work
 Owner art approval; runtime/world-builder placement separate from this requested art production. Live deployment: not applicable, new unbound art package only.
+
+Implementation commit:1a8ca323f1d1c7ef95c6589b1e86b5beac659a49
+Review PR:https://github.com/kiotdstudios/shinobi-rush/pull/144 (draft; no merge/deployment).
