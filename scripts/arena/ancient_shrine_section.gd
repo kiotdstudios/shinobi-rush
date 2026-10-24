@@ -62,7 +62,7 @@ static func populate(arena: TrainingArena) -> int:
 			continue
 		# Avoid stacking new solid props on the existing shrine or other placed solids.
 		var def := PlacedObjects.def_of(id)
-		var solid := def.kind not in ["ground", "grass", "fireflies", "water_fx"] and not def.has("water_role")
+		var solid: bool = def.kind not in ["ground", "grass", "fireflies", "water_fx"] and not def.has("water_role")
 		if solid and arena.placed._overlaps_solid(PlacedObjects.footprint_rect(id, pos).grow(12.0)):
 			continue
 		if not arena.placed.add(id, pos, false).is_empty():
