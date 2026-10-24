@@ -26,6 +26,9 @@ func _test_threshold_shared() -> void:
 		var h: float = WorldScale.BLOCKS[i][2]
 		var def := PlacedObjects.def_of("base_%d" % i)
 		var expect_wall := h >= WorldScale.WALL_ART_MIN_HEIGHT
+		if not expect_wall:
+			ck.call("wall art: BLOCKS[%d] (height %.0f) is a removed placeholder: no builder entry" % [i, h], def.is_empty())
+			continue
 		ck.call("wall art: BLOCKS[%d] (height %.0f) PlacedObjects label agrees with the threshold (%s)" % [i, h, "Wall" if expect_wall else "Block"],
 			(def.label == "Wall") == expect_wall, def.label)
 
@@ -81,6 +84,10 @@ func _test_scene_classification(tree_root: Node) -> void:
 	for i in WorldScale.BLOCKS.size():
 		var h: float = WorldScale.BLOCKS[i][2]
 		var expect_wall := h >= WorldScale.WALL_ART_MIN_HEIGHT
+		if not expect_wall:
+			ck.call("wall art: placeholder Block%d no longer exists in the level" % i, arena.get_node_or_null("Block%d" % i) == null and arena.get_node_or_null("BlockRear%d" % i) == null)
+			any_placeholder = true
+			continue
 		var block := arena.get_node_or_null("Block%d" % i) as TrainingArena.Block
 		var rear := arena.get_node_or_null("BlockRear%d" % i) as TrainingArena.BlockRear
 		ck.call("wall art: Block%d and BlockRear%d exist" % [i, i], block != null and rear != null)
@@ -93,7 +100,7 @@ func _test_scene_classification(tree_root: Node) -> void:
 		else:
 			any_placeholder = true
 	ck.call("wall art: at least one real wall in the fixed arena got the new art (the order's whole point)", any_wall)
-	ck.call("wall art: at least one shorter block (rock/crate) correctly stayed placeholder (out of scope)", any_placeholder)
+	ck.call("wall art: the short placeholder blocks (rock/crate) were removed", any_placeholder)
 	# Collision must be byte-for-byte unchanged: same footprint, same StaticBody2D with a
 	# RectangleShape2D of that exact size, regardless of is_wall -- this order is a visual swap only.
 	for i in WorldScale.BLOCKS.size():

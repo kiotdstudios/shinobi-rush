@@ -50,7 +50,7 @@ var _hud_buttons: Dictionary = {}
 var hud_snap_button: Button = null
 ## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
-const DIM_TYPES: Array[String] = ["Ashen fire", "Volcanic trees", "Trees", "Walls & blocks", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
+const DIM_TYPES: Array[String] = ["Ashen fire", "Volcanic trees", "Trees", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
 var show_grid := false
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false

@@ -223,6 +223,8 @@ func _ready() -> void:
 	y_sort_enabled = true
 	add_child(Ground.new(self))
 	for i in BLOCKS.size():
+		if WorldScale.is_placeholder_block(i):
+			continue  # owner: no placeholder boxes in the level
 		var b: Array = BLOCKS[i]
 		var block := Block.new(b[1], b[2])
 		block.name = "Block%d" % i
@@ -234,7 +236,7 @@ func _ready() -> void:
 		rear.position = ArenaSort.rear_position(b[0], b[1])
 		add_child(rear)
 	_build_bounds_walls()
-	nav = ArenaNav.build(bounds, BLOCKS)
+	nav = ArenaNav.build(bounds, WorldScale.live_blocks())
 	placed = PlacedObjects.new()
 	placed.name = "PlacedObjects"
 	placed.arena = self
@@ -292,7 +294,7 @@ func _on_bandit_defeated(bandit: Bandit) -> void:
 
 ## Rebuild the bandit nav after the player-built layout changed; live enemies get the new grid at once.
 func rebuild_nav() -> void:
-	nav = ArenaNav.build(bounds, BLOCKS + (placed.obstacles() if placed != null else []))
+	nav = ArenaNav.build(bounds, WorldScale.live_blocks() + (placed.obstacles() if placed != null else []))
 	for e in get_tree().get_nodes_in_group("enemy"):
 		if "nav" in e:
 			e.nav = nav
