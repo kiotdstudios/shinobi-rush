@@ -1,7 +1,7 @@
 # ORDER â€” Reference Blightwood dynamic shrine
 - Agent: Codex
 - Owner: Codex
-- Status: REVIEW — local checks passed; PR181 CI/live pending
+- Status: DONE — runtime delivered and publicly verified; owner visual review remains separate
 - Priority: P1 â€” latest direct owner request
 - Branch/PR: codex/blightwood-dynamic-shrine / https://github.com/kiotdstudios/shinobi-rush/pull/181
 - Dependencies: Connected PixelLab generation; existing Blightwood art/runtime.
@@ -23,3 +23,6 @@ Reference fidelity at actual game zoom; fixed stone geometry/anchor; three indep
 
 ## Handoff / Notes
 Latest owner request takes priority over historical queued character orders. Previous shoreline runtime merged as PR166; its final public evidence/report remains outstanding and must not be represented as completed.
+
+## Delivery
+PR181 merged as205b2bbc15033c6c04449d1ea57ecff3486e3af7. Main workflow40140152663 completed success, including Pages, postdeploy smoke and gate. Exact deployed SHA verified;17public review+11public builder checks passed with no errors. Full integrated native suite2512PASS/0FAIL. Final report and screenshots record exact URLs/times/SHA.

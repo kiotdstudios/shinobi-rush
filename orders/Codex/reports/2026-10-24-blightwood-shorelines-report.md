@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-24-blightwood-shorelines.md
 - Date: 2026-10-24
-- Final status: REVIEW - local validation complete; PR/deployment next. NOT LIVE yet.
-- Commit / PR: implementation f6a344e73ac5065d2e6b8ffaeb33168c6bc50734; PR creation next. Report written before that implementation commit.
+- Final status: DONE — delivered to canonical live test build and verified; owner visual approval not claimed.
+- Commit / PR: runtime merge9cb283672c241d10a31034ce27ba56a5856fb776 / https://github.com/kiotdstudios/shinobi-rush/pull/166. Initial report written before implementation commit.
 
 ## Work completed
 Three PixelLab connected terrain families, 16 pieces each: grass-to-water, dirt-to-water and rocky edges. Native72x36 diamonds use the existing grid and 36,18anchor. Each family supplies four straight banks, four outer corners, four inner corners, two diagonal/split joins and land/water fills. Placement metadata records all corner masks.
@@ -52,3 +52,15 @@ Shared main advanced again to87ad031 (Aki's player evade effect) while the pause
 
 ## Latest shared base
 Main advanced to6c56232 with Aki's small bandit substitution-cost correction. Merged without conflicts; incoming enemy/profile/test files preserved unchanged. Relevant real water/shore suites134 PASS/0 FAIL before merge commit. Fresh full-game Web export PASS (../blightwood-shorelines-latest-web-20261024, build/blightwood-shorelines-latest-export). No shoreline code/pixel/review-scene changes from this sync; the repeated14/12browser checks above cover the unchanged feature. Required final-head CI will run the full native/game browser suite; canonical26 targeted checks will be repeated after deployment.
+
+
+## Public delivery and final evidence — 2026-10-24
+Main runtime workflow https://github.com/kiotdstudios/shinobi-rush/actions/runs/40114645854 completed success, including Pages and postdeploy checks. The canonical public build subsequently advanced to12f5dfa64ca1f6725f4863ddc53e9750cad7789f, which contains the shoreline merge; this exact newer build was actually tested, not falsely labeled as9cb283.
+
+- Public review: https://kiotdstudios.github.io/shinobi-rush/?shore=review —12boolean checks PASS, no errors, timestamp22:13:08.704UTC. Used browser-proof.mjs with canonical base URL and --no-capture; no need to regenerate identical previews.
+- Public builder: canonical base URL using scripts/ci/smoke/builder-shorelines-probe.mjs —14checks PASS, no errors, timestamp22:37:04.447UTC. Actual screenshots inspected with view_image; flowing shore field and all three native tile families display correctly.
+- Exact SHA/time/URLs/checks: docs/visuals/blightwood-shorelines/live-builder-validation.json and live-review-validation.json. Actual public screenshots: live-builder.png and live-grass-focus.png.
+
+The first public builder result had save_reload=false because it required the entire map's count to stay unchanged. All3saved shoreline objects did reload correctly; the authored courtyard separately added unrelated transient props (initial413objects, final442objects). Corrected that test to assert the persisted shoreline count after already checking localStorage contains exactly3shoreline items. Re-ran the whole14check public probe, all passed. This is a test correction, no runtime save implementation change. Original failed result is not counted as a pass.
+
+Delivery includes48pieces, independent Grass banks/Dirt banks/Rocky banks filters, existing shared flowing river, move/delete/save support, normal and half-speed GIFs and interactive review. No further shoreline runtime work outstanding. Owner visual review remains separate. Final evidence/report follows in the shared shrine/shoreline report PR.

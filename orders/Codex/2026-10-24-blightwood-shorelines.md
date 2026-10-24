@@ -1,7 +1,7 @@
 # Order - Blightwood shoreline kit
 - Agent: Codex
 - Owner: Codex
-- Status: REVIEW
+- Status: DONE — runtime delivered and publicly verified; owner visual review remains separate
 - Priority: P1 - latest owner request
 - Branch: codex/blightwood-shorelines
 - Dependencies: live72x36 river grid and grass/path/stone palettes available; PixelLab authenticated.
@@ -21,3 +21,6 @@ Straight banks, inner/outer corners and diagonal joins connect on the existing g
 ## Local validation
 48 native pieces,192 corner probes and384 compatible edge-pair configurations PASS. Godot import/export PASS;2501 native checks PASS;14 builder checks and12 review checks PASS;192 actual preview captures (8s normal/16s half). Await reviewed integration and exact canonical deployment verification.
 PR: https://github.com/kiotdstudios/shinobi-rush/pull/166. Main16d76a9 integrated;2502 native tests and14 repeated builder browser checks PASS. Required CI and canonical deployment still pending.
+
+## Public delivery
+Runtime PR166 merged as9cb283672c241d10a31034ce27ba56a5856fb776. Main workflow40114645854 passed including deployment/postdeploy. Verified canonical site build12f5dfa64ca1f6725f4863ddc53e9750cad7789f on2026-10-24:12review+14builder checks passed. Exact URLs/time/SHA in docs live validation JSON. Builder filter families: Grass banks, Dirt banks, Rocky banks.
