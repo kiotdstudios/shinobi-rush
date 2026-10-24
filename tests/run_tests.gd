@@ -44,6 +44,7 @@ func _initialize() -> void:
 	await load("res://tests/test_health_flicker.gd").new().run(ck, root)
 	await load("res://tests/test_health_gourd.gd").new().run(ck, root)
 	await load("res://tests/test_gourd_pickup_fx.gd").new().run(ck, root)
+	await load("res://tests/test_inventory.gd").new().run(ck, root)
 	await load("res://tests/test_ancient_shrine.gd").new().run(ck, root)
 	await load("res://tests/test_fence_kit.gd").new().run(ck, root)
 	await load("res://tests/test_paint_tool.gd").new().run(ck, root)
@@ -161,7 +162,7 @@ func _base_manifest() -> Dictionary:
 
 # ------------------------------------------------------------------ 3.6 tests
 func test_input_map() -> void:
-	var implemented := ["move_left", "move_right", "move_up", "move_down", "sprint", "pause"]
+	var implemented := ["move_left", "move_right", "move_up", "move_down", "sprint", "pause", "slot_up", "slot_right", "slot_down", "slot_left", "player_menu"]
 	var reserved := ["aim_left", "aim_right", "aim_up", "aim_down", "attack_light", "attack_heavy", "dodge", "jump", "heal", "substitution", "jutsu_modifier"]
 	for a: String in implemented:
 		var has_key := false

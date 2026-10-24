@@ -82,7 +82,7 @@ They exist so later work can bind them without remapping. Pressing them does not
 
 | action | keyboard | gamepad |
 |---|---|---|
-| `aim_left/right/up/down` | arrow keys | right stick |
+| `aim_left/right/up/down` | none | right stick |
 | `attack_light` | `J` | Square (X) |
 | `attack_heavy` | `K` | Triangle (Y) |
 | `dodge` | `Space` | Circle (B) |
@@ -91,7 +91,7 @@ They exist so later work can bind them without remapping. Pressing them does not
 | `substitution` | `Q` | L2 |
 | `jutsu_modifier` | none | R2 |
 
-Implemented: `move_*` (WASD, left stick, D-pad), `sprint` (`Shift`, R1), `pause` (`Esc`, Options).
+Implemented: `move_*` (WASD, left stick), `sprint` (`Shift`, R1), `pause` (`Esc`, Options), `slot_up/right/down/left` (arrow keys, D-pad: use the item on that slot), `player_menu` (`I`, touchpad).
 
 ## Not covered
 

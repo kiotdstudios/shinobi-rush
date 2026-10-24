@@ -30,12 +30,15 @@ const COL_FILL := Color(1.0, 1.0, 1.0, 1.0)  ## fill textures are already red / 
 const COL_LOW := Color(1.0, 0.72, 0.72, 1.0)  ## HP at or below LOW_FRACTION: brighter flush
 const COL_TRAIL := Color(1.0, 1.0, 1.0, 0.55)
 ## Every piece of the HUD the builder can pick up and move. Order = draw order (hit-testing walks it backwards).
-const ELEMENTS: Array[String] = ["hp_bar", "chakra_bar", "portrait", "pips", "ability_0", "ability_1", "ability_2", "ability_3", "ability_4"]
+const ELEMENTS: Array[String] = ["hp_bar", "chakra_bar", "portrait", "pips", "ability_0", "ability_1", "ability_2", "ability_3", "ability_4", "dpad"]
 const ELEMENT_NAMES := {
 	"hp_bar": "HP bar", "chakra_bar": "Chakra bar", "portrait": "Avatar", "pips": "Sub pips",
-	"ability_0": "Substitution", "ability_1": "R2 + Sq (Chidori)", "ability_2": "R2 + Tri", "ability_3": "R2 + O", "ability_4": "R2 + X",
+	"ability_0": "Substitution", "ability_1": "R2 + Sq", "ability_2": "R2 + Tri", "ability_3": "R2 + O", "ability_4": "R2 + X", "dpad": "D-pad items",
 }
 const ABILITY_LABELS: Array[String] = ["L2", "R2+Sq", "R2+Tri", "R2+O", "R2+X"]
+const DPAD_CELL := 44.0  ## D-pad item cross (bottom-left): four 40px cells around a 3x3 grid, one per direction
+const DPAD_ORIGIN := Vector2(28.0, 560.0)
+const DPAD_CELLS := {"up": Vector2(1, 0), "left": Vector2(0, 1), "right": Vector2(2, 1), "down": Vector2(1, 2)}
 const LAYOUT_PATH := "user://hud_layout.json"
 const LOW_FRACTION := 0.3
 const TRAIL_DELAY := 0.35
@@ -90,6 +93,7 @@ func bind(player: PlayerController) -> void:
 	player.health_changed.connect(_on_health_changed)
 	player.chakra_changed.connect(_on_chakra_changed)
 	player.substitution_changed.connect(_on_substitution_changed)
+	player.inventory.changed.connect(_redraw)
 	_on_health_changed(player.health, player.max_health)
 	_on_chakra_changed(player.chakra, player.max_chakra)
 	_on_substitution_changed(player.substitution_charges, player.max_substitution_charges)
@@ -211,6 +215,7 @@ func _draw_hud() -> void:
 			_canvas.draw_circle(at + Vector2(PIP_SIZE, PIP_SIZE) * 0.5, PIP_SIZE * 0.5 + 3.0 + 6.0 * (1.0 - k), Color(0.45, 0.85, 1.0, 0.55 * k))
 		_canvas.draw_texture(tex, at)
 	_draw_abilities()
+	_draw_dpad()
 	if edit_mode:
 		_draw_edit_outlines()
 
@@ -226,7 +231,10 @@ func _draw_abilities() -> void:
 		_canvas.draw_string_outline(font, lab, ABILITY_LABELS[i], HORIZONTAL_ALIGNMENT_CENTER, SLOT_SIZE, 13, 3, Color(0, 0, 0, 0.9))
 		_canvas.draw_string(font, lab, ABILITY_LABELS[i], HORIZONTAL_ALIGNMENT_CENTER, SLOT_SIZE, 13, COL_TEXT)
 	var chi: Texture2D = _tex["chidori_icon"]
-	_canvas.draw_texture(chi, slot_pos(1) + (Vector2(SLOT_SIZE, SLOT_SIZE) - chi.get_size()) * 0.5)
+	for k in PlayerInventory.JUTSU_SLOTS.size():
+		# The R2 slots show whichever jutsu the Player Menu put on them (Chidori is the only one so far).
+		if _player != null and _player.inventory.jutsu[PlayerInventory.JUTSU_SLOTS[k]] == "chidori":
+			_canvas.draw_texture(chi, slot_pos(k + 1) + (Vector2(SLOT_SIZE, SLOT_SIZE) - chi.get_size()) * 0.5)
 	var first := slot_pos(0)
 	var icon: Texture2D = _tex["log_icon"]
 	var isz := icon.get_size()
@@ -238,6 +246,33 @@ func _draw_abilities() -> void:
 			_canvas.draw_texture_rect_region(icon, Rect2(ipos + Vector2(0.0, top), Vector2(isz.x, isz.y - top)), Rect2(0.0, top, isz.x, isz.y - top))
 	else:
 		_canvas.draw_texture(icon, ipos)
+
+
+## D-pad item cross: one cell per direction showing the item on that slot and how many are left.
+func _draw_dpad() -> void:
+	if _player == null:
+		return
+	var o := pos_of("dpad")
+	var font := ThemeDB.fallback_font
+	for slot: String in PlayerInventory.DPAD_SLOTS:
+		var at := o + (DPAD_CELLS[slot] as Vector2) * DPAD_CELL
+		var r := Rect2(at, Vector2(DPAD_CELL - 4.0, DPAD_CELL - 4.0))
+		_canvas.draw_rect(r, Color(0.36, 0.31, 0.24, 0.9))
+		_canvas.draw_rect(r, Color(0.86, 0.68, 0.25, 0.95), false, 2.0)
+		var id := _player.inventory.slot_item(slot)
+		var n := _player.inventory.count_of(id) if id != "" else 0
+		var tex := PlayerInventory.icon(id) if id != "" else null
+		if tex != null:
+			var sz := tex.get_size()
+			var k := minf(30.0 / maxf(sz.x, 1.0), 30.0 / maxf(sz.y, 1.0))
+			var tint := Color.WHITE if n > 0 else Color(1, 1, 1, 0.3)
+			_canvas.draw_texture_rect(tex, Rect2(r.position + (r.size - sz * k) * 0.5, sz * k), false, tint)
+		if id != "":
+			var txt := "x%d" % n
+			var tp := r.position + Vector2(0.0, r.size.y - 2.0)
+			_canvas.draw_string_outline(font, tp, txt, HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 2.0, 12, 3, Color(0, 0, 0, 0.9))
+			_canvas.draw_string(font, tp, txt, HORIZONTAL_ALIGNMENT_RIGHT, r.size.x - 2.0, 12, COL_TEXT if n > 0 else Color(1, 0.5, 0.5, 0.9))
+	_canvas.draw_circle(o + Vector2(1.5, 1.5) * DPAD_CELL - Vector2(2, 2), 5.0, Color(0.86, 0.68, 0.25, 0.8))
 
 
 func _draw_heal_fx(shown: float) -> void:
@@ -280,6 +315,8 @@ func base_pos(id: String) -> Vector2:
 			return ORIGIN
 		"pips":
 			return PIP_POS
+		"dpad":
+			return DPAD_ORIGIN
 	var i := int(id.trim_prefix("ability_"))
 	var total := SLOT_SIZE * SLOT_COUNT + SLOT_GAP * (SLOT_COUNT - 1)
 	var w := _canvas.size.x if _canvas != null and _canvas.size.x > 0.0 else 1280.0
@@ -304,6 +341,8 @@ func element_rect(id: String) -> Rect2:
 			return Rect2(p + Vector2(0.0, AVATAR_POS.y), Vector2(PORTRAIT_SIZE.x, PORTRAIT_SIZE.y - AVATAR_POS.y))
 		"pips":
 			return Rect2(p, Vector2(PIP_STEP * (max_pips - 1) + PIP_SIZE, PIP_SIZE))
+		"dpad":
+			return Rect2(p, Vector2(DPAD_CELL * 3.0 - 4.0, DPAD_CELL * 3.0 - 4.0))
 	return Rect2(p, Vector2(SLOT_SIZE, SLOT_SIZE + 20.0))
 
 
