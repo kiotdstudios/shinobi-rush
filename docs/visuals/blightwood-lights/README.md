@@ -6,7 +6,7 @@ Five PixelLab fixtures match the owner's concept: wooden lantern post, stone pag
 
 In World Builder, choose **Blightwood lights**. Five fixture cards have their own lighting, emissive glass, hanging-lantern sway, spirit flames where applicable and independent fireflies. The sixth card, **Forest Fireflies**, places a separate movable/deletable 32-insect emitter. The swarm has no collider and does not block navigation. Every fixture has 12 insects, with fixed pools and independent flight/glow phases.
 
-The spirit flame has 12 unique frames at 12 FPS; insect wings have 8 unique frames at 18 FPS. Hanging pendants are separate native pixel layers and use gentle runtime rotation. The structure stays rooted. These are independent effect clocks, not a single baked animated background.
+The spirit flame has 12 unique frames at 12 FPS; insect wings have 8 unique frames at 18 FPS. The wingbeat contact sheet is enlarged eight times with nearest pixels for inspection; the runtime atlas remains native 32x32 per frame. Hanging pendants are separate native pixel layers and use gentle runtime rotation. The structure stays rooted. These are independent effect clocks, not a single baked animated background.
 
 Review scene controls: Normal, Half speed, Pause, Step, Fireflies, Lighting, Sway and Sound. Normal and half-speed GIFs contain 192 actual Godot Web captures, lasting 8 and 16 seconds respectively. GIFs are silent; the two spirit-flame props reuse quiet original fire ambience in-game.
 

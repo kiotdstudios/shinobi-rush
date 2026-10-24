@@ -59,6 +59,7 @@ try{
  await page.reload();await page.waitForFunction(()=>window.__EDITOR_STATE__?.cards_json&&window.__SHINOBI_READY__,null,{timeout:90000});await wait(500);
  const restored=await state();checks.save_reload=restored.blight_count===initial.blight_count+5&&restored.swarm_count===initial.swarm_count+1&&restored.count===initial.count+6;
  checks.no_errors=errors.length===0;
- writeFileSync(out+'/result.json',JSON.stringify({checks,errors,initial,selected,moved,last:await state()},null,2));
+ const deployed=server?null:await (await page.request.get(arg('base-url')+'build-info.json?v='+Date.now())).json();
+ writeFileSync(out+'/result.json',JSON.stringify({url:page.url(),tested_at:new Date().toISOString(),build_sha:deployed?.commit_sha??null,checks,errors,initial,selected,moved,last:await state()},null,2));
  console.log(JSON.stringify(checks));process.exitCode=Object.values(checks).every(Boolean)?0:1;
 }finally{await browser.close();if(server)await server.close()}

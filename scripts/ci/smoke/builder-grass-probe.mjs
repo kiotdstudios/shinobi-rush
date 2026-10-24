@@ -21,7 +21,7 @@ try{
  await page.mouse.move(initial.panel_x+20,initial.panel_y+20);await page.mouse.wheel(0,-400);await wait(500);checks.header_no_zoom=(await state()).zoom===zoom;
  await page.mouse.move(600,350);await page.mouse.wheel(0,-100);await wait(500);checks.outside_zoom=(await state()).zoom!==zoom;
  await page.mouse.wheel(0,100);await wait(500);
- await filter('Trees');await filter('Walls & blocks');
+ await filter('Trees');await filter('Temple walls');
  let st=await state();checks.filters_hide= !JSON.parse(st.cards_json).tree_1.shown&&!JSON.parse(st.filters_json).Trees.shown&&st.count===initial.count;
  for(let i=0;i<12;i++){st=await state();const card=JSON.parse(st.cards_json).grass9_center;if(card.shown)break;await page.mouse.move(st.scroll_x,st.scroll_y);await page.mouse.wheel(0,120);await wait(300)}
  st=await state();const card=JSON.parse(st.cards_json).grass9_center;if(!card.shown)throw Error('grass card not visible');await click(card.x,card.y);checks.grass_palette=(await state()).place_id==='grass9_center';await page.screenshot({path:out+'/01-grass-palette.png'});
@@ -31,9 +31,9 @@ try{
  await page.screenshot({path:out+'/02-moved-grass.png'});
  await page.keyboard.press('Delete');await wait(500);checks.delete=(await state()).grass_count===247;
  await filter('Grass');st=await state();checks.hide_grass_cancels=st.selected_id===''&&!JSON.parse(st.cards_json).grass9_center.shown&&st.grass_count===247;
- await filter('Grass');await filter('Trees');await filter('Walls & blocks');st=await state();checks.reveal=Object.values(JSON.parse(st.filters_json)).every(f=>f.shown)&&st.grass_count===247;
+ await filter('Grass');await filter('Trees');await filter('Temple walls');st=await state();checks.reveal=Object.values(JSON.parse(st.filters_json)).every(f=>f.shown)&&st.grass_count===247;
  // Add through the palette, explicitly save, reload and verify the persisted edit.
- await filter('Trees');await filter('Walls & blocks');
+ await filter('Trees');await filter('Temple walls');
  st=await state();for(let i=0;i<12&&!JSON.parse(st.cards_json).grass9_center.shown;i++){await page.mouse.move(st.scroll_x,st.scroll_y);await page.mouse.wheel(0,JSON.parse(st.cards_json).grass9_center.y>st.scroll_y?120:-120);await wait(250);st=await state()}
  const c=JSON.parse(st.cards_json).grass9_center;if(!c.shown)throw Error("save test card not visible");await click(c.x,c.y);await click(300,550);checks.second_place=(await state()).grass_count===248;await page.keyboard.press('Control+s');await wait(8000);await page.reload();await page.waitForFunction(()=>window.__EDITOR_STATE__?.open&&window.__EDITOR_STATE__.cards_json,null,{timeout:90000});await wait(800);checks.save_reload=(await state()).grass_count===248;
  checks.no_errors=errors.length===0;writeFileSync(out+'/builder-grass-proof.json',JSON.stringify({checks,errors,initial,selected,moved,last:await state()},null,2));console.log(JSON.stringify(checks));process.exitCode=Object.values(checks).every(Boolean)?0:1;

@@ -83,6 +83,13 @@ def main():
   assert len(set(keys))==n,(kind,'duplicate registered frames')
   atlas.save(FX/('spirit_flame_atlas.png' if kind=='flame' else 'firefly_atlas.png'))
   atlas.save(DOC/f'{kind}-contact.png');hashes[kind]=keys
+ wing_atlas=Image.open(FX/'firefly_atlas.png').convert('RGBA')
+ wing_sheet=Image.new('RGBA',(1024,560),'#17232c');wing_draw=ImageDraw.Draw(wing_sheet)
+ for i in range(8):
+  frame=wing_atlas.crop(((i%4)*32,(i//4)*32,(i%4+1)*32,(i//4+1)*32)).resize((256,256),Image.Resampling.NEAREST)
+  wing_sheet.alpha_composite(frame,((i%4)*256,(i//4)*280))
+  wing_draw.text(((i%4)*256+12,(i//4)*280+256),f'Wingbeat {i+1} - native32x32, nearest8x',fill='#c2d9ef')
+ wing_sheet.convert('RGB').save(DOC/'firefly-contact.png')
  clean(Image.open(SRC/'firefly-00.png'),BLUE).save(FX/'firefly-icon.png')
  manifest={'schema':'shinobi_blightwood_lights_v1','status':'technical_validation','source_tool':'PixelLab Pro/Pixen/inpaint and animate_image','palette':PALETTE,'palette_sources':['owner concept palette','assets/environment/kosen_courtyard/grass/tiles/grass9_center.png'],'fixtures':records,'flame':{'path':'res://assets/vfx/blightwood_lights/spirit_flame_atlas.png','frames':12,'fps':12,'frame_size':[128,160],'anchor':[64,144],'columns':4,'rows':3,'unique_hashes':hashes['flame']},'firefly':{'path':'res://assets/vfx/blightwood_lights/firefly_atlas.png','frames':8,'fps':18,'frame_size':[32,32],'columns':4,'rows':2,'unique_hashes':hashes['firefly'],'per_fixture':12,'standalone_count':32,'flight':'independent continuous bounded multi-frequency paths and staggered bioluminescent pulses'},'source_endpoint_policy':'Pinned final key omitted from each atlas, preserving12and8unique frames.','body_animation':'Fixed rooted fixture; extracted hanging pendants move independently; emissive glass masks pulse independently.'}
  (BASE/'blightwood-lights.art.json').write_text(json.dumps(manifest,indent=2)+'\n')

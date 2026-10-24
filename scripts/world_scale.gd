@@ -66,6 +66,21 @@ const STAND_DIAMOND := Vector2(144, 72)
 ## grey placeholder polygon + "PLACEHOLDER" caption. Shorter entries (rocks, crates, the lab stand)
 ## are genuinely still placeholder and are unaffected -- this order only asked for walls.
 const WALL_ART_MIN_HEIGHT := 140.0
+## Placeholder test: a block shorter than the wall-art threshold is a bare grey box (rock/crate stand-in). They no
+## longer exist in the level or the builder; only the real temple-wall blocks are spawned (see live_blocks()).
+static func is_placeholder_block(i: int) -> bool:
+	return float(BLOCKS[i][2]) < WALL_ART_MIN_HEIGHT
+
+
+## BLOCKS without the placeholder boxes: what the arena actually builds, collides with and navigates around.
+static func live_blocks() -> Array:
+	var out: Array = []
+	for i in BLOCKS.size():
+		if not is_placeholder_block(i):
+			out.append(BLOCKS[i])
+	return out
+
+
 const BLOCKS: Array = [
 	[Vector2(-585, -180), Vector2(270, 108), 126.0],
 	[Vector2(630, -270), Vector2(144, 144), 144.0],

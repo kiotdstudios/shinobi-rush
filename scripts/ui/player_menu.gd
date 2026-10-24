@@ -54,7 +54,7 @@ func _exit_tree() -> void:
 func entries() -> Array[String]:
 	var list: Array[String] = []
 	if tab == 0:
-		list.append_array(["health_gourd", "chakra_gourd", "kunai", ""])
+		list.append_array(["health_gourd", "chakra_gourd", "kunai", "paper_tag", ""])
 	else:
 		list.append_array(["chidori", ""])
 	return list

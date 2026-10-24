@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-24-blightwood-lights.md
 - Date: 2026-10-24
-- Final status: REVIEW (local implementation validated; PR/live delivery next)
-- Commit / PR: Implementation commit follows this report.
+- Final status: DONE - integrated and verified live; available for owner visual review
+- Commit / PR: implementation 8e0b0f6; integration 121835af0e2a571049e4ffc77dcebcfea82e7167; PR https://github.com/kiotdstudios/shinobi-rush/pull/155; main runtime merge 1cf0ec0a4515e84eebdaf930ed8e2b7a8164b8a4.
 
 ## Work completed
 Five original PixelLab Pro fixtures closely follow the owner's exact concept: rope-bound wooden lantern post, mossy pagoda, gnarled flowering branch lantern, stone tripod brazier and root-wrapped spirit totem. The concept forest/blue swatches were combined with colors sampled from the live grass tile. Props retain native pixel scale, transparent margins, individual root anchors and existing three-quarter camera. No painted floor or background is exported.
@@ -47,3 +47,15 @@ Merged origin/main3fcfd96 (larger fences, archived legacy posts, controls and ca
 Before completing the integration merge commit: Godot import PASS; full native suite2301PASS/0FAIL again (build/blightwood-integrated-tests). Fresh Web export PASS (../blightwood-integrated-web-20261024). Repeated full builder probe all16PASS/0errors (build/blightwood-integrated-browser); refreshed screenshot and JSON copied to docs. Order validation and whitespace checks PASS. Light art and isolated preview did not change. Published half-speed GIF fetched from the implementation commit8e0b0f6; SHA256 matches local.
 
 Canonical public game remains https://kiotdstudios.github.io/shinobi-rush/. This branch/preview is NOT LIVE yet; required PR/main CI, deploy/postdeploy success and exact live SHA verification will be recorded after integration.
+
+## Final live verification and handoff
+PR #155 merged through required passing checks (Godot CI 40096313377 and pipeline self-test 40096313402). Main workflow https://github.com/kiotdstudios/shinobi-rush/actions/runs/40097103408 succeeded, including deploy and smoke-postdeploy. Canonical build-info.json returned commit_sha 1cf0ec0a4515e84eebdaf930ed8e2b7a8164b8a4.
+
+Exact tested URL: https://kiotdstudios.github.io/shinobi-rush/?editor=1&v=1792848129209
+Timestamp: 2026-10-24T13:23:02.375Z (UTC).
+Command: node scripts/ci/smoke/builder-blightwood-probe.mjs --base-url https://kiotdstudios.github.io/shinobi-rush/ --out-dir build/blightwood-live-evidence
+Result: all16 checks PASS, zero errors. Actual public render visually inspected: five blue fixtures, illumination, flames and flying fireflies visible; category, selection and Save controls accessible. Evidence: docs/visuals/blightwood-lights/live-validation.json and live-builder.png. This is the runtime revision actually tested, not an assertion about a later deployment.
+
+World Builder: select Blightwood lights for five fixtures and a separately placeable Forest Fireflies swarm. Existing move/delete/save/reload supported. No automatic map placement. Normal and half-speed previews are linked in the visual README. Owner visual approval is not claimed.
+
+Report follow-up only: enlarged the wingbeat contact sheet eight times with nearest pixels; production atlas remains native32x32. Reran export_pack.py successfully; production assets byte-identical. Browser probe adds exact URL/time/build SHA to evidence only. Repeated live probe passed16/16. No runtime changes in this follow-up. Remaining work: optional owner art feedback; no implementation blocker.
