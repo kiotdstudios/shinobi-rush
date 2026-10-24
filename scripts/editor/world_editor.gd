@@ -50,7 +50,7 @@ var _hud_buttons: Dictionary = {}
 var hud_snap_button: Button = null
 ## Builder guides (Settings tab), all OFF by default: a white floor grid and, per object type, a box that
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
-const DIM_TYPES: Array[String] = ["Trees", "Walls & blocks", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
+const DIM_TYPES: Array[String] = ["Volcanic trees", "Trees", "Walls & blocks", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
 var show_grid := false
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false
@@ -152,6 +152,18 @@ func _process(_d: float) -> void:
 			_js_state.panel_w = r.size.x
 			_js_state.panel_h = r.size.y
 			_js_state.grass_count = (arena.get_node("WindGrassField") as WindGrassField).ground_count()
+			var ashen_count := 0
+			var ashen_capacity := 0
+			var ashen_clock := 0.0
+			for obj in placed.objects:
+				if PlacedObjects.def_of(obj.id).kind == "ashen_tree":
+					var tree := obj.nodes[0] as AshenTree
+					ashen_count += 1
+					ashen_capacity += tree.flakes.size()
+					ashen_clock = tree.local_clock
+			_js_state.ashen_count = ashen_count
+			_js_state.ashen_capacity = ashen_capacity
+			_js_state.ashen_clock = ashen_clock
 			_js_state.tall_count = (arena.get_node("WindGrassField") as WindGrassField).tall_count()
 	if open and inspector != null and inspector.visible and not selected.is_empty():
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
@@ -904,6 +916,10 @@ func _build_ui() -> void:
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "pickup":
 				b.icon = HealthGourd.icon(str(def.get("gourd", "health")))
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "ashen_tree":
+				b.icon = load(str(PlacedObjects.ashen_info(int(def.tree)).texture)) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "tree":
