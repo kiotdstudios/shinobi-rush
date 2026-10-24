@@ -1,0 +1,9 @@
+# ORCHA — P0 Saturday reusable Body Flicker live combat VFX
+- **Status:** QUEUED
+- **Priority:** P0
+
+## Objective
+Orcha's Body Flicker Animation Lab PR #61 is merged. Work with Aki to make the **same existing VFX** work for player **single dodge and optional double-back after hit 2** and for Bandit's single/double retreats in the **real arena**, with directional, collision-safe presentation and no persistent ghosts. Do not create a competing movement/controller implementation. Own VFX API, assets and scene glue in coordination with Aki. Provide event hooks, departure/travel/arrival timings and simple reusable integration examples. Test repeated quick uses and interruptions, wall stop and re-engage, real web build. Push each tested slice and verify deployment. Report `orders/Orcha/reports/2026-10-22-saturday-flicker-live-combat-vfx-report.md`.
+
+## Shared Saturday milestone and delivery rule
+**Deadline: Saturday October 24, 2026, end of day America/New_York.** Read `orders/README.md` and `orders/Orcha/README.md`. Owner needs a **playable integrated combat loop in the ONE official live browser game** https://kiotdstudios.github.io/shinobi-rush/, not more disconnected art proofs. Work in small vertical slices; for **each tested meaningful slice**, write evidence, **commit and PUSH immediately**, open/update PR, get required CI, merge into `main`, deploy and verify live before claiming playable. Do not leave local-only uncommitted work or accumulate a huge unreviewable branch. Do not bypass CI, branch protection, or overwrite another agent's files. If CI is pending, say pending and follow it through. Mark DONE only after the actual deployed build is tested. Report PR/SHA/live SHA and blocker promptly. Keep all agents aligned through the integration order and preserve existing 128×128 8-direction art and persistent RPG rules.
