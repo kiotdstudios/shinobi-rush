@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-24-blightwood-shorelines.md
 - Date: 2026-10-24
 - Final status: REVIEW - local validation complete; PR/deployment next. NOT LIVE yet.
-- Commit / PR: Not committed; report written before implementation commit.
+- Commit / PR: implementation f6a344e73ac5065d2e6b8ffaeb33168c6bc50734; PR creation next. Report written before that implementation commit.
 
 ## Work completed
 Three PixelLab connected terrain families, 16 pieces each: grass-to-water, dirt-to-water and rocky edges. Native72x36 diamonds use the existing grid and 36,18anchor. Each family supplies four straight banks, four outer corners, four inner corners, two diagonal/split joins and land/water fills. Placement metadata records all corner masks.
@@ -32,3 +32,5 @@ None required. Delivered for visual review; owner approval is not claimed.
 
 ## Outstanding work / next steps
 Required reviewed PR/CI, main deployment/postdeploy and exact canonical-site visual/builder verification. Final report will record the exact tested SHA/URLs/timestamp. Decorative shoreline visuals do not introduce terrain physics.
+
+Final GIF packaging:192 frames each,8s normal and16s half, about2.59MB each. Actual screenshot review confirms all three families and coherent current across shore/river joins. Shared main remains6274dbf, matching the tested base; no integration conflict.
