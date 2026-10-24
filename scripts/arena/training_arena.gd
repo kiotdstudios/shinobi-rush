@@ -245,7 +245,8 @@ func _ready() -> void:
 	rebuild_nav()
 	_spawn_bandit()
 	if placed.loaded_version < PlacedObjects.SAVE_VERSION:
-		placed.scatter_gourds()  # first run / a layout saved before pickups existed: a few health gourds lie around
+		# first run / an older layout: a few gourds lie around (a v5 layout already has its health gourds)
+		placed.scatter_defaults(placed.loaded_version >= 5)
 	editor = WorldEditor.new()
 	editor.setup(self, placed)
 	add_child(editor)

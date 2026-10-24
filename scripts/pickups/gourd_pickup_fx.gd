@@ -19,13 +19,15 @@ const T_HEAL := 0.55
 const T_END := 1.25  ## the floating number is the last thing alive
 const CHEST := Vector2(0.0, -56.0)  ## the player's origin is at their feet
 const HEAD := Vector2(0.0, -126.0)
-const GREEN := Color(0.35, 1.0, 0.55)
-const WHITE_GREEN := Color(0.85, 1.0, 0.9)
 const SOUND_RATE := 32000
 
 static var _sound: AudioStreamWAV
 
 var gourd: HealthGourd
+## Effect colours: green for a health gourd, blue for a chakra gourd (set in start()).
+var _green := Color(0.35, 1.0, 0.55)
+var _white_green := Color(0.85, 1.0, 0.9)
+var _label := "HP"
 var player: Node2D
 var amount := 0.0
 var t := 0.0
@@ -47,9 +49,13 @@ static func start(p_gourd: HealthGourd, p_player: Node2D, p_amount: float, hp_be
 	fx.gourd = p_gourd
 	fx.player = p_player
 	fx.amount = p_amount
+	if p_gourd.kind == "chakra":
+		fx._green = Color(0.3, 0.65, 1.0)
+		fx._white_green = Color(0.85, 0.95, 1.0)
+		fx._label = "CHAKRA"
 	p_gourd.add_child(fx)
 	var bar := p_player.get_node_or_null("HealthBar") as HealthBar
-	if bar != null:
+	if bar != null and p_gourd.kind != "chakra":
 		bar.begin_heal_anim(hp_before_fraction, T_ABSORB)
 	return fx
 
@@ -69,7 +75,7 @@ func _ready() -> void:
 	_glow_layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(_glow_layer)
 	_glow_layer.draw.connect(_draw_additive)
-	var list := HealthGourd.frames("gourd")
+	var list := HealthGourd.frames("gourd", gourd.kind)
 	_body_tex = list[0] if not list.is_empty() else null
 	_start_pos = gourd._visual.global_position
 	_audio = AudioStreamPlayer.new()
@@ -237,16 +243,16 @@ func _draw_additive() -> void:
 	# 1 contact: flash + first ring + soft ping ring
 	if t < 0.2:
 		var f := 1.0 - t / 0.2
-		_blob(ci, g_pos, 34.0 * (0.7 + 0.5 * f), Color(WHITE_GREEN, 0.9 * f))
+		_blob(ci, g_pos, 34.0 * (0.7 + 0.5 * f), Color(_white_green, 0.9 * f))
 	if t < 0.3:
 		var k := t / 0.3
-		_ring(ci, g_pos, lerpf(10.0, 62.0, k), 2.0, Color(GREEN, 0.9 * (1.0 - k)))
+		_ring(ci, g_pos, lerpf(10.0, 62.0, k), 2.0, Color(_green, 0.9 * (1.0 - k)))
 	# 2 burst: two concentric rings at different speeds, then a faint wide pulse
 	if t >= T_CONTACT and t < 0.5:
 		var k := (t - T_CONTACT) / 0.42
-		_ring(ci, g_pos, lerpf(8.0, 90.0, k), 2.0, Color(GREEN, 0.8 * (1.0 - k)))
-		_ring(ci, g_pos, lerpf(8.0, 48.0, minf(k * 1.6, 1.0)), 1.5, Color(WHITE_GREEN, 0.7 * (1.0 - minf(k * 1.6, 1.0))))
-		_ring(ci, g_pos, lerpf(20.0, 140.0, k), 7.0, Color(GREEN, 0.14 * (1.0 - k)))  # distortion-style pulse
+		_ring(ci, g_pos, lerpf(8.0, 90.0, k), 2.0, Color(_green, 0.8 * (1.0 - k)))
+		_ring(ci, g_pos, lerpf(8.0, 48.0, minf(k * 1.6, 1.0)), 1.5, Color(_white_green, 0.7 * (1.0 - minf(k * 1.6, 1.0))))
+		_ring(ci, g_pos, lerpf(20.0, 140.0, k), 7.0, Color(_green, 0.14 * (1.0 - k)))  # distortion-style pulse
 	# the player's rim light during the burst
 	if t >= T_CONTACT and t < T_WARP and is_instance_valid(player):
 		var k := (t - T_CONTACT) / (T_WARP - T_CONTACT)
@@ -258,25 +264,25 @@ func _draw_additive() -> void:
 			var h := _history_at(t - lag)
 			if not h.is_empty():
 				ci.draw_set_transform(h.pos, h.rot, h.scale)
-				ci.draw_texture(_body_tex, -_body_tex.get_size() * 0.5, Color(GREEN, 0.5 - 0.2 * float(i)))
+				ci.draw_texture(_body_tex, -_body_tex.get_size() * 0.5, Color(_green, 0.5 - 0.2 * float(i)))
 		ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	# 3 absorb: chest flash, shockwave, outline
 	if t >= T_WARP:
 		var k := (t - T_WARP) / 0.28
 		if k < 1.0:
-			_blob(ci, c, lerpf(46.0, 20.0, k), Color(WHITE_GREEN, 0.95 * (1.0 - k)))
-			_ring(ci, c, lerpf(10.0, 96.0, k), 3.0, Color(GREEN, 0.9 * (1.0 - k)))
-			_ring(ci, c, lerpf(6.0, 60.0, k), 2.0, Color(WHITE_GREEN, 0.7 * (1.0 - k)))
+			_blob(ci, c, lerpf(46.0, 20.0, k), Color(_white_green, 0.95 * (1.0 - k)))
+			_ring(ci, c, lerpf(10.0, 96.0, k), 3.0, Color(_green, 0.9 * (1.0 - k)))
+			_ring(ci, c, lerpf(6.0, 60.0, k), 2.0, Color(_white_green, 0.7 * (1.0 - k)))
 		var ko := clampf((t - T_WARP) / 0.35, 0.0, 1.0)
 		if ko < 1.0:
 			_aura(ci, 0.9 * (1.0 - ko))
 	# particles
 	for q in particles:
 		var life_k := float(q.age) / float(q.life)
-		var col := Color(WHITE_GREEN if life_k < 0.4 else GREEN, 1.0 - life_k)
+		var col := Color(_white_green if life_k < 0.4 else _green, 1.0 - life_k)
 		var p: Vector2 = _spiral_pos(q) if q.kind == "spiral" else q.p
 		if q.kind == "trail":
-			_blob(ci, p, float(q.size) * (1.0 - life_k * 0.5) + 2.0, Color(GREEN, 0.9 * (1.0 - life_k)))
+			_blob(ci, p, float(q.size) * (1.0 - life_k * 0.5) + 2.0, Color(_green, 0.9 * (1.0 - life_k)))
 		else:
 			ci.draw_circle(p, float(q.size) * (1.0 - life_k * 0.4), col)
 
@@ -292,7 +298,7 @@ func _aura(ci: CanvasItem, a: float) -> void:
 		for j in 33:
 			var ang := TAU * float(j) / 32.0
 			pts.append(b + Vector2(cos(ang) * (26.0 + float(i) * 2.0), sin(ang) * (62.0 + float(i) * 2.0)))
-		ci.draw_polyline(pts, Color(GREEN, a * (0.55 - 0.15 * float(i))), w)
+		ci.draw_polyline(pts, Color(_green, a * (0.55 - 0.15 * float(i))), w)
 
 
 func _history_at(when: float) -> Dictionary:
@@ -311,9 +317,9 @@ func _draw() -> void:
 	var pos := player.global_position + HEAD + Vector2(0.0, -46.0 * (1.0 - pow(1.0 - k, 2.0)))
 	var a := 1.0 - clampf((k - 0.6) / 0.4, 0.0, 1.0)
 	var font := ThemeDB.fallback_font
-	var txt := "+%d HP" % int(roundf(amount))
-	draw_string_outline(font, pos - Vector2(60.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 120.0, 20, 5, Color(0.02, 0.15, 0.06, 0.9 * a))
-	draw_string(font, pos - Vector2(60.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 120.0, 20, Color(0.6, 1.0, 0.7, a))
+	var txt := "+%d %s" % [int(roundf(amount)), _label]
+	draw_string_outline(font, pos - Vector2(60.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 120.0, 20, 5, Color(0.02, 0.15, 0.06, 0.9 * a) if _label == "HP" else Color(0.02, 0.06, 0.2, 0.9 * a))
+	draw_string(font, pos - Vector2(60.0, 0.0), txt, HORIZONTAL_ALIGNMENT_CENTER, 120.0, 20, Color(0.6, 1.0, 0.7, a) if _label == "HP" else Color(0.65, 0.85, 1.0, a))
 
 
 # ---------------------------------------------------------------- sound

@@ -10,7 +10,7 @@ extends Node
 const SAVE_PATH := "user://world_builder_layout.json"
 ## v4 adds editable grass to v3 saves, which list EVERY solid object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
-const SAVE_VERSION := 5
+const SAVE_VERSION := 6
 const CATALOG := {
 	"tree_1": {"label": "Tiered tree", "kind": "tree", "tree": 0},
 	"tree_2": {"label": "Windswept tree", "kind": "tree", "tree": 1},
@@ -47,16 +47,19 @@ const CATALOG := {
 	"grass_tall_01": {"label": "Tall grass 2", "kind": "grass", "tall": true},
 	"grass_tall_02": {"label": "Tall grass 3", "kind": "grass", "tall": true},
 	"grass_tall_03": {"label": "Tall grass 4", "kind": "grass", "tall": true},
-	"health_gourd": {"label": "Health gourd +25", "kind": "pickup"},
+	"health_gourd": {"label": "Health gourd +25%", "kind": "pickup", "gourd": "health"},
+	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Pickups", ["health_gourd"]]]
+const CATEGORIES := [["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Walls & blocks", ["wall_h", "wall_v", "rock", "crate"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Pickups", ["health_gourd", "chakra_gourd"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
 const PICKUP_FOOTPRINT := Vector2(40, 20)
 ## Health gourds scattered over a layout that has never had any (first run / pre-v5 saves).
 const DEFAULT_GOURDS := 5
+## Chakra gourds scattered over a layout saved before they existed (and on a fresh one).
+const DEFAULT_CHAKRA_GOURDS := 3
 
 static var _tree_cache: Array = []
 
@@ -163,7 +166,7 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 		"wall":
 			return [wall_texture(id), pos - (def.anchor as Vector2)]
 		"pickup":
-			var icon := HealthGourd.icon()
+			var icon := HealthGourd.icon(str(def.get("gourd", "health")))
 			if icon != null:
 				return [icon, pos - Vector2(icon.get_width() * 0.5, icon.get_height() * 0.5 + HealthGourd.FLOAT_HEIGHT)]
 	return [null, Vector2.ZERO]
@@ -250,6 +253,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		nodes = _make_wall(id, pos)
 	elif def.kind == "pickup":
 		var gourd := HealthGourd.new()
+		gourd.kind = str(def.get("gourd", "health"))
 		gourd.name = "PlacedGourd%d" % _serial
 		gourd.position = pos
 		arena.add_child(gourd)
@@ -604,7 +608,7 @@ func load_dict(data: Dictionary) -> int:
 
 ## Drop `count` health gourds at random spots clear of the spawn, enemies, other gourds and every solid object.
 ## Deterministic for a given `seed_value` (tests); a negative seed randomises. Returns how many were placed.
-func scatter_gourds(count := DEFAULT_GOURDS, seed_value := -1) -> int:
+func scatter_gourds(count := DEFAULT_GOURDS, seed_value := -1, id := "health_gourd") -> int:
 	if arena == null:
 		return 0
 	var rng := RandomNumberGenerator.new()
@@ -615,17 +619,28 @@ func scatter_gourds(count := DEFAULT_GOURDS, seed_value := -1) -> int:
 	var area := arena.bounds.grow(-140.0)
 	var made := 0
 	var taken: Array[Vector2] = []
+	for o in objects:
+		if def_of(o.id).kind == "pickup":
+			taken.append(o.pos)
 	for attempt in 600:
 		if made >= count:
 			break
 		var pos := Vector2(rng.randf_range(area.position.x, area.end.x), rng.randf_range(area.position.y, area.end.y)).round()
 		if _gourd_spot_ok(pos, taken):
-			add("health_gourd", pos, false)
+			add(id, pos, false)
 			taken.append(pos)
 			made += 1
 	loaded_version = SAVE_VERSION
 	_changed(false)
 	return made
+
+
+## The starting set: health gourds, then chakra gourds, all spread apart. With `chakra_only` (a layout that
+## already has its health gourds) just the chakra ones are added.
+func scatter_defaults(chakra_only := false, seed_value := -1) -> void:
+	if not chakra_only:
+		scatter_gourds(DEFAULT_GOURDS, seed_value)
+	scatter_gourds(DEFAULT_CHAKRA_GOURDS, seed_value + 1 if seed_value >= 0 else -1, "chakra_gourd")
 
 
 func _gourd_spot_ok(pos: Vector2, taken: Array[Vector2]) -> bool:
@@ -640,10 +655,11 @@ func _gourd_spot_ok(pos: Vector2, taken: Array[Vector2]) -> bool:
 	for e: Node in get_tree().get_nodes_in_group("enemy"):
 		if e is Node2D and (e as Node2D).global_position.distance_to(pos) < 200.0:
 			return false
+	var gourd_box := Rect2(pos.x - 40.0, pos.y - 140.0, 80.0, 150.0)  # what a click on the gourd would hit
 	for o in objects:
 		if def_of(o.id).kind in ["grass", "pickup"]:
 			continue
-		if footprint_rect(o.id, o.pos).grow(90.0).has_point(pos) or hit_rect(o.id, o.pos).grow(20.0).has_point(pos):
+		if footprint_rect(o.id, o.pos).grow(90.0).has_point(pos) or hit_rect(o.id, o.pos).grow(20.0).has_point(pos) or hit_rect(o.id, o.pos).intersects(gourd_box):
 			return false
 	return true
 

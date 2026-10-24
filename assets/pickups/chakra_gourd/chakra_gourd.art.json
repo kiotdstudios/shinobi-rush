@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "id": "chakra_gourd",
+  "status": "art_review",
+  "production_bound": false,
+  "generator": "PixelLab",
+  "layers": {
+    "gourd": {
+      "frames": [
+        "gourd_00.png",
+        "gourd_01.png",
+        "gourd_02.png",
+        "gourd_03.png",
+        "gourd_04.png",
+        "gourd_05.png",
+        "gourd_06.png",
+        "gourd_07.png",
+        "gourd_08.png",
+        "gourd_09.png",
+        "gourd_10.png",
+        "gourd_11.png",
+        "gourd_12.png",
+        "gourd_13.png",
+        "gourd_14.png",
+        "gourd_15.png"
+      ],
+      "frame_size": [
+        64,
+        96
+      ],
+      "fps": 14,
+      "loop": true
+    },
+    "glow": {
+      "frames": [
+        "glow_00.png"
+      ],
+      "frame_size": [
+        96,
+        96
+      ],
+      "fps": 12,
+      "loop": true,
+      "blend": "add"
+    },
+    "ember": {
+      "frames": [
+        "ember_00.png",
+        "ember_01.png",
+        "ember_02.png",
+        "ember_03.png",
+        "ember_04.png",
+        "ember_05.png",
+        "ember_06.png",
+        "ember_07.png",
+        "ember_08.png"
+      ],
+      "frame_size": [
+        96,
+        96
+      ],
+      "fps": 12,
+      "loop": "ping_pong",
+      "blend": "add"
+    }
+  },
+  "presentation": {
+    "float_height": 56,
+    "bob_px": 4,
+    "bob_radians_per_second": 2.3,
+    "pulse_radians_per_second": 3.1,
+    "glow_rotation_radians_per_second": 0.35,
+    "glow_scale": [
+      1.25,
+      1.55
+    ],
+    "glow_modulate": [
+      0.4,
+      0.7,
+      1
+    ],
+    "floor_color": [
+      0.1,
+      0.45,
+      1
+    ],
+    "floor_radii": [
+      46,
+      12
+    ],
+    "floor_y_scale": 0.5,
+    "beam_height": 170
+  },
+  "qc": {
+    "body_unique": 7,
+    "body_height_range": [
+      75,
+      75
+    ],
+    "body_bboxes": [
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ],
+      [
+        10,
+        12,
+        55,
+        87
+      ]
+    ],
+    "closing_duplicate_removed": true,
+    "effects_exact_health_geometry_and_alpha": true,
+    "effect_palette_operation": "PixelLab map_colors; RGBA R/B exchange, alpha unchanged"
+  },
+  "sha256": {
+    "ember_00.png": "bbb162e2a221a09201c9826456264c68fd4f4ca98d0e2cc54b0c375e0e08031d",
+    "ember_01.png": "0c69e8ae3a23492f65248abd965d293b68c583ac95b115b242f74577f3b52c64",
+    "ember_02.png": "e0d73455238f89c9e88bd908af1d22a756b7491de8b2812f42035401b7620a90",
+    "ember_03.png": "fdaf6a0c7b9f77523402f5e7023b365e200793056ec7b68f697ed689102098bc",
+    "ember_04.png": "916b5980e78d318fb73f6c9cead2121533313cf60506bc1bef35018e4c038753",
+    "ember_05.png": "cea33de202cd7c7f08d02f71971ea70ec6a5ec8e6e4d2ffc024080b3bbf6e6ea",
+    "ember_06.png": "56773ed655db86ae04420090a51bbda95a200ec81261de0af67d0c9ab1e29377",
+    "ember_07.png": "b7712801f83131f977e3f3292cd397957cd35585e8bd4930f6fa33f22d2c7ebd",
+    "ember_08.png": "878c0fff334e6e2515f91b5ba86738149fb5bafddd165b0242779204e37218e2",
+    "glow_00.png": "dc1f9803cf6b9b79d493842255631d791d848126ad6f4d0834d6b66b92ca86a8",
+    "gourd_00.png": "9319721c6e33bb38a67b8eb5a06a2802d5155980ce9be466a0e080adef5bc3e9",
+    "gourd_01.png": "9319721c6e33bb38a67b8eb5a06a2802d5155980ce9be466a0e080adef5bc3e9",
+    "gourd_02.png": "854e14ac23963ff432bcd29cb3d66c2a36a4d430bdc73a44770d8aa28a7a3954",
+    "gourd_03.png": "e3301433508fb1aaf41f57c29ea5c33ce0b0b08c2b5823cef6fdcb4ed6a813d9",
+    "gourd_04.png": "a41d173b9a329d2d70a5ef1f7d328bda7a8a12c08d8026daef15cdf82111e7a5",
+    "gourd_05.png": "e3301433508fb1aaf41f57c29ea5c33ce0b0b08c2b5823cef6fdcb4ed6a813d9",
+    "gourd_06.png": "854e14ac23963ff432bcd29cb3d66c2a36a4d430bdc73a44770d8aa28a7a3954",
+    "gourd_07.png": "9319721c6e33bb38a67b8eb5a06a2802d5155980ce9be466a0e080adef5bc3e9",
+    "gourd_08.png": "9319721c6e33bb38a67b8eb5a06a2802d5155980ce9be466a0e080adef5bc3e9",
+    "gourd_09.png": "9319721c6e33bb38a67b8eb5a06a2802d5155980ce9be466a0e080adef5bc3e9",
+    "gourd_10.png": "562e269944de0fab9f7c3d3d7377fb7b33981a4e476dd9ab1f79de3ef15af577",
+    "gourd_11.png": "d0ed2bcd7844ed6147b60dc3dd0e55f01e23a4131f31c72f55a480dad2216dfd",
+    "gourd_12.png": "c7d531b51dd5d849050e3d053f03ac12e2bc1055686b425b24a74b2cc65ea500",
+    "gourd_13.png": "d0ed2bcd7844ed6147b60dc3dd0e55f01e23a4131f31c72f55a480dad2216dfd",
+    "gourd_14.png": "562e269944de0fab9f7c3d3d7377fb7b33981a4e476dd9ab1f79de3ef15af577",
+    "gourd_15.png": "9319721c6e33bb38a67b8eb5a06a2802d5155980ce9be466a0e080adef5bc3e9"
+  }
+}
