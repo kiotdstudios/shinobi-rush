@@ -498,7 +498,7 @@ func _test_ai_flag() -> void:
 	var west := _snap8(4)
 	var home := Vector2(1500, 100)  # open ground; along y=100 the choke gap and the walls leave a clear line
 	var cases: Array = [
-		["ahead 350 px: beyond the cone reach 320, inside the chase reach 384", home, Vector2(1150, 100), "chase_only"],
+		["ahead 500 px: beyond the cone reach 450, inside the chase reach 540", home, Vector2(1000, 100), "chase_only"],
 		["ahead 250 px", home, Vector2(1250, 100), "both"],
 		["ahead 1000 px: beyond everything", home, Vector2(500, 100), "never"],
 		["behind 250 px: outside the cone, beyond close sense", home, Vector2(1750, 100), "chase_only"],
@@ -533,7 +533,7 @@ func _test_ai_flag() -> void:
 			if ai != want:
 				table_bad += "%s/%s " % [String(c[0]).substr(0, 12), n]
 	ck.call("vision AI flag: the AI's own sees_player equals 'polygon contains the player' for all %d (state x place) rows" % rows, mism == 0 and rows == 6 * 12, "%d mismatches, first: %s" % [mism, first])
-	ck.call("vision AI flag: and those AI answers match the documented table (cone-only reach 320 / close sense 70 / chase reach 384 / walls block)", table_bad == "", table_bad)
+	ck.call("vision AI flag: and those AI answers match the documented table (cone-only reach 450 / close sense 70 / chase reach 540 / walls block)", table_bad == "", table_bad)
 	_put(WorldScale.BANDIT_HOME, west, Bandit.State.DEAD)
 	ov.refresh()
 	ck.call("vision AI flag: a DEAD Bandit has no view at all", ov.views.is_empty() and BanditVisionToggle.telemetry()["vision_bandits"] == 0)

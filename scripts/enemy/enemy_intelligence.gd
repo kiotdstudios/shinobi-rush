@@ -10,7 +10,7 @@ extends RefCounted
 const LEVELS := {
 	1: {
 		"name": "Level 1 robber",
-		"sight_range": 320.0,        # how far it can see in its facing cone
+		"sight_range": 450.0,        # how far it can see in its facing cone
 		"fov_deg": 90.0,             # NARROW awareness: only what is in front of it
 		"close_sense": 70.0,         # it still notices someone right behind/next to it
 		"notice_delay": 0.65,        # suspicion pause before it commits to a hunt (slow reaction)
