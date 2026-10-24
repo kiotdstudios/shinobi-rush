@@ -65,7 +65,7 @@ const CATALOG := {
 	"grass_tall_01": {"label": "Tall grass 2", "kind": "grass", "tall": true},
 	"grass_tall_02": {"label": "Tall grass 3", "kind": "grass", "tall": true},
 	"grass_tall_03": {"label": "Tall grass 4", "kind": "grass", "tall": true},
-	"ancient_shrine": {"label": "Ancient Shrine", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/ancient_shrine/", "art": "shrine_shelter_01", "size": Vector2(256, 256), "anchor": Vector2(129, 242), "col": Vector2(0, 0), "body": Vector2(78, 34)},
+	"ancient_shrine": {"label": "Ancient Shrine", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/ancient_shrine/", "art": "shrine_shelter_01", "size": Vector2(256, 256), "anchor": Vector2(129, 242), "col": Vector2(0, 0), "body": Vector2(87, 112), "poly": [Vector2(-87, -69), Vector2(0, -29), Vector2(86, -72), Vector2(0, -112)]},
 	"ground9_corner_top": {"label": "Corner Top", "kind": "ground"},
 	"ground9_edge_ne": {"label": "Edge Ne", "kind": "ground"},
 	"ground9_corner_right": {"label": "Corner Right", "kind": "ground"},
@@ -442,7 +442,10 @@ func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 	var body := StaticBody2D.new()
 	body.name = "PlacedWallBody%d" % _serial
 	var shape := ConvexPolygonShape2D.new()
-	if col == Vector2.ZERO:
+	if col == Vector2.ZERO and def.has("poly"):
+		# whole ground footprint (the plinth diamond), so nobody can stand "inside" the building under its art
+		shape.points = PackedVector2Array(def.poly)
+	elif col == Vector2.ZERO:
 		var half: Vector2 = def.get("body", Vector2(14.0, 14.0))
 		shape.points = PackedVector2Array([Vector2(-half.x, 0), Vector2(half.x, 0), Vector2(half.x, -half.y), Vector2(-half.x, -half.y)])
 	else:

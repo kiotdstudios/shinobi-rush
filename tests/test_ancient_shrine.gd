@@ -33,6 +33,16 @@ func run(p_ck: Callable, root: Node) -> void:
 		if n is StaticBody2D:
 			body = n
 	ck.call("shrine: it is solid (has a collision body)", body != null)
+	var poly_w := 0.0
+	var poly_h := 0.0
+	if body != null and body.get_child_count() > 0:
+		var pts: PackedVector2Array = ((body.get_child(0) as CollisionShape2D).shape as ConvexPolygonShape2D).points
+		var bb := Rect2(pts[0], Vector2.ZERO)
+		for q in pts:
+			bb = bb.expand(q)
+		poly_w = bb.size.x
+		poly_h = bb.size.y
+	ck.call("shrine: collision covers the whole plinth footprint (nobody can stand under the roof)", poly_w >= 170.0 and poly_h >= 80.0, "%s x %s" % [poly_w, poly_h])
 	ck.call("shrine: its footprint is a nav obstacle", placed.obstacles().size() >= 1 and _has_obstacle(placed, pos))
 	placed.move(obj, pos + Vector2(40, 0), false)
 	ck.call("shrine: it can be moved", (obj.nodes[0] as Node2D).global_position.x > pos.x + 1.0 or (body != null and body.position.x > pos.x + 1.0))
