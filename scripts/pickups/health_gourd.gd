@@ -1,6 +1,7 @@
 class_name HealthGourd
 extends Node2D
-## Red health gourd pickup: floats and glows above the floor; touching it heals the player by HEAL.
+## Gourd pickup: floats and glows above the floor. kind "health" (red) restores 25% of max HP, kind "chakra" (blue)
+## restores 25% of max chakra, each only when the player is actually missing some.
 ##
 ## Art is PixelLab-generated (assets/pickups/health_gourd/): `gourd_NN.png` is the looping float/sway
 ## sequence of the gourd itself, `glow_NN.png` the looping red aura (drawn additively behind it) and
@@ -16,6 +17,13 @@ signal collected(amount: float)
 const DIR := "res://assets/pickups/health_gourd/"
 const HEAL := 25.0
 const GROUP := "health_pickup"
+const CHAKRA_GROUP := "chakra_pickup"
+## Share of the player's maximum a gourd gives back.
+const FRACTION := 0.25
+const KINDS := {
+	"health": {"dir": "res://assets/pickups/health_gourd/", "group": "health_pickup", "color": Color(1.0, 0.18, 0.1), "aura": Color(1.0, 0.5, 0.4)},
+	"chakra": {"dir": "res://assets/pickups/chakra_gourd/", "group": "chakra_pickup", "color": Color(0.15, 0.55, 1.0), "aura": Color(0.45, 0.8, 1.0)},
+}
 ## Floor-plane pick-up radius (the iso floor is squashed 2:1, so y is doubled before measuring).
 const PICKUP_RADIUS := 40.0
 const RESPAWN_SECONDS := 30.0
@@ -30,8 +38,9 @@ const GLOW_COLOR := Color(1.0, 0.18, 0.1)
 
 static var _cache: Dictionary = {}
 
+## "health" or "chakra"; set before the node enters the tree.
+var kind := "health"
 var available := true
-var heal_amount := HEAL
 var respawn_left := 0.0
 
 var _clock := 0.0
@@ -44,26 +53,28 @@ var _tween: Tween
 
 
 ## Frames of one layer ("gourd", "glow", "ember"), loaded once and shared by every gourd.
-static func frames(layer: String) -> Array:
-	if _cache.has(layer):
-		return _cache[layer]
+static func frames(layer: String, p_kind := "health") -> Array:
+	var key := p_kind + "/" + layer
+	if _cache.has(key):
+		return _cache[key]
+	var dir: String = KINDS[p_kind].dir
 	var list: Array = []
 	var i := 0
-	while ResourceLoader.exists(DIR + "%s_%02d.png" % [layer, i]):
-		list.append(load(DIR + "%s_%02d.png" % [layer, i]))
+	while ResourceLoader.exists(dir + "%s_%02d.png" % [layer, i]):
+		list.append(load(dir + "%s_%02d.png" % [layer, i]))
 		i += 1
-	_cache[layer] = list
+	_cache[key] = list
 	return list
 
 
 ## A still of the gourd for the builder's palette card and placement ghost.
-static func icon() -> Texture2D:
-	var list := frames("gourd")
+static func icon(p_kind := "health") -> Texture2D:
+	var list := frames("gourd", p_kind)
 	return list[0] if not list.is_empty() else null
 
 
 func _ready() -> void:
-	add_to_group(GROUP)
+	add_to_group(String(KINDS[kind].group))
 	_pool = Node2D.new()
 	_pool.name = "LightPool"
 	_pool.z_index = -1
@@ -110,14 +121,15 @@ func _apply_frames() -> void:
 	var breathe := 0.5 + 0.5 * sin(_clock * 3.1)
 	_glow.scale = Vector2.ONE * lerpf(1.25, 1.55, breathe)
 	_glow.rotation = _clock * 0.35  # the aura's painted sparks orbit the gourd
-	_glow.modulate = Color(1.0, 0.5, 0.4, lerpf(0.6, 1.0, breathe))  # deeper red: keeps the aura's pale sparks from reading pink
+	var aura: Color = KINDS[kind].aura
+	_glow.modulate = Color(aura.r, aura.g, aura.b, lerpf(0.6, 1.0, breathe))  # deeper red: keeps the aura's pale sparks from reading pink
 	_set_frame(_body, "gourd", GOURD_FPS)
 	_set_frame(_glow, "glow", GLOW_FPS)
 	_set_frame(_embers, "ember", EMBER_FPS, true)
 
 
 func _set_frame(s: Sprite2D, layer: String, fps: float, ping_pong := false) -> void:
-	var list := frames(layer)
+	var list := frames(layer, kind)
 	s.visible = not list.is_empty()
 	if not list.is_empty():
 		var n := int(_clock * fps)
@@ -126,6 +138,7 @@ func _set_frame(s: Sprite2D, layer: String, fps: float, ping_pong := false) -> v
 
 ## Pulsing pool of red light on the floor under the gourd (a squashed disc, bright core to clear edge).
 func _draw_pool() -> void:
+	var glow_color: Color = KINDS[kind].color
 	var pulse := 0.5 + 0.5 * sin(_clock * 3.1)
 	for i in 7:
 		var k := float(i) / 6.0
@@ -135,18 +148,21 @@ func _draw_pool() -> void:
 		for j in 24:
 			var t := TAU * float(j) / 24.0
 			pts.append(Vector2(cos(t) * r, sin(t) * r * 0.5))
-		_pool.draw_colored_polygon(pts, Color(GLOW_COLOR, a))
+		_pool.draw_colored_polygon(pts, Color(glow_color, a))
 	# Faint vertical beam of red light rising from the floor pool (the gold reference has one).
 	var beam_a := 0.16 + 0.07 * pulse
 	var bx := PackedVector2Array([Vector2(-17, 0), Vector2(17, 0), Vector2(9, -BEAM_HEIGHT), Vector2(-9, -BEAM_HEIGHT)])
-	_pool.draw_polygon(bx, PackedColorArray([Color(GLOW_COLOR, beam_a), Color(GLOW_COLOR, beam_a), Color(GLOW_COLOR, 0.0), Color(GLOW_COLOR, 0.0)]))
+	_pool.draw_polygon(bx, PackedColorArray([Color(glow_color, beam_a), Color(glow_color, beam_a), Color(glow_color, 0.0), Color(glow_color, 0.0)]))
 
 
 ## Is this gourd currently able to be taken by a player standing at `feet`?
 func can_collect(player: Node) -> bool:
-	if not available or not is_visible_in_tree() or not (player is Node2D) or not player.has_method("restore_health"):
+	var restore := "restore_chakra" if kind == "chakra" else "restore_health"
+	if not available or not is_visible_in_tree() or not (player is Node2D) or not player.has_method(restore):
 		return false
-	if float(player.get("health")) >= float(player.get("max_health")):
+	var have := "chakra" if kind == "chakra" else "health"
+	var cap := "max_chakra" if kind == "chakra" else "max_health"
+	if float(player.get(have)) >= float(player.get(cap)):
 		return false
 	var d: Vector2 = (player as Node2D).global_position - global_position
 	return Vector2(d.x, d.y * 2.0).length() <= PICKUP_RADIUS
@@ -159,9 +175,14 @@ func _try_collect() -> void:
 			return
 
 
-## Heal `player`, play the take-it animation and start the respawn timer. Returns the HP actually restored.
+## Refill `player` by FRACTION of their maximum, play the take-it animation and start the respawn timer.
+## Returns the amount actually restored (HP or chakra, depending on kind).
 func collect(player: Node) -> float:
-	var gained: float = player.call("restore_health", heal_amount)
+	var gained: float
+	if kind == "chakra":
+		gained = player.call("restore_chakra", float(player.get("max_chakra")) * FRACTION)
+	else:
+		gained = player.call("restore_health", float(player.get("max_health")) * FRACTION)
 	available = false
 	respawn_left = RESPAWN_SECONDS
 	collected.emit(gained)

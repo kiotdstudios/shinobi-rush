@@ -115,7 +115,7 @@ func run(ck: Callable, root: Node) -> void:
 	var base_objs := placed.objects.size()
 	var nb := WorldScale.BLOCKS.size()
 	var grass_total := (arena.get_node("WindGrassField") as WindGrassField).initial_tiles.size()
-	ck.call("builder: the five starting trees and every placeholder wall are editable objects", base_trees == 5 and base_objs == 5 + nb + grass_total + PlacedObjects.DEFAULT_GOURDS)
+	ck.call("builder: the five starting trees and every placeholder wall are editable objects", base_trees == 5 and base_objs == 5 + nb + grass_total + PlacedObjects.DEFAULT_GOURDS + PlacedObjects.DEFAULT_CHAKRA_GOURDS)
 	# a placeholder wall: pick, move (collision + nav follow), delete
 	var wb: Array = WorldScale.BLOCKS[1]
 	var wb_mid: Vector2 = (wb[0] as Vector2) + Vector2(0, -float((wb[1] as Vector2).y) * 0.5)
@@ -161,7 +161,7 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().physics_frame
 	await root.get_tree().physics_frame
 	ck.call("builder: reset brings the five starting trees back in place", _non_pickups(placed) == 5 + nb + grass_total and grove.trees.size() == 5 and _solid_at(arena, orig_pos + Vector2(0, -20)) and not arena.nav.is_walkable(orig_pos + Vector2(0, -20)))
-	ck.call("builder: reset also scatters a fresh set of health gourds", placed.objects.size() - _non_pickups(placed) == PlacedObjects.DEFAULT_GOURDS, str(placed.objects.size() - _non_pickups(placed)))
+	ck.call("builder: reset also scatters a fresh set of health and chakra gourds", placed.objects.size() - _non_pickups(placed) == PlacedObjects.DEFAULT_GOURDS + PlacedObjects.DEFAULT_CHAKRA_GOURDS, str(placed.objects.size() - _non_pickups(placed)))
 	editor.set_open(false)
 	base_trees = grove.trees.size()
 	base_objs = placed.objects.size()

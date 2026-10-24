@@ -859,6 +859,15 @@ func respawn() -> void:
 	respawned.emit(global_position)
 
 
+## Adds chakra (clamped to max_chakra). Returns the amount actually restored.
+func restore_chakra(amount: float) -> float:
+	var before := chakra
+	chakra = clampf(chakra + maxf(amount, 0.0), 0.0, max_chakra)
+	if chakra != before:
+		chakra_changed.emit(chakra, max_chakra)
+	return chakra - before
+
+
 func restore_health(amount: float) -> float:
 	var before := health
 	health = clampf(health + maxf(amount, 0.0), 0.0, max_health)

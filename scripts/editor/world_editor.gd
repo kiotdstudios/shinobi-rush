@@ -755,7 +755,7 @@ func _build_ui() -> void:
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "pickup":
-				b.icon = HealthGourd.icon()
+				b.icon = HealthGourd.icon(str(def.get("gourd", "health")))
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "tree":
@@ -1018,7 +1018,7 @@ func _reset_pressed() -> void:
 		return
 	_reset_armed = false
 	placed.load_dict({"version": 1, "items": []})
-	placed.scatter_gourds()  # the starting arena has its health gourds lying around
+	placed.scatter_defaults()  # the starting arena has its gourds lying around
 	selected = {}
 	_refresh()
 
