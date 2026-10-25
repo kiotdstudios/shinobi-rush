@@ -98,7 +98,15 @@ static func populate(arena: TrainingArena) -> int:
 	if arena == null or arena.placed == null:
 		return 0
 	var placed := arena.placed
+	# The layer is part of the saved layout once applied: the owner's edits (deleted or repainted tiles) stick
+	# instead of the section being laid again on every boot.
+	placed.dedupe_floor()
+	if placed.shrine_section_applied:
+		return 0
 	var lay := layout()
+	for item: Array in lay.floor:
+		for o in placed.floor_tiles_in_cell(item[1]):
+			placed.remove(o, false)  # an older save already holds these exact tiles
 	# Clear loose scenery (trees, rocks, old section props) from the courtyard footprint; the shrine is re-seated below.
 	for o: Dictionary in placed.objects.duplicate():
 		var kind: String = PlacedObjects.def_of(o.id).get("kind", "")
@@ -131,5 +139,6 @@ static func populate(arena: TrainingArena) -> int:
 	for item: Array in lay.floor:
 		if placed.can_place(item[0], item[1]) and not placed.add(item[0], item[1], false).is_empty():
 			count += 1
+	placed.shrine_section_applied = true
 	arena.rebuild_nav()
 	return count
