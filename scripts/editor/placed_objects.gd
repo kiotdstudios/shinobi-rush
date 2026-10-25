@@ -728,6 +728,45 @@ func floor_tiles_in_cell(cell: Vector2) -> Array:
 	return out
 
 
+## Centre of the 72 x 36 floor-diamond (centres at (36k, 18m), k and m of equal parity) nearest to p.
+static func lattice_center(p: Vector2) -> Vector2:
+	var best := Vector2.ZERO
+	var best_d := INF
+	var k0 := int(floor(p.x / 36.0))
+	var m0 := int(floor(p.y / 18.0))
+	for k in [k0, k0 + 1]:
+		for m in [m0, m0 + 1]:
+			if posmod(k - m, 2) != 0:
+				continue
+			var c := Vector2(36.0 * k, 18.0 * m)
+			var d := c.distance_squared_to(p)
+			if d < best_d:
+				best_d = d
+				best = c
+	return best
+
+
+## Every floor cell inside `area` that has no floor art on it (the white void). Water and tall props do not count as floor.
+func void_cells(area: Rect2) -> Array:
+	var covered := {}
+	for o in objects:
+		if is_floor_tile(o.id):
+			covered[lattice_center(o.pos as Vector2)] = true
+	var out: Array = []
+	var k_lo := int(ceil(area.position.x / 36.0))
+	var k_hi := int(floor(area.end.x / 36.0))
+	var m_lo := int(ceil(area.position.y / 18.0))
+	var m_hi := int(floor(area.end.y / 18.0))
+	for m in range(m_lo, m_hi + 1):
+		for k in range(k_lo, k_hi + 1):
+			if posmod(k - m, 2) != 0:
+				continue
+			var c := Vector2(36.0 * k, 18.0 * m)
+			if not covered.has(c):
+				out.append(c)
+	return out
+
+
 ## The ground tile (any kind of floor tile) sitting on the floor cell centred at `cell`, or {}.
 func ground_at(cell: Vector2) -> Dictionary:
 	for o in floor_tiles_in_cell(cell):

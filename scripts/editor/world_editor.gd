@@ -53,6 +53,10 @@ var hud_snap_button: Button = null
 const DIM_TYPES: Array[String] = ["Blightwood lights", "Blightwood rocks", "Ashen fire", "Volcanic trees", "Trees", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
 var show_grid := false
 var void_sheet: Node2D = null
+## Set false only by tests: save/publish normally refuse while white void is left in the level.
+var void_check := true
+## Cell the last blocked save jumped to (INF = none); drawn as a red diamond on the white void.
+var void_focus := Vector2.INF
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false
 var _grid_button: Button = null
@@ -104,6 +108,10 @@ class VoidSheet extends Node2D:
 	func _draw() -> void:
 		if editor.arena != null:
 			draw_rect(editor.arena.ground_rect().grow(400.0), Color.WHITE)
+		if editor.void_focus != Vector2.INF:
+			var c := editor.void_focus
+			var pts := PackedVector2Array([c + Vector2(0, -18), c + Vector2(36, 0), c + Vector2(0, 18), c + Vector2(-36, 0), c + Vector2(0, -18)])
+			draw_polyline(pts, Color("#e02020"), 4.0)
 
 
 func setup(a: TrainingArena, p: PlacedObjects) -> void:
@@ -122,6 +130,7 @@ func _ready() -> void:
 	void_sheet = VoidSheet.new(self)
 	arena.add_child(void_sheet)
 	_build_ui()
+	_show_void(true)
 	set_open(false)
 	if OS.has_feature("web"):
 		var query := str(JavaScriptBridge.eval("window.location.search", true))
@@ -230,7 +239,6 @@ func set_open(v: bool) -> void:
 	_set_camera_free(v)
 	panel.visible = v
 	tab.visible = not v
-	_show_void(v)
 	var hud := hud_bar()
 	if hud != null:
 		hud.set_edit_mode(v)
@@ -242,6 +250,7 @@ func set_open(v: bool) -> void:
 	_refresh()
 
 
+## The default stone floor is always hidden (editor AND play): white means "no art laid here yet".
 func _show_void(on: bool) -> void:
 	if void_sheet != null:
 		void_sheet.visible = on
@@ -519,9 +528,38 @@ func release() -> void:
 
 ## Explicit save: writes the layout to the game's save slot (it also autosaves on every edit) and says so.
 func save_now() -> bool:
+	if _void_blocks_save():
+		return false
 	var ok := placed.save()
 	_flash("SAVED  %d objects" % placed.objects.size() if ok else "SAVE FAILED")
 	return ok
+
+
+## Save checker: any floor cell with no art on it shows as white void. Returns true (and refuses the save) when
+## there is any; the view jumps to the void cell nearest the current view and marks it with a red diamond.
+func _void_blocks_save() -> bool:
+	if not void_check or arena == null:
+		return false
+	var cells := placed.void_cells(arena.bounds)
+	if cells.is_empty():
+		void_focus = Vector2.INF
+		return false
+	var cam := _camera()
+	var from := cam.get_screen_center_position() if cam != null else Vector2.ZERO
+	var best: Vector2 = cells[0]
+	for c in cells:
+		if (c as Vector2).distance_squared_to(from) < best.distance_squared_to(from):
+			best = c
+	void_focus = best
+	if not open:
+		set_open(true)
+	if cam != null:
+		cam.offset += best - cam.get_screen_center_position()
+		cam.force_update_scroll()
+	if void_sheet != null:
+		void_sheet.queue_redraw()
+	_flash("SAVE BLOCKED: %d white void cells have no art. View jumped to the nearest one." % cells.size())
+	return true
 
 
 ## Hand the layout over as a file (web: browser download; desktop: copied to the clipboard).
@@ -573,6 +611,8 @@ static func _push_outcome(code: int, output_text: String, object_count: int) -> 
 ## rejected push (e.g. a protected branch requiring a PR) is reported plainly, not retried.
 func publish_to_github() -> bool:
 	if OS.has_feature("web"):
+		return false
+	if _void_blocks_save():
 		return false
 	var abs_path := ProjectSettings.globalize_path(REPO_LAYOUT_PATH)
 	DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
