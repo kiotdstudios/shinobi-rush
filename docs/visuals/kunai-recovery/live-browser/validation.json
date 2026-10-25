@@ -1,0 +1,23 @@
+{
+  "url": "https://kiotdstudios.github.io/shinobi-rush/?kunai=recovery",
+  "tested_at": "2026-10-25T14:51:44.802Z",
+  "build_sha": "2faebf3794347ac93d1b2ed8acff9e924c794a90",
+  "checks": {
+    "ready": true,
+    "half": true,
+    "pause": true,
+    "normal": true,
+    "character_no_drop": true,
+    "miss_falling": true,
+    "miss_settles": true,
+    "collect_one": true,
+    "no_duplicate": true,
+    "surface_sticks": true,
+    "surface_settles": true,
+    "surface_collect": true,
+    "bandit_miss_recovers": true,
+    "bandit_collect": true,
+    "no_errors": true
+  },
+  "errors": []
+}

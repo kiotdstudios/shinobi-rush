@@ -1,9 +1,9 @@
 # ORDER — Recoverable physical kunai pickups
 - Agent: Codex
 - Owner: Codex
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1
-- Branch/PR: codex/recoverable-kunai
+- Branch/PR: codex/recoverable-kunai / https://github.com/kiotdstudios/shinobi-rush/pull/198 (merged)
 - Dependencies: approved black kunai, gourd pickup/inventory, player and bandit projectiles
 
 ## Objective
@@ -23,3 +23,6 @@ No drops on character damage. Recoverable misses refund one ammo only once, neve
 
 ## Handoff / Notes
 Reuse approved PNG with code-driven nearest-filtered rigid-body motion; no new AI bitmap generation required. This owner request supersedes unrelated historical queued art orders.
+
+## Completion
+PR #198 merged as `2faebf3794347ac93d1b2ed8acff9e924c794a90`. Main [Godot CI 40202842227](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40202842227) fully succeeded, including deploy/postdeploy/gate; 2867 native tests passed and 351 scripts/24 scenes validated without failure. Exact-SHA public review at 2026-10-25T14:51:44.802Z passed 15/15 with zero page/console errors. Actual live pickup/bounce/ground/surface/Bandit-drop screenshots inspected. Review: https://kiotdstudios.github.io/shinobi-rush/?kunai=recovery&v=2faebf37. Final report: orders/Codex/reports/2026-10-25-kunai-recovery-report.md.

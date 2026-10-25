@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-25-kunai-recovery.md
 - Date: 2026-10-25 (America/New_York)
-- Final status: REVIEW — locally tested, PR / canonical publication pending
-- Commit / PR: pending implementation commit
+- Final status: DONE — merged, deployed and public-browser verified
+- Commit / PR: implementation f76670f97603aa01f9255661e018528bf96d6dd5; final head f50d55ead93e807da785b2b6ffc767d5bc723241; PR #198 merged as 2faebf3794347ac93d1b2ed8acff9e924c794a90
 
 ## Work completed
 Implemented the owner's kunai pickup/recovery rules for player and Bandit projectiles, using the existing approved black kunai PNG. No new bitmap generation or PixelLab credit spend. White floor light, halo and sharp glints are independent of the black sprite. Code-driven fall/tumble/rotation/two bounces settle smoothly into a smaller ground-aligned collectible. Two original synthesized metallic clinks accompany contact. Timing and source metadata: docs/visuals/kunai-recovery/animation.json.
@@ -47,7 +47,7 @@ Initial review background obscured its lower white light pool; moved review-only
 None.
 
 ## Outstanding work / next steps
-Reviewed PR CI and merge, main deployment/postdeploy, exact-SHA public visual/functional proof and final report. Until then **NOT LIVE**. Optional future work: broader loot persistence across map unloads; no persistence/save redesign is included here.
+No outstanding work for the requested pickup/recovery delivery. Optional future work: broader loot persistence across map unloads; no persistence/save redesign is included here.
 
 ## Main/editor integration — 2026-10-25
 PR https://github.com/kiotdstudios/shinobi-rush/pull/198; original implementation `f76670f97603aa01f9255661e018528bf96d6dd5`. Main advanced to Aki's map-editor merge `bd4a211448b7dfa37583a2c74cc2e131647d0a64`. Integrated via `git merge --no-commit --no-ff origin/main`, no conflicts. Added the pickup visibility guard so hidden/frozen editor players cannot auto-collect placed loot; no edits to Aki's editor implementation beyond merging it.
@@ -56,3 +56,14 @@ Before integration commit: Godot import passed; map-editor + all kunai/inventory
 
 ## Simultaneous-drop guard — 2026-10-25
 Initial integrated PR CI 40200405594 passed its native build: **2865/0** tests and 351 scripts/24 scenes validated. Before publication, tightened the spent-pickup cap to ignore nodes already queued for deletion and remove excess old entries in a loop. This prevents several settle events in the same frame from repeatedly choosing the same pending deletion. Added two outcome tests at a full 64-blade population, before and after deferred deletion. Before this commit: focused map-editor/item regressions **254/0** (both cap assertions passed), debug Web export to `../kunai-recovery-batch-web-20261025` passed, actual Web proof **15/15** with no console/page errors (batch-browser/validation.json), orders validator and diff check passed. No visual/timing changes; existing GIFs remain representative.
+
+
+## Final canonical live verification — 2026-10-25
+- Runtime PR: https://github.com/kiotdstudios/shinobi-rush/pull/198 (merged). Initial implementation `f76670f9`, integrated head `73819121`, final tested head `f50d55ea`; merge/live SHA `2faebf3794347ac93d1b2ed8acff9e924c794a90`.
+- Final PR CI https://github.com/kiotdstudios/shinobi-rush/actions/runs/40201566140 succeeded: **2867 tests passed /0 failed**; **351 scripts /24 scenes**, zero validation failures.
+- Main workflow https://github.com/kiotdstudios/shinobi-rush/actions/runs/40202842227 fully **success**, including pre-deploy browser, GitHub Pages, post-deploy live smoke and gate. Main native run also **2867/0**, 351 scripts/24 scenes validated. Receipt: live-browser/deployment.json.
+- Before public proof, `build-info.json` matched the exact merged SHA and main run. Actual public command: `node docs/visuals/kunai-recovery/browser-proof.mjs https://kiotdstudios.github.io/shinobi-rush/ docs/visuals/kunai-recovery/live-browser`. **15/15 checks passed**, no page/console errors, at 2026-10-25T14:51:44.802Z; local time 2026-10-25T10:51:44.802000-04:00 (America/New_York). Receipt: live-browser/validation.json.
+- Viewed and inspected all five actual public screenshots: floating white pickup; bounce/tumble; grounded white-glow collectible; brief surface embed; Bandit miss resting on ground. No missing art, overlap or repeated collection. Character hit produced no recovery; player and Bandit misses became one-use pickups; accessible surface recovery and collection passed. Normal/half/pause worked. Clink data and both contact events are covered by native tests; no subjective headphone listening claim.
+- Live review: https://kiotdstudios.github.io/shinobi-rush/?kunai=recovery&v=2faebf37. Normal/half-speed GIFs are on main at docs/visuals/kunai-recovery.
+- Final delivery includes white gourd-style absorption; one-ammo refund with no spent-pickup respawn; kunai-only capacity 10; duplicate/full-bag/hidden-editor guards; impact-side collision/navigation accessibility; bounded simultaneous drops. Character-hit damage and existing dodge/jump/substitution outcomes preserved.
+- Final report/evidence-only follow-up uses normal PR review and does not alter the already verified runtime.
