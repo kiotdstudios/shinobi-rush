@@ -116,7 +116,7 @@ func run(p_ck: Callable, root: Node) -> void:
 		k2.step(1.0 / 60.0)
 		if k2.hit_result != "":
 			break
-	ck.call("kunai: misses and expires at max range", k2.hit_result == "range" or k2.hit_result == "wall")
+	ck.call("kunai: misses transition to ground/surface recovery", k2.hit_result == "range" or k2.hit_result == "wall")
 	dummy.queue_free()
 
 	# menu
@@ -132,7 +132,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	ck.call("menu: Cross picks the highlighted item", menu.placing)
 	menu.place_item_on("down")
 	ck.call("menu: pressing a D-pad direction puts the item there", player.inventory.slot_item("down") == "kunai" and not menu.placing)
-	menu.cursor = 4  # empty entry
+	menu.cursor = menu.entries().find("")  # empty entry
 	menu.accept()
 	menu.place_item_on("down")
 	ck.call("menu: the (empty) entry clears a slot", player.inventory.slot_item("down") == "")

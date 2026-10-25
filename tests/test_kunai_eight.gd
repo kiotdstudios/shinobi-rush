@@ -72,7 +72,7 @@ func run(ck: Callable, root: Node) -> void:
 	var held_frame := visual.actor.current_frame()
 	var held_grip := visual.weapon_layer.grip.position
 	visual._process(0)
-	ck.call("kunai eight: struck pose keeps attached weapon",visual.weapon_visible() and visual.actor.current_frame()==held_frame and visual.weapon_layer.grip.position==held_grip and not visual.actor.sprite.is_playing())
+	ck.call("kunai eight: struck plays the unarmed hit_react art, weapon layer hidden",not visual.weapon_visible() and visual.actor.anim_id=="hit_react")
 	enemy.state=Bandit.State.PATROL
 	enemy.velocity=Vector2.RIGHT*enemy.move_speed
 	visual._process(0)
@@ -82,7 +82,7 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("kunai eight: threaten has authored guard",visual.weapon_visible() and visual.actor.anim_id=="kunai_guard")
 	enemy.state=Bandit.State.DEAD
 	visual._process(0)
-	ck.call("kunai eight: death clears weapon",not visual.weapon_visible() and not visual.actor.visible)
+	ck.call("kunai eight: death clears weapon and plays the death art",not visual.weapon_visible() and visual.actor.visible and visual.actor.anim_id=="death")
 	player.visual.set_pose(Vector2.DOWN,false,false)
 	ck.call("kunai eight: player locomotion clears all attachments",not player.visual.weapon_visible())
 	main.queue_free()

@@ -159,12 +159,15 @@ const CATALOG := {
 	"temple_floor_corner_right": {"label": "Corner Right", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_right"},
 	"temple_floor_corner_bottom": {"label": "Corner Bottom", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_bottom"},
 	"temple_floor_corner_left": {"label": "Corner Left", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_left"},
+	"kunai": {"label": "Kunai (white glow)", "kind": "pickup", "gourd": "kunai"},
 	"health_gourd": {"label": "Health gourd +25%", "kind": "pickup", "gourd": "health"},
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
+	"tag_bomb": {"label": "Tag bomb (explosive)", "kind": "pickup", "gourd": "tag_bomb"},
+	"smoke_tag_bomb": {"label": "Smoke tag bomb", "kind": "pickup", "gourd": "smoke_tag_bomb"},
 	"paper_tag": {"label": "Paper tag (throwable bomb)", "kind": "pickup", "gourd": "paper_tag"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
+const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -219,6 +222,16 @@ var objects: Array[Dictionary] = []
 var _serial := 0
 ## SAVE_VERSION of the layout last loaded (0 = none); the arena scatters the default gourds when it is below 5.
 var loaded_version := 0
+## True once the authored starting-area layer is part of this layout (it is saved, so the owner's edits to it stick).
+var shrine_section_applied := false
+## Undo / redo. Each group is one editor action (a click, a whole paint stroke, a fill) stored as small ops:
+## ["add", id, pos] | ["remove", id, pos] | ["move", id, from, to]. Nothing else is stored, so it stays cheap.
+const UNDO_LIMIT := 200
+var _undo: Array = []
+var _redo: Array = []
+var _pending: Array = []
+var _replaying := false
+var _recording := true
 var hidden_types: Dictionary = {}
 
 
@@ -371,6 +384,38 @@ static func art_rect(id: String, pos: Vector2) -> Rect2:
 	return Rect2((at[1] as Vector2) + Vector2(u.position), Vector2(u.size))
 
 
+static var _alpha_images := {}
+
+
+## True when `point` lands on a visible pixel of the object's art (within `reach` px, so thin pieces stay clickable).
+## Pieces with no texture (placeholder blocks) fall back to their drawn volume.
+static func art_pixel_hit(id: String, pos: Vector2, point: Vector2, reach := 2) -> bool:
+	var at := art_texture(id, pos)
+	var tex: Texture2D = at[0]
+	if tex == null:
+		return hit_rect(id, pos).has_point(point)
+	var local := point - (at[1] as Vector2)
+	if not Rect2(Vector2.ZERO, tex.get_size()).grow(float(reach)).has_point(local):
+		return false
+	if not _alpha_images.has(id):
+		var img := tex.get_image()
+		if img != null and img.is_compressed():
+			img.decompress()
+		_alpha_images[id] = img
+	var image: Image = _alpha_images[id]
+	if image == null:
+		return true
+	var cx := int(floor(local.x))
+	var cy := int(floor(local.y))
+	for dy in range(-reach, reach + 1):
+		for dx in range(-reach, reach + 1):
+			var x := cx + dx
+			var y := cy + dy
+			if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height() and image.get_pixel(x, y).a > 0.1:
+				return true
+	return false
+
+
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
 static func hit_rect(id: String, pos: Vector2) -> Rect2:
 	var def := def_of(id)
@@ -459,7 +504,11 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		if field == null:
 			return {}
 		var sprite := field.make_editable_sprite(id, pos)
-		arena.add_child(sprite)
+		if bool(def.get("tall", false)):
+			arena.add_child(sprite)
+		else:
+			# Flat grass is floor: it lives on the Ground layer so fences, walls and actors always draw over it.
+			arena.get_node("Ground").add_child(sprite)
 		nodes = [sprite]
 	elif def.kind == "blight_light":
 		var fixture := BlightwoodLight.new()
@@ -528,6 +577,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		nodes = [tree, _make_trunk(pos)]
 	var obj := {"id": id, "pos": pos, "nodes": nodes}
 	objects.append(obj)
+	_record(["add", id, pos])
 	_apply_visibility(obj)
 	if commit:
 		_changed()
@@ -704,15 +754,72 @@ func set_type_visible(category: String, shown: bool) -> void:
 			_apply_visibility(obj)
 
 
+## True for a floor-layer object: ground tiles and flat (non-tall) grass tiles. They replace each other.
+static func is_floor_tile(id: String) -> bool:
+	var def := def_of(id)
+	return def.get("kind", "") == "ground" or (def.get("kind", "") == "grass" and not bool(def.get("tall", false)))
+
+
+## Every floor-layer object whose centre lies inside the floor cell centred at `cell`. Tiles that sit off the
+## 72 x 36 lattice (the authored starting area) still count: exactly one lattice tile centre falls in each cell.
+func floor_tiles_in_cell(cell: Vector2) -> Array:
+	var out: Array = []
+	for o in objects:
+		if is_floor_tile(o.id):
+			var d: Vector2 = (o.pos as Vector2) - cell
+			if absf(d.x) / 36.0 + absf(d.y) / 18.0 < 1.0:
+				out.append(o)
+	return out
+
+
+## Centre of the 72 x 36 floor-diamond (centres at (36k, 18m), k and m of equal parity) nearest to p.
+static func lattice_center(p: Vector2) -> Vector2:
+	var best := Vector2.ZERO
+	var best_d := INF
+	var k0 := int(floor(p.x / 36.0))
+	var m0 := int(floor(p.y / 18.0))
+	for k in [k0, k0 + 1]:
+		for m in [m0, m0 + 1]:
+			if posmod(k - m, 2) != 0:
+				continue
+			var c := Vector2(36.0 * k, 18.0 * m)
+			var d := c.distance_squared_to(p)
+			if d < best_d:
+				best_d = d
+				best = c
+	return best
+
+
+## Every floor cell inside `area` that has no floor art on it (the white void). Water and tall props do not count as floor.
+func void_cells(area: Rect2) -> Array:
+	var covered := {}
+	for o in objects:
+		if is_floor_tile(o.id):
+			covered[lattice_center(o.pos as Vector2)] = true
+	var out: Array = []
+	var k_lo := int(ceil(area.position.x / 36.0))
+	var k_hi := int(floor(area.end.x / 36.0))
+	var m_lo := int(ceil(area.position.y / 18.0))
+	var m_hi := int(floor(area.end.y / 18.0))
+	for m in range(m_lo, m_hi + 1):
+		for k in range(k_lo, k_hi + 1):
+			if posmod(k - m, 2) != 0:
+				continue
+			var c := Vector2(36.0 * k, 18.0 * m)
+			if not covered.has(c) and area.encloses(Rect2(c - Vector2(36, 18), Vector2(72, 36))):
+				out.append(c)
+	return out
+
+
 ## The ground tile (any kind of floor tile) sitting on the floor cell centred at `cell`, or {}.
 func ground_at(cell: Vector2) -> Dictionary:
-	for o in objects:
-		if def_of(o.id).kind == "ground" and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
+	for o in floor_tiles_in_cell(cell):
+		if def_of(o.id).kind == "ground":
 			return o
 	return {}
 
 
-## Lay `id` on the floor cell centred at `cell`, replacing a different tile already there.
+## Lay `id` on the floor cell centred at `cell`, replacing whatever floor tile (ground or flat grass) is already there.
 ## Returns true when something changed. Never commits: the caller does one `_changed()` after a whole stroke.
 func paint_cell(id: String, cell: Vector2) -> bool:
 	var def := def_of(id)
@@ -720,12 +827,12 @@ func paint_cell(id: String, cell: Vector2) -> bool:
 		return false
 	if not arena.bounds.encloses(Rect2(cell - Vector2(36, 18), Vector2(72, 36))):
 		return false
-	if def.kind == "ground":
-		var old := ground_at(cell)
-		if not old.is_empty():
-			if old.id == id:
-				return false
-			remove(old, false)
+	if is_floor_tile(id):
+		var old := floor_tiles_in_cell(cell)
+		if old.size() == 1 and old[0].id == id and (old[0].pos as Vector2).distance_squared_to(cell) < 4.0:
+			return false
+		for o in old:
+			remove(o, false)
 	else:
 		for o in objects:
 			if o.id == id and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
@@ -733,10 +840,28 @@ func paint_cell(id: String, cell: Vector2) -> bool:
 	return not add(id, cell, false).is_empty()
 
 
+## Drop floor tiles stacked exactly on top of each other (older saves re-added the starting area on every boot).
+func dedupe_floor() -> int:
+	var seen := {}
+	var dropped := 0
+	for i in range(objects.size() - 1, -1, -1):
+		var o: Dictionary = objects[i]
+		if not is_floor_tile(o.id):
+			continue
+		var key := Vector2i(roundi(o.pos.x), roundi(o.pos.y))
+		if seen.has(key):
+			remove(o, false)
+			dropped += 1
+		else:
+			seen[key] = true
+	return dropped
+
+
 func remove(obj: Dictionary, commit := true) -> void:
 	if not objects.has(obj):
 		return
 	objects.erase(obj)
+	_record(["remove", str(obj.id), obj.pos])
 	var def := def_of(obj.id)
 	if def.kind == "grass":
 		(arena.get_node("WindGrassField") as WindGrassField).removed_editable(obj.id)
@@ -755,6 +880,7 @@ func remove(obj: Dictionary, commit := true) -> void:
 func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 	if not objects.has(obj):
 		return
+	_record(["move", str(obj.id), obj.pos, pos])
 	obj.pos = pos
 	var def := def_of(obj.id)
 	var nodes: Array = obj.nodes
@@ -787,34 +913,46 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 
 ## Topmost object under a world point: the solid base wins over the (larger) picture so crowded trees stay pickable.
 func hit_test(point: Vector2) -> Dictionary:
-	# Solid props win before grass; hiding a type lets the owner pick what is underneath it.
-	for picture: bool in [false, true]:
-		for i in range(objects.size() - 1, -1, -1):
-			var o := objects[i]
-			if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
-				continue
-			var rect := hit_rect(o.id, o.pos) if picture else footprint_rect(o.id, o.pos).grow(10.0)
-			if rect.has_point(point):
-				return o
+	# Tight picking (owner 2026-10-24: the old click boxes were far bigger than the art and the wrong assets got
+	# selected / deleted). A prop is hit only where its picture has visible pixels (a 2px forgiveness ring), or on
+	# its solid footprint. Overlaps: the piece drawn in front (larger y) wins, then the one placed last.
+	var hit: Dictionary = {}
+	var hit_y := -INF
+	for i in objects.size():
+		var o := objects[i]
+		if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
+			continue
+		if not (art_pixel_hit(o.id, o.pos, point) or footprint_rect(o.id, o.pos).has_point(point)):
+			continue
+		if (o.pos as Vector2).y >= hit_y:
+			hit_y = (o.pos as Vector2).y
+			hit = o
+	if not hit.is_empty():
+		return hit
 	var closest: Dictionary = {}
 	var distance := INF
 	for o in objects:
 		if def_of(o.id).kind != "grass" or not type_visible(o.id):
 			continue
-		if hit_rect(o.id, o.pos).has_point(point):
+		if art_pixel_hit(o.id, o.pos, point):
 			var d := point.distance_squared_to(o.pos)
 			if d < distance:
 				distance = d
 				closest = o
 	if not closest.is_empty():
 		return closest
+	# Overlapping floor tiles (the off-lattice starting area next to painted ones): the nearest centre wins.
+	var best: Dictionary = {}
+	var best_norm := INF
 	for i in range(objects.size() - 1, -1, -1):
 		var o := objects[i]
 		if def_of(o.id).kind == "ground" and type_visible(o.id):
 			var delta: Vector2 = point - o.pos
-			if absf(delta.x) / 36.0 + absf(delta.y) / 18.0 <= 1.0:
-				return o
-	return {}
+			var norm := absf(delta.x) / 36.0 + absf(delta.y) / 18.0
+			if norm <= 1.0 and norm < best_norm - 0.0001:
+				best_norm = norm
+				best = o
+	return best
 
 
 ## BLOCKS-style entries [pos, footprint, height] for the bandit nav.
@@ -861,7 +999,7 @@ func to_dict() -> Dictionary:
 	var items: Array = []
 	for o in objects:
 		items.append({"id": o.id, "x": snappedf(o.pos.x, 0.01), "y": snappedf(o.pos.y, 0.01)})
-	return {"version": SAVE_VERSION, "items": items}
+	return {"version": SAVE_VERSION, "shrine_section": shrine_section_applied, "items": items}
 
 
 func to_json_string() -> String:
@@ -902,8 +1040,11 @@ func save() -> bool:
 
 ## Rebuild a layout. Entries with an unknown id, bad numbers, outside the arena or on top of the spawn are skipped.
 func load_dict(data: Dictionary) -> int:
+	var was_recording := _recording
+	_recording = false
 	clear_all(false)
 	loaded_version = int(data.get("version", 1))
+	shrine_section_applied = bool(data.get("shrine_section", false))
 	if int(data.get("version", 1)) < 2:
 		for i in WorldScale.TREE_POSITIONS.size():
 			add("tree_%d" % (i + 1), WorldScale.TREE_POSITIONS[i], false)
@@ -929,6 +1070,8 @@ func load_dict(data: Dictionary) -> int:
 			continue
 		if not add(id, pos, false).is_empty():
 			made += 1
+	_recording = was_recording
+	clear_history()
 	_changed(false)
 	return made
 
@@ -1070,7 +1213,107 @@ func load_default_from_repo(path := DEFAULT_LAYOUT_PATH) -> int:
 
 
 func _changed(write := true) -> void:
+	_flush_pending()
 	if arena != null:
 		arena.rebuild_nav()
 	if write and autosave:
 		save()
+
+
+# ------------------------------------------------------------------ undo / redo
+func _record(op: Array) -> void:
+	if _replaying or not _recording:
+		return
+	_pending.append(op)
+	_redo.clear()
+
+
+func _flush_pending() -> void:
+	if _pending.is_empty():
+		return
+	_undo.append(_pending)
+	_pending = []
+	if _undo.size() > UNDO_LIMIT:
+		_undo.pop_front()
+
+
+func clear_history() -> void:
+	_undo.clear()
+	_redo.clear()
+	_pending.clear()
+
+
+func can_undo() -> bool:
+	return not _undo.is_empty() or not _pending.is_empty()
+
+
+func can_redo() -> bool:
+	return not _redo.is_empty()
+
+
+func _find_exact(id: String, pos: Vector2) -> Dictionary:
+	for i in range(objects.size() - 1, -1, -1):
+		var o := objects[i]
+		if o.id == id and (o.pos as Vector2).distance_squared_to(pos) < 0.25:
+			return o
+	return {}
+
+
+## Undo the last editor action. Returns false when there is nothing to undo.
+func undo() -> bool:
+	_flush_pending()
+	if _undo.is_empty():
+		return false
+	var group: Array = _undo.pop_back()
+	_replaying = true
+	for i in range(group.size() - 1, -1, -1):
+		var op: Array = group[i]
+		match op[0]:
+			"add":
+				var o := _find_exact(op[1], op[2])
+				if not o.is_empty():
+					remove(o, false)
+			"remove":
+				add(op[1], op[2], false)
+			"move":
+				var o2 := _find_exact(op[1], op[3])
+				if not o2.is_empty():
+					move(o2, op[2], false)
+	_replaying = false
+	_redo.append(group)
+	_changed()
+	return true
+
+
+func redo() -> bool:
+	if _redo.is_empty():
+		return false
+	var group: Array = _redo.pop_back()
+	_replaying = true
+	for op: Array in group:
+		match op[0]:
+			"add":
+				add(op[1], op[2], false)
+			"remove":
+				var o := _find_exact(op[1], op[2])
+				if not o.is_empty():
+					remove(o, false)
+			"move":
+				var o2 := _find_exact(op[1], op[2])
+				if not o2.is_empty():
+					move(o2, op[3], false)
+	_replaying = false
+	_undo.append(group)
+	_changed()
+	return true
+
+
+## Lay `id` (a ground or flat-grass tile) on every floor cell that has no art. One undo step. Returns how many were laid.
+func fill_void(id: String, area: Rect2) -> int:
+	var made := 0
+	for c: Vector2 in void_cells(area):
+		if paint_cell(id, c):
+			made += 1
+	if made > 0:
+		_changed()
+	return made

@@ -4,7 +4,7 @@ PixelLab reference recreation from the owner's supplied image. Native 512x448 ar
 
 Four extracted hanging-flower/vine bands bend by at most one native pixel with fixed attachment regions. The original PixelLab stone pixels stay fixed. Central orange inlays have a12second emissive breath, with a separate additive halo. Three independently seeded ForestFireflies groups (14each,42total) reuse the existing approved PixelLab firefly atlas. Soft procedural god rays drift independently. These are continuous runtime layer animations, not AI-generated full-structure frames. The preview samples at24FPS.
 
-Builder: Dynamic shrine filter / Ancient Flame Shrine. Decorative, nonblocking landmark; move/delete/save/load use the existing builder. Existing shelter and default map stay unchanged. Placement dimensions protect nearby actors during editing; this is not a gameplay shrine interaction or traversal feature.
+Builder: Dynamic shrine filter / Ancient Flame Shrine. Solid, climbable landmark (see docs/visuals/shrine-elevation/): the stone and glow art are partitioned pixel for pixel into depth layers (stone_<layer>.png, emission_<layer>.png, regenerated with make_layers.py) that sort per vertical strip; the staircase raises the player by a logical elevation, the platform is walkable around the central monument; move/delete/save/load use the existing builder. Existing shelter and default map stay unchanged. Placement dimensions protect nearby actors during editing; the shrine is traversal, not an interaction.
 
 Review: canonical game URL with ?shrine=review. Normal, Half speed, Pause, Step, Glow, Vines, Fireflies, God rays. Default half speed. Source geometry/pulse/breeze periods are stable; independently moving insects do not share a short loop.
 

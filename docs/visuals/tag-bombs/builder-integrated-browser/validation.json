@@ -1,0 +1,19 @@
+{
+  "url": "http://127.0.0.1:62805/?bombs=review",
+  "tested_at": "2026-10-25T08:38:40.551Z",
+  "checks": {
+    "ready": true,
+    "half": true,
+    "pause": true,
+    "normal": true,
+    "collected": true,
+    "explosive_lands": true,
+    "explosive_detonates": true,
+    "smoke_lands": true,
+    "smoke_detonates": true,
+    "smoke_no_damage": true,
+    "smoke_cleanup": true,
+    "no_errors": true
+  },
+  "errors": []
+}

@@ -1,0 +1,2898 @@
+{
+  "schema": 1,
+  "character": "player",
+  "frame_size": [
+    128,
+    128
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "direction_semantics": "Actor facing; gameplay knockback vector is independent.",
+  "gameplay_bound": false,
+  "hide_weapon_layer": true,
+  "shadow_baked": false,
+  "animations": {
+    "hit_react": {
+      "loop": false,
+      "root_motion": "none; world displacement belongs to gameplay",
+      "nominal_duration_s": 0.3333333333333333,
+      "timing_integration": "Sample normalized progress from the existing gameplay timer; nominal art FPS does not replace hitstop/stun/respawn rules.",
+      "directions": {
+        "S": {
+          "frame_count": 8,
+          "fps": 24,
+          "duration_s": 0.3333333333333333,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 4,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            6,
+            7
+          ],
+          "hold_frame": null,
+          "job_id": "b1ea1909-b1f7-4fca-bec3-33d32932aedb",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "frame_hashes": [
+            "2664209e908d59afc6bacbf16230a6316c5508fb1c97914676330e37803b2a6a",
+            "1cf8828c68e4bbbc9b6f4244e10622ee3b7bf0259be3daca2ba9dcd1f6ed465c",
+            "b77f0f638badba837b87b4ce09af3e0215e94276be06850305122d79f8480225",
+            "beadfa6110a4823712a0dd2693d8ac8af1eea06e1b210f5aceff2e6a52944484",
+            "61407cb83d7ee004a84f821038c599040b712520689851fc84221278917d5dc2",
+            "60e639c17519692f8bd08bcdec9a84cb7676ea2fc70c7e9322dafe6e37466c3a",
+            "b65ed59fb1a9bb3c23f58f55481867be0001c672ac96047141676ea5a67eff4d",
+            "14825e66d4edee60f8d5cc708c5f014c668034715d94bb8f7dea97361f9a6edf"
+          ],
+          "alpha_bounds": [
+            [
+              36,
+              13,
+              92,
+              116
+            ],
+            [
+              37,
+              17,
+              90,
+              115
+            ],
+            [
+              36,
+              21,
+              90,
+              115
+            ],
+            [
+              35,
+              23,
+              91,
+              115
+            ],
+            [
+              37,
+              20,
+              89,
+              115
+            ],
+            [
+              38,
+              17,
+              88,
+              115
+            ],
+            [
+              40,
+              14,
+              88,
+              116
+            ],
+            [
+              40,
+              13,
+              88,
+              116
+            ]
+          ]
+        },
+        "SE": {
+          "frame_count": 8,
+          "fps": 24,
+          "duration_s": 0.3333333333333333,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 4,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            6,
+            7
+          ],
+          "hold_frame": null,
+          "job_id": "5b8345e5-f708-4396-8fbd-37458ab18ebc",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "frame_hashes": [
+            "72033924eba6444de50515683525390acaa612c00a0698e491c23ce13d833489",
+            "335d3e9513b29e8b35bab2077bb247399728f8c39c3e8166ec74580e18b2be0a",
+            "318765e6d312baf84ec4d57a859ddb1e50afd342d6179d5f331f4ef5d8c87bf9",
+            "30d1b41c8b2baacd103588a264f0151e74a79fa710192f6de3f6930b6034e3a4",
+            "84de2bfd7c2a73b95e10fe48183a33eeef3788d59b6dda3c143b6a7df4d75fca",
+            "bb48e81af8bfd690c38e0d8d730bc1f08c7320c5666410eae6b17f94b203d073",
+            "76eb0a3519c6800d9242a37d4e0f5599f9136ff188f98b900cc9186323c145a6",
+            "6a0200bbaa804fbd1d2450174298a22d33cf33ebb08a1039dfcbe65c7695d2cd"
+          ],
+          "alpha_bounds": [
+            [
+              43,
+              13,
+              87,
+              116
+            ],
+            [
+              41,
+              15,
+              90,
+              115
+            ],
+            [
+              35,
+              21,
+              90,
+              114
+            ],
+            [
+              32,
+              25,
+              90,
+              114
+            ],
+            [
+              33,
+              21,
+              90,
+              114
+            ],
+            [
+              35,
+              18,
+              90,
+              114
+            ],
+            [
+              38,
+              14,
+              91,
+              114
+            ],
+            [
+              41,
+              12,
+              91,
+              116
+            ]
+          ]
+        },
+        "E": {
+          "frame_count": 8,
+          "fps": 24,
+          "duration_s": 0.3333333333333333,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 4,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            6,
+            7
+          ],
+          "hold_frame": null,
+          "job_id": "329f7c3d-d304-4c43-bf6e-77b852135339",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "frame_hashes": [
+            "74d40cc07a4e819449df885f15f2201e67193571e932eb461b8920680dfe3f0d",
+            "c8fc512779d1466569a531f7ba1c0732379bbeea3a8d428069331c677c14deda",
+            "1a204de7be356c53df3671e91a087add055c0c954c031cba1495b904522a7fe5",
+            "27a9d8b9ea8ae66b71bf842c24a260ff4004d208bb33e738c0ef9f5c39c2fbe9",
+            "39eb2acc535f8c03793b371b2ca8387b75d7238a5451f7a7e57712f17aeb0307",
+            "6771ab219da013edd91825e686a7cce48f273c2fe2cfb6f423d098f7df30bae6",
+            "19bc7403ba4efbc548310d52830a82dcfc3da2c1e58248a4d19984e5c798e8fe",
+            "b816e26d30c2da590fd3f371f5fbe64f631b300a59e11ec97fcb5de933b9e4a4"
+          ],
+          "alpha_bounds": [
+            [
+              44,
+              14,
+              82,
+              116
+            ],
+            [
+              45,
+              14,
+              84,
+              116
+            ],
+            [
+              45,
+              18,
+              88,
+              115
+            ],
+            [
+              35,
+              22,
+              91,
+              115
+            ],
+            [
+              35,
+              23,
+              91,
+              115
+            ],
+            [
+              37,
+              21,
+              89,
+              115
+            ],
+            [
+              48,
+              17,
+              88,
+              115
+            ],
+            [
+              45,
+              14,
+              85,
+              116
+            ]
+          ]
+        },
+        "NE": {
+          "frame_count": 8,
+          "fps": 24,
+          "duration_s": 0.3333333333333333,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 4,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            6,
+            7
+          ],
+          "hold_frame": null,
+          "job_id": "806ddc26-bd08-4e27-853d-160c45ac11b3",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "frame_hashes": [
+            "b57509947faed6414f51ce567e4374aa993b3164c7db9385d2c12c86b15b1625",
+            "0640b30c9f14d9394c67a98107251f28ee623a6ae9ef2c029664ae2196fb6d33",
+            "54bfa2f19812ce5e7761de777167b1150da87e8f8eefcd6a7b6782d0021e04ba",
+            "45aeccf843bec6b2abf3760df8c910c5036c406193196bfa3cadbda3c6839269",
+            "8e825be0d5482e92ffc45b56b6f9a7bae382c458a19df16f2d8d39ebbdfcbc8d",
+            "98e7e27c5d4013f1f93375a10aeb54ce790d47ea725f77787693dc9155707db1",
+            "6cefe16dd20c3f84e72195cde568e6e4995b5f3bbc85b9163354fd6cc8881b60",
+            "54ddbbd626ea7d68e9a85eb93527f07c70439077aa8d20cb952d32f7300f7176"
+          ],
+          "alpha_bounds": [
+            [
+              40,
+              16,
+              89,
+              115
+            ],
+            [
+              38,
+              18,
+              90,
+              114
+            ],
+            [
+              38,
+              20,
+              88,
+              113
+            ],
+            [
+              38,
+              22,
+              85,
+              113
+            ],
+            [
+              38,
+              22,
+              87,
+              113
+            ],
+            [
+              39,
+              20,
+              87,
+              113
+            ],
+            [
+              39,
+              18,
+              91,
+              114
+            ],
+            [
+              41,
+              15,
+              93,
+              116
+            ]
+          ]
+        },
+        "N": {
+          "frame_count": 8,
+          "fps": 24,
+          "duration_s": 0.3333333333333333,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 4,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            6,
+            7
+          ],
+          "hold_frame": null,
+          "job_id": "5d514aae-5854-457b-ab7f-8431373524c6",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "frame_hashes": [
+            "16770ffa6ee31159568d384a9911692cdaa7ca23b64382af4bd89a7258396e83",
+            "b9513117b7e54453be9cc704d3a38485aed4d42b9585543cb8df81ab7ad8fab4",
+            "c24f4bf9989ac935d9ee2e0400eb60705db90178516dd8ee83b52a8464f6b8af",
+            "855a48c795e6fdcbddc5519cb817a587854ccc9fa628288d37649240d0528b86",
+            "428c94860017eff5f91a7bea9584c637fffc2847e3c22b6c7dc2cfe9b217fa98",
+            "fc82b659de4c3a94e4206270c7007c80ab7f508d0805ac05ddc231e9cf0dbf5c",
+            "1310d22669bfd9fb368a302092e8138fea9421b6640f5660ca64c787505f93ce",
+            "ed4d0a2f58bfbcf6e954fe4390530baf13fa0bbc5355d591d245de7aebb6c713"
+          ],
+          "alpha_bounds": [
+            [
+              37,
+              12,
+              89,
+              116
+            ],
+            [
+              35,
+              14,
+              90,
+              116
+            ],
+            [
+              38,
+              17,
+              88,
+              116
+            ],
+            [
+              40,
+              20,
+              86,
+              116
+            ],
+            [
+              40,
+              23,
+              86,
+              116
+            ],
+            [
+              40,
+              18,
+              86,
+              116
+            ],
+            [
+              38,
+              16,
+              88,
+              116
+            ],
+            [
+              37,
+              14,
+              90,
+              116
+            ]
+          ]
+        },
+        "NW": {
+          "frame_count": 8,
+          "fps": 24,
+          "duration_s": 0.3333333333333333,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 4,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            6,
+            7
+          ],
+          "hold_frame": null,
+          "job_id": "3e10f149-10d3-45ae-a2a7-1081f299f636",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "frame_hashes": [
+            "ca985cebcfd9b65511647acaad5d3c18fedbd77e0a4d532b5b21147afce15832",
+            "3e6afa31991d6e38a29ae87b594872d99a06b8a90e18eb4e37a266baf5a282c8",
+            "ae7ab3d570315e509a37594c81e4d06eadb292362c5c7c2a8ac14739a17f2052",
+            "84119c15960a6aedb2ea875c97c9ca63c333d1411cc8b7b392c950bafbd2411a",
+            "c6fd63d6492fa26595b71f3e301bcdf56906337a6fc3ece0fc70e7d466b05a5e",
+            "5f9e282044d57bae0ce0a5fb757bb3b4b7e4e12abd353d97fbc11716dba6ff6a",
+            "b443d447c68cd44a47e8a190f9808a72bd53e0d8f80c54edb02f508b2d9ddcfa",
+            "a4fbb36b902b447e5c8fcc2f4bff9c7c7e92b8d630a35811dc7b4fdbf17ca8b3"
+          ],
+          "alpha_bounds": [
+            [
+              38,
+              15,
+              86,
+              116
+            ],
+            [
+              33,
+              17,
+              87,
+              115
+            ],
+            [
+              35,
+              19,
+              85,
+              114
+            ],
+            [
+              37,
+              22,
+              85,
+              115
+            ],
+            [
+              34,
+              19,
+              84,
+              115
+            ],
+            [
+              32,
+              18,
+              86,
+              115
+            ],
+            [
+              33,
+              17,
+              87,
+              116
+            ],
+            [
+              41,
+              15,
+              84,
+              116
+            ]
+          ]
+        },
+        "W": {
+          "frame_count": 8,
+          "fps": 24,
+          "duration_s": 0.3333333333333333,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 4,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            6,
+            7
+          ],
+          "hold_frame": null,
+          "job_id": "b5ef9e34-4588-4e6a-8a2b-4c9a727790f5",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "frame_hashes": [
+            "3a08c561078aa5f19794572c65b7843db3153c504804d268630ede272c58148f",
+            "28b85778a689477f20adeacd4ad53f9565a95e10a384c8ac512489dadab81188",
+            "00cbc8865c5f1b9808df1578d79e487fdec897a5cd64df2a4bf9fe8a1bbc14af",
+            "3619b2d11010750415d93f977c80cc3a59af45f4a1adb195671b122fd891089e",
+            "1626bb8b7fee222d97370179b869d2ccfc8b8de43c9736e5ad7dddcefc828d30",
+            "0b789bbcef635540c571fac1a73515010628b5505fe0c4cdd0d9f9dc4df3e377",
+            "74daac47274c4e31b43a07255e61a1dec45c22d6bb00e7eb298dee43070cb13a",
+            "197890a0530f27cbc655b47ee9f378756780f4924033efe2d54159117a421162"
+          ],
+          "alpha_bounds": [
+            [
+              45,
+              13,
+              83,
+              116
+            ],
+            [
+              43,
+              15,
+              82,
+              116
+            ],
+            [
+              36,
+              19,
+              81,
+              116
+            ],
+            [
+              34,
+              20,
+              85,
+              116
+            ],
+            [
+              36,
+              19,
+              84,
+              116
+            ],
+            [
+              36,
+              18,
+              84,
+              116
+            ],
+            [
+              39,
+              16,
+              82,
+              116
+            ],
+            [
+              43,
+              14,
+              81,
+              116
+            ]
+          ]
+        },
+        "SW": {
+          "frame_count": 8,
+          "fps": 24,
+          "duration_s": 0.3333333333333333,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 4,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            6,
+            7
+          ],
+          "hold_frame": null,
+          "job_id": "f735fe41-1273-4b32-9d1a-5749b4ee5db0",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "frame_hashes": [
+            "0e75711c38ac1049b5839c93c0d99b7a69e643956ec42fe78f3f8217943124d9",
+            "a0aef2644d478f534a12f8de9d4743d9b1375932b8efaf2613ecbe79e72b79cd",
+            "558edff0eb1f556979de5579e0913d143cc74e989160c06d24c63b1b72ff4927",
+            "a609fcd3790a00d17d5632eea4bb2064abc544e6ce819378b7d8bd9de11e4d01",
+            "fcfbde88da91b748c6feff779d648935450a6380ea800603dcd66cf92e3651f1",
+            "c91fafa7c8e16ea4317e5817037353a47a9d4d9ff0d6e10a90318a3b4a7883fa",
+            "4064cb59ca6c23b771d9aa829640993dec93be3f58d8d6a2155b648469e42e59",
+            "ec25daa0c40226d2ead86734d2ccea20f245be3d480e6bac93397a2f6df0d0b7"
+          ],
+          "alpha_bounds": [
+            [
+              43,
+              13,
+              87,
+              116
+            ],
+            [
+              40,
+              14,
+              88,
+              116
+            ],
+            [
+              36,
+              17,
+              90,
+              116
+            ],
+            [
+              31,
+              20,
+              89,
+              116
+            ],
+            [
+              33,
+              19,
+              89,
+              116
+            ],
+            [
+              36,
+              15,
+              86,
+              116
+            ],
+            [
+              43,
+              12,
+              85,
+              116
+            ],
+            [
+              46,
+              12,
+              85,
+              116
+            ]
+          ]
+        }
+      }
+    },
+    "knockback": {
+      "loop": false,
+      "root_motion": "none; world displacement belongs to gameplay",
+      "nominal_duration_s": 0.5,
+      "timing_integration": "Sample normalized progress from the existing gameplay timer; nominal art FPS does not replace hitstop/stun/respawn rules.",
+      "directions": {
+        "S": {
+          "frame_count": 12,
+          "fps": 24,
+          "duration_s": 0.5,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 6,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            10,
+            11
+          ],
+          "hold_frame": null,
+          "job_id": "16ce3033-e3d3-415a-a0af-63b87fec6f4a",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_hashes": [
+            "01174ca7cc4f67dd672ff11cf4612966202ffa09a3158624daef617347c9f211",
+            "eba0564b88a0ec4a6a0960aefac439415c008677311909e206706d1afaa114e7",
+            "058172867936dd55b7d15e8b902417b8d0ab12e7938713079faac55017e1d262",
+            "d32e3efd559b31200c2efbb4f4fa96109412b4557de67e6cd32a1e6044b60fad",
+            "6834527c8ce7396003434e10b7d7a4cfc273539270c94239602637336d4f17c8",
+            "88e753e63921fa88865a56df7ad766aa1c45cc6745a31346f712ade1461c4105",
+            "9399652ae0b7c5beb5c124d9ee38044fa85b3ef89d00df8c520015acd195bc84",
+            "bf20b1378f7b9c8dc42182a7b6a4d3ddfa7c03f137c3d16bfd9e39ac75f0c977",
+            "10759866ad3bf282f843adfe1b0883633fc5e25a18b5ff156c0a4e03d223ad8c",
+            "76a0dce59ad8f0b56ff5833c0a646b7994e75e4d537b9f4aef460ddd21b705de",
+            "4f193cb8494ac8ea8e60a4ba70b8b06f08fa47921bc8e5b779f359b0119c9e38",
+            "6567aeac2967bde1d9f06874ca5c17762ee0d48a721183a334b8ebfc1355b03f"
+          ],
+          "alpha_bounds": [
+            [
+              38,
+              14,
+              90,
+              116
+            ],
+            [
+              34,
+              15,
+              94,
+              116
+            ],
+            [
+              31,
+              17,
+              96,
+              116
+            ],
+            [
+              29,
+              19,
+              98,
+              115
+            ],
+            [
+              28,
+              20,
+              99,
+              114
+            ],
+            [
+              27,
+              21,
+              100,
+              114
+            ],
+            [
+              28,
+              19,
+              99,
+              115
+            ],
+            [
+              30,
+              17,
+              97,
+              116
+            ],
+            [
+              32,
+              15,
+              95,
+              116
+            ],
+            [
+              35,
+              14,
+              93,
+              116
+            ],
+            [
+              38,
+              13,
+              90,
+              116
+            ],
+            [
+              40,
+              13,
+              88,
+              116
+            ]
+          ]
+        },
+        "SE": {
+          "frame_count": 12,
+          "fps": 24,
+          "duration_s": 0.5,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 6,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            10,
+            11
+          ],
+          "hold_frame": null,
+          "job_id": "4de38c18-ff65-4723-af56-c634b737303b",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_hashes": [
+            "91e76df0b427615b7a91ac575cc764c1f221200e67765a2786d364610edd9ff9",
+            "7cd7226f1f536211be2ef296c3e15e26d2bb7cb50b12b7a754326babe9201712",
+            "a80ea6cc898f797cc3f204cf49ca3129806800d37ff70b1c6ba508161eea7688",
+            "4c8ced287851fa9d7f57781319ceea848a605324907a8bad323382013a5287c7",
+            "d6290f99c00f49d275ddd596bfc6225a9977d263b51c12f52e6696e4ad55dde0",
+            "e30a67cf2d5896bf82c2055d4098c4bb8966acd8b8975d65f75cf38bbf2f0b39",
+            "7f1a60a4855574ce343b06f79bf9cfd7f452be3466b1dbc87226839205f765f1",
+            "093fe94b7163c8fb49864d21f810d4381f4a7b4db098f667c90bc673417c36b2",
+            "fea38588fe9e8abb5adc69d5278e1cd493253250eebeb3bb0d9cc2ad852c9825",
+            "62ed831c7614d11d72e6d3d729ed96562e113b0aee8bd4ac9c31f4945386555a",
+            "26b9dee8f93b634707490c308596792662f6c2277bbddfd66df496b9df388926",
+            "86b6fd75e9e215cf29d261b31629054866667737c2ad543b770d79699ce3e164"
+          ],
+          "alpha_bounds": [
+            [
+              43,
+              12,
+              88,
+              116
+            ],
+            [
+              40,
+              14,
+              92,
+              115
+            ],
+            [
+              32,
+              16,
+              96,
+              114
+            ],
+            [
+              28,
+              18,
+              99,
+              116
+            ],
+            [
+              24,
+              19,
+              97,
+              116
+            ],
+            [
+              21,
+              19,
+              94,
+              116
+            ],
+            [
+              21,
+              20,
+              94,
+              116
+            ],
+            [
+              21,
+              20,
+              94,
+              116
+            ],
+            [
+              21,
+              19,
+              95,
+              116
+            ],
+            [
+              29,
+              18,
+              99,
+              115
+            ],
+            [
+              36,
+              14,
+              97,
+              114
+            ],
+            [
+              44,
+              13,
+              87,
+              116
+            ]
+          ]
+        },
+        "E": {
+          "frame_count": 12,
+          "fps": 24,
+          "duration_s": 0.5,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 6,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            10,
+            11
+          ],
+          "hold_frame": null,
+          "job_id": "34ef2102-83cb-4b61-8643-3a27dd8d2115",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_hashes": [
+            "784ae7c203467ce5bf13d443487bac565b6f9dca0698d00d9501b55f7c308705",
+            "06db17a6c8b88cd86259e80384b0c33d030b2b8bd229e62d05346cee95511937",
+            "322723e0ece1053dd65bb2759029a8787efd3a01613a55160bfda31618918ff5",
+            "c5ab59259a467ebae1ec914633ef0d33e3c7a7fa72d2a603aacf762e54cb02bc",
+            "8c7b53f40867907703025a000869284f45583111df0331570f7e2625582ec637",
+            "55ffcc6354d39a52dbb387a4d5efecbb7daff5c6786bf86794ce6d596fce9fd3",
+            "44c5ad3ad866c8edc61c56c5783096be7ee648a3403e509299a9376ca181d478",
+            "ab1d33b9f9f9480c2c2c166bae431f051afd3e503be673d7334d96e11d09bc2a",
+            "109ef6406a63e0abf9c3eeaccebab4e66b07fdb52e70cc1668c2f0405321732e",
+            "22e7db593f6ded3be25313b09792b22963946a8bee1ee188b90f4604bcbf4e2f",
+            "e0536e02cc5b150064c068dde151bc0b05d49ed37990c08e67c71f4958511dfb",
+            "dfa2fa4c4c39c8faba9c863467fc1ea5f06ae09db1c6e04ac45bd9e57d0316ce"
+          ],
+          "alpha_bounds": [
+            [
+              45,
+              13,
+              83,
+              116
+            ],
+            [
+              47,
+              14,
+              85,
+              116
+            ],
+            [
+              48,
+              14,
+              90,
+              115
+            ],
+            [
+              36,
+              16,
+              93,
+              115
+            ],
+            [
+              31,
+              18,
+              89,
+              116
+            ],
+            [
+              29,
+              18,
+              87,
+              116
+            ],
+            [
+              29,
+              18,
+              87,
+              116
+            ],
+            [
+              31,
+              19,
+              91,
+              116
+            ],
+            [
+              32,
+              19,
+              92,
+              116
+            ],
+            [
+              34,
+              16,
+              95,
+              117
+            ],
+            [
+              46,
+              16,
+              90,
+              116
+            ],
+            [
+              46,
+              14,
+              85,
+              116
+            ]
+          ]
+        },
+        "NE": {
+          "frame_count": 12,
+          "fps": 24,
+          "duration_s": 0.5,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 6,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            10,
+            11
+          ],
+          "hold_frame": null,
+          "job_id": "b682a68e-2c66-4bec-9d1f-1056f71a7ae2",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_hashes": [
+            "1108850b8450bae89a8407d57674eaf5ba6c7b6e9700ff70a61e4003a0d936c3",
+            "eac6cc3a3e0aa5ec3d02c200ce56be8f5a3de78de66d6defc46a9e3ebe4ebf07",
+            "0f36598515eabd63500e065949902f783df3bc26ca6de9f7dc5f44717a93be04",
+            "c2fc9939a485efd73683d6c32c45445ff48fa3ce97e6859fa8f30659baa8ceea",
+            "e54bd918f49b820dfd5f454171f9d3c63e567a6aeeaf4955c492a163efa08dc8",
+            "ae206d5cb399fa1aea500e3ca6c83f1b12d0677cf086abfb1cdea3c6a66efb68",
+            "f51bc02d03c2f74ace4646c924cd652f4f0541db8cdfc99c801730726a35f429",
+            "bbdbd2abdf5055e5642e93a7e77e28b2c083a7e93956317cf1aff57d8dce93cd",
+            "37c60ef09222e7f4f766bbc290b73b8ec82299b9e2dfb73ecf17b329c5b7eae4",
+            "c46c85c50771f74e3167f6c26022e7af74aedf7e7202a506a90629e70d1d27a1",
+            "28edf7019ed4539d2148bb124e66e78ae2597a5da8c124afce639ca29e01fe57",
+            "e12b567bcad3295042b91c1231e3d403e080ca472c05ca48f48d9147ec17e910"
+          ],
+          "alpha_bounds": [
+            [
+              41,
+              15,
+              89,
+              116
+            ],
+            [
+              39,
+              16,
+              93,
+              115
+            ],
+            [
+              33,
+              17,
+              97,
+              113
+            ],
+            [
+              27,
+              20,
+              97,
+              113
+            ],
+            [
+              27,
+              20,
+              97,
+              113
+            ],
+            [
+              27,
+              21,
+              97,
+              113
+            ],
+            [
+              27,
+              19,
+              97,
+              113
+            ],
+            [
+              27,
+              20,
+              97,
+              113
+            ],
+            [
+              28,
+              20,
+              97,
+              113
+            ],
+            [
+              30,
+              17,
+              98,
+              114
+            ],
+            [
+              36,
+              16,
+              97,
+              115
+            ],
+            [
+              43,
+              15,
+              92,
+              116
+            ]
+          ]
+        },
+        "N": {
+          "frame_count": 12,
+          "fps": 24,
+          "duration_s": 0.5,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 6,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            10,
+            11
+          ],
+          "hold_frame": null,
+          "job_id": "eb2cf586-dbc4-44ea-a40d-5f7fe41183e6",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_hashes": [
+            "a0204d2527b0fcf0dade6dbaa57199d5ae3997fc43064ca01cfaae085507e40a",
+            "03be3a214486903aa858961b47c4f11c4c340c3c944733dbae8199b2e72926d7",
+            "f03701e568629846c060f382d9b980100b47a2450a75bee3dc74c30d0bc4b452",
+            "17ded5f25dcdcfcccb590223c6e6c63d30d385d3cad163faf1a96bd499013d49",
+            "897d7c17b05d104e36de7b4f9ed51d61b705770cdf3702f4b546e026c55bcefa",
+            "d3bfdf14bdeb7ba9b5a5a49569ec46bb927a6015b8da583b0867d28b07e218e1",
+            "f336e7cffa2a52afb68f5662d2703a067592c5950e1548d131a77665467e971c",
+            "b413bf20c20398e4bc31c1fb81471078df7a4541ac47a6e280215c8eb4455ce1",
+            "81a9e3b7bd0c7d4f8a7ed5418b05c082eb8616372203cd3c50212f59236ecbcf",
+            "6fad5a869ac2002bfdfe721ea0e97e25d272d071d265fed3a0c93e8be2c18163",
+            "cd0d5300be160e0bfeb5c30381ae017d9dd7c9cb0312f3dbe0213c7148f1c3b2",
+            "2418e3ab4a279a42656d1d0a4b36e0cd1896d9be06bc6eee49e71557180850e8"
+          ],
+          "alpha_bounds": [
+            [
+              39,
+              12,
+              87,
+              116
+            ],
+            [
+              34,
+              13,
+              92,
+              114
+            ],
+            [
+              30,
+              15,
+              97,
+              112
+            ],
+            [
+              25,
+              22,
+              103,
+              112
+            ],
+            [
+              22,
+              24,
+              103,
+              112
+            ],
+            [
+              23,
+              22,
+              103,
+              112
+            ],
+            [
+              24,
+              20,
+              103,
+              112
+            ],
+            [
+              23,
+              22,
+              103,
+              112
+            ],
+            [
+              23,
+              22,
+              103,
+              112
+            ],
+            [
+              23,
+              21,
+              103,
+              112
+            ],
+            [
+              32,
+              16,
+              96,
+              113
+            ],
+            [
+              40,
+              12,
+              86,
+              116
+            ]
+          ]
+        },
+        "NW": {
+          "frame_count": 12,
+          "fps": 24,
+          "duration_s": 0.5,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 6,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            10,
+            11
+          ],
+          "hold_frame": null,
+          "job_id": "a210f36a-1979-454c-8e81-d3b464c83094",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_hashes": [
+            "c895876bb8b39033eb068529f4aa27bdecfea512805caaabf41527b4ac290a7c",
+            "1190444bb0fef9bd8cdb191eddd3e2b58a9ce74dad320f18c27d4831e6e8dc7b",
+            "eba05b2d3442ad781c2fabe853f858daa37710d74e5b83336066c670205b762c",
+            "0a4cf60ade91a34610f18014e60de21f67e7874bca5425b5d4ca6bb70ea6bf00",
+            "b2f396efe06f815bc51fe1905b53ac2755fb36420c894eee1e4fcfdb48753890",
+            "a8f87ba8fd0d67b22d3a1daa6316c2de08e82bc2f08f0055ef7fe0507720b40a",
+            "1c797d9f38a524e81a02239761811e1508a608a89e62f0dc8b5e000ce4315cac",
+            "a9e6f15ae354195ea989bc33da3d2e84ef5e36aa6914133dae8bac8ad33cf8ee",
+            "7d8fe06d3bbad44175ec344c93c3daa5e63b92b7450e698ba6d5558a450dc784",
+            "861caf625a302afc367d7f33d848529c1386b44024f931a4e06d9e96e5379726",
+            "5c053d8b01cd29017e4064bc89ec02bd0542cbe1ae72a2ebd058f82290a6d32d",
+            "cd26b60e50a50a0f0eafc343af7b0afda88b496917e3507ae230e87a0898261d"
+          ],
+          "alpha_bounds": [
+            [
+              35,
+              15,
+              90,
+              114
+            ],
+            [
+              30,
+              15,
+              98,
+              113
+            ],
+            [
+              29,
+              16,
+              97,
+              112
+            ],
+            [
+              29,
+              19,
+              93,
+              112
+            ],
+            [
+              30,
+              21,
+              89,
+              112
+            ],
+            [
+              27,
+              23,
+              91,
+              112
+            ],
+            [
+              27,
+              23,
+              88,
+              112
+            ],
+            [
+              27,
+              23,
+              91,
+              112
+            ],
+            [
+              27,
+              21,
+              91,
+              112
+            ],
+            [
+              27,
+              18,
+              94,
+              113
+            ],
+            [
+              30,
+              15,
+              94,
+              115
+            ],
+            [
+              39,
+              16,
+              87,
+              116
+            ]
+          ]
+        },
+        "W": {
+          "frame_count": 12,
+          "fps": 24,
+          "duration_s": 0.5,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 6,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            10,
+            11
+          ],
+          "hold_frame": null,
+          "job_id": "aff7b9a9-4e87-4f67-8575-fe316d72ceb7",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_hashes": [
+            "8d4b2290a5f4ab2e18c7b3ada7cb2835703018478dc9fab437a0ba5bddbcdd9e",
+            "bd7e1e3727acb512979c60cbfcd611541718583d6e24a089acbf83eb0267825a",
+            "e3f1bbd27bd32b16cc38e388dd5fa4b644b4d366841b5c723fab188bbf0c3579",
+            "e55a4862492b6ddc4af4ed61df8845ccc06f6a3cc50f8d86d49b99237a99bec8",
+            "e8ac5734888ea3f42856fda9a287537a9cd9b0a5823928d88773950bd3dff629",
+            "ee7f453f19daf8bb65a811a14694ce78f81ec56b6de119181435b5a76f9705e6",
+            "8ffb9c4bf2eed578f6bb3d3cc6ad09bd9ac6d7f1310d8d8c404ef10a03208602",
+            "bfb354d5e0bb16192341950e492766cc80c0a6a5afc42094775f3591471ce470",
+            "97a3765784d8f86ee8d4b7f114e3d2a37cbd53572158d620a355f8f86e3740f7",
+            "c3ead38f538a16f0710706b3984e4ba5d77f0ff7e5ad67a69c7efa7afaf4e680",
+            "5466eea1e1bebb15060e2c73f73d5d5bf99d4a7cdd708b39ead437ecb4092d49",
+            "f8dfae8a4803fcfc880d226246effdd6d0ba7e5e2d197635a59a1bc5ef9fe99e"
+          ],
+          "alpha_bounds": [
+            [
+              46,
+              13,
+              85,
+              116
+            ],
+            [
+              44,
+              12,
+              86,
+              114
+            ],
+            [
+              34,
+              15,
+              86,
+              114
+            ],
+            [
+              28,
+              17,
+              97,
+              112
+            ],
+            [
+              28,
+              17,
+              96,
+              112
+            ],
+            [
+              30,
+              19,
+              95,
+              112
+            ],
+            [
+              32,
+              18,
+              97,
+              112
+            ],
+            [
+              33,
+              18,
+              97,
+              112
+            ],
+            [
+              29,
+              18,
+              96,
+              112
+            ],
+            [
+              29,
+              16,
+              93,
+              110
+            ],
+            [
+              37,
+              14,
+              80,
+              115
+            ],
+            [
+              42,
+              13,
+              82,
+              116
+            ]
+          ]
+        },
+        "SW": {
+          "frame_count": 12,
+          "fps": 24,
+          "duration_s": 0.5,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": 6,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [
+            10,
+            11
+          ],
+          "hold_frame": null,
+          "job_id": "99ffe359-b7b7-44db-9328-dedf0b6eec67",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_hashes": [
+            "d9d3b71fbbafcd1501562159590348c2a1b3f8f1ae9a404abb3d5364782e2f2a",
+            "387054f45906083401944692dcbaf14c471b6ba15482c96caf29d86feb9c80a1",
+            "b1b631123b0d3ba507a47dd10fbe45042915f7c4067b103a8e145ca1994cf861",
+            "d8f4a7b602c29297fda14a62d017687d139b7b6d867cb26a13b78217be75691e",
+            "c24cdd2712dd5d6dcbb1f2a464c52b4262b8c58bc306f0709ed74a8fb5b8bd6e",
+            "7b29178010631be9f5ce38aa21e2e325d94e45253200f2f771d8b52a114a93dc",
+            "5637ac0561ff6760685b667db27f639242fb7cafaacb4f697e3ec141cd43dab3",
+            "6f9536b7094a7035c81d6b2a8288f61ad17dd1a9460ea8caadad4a2361ececc2",
+            "cf5e6046e5948bbc35923c536233ea84f5ab44fed4cf47d195a7c069260ea1a5",
+            "a253c6f037d06951d463678e101659f111e4ea20bbc3fb5b9089034da68d5e99",
+            "95c068d018a6e08ec3cbfcb9ec3c9f054edcd4ba79ac6587faa54481bc7aa996",
+            "fd62a244860b62fd2675b046879586c549dc9bbdfafbec91fe75df596460c427"
+          ],
+          "alpha_bounds": [
+            [
+              47,
+              12,
+              86,
+              115
+            ],
+            [
+              46,
+              13,
+              88,
+              113
+            ],
+            [
+              42,
+              15,
+              91,
+              110
+            ],
+            [
+              38,
+              18,
+              97,
+              116
+            ],
+            [
+              38,
+              19,
+              98,
+              116
+            ],
+            [
+              35,
+              22,
+              97,
+              116
+            ],
+            [
+              34,
+              23,
+              96,
+              116
+            ],
+            [
+              29,
+              24,
+              92,
+              114
+            ],
+            [
+              28,
+              22,
+              92,
+              111
+            ],
+            [
+              30,
+              21,
+              92,
+              111
+            ],
+            [
+              34,
+              17,
+              86,
+              113
+            ],
+            [
+              39,
+              14,
+              85,
+              116
+            ]
+          ]
+        }
+      }
+    },
+    "death": {
+      "loop": false,
+      "root_motion": "none; world displacement belongs to gameplay",
+      "nominal_duration_s": 0.6666666666666666,
+      "timing_integration": "Sample normalized progress from the existing gameplay timer; nominal art FPS does not replace hitstop/stun/respawn rules.",
+      "directions": {
+        "S": {
+          "frame_count": 16,
+          "fps": 24,
+          "duration_s": 0.6666666666666666,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": null,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [],
+          "hold_frame": 15,
+          "job_id": "db692e98-a58b-4a40-9dec-049030050543",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "frame_hashes": [
+            "361724c81c1f2d5afaad7c9de759a07f6e74475ef7e2b2e300abaf00e2ad2544",
+            "4a3381dd9bade88f966b307118fd6df89c83795960b847dd2a7b9507d8102494",
+            "48a01e8b3d4fedc8a32fc85d514f353c114af6f97980a77d52edf052adca1b38",
+            "e4e47be21bdbdcce7a7c31e125a975424c59cec8d281dc265c443b79b0410954",
+            "99d45c61e90c70ed79e51922c9c790cb37a54d6137c32f7e9443cca9d1c42bcc",
+            "81d1039e8e256d7272d7188b6720be1e7db734867a5e4354abd883fe11ebed85",
+            "5c848bd2922c443c362d9d920df31004a58fe9e526fab73d7eb87533beb5436c",
+            "c0692bef85c6ff9cc0abe2047f6bd7967ab4149987573e7456f988eeb1fcad88",
+            "756c6eef8404e7e69603a05fbc68f5c93005a72c18ee855c11fc277d5bd59ae1",
+            "b17a6e2bba674b3d19af91c5e621b1510a1a79deab3181cd657abea95136a3ff",
+            "c831f78d2de4252c720e6583e5bb18e77eac3f75e9a1ed8f1736f44d6a013594",
+            "3cdef8ec86e6d0535f285613c39e625093b8c4b0d8be688277f64b81630af0c3",
+            "198198056ce8a3b0b05590385de9ee8249bde3dda31f6a35ecc17ea7697dd61f",
+            "9fbf48268e680f8d125735295590ea3763f209fca706bb2da86a4f6e995bb634",
+            "e020317fc91f3d1f54233057451948d53ba17297005312111ab45990bf568c46",
+            "c6274b2f036bb832dc78d435f91e4197c5849340922df7a2491151c9b9eab932"
+          ],
+          "alpha_bounds": [
+            [
+              38,
+              13,
+              89,
+              116
+            ],
+            [
+              38,
+              15,
+              89,
+              116
+            ],
+            [
+              39,
+              18,
+              89,
+              116
+            ],
+            [
+              41,
+              20,
+              89,
+              115
+            ],
+            [
+              40,
+              19,
+              90,
+              114
+            ],
+            [
+              40,
+              19,
+              90,
+              114
+            ],
+            [
+              40,
+              19,
+              89,
+              114
+            ],
+            [
+              40,
+              21,
+              89,
+              114
+            ],
+            [
+              40,
+              22,
+              94,
+              114
+            ],
+            [
+              33,
+              28,
+              94,
+              114
+            ],
+            [
+              25,
+              40,
+              95,
+              114
+            ],
+            [
+              18,
+              59,
+              105,
+              117
+            ],
+            [
+              16,
+              72,
+              108,
+              116
+            ],
+            [
+              17,
+              77,
+              113,
+              117
+            ],
+            [
+              17,
+              77,
+              113,
+              117
+            ],
+            [
+              17,
+              76,
+              113,
+              117
+            ]
+          ]
+        },
+        "SE": {
+          "frame_count": 16,
+          "fps": 24,
+          "duration_s": 0.6666666666666666,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": null,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [],
+          "hold_frame": 15,
+          "job_id": "e61643c9-b0ea-4133-8828-daf60991e74d",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "frame_hashes": [
+            "8650bfd578161764202e89b34a6b870b4cc4e4d30a53951441ed2734e1afd216",
+            "58d087fcffc4c91441aee3ec855a62acfefe172a210883c75d7d1714d689d234",
+            "f744fc6cfff7c823cd9ab800f3228bb232fceda2481ff0ce3d91d86e603ee3b1",
+            "55473a1c1927b643039b254406ba3c27cb3c456ab4a0ca46c264b9033a92f3c9",
+            "2f8b430c9e6fbacddfac198b84b02a52593a9ee5235835f2d0f9cabfaf9bd787",
+            "c49f9782508c140125ca0f9dfd7cca1b2f98340ad10804c773adfb9b11747709",
+            "418c5618040115e83b7514aa3bb98cfa862d1b08753443dbfee18066d3036657",
+            "9a1d9c1e7a3294cf9efae0c99600ae0edb000c6c36bcf11320d79feaa046c9e1",
+            "2536cf4cc3dc548f4ddf041f127793422037267e0f8706a1c076fb147fc24fba",
+            "afd1dd8cffc69570d03dc0f1a7221b1af48912317113cea59e5a1ba46cd264e3",
+            "ba890dbaf6f3ac27e507c7b441f82ccefe145f057ccebe748b2ade2dc9c4d280",
+            "7075f7daaa9900887669f3765723724318a96b8309ed9afac296fbf30bb3b1d5",
+            "ea23590c26ddc7805665b71bd7b3ea9ee0c1a14a1aa0caa3e828e2762fd816d8",
+            "6f4991fc715f182e8cd6924460bb5e48370bf43070e080dad1169b8d1fc07209",
+            "c11418c1a4d3bf944ea4658cce7649d19f21e516233a01e953e8d73344fbb113",
+            "b3819cf9983d244e81bbced3675fc51f5e6c73769e44548661977c3627a7abb3"
+          ],
+          "alpha_bounds": [
+            [
+              44,
+              12,
+              86,
+              116
+            ],
+            [
+              43,
+              14,
+              90,
+              116
+            ],
+            [
+              39,
+              20,
+              95,
+              114
+            ],
+            [
+              38,
+              22,
+              96,
+              115
+            ],
+            [
+              39,
+              20,
+              95,
+              115
+            ],
+            [
+              37,
+              19,
+              94,
+              114
+            ],
+            [
+              36,
+              20,
+              95,
+              113
+            ],
+            [
+              36,
+              25,
+              97,
+              113
+            ],
+            [
+              33,
+              32,
+              102,
+              111
+            ],
+            [
+              24,
+              37,
+              103,
+              110
+            ],
+            [
+              20,
+              53,
+              108,
+              112
+            ],
+            [
+              17,
+              67,
+              112,
+              117
+            ],
+            [
+              16,
+              69,
+              112,
+              117
+            ],
+            [
+              16,
+              75,
+              112,
+              118
+            ],
+            [
+              16,
+              74,
+              112,
+              118
+            ],
+            [
+              16,
+              74,
+              112,
+              118
+            ]
+          ]
+        },
+        "E": {
+          "frame_count": 16,
+          "fps": 24,
+          "duration_s": 0.6666666666666666,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": null,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [],
+          "hold_frame": 15,
+          "job_id": "264bde01-7958-49a0-82fe-c3579486d233",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "frame_hashes": [
+            "3bc949ea1a96869a7afa617a3136a3846963f577fa3fc24fd697e0deab8affdc",
+            "238ed342c311702b13bf7651e118cfface32d551d3c08e5f7808c3d63725dfa2",
+            "141c3a3e8b1ff683a343f452a1193c665ccfc0d2ceb32d449a342ee9720d4bfa",
+            "61b1e253b5c724be0f34c2a82e44b1ceb9e338bef636b6867ea26f0aa78976a8",
+            "ed45793baea76ef5d01022be974ff1665ccd79eb863b7c660d8f1e72e281eaba",
+            "8ff044f5a107b8ef3bd8d78b8e21bbd72d90f4b8fa44bc1cad0baf7c6f921641",
+            "96ec84f19e509a3f6a478b46315016eee1075e2f91a0fda26d8456d2eb6310b8",
+            "5fcd123323a52e27705f11d588f40eb5f155c050328e54f4e2d93e2ed75be3c1",
+            "f5ad29dfbc6a53a60060277b1a185cd81e50c1d1c472bdcf38050657583b6f60",
+            "e4a82e327be5cf3b115f3cfcaf0dfdec009bde907c2ae5c678f069ca397184ff",
+            "cc34dfacc35c61d76047c4513df815abb0d032120a09b8006c557e8c69519871",
+            "73e64934f6c08c9f73d133ed9d25a62e27eb5a284c8c4682013de3cddec7bafa",
+            "d03cf98f3c60ddc44e8611a3b393eb983090be90940945d214b891089d624b14",
+            "273bfbf748a60d25f967f0394c8a4d5f7c6e8c20e789e55ddd10e03b3039a10d",
+            "e6e2b614c3275737ca69185e25f8019439da75b5fce3900e15978448bc023b0d",
+            "455f5a9281a6e7e543a7e43c06e8c272d0efd3f20506c8dc2e8bd078cae6cd18"
+          ],
+          "alpha_bounds": [
+            [
+              46,
+              13,
+              83,
+              116
+            ],
+            [
+              48,
+              14,
+              85,
+              115
+            ],
+            [
+              50,
+              15,
+              87,
+              116
+            ],
+            [
+              52,
+              17,
+              90,
+              116
+            ],
+            [
+              49,
+              18,
+              92,
+              116
+            ],
+            [
+              47,
+              18,
+              93,
+              116
+            ],
+            [
+              39,
+              24,
+              96,
+              115
+            ],
+            [
+              27,
+              36,
+              101,
+              112
+            ],
+            [
+              24,
+              42,
+              104,
+              111
+            ],
+            [
+              17,
+              53,
+              106,
+              116
+            ],
+            [
+              17,
+              64,
+              111,
+              118
+            ],
+            [
+              15,
+              71,
+              112,
+              116
+            ],
+            [
+              15,
+              71,
+              113,
+              116
+            ],
+            [
+              15,
+              74,
+              114,
+              116
+            ],
+            [
+              15,
+              75,
+              114,
+              116
+            ],
+            [
+              15,
+              75,
+              114,
+              116
+            ]
+          ]
+        },
+        "NE": {
+          "frame_count": 16,
+          "fps": 24,
+          "duration_s": 0.6666666666666666,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": null,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [],
+          "hold_frame": 15,
+          "job_id": "6e079253-f869-493c-a1c7-c0c284c36788",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "frame_hashes": [
+            "7eed4b48acfa5d6d462a26058ab75bf793983647911f5fe02ab7dfdc740e77f2",
+            "44ee6576ab19a64fdced5e8799c0d43e98a1b26c2f0e1c6ec3a759f580bfbfb3",
+            "c8ca500ddd4c9954040b7b42d512a1eb73753c51e641eda6332c82747e971339",
+            "ea7c6112c240fb26b1e8cffd43d64593a52136df3ac7c34a01165218b09de69b",
+            "ccefab2afb5c3bfd4d135cb5ff3146f75f7bc040418b8237b5bf48b2b31faabb",
+            "96cc0ce1fa5eb08d03a08aaadee6630acda10d6508d13df3581039158b09a3f2",
+            "cb6c0af8b6f5f7bfa180fbb2e1eb6b8b65e95ed647e64fbf63563134dc132d72",
+            "f4c91c4e2723e2661aaf3828ecf3f93d8790ad99a39af26c7a7f63c4429cd220",
+            "2fc84823e2e844a1a446234e8e2839be531f2777cec47537d3348a9ebfcd33fe",
+            "49c20ebdba17529d8aa232cca6e3d69fb3882a46dda03f5423b18f3a0f23f903",
+            "0311b3ecb391e4a8cb03e45b9241428108a4a3ede0ed93d1bd64fab2f7ff6e3e",
+            "2355586cd7c3f5a5a5b70d241d07ebfe977c05706cac92e0ecf7ea87841402a3",
+            "cd552dc8cf4d9a58cce5ea48a9c1d1df8bc27c0a79d5f37b3394240fd7be170a",
+            "7c17332d720fe268991f3c9498368eef78e6d19f57319d431cb9722fc9cba495",
+            "52dddd2d97f8f1e032743ac6944362e20bb280ef908dea8a9663173c2c330185",
+            "a01475f8a9f90c7c5bae2c1f9dbd103aa5d09a99ccd514511cd4fba99a18a8bc"
+          ],
+          "alpha_bounds": [
+            [
+              44,
+              15,
+              84,
+              116
+            ],
+            [
+              45,
+              14,
+              83,
+              116
+            ],
+            [
+              43,
+              14,
+              84,
+              116
+            ],
+            [
+              41,
+              14,
+              86,
+              115
+            ],
+            [
+              40,
+              15,
+              89,
+              116
+            ],
+            [
+              40,
+              18,
+              93,
+              116
+            ],
+            [
+              33,
+              24,
+              98,
+              117
+            ],
+            [
+              22,
+              38,
+              104,
+              117
+            ],
+            [
+              16,
+              46,
+              105,
+              116
+            ],
+            [
+              13,
+              61,
+              111,
+              114
+            ],
+            [
+              12,
+              67,
+              114,
+              111
+            ],
+            [
+              13,
+              79,
+              118,
+              114
+            ],
+            [
+              11,
+              77,
+              117,
+              115
+            ],
+            [
+              11,
+              79,
+              116,
+              116
+            ],
+            [
+              11,
+              78,
+              115,
+              116
+            ],
+            [
+              11,
+              78,
+              114,
+              116
+            ]
+          ]
+        },
+        "N": {
+          "frame_count": 16,
+          "fps": 24,
+          "duration_s": 0.6666666666666666,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": null,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [],
+          "hold_frame": 15,
+          "job_id": "39d00515-afb6-4433-abad-176f414cf63b",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "frame_hashes": [
+            "34974a33cfcd53206685ff9d74c844ca044b7dc2f368cefb10a9db53a44561e6",
+            "1cd006339ee37f691ad7e54827996fbe5d9024d25b09237d8ea4634df41ffc8b",
+            "b0ab84d5ac59cd43e677b6b3e9c0b5c895d75b39617710b0a7e8000a39cf0da8",
+            "254b332f4d1a532c60ec70413f323dcb1ceea8e8078d5078ec4c8493a6ac1473",
+            "8d7066ec6941c1e419faa6eb757ddfd6aeaf36c9517a6a6ade92ddc08582e09f",
+            "5bd5af3ea951a803941c3fc5579bb2a1108b30c12fc4358b658055db63fe33c2",
+            "91c4790f81fda80910fced4fb450a5b977bcf6b556c0858db422c5787ca0a846",
+            "4a82bb86262ccd783709c5cd902dbff8df2475e765264f9a0e0d2e4e7235de01",
+            "7bdd3ba1b2a8bbc47f57c412fd567f1a02a95f79786638167470917020d660ea",
+            "dc70f7411a09979b3f9574ac0872d7dc084513efdea4eb812e630a4339f195c9",
+            "99909e0f24a990efb4d1f90a31a811dcad81862c9b667b1bf8fb53e711e8ef3d",
+            "3b41ab05fe451603bf32ae305bdc56488e51d6fe826e7a4cdd98e487ded1a5a2",
+            "6393a07f1623386f9c1d11951c7c90f2671b92d34a9e701f0fa44940c136a092",
+            "cf86d1a53c23bb5a42cf3defff5746107e58d226596c1a92f1e5b6c2401da87e",
+            "5237274e125da848acccfe0d2886f1746216f8ce6409437317ce0f5a2bb53a47",
+            "a8bc25b5d279486afc38a2efa32b11b6c596aae40d5425eb03bdb55f0ece5239"
+          ],
+          "alpha_bounds": [
+            [
+              40,
+              12,
+              87,
+              116
+            ],
+            [
+              41,
+              12,
+              88,
+              116
+            ],
+            [
+              43,
+              13,
+              90,
+              116
+            ],
+            [
+              42,
+              15,
+              89,
+              116
+            ],
+            [
+              39,
+              16,
+              90,
+              115
+            ],
+            [
+              36,
+              16,
+              94,
+              113
+            ],
+            [
+              35,
+              23,
+              92,
+              114
+            ],
+            [
+              27,
+              33,
+              89,
+              115
+            ],
+            [
+              26,
+              42,
+              94,
+              115
+            ],
+            [
+              22,
+              53,
+              99,
+              113
+            ],
+            [
+              18,
+              65,
+              110,
+              114
+            ],
+            [
+              13,
+              71,
+              116,
+              116
+            ],
+            [
+              13,
+              79,
+              115,
+              115
+            ],
+            [
+              13,
+              80,
+              115,
+              115
+            ],
+            [
+              13,
+              80,
+              115,
+              115
+            ],
+            [
+              13,
+              82,
+              115,
+              115
+            ]
+          ]
+        },
+        "NW": {
+          "frame_count": 16,
+          "fps": 24,
+          "duration_s": 0.6666666666666666,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": null,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [],
+          "hold_frame": 15,
+          "job_id": "20073779-0a6f-41d6-9a1b-33151a1c3aa7",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "frame_hashes": [
+            "d34ccc35ec8ab5aca6a830b836b8fb75366702ef00469ff05bc18e4c69625ec5",
+            "9cb0340582a77b4992c84fb1be490af0ea91288543768d983c57f9f515d550ac",
+            "0e9494f59d190d24c946e75c4056df0f2b11f8c8b652547539078f9c163e4b90",
+            "1cd3a456692f6042b363f5da9df35d8fa28ceb6d582a0be13c5bb96b1589e407",
+            "c0bbd3a5a3de9ca02b10d542eb3d993dbf8790caa142a9c08aaa1293f0f19212",
+            "c3660e3b476b101d3ce8e4d7c56dafeded8938c205f5d8e05d93f6c266800cf0",
+            "51cedddef226b038dae45c6eb64cfde8114a8665d2f737b1d732bad60b120ef7",
+            "f36fefd8bb339957d9bb5f259f21a23e06d87fea85ead1cea77fa2d8e9d427ec",
+            "af3d5a8e3015ef236231aeff716f6fa643560f7924ceafc183bac6b66c48df2d",
+            "ec1203e97052c86b4d47d51c9f57bc208a2b70ae8abd0c346f8f94571709c0a0",
+            "3801d9600a1e348054d6463ba323568da15510543888b4fc00232b63f0fbc207",
+            "d61b0eebb0995d2d725bbe7bdb79c7933ef0ddc3745b0e22966ad3d185ad0b44",
+            "3022db170546359c723163d26a0415bee0f1850d7348c974411ebf5bd5407b5d",
+            "61019167a84d13117708b856450796f29c469679cbdaf867030922088bff0f79",
+            "d1836e7995b35c005b7dc21b71fcc318c1cc2a058df44afdbb98a81f8c484303",
+            "0c161dfffce372239087984f6a292404092eb860cf93a2c61338af4b6159d421"
+          ],
+          "alpha_bounds": [
+            [
+              40,
+              14,
+              83,
+              116
+            ],
+            [
+              38,
+              14,
+              83,
+              116
+            ],
+            [
+              37,
+              13,
+              85,
+              116
+            ],
+            [
+              35,
+              15,
+              85,
+              114
+            ],
+            [
+              37,
+              15,
+              85,
+              112
+            ],
+            [
+              31,
+              17,
+              87,
+              112
+            ],
+            [
+              24,
+              27,
+              90,
+              108
+            ],
+            [
+              21,
+              38,
+              92,
+              106
+            ],
+            [
+              19,
+              47,
+              97,
+              108
+            ],
+            [
+              18,
+              62,
+              103,
+              109
+            ],
+            [
+              19,
+              73,
+              107,
+              111
+            ],
+            [
+              18,
+              80,
+              110,
+              114
+            ],
+            [
+              17,
+              83,
+              111,
+              115
+            ],
+            [
+              18,
+              82,
+              110,
+              115
+            ],
+            [
+              18,
+              82,
+              110,
+              115
+            ],
+            [
+              18,
+              82,
+              109,
+              115
+            ]
+          ]
+        },
+        "W": {
+          "frame_count": 16,
+          "fps": 24,
+          "duration_s": 0.6666666666666666,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": null,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [],
+          "hold_frame": 15,
+          "job_id": "d06499e8-9613-4ed2-8446-4194e4fff674",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "frame_hashes": [
+            "d539eaf594955736570af7e7c18920eaf779585199c15d9cb941a6343629b59f",
+            "f086bff57356e98eebd4ae2e581f66875bc5eafc532e4bb87868fb4c94235f1f",
+            "1969be53c58183f718cd0a51112d547f3046d65710ff696733a4c3e45ccc243c",
+            "1281b9fef519cefa9af65b7bbf4642bf8e00502174db0b5ac57907dfe09d3581",
+            "65a1620068a2238e6870ea0252b683d7a1c425164dcd9462d417e91f5f34029a",
+            "430b330d8fb0849d900bc94f7e7c1139c3ca218e79eb4dddc8957dde8d76b22b",
+            "8be0cb07f6b61b8c151d85bb11377b6e5e21dac2831332043abfe3cbd2f29254",
+            "bed59b4a820a49657b32cf8abe1a5d15056e6fd23a316a141ae6ec1fabd78f15",
+            "66a102ba71a9012cc102d8f94833528c0316cb6f71b45d608464e4078b0d646d",
+            "80a1b974bdc797bb0b45c7dd793a672c4ba59afb9c33426037157dbd07f27153",
+            "bbc053dea22e4648c04158662a33b2ba632d6da46a07f3d967e1be426ef82cdf",
+            "f92af2c0dd689d7268a80f26094e39aaa7d7206068695e5d72d9bcab7085c85b",
+            "f1f4e56bd98f1264353e6372797ad07df3729c15dc8d3f67ce6666a5b422f589",
+            "bb29a0082696e8210bcbd57e2e8d72c3b6be49efca4a2d9be961fb50d43c1d2f",
+            "bdf0f41cb85f8632ad93e16f5496e22c11e8722f532be168b1d94eabe1e5bb98",
+            "9447c3bd755eeabcbc917bb651d2311533ba11e7b7d792060ae006dd989c5b08"
+          ],
+          "alpha_bounds": [
+            [
+              46,
+              13,
+              84,
+              116
+            ],
+            [
+              48,
+              13,
+              86,
+              116
+            ],
+            [
+              45,
+              14,
+              87,
+              115
+            ],
+            [
+              39,
+              17,
+              88,
+              114
+            ],
+            [
+              35,
+              22,
+              90,
+              114
+            ],
+            [
+              29,
+              30,
+              92,
+              114
+            ],
+            [
+              23,
+              47,
+              100,
+              111
+            ],
+            [
+              20,
+              62,
+              101,
+              115
+            ],
+            [
+              17,
+              66,
+              108,
+              114
+            ],
+            [
+              17,
+              72,
+              109,
+              114
+            ],
+            [
+              17,
+              72,
+              113,
+              114
+            ],
+            [
+              17,
+              74,
+              111,
+              116
+            ],
+            [
+              17,
+              76,
+              110,
+              116
+            ],
+            [
+              17,
+              75,
+              110,
+              116
+            ],
+            [
+              17,
+              74,
+              110,
+              116
+            ],
+            [
+              17,
+              74,
+              110,
+              116
+            ]
+          ]
+        },
+        "SW": {
+          "frame_count": 16,
+          "fps": 24,
+          "duration_s": 0.6666666666666666,
+          "foot_anchor": [
+            64,
+            116
+          ],
+          "impact_frame": 0,
+          "recoil_peak_frame": null,
+          "hitbox_active_frames": [],
+          "transition_ready_frames": [],
+          "hold_frame": 15,
+          "job_id": "59fe9f4e-b664-4d8e-92ad-33ad9e6ee41b",
+          "source_frame_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "frame_hashes": [
+            "3fb74c51e158fccafdf7fb48c50d6418f3d6e50a41427285fba0163b9c4a69bb",
+            "5cbf251ce285c498ae46603e84c52e763a1cf467849c5099e54c275b45e80056",
+            "d672675936bf07d6d9629757d08bf2b2ef8a84c0dc6a783d21541ac3135030a7",
+            "1da24bb023934cac9b95aff39405c22df9ca7a9da572aef8d8ed39323db69e36",
+            "66e0cdcd4af7bfc74f4f1a44976327de38e8114f7407b7d62b6f9b4301242312",
+            "32e1a45a1d97f522226713f88e5b652689300aa086eb85c123e448f9da6f67a5",
+            "bc8f2d172e29f979ffdb336f80d51e37c9ee97c24e7b17c0b0a5ae39e8cbf00f",
+            "e17430c5a36d7dd5679165d525c1a7f864a1534fbdc540d2c4f0a847093bf3a0",
+            "44191e58529a897dce8de832234d688f98e9388ea45e2b4d8ad33877f612bdf0",
+            "32afdc18143df304ceed3129457bd36875e6655cb1ff67feb0bcef1a7539ad7e",
+            "d4a5a18e3efae2328fb000d5e66d65b9fb3c041dc76b7a9e2d638bbd2fc07329",
+            "f770e496c0042092d32aa126315a461506919ba5bde621aca1ab27ada36d3da4",
+            "152267a9621836fccd2322df429e5b3cc9bcb306562101b2d248cdff756df9d5",
+            "a915b4aaff91a345fd6452c1c2bbbdfbb4f9253e779d417514588d76791f2d61",
+            "755bfdbcbfd0c5b916aa1567e20368ade4df5dded7852ace7b9b302b7e0420cb",
+            "902f24a7320018b6267a3d5b4a71c8bf100556c2e83d86f4c61179dde94ae5ac"
+          ],
+          "alpha_bounds": [
+            [
+              44,
+              12,
+              85,
+              116
+            ],
+            [
+              44,
+              12,
+              85,
+              116
+            ],
+            [
+              40,
+              12,
+              86,
+              115
+            ],
+            [
+              37,
+              14,
+              85,
+              115
+            ],
+            [
+              38,
+              14,
+              84,
+              115
+            ],
+            [
+              37,
+              15,
+              85,
+              115
+            ],
+            [
+              34,
+              20,
+              86,
+              114
+            ],
+            [
+              28,
+              28,
+              92,
+              114
+            ],
+            [
+              23,
+              43,
+              98,
+              112
+            ],
+            [
+              22,
+              50,
+              103,
+              116
+            ],
+            [
+              17,
+              63,
+              109,
+              116
+            ],
+            [
+              16,
+              72,
+              112,
+              116
+            ],
+            [
+              16,
+              73,
+              112,
+              116
+            ],
+            [
+              16,
+              73,
+              112,
+              116
+            ],
+            [
+              16,
+              73,
+              112,
+              116
+            ],
+            [
+              16,
+              73,
+              112,
+              116
+            ]
+          ]
+        }
+      }
+    }
+  }
+}

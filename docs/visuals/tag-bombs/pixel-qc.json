@@ -1,0 +1,130 @@
+[
+  {
+    "kind": "tag_bomb",
+    "layer": "idle",
+    "frames": 16,
+    "unique": 16,
+    "alpha_values": 2,
+    "bbox_min": [
+      15,
+      11
+    ],
+    "bbox_max": [
+      114,
+      118
+    ],
+    "blue_pixels": 0
+  },
+  {
+    "kind": "tag_bomb",
+    "layer": "fly",
+    "frames": 16,
+    "unique": 16,
+    "alpha_values": 2,
+    "bbox_min": [
+      14,
+      12
+    ],
+    "bbox_max": [
+      115,
+      116
+    ],
+    "blue_pixels": 0
+  },
+  {
+    "kind": "tag_bomb",
+    "layer": "armed",
+    "frames": 16,
+    "unique": 16,
+    "alpha_values": 2,
+    "bbox_min": [
+      10,
+      10
+    ],
+    "bbox_max": [
+      116,
+      117
+    ],
+    "blue_pixels": 0
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "idle",
+    "frames": 16,
+    "unique": 16,
+    "alpha_values": 2,
+    "bbox_min": [
+      14,
+      13
+    ],
+    "bbox_max": [
+      115,
+      116
+    ],
+    "blue_pixels": 0
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "fly",
+    "frames": 16,
+    "unique": 16,
+    "alpha_values": 2,
+    "bbox_min": [
+      15,
+      13
+    ],
+    "bbox_max": [
+      114,
+      116
+    ],
+    "blue_pixels": 0
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "armed",
+    "frames": 16,
+    "unique": 16,
+    "alpha_values": 2,
+    "bbox_min": [
+      14,
+      14
+    ],
+    "bbox_max": [
+      114,
+      117
+    ],
+    "blue_pixels": 0
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "smoke",
+    "frames": 8,
+    "unique": 8,
+    "alpha_values": 2,
+    "bbox_min": [
+      21,
+      24
+    ],
+    "bbox_max": [
+      232,
+      229
+    ],
+    "blue_pixels": 0
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "billow",
+    "frames": 8,
+    "unique": 8,
+    "alpha_values": 2,
+    "bbox_min": [
+      22,
+      24
+    ],
+    "bbox_max": [
+      226,
+      231
+    ],
+    "blue_pixels": 0
+  }
+]
