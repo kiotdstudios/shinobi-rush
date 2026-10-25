@@ -655,6 +655,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if player == null:
 		return
 	if event is InputEventMouseButton and event.pressed:
+		# While the builder is open it owns the wheel (it has extra zoom-out steps).
+		for editor in get_tree().get_nodes_in_group("world_editor"):
+			if editor.open:
+				return
 		# Builder wheel input belongs to its scroll area, including when that area is at a limit.
 		var hovered := get_viewport().gui_get_hovered_control()
 		while hovered != null:

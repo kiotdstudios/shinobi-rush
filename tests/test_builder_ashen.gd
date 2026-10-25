@@ -23,6 +23,7 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().process_frame
 	var obj := placed.objects[placed.objects.size()-1]
 	var tree := obj.nodes[0] as AshenTree
+	editor.set_open(false)  # the open builder freezes the world, so the animation runs once play resumes
 	var clock := tree.local_clock
 	await root.get_tree().process_frame
 	ck.call("volcanic builder: runtime clock advances", tree.local_clock>clock)

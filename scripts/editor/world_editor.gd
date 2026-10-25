@@ -22,6 +22,10 @@ var _paint_button: Button = null
 var brush_button: Button = null
 var _panning := false
 var _camera_free := false
+var _was_paused := false  ## tree pause state before the builder froze the world
+var _zoom_before := 0.0  ## camera zoom before the builder took over the wheel
+## Extra wheel-zoom steps below the gameplay baseline (fractions of it) while building: three more zoom-outs.
+const EDIT_ZOOM_OUT: Array[float] = [0.5, 0.64, 0.8]
 var _pan_camera_mode := Node.PROCESS_MODE_INHERIT
 var place_id := ""
 var snap := 30
@@ -42,6 +46,8 @@ var grid_layer: Node2D
 var _tool_buttons: Dictionary = {}
 var _palette_buttons: Dictionary = {}
 var _filter_buttons: Dictionary = {}
+var filters_toggle: Button
+var filters_box: GridContainer
 var _category_sections: Dictionary = {}
 var palette_scroll: ScrollContainer
 var _clear_armed := false
@@ -66,7 +72,7 @@ var undo_button: Button
 var redo_button: Button
 var fill_void_button: Button
 var next_void_button: Button
-const PANEL_W_MAP := 330.0
+const PANEL_W_MAP := 340.0
 ## Set false only by tests: save/publish normally refuse while white void is left in the level.
 var void_check := true
 ## Cell the last blocked save jumped to (INF = none); drawn as a red diamond on the white void.
@@ -137,6 +143,7 @@ func _ready() -> void:
 	layer = 7
 	name = "WorldEditor"
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group("world_editor")
 	overlay = Overlay.new(self)
 	arena.add_child(overlay)
 	grid_layer = GridLayer.new(self)
@@ -157,10 +164,16 @@ func _ready() -> void:
 			set_open(true)
 
 
+func _exit_tree() -> void:
+	if open and get_tree() != null:
+		get_tree().paused = _was_paused
+
+
 func _process(_d: float) -> void:
 	var hud := hud_bar()
 	if hud != null and hud.edit_mode != open:
 		hud.set_edit_mode(open)
+	_sync_game_ui()
 	if not _settings_rows_added and SettingsPanel.instance() != null:
 		_add_settings_rows(SettingsPanel.instance())
 		if map_mode:
@@ -257,8 +270,12 @@ func _process(_d: float) -> void:
 
 
 func set_open(v: bool) -> void:
+	if v and not open:
+		_was_paused = get_tree().paused if is_inside_tree() else false
 	open = v
+	_freeze_world(v)
 	_set_camera_free(v)
+	_sync_game_ui()
 	panel.visible = v
 	tab.visible = not v
 	var hud := hud_bar()
@@ -373,6 +390,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if not open:
 		return
+	if event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+		var hovered := get_viewport().gui_get_hovered_control()
+		while hovered != null:
+			if hovered.is_in_group("world_builder_ui"):
+				return
+			hovered = hovered.get_parent_control()
+		wheel_zoom(1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else -1)
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventMouseMotion and _panning:
 		pan_by((event as InputEventMouseMotion).relative)
 		get_viewport().set_input_as_handled()
@@ -407,6 +433,58 @@ func _unhandled_input(event: InputEvent) -> void:
 func _camera() -> Camera2D:
 	var p := get_tree().get_first_node_in_group("player") as PlayerController
 	return p.camera if p != null else null
+
+
+## The builder is not the game: while it is open the world is frozen (nothing moves, nobody can hit the player).
+func _freeze_world(on: bool) -> void:
+	if not is_inside_tree():
+		return
+	if on:
+		get_tree().paused = true
+	else:
+		get_tree().paused = _was_paused
+	var cam := _camera()
+	if cam == null:
+		return
+	if on:
+		if _zoom_before <= 0.0:
+			_zoom_before = cam.zoom.x
+	elif _zoom_before > 0.0:
+		cam.zoom = Vector2.ONE * _zoom_before
+		_zoom_before = 0.0
+
+
+## Game HUD (bars, ability slots, d-pad) stays out of the editor, except while the HUD layout section is ticked.
+func _sync_game_ui() -> void:
+	var hud := hud_bar()
+	if hud == null:
+		return
+	var show_hud := not open or ((_filter_buttons.get("HUD layout") as CheckBox) != null and (_filter_buttons["HUD layout"] as CheckBox).button_pressed)
+	if hud.visible != show_hud:
+		hud.visible = show_hud
+
+
+## Wheel zoom while building: the usual lab steps plus three extra zoom-outs below the baseline.
+func zoom_steps() -> Array[float]:
+	var p := get_tree().get_first_node_in_group("player") as PlayerController
+	var base := p.camera_baseline if p != null else WorldScale.CAMERA_BASE_ZOOM
+	var out: Array[float] = []
+	for f in EDIT_ZOOM_OUT:
+		out.append(base * f)
+	out.append_array(AnimationLab.zoom_list(base))
+	return out
+
+
+func wheel_zoom(direction: int) -> void:
+	var cam := _camera()
+	if cam == null:
+		return
+	var steps := zoom_steps()
+	var cur := 0
+	for i in steps.size():
+		if absf(steps[i] - cam.zoom.x) < absf(steps[cur] - cam.zoom.x):
+			cur = i
+	cam.zoom = Vector2.ONE * steps[clampi(cur + direction, 0, steps.size() - 1)]
 
 
 ## While the builder is open the camera keeps running through a pause, so you can pan and place on a frozen world.
@@ -638,7 +716,7 @@ func _build_map_tabs(outer: VBoxContainer, foot: Control) -> void:
 	tab_build_button.button_pressed = true
 	build_page = VBoxContainer.new()
 	build_page.name = "BuildPage"
-	build_page.add_theme_constant_override("separation", 8)
+	build_page.add_theme_constant_override("separation", 4)
 	build_page.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var movers: Array[Node] = []
 	for i in range(3, outer.get_child_count()):
@@ -953,10 +1031,10 @@ static func _sbox(bg: Color, border := Color(0, 0, 0, 0), bw := 0, radius := 8) 
 	s.border_color = border
 	s.set_border_width_all(bw)
 	s.set_corner_radius_all(radius)
-	s.content_margin_left = 10
-	s.content_margin_right = 10
-	s.content_margin_top = 6
-	s.content_margin_bottom = 6
+	s.content_margin_left = 6
+	s.content_margin_right = 6
+	s.content_margin_top = 3
+	s.content_margin_bottom = 3
 	return s
 
 
@@ -985,7 +1063,7 @@ func _skin(b: Button, kind := "ghost") -> void:
 	var on := Color("#0a0a0a") if kind == "tool" else Color.WHITE
 	b.add_theme_color_override("font_pressed_color", on)
 	b.add_theme_color_override("font_hover_pressed_color", on)
-	b.add_theme_font_size_override("font_size", 13)
+	b.add_theme_font_size_override("font_size", 12)
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
 
@@ -1059,8 +1137,8 @@ func _build_ui() -> void:
 	panel.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	panel.offset_left = -PANEL_W
 	panel.offset_right = 0
-	panel.offset_top = 56
-	panel.offset_bottom = -24
+	panel.offset_top = 0
+	panel.offset_bottom = 0
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	panel.mouse_force_pass_scroll_events = false
 	panel.add_to_group("world_builder_ui")
@@ -1068,14 +1146,14 @@ func _build_ui() -> void:
 	sb.corner_radius_top_right = 0
 	sb.corner_radius_bottom_right = 0
 	sb.border_width_right = 0
-	sb.set_content_margin_all(12)
+	sb.set_content_margin_all(8)
 	sb.shadow_color = Color(0, 0, 0, 0.55)
 	sb.shadow_size = 14
 	panel.add_theme_stylebox_override("panel", sb)
 	root.add_child(panel)
 
 	var outer := VBoxContainer.new()
-	outer.add_theme_constant_override("separation", 8)
+	outer.add_theme_constant_override("separation", 4)
 	panel.add_child(outer)
 
 	# header
@@ -1112,7 +1190,7 @@ func _build_ui() -> void:
 
 	# tools
 	var tools := HBoxContainer.new()
-	tools.add_theme_constant_override("separation", 6)
+	tools.add_theme_constant_override("separation", 4)
 	outer.add_child(tools)
 	_tool_buttons["select"] = _toggle(tools, "SELECT / MOVE", func(): set_tool("select"))
 	_tool_buttons["erase"] = _toggle(tools, "ERASE", func(): set_tool("erase"))
@@ -1121,7 +1199,7 @@ func _build_ui() -> void:
 	_paint_button = _tool_buttons["paint"]
 	brush_button = _toggle(outer, "BRUSH  1 x 1  (paint: drag to lay many tiles)", func(): cycle_brush())
 	var edit_row := HBoxContainer.new()
-	edit_row.add_theme_constant_override("separation", 6)
+	edit_row.add_theme_constant_override("separation", 4)
 	outer.add_child(edit_row)
 	undo_button = Button.new()
 	undo_button.text = "UNDO"
@@ -1140,7 +1218,7 @@ func _build_ui() -> void:
 	redo_button.pressed.connect(redo)
 	edit_row.add_child(redo_button)
 	var void_row := HBoxContainer.new()
-	void_row.add_theme_constant_override("separation", 6)
+	void_row.add_theme_constant_override("separation", 4)
 	outer.add_child(void_row)
 	fill_void_button = Button.new()
 	fill_void_button.text = "FILL VOID"
@@ -1159,10 +1237,24 @@ func _build_ui() -> void:
 	next_void_button.pressed.connect(jump_to_next_void)
 	void_row.add_child(next_void_button)
 
-	# Palette filters: hide/show the option cards by type; the world itself is untouched.
-	var filters := GridContainer.new()
-	filters.columns = 3
-	outer.add_child(filters)
+	# Palette filters: hide/show the option cards by type; the world itself is untouched. Folded away by default.
+	filters_toggle = Button.new()
+	filters_toggle.text = "FILTERS  +"
+	filters_toggle.toggle_mode = true
+	filters_toggle.focus_mode = Control.FOCUS_NONE
+	filters_toggle.tooltip_text = "Show or hide the palette type checkboxes"
+	filters_toggle.custom_minimum_size = Vector2(0, 24)
+	_skin(filters_toggle)
+	outer.add_child(filters_toggle)
+	filters_box = GridContainer.new()
+	filters_box.columns = 2
+	filters_box.visible = false
+	filters_box.add_theme_constant_override("v_separation", 0)
+	filters_toggle.toggled.connect(func(on: bool) -> void:
+		filters_box.visible = on
+		filters_toggle.text = "FILTERS  -" if on else "FILTERS  +")
+	outer.add_child(filters_box)
+	var filters := filters_box
 	var filter_cats: Array = PlacedObjects.CATEGORIES.duplicate()
 	filter_cats.append(["HUD layout", []])  # the HUD piece controls are a section like the others (hidden until ticked)
 	for category: Array in filter_cats:
@@ -1172,6 +1264,8 @@ func _build_ui() -> void:
 		check.tooltip_text = "Show/hide the " + name.to_lower() + " options in the build palette (the world is not affected)"
 		check.button_pressed = name != "HUD layout"
 		check.focus_mode = Control.FOCUS_NONE
+		check.clip_text = true
+		check.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		check.add_theme_font_size_override("font_size", 11)
 		check.toggled.connect(func(shown: bool): set_type_filter(name, shown))
 		filters.add_child(check)
@@ -1182,7 +1276,7 @@ func _build_ui() -> void:
 	palette_scroll = scroll
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.custom_minimum_size = Vector2(0, 240)  # the palette never gets squeezed out by what sits below it
+	scroll.custom_minimum_size = Vector2(0, 200)  # the palette never gets squeezed out by what sits below it
 	outer.add_child(scroll)
 	_fat_scrollbar(scroll)
 	var col := VBoxContainer.new()
@@ -1369,7 +1463,7 @@ func _build_ui() -> void:
 	save_button.text = "SAVE  (Ctrl+S)"
 	save_button.focus_mode = Control.FOCUS_NONE
 	save_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	save_button.custom_minimum_size = Vector2(0, 38)
+	save_button.custom_minimum_size = Vector2(0, 30)
 	_skin(save_button, "tool")
 	save_button.add_theme_stylebox_override("normal", _sbox(ACCENT, Color("#ffa05a"), 1, 8))
 	save_button.add_theme_stylebox_override("hover", _sbox(Color("#ff8a2e"), Color.WHITE, 1, 8))
@@ -1382,7 +1476,7 @@ func _build_ui() -> void:
 	dl.text = "DOWNLOAD"
 	dl.tooltip_text = "Download the layout as a .json file"
 	dl.focus_mode = Control.FOCUS_NONE
-	dl.custom_minimum_size = Vector2(0, 38)
+	dl.custom_minimum_size = Vector2(0, 30)
 	_skin(dl)
 	dl.pressed.connect(download_layout)
 	saves.add_child(dl)
@@ -1393,7 +1487,7 @@ func _build_ui() -> void:
 		pub.text = "PUBLISH"
 		pub.tooltip_text = "Commit + push this layout to GitHub (desktop only, uses this machine's own git login)"
 		pub.focus_mode = Control.FOCUS_NONE
-		pub.custom_minimum_size = Vector2(0, 38)
+		pub.custom_minimum_size = Vector2(0, 30)
 		_skin(pub)
 		pub.pressed.connect(publish_to_github)
 		saves.add_child(pub)
@@ -1470,6 +1564,8 @@ func set_type_filter(category: String, shown: bool) -> void:
 	if category == "HUD layout" and not shown and hud_bar() != null:
 		hud_bar().select_element("")
 	(_filter_buttons[category] as CheckBox).set_pressed_no_signal(shown)
+	if category == "HUD layout":
+		_sync_game_ui()
 	if not shown:
 		if place_id != "" and PlacedObjects.type_of(place_id) == category:
 			set_tool("select")
@@ -1493,7 +1589,7 @@ func _toggle(parent: Node, text: String, cb: Callable) -> Button:
 	b.toggle_mode = true
 	b.focus_mode = Control.FOCUS_NONE
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.custom_minimum_size = Vector2(0, 38)
+	b.custom_minimum_size = Vector2(0, 28)
 	_skin(b, "tool")
 	b.pressed.connect(cb)
 	parent.add_child(b)
