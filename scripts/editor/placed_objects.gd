@@ -221,6 +221,14 @@ var _serial := 0
 var loaded_version := 0
 ## True once the authored starting-area layer is part of this layout (it is saved, so the owner's edits to it stick).
 var shrine_section_applied := false
+## Undo / redo. Each group is one editor action (a click, a whole paint stroke, a fill) stored as small ops:
+## ["add", id, pos] | ["remove", id, pos] | ["move", id, from, to]. Nothing else is stored, so it stays cheap.
+const UNDO_LIMIT := 200
+var _undo: Array = []
+var _redo: Array = []
+var _pending: Array = []
+var _replaying := false
+var _recording := true
 var hidden_types: Dictionary = {}
 
 
@@ -534,6 +542,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		nodes = [tree, _make_trunk(pos)]
 	var obj := {"id": id, "pos": pos, "nodes": nodes}
 	objects.append(obj)
+	_record(["add", id, pos])
 	_apply_visibility(obj)
 	if commit:
 		_changed()
@@ -762,7 +771,7 @@ func void_cells(area: Rect2) -> Array:
 			if posmod(k - m, 2) != 0:
 				continue
 			var c := Vector2(36.0 * k, 18.0 * m)
-			if not covered.has(c):
+			if not covered.has(c) and area.encloses(Rect2(c - Vector2(36, 18), Vector2(72, 36))):
 				out.append(c)
 	return out
 
@@ -817,6 +826,7 @@ func remove(obj: Dictionary, commit := true) -> void:
 	if not objects.has(obj):
 		return
 	objects.erase(obj)
+	_record(["remove", str(obj.id), obj.pos])
 	var def := def_of(obj.id)
 	if def.kind == "grass":
 		(arena.get_node("WindGrassField") as WindGrassField).removed_editable(obj.id)
@@ -835,6 +845,7 @@ func remove(obj: Dictionary, commit := true) -> void:
 func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 	if not objects.has(obj):
 		return
+	_record(["move", str(obj.id), obj.pos, pos])
 	obj.pos = pos
 	var def := def_of(obj.id)
 	var nodes: Array = obj.nodes
@@ -987,6 +998,8 @@ func save() -> bool:
 
 ## Rebuild a layout. Entries with an unknown id, bad numbers, outside the arena or on top of the spawn are skipped.
 func load_dict(data: Dictionary) -> int:
+	var was_recording := _recording
+	_recording = false
 	clear_all(false)
 	loaded_version = int(data.get("version", 1))
 	shrine_section_applied = bool(data.get("shrine_section", false))
@@ -1015,6 +1028,8 @@ func load_dict(data: Dictionary) -> int:
 			continue
 		if not add(id, pos, false).is_empty():
 			made += 1
+	_recording = was_recording
+	clear_history()
 	_changed(false)
 	return made
 
@@ -1156,7 +1171,107 @@ func load_default_from_repo(path := DEFAULT_LAYOUT_PATH) -> int:
 
 
 func _changed(write := true) -> void:
+	_flush_pending()
 	if arena != null:
 		arena.rebuild_nav()
 	if write and autosave:
 		save()
+
+
+# ------------------------------------------------------------------ undo / redo
+func _record(op: Array) -> void:
+	if _replaying or not _recording:
+		return
+	_pending.append(op)
+	_redo.clear()
+
+
+func _flush_pending() -> void:
+	if _pending.is_empty():
+		return
+	_undo.append(_pending)
+	_pending = []
+	if _undo.size() > UNDO_LIMIT:
+		_undo.pop_front()
+
+
+func clear_history() -> void:
+	_undo.clear()
+	_redo.clear()
+	_pending.clear()
+
+
+func can_undo() -> bool:
+	return not _undo.is_empty() or not _pending.is_empty()
+
+
+func can_redo() -> bool:
+	return not _redo.is_empty()
+
+
+func _find_exact(id: String, pos: Vector2) -> Dictionary:
+	for i in range(objects.size() - 1, -1, -1):
+		var o := objects[i]
+		if o.id == id and (o.pos as Vector2).distance_squared_to(pos) < 0.25:
+			return o
+	return {}
+
+
+## Undo the last editor action. Returns false when there is nothing to undo.
+func undo() -> bool:
+	_flush_pending()
+	if _undo.is_empty():
+		return false
+	var group: Array = _undo.pop_back()
+	_replaying = true
+	for i in range(group.size() - 1, -1, -1):
+		var op: Array = group[i]
+		match op[0]:
+			"add":
+				var o := _find_exact(op[1], op[2])
+				if not o.is_empty():
+					remove(o, false)
+			"remove":
+				add(op[1], op[2], false)
+			"move":
+				var o2 := _find_exact(op[1], op[3])
+				if not o2.is_empty():
+					move(o2, op[2], false)
+	_replaying = false
+	_redo.append(group)
+	_changed()
+	return true
+
+
+func redo() -> bool:
+	if _redo.is_empty():
+		return false
+	var group: Array = _redo.pop_back()
+	_replaying = true
+	for op: Array in group:
+		match op[0]:
+			"add":
+				add(op[1], op[2], false)
+			"remove":
+				var o := _find_exact(op[1], op[2])
+				if not o.is_empty():
+					remove(o, false)
+			"move":
+				var o2 := _find_exact(op[1], op[2])
+				if not o2.is_empty():
+					move(o2, op[3], false)
+	_replaying = false
+	_undo.append(group)
+	_changed()
+	return true
+
+
+## Lay `id` (a ground or flat-grass tile) on every floor cell that has no art. One undo step. Returns how many were laid.
+func fill_void(id: String, area: Rect2) -> int:
+	var made := 0
+	for c: Vector2 in void_cells(area):
+		if paint_cell(id, c):
+			made += 1
+	if made > 0:
+		_changed()
+	return made
