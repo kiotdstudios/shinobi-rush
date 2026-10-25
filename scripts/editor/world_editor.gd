@@ -15,6 +15,35 @@ var open := false
 var tool := "select"  ## "select" | "erase" | "place" | "paint" | "pan"
 const BRUSHES: Array[int] = [1, 3, 5]
 var brush := 1  ## paint tool: the brush is a brush x brush block of floor cells
+const SHAPES: Array[String] = ["brush", "rect", "line"]
+const BANK_LABELS := {"": "AUTO", "grass": "GRASS", "dirt": "DIRT", "rock": "ROCK"}
+const TERRAIN_COLORS := {"water": Color("#3aa0ff"), "grass": Color("#4fd25a"), "ground": Color("#b9824a"), "temple": Color("#b8b8c8"), "": Color("#ff4d4d")}
+var auto_terrain := "water"  ## terrain tool: "water" | "grass" | "ground" | "temple" | "" (clear floor)
+var bank_family := ""  ## terrain tool: "" follows the neighbouring land, else "grass" | "dirt" | "rock"
+var shape := "brush"  ## paint / terrain: "brush" (drag), "rect" (drag a box) or "line"
+var erase_autofix := true  ## erasing a floor tile re-picks the edges around the hole
+var selection: Array = []  ## box-selected objects (group move / copy / delete)
+var clipboard: Array = []  ## copied stamp items {id, x, y} relative to an anchor floor cell
+var stamp_path := StampStore.PATH
+var problems: Array = []
+var _problem_i := -1
+var _auto: AutoTile = null
+var _shaping := false
+var _shape_start := Vector2.INF
+var _shape_end := Vector2.INF
+var _boxing := false
+var _box_start := Vector2.INF
+var _box_end := Vector2.INF
+var _group_dragging := false
+var _group_start_world := Vector2.ZERO
+var _group_from: Array = []
+var _terrain_buttons: Dictionary = {}
+var _shape_buttons: Dictionary = {}
+var _layer_buttons: Dictionary = {}
+var bank_button: Button = null
+var stamps_box: VBoxContainer = null
+var tools_toggle: Button = null
+var tools_body: Control = null
 var _stroke := false
 var _stroke_changed := false
 var _last_cell := Vector2(INF, INF)
@@ -317,6 +346,11 @@ func set_tool(t: String, id := "") -> void:
 		place_id = id if t == "place" else ""
 	if t != "select":
 		selected = {}
+	if t not in ["select", "box"]:
+		selection = []
+	_auto = null
+	_shaping = false
+	_boxing = false
 	_refresh()
 
 
@@ -393,7 +427,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			hud_bar().save_layout()
 			get_viewport().set_input_as_handled()
 			return
-		if open and (event.keycode == KEY_DELETE or event.keycode == KEY_BACKSPACE) and not selected.is_empty():
+		if open and event.ctrl_pressed and event.keycode == KEY_C:
+			copy_selection()
+			get_viewport().set_input_as_handled()
+			return
+		if open and event.ctrl_pressed and event.keycode == KEY_V:
+			begin_paste()
+			get_viewport().set_input_as_handled()
+			return
+		if open and (event.keycode == KEY_DELETE or event.keycode == KEY_BACKSPACE) and (not selected.is_empty() or not selection.is_empty()):
 			delete_selected()
 			get_viewport().set_input_as_handled()
 		return
@@ -416,8 +458,15 @@ func _unhandled_input(event: InputEvent) -> void:
 				release_hud()
 			elif _stroke:
 				end_stroke()
+			elif _shaping:
+				end_shape(_mouse_world())
+			elif _boxing:
+				end_box(_mouse_world())
 			else:
 				release()
+			get_viewport().set_input_as_handled()
+		elif mb.button_index == MOUSE_BUTTON_MIDDLE and mb.pressed:
+			eyedrop(_mouse_world(), Input.is_key_pressed(KEY_ALT))
 			get_viewport().set_input_as_handled()
 		elif mb.button_index == MOUSE_BUTTON_RIGHT and mb.pressed:
 			set_tool("select")
@@ -426,6 +475,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		hud_bar().drag_at(get_viewport().get_mouse_position(), not Input.is_key_pressed(KEY_SHIFT))
 	elif event is InputEventMouseMotion and _stroke:
 		paint_to(_mouse_world())
+	elif event is InputEventMouseMotion and _shaping:
+		_shape_end = iso_cell_center(_mouse_world())
+	elif event is InputEventMouseMotion and _boxing:
+		_box_end = _mouse_world()
 	elif event is InputEventMouseMotion and dragging:
 		drag_to(_mouse_world())
 
@@ -498,7 +551,11 @@ func select_hud(id: String) -> void:
 
 ## Floor cells a brush stamped at `world` covers: a brush x brush block of 72x36 diamonds, centred on the cell under it.
 func brush_cells(world: Vector2) -> Array[Vector2]:
-	var c := iso_cell_center(world)
+	return block_cells(iso_cell_center(world))
+
+
+## The brush x brush block of floor cells around floor cell `c`.
+func block_cells(c: Vector2) -> Array[Vector2]:
 	var out: Array[Vector2] = []
 	var r := (brush - 1) / 2
 	for i in range(-r, r + 1):
@@ -509,12 +566,23 @@ func brush_cells(world: Vector2) -> Array[Vector2]:
 
 ## Stamp the brush at `world`; true if any tile changed.
 func paint_at(world: Vector2) -> bool:
-	var any := false
-	for cell in brush_cells(world):
-		if placed.paint_cell(place_id, cell):
-			any = true
+	var any := _apply_cells(brush_cells(world))
 	if any:
 		_stroke_changed = true
+	return any
+
+
+## Lay the current brush (the terrain tool's auto-tiling, or the chosen floor piece) on `cells`. No commit.
+func _apply_cells(cells: Array) -> bool:
+	if tool == "terrain":
+		if _auto == null:
+			_auto = AutoTile.new(placed, bank_family)
+		_auto.bank_family = bank_family
+		return _auto.apply(cells, auto_terrain) > 0
+	var any := false
+	for cell: Vector2 in cells:
+		if placed.paint_cell(place_id, cell):
+			any = true
 	return any
 
 
@@ -537,6 +605,7 @@ func end_stroke() -> void:
 	if not _stroke:
 		return
 	_stroke = false
+	_auto = null
 	_last_cell = Vector2(INF, INF)
 	if _stroke_changed:
 		_stroke_changed = false
@@ -545,8 +614,13 @@ func end_stroke() -> void:
 
 
 func press(world: Vector2) -> void:
+	if tool in ["paint", "terrain"] and shape != "brush":
+		_shaping = true
+		_shape_start = iso_cell_center(world)
+		_shape_end = _shape_start
+		return
 	match tool:
-		"paint":
+		"paint", "terrain":
 			_stroke = true
 			_stroke_changed = false
 			_last_cell = Vector2(INF, INF)
@@ -557,13 +631,33 @@ func press(world: Vector2) -> void:
 				selected = {}
 				placed.add(place_id, pos)
 				_refresh()
+		"stamp":
+			paste_at(world)
+		"box":
+			_boxing = true
+			_box_start = world
+			_box_end = world
 		"erase":
 			var o := placed.hit_test(world)
 			if not o.is_empty():
-				placed.remove(o)
+				if erase_autofix and PlacedObjects.is_floor_tile(o.id):
+					AutoTile.new(placed).erase(o)
+					placed._changed()
+				else:
+					placed.remove(o)
 				_refresh()
 		_:
-			selected = placed.hit_test(world)
+			var hit := placed.hit_test(world)
+			if Input.is_key_pressed(KEY_SHIFT) and tool == "select":
+				_boxing = true
+				_box_start = world
+				_box_end = world
+				return
+			if not selection.is_empty() and selection.has(hit):
+				begin_group_drag(world)
+				return
+			selection = []
+			selected = hit
 			dragging = not selected.is_empty()
 			if dragging:
 				_drag_origin = selected.pos
@@ -572,11 +666,17 @@ func press(world: Vector2) -> void:
 
 
 func drag_to(world: Vector2) -> void:
+	if _group_dragging:
+		group_drag_to(world)
+		return
 	if dragging and not selected.is_empty():
 		placed.move(selected, snapped_pos(world + _drag_offset), false)
 
 
 func release() -> void:
+	if _group_dragging:
+		end_group_drag()
+		return
 	if not dragging:
 		return
 	dragging = false
@@ -587,6 +687,278 @@ func release() -> void:
 	else:
 		placed.move(selected, _drag_origin, true)  # dropped somewhere illegal: snap back
 	_refresh()
+
+
+# ------------------------------------------------------------------ builder pro tools
+## Floor cells covered by a rect / line drag from floor cell `a` to floor cell `b` (in the floor grid's own axes).
+func shape_cells(a: Vector2, b: Vector2) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	var seen := {}
+	var d := b - a
+	var di := roundi((d.x / 36.0 + d.y / 18.0) * 0.5)
+	var dj := roundi((d.x / 36.0 - d.y / 18.0) * 0.5)
+	var step_i := Vector2(36, 18)
+	var step_j := Vector2(36, -18)
+	if shape == "rect":
+		for i in range(mini(0, di), maxi(0, di) + 1):
+			for j in range(mini(0, dj), maxi(0, dj) + 1):
+				out.append(a + step_i * float(i) + step_j * float(j))
+		return out
+	var n := maxi(absi(di), absi(dj))
+	for k in range(n + 1):
+		var t := float(k) / float(maxi(n, 1))
+		var c := a + step_i * float(roundi(float(di) * t)) + step_j * float(roundi(float(dj) * t))
+		for cell in block_cells(c):
+			if not seen.has(cell):
+				seen[cell] = true
+				out.append(cell)
+	return out
+
+
+## Finish a rect / line drag: lay the whole shape as one undo step.
+func end_shape(world: Vector2) -> int:
+	if not _shaping:
+		return 0
+	_shaping = false
+	_shape_end = iso_cell_center(world)
+	return apply_shape(_shape_start, _shape_end)
+
+
+func apply_shape(a: Vector2, b: Vector2) -> int:
+	var cells := shape_cells(a, b)
+	_auto = null
+	var any := _apply_cells(cells)
+	_auto = null
+	if any:
+		placed._changed()
+		_flash("Filled %d cells (Ctrl+Z undoes it)" % cells.size())
+	_refresh()
+	return cells.size() if any else 0
+
+
+## Box select: every unlocked, visible object whose centre is inside the dragged box.
+func end_box(world: Vector2) -> int:
+	if not _boxing:
+		return 0
+	_boxing = false
+	_box_end = world
+	return select_in_rect(Rect2(_box_start, Vector2.ZERO).expand(_box_end))
+
+
+func select_in_rect(area: Rect2) -> int:
+	selection = placed.objects_in_rect(area)
+	selected = {}
+	dragging = false
+	if selection.size() == 1:
+		selected = selection[0]
+		selection = []
+	_flash("%d selected: drag to move, Ctrl+C to copy, Del to delete" % selection.size() if selection.size() > 1 else "Nothing in the box" if selected.is_empty() else "1 selected")
+	_refresh()
+	return selection.size() + (1 if not selected.is_empty() else 0)
+
+
+func selected_objects() -> Array:
+	if not selection.is_empty():
+		return selection.duplicate()
+	return [selected] if not selected.is_empty() else []
+
+
+func begin_group_drag(world: Vector2) -> void:
+	_group_dragging = true
+	_group_start_world = world
+	_group_from = []
+	for o: Dictionary in selection:
+		_group_from.append(o.pos)
+
+
+func group_drag_to(world: Vector2) -> void:
+	var delta := world - _group_start_world
+	var has_floor := false
+	for o: Dictionary in selection:
+		has_floor = has_floor or PlacedObjects.is_floor_tile(o.id)
+	if has_floor:
+		var c0 := iso_cell_center(_group_start_world)
+		delta = iso_cell_center(_group_start_world + delta) - c0  # floor pieces stay on the floor grid
+	elif snap > 0:
+		delta = (delta / float(snap)).round() * float(snap)
+	for i in selection.size():
+		placed.move(selection[i], (_group_from[i] as Vector2) + delta, false)
+
+
+func end_group_drag() -> void:
+	_group_dragging = false
+	var ok := true
+	for o: Dictionary in selection:
+		if not PlacedObjects.is_floor_tile(o.id) and not placed.can_place(o.id, o.pos):
+			ok = false
+	if not ok:
+		for i in selection.size():
+			placed.move(selection[i], _group_from[i], false)
+		_flash("Cannot drop the group there")
+	else:
+		for o: Dictionary in selection:  # a moved floor tile replaces whatever floor it lands on
+			if PlacedObjects.is_floor_tile(o.id):
+				for other in placed.floor_tiles_in_cell(PlacedObjects.lattice_center(o.pos)):
+					if other != o and not selection.has(other):
+						placed.remove(other, false)
+	placed._changed()
+	_refresh()
+
+
+func copy_selection() -> int:
+	var objs := selected_objects()
+	clipboard = StampStore.capture(objs)
+	_flash("Copied %d objects: Ctrl+V or PASTE, then click to drop" % clipboard.size() if not clipboard.is_empty() else "Select something first (BOX SELECT, or Shift + drag)")
+	_refresh()
+	return clipboard.size()
+
+
+func begin_paste() -> void:
+	if clipboard.is_empty():
+		_flash("Nothing copied yet")
+		return
+	set_tool("stamp")
+	_flash("Click to drop the copy, right-click to stop")
+
+
+func paste_at(world: Vector2) -> int:
+	if clipboard.is_empty():
+		return 0
+	var made := placed.paste(clipboard, iso_cell_center(world))
+	_flash("Pasted %d objects (Ctrl+Z undoes it)" % made.size())
+	_refresh()
+	return made.size()
+
+
+func save_stamp(stamp_name := "") -> bool:
+	var items := StampStore.capture(selected_objects()) if not selected_objects().is_empty() else clipboard
+	if items.is_empty():
+		_flash("Select or copy something, then SAVE STAMP")
+		return false
+	var nm := stamp_name if stamp_name != "" else "Stamp %d" % (StampStore.load_all(stamp_path).size() + 1)
+	var ok := StampStore.add(nm, items, stamp_path)
+	_rebuild_stamps()
+	_flash("Saved %s" % nm if ok else "Could not save the stamp")
+	return ok
+
+
+func use_stamp(index: int) -> void:
+	var all := StampStore.load_all(stamp_path)
+	if index < 0 or index >= all.size():
+		return
+	clipboard = (all[index] as Dictionary).items
+	begin_paste()
+
+
+func delete_stamp(index: int) -> void:
+	StampStore.remove(index, stamp_path)
+	_rebuild_stamps()
+
+
+func _rebuild_stamps() -> void:
+	if stamps_box == null:
+		return
+	for c in stamps_box.get_children():
+		stamps_box.remove_child(c)
+		c.queue_free()
+	var all := StampStore.load_all(stamp_path)
+	for i in all.size():
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 4)
+		stamps_box.add_child(row)
+		var use := _mini(row, "%s  (%d)" % [str(all[i].name), (all[i].items as Array).size()], use_stamp.bind(i), false)
+		use.tooltip_text = "Load this stamp, then click the map to drop it"
+		var x := _mini(row, "X", delete_stamp.bind(i), false)
+		x.size_flags_horizontal = Control.SIZE_SHRINK_END
+		x.tooltip_text = "Delete this saved stamp"
+
+
+## Middle-click: make the piece under the cursor the current brush (Alt: the floor tile under it).
+func eyedrop(world: Vector2, floor_only := false) -> bool:
+	var o: Dictionary = {}
+	if floor_only:
+		var tiles := placed.floor_tiles_in_cell(iso_cell_center(world))
+		o = tiles.back() if not tiles.is_empty() else {}
+	else:
+		o = placed.hit_test(world)
+	if o.is_empty():
+		_flash("Nothing here to pick up")
+		return false
+	var id: String = o.id
+	if PlacedObjects.is_floor_tile(id):
+		var t := AutoTile.terrain_of(id)
+		if tool == "terrain" and t in AutoTile.TERRAINS:
+			auto_terrain = t
+			_refresh()
+		else:
+			set_tool("paint", id)
+	else:
+		set_tool("place", id)
+	_flash("Picked %s" % str(PlacedObjects.def_of(id).get("label", id)))
+	return true
+
+
+func set_terrain(t: String) -> void:
+	auto_terrain = t
+	set_tool("terrain")
+
+
+func cycle_bank() -> void:
+	var fams := AutoTile.BANK_FAMILIES
+	bank_family = fams[(fams.find(bank_family) + 1) % fams.size()]
+	_refresh()
+
+
+func set_shape(sh: String) -> void:
+	shape = sh
+	_shaping = false
+	if tool not in ["paint", "terrain"]:
+		set_terrain(auto_terrain)
+	_refresh()
+
+
+func set_layer_hidden(category: String, hidden: bool) -> void:
+	placed.set_type_visible(category, not hidden)
+	_refresh()
+
+
+func set_layer_locked(category: String, locked: bool) -> void:
+	placed.set_type_locked(category, locked)
+	if locked and not selected.is_empty() and PlacedObjects.type_of(selected.id) == category:
+		selected = {}
+	selection = selection.filter(func(o): return PlacedObjects.type_of(o.id) != category)
+	_refresh()
+
+
+func toggle_erase_autofix() -> void:
+	erase_autofix = not erase_autofix
+	_refresh()
+
+
+func clear_problem_flags() -> void:
+	problems = []
+	_refresh()
+
+
+func scan_problems() -> int:
+	problems = ProblemScan.scan(placed)
+	_problem_i = -1
+	_flash("%d problems found: NEXT PROBLEM flies to each" % problems.size() if not problems.is_empty() else "No problems found")
+	return problems.size()
+
+
+func next_problem() -> void:
+	if problems.is_empty() and scan_problems() == 0:
+		return
+	_problem_i = (_problem_i + 1) % problems.size()
+	var pr: Dictionary = problems[_problem_i]
+	var cam := _camera()
+	if not open:
+		set_open(true)
+	if cam != null:
+		cam.offset += (pr.pos as Vector2) - cam.get_screen_center_position()
+		cam.force_update_scroll()
+	_flash("%d/%d  %s" % [_problem_i + 1, problems.size(), str(pr.msg)])
 
 
 ## Explicit save: writes the layout to the game's save slot (it also autosaves on every edit) and says so.
@@ -639,12 +1011,14 @@ func fill_void() -> void:
 
 func undo() -> void:
 	selected = {}
+	selection = []
 	_flash("Undone" if placed.undo() else "Nothing to undo")
 	_refresh()
 
 
 func redo() -> void:
 	selected = {}
+	selection = []
 	_flash("Redone" if placed.redo() else "Nothing to redo")
 	_refresh()
 
@@ -709,7 +1083,7 @@ func _build_map_tabs(outer: VBoxContainer, foot: Control) -> void:
 		build_page.add_child(n)
 	outer.add_child(build_page)
 	outer.move_child(build_page, 3)
-	palette_scroll.custom_minimum_size = Vector2(0, 120)
+	palette_scroll.custom_minimum_size = Vector2(0, 90)
 	var scroll := ScrollContainer.new()
 	scroll.name = "SettingsPage"
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -903,6 +1277,18 @@ func _flash(text: String) -> void:
 
 
 func delete_selected() -> void:
+	if not selection.is_empty():
+		var n := 0
+		for o: Dictionary in selection.duplicate():
+			if placed.objects.has(o) and not placed.type_locked(o.id):
+				placed.remove(o, false)
+				n += 1
+		selection = []
+		if n > 0:
+			placed._changed()
+		_flash("Deleted %d objects (Ctrl+Z undoes it)" % n)
+		_refresh()
+		return
 	if selected.is_empty():
 		return
 	placed.remove(selected)
@@ -1004,6 +1390,36 @@ func draw_overlay(c: Node2D) -> void:
 			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95), false, 3.0)
 		elif dims_on(PlacedObjects.type_of(o.id)):
 			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(ACCENT, 0.7), false, 2.0)
+	for o: Dictionary in selection:
+		if placed.objects.has(o):
+			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95), false, 3.0)
+	if _boxing:
+		var br := Rect2(_box_start, Vector2.ZERO).expand(_box_end)
+		c.draw_rect(br, Color(ACCENT, 0.12))
+		c.draw_rect(br, Color(ACCENT, 0.95), false, 2.0)
+	var over_world := get_viewport().gui_get_hovered_control() == null
+	if tool in ["paint", "terrain"] and shape != "brush" and over_world:
+		var a := _shape_start if _shaping else iso_cell_center(_mouse_world())
+		var b := _shape_end if _shaping else a
+		var tint: Color = TERRAIN_COLORS.get(auto_terrain, ACCENT) if tool == "terrain" else ACCENT
+		for cell in shape_cells(a, b):
+			c.draw_colored_polygon(_diamond(cell), Color(tint, 0.28))
+			c.draw_polyline(_diamond(cell), Color(tint, 0.9), 1.5)
+	elif tool == "terrain" and over_world:
+		var tint2: Color = TERRAIN_COLORS.get(auto_terrain, ACCENT)
+		for cell in brush_cells(_mouse_world()):
+			c.draw_colored_polygon(_diamond(cell), Color(tint2, 0.3))
+			c.draw_polyline(_diamond(cell), Color(tint2, 0.95), 2.0)
+	if tool == "stamp" and not clipboard.is_empty() and over_world:
+		var origin := iso_cell_center(_mouse_world())
+		for it in clipboard:
+			var at: Array = PlacedObjects.art_texture(it.id, origin + Vector2(float(it.x), float(it.y)))
+			if at[0] != null:
+				c.draw_texture(at[0], at[1], Color(1, 1, 1, 0.6))
+	for pr: Dictionary in problems:
+		var col := Color(1, 0.25, 0.25, 0.95) if pr.kind in ["overlap", "stacked"] else Color(1, 0.8, 0.1, 0.95)
+		c.draw_arc(pr.pos, 26.0, 0.0, TAU, 28, col, 3.0)
+		c.draw_circle(pr.pos, 4.0, col)
 	if tool == "erase" and get_viewport().gui_get_hovered_control() == null:
 		var h := placed.hit_test(_mouse_world())
 		if not h.is_empty():
@@ -1259,6 +1675,8 @@ func _build_ui() -> void:
 	_skin(next_void_button)
 	next_void_button.pressed.connect(jump_to_next_void)
 	void_row.add_child(next_void_button)
+
+	_build_pro_tools(outer)
 
 	# Palette filters: hide/show the option cards by type; the world itself is untouched.
 	var filter_box := VBoxContainer.new()
@@ -1621,6 +2039,126 @@ func _fat_scrollbar(scroll: ScrollContainer) -> void:
 		bar.add_theme_stylebox_override(k, s)
 
 
+## A compact button for the pro-tools block.
+func _mini(parent: Node, text: String, cb: Callable, toggle := true) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.toggle_mode = toggle
+	b.focus_mode = Control.FOCUS_NONE
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.custom_minimum_size = Vector2(64, 30)
+	b.clip_text = true
+	_skin(b, "tool")
+	b.add_theme_font_size_override("font_size", 11)
+	b.pressed.connect(cb)
+	parent.add_child(b)
+	return b
+
+
+## Every layer name the catalog can produce, for the HIDE / LOCK rows.
+static func layer_names() -> Array[String]:
+	var seen := {}
+	for id: String in PlacedObjects.CATALOG:
+		seen[PlacedObjects.type_of(id)] = true
+	var out: Array[String] = []
+	for k: String in seen:
+		out.append(k)
+	out.sort()
+	return out
+
+
+func _flow(parent: Node) -> HFlowContainer:
+	var f := HFlowContainer.new()
+	f.add_theme_constant_override("h_separation", 4)
+	f.add_theme_constant_override("v_separation", 4)
+	f.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(f)
+	return f
+
+
+## AUTO-TILE + the rest of the pro tools: one collapsible, scrolling block so it never squeezes SAVE off the panel.
+func _build_pro_tools(outer: VBoxContainer) -> void:
+	tools_toggle = _toggle(outer, "AUTO-TILE & TOOLS  ^", func(): set_pro_tools_open(not tools_body.visible))
+	tools_toggle.toggle_mode = false
+	var scroll := ScrollContainer.new()
+	scroll.name = "ProTools"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.custom_minimum_size = Vector2(0, 104)
+	outer.add_child(scroll)
+	_fat_scrollbar(scroll)
+	tools_body = scroll
+	var gutter := MarginContainer.new()
+	gutter.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	gutter.add_theme_constant_override("margin_right", 24)
+	scroll.add_child(gutter)
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.add_theme_constant_override("separation", 5)
+	gutter.add_child(col)
+
+	_section(col, "Auto-tile terrain  (edges and banks pick themselves)")
+	var trow := _flow(col)
+	for t: String in ["water", "grass", "ground", "temple", ""]:
+		var label := "CLEAR" if t == "" else t.to_upper()
+		_terrain_buttons[t] = _mini(trow, label, set_terrain.bind(t))
+		(_terrain_buttons[t] as Button).tooltip_text = "Paint %s: the right edge, corner or bank piece is chosen for every cell you touch" % label.to_lower()
+	bank_button = _mini(col, "BANK LOOK", cycle_bank, false)
+	bank_button.tooltip_text = "Which bank art water gets next to land: follow the land, or force grass / dirt / rock"
+	var srow := _flow(col)
+	for sh: String in SHAPES:
+		_shape_buttons[sh] = _mini(srow, "DRAG" if sh == "brush" else sh.to_upper(), set_shape.bind(sh))
+	(_shape_buttons["brush"] as Button).tooltip_text = "Paint along the mouse path with the brush size"
+	(_shape_buttons["rect"] as Button).tooltip_text = "Drag a box (along the floor grid) and fill it in one undo step"
+	(_shape_buttons["line"] as Button).tooltip_text = "Drag a straight line of floor cells, brush wide"
+	var erow := _flow(col)
+	var fix := _mini(erow, "ERASE FIXES EDGES", toggle_erase_autofix)
+	fix.tooltip_text = "When you erase a floor tile, the pieces around the hole re-pick their edges"
+	_terrain_buttons["_fix"] = fix
+
+	_section(col, "Select, copy, stamps")
+	var brow := _flow(col)
+	_tool_buttons["box"] = _mini(brow, "BOX SELECT", func(): set_tool("box"))
+	(_tool_buttons["box"] as Button).tooltip_text = "Drag a box to select a group (Shift + drag works with SELECT too), then drag to move, Del to delete"
+	_mini(brow, "COPY", copy_selection, false).tooltip_text = "Copy the selection (Ctrl+C)"
+	_mini(brow, "PASTE", begin_paste, false).tooltip_text = "Drop the copy where you click (Ctrl+V)"
+	_mini(brow, "SAVE STAMP", save_stamp, false).tooltip_text = "Keep the selection as a named stamp you can drop again later"
+	stamps_box = VBoxContainer.new()
+	stamps_box.add_theme_constant_override("separation", 3)
+	col.add_child(stamps_box)
+	_rebuild_stamps()
+
+	_section(col, "Problems")
+	var prow := _flow(col)
+	_mini(prow, "SCAN", scan_problems, false).tooltip_text = "Find overlapping pieces, mismatched banks and water with no bank"
+	_mini(prow, "NEXT PROBLEM", next_problem, false).tooltip_text = "Fly the view to the next problem"
+	_mini(prow, "CLEAR FLAGS", clear_problem_flags, false)
+
+	_section(col, "Layers  (hide to see through, lock to keep from moving)")
+	for nm: String in layer_names():
+		var lrow := HBoxContainer.new()
+		lrow.add_theme_constant_override("separation", 4)
+		col.add_child(lrow)
+		var lab := Label.new()
+		lab.text = nm
+		lab.clip_text = true
+		lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lab.add_theme_font_size_override("font_size", 11)
+		lrow.add_child(lab)
+		var hb := _mini(lrow, "HIDE", func(): set_layer_hidden(nm, not bool(placed.hidden_types.get(nm, false))))
+		var lb := _mini(lrow, "LOCK", func(): set_layer_locked(nm, not bool(placed.locked_types.get(nm, false))))
+		hb.size_flags_horizontal = Control.SIZE_SHRINK_END
+		lb.size_flags_horizontal = Control.SIZE_SHRINK_END
+		_layer_buttons[nm] = {"hide": hb, "lock": lb}
+	set_pro_tools_open(MapEditorMode.active())
+
+
+func set_pro_tools_open(on: bool) -> void:
+	if tools_body == null:
+		return
+	tools_body.visible = on
+	tools_toggle.text = "AUTO-TILE & TOOLS  ^" if on else "AUTO-TILE & TOOLS  v"
+
+
 func _toggle(parent: Node, text: String, cb: Callable) -> Button:
 	var b := Button.new()
 	b.text = text
@@ -1682,6 +2220,18 @@ func _refresh() -> void:
 		(_tool_buttons[k] as Button).set_pressed_no_signal(tool == k)
 	for id: String in _palette_buttons:
 		(_palette_buttons[id] as Button).set_pressed_no_signal(tool in ["place", "paint"] and place_id == id)
+	for t: String in _terrain_buttons:
+		if t == "_fix":
+			(_terrain_buttons[t] as Button).set_pressed_no_signal(erase_autofix)
+		else:
+			(_terrain_buttons[t] as Button).set_pressed_no_signal(tool == "terrain" and auto_terrain == t)
+	for sh: String in _shape_buttons:
+		(_shape_buttons[sh] as Button).set_pressed_no_signal(shape == sh)
+	if bank_button != null:
+		bank_button.text = "BANK LOOK: %s" % str(BANK_LABELS.get(bank_family, "AUTO"))
+	for nm: String in _layer_buttons:
+		(_layer_buttons[nm].hide as Button).set_pressed_no_signal(bool(placed.hidden_types.get(nm, false)))
+		(_layer_buttons[nm].lock as Button).set_pressed_no_signal(bool(placed.locked_types.get(nm, false)))
 	if brush_button != null:
 		brush_button.text = "BRUSH  %d x %d" % [brush, brush]
 		brush_button.set_pressed_no_signal(false)
@@ -1698,6 +2248,6 @@ func _refresh() -> void:
 	if not selected.is_empty():
 		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
-	var what := "Painting: %s  (drag to lay tiles, %d x %d brush)" % [str(PlacedObjects.def_of(place_id).label), brush, brush] if tool == "paint" else "Placing: %s" % str(PlacedObjects.def_of(place_id).label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
+	var what := ("Terrain: %s  (%s)" % [("clear floor" if auto_terrain == "" else auto_terrain), shape]) if tool == "terrain" else "Box select: drag a box" if tool == "box" else "Stamp: click to drop (%d pieces)" % clipboard.size() if tool == "stamp" else "Painting: %s  (drag to lay tiles, %d x %d brush)" % [str(PlacedObjects.def_of(place_id).label), brush, brush] if tool == "paint" else "Placing: %s" % str(PlacedObjects.def_of(place_id).label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
 	count_label.text = "%d objects" % placed.objects.size()
 	status.text = _note if Time.get_ticks_msec() < _note_until else what

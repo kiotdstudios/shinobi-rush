@@ -239,6 +239,7 @@ var _pending: Array = []
 var _replaying := false
 var _recording := true
 var hidden_types: Dictionary = {}
+var locked_types: Dictionary = {}  ## category -> true: cannot be picked, dragged, erased or painted over
 
 
 static func tree_info(index: int) -> Dictionary:
@@ -778,6 +779,28 @@ func _apply_visibility(obj: Dictionary) -> void:
 			(n as CanvasItem).visible = type_visible(obj.id)
 
 
+func type_locked(id: String) -> bool:
+	return bool(locked_types.get(type_of(id), false))
+
+
+func set_type_locked(category: String, locked: bool) -> void:
+	locked_types[category] = locked
+
+
+## Every unlocked, visible object whose picture centre lies inside `area` (box select). Floor tiles count by tile centre.
+func objects_in_rect(area: Rect2) -> Array:
+	var out: Array = []
+	for o in objects:
+		if not type_visible(o.id) or type_locked(o.id):
+			continue
+		var c: Vector2 = o.pos
+		if not is_floor_tile(o.id):
+			c = art_rect(o.id, o.pos).get_center()
+		if area.has_point(c):
+			out.append(o)
+	return out
+
+
 func set_type_visible(category: String, shown: bool) -> void:
 	hidden_types[category] = not shown
 	for obj in objects:
@@ -860,6 +883,9 @@ func paint_cell(id: String, cell: Vector2) -> bool:
 		return false
 	if is_floor_tile(id):
 		var old := floor_tiles_in_cell(cell)
+		for o in old:
+			if type_locked(o.id):
+				return false
 		if old.size() == 1 and old[0].id == id and (old[0].pos as Vector2).distance_squared_to(cell) < 4.0:
 			return false
 		for o in old:
@@ -869,6 +895,27 @@ func paint_cell(id: String, cell: Vector2) -> bool:
 			if o.id == id and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
 				return false
 	return not add(id, cell, false).is_empty()
+
+
+## Drop a stamp (items {id, x, y} relative to `origin`). Floor pieces replace the floor under them; props are placed
+## only where `can_place` allows. One undo step. Returns the new objects.
+func paste(items: Array, origin: Vector2) -> Array:
+	var made: Array = []
+	for it in items:
+		var id: String = it.id
+		if def_of(id).is_empty() or def_of(id).kind == "spawn":
+			continue
+		var pos := origin + Vector2(float(it.x), float(it.y))
+		if is_floor_tile(id):
+			if paint_cell(id, lattice_center(pos)):
+				made.append(floor_tiles_in_cell(lattice_center(pos)).back())
+		elif can_place(id, pos):
+			var o := add(id, pos, false)
+			if not o.is_empty():
+				made.append(o)
+	if not made.is_empty():
+		_changed()
+	return made
 
 
 ## Drop floor tiles stacked exactly on top of each other (older saves re-added the starting area on every boot).
@@ -951,7 +998,7 @@ func hit_test(point: Vector2) -> Dictionary:
 	var hit_y := -INF
 	for i in objects.size():
 		var o := objects[i]
-		if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
+		if not type_visible(o.id) or type_locked(o.id) or def_of(o.id).kind in ["grass", "ground"]:
 			continue
 		if not (art_pixel_hit(o.id, o.pos, point) or footprint_rect(o.id, o.pos).has_point(point)):
 			continue
@@ -963,7 +1010,7 @@ func hit_test(point: Vector2) -> Dictionary:
 	var closest: Dictionary = {}
 	var distance := INF
 	for o in objects:
-		if def_of(o.id).kind != "grass" or not type_visible(o.id):
+		if def_of(o.id).kind != "grass" or not type_visible(o.id) or type_locked(o.id):
 			continue
 		if art_pixel_hit(o.id, o.pos, point):
 			var d := point.distance_squared_to(o.pos)
@@ -977,7 +1024,7 @@ func hit_test(point: Vector2) -> Dictionary:
 	var best_norm := INF
 	for i in range(objects.size() - 1, -1, -1):
 		var o := objects[i]
-		if def_of(o.id).kind == "ground" and type_visible(o.id):
+		if def_of(o.id).kind == "ground" and type_visible(o.id) and not type_locked(o.id):
 			var delta: Vector2 = point - o.pos
 			var norm := absf(delta.x) / 36.0 + absf(delta.y) / 18.0
 			if norm <= 1.0 and norm < best_norm - 0.0001:
