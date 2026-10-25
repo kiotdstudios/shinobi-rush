@@ -22,3 +22,11 @@ static func open_page(url: String) -> bool:
 		return false
 	JavaScriptBridge.eval("window.open(" + JSON.stringify(url) + ",'_blank')", true)
 	return true
+
+
+## The public game page: no World Builder and no Settings (owner 2026-10-25). Web only; the editor page, `?editor=1` and `?debug=1` show them.
+static func public_game() -> bool:
+	if not OS.has_feature("web") or active():
+		return false
+	var q := str(JavaScriptBridge.eval("window.location.search", true))
+	return not ("editor=1" in q or "debug=1" in q)

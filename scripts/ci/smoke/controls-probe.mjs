@@ -34,7 +34,7 @@ const shot = (name) => page.screenshot({ path: path.join(outDir, `probe-${name}.
 let exitCode = 1;
 try {
   const t0 = Date.now();
-  await page.goto(server.url, { waitUntil: 'load' });
+  await page.goto(server.url + '?debug=1', { waitUntil: 'load' }); // the public page hides Settings; ?debug=1 shows it
   const hooksAbsent = await page.waitForFunction(
     () => window.__SHINOBI_READY__ === true || (document.readyState === 'complete' && window.__SHINOBI_READY__ === undefined && window.__SHINOBI_STATE__ === undefined && performance.now() > 90000),
     null, { timeout: 120000, polling: 250 }).then(() => page.evaluate(() => window.__SHINOBI_READY__ !== true && window.__SHINOBI_STATE__ === undefined));
