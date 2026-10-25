@@ -1,0 +1,470 @@
+[
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "S",
+    "frame_count": 8,
+    "job_id": "b1ea1909-b1f7-4fca-bec3-33d32932aedb",
+    "source_dir": "b1ea1909-b1f7-4fca-bec3-33d32932aedb",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "S",
+    "frame_count": 12,
+    "job_id": "16ce3033-e3d3-415a-a0af-63b87fec6f4a",
+    "source_dir": "16ce3033-e3d3-415a-a0af-63b87fec6f4a",
+    "state": "completed",
+    "rejected_versions": [
+      {
+        "job_id": "c56221c9-7420-4cef-8897-e02f64446b27",
+        "reason": "Unwanted long white graphic/blade-like artifact during recoil"
+      }
+    ]
+  },
+  {
+    "character": "player",
+    "animation": "death",
+    "direction": "S",
+    "frame_count": 16,
+    "job_id": "db692e98-a58b-4a40-9dec-049030050543",
+    "source_dir": "db692e98-a58b-4a40-9dec-049030050543",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "SE",
+    "frame_count": 8,
+    "job_id": "5b8345e5-f708-4396-8fbd-37458ab18ebc",
+    "source_dir": "hit_react/SE",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "SE",
+    "frame_count": 12,
+    "job_id": "4de38c18-ff65-4723-af56-c634b737303b",
+    "source_dir": "knockback/SE",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "death",
+    "direction": "SE",
+    "frame_count": 16,
+    "job_id": "e61643c9-b0ea-4133-8828-daf60991e74d",
+    "source_dir": "death/SE",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "E",
+    "frame_count": 8,
+    "job_id": "329f7c3d-d304-4c43-bf6e-77b852135339",
+    "source_dir": "329f7c3d-d304-4c43-bf6e-77b852135339",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "E",
+    "frame_count": 12,
+    "job_id": "34ef2102-83cb-4b61-8643-3a27dd8d2115",
+    "source_dir": "34ef2102-83cb-4b61-8643-3a27dd8d2115",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "death",
+    "direction": "E",
+    "frame_count": 16,
+    "job_id": "264bde01-7958-49a0-82fe-c3579486d233",
+    "source_dir": "264bde01-7958-49a0-82fe-c3579486d233",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "NE",
+    "frame_count": 8,
+    "job_id": "806ddc26-bd08-4e27-853d-160c45ac11b3",
+    "source_dir": "806ddc26-bd08-4e27-853d-160c45ac11b3",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "NE",
+    "frame_count": 12,
+    "job_id": "b682a68e-2c66-4bec-9d1f-1056f71a7ae2",
+    "source_dir": "b682a68e-2c66-4bec-9d1f-1056f71a7ae2",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "death",
+    "direction": "NE",
+    "frame_count": 16,
+    "job_id": "6e079253-f869-493c-a1c7-c0c284c36788",
+    "source_dir": "6e079253-f869-493c-a1c7-c0c284c36788",
+    "state": "completed",
+    "rejected_versions": [
+      {
+        "job_id": "a4310ac9-14ac-4332-904b-267438b98a8f",
+        "reason": "Final torso/head remained propped off the floor"
+      }
+    ],
+    "endpoint_job": "e25010be-8fd8-4c25-93c4-72b9386f6c3d"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "N",
+    "frame_count": 8,
+    "job_id": "5d514aae-5854-457b-ab7f-8431373524c6",
+    "source_dir": "5d514aae-5854-457b-ab7f-8431373524c6",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "N",
+    "frame_count": 12,
+    "job_id": "eb2cf586-dbc4-44ea-a40d-5f7fe41183e6",
+    "source_dir": "eb2cf586-dbc4-44ea-a40d-5f7fe41183e6",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "death",
+    "direction": "N",
+    "frame_count": 16,
+    "job_id": "39d00515-afb6-4433-abad-176f414cf63b",
+    "source_dir": "39d00515-afb6-4433-abad-176f414cf63b",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "NW",
+    "frame_count": 8,
+    "job_id": "3e10f149-10d3-45ae-a2a7-1081f299f636",
+    "source_dir": "3e10f149-10d3-45ae-a2a7-1081f299f636",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "NW",
+    "frame_count": 12,
+    "job_id": "a210f36a-1979-454c-8e81-d3b464c83094",
+    "source_dir": "a210f36a-1979-454c-8e81-d3b464c83094",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "death",
+    "direction": "NW",
+    "frame_count": 16,
+    "job_id": "20073779-0a6f-41d6-9a1b-33151a1c3aa7",
+    "source_dir": "20073779-0a6f-41d6-9a1b-33151a1c3aa7",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "W",
+    "frame_count": 8,
+    "job_id": "b5ef9e34-4588-4e6a-8a2b-4c9a727790f5",
+    "source_dir": "b5ef9e34-4588-4e6a-8a2b-4c9a727790f5",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "W",
+    "frame_count": 12,
+    "job_id": "aff7b9a9-4e87-4f67-8575-fe316d72ceb7",
+    "source_dir": "aff7b9a9-4e87-4f67-8575-fe316d72ceb7",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "death",
+    "direction": "W",
+    "frame_count": 16,
+    "job_id": "d06499e8-9613-4ed2-8446-4194e4fff674",
+    "source_dir": "d06499e8-9613-4ed2-8446-4194e4fff674",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "SW",
+    "frame_count": 8,
+    "job_id": "f735fe41-1273-4b32-9d1a-5749b4ee5db0",
+    "source_dir": "f735fe41-1273-4b32-9d1a-5749b4ee5db0",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "SW",
+    "frame_count": 12,
+    "job_id": "99ffe359-b7b7-44db-9328-dedf0b6eec67",
+    "source_dir": "99ffe359-b7b7-44db-9328-dedf0b6eec67",
+    "state": "completed"
+  },
+  {
+    "character": "player",
+    "animation": "death",
+    "direction": "SW",
+    "frame_count": 16,
+    "job_id": "59fe9f4e-b664-4d8e-92ad-33ad9e6ee41b",
+    "source_dir": "59fe9f4e-b664-4d8e-92ad-33ad9e6ee41b",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "S",
+    "frame_count": 8,
+    "job_id": "41713046-6215-4ea6-8632-94d19a4b2641",
+    "source_dir": "41713046-6215-4ea6-8632-94d19a4b2641",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "S",
+    "frame_count": 12,
+    "job_id": "96023e10-c770-46dd-86d6-a8da0dc1871f",
+    "source_dir": "96023e10-c770-46dd-86d6-a8da0dc1871f",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "death",
+    "direction": "S",
+    "frame_count": 16,
+    "job_id": "b952f4da-6314-4d5c-b3c0-4cf689a2f91e",
+    "source_dir": "b952f4da-6314-4d5c-b3c0-4cf689a2f91e",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "SE",
+    "frame_count": 8,
+    "job_id": "94241851-8144-4780-b23e-151eedaa7bc9",
+    "source_dir": "hit_react/SE",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "SE",
+    "frame_count": 12,
+    "job_id": "79b6612c-29e0-417a-909f-2db363e7d920",
+    "source_dir": "knockback/SE",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "death",
+    "direction": "SE",
+    "frame_count": 16,
+    "job_id": "a22a6560-e295-4260-b54b-5487fa06aa57",
+    "source_dir": "a22a6560-e295-4260-b54b-5487fa06aa57",
+    "state": "completed",
+    "rejected_versions": [
+      {
+        "job_id": "96de248f-797f-4c58-be8d-3a3081553728",
+        "reason": "Ended partly propped up"
+      },
+      {
+        "job_id": "12e02cc5-8446-41b9-bf38-0b41051fb6ce",
+        "reason": "Prone endpoint body landed24pixels too high"
+      }
+    ]
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "E",
+    "frame_count": 8,
+    "job_id": "c1d36527-9b01-4736-a07b-35ddbfcbba5e",
+    "source_dir": "c1d36527-9b01-4736-a07b-35ddbfcbba5e",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "E",
+    "frame_count": 12,
+    "job_id": "8f974c65-9103-46de-8c80-74b68ce85512",
+    "source_dir": "8f974c65-9103-46de-8c80-74b68ce85512",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "death",
+    "direction": "E",
+    "frame_count": 16,
+    "job_id": "c62ddd0b-4cd5-40a1-8c8c-c26982b71814",
+    "source_dir": "c62ddd0b-4cd5-40a1-8c8c-c26982b71814",
+    "state": "completed",
+    "rejected_versions": [
+      {
+        "job_id": "da95cebb-1a14-4665-9bba-c8f4b41941b5",
+        "reason": "Final torso/head remained propped off the floor"
+      }
+    ],
+    "endpoint_job": "0527eb60-75d1-47ea-bbc4-4130f76544b1"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "NE",
+    "frame_count": 8,
+    "job_id": "b52b6550-e3bd-498c-b686-782bc92e3a4c",
+    "source_dir": "b52b6550-e3bd-498c-b686-782bc92e3a4c",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "NE",
+    "frame_count": 12,
+    "job_id": "6531c198-c081-4fa2-a4aa-119389fbfb55",
+    "source_dir": "6531c198-c081-4fa2-a4aa-119389fbfb55",
+    "state": "completed",
+    "rejected_versions": [
+      {
+        "job_id": "56cb6487-0ca5-445c-801e-58caf0507e23",
+        "reason": "Unwanted long white graphic/blade-like artifact during recoil"
+      }
+    ]
+  },
+  {
+    "character": "bandit",
+    "animation": "death",
+    "direction": "NE",
+    "frame_count": 16,
+    "job_id": "639cec54-5394-4a78-948e-df2b96f33b37",
+    "source_dir": "639cec54-5394-4a78-948e-df2b96f33b37",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "N",
+    "frame_count": 8,
+    "job_id": "8ea5ff29-f2d7-427d-9992-704b2893d533",
+    "source_dir": "8ea5ff29-f2d7-427d-9992-704b2893d533",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "N",
+    "frame_count": 12,
+    "job_id": "12293cef-687a-4c8d-8b20-435fb0e12539",
+    "source_dir": "12293cef-687a-4c8d-8b20-435fb0e12539",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "death",
+    "direction": "N",
+    "frame_count": 16,
+    "job_id": "2f5f4407-f673-48c7-bdeb-a8b5b8473864",
+    "source_dir": "2f5f4407-f673-48c7-bdeb-a8b5b8473864",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "NW",
+    "frame_count": 8,
+    "job_id": "536e3cc5-070a-4052-862c-47be0cc74156",
+    "source_dir": "536e3cc5-070a-4052-862c-47be0cc74156",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "NW",
+    "frame_count": 12,
+    "job_id": "70eb3542-d2c2-4c3d-a25a-9e66d1cd4ba8",
+    "source_dir": "70eb3542-d2c2-4c3d-a25a-9e66d1cd4ba8",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "death",
+    "direction": "NW",
+    "frame_count": 16,
+    "job_id": "74ec21c3-8292-40ad-861d-3e8cd2a270eb",
+    "source_dir": "74ec21c3-8292-40ad-861d-3e8cd2a270eb",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "W",
+    "frame_count": 8,
+    "job_id": "beeccdee-347f-4af4-bec2-b926e8b59302",
+    "source_dir": "beeccdee-347f-4af4-bec2-b926e8b59302",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "W",
+    "frame_count": 12,
+    "job_id": "03478852-9d3f-468e-8109-ca54d575a045",
+    "source_dir": "03478852-9d3f-468e-8109-ca54d575a045",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "death",
+    "direction": "W",
+    "frame_count": 16,
+    "job_id": "53bd2693-bae4-4a10-bb64-d881cfda3dfd",
+    "source_dir": "53bd2693-bae4-4a10-bb64-d881cfda3dfd",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "SW",
+    "frame_count": 8,
+    "job_id": "e2ae807b-7037-4815-bba9-41ece1d81c28",
+    "source_dir": "e2ae807b-7037-4815-bba9-41ece1d81c28",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "SW",
+    "frame_count": 12,
+    "job_id": "d019571f-8696-440c-af55-0405e3c8f8b2",
+    "source_dir": "d019571f-8696-440c-af55-0405e3c8f8b2",
+    "state": "completed"
+  },
+  {
+    "character": "bandit",
+    "animation": "death",
+    "direction": "SW",
+    "frame_count": 16,
+    "job_id": "6cfe1b94-2d9b-40cb-9eed-cd1a48ba8215",
+    "source_dir": "6cfe1b94-2d9b-40cb-9eed-cd1a48ba8215",
+    "state": "completed"
+  }
+]
