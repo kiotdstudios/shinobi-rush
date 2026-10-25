@@ -49,7 +49,10 @@ static func start(p_gourd: HealthGourd, p_player: Node2D, p_amount: float, hp_be
 	fx.gourd = p_gourd
 	fx.player = p_player
 	fx.amount = p_amount
-	if p_gourd.kind == "chakra":
+	if p_gourd.kind == "kunai":
+		fx._green = Color.WHITE
+		fx._white_green = Color.WHITE
+	elif p_gourd.kind == "chakra":
 		fx._green = Color(0.3, 0.65, 1.0)
 		fx._white_green = Color(0.85, 0.95, 1.0)
 	elif p_gourd.kind in ["paper_tag", "tag_bomb", "smoke_tag_bomb"]:
@@ -57,7 +60,7 @@ static func start(p_gourd: HealthGourd, p_player: Node2D, p_amount: float, hp_be
 		fx._white_green = Color(1.0, 0.92, 0.7)
 	p_gourd.add_child(fx)
 	# The gourd goes into the bag now (healing happens later, from its D-pad slot), so there is no HUD fill to schedule.
-	fx._label = {"chakra": "CHAKRA GOURD", "paper_tag": "PAPER TAG", "tag_bomb": "TAG BOMB", "smoke_tag_bomb": "SMOKE TAG BOMB"}.get(p_gourd.kind, "HEALTH GOURD")
+	fx._label = {"kunai": "KUNAI", "chakra": "CHAKRA GOURD", "paper_tag": "PAPER TAG", "tag_bomb": "TAG BOMB", "smoke_tag_bomb": "SMOKE TAG BOMB"}.get(p_gourd.kind, "HEALTH GOURD")
 	return fx
 
 
@@ -126,7 +129,7 @@ func finish() -> void:
 # ---------------------------------------------------------------- the gourd itself
 func _drive_gourd() -> void:
 	var v: Node2D = gourd._visual
-	var rest := Vector2(0.0, -HealthGourd.FLOAT_HEIGHT)
+	var rest := Vector2(0.0, -3.0 if gourd.grounded else -HealthGourd.FLOAT_HEIGHT)
 	if t < T_CONTACT:
 		var k := t / T_CONTACT
 		var sq := 0.38 * (1.0 - 0.3 * k)

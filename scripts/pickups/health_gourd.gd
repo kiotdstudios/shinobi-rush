@@ -21,6 +21,7 @@ const CHAKRA_GROUP := "chakra_pickup"
 ## Share of the player's maximum a gourd gives back.
 const FRACTION := 0.25
 const KINDS := {
+	"kunai": {"dir": "res://assets/weapons/kunai/", "group": "kunai_pickup", "color": Color.WHITE, "aura": Color.WHITE},
 	"tag_bomb": {"dir": "res://assets/pickups/tag_bomb/", "group": "bomb_pickup", "color": Color(1.0, 0.25, 0.08), "aura": Color(1.0, 0.65, 0.3)},
 	"smoke_tag_bomb": {"dir": "res://assets/pickups/smoke_tag_bomb/", "group": "smoke_bomb_pickup", "color": Color(0.9, 0.12, 0.16), "aura": Color(1.0, 0.5, 0.45)},
 	"health": {"dir": "res://assets/pickups/health_gourd/", "group": "health_pickup", "color": Color(1.0, 0.18, 0.1), "aura": Color(1.0, 0.5, 0.4)},
@@ -44,6 +45,9 @@ static var _cache: Dictionary = {}
 ## "health" or "chakra"; set before the node enters the tree.
 var kind := "health"
 var available := true
+var grounded := false  ## recovered kunai rests on the floor; authored pickups hover
+var respawns := true
+var resting_rotation := 0.35
 var respawn_left := 0.0
 
 var _clock := 0.0
@@ -58,6 +62,8 @@ var fx: GourdPickupFx  ## the take-it animation while it plays
 
 ## Frames of one layer ("gourd", "glow", "ember"), loaded once and shared by every gourd.
 static func frames(layer: String, p_kind := "health") -> Array:
+	if p_kind == "kunai":
+		return [load("res://assets/weapons/kunai/black_kunai.png")] if layer == "gourd" else []
 	if p_kind in ["tag_bomb", "smoke_tag_bomb"]:
 		if layer == "gourd":
 			return TagBombArt.frames(p_kind, "idle")
@@ -117,6 +123,8 @@ func _layer(layer_name: String, mat: Material) -> Sprite2D:
 func _process(delta: float) -> void:
 	_clock += delta
 	if not available:
+		if not respawns:
+			return
 		respawn_left -= delta
 		if respawn_left <= 0.0:
 			_return()
@@ -127,6 +135,15 @@ func _process(delta: float) -> void:
 
 
 func _apply_frames() -> void:
+	if kind == "kunai":
+		_visual.position.y = -3.0 if grounded else -FLOAT_HEIGHT
+		_body.texture = icon("kunai")
+		_body.scale = Vector2(0.7,0.45) if grounded else Vector2.ONE
+		_body.position.y = 0.0 if grounded else roundf(sin(_clock * BOB_SPEED) * BOB)
+		_body.rotation = resting_rotation if grounded else sin(_clock * 1.4) * 0.15 - 0.35
+		_glow.visible = false
+		_embers.visible = false
+		return
 	# Whole-pixel bob on top of the painted sway: the gourd rises and falls BOB px, the aura trails it a little.
 	_body.position.y = roundf(sin(_clock * BOB_SPEED) * BOB)
 	_glow.position.y = roundf(sin(_clock * BOB_SPEED - 0.7) * BOB)
@@ -150,6 +167,9 @@ func _set_frame(s: Sprite2D, layer: String, fps: float, ping_pong := false) -> v
 
 ## Pulsing pool of red light on the floor under the gourd (a squashed disc, bright core to clear edge).
 func _draw_pool() -> void:
+	if kind == "kunai":
+		_draw_kunai_light()
+		return
 	var glow_color: Color = KINDS[kind].color
 	var pulse := 0.5 + 0.5 * sin(_clock * 3.1)
 	for i in 7:
@@ -181,7 +201,7 @@ func can_collect(player: Node) -> bool:
 ## The inventory item this gourd turns into.
 func item_id() -> String:
 	match kind:
-		"tag_bomb", "smoke_tag_bomb":
+		"kunai", "tag_bomb", "smoke_tag_bomb":
 			return kind
 		"chakra":
 			return "chakra_gourd"
@@ -200,13 +220,19 @@ func _try_collect() -> void:
 ## Put this gourd in `player`'s inventory (it is eaten later from its D-pad slot, see PlayerController.use_slot), play
 ## the take-it animation and start the respawn timer. Returns how many items went into the bag (0 when it is full).
 func collect(player: Node) -> float:
+	if not available:
+		return 0.0
 	var inv: Variant = player.get("inventory")
 	var gained := 0.0
 	if inv is PlayerInventory:
 		gained = float((inv as PlayerInventory).add(item_id(), 1))
+	if gained <= 0.0:
+		return 0.0
 	var before_fraction := 1.0
 	available = false
-	respawn_left = RESPAWN_SECONDS
+	respawn_left = RESPAWN_SECONDS if respawns else 0.0
+	if not respawns:
+		get_tree().create_timer(1.5).timeout.connect(queue_free)
 	collected.emit(gained)
 	if _tween != null:
 		_tween.kill()
@@ -243,3 +269,25 @@ func _return() -> void:
 	_tween.tween_property(_visual, "scale", Vector2.ONE, 0.5)
 	_tween.tween_property(_visual, "modulate:a", 1.0, 0.5)
 	_tween.tween_property(_pool, "modulate:a", 1.0, 0.5)
+
+
+## White floor light and independent pin-sharp glints. Ground drops stay grounded; no bob/beam.
+func _draw_kunai_light() -> void:
+	var pulse := 0.5 + 0.5 * sin(_clock * 3.1)
+	for i in 5:
+		var radius := lerpf(28.0 if grounded else 42.0, 6.0, float(i)/4.0)
+		var points := PackedVector2Array()
+		for j in 24:
+			var angle := TAU * j / 24.0
+			points.append(Vector2(cos(angle)*radius,sin(angle)*radius*0.5))
+		_pool.draw_colored_polygon(points,Color(1,1,1,(0.035+i*0.018)*(0.7+0.3*pulse)))
+	var halo_y := -3.0 if grounded else -FLOAT_HEIGHT+_body.position.y
+	for i in 3:
+		_pool.draw_circle(Vector2(0,halo_y),18.0-i*4,Color(1,1,1,0.025+0.015*pulse))
+	for i in 3:
+		var angle := _clock*0.7 + i*TAU/3.0
+		var height := -3.0 if grounded else -FLOAT_HEIGHT+_body.position.y
+		var pos := Vector2(roundf(cos(angle)*22),roundf(sin(angle)*9)+height)
+		var alpha := pow(maxf(sin(_clock*3.0+i*2.0),0.0),3.0)
+		_pool.draw_line(pos-Vector2(3,0),pos+Vector2(3,0),Color(1,1,1,alpha),1.0)
+		_pool.draw_line(pos-Vector2(0,3),pos+Vector2(0,3),Color(1,1,1,alpha),1.0)

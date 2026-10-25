@@ -9,6 +9,7 @@ extends RefCounted
 signal changed
 
 const MAX_STACK := 9
+const KUNAI_MAX_STACK := 10  ## matches the existing starter loadout; thrown blades can be recovered
 const DPAD_SLOTS: Array[String] = ["up", "right", "down", "left"]
 const JUTSU_SLOTS: Array[String] = ["square", "triangle", "circle", "cross"]
 const ITEMS := {
@@ -51,7 +52,7 @@ func slot_count(slot: String) -> int:
 func add(id: String, n: int = 1) -> int:
 	if not ITEMS.has(id):
 		return 0
-	var room := MAX_STACK - count_of(id)
+	var room := stack_limit(id) - count_of(id)
 	var put := clampi(n, 0, maxi(room, 0))
 	if put > 0:
 		counts[id] = count_of(id) + put
@@ -59,8 +60,12 @@ func add(id: String, n: int = 1) -> int:
 	return put
 
 
+static func stack_limit(id: String) -> int:
+	return KUNAI_MAX_STACK if id == "kunai" else MAX_STACK
+
+
 func has_room(id: String) -> bool:
-	return ITEMS.has(id) and count_of(id) < MAX_STACK
+	return ITEMS.has(id) and count_of(id) < stack_limit(id)
 
 
 ## Removes one of `id`. Returns false (and changes nothing) when there is none.
