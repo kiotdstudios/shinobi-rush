@@ -281,7 +281,7 @@ func set_open(v: bool) -> void:
 	if v and not open:
 		_was_paused = get_tree().paused if is_inside_tree() else false
 	open = v
-	_freeze_world(v)
+	_pause_for_build(v)
 	_set_camera_free(v)
 	_sync_game_ui()
 	panel.visible = v
@@ -440,13 +440,11 @@ func _camera() -> Camera2D:
 
 
 ## The builder is not the game: while it is open the world is frozen (nothing moves, nobody can hit the player).
-func _freeze_world(on: bool) -> void:
+func _pause_for_build(on: bool) -> void:
 	if not is_inside_tree():
 		return
-	if on:
-		get_tree().paused = true
-	else:
-		get_tree().paused = _was_paused
+	if not map_mode:  # the map editor already puts the player and enemies away (see _freeze_world)
+		get_tree().paused = true if on else _was_paused
 	var cam := _camera()
 	if cam == null:
 		return
