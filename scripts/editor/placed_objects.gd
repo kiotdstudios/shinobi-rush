@@ -481,6 +481,10 @@ func can_place(id: String, pos: Vector2) -> bool:
 	return true
 
 
+## Bumped on every add / remove / move / clear / load, so cheap views (the floor underlay) know when to redraw.
+var revision := 0
+
+
 func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	if arena == null or def_of(id).is_empty():
 		return {}
@@ -609,6 +613,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		nodes = [tree, _make_trunk(pos)]
 	var obj := {"id": id, "pos": pos, "nodes": nodes}
 	objects.append(obj)
+	revision += 1
 	if def.kind in ["ground", "grass"] or def.has("water_role"):
 		Bridge.raise_floors(arena.get_node_or_null("Ground"))
 	_record(["add", id, pos])
@@ -810,6 +815,40 @@ func set_type_visible(category: String, shown: bool) -> void:
 			_apply_visibility(obj)
 
 
+static var _fill_colors: Dictionary = {}
+
+
+## Average colour of a floor tile's visible pixels. Flat grass tiles are tufts that cover only part of their 72 x 36
+## cell; the floor underlay paints the whole cell in this colour so no white void shows around them.
+static func floor_fill_color(id: String) -> Color:
+	if _fill_colors.has(id):
+		return _fill_colors[id]
+	var col := Color("#5b6246")
+	var at := art_texture(id, Vector2.ZERO)
+	var tex: Texture2D = at[0]
+	if tex != null:
+		var img := tex.get_image()
+		if img != null:
+			if img.is_compressed():
+				img.decompress()
+			var r := 0.0
+			var g := 0.0
+			var b := 0.0
+			var n := 0
+			for y in range(0, img.get_height(), 2):
+				for x in range(0, img.get_width(), 2):
+					var px := img.get_pixel(x, y)
+					if px.a > 0.5:
+						r += px.r
+						g += px.g
+						b += px.b
+						n += 1
+			if n > 0:
+				col = Color(r / n, g / n, b / n, 1.0)
+	_fill_colors[id] = col
+	return col
+
+
 ## True for a floor-layer object: ground tiles and flat (non-tall) grass tiles. They replace each other.
 static func is_floor_tile(id: String) -> bool:
 	var def := def_of(id)
@@ -941,6 +980,7 @@ func remove(obj: Dictionary, commit := true) -> void:
 	if not objects.has(obj):
 		return
 	objects.erase(obj)
+	revision += 1
 	_record(["remove", str(obj.id), obj.pos])
 	var def := def_of(obj.id)
 	if def.kind == "grass":
@@ -958,6 +998,7 @@ func remove(obj: Dictionary, commit := true) -> void:
 		_changed()
 
 func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
+	revision += 1
 	if not objects.has(obj):
 		return
 	_record(["move", str(obj.id), obj.pos, pos])
@@ -1069,6 +1110,7 @@ static func _wall_obstacles(def: Dictionary, pos: Vector2) -> Array:
 
 
 func clear_all(commit := true) -> void:
+	revision += 1
 	for o in objects.duplicate():
 		remove(o, false)
 	if commit:
@@ -1120,6 +1162,7 @@ func save() -> bool:
 
 ## Rebuild a layout. Entries with an unknown id, bad numbers, outside the arena or on top of the spawn are skipped.
 func load_dict(data: Dictionary) -> int:
+	revision += 1
 	var was_recording := _recording
 	_recording = false
 	clear_all(false)
