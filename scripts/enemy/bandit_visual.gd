@@ -17,6 +17,8 @@ var weapon_layer: KunaiWeaponVisual
 const CLOTH := Color("#5a3a2a")
 const LIMB := Color("#3a2a1a")
 const SKIN := Color("#8a4a3a")
+const DEATH_CLIP := 0.667
+const DEATH_FADE_DELAY := 1.6
 const DEAD_TINT := Color("#555555")
 const MOVING_STATES := [Bandit.State.APPROACH, Bandit.State.EVADE, Bandit.State.PATROL, Bandit.State.SEARCH, Bandit.State.RETURN, Bandit.State.REPOSITION]
 const SLASH_COLOR := Color(1.0, 0.85, 0.6, 0.9)
@@ -56,9 +58,32 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if bandit == null or actor == null:
 		return
-	actor.visible = _art_set != null and _art_set.is_valid() and bandit.state != Bandit.State.DEAD
+	var art_ok := _art_set != null and _art_set.is_valid()
+	var dead := bandit.state == Bandit.State.DEAD
+	var damage_clip := ""
+	var damage_progress := 0.0
+	if art_ok and dead and _art_set.animations.has("death"):
+		damage_clip = "death"
+		damage_progress = clampf(bandit._death_time / DEATH_CLIP, 0.0, 1.0)  # holds the prone last frame
+	elif art_ok and bandit.state == Bandit.State.HIT_REACT and _art_set.animations.has(bandit.react_kind):
+		damage_clip = bandit.react_kind
+		damage_progress = bandit.react_progress()
+	actor.visible = art_ok and (not dead or damage_clip != "")
 	if not actor.visible:weapon_layer.visible=false
-	if actor.visible:
+	if damage_clip != "":
+		weapon_layer.visible = false
+		actor.show_animation_at(_art_set, damage_clip, SpriteSet.dir_name(bandit.facing8), damage_progress)
+		var dt := Color.WHITE
+		if bandit._hit_flash_timer > 0.0:
+			dt = Bandit.HIT_FLASH
+		elif dead and bandit._death_time > DEATH_CLIP + DEATH_FADE_DELAY:
+			dt.a = clampf(1.0 - (bandit._death_time - DEATH_CLIP - DEATH_FADE_DELAY) / 0.8, 0.0, 1.0)
+		actor.modulate = dt
+		# Squash on impact, settles over the first quarter of the clip.
+		var punch := clampf(1.0 - damage_progress * 4.0, 0.0, 1.0) if not dead else 0.0
+		actor.scale = Vector2(1.0 + 0.12 * punch, 1.0 - 0.12 * punch)
+	elif actor.visible:
+		actor.scale = Vector2.ONE
 		var combat_pose := _show_kunai_pose()
 		var throw_progress := bandit.get_throw_progress()
 		var moving := bandit.state in MOVING_STATES and bandit.velocity.length_squared() > 1.0

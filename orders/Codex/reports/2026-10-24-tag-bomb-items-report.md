@@ -45,3 +45,8 @@ None.
 
 ## Outstanding work / next steps
 Normal reviewed PR checks, merge, main deploy/postdeploy and exact-SHA canonical smoke test. Until those complete this is NOT LIVE. Aki can add actual smoke stealth/line-of-sight behavior separately using the existing smoke projectile duration/position.
+
+## Integration validation — 2026-10-25
+PR #194: https://github.com/kiotdstudios/shinobi-rush/pull/194. Initial implementation `307280a97279f504f89f9e52ea45e960b93bcfd5`; initial PR CI 40160009964 passed all gates including 2800 native tests. Main advanced to Aki's damage reaction merge `5413ec33` while CI ran. GitHub correctly rejected merge under strict up-to-date rules; no bypass attempted. Integrated with `git merge --no-commit --no-ff origin/main`, with clean automatic merges in controller/runner.
+
+Before the integration commit: Godot import passed; focused damage reactions + bomb/paper-tag/inventory/gourd suites passed **184/0**, no engine error/failure lines; integrated debug Web export to `../tag-bombs-integrated-web-20261025` passed; actual integrated browser proof passed **12/12** with no console errors (integrated-browser/validation.json, inspected equivalent scene). Normal and half-speed GIFs captured from actual prior Web export, 85 frames each with measured screenshot durations; GIF frame/dimension decoding checked and samples inspected. Added in-game inventory screenshot: seven rows fit, both correct icons, no browser errors. PixelLab used 70 generations total (279.80 to 209.80); no credits purchased. Source concept retained. Canonical live publication still pending updated PR checks/merge/main deployment.

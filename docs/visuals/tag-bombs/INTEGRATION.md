@@ -13,3 +13,6 @@ Review: `?bombs=review`, normal / half speed and pause, collection and real item
 PixelLab job receipts: `generation.json` and `jobs.json`. Source images retained under each item's ignored source folder; `export_pack.py` downloads and checks native dimensions. Explosion and pickup VFX reuse the existing approved art; those reused effects are not claimed as new generations.
 
 Black-shell palette correction neutralizes cool-gray hues in body and white markings while preserving scarlet seams; original PixelLab images retained. All 112 exported frames are unique and hard-alpha RGBA.
+
+## Review media
+`normal.gif` and `half-speed.gif` are captured from the actual Godot Web preview (not a fabricated composite). Playback preserves measured capture intervals. `capture-preview.mjs` / `make_previews.py` reproduce them. Inventory and integrated-build screenshots are included beside the browser check receipts.
