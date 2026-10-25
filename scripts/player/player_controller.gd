@@ -990,8 +990,8 @@ func use_slot(slot: String) -> bool:
 				used = true
 		"kunai":
 			used = _begin_throw()
-		"paper_tag":
-			used = _begin_throw("paper_tag")
+		"paper_tag", "tag_bomb", "smoke_tag_bomb":
+			used = _begin_throw(id)
 	if used:
 		item_used.emit(id)
 	return used
@@ -1018,9 +1018,11 @@ func _tick_throw(delta: float) -> void:
 	var progress := 1.0 - _throw_t / THROW_TIME
 	if not _throw_released and progress >= THROW_RELEASE:
 		_throw_released = true
-		if _throw_item == "paper_tag":
+		if _throw_item == "smoke_tag_bomb":
+			SmokeTagBomb.spawn_smoke(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+		elif _throw_item in ["paper_tag", "tag_bomb"]:
 			tags_thrown_count += 1
-			PaperTagBomb.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+			PaperTagBomb.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self, "tag_bomb" if _throw_item == "tag_bomb" else "")
 		else:
 			kunai_thrown_count += 1
 			PlayerKunai.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)

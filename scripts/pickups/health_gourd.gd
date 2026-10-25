@@ -21,6 +21,8 @@ const CHAKRA_GROUP := "chakra_pickup"
 ## Share of the player's maximum a gourd gives back.
 const FRACTION := 0.25
 const KINDS := {
+	"tag_bomb": {"dir": "res://assets/pickups/tag_bomb/", "group": "bomb_pickup", "color": Color(1.0, 0.25, 0.08), "aura": Color(1.0, 0.65, 0.3)},
+	"smoke_tag_bomb": {"dir": "res://assets/pickups/smoke_tag_bomb/", "group": "smoke_bomb_pickup", "color": Color(0.9, 0.12, 0.16), "aura": Color(1.0, 0.5, 0.45)},
 	"health": {"dir": "res://assets/pickups/health_gourd/", "group": "health_pickup", "color": Color(1.0, 0.18, 0.1), "aura": Color(1.0, 0.5, 0.4)},
 	"chakra": {"dir": "res://assets/pickups/chakra_gourd/", "group": "chakra_pickup", "color": Color(0.15, 0.55, 1.0), "aura": Color(0.45, 0.8, 1.0)},
 	"paper_tag": {"dir": "res://assets/pickups/paper_tag/", "group": "tag_pickup", "color": Color(1.0, 0.45, 0.08), "aura": Color(1.0, 0.7, 0.3)},
@@ -56,6 +58,11 @@ var fx: GourdPickupFx  ## the take-it animation while it plays
 
 ## Frames of one layer ("gourd", "glow", "ember"), loaded once and shared by every gourd.
 static func frames(layer: String, p_kind := "health") -> Array:
+	if p_kind in ["tag_bomb", "smoke_tag_bomb"]:
+		if layer == "gourd":
+			return TagBombArt.frames(p_kind, "idle")
+		# Reuse the established orange pickup aura and embers, tinted by KINDS.
+		return frames(layer, "paper_tag")
 	var key := p_kind + "/" + layer
 	if _cache.has(key):
 		return _cache[key]
@@ -89,6 +96,8 @@ func _ready() -> void:
 	add_mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	_glow = _layer("Glow", add_mat)
 	_body = _layer("Body", null)
+	if kind in ["tag_bomb", "smoke_tag_bomb"]:
+		_body.scale = Vector2.ONE * 0.5
 	_embers = _layer("Embers", add_mat)
 	_pool.draw.connect(_draw_pool)
 	GourdPickupFx.pickup_sound.call_deferred()  # synthesize the layered clip once, not in the middle of a pickup
@@ -172,6 +181,8 @@ func can_collect(player: Node) -> bool:
 ## The inventory item this gourd turns into.
 func item_id() -> String:
 	match kind:
+		"tag_bomb", "smoke_tag_bomb":
+			return kind
 		"chakra":
 			return "chakra_gourd"
 		"paper_tag":

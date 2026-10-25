@@ -54,7 +54,7 @@ func _exit_tree() -> void:
 func entries() -> Array[String]:
 	var list: Array[String] = []
 	if tab == 0:
-		list.append_array(["health_gourd", "chakra_gourd", "kunai", "paper_tag", ""])
+		list.append_array(["health_gourd", "chakra_gourd", "kunai", "paper_tag", "tag_bomb", "smoke_tag_bomb", ""])
 	else:
 		list.append_array(["chidori", ""])
 	return list
@@ -242,26 +242,27 @@ func _draw_menu() -> void:
 	# list
 	var list := entries()
 	var list_pos := panel.position + Vector2(24, 84)
+	var row_height := 46.0 if list.size() > 5 else 62.0
 	for i in list.size():
 		var id := list[i]
-		var row := Rect2(list_pos + Vector2(0, i * 62), Vector2(330, 56))
+		var row := Rect2(list_pos + Vector2(0, i * row_height), Vector2(330, row_height - 6))
 		var on := i == cursor
 		_canvas.draw_rect(row, Color(0.86, 0.68, 0.25, 0.22) if on else Color(1, 1, 1, 0.04))
 		_canvas.draw_rect(row, (COL_TEXT if placing and on else COL_GOLD) if on else Color(1, 1, 1, 0.15), false, 2.0)
 		if tab == 0:
 			var tex := PlayerInventory.icon(id) if id != "" else null
 			if tex != null:
-				var k := minf(40.0 / tex.get_width(), 40.0 / tex.get_height())
-				_canvas.draw_texture_rect(tex, Rect2(row.position + Vector2(8, 8) + (Vector2(40, 40) - tex.get_size() * k) * 0.5, tex.get_size() * k), false)
+				var k := minf(minf(40.0,row_height-14) / tex.get_width(), minf(40.0,row_height-14) / tex.get_height())
+				_canvas.draw_texture_rect(tex, Rect2(row.position + Vector2(8, 8) + (Vector2(minf(40,row_height-14), minf(40,row_height-14)) - tex.get_size() * k) * 0.5, tex.get_size() * k), false)
 			var nm: String = String(PlayerInventory.ITEMS[id].name) if id != "" else "(empty slot)"
-			_text(font, row.position + Vector2(60, 34), nm, 18, COL_TEXT if id == "" or inv.count_of(id) > 0 else COL_DIM)
+			_text(font, row.position + Vector2(60, minf(34,row_height-14)), nm, 18, COL_TEXT if id == "" or inv.count_of(id) > 0 else COL_DIM)
 			if id != "":
-				_text(font, row.position + Vector2(0, 34), "x%d" % inv.count_of(id), 18, COL_TEXT, row.size.x - 12.0, HORIZONTAL_ALIGNMENT_RIGHT)
+				_text(font, row.position + Vector2(0, minf(34,row_height-14)), "x%d" % inv.count_of(id), 18, COL_TEXT, row.size.x - 12.0, HORIZONTAL_ALIGNMENT_RIGHT)
 		else:
 			var nm2: String = String(PlayerInventory.JUTSU[id].name) if id != "" else "(empty slot)"
 			_text(font, row.position + Vector2(16, 34), nm2, 18, COL_TEXT)
 			if id != "" and not bool(PlayerInventory.JUTSU[id].ready):
-				_text(font, row.position + Vector2(0, 34), "not playable yet", 13, COL_DIM, row.size.x - 12.0, HORIZONTAL_ALIGNMENT_RIGHT)
+				_text(font, row.position + Vector2(0, minf(34,row_height-14)), "not playable yet", 13, COL_DIM, row.size.x - 12.0, HORIZONTAL_ALIGNMENT_RIGHT)
 	# description
 	var cur := list[cursor] if cursor < list.size() else ""
 	var desc := ""
@@ -271,7 +272,7 @@ func _draw_menu() -> void:
 		desc = "Lightning fist strike (coming soon)."
 	elif cur == "":
 		desc = "Empties the slot you place it on."
-	_text(font, list_pos + Vector2(0, 4 * 62 + 4), desc, 14, COL_DIM, 340.0)
+	_text(font, list_pos + Vector2(0, list.size() * row_height + 8), desc, 14, COL_DIM, 340.0)
 	# slots
 	var cx := panel.position + Vector2(panel.size.x * 0.72, 270)
 	var cell := 96.0
