@@ -102,6 +102,9 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
 var facing8: Vector2 = Vector2.DOWN  ## facing snapped to 8 directions
+## Logical height above the ground (shrine stairs and platform, see ShrineElevation). The ground position is
+## unchanged by it; only the figure is drawn higher: visual_y = ground_y - elevation (a jump adds its own lift).
+var elevation: float = 0.0
 var camera_baseline: float = WorldScale.CAMERA_BASE_ZOOM  ## zoom of the active CameraPreset for the current figure
 var _action_timer: float = 0.0  ## seconds left in the current dodge/jump; 0 when not acting
 var _action_duration: float = 0.0  ## total authored length of the current/last action, for progress math
@@ -186,6 +189,7 @@ var kunai_thrown_count: int = 0
 
 func _ready() -> void:
 	add_to_group("player")
+	collision_mask |= ShrineElevation.EDGE_LAYER  # platform rim and stair sides only stop the player
 	spawn_position = global_position
 	# Collider comes from the shared footprint constant (the scene values mirror it).
 	var feet := $CollisionShape2D as CollisionShape2D
@@ -223,6 +227,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var prev_state := state
+	_follow_elevation(delta)
 	var charge_held := Input.is_action_pressed("substitution")
 	_charge_hold_time = _charge_hold_time + delta if charge_held else 0.0
 	if not charge_held and not Input.is_action_pressed("chakra_charge"):
@@ -536,7 +541,7 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 				_update_jump_lift()
 				return
 			if airborne:
-				visual.position.y = 0.0
+				visual.position.y = -elevation
 				dust.landing(global_position)  # landed out of the swing
 			# The attack just ended: pick the state up where locomotion already is this instant (order:
 			# "continue running immediately after an attack ends" -- never a forced idle frame).
@@ -665,12 +670,21 @@ func _play_jump_visual() -> void:
 	visual.play_action_progress("jump", facing8, progress)
 
 
+## Eases `elevation` toward the height of the ground under the feet and carries the figure and camera with it.
+func _follow_elevation(delta: float) -> void:
+	var before := elevation
+	ShrineElevation.update_actor(self, delta)
+	if elevation != before:
+		_update_jump_lift()
+		camera.position.y = -elevation
+
+
 func _update_jump_lift() -> void:
 	if (state != State.JUMP and state != State.AIR_ATTACK) or _action_duration <= 0.0:
-		visual.position.y = 0.0
+		visual.position.y = -elevation
 		return
 	var progress := clampf(1.0 - (_action_timer / _action_duration), 0.0, 1.0)
-	visual.position.y = -jump_visual_height * sin(progress * PI)
+	visual.position.y = -elevation - jump_visual_height * sin(progress * PI)
 
 
 ## Height of the standing figure in world px: the loaded sprite set's `body_height_px`, else the placeholder.
@@ -704,7 +718,7 @@ func _process_charge(delta: float) -> void:
 	state = State.CHARGE
 	velocity = Vector2.ZERO
 	_footstep_timer = 0.0
-	visual.position.y = 0.0
+	visual.position.y = -elevation
 	visual.play_action("charge", facing8)
 	var restored := minf(max_chakra, chakra + chakra_charge_per_second * delta)
 	if not is_equal_approx(restored, chakra):
@@ -821,6 +835,8 @@ func _substitution_spot_ok(p: Vector2) -> bool:
 		var b: Rect2 = arena.get_bounds()
 		if not b.grow(-8.0).has_point(p):
 			return false
+	if absf(ShrineElevation.target_at(p) - elevation) > ShrineElevation.HEIGHT * ShrineElevation.BOARD_AT:
+		return false  # never swap across the shrine's levels (onto the platform from the ground, or off it)
 	return not test_move(Transform2D(0.0, p), Vector2(0.01, 0.0))
 
 

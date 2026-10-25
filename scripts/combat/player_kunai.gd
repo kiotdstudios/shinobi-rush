@@ -76,6 +76,11 @@ func step(delta: float) -> void:
 		var ex: Array[RID] = []
 		if is_instance_valid(thrower) and thrower is CollisionObject2D:
 			ex.append((thrower as CollisionObject2D).get_rid())
+		if is_instance_valid(thrower) and thrower is PhysicsBody2D:
+			# Bodies the thrower walks through (the shrine's ground-level mound while it stands on the platform).
+			for passable in (thrower as PhysicsBody2D).get_collision_exceptions():
+				ex.append(passable.get_rid())
+		q.collision_mask = 1  # world walls only: player-only walls (the platform rim) never stop a kunai
 		q.exclude = ex
 		if not get_world_2d().direct_space_state.intersect_ray(q).is_empty():
 			hit_result = "wall"
