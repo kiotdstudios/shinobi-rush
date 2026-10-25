@@ -57,6 +57,25 @@ def export_files(d: Path) -> Dict[str, Path]:
     return {p.relative_to(d).as_posix(): p for p in sorted(d.rglob("*")) if p.is_file() and p.name != "build-info.json"}
 
 
+MAP_EDITOR_PAGE = "editor.html"
+MAP_EDITOR_FLAG = "window.SHINOBI_MAP_EDITOR=true;"
+
+
+def write_map_editor_page(d: Path) -> Path:
+    """Derive editor.html (the Shinobi Rush Map Editor) from the exported index.html: same engine, same .pck, but a
+    flag set before the engine starts makes the game open its map editor (scripts/editor/map_editor_mode.gd)."""
+    src = d / "index.html"
+    html = src.read_text(encoding="utf-8")
+    if "</head>" not in html:
+        raise ValueError("index.html has no </head>; cannot derive the map editor page")
+    page = html.replace("</head>", f"<script>{MAP_EDITOR_FLAG}</script>\n</head>", 1)
+    if "<title>" in page:
+        page = re.sub(r"<title>.*?</title>", "<title>Shinobi Rush Map Editor</title>", page, count=1, flags=re.S)
+    out = d / MAP_EDITOR_PAGE
+    out.write_text(page, encoding="utf-8", newline="\n")
+    return out
+
+
 def check_export_dir(d: Path) -> List[Finding]:
     """Structural checks of the exported files (independent of build-info.json)."""
     out: List[Finding] = []

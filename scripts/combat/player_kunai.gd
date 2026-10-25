@@ -1,7 +1,7 @@
 class_name PlayerKunai
 extends Node2D
 ## A kunai the player throws from the inventory. Flies straight, hits the first "enemy" it passes close to (light
-## damage, small knockback), stops on walls, vanishes at MAX_RANGE. Same black kunai art as the Bandit's.
+## damage, small knockback), embeds on surfaces and drops after misses; character hits consume it. Same black kunai art as the Bandit's.
 
 const SPEED := 640.0
 const MAX_RANGE := 520.0
@@ -47,47 +47,37 @@ func _physics_process(delta: float) -> void:
 
 
 func step(delta: float) -> void:
-	if hit_result != "":
-		return
+	if hit_result != "": return
 	var a := global_position
-	var b := a + dir * SPEED * delta
-	var seg := b - a
-	var best: Node2D = null
+	var length := minf(SPEED*delta,maxf(MAX_RANGE-travelled,0.0))
+	var b := a+dir*length
+	var seg := b-a
+	var wall := KunaiRecovery.wall_hit(self,a,b,thrower)
+	var wall_t := 2.0 if wall.is_empty() or length<0.001 else a.distance_to(wall.position-KunaiRecovery.LIFT)/length
+	var best: Node2D
 	var best_t := 2.0
-	if is_inside_tree():
-		for e: Node in get_tree().get_nodes_in_group("enemy"):
-			if not (e is Node2D) or e == thrower or not e.has_method("take_damage"):
-				continue
-			var t := 0.0
-			if seg.length_squared() > 0.0001:
-				t = clampf(((e as Node2D).global_position - a).dot(seg) / seg.length_squared(), 0.0, 1.0)
-			if (a + seg * t).distance_to((e as Node2D).global_position) <= HIT_RADIUS and t < best_t:
-				best = e as Node2D
-				best_t = t
-	if best != null:
-		global_position = a + seg * best_t
-		best.call("take_damage", DAMAGE, dir, KNOCKBACK, HITSTOP_MS)
-		hit_target = best
-		hit_result = "hit"
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if not (enemy is Node2D) or enemy==thrower or not enemy.has_method("take_damage"): continue
+		var t := clampf((enemy.global_position-a).dot(seg)/maxf(seg.length_squared(),0.0001),0,1)
+		if (a+seg*t).distance_to(enemy.global_position)<=HIT_RADIUS and t<best_t and t<wall_t:
+			best=enemy
+			best_t=t
+	if best!=null:
+		global_position=a+seg*best_t
+		best.call("take_damage",DAMAGE,dir,KNOCKBACK,HITSTOP_MS)
+		hit_target=best
+		hit_result="hit"
 		queue_free()
 		return
-	if is_inside_tree():
-		var q := PhysicsRayQueryParameters2D.create(a + Vector2(0, -14), b + Vector2(0, -14))
-		var ex: Array[RID] = []
-		if is_instance_valid(thrower) and thrower is CollisionObject2D:
-			ex.append((thrower as CollisionObject2D).get_rid())
-		if is_instance_valid(thrower) and thrower is PhysicsBody2D:
-			# Bodies the thrower walks through (the shrine's ground-level mound while it stands on the platform).
-			for passable in (thrower as PhysicsBody2D).get_collision_exceptions():
-				ex.append(passable.get_rid())
-		q.collision_mask = 1  # world walls only: player-only walls (the platform rim) never stop a kunai
-		q.exclude = ex
-		if not get_world_2d().direct_space_state.intersect_ray(q).is_empty():
-			hit_result = "wall"
-			queue_free()
-			return
-	global_position = b
-	travelled += seg.length()
-	if travelled >= MAX_RANGE:
-		hit_result = "range"
+	if not wall.is_empty():
+		global_position=wall.position-KunaiRecovery.LIFT
+		hit_result="wall"
+		KunaiRecovery.start(get_parent(),global_position,dir,DRAW_LIFT.y,wall.normal)
+		queue_free()
+		return
+	global_position=b
+	travelled+=length
+	if travelled>=MAX_RANGE-0.01:
+		hit_result="range"
+		KunaiRecovery.start(get_parent(),global_position,dir,DRAW_LIFT.y)
 		queue_free()

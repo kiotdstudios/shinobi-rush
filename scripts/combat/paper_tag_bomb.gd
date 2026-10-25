@@ -35,6 +35,7 @@ enum Phase { FLY, ARMED, BLAST, DONE }
 static var _cache: Dictionary = {}
 static var _sound: AudioStreamWAV = null
 
+var art_kind := ""  ## empty preserves the original flat paper tag
 var dir: Vector2 = Vector2.RIGHT
 var thrower: Node2D = null
 var phase: Phase = Phase.FLY
@@ -56,13 +57,14 @@ var _hit_done := false
 var _flight_len := MAX_RANGE
 
 
-static func spawn(parent: Node, from: Vector2, aim: Vector2, who: Node2D) -> PaperTagBomb:
+static func spawn(parent: Node, from: Vector2, aim: Vector2, who: Node2D, item_art := "") -> PaperTagBomb:
 	if parent == null:
 		return null
 	warm()
 	var b := PaperTagBomb.new()
 	b.dir = aim.normalized() if aim != Vector2.ZERO else Vector2.RIGHT
 	b.thrower = who
+	b.art_kind = item_art
 	parent.add_child(b)
 	b.global_position = from
 	b._start = from
@@ -94,6 +96,10 @@ static func warm() -> void:
 				ResourceLoader.load_threaded_request(p)
 
 
+func body_frames(layer: String) -> Array:
+	return frames(layer) if art_kind.is_empty() else TagBombArt.frames(art_kind, layer)
+
+
 func _ready() -> void:
 	_shadow = Node2D.new()
 	_shadow.name = "Shadow"
@@ -108,10 +114,12 @@ func _ready() -> void:
 	add_child(_halo)
 	_body = Sprite2D.new()
 	_body.name = "Tag"
+	if not art_kind.is_empty():
+		_body.scale = Vector2.ONE * 0.5
 	_body.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(_body)
-	if not frames("fly").is_empty():
-		_body.texture = frames("fly")[0]
+	if not body_frames("fly").is_empty():
+		_body.texture = body_frames("fly")[0]
 	_body.position = Vector2(0, -HAND_LIFT)
 	z_index = 5
 
@@ -270,19 +278,19 @@ func _refresh_visual() -> void:
 		return
 	match phase:
 		Phase.FLY:
-			var fl := frames("fly")
+			var fl := body_frames("fly")
 			var u := clampf(age / FLIGHT_TIME, 0.0, 1.0)
 			if not fl.is_empty():
 				_body.texture = fl[int(age * FLY_FPS) % fl.size()]
 			_body.position = Vector2(0, -HAND_LIFT - sin(u * PI) * ARC_HEIGHT)
 			_shadow.queue_redraw()
 		Phase.ARMED:
-			var ar := frames("armed")
+			var ar := body_frames("armed")
 			var left := maxf(FUSE - age, 0.0)
 			var rate := lerpf(8.0, 30.0, 1.0 - clampf(left / maxf(FUSE - FLIGHT_TIME, 0.1), 0.0, 1.0))
 			if not ar.is_empty():
 				_body.texture = ar[int(age * rate) % ar.size()]
-			_body.position = Vector2(0, -4)
+			_body.position = Vector2(0, -24 if not art_kind.is_empty() else -4)
 			_shadow.queue_redraw()
 			_halo.queue_redraw()
 		Phase.BLAST:

@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "id": "tag_bomb",
+  "generator": "PixelLab",
+  "layers": {
+    "idle": {
+      "frames": [
+        "idle_00.png",
+        "idle_01.png",
+        "idle_02.png",
+        "idle_03.png",
+        "idle_04.png",
+        "idle_05.png",
+        "idle_06.png",
+        "idle_07.png",
+        "idle_08.png",
+        "idle_09.png",
+        "idle_10.png",
+        "idle_11.png",
+        "idle_12.png",
+        "idle_13.png",
+        "idle_14.png",
+        "idle_15.png"
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "fps": 14,
+      "loop": true,
+      "unique_frames": 16,
+      "anchor": [
+        64,
+        64
+      ]
+    },
+    "fly": {
+      "frames": [
+        "fly_00.png",
+        "fly_01.png",
+        "fly_02.png",
+        "fly_03.png",
+        "fly_04.png",
+        "fly_05.png",
+        "fly_06.png",
+        "fly_07.png",
+        "fly_08.png",
+        "fly_09.png",
+        "fly_10.png",
+        "fly_11.png",
+        "fly_12.png",
+        "fly_13.png",
+        "fly_14.png",
+        "fly_15.png"
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "fps": 40,
+      "loop": true,
+      "unique_frames": 16,
+      "anchor": [
+        64,
+        64
+      ]
+    },
+    "armed": {
+      "frames": [
+        "armed_00.png",
+        "armed_01.png",
+        "armed_02.png",
+        "armed_03.png",
+        "armed_04.png",
+        "armed_05.png",
+        "armed_06.png",
+        "armed_07.png",
+        "armed_08.png",
+        "armed_09.png",
+        "armed_10.png",
+        "armed_11.png",
+        "armed_12.png",
+        "armed_13.png",
+        "armed_14.png",
+        "armed_15.png"
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "fps": 16,
+      "loop": true,
+      "unique_frames": 16,
+      "anchor": [
+        64,
+        64
+      ]
+    }
+  },
+  "runtime_body_scale": 0.5,
+  "pickup_glow": "existing paper_tag aura/embers tinted independently",
+  "effects": "existing paper_tag_blast"
+}
