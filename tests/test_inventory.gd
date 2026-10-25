@@ -116,7 +116,7 @@ func run(p_ck: Callable, root: Node) -> void:
 		k2.step(1.0 / 60.0)
 		if k2.hit_result != "":
 			break
-	ck.call("kunai: misses and expires at max range", k2.hit_result == "range" or k2.hit_result == "wall")
+	ck.call("kunai: misses transition to ground/surface recovery", k2.hit_result == "range" or k2.hit_result == "wall")
 	dummy.queue_free()
 
 	# menu

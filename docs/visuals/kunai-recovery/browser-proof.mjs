@@ -1,0 +1,30 @@
+import {chromium} from '../../../scripts/ci/smoke/node_modules/playwright/index.mjs';
+import {startStaticServer} from '../../../scripts/ci/smoke/lib/serve.mjs';
+import {mkdirSync,writeFileSync} from 'node:fs';
+const [dir,out]=process.argv.slice(2);mkdirSync(out,{recursive:true});
+const server=/^https?:/.test(dir)?null:await startStaticServer(dir,{port:0});const base=server?.url??dir;
+const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1280,height:720},serviceWorkers:'block'});
+const checks={},errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+const state=()=>page.evaluate(()=>({...window.__KUNAI_RECOVERY__}));
+const click=async name=>{const b=JSON.parse((await state()).buttons_json)[name];await page.mouse.click(b.x,b.y);await page.waitForTimeout(40)};
+const until=async fn=>{await page.waitForFunction(fn,null,{timeout:15000})};
+try{
+ await page.goto(base+'?kunai=recovery');await until(()=>window.__KUNAI_RECOVERY__?.ready);checks.ready=true;
+ await page.screenshot({path:out+'/pickup.png'});
+ await click('Half');checks.half=(await state()).speed===.5;await click('Pause');const t=(await state()).clock;await page.waitForTimeout(150);checks.pause=(await state()).clock===t;await click('Pause');await click('Normal');checks.normal=(await state()).speed===1;
+ await click('Character');await until(()=>window.__KUNAI_RECOVERY__.result==='hit');checks.character_no_drop=(await state()).drops===0&&JSON.parse((await state()).recovery_json).length===0;
+ await click('Miss');await until(()=>window.__KUNAI_RECOVERY__.result==='range');
+ checks.miss_falling=JSON.parse((await state()).recovery_json).some(r=>!r.surface);
+ await page.waitForTimeout(340);await page.screenshot({path:out+'/bounce.png'});
+ await until(()=>window.__KUNAI_RECOVERY__.drops===1);checks.miss_settles=true;
+ await page.screenshot({path:out+'/ground.png'});
+ await click('Collect');checks.collect_one=(await state()).inventory===1&&(await state()).drops===0;
+ await click('Collect');checks.no_duplicate=(await state()).inventory===1;
+ await click('Surface');await until(()=>window.__KUNAI_RECOVERY__.result==='wall');checks.surface_sticks=JSON.parse((await state()).recovery_json).some(r=>r.surface&&r.age<.4&&r.recoverable);
+ await page.screenshot({path:out+'/surface.png'});await until(()=>window.__KUNAI_RECOVERY__.drops===1);checks.surface_settles=true;
+ await click('Collect');checks.surface_collect=(await state()).inventory===2;
+ await click('Bandit miss');await until(()=>window.__KUNAI_RECOVERY__.result==='range');await until(()=>window.__KUNAI_RECOVERY__.drops===1);checks.bandit_miss_recovers=true;
+ await page.screenshot({path:out+'/bandit-drop.png'});await click('Collect');checks.bandit_collect=(await state()).inventory===3;
+ checks.no_errors=errors.length===0;const build=server?null:await(await page.request.get(base+'build-info.json?v='+Date.now())).json();
+ writeFileSync(out+'/validation.json',JSON.stringify({url:page.url(),tested_at:new Date().toISOString(),build_sha:build?.commit_sha,checks,errors},null,2));console.log(JSON.stringify({checks,errors}));if(!Object.values(checks).every(Boolean))process.exitCode=1;
+}finally{await browser.close();if(server)await server.close()}
