@@ -2,8 +2,8 @@
 - Agent: Codex
 - Owner: Codex
 - Priority: P1
-- Status: IN_PROGRESS
-- Branch/PR: codex/tag-bomb-items
+- Status: DONE
+- Branch/PR: codex/tag-bomb-items / https://github.com/kiotdstudios/shinobi-rush/pull/194 (merged)
 - Dependencies: existing gourd pickup, inventory and paper-tag throwing systems
 
 ## Objective
@@ -23,3 +23,6 @@ Transparent aligned native pixel frames; no blue smoke-bomb body; readable at ga
 
 ## Handoff / Notes
 Smoke is a visual screen; AI stealth/line-of-sight behavior remains Aki-owned unless separately assigned. Report that limit explicitly.
+
+## Completion — 2026-10-25
+112 native PixelLab frames delivered; obtainable/throwable items and builder entries live. PR #194 merged as `d410ff30c51bf26c228a2108a52814909249cb61`. Main workflow [40178592040](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40178592040) fully succeeded including deploy, post-deploy and gate; 2828 native tests passed. Public `?bombs=review` validated at 2026-10-25T09:13:47.455Z against that exact SHA: 12/12 passed, zero console errors. Pickup/explosion/smoke screenshots inspected. See own job report and docs/visuals/tag-bombs/live-browser. Smoke AI stealth remains separately owned, not implemented or claimed.

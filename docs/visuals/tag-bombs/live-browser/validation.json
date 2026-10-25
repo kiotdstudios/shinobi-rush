@@ -1,0 +1,20 @@
+{
+  "url": "https://kiotdstudios.github.io/shinobi-rush/?bombs=review",
+  "tested_at": "2026-10-25T09:13:47.455Z",
+  "build_sha": "d410ff30c51bf26c228a2108a52814909249cb61",
+  "checks": {
+    "ready": true,
+    "half": true,
+    "pause": true,
+    "normal": true,
+    "collected": true,
+    "explosive_lands": true,
+    "explosive_detonates": true,
+    "smoke_lands": true,
+    "smoke_detonates": true,
+    "smoke_no_damage": true,
+    "smoke_cleanup": true,
+    "no_errors": true
+  },
+  "errors": []
+}

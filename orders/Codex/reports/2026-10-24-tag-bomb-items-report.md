@@ -1,9 +1,9 @@
 # Job Report — Animated tag bomb items
 - Agent: Codex
 - Order: orders/Codex/2026-10-24-tag-bomb-items.md
-- Date: 2026-10-24 (America/New_York)
-- Final status: REVIEW — local acceptance passed; PR integration and canonical live verification pending
-- Commit / PR: pending implementation commit
+- Date: 2026-10-24–25 (America/New_York)
+- Final status: DONE — integrated, deployed and public-browser verified
+- Commit / PR: implementation 307280a97279f504f89f9e52ea45e960b93bcfd5; final PR head b9e6ed730f61bedb2cd688ab54d200486b197dca; PR #194 merged as d410ff30c51bf26c228a2108a52814909249cb61
 
 ## Work completed
 Created two PixelLab sphere item packs matching the owner concept. Explosive: ivory paper, black decorative ink, red seams. Smoke: charcoal black paper, neutral white/gray ink, red seams. 48 native 128px frames per bomb (16 idle / flight / armed) plus 16 separate 256px smoke burst/billow frames. All 112 are unique RGBA, hard alpha, uncut transparent margins. Black-shell palette correction neutralizes cool gray at native pixel positions; source originals and API receipts retained. Reused approved separate pickup aura/embers and explosive blast rather than repainting them.
@@ -44,7 +44,7 @@ Initial review normal HUD covered title/buttons; fixed and reran final Web proof
 None.
 
 ## Outstanding work / next steps
-Normal reviewed PR checks, merge, main deploy/postdeploy and exact-SHA canonical smoke test. Until those complete this is NOT LIVE. Aki can add actual smoke stealth/line-of-sight behavior separately using the existing smoke projectile duration/position.
+No outstanding work for the requested art/items delivery. Aki can add actual smoke stealth/line-of-sight behavior separately using the existing smoke projectile duration/position; this delivery makes no AI-stealth claim.
 
 ## Integration validation — 2026-10-25
 PR #194: https://github.com/kiotdstudios/shinobi-rush/pull/194. Initial implementation `307280a97279f504f89f9e52ea45e960b93bcfd5`; initial PR CI 40160009964 passed all gates including 2800 native tests. Main advanced to Aki's damage reaction merge `5413ec33` while CI ran. GitHub correctly rejected merge under strict up-to-date rules; no bypass attempted. Integrated with `git merge --no-commit --no-ff origin/main`, with clean automatic merges in controller/runner.
@@ -53,3 +53,13 @@ Before the integration commit: Godot import passed; focused damage reactions + b
 
 ## Builder integration validation — 2026-10-25
 Updated PR CI 40161301270 passed all gates, **2821 native tests**, 346 scripts/23 scenes validated. Main then advanced to Aki's tight-selection merge `9419d9a2a6c46a956e729f5c67e1492fc6675b19`; strict checks correctly required updating again. Integrated through `git merge --no-commit --no-ff origin/main`, no conflicts. Before this merge commit: Godot import passed; tight-selection + damage reactions + bomb/item/gourd regressions **191/0**, no engine error/failure lines; debug Web export to `../tag-bombs-builder-web-20261025` passed; actual browser proof **12/12**, no console errors (builder-integrated-browser/validation.json). Both bomb pickups still create, move and remove through the existing builder. No protection bypass or direct main push.
+
+
+## Final canonical live verification — 2026-10-25
+- Runtime PR: https://github.com/kiotdstudios/shinobi-rush/pull/194 (merged). Implementation `307280a9`, final integrated head `b9e6ed73`, merge/live SHA `d410ff30c51bf26c228a2108a52814909249cb61`.
+- Final PR CI https://github.com/kiotdstudios/shinobi-rush/actions/runs/40177465474 succeeded; **2828/0** native tests; 347 scripts /23 scenes validated with zero failures.
+- Main CI https://github.com/kiotdstudios/shinobi-rush/actions/runs/40178592040 fully **success**, including pre-deploy, Pages deployment, post-deploy live smoke and gate. Main native run also **2828 passed /0 failed**, 347 scripts/23 scenes validated. Receipt: live-browser/deployment.json.
+- `build-info.json` confirmed exact merged main SHA before public proof. Actual public test: `node docs/visuals/tag-bombs/browser-proof.mjs https://kiotdstudios.github.io/shinobi-rush/ docs/visuals/tag-bombs/live-browser`. **12/12 passed**, no page/console errors, at 2026-10-25T09:13:47.455Z (2026-10-25 05:13:47 America/New_York). Actual live pickup/explosion/smoke screenshots viewed and inspected. No missing art or UI overlap.
+- Canonical review: https://kiotdstudios.github.io/shinobi-rush/?bombs=review&v=d410ff30. Normal/half-speed GIFs and contact sheets are on main.
+- Both items under Builder → Pickups; collect, then Inventory → assign D-pad slot → throw. New items start at zero; obtain from placed pickups. Old items/default slots preserved. Explosive retains existing damage; smoke releases a visual screen without damage or AI-stealth behavior.
+- Final report/evidence-only follow-up uses the normal PR workflow; it does not alter the already verified runtime.
