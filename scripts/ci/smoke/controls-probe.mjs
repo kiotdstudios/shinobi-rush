@@ -232,7 +232,7 @@ try {
     const p = await context.newPage();
     p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
     p.on('pageerror', (e) => consoleMsgs.push({ type: 'pageerror', text: String(e) }));
-    await p.goto(server.url + query, { waitUntil: 'load' });
+    await p.goto(server.url + (query ? query + '&settings=1' : '?settings=1'), { waitUntil: 'load' });
     await p.waitForFunction(() => window.__SHINOBI_READY__ === true && typeof window.__SHINOBI_STATE__?.vision_on === 'boolean',
       null, { timeout: 120000, polling: 250 });
     await p.mouse.click(640, 400); // canvas keyboard focus (no game action uses the mouse)
