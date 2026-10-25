@@ -3,7 +3,7 @@
 - Owner: Codex
 - Status: REVIEW
 - Priority: P1
-- Branch/PR: codex/blightwood-bridge-kit
+- Branch/PR: codex/blightwood-bridge-kit / https://github.com/kiotdstudios/shinobi-rush/pull/201
 - Dependencies: Existing Blightwood palette and 72x36 diamond grid; Aki owns gameplay traversal integration.
 
 ## Objective

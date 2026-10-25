@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-25-blightwood-bridge-kit.md
 - Date: 2026-10-25
 - Final status: REVIEW — tested art kit ready; NOT LIVE awaiting gameplay integration
-- Commit / PR: Implementation commit pending at report creation; follow-up below.
+- Commit / PR: ca0de669be63981b11a7d5d10d2d59a90d2e6158; https://github.com/kiotdstudios/shinobi-rush/pull/201 (open).
 
 ## Work completed
 Created the requested Blightwood modular bridge kit: three lengths (4/6/8 logical tiles), two-tile fixed width, both diagonal axes, start/end caps, support posts, timber rails, optional rope rails, and damaged versions. Delivered 13 reusable modules, 18 assembled examples and 72 separate support/rear/deck/front bitmap layers. Added 72x36 grid basis, exact sockets/anchors, dimensions, sampled palette and SHA-256 metadata.
