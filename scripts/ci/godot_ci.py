@@ -274,6 +274,12 @@ def cmd_finalize_export(args: argparse.Namespace) -> int:
         except (OSError, subprocess.SubprocessError):
             annotate("error", "GITHUB_SHA is not set and git could not determine HEAD; pass --commit-sha.", title="build-info")
             return 1
+    if args.kind == "game" and (out / "index.html").is_file():
+        try:
+            export_tools.write_map_editor_page(out)
+        except ValueError as e:
+            annotate("error", str(e), title="map editor page")
+            return 1
     version = pinlib.load()["GODOT_VERSION"]
     version_string = env.get("GODOT_VERSION_STRING") or run_logged([godot_bin(args), "--version"], timeout=60).text.strip().splitlines()[-1]
     try:
