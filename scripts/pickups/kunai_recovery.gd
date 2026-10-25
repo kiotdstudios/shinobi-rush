@@ -27,6 +27,9 @@ static func wall_hit(node: Node2D, a: Vector2, b: Vector2, who: Node2D = null) -
 		for actor in node.get_tree().get_nodes_in_group(group):
 			if actor is CollisionObject2D: excludes.append(actor.get_rid())
 	if is_instance_valid(who) and who is CollisionObject2D: excludes.append(who.get_rid())
+	if is_instance_valid(who) and who is PhysicsBody2D:
+		for passable in (who as PhysicsBody2D).get_collision_exceptions(): excludes.append(passable.get_rid())  # e.g. the shrine mound while the thrower stands on the platform
+	query.collision_mask=1  # world walls only: player-only walls (the platform rim) never stop a kunai
 	query.exclude=excludes
 	return node.get_world_2d().direct_space_state.intersect_ray(query)
 
