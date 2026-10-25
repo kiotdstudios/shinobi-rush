@@ -27,6 +27,7 @@ var place_id := ""
 var snap := 30
 var selected: Dictionary = {}
 var dragging := false
+var panel_hidden := false  ## map editor: the tools panel is collapsed to its tab
 var _drag_origin := Vector2.ZERO
 var _drag_offset := Vector2.ZERO
 var panel: PanelContainer
@@ -262,11 +263,21 @@ func _process(_d: float) -> void:
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
 
 
+## Map editor only: collapse or restore the tools panel without closing the editor (editing keeps working).
+func set_panel_hidden(hidden: bool) -> void:
+	if not map_mode:
+		return
+	panel.visible = not hidden
+	tab.visible = hidden
+	panel_hidden = hidden
+
+
 func set_open(v: bool) -> void:
 	if v and MapEditorMode.public_game():
 		return  # no World Builder on the public game page
 	if map_mode and not v:
 		return  # the map editor is for building only: it cannot be closed into a playable level
+	SpawnMarker.shown = v
 	open = v
 	_set_camera_free(v)
 	panel.visible = v
@@ -351,6 +362,10 @@ func _mouse_world() -> Vector2:
 # ------------------------------------------------------------------ input
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
+		if map_mode and event.keycode == KEY_H and not event.ctrl_pressed and not (get_viewport().gui_get_focus_owner() is LineEdit):
+			set_panel_hidden(not panel_hidden)
+			get_viewport().set_input_as_handled()
+			return
 		if open and event.keycode == KEY_S and event.ctrl_pressed:
 			save_now()
 			get_viewport().set_input_as_handled()
@@ -719,7 +734,14 @@ func _enter_map_mode() -> void:
 	panel.clip_contents = true
 	title_label.text = "SHINOBI RUSH MAP EDITOR"
 	sub_label.text = "BUILD  -  SETTINGS"
-	hide_button.visible = false  # build only: there is no playtest and no way to close the editor
+	# The editor itself cannot be closed (build only), but the PANEL can slide away to see the whole map:
+	# HIDE collapses it to a small tab on the right edge, and the tab (or the H key) brings it back.
+	hide_button.pressed.disconnect(hide_button.pressed.get_connections()[0].callable)
+	hide_button.pressed.connect(func(): set_panel_hidden(true))
+	hide_button.tooltip_text = "Hide this panel (press H or click the tab to bring it back)"
+	tab.text = "<  PANEL"
+	tab.pressed.disconnect(tab.pressed.get_connections()[0].callable)
+	tab.pressed.connect(func(): set_panel_hidden(false))
 	tab.visible = false
 	if _filter_buttons.has("HUD layout"):
 		(_filter_buttons["HUD layout"] as Control).visible = false  # the player HUD is not part of the map
@@ -1234,10 +1256,22 @@ func _build_ui() -> void:
 	void_row.add_child(next_void_button)
 
 	# Palette filters: hide/show the option cards by type; the world itself is untouched.
+	var filter_box := VBoxContainer.new()
+	filter_box.add_theme_constant_override("separation", 4)
+	_ui["filters"] = filter_box
+	outer.add_child(filter_box)
+	var all_row := HBoxContainer.new()
+	all_row.add_theme_constant_override("separation", 6)
+	filter_box.add_child(all_row)
+	var select_all := _toggle(all_row, "SELECT ALL", func(): set_all_filters(true))
+	select_all.toggle_mode = false
+	select_all.tooltip_text = "Show every option group in the build palette"
+	var deselect_all := _toggle(all_row, "DESELECT ALL", func(): set_all_filters(false))
+	deselect_all.toggle_mode = false
+	deselect_all.tooltip_text = "Hide every option group, then tick just the ones you want"
 	var filters := GridContainer.new()
-	_ui["filters"] = filters
 	filters.columns = 3
-	outer.add_child(filters)
+	filter_box.add_child(filters)
 	var filter_cats: Array = PlacedObjects.CATEGORIES.duplicate()
 	filter_cats.append(["HUD layout", []])  # the HUD piece controls are a section like the others (hidden until ticked)
 	for category: Array in filter_cats:
@@ -1292,7 +1326,11 @@ func _build_ui() -> void:
 			b.expand_icon = true
 			b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
-			if def.kind == "ground":
+			if def.kind == "spawn":
+				b.icon = SpawnMarker.icon()
+				b.add_theme_constant_override("icon_max_width", 48)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "ground":
 				b.icon = PlacedObjects.ground_texture(id)
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
@@ -1541,6 +1579,14 @@ func _build_ui() -> void:
 		hints.add_child(help)
 	if MapEditorMode.active():
 		_build_map_tabs(outer, foot)
+
+
+## SELECT ALL / DESELECT ALL for the palette filters. The HUD layout group is not part of "all" on the map editor.
+func set_all_filters(shown: bool) -> void:
+	for category: String in _filter_buttons:
+		if category == "HUD layout" and map_mode:
+			continue
+		set_type_filter(category, shown)
 
 
 func set_type_filter(category: String, shown: bool) -> void:
