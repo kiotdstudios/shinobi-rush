@@ -62,6 +62,11 @@ func _test_in_scene(tree_root: Node) -> void:
 		ck.call("fire pillar %d: embers particle emitter is continuous (not a one-shot burst)" % i, not p.embers.one_shot and p.embers.emitting)
 	# Advance real physics frames and confirm the flame is actually animating (frame index changes)
 	# and the glow is actually pulsing (not a frozen static halo) -- not just configured correctly.
+	if field.pillars.is_empty():
+		ck.call("fire pillar: the level places none (owner removed them 2026-10-24)", WorldScale.FIRE_PILLAR_POSITIONS.is_empty())
+		main.queue_free()
+		await main.get_tree().process_frame
+		return
 	var p0: FirePillar = field.pillars[0]
 	var seen_frames: Dictionary = {}
 	var glow_scales: Array[float] = []
