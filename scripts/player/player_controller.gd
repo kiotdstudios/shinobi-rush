@@ -102,6 +102,9 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
 var facing8: Vector2 = Vector2.DOWN  ## facing snapped to 8 directions
+## Logical height above the ground (shrine stairs and platform, see ShrineElevation). The ground position is
+## unchanged by it; only the figure is drawn higher: visual_y = ground_y - elevation (a jump adds its own lift).
+var elevation: float = 0.0
 var camera_baseline: float = WorldScale.CAMERA_BASE_ZOOM  ## zoom of the active CameraPreset for the current figure
 var _action_timer: float = 0.0  ## seconds left in the current dodge/jump; 0 when not acting
 var _action_duration: float = 0.0  ## total authored length of the current/last action, for progress math
@@ -157,6 +160,20 @@ var hits_taken: int = 0  ## enemy hits that landed on the player (read by tests 
 var hit_flash_timer: float = 0.0
 var _hit_invuln: float = 0.0  ## brief grace after a hit so one combo cannot chain-stun the player
 const HIT_INVULN_TIME := 0.45
+## Damage reactions (Codex clips: hit_react 0.333 s, knockback 0.5 s, death 0.667 s). Gameplay owns the
+## world displacement; the art has zero root motion.
+const HURT_CLIP := 0.333
+const KNOCKBACK_CLIP := 0.5
+const DEATH_CLIP := 0.667
+const DEATH_HOLD := 0.65  ## prone hold after the clip, before the respawn
+const KNOCKBACK_SHOVE := 170.0  ## shoves at least this strong (melee) play the knockback clip
+## Off in the default suite where tests assume the instant respawn; the dedicated damage test turns it on.
+static var death_sequence_enabled: bool = true
+var hurt_kind: String = ""  ## "" | hit_react | knockback
+var _hurt_t: float = 0.0
+var _hurt_dur: float = 0.333
+var dying: bool = false
+var _death_t: float = 0.0
 const HIT_FLASH_TIME := 0.18
 const HIT_TINT := Color(1.0, 0.45, 0.4, 1.0)
 
@@ -186,6 +203,7 @@ var kunai_thrown_count: int = 0
 
 func _ready() -> void:
 	add_to_group("player")
+	collision_mask |= ShrineElevation.EDGE_LAYER  # platform rim and stair sides only stop the player
 	spawn_position = global_position
 	# Collider comes from the shared footprint constant (the scene values mirror it).
 	var feet := $CollisionShape2D as CollisionShape2D
@@ -223,6 +241,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	var prev_state := state
+	_follow_elevation(delta)
 	var charge_held := Input.is_action_pressed("substitution")
 	_charge_hold_time = _charge_hold_time + delta if charge_held else 0.0
 	if not charge_held and not Input.is_action_pressed("chakra_charge"):
@@ -259,6 +278,13 @@ func _physics_process(delta: float) -> void:
 	# exactly where they stopped.
 	if _hitstop_timer > 0.0:
 		_hitstop_timer = maxf(_hitstop_timer - delta, 0.0)
+		return
+
+	if dying:
+		_tick_dying(delta)
+		return
+	if _hurt_t > 0.0:
+		_tick_hurt(delta)
 		return
 
 	_dodge_buffer = maxf(_dodge_buffer - delta, 0.0)
@@ -536,7 +562,7 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 				_update_jump_lift()
 				return
 			if airborne:
-				visual.position.y = 0.0
+				visual.position.y = -elevation
 				dust.landing(global_position)  # landed out of the swing
 			# The attack just ended: pick the state up where locomotion already is this instant (order:
 			# "continue running immediately after an attack ends" -- never a forced idle frame).
@@ -665,12 +691,21 @@ func _play_jump_visual() -> void:
 	visual.play_action_progress("jump", facing8, progress)
 
 
+## Eases `elevation` toward the height of the ground under the feet and carries the figure and camera with it.
+func _follow_elevation(delta: float) -> void:
+	var before := elevation
+	ShrineElevation.update_actor(self, delta)
+	if elevation != before:
+		_update_jump_lift()
+		camera.position.y = -elevation
+
+
 func _update_jump_lift() -> void:
 	if (state != State.JUMP and state != State.AIR_ATTACK) or _action_duration <= 0.0:
-		visual.position.y = 0.0
+		visual.position.y = -elevation
 		return
 	var progress := clampf(1.0 - (_action_timer / _action_duration), 0.0, 1.0)
-	visual.position.y = -jump_visual_height * sin(progress * PI)
+	visual.position.y = -elevation - jump_visual_height * sin(progress * PI)
 
 
 ## Height of the standing figure in world px: the loaded sprite set's `body_height_px`, else the placeholder.
@@ -704,7 +739,7 @@ func _process_charge(delta: float) -> void:
 	state = State.CHARGE
 	velocity = Vector2.ZERO
 	_footstep_timer = 0.0
-	visual.position.y = 0.0
+	visual.position.y = -elevation
 	visual.play_action("charge", facing8)
 	var restored := minf(max_chakra, chakra + chakra_charge_per_second * delta)
 	if not is_equal_approx(restored, chakra):
@@ -714,7 +749,7 @@ func _process_charge(delta: float) -> void:
 
 ## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely.
 func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: Variant = null) -> bool:
-	if is_evading_melee() or _hit_invuln > 0.0:
+	if dying or is_evading_melee() or _hit_invuln > 0.0:
 		return false
 	if _try_substitution(attacker, from_dir):
 		return false
@@ -730,11 +765,87 @@ func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: 
 	hit_taken.emit(damage, from_dir)
 	health = maxf(health - maxf(damage, 0.0), 0.0)
 	health_changed.emit(health, max_health)
+	var dir := from_dir.normalized() if from_dir != Vector2.ZERO else -facing
 	if health <= 0.0:
 		times_downed += 1
 		downed.emit()
-		respawn()
+		if death_sequence_enabled:
+			_begin_dying(dir, shove)
+		else:
+			respawn()
+	else:
+		_begin_hurt(dir, shove)
 	return true
+
+
+func _clear_action_for_damage() -> void:
+	state = State.IDLE
+	_action_timer = 0.0
+	_attack_timer = 0.0
+	_attack_def = null
+	_combo_index = 0
+	_hit_targets.clear()
+	_dodge_buffer = 0.0
+	_jump_buffer = 0.0
+	_attack_buffer = 0.0
+
+
+## Struck: the attack/dodge/charge is cancelled, the body is thrown away from the hit and plays the
+## hit_react clip (light hit) or the knockback clip (strong melee shove), keeping its facing.
+func _begin_hurt(dir: Vector2, shove: float) -> void:
+	_clear_action_for_damage()
+	var big := shove >= KNOCKBACK_SHOVE
+	hurt_kind = "knockback" if big else "hit_react"
+	_hurt_dur = KNOCKBACK_CLIP if big else HURT_CLIP
+	_hurt_t = _hurt_dur
+	velocity = dir * shove * (2.8 if big else 2.2)
+	CameraImpact.impulse(dir, 7.0 if big else 4.0, 180.0 if big else 120.0)
+	dust.landing(global_position)
+	_show_damage_clip(hurt_kind, 0.0)
+
+
+func _tick_hurt(delta: float) -> void:
+	_hurt_t = maxf(_hurt_t - delta, 0.0)
+	# Decelerate so the body skids to a stop around 70% through the clip, then stands recovered.
+	var remaining := maxf(_hurt_dur * 0.7 - (_hurt_dur - _hurt_t), 0.02)
+	velocity = velocity.move_toward(Vector2.ZERO, velocity.length() / remaining * delta)
+	move_and_slide()
+	_show_damage_clip(hurt_kind, 1.0 - _hurt_t / _hurt_dur)
+	if _hurt_t <= 0.0:
+		hurt_kind = ""
+		velocity = Vector2.ZERO
+
+
+## Fatal blow: throw the body, play the death clip, hold the prone last frame, then respawn.
+func _begin_dying(dir: Vector2, shove: float) -> void:
+	_clear_action_for_damage()
+	_hurt_t = 0.0
+	hurt_kind = ""
+	dying = true
+	_death_t = 0.0
+	_hit_invuln = DEATH_CLIP + DEATH_HOLD + 1.0
+	velocity = dir * maxf(shove, 140.0) * 3.0
+	CameraImpact.impulse(dir, 11.0, 260.0)
+	dust.landing(global_position)
+	_show_damage_clip("death", 0.0)
+
+
+func _tick_dying(delta: float) -> void:
+	_death_t += delta
+	velocity = velocity.move_toward(Vector2.ZERO, 1400.0 * delta)
+	move_and_slide()
+	_show_damage_clip("death", clampf(_death_t / DEATH_CLIP, 0.0, 1.0))
+	var fade_start := DEATH_CLIP + DEATH_HOLD - 0.3
+	if _death_t > fade_start:
+		visual.modulate.a = clampf(1.0 - (_death_t - fade_start) / 0.3, 0.0, 1.0)
+	if _death_t >= DEATH_CLIP + DEATH_HOLD:
+		dying = false
+		respawn()
+
+
+func _show_damage_clip(kind: String, progress: float) -> void:
+	if not visual.play_action_progress(kind, facing8, progress):
+		visual.set_pose(facing8, false, false)
 
 
 ## 0..1 refill of the charge that comes back first (1.0 when no charge is recharging). Drives the HUD slot.
@@ -821,6 +932,8 @@ func _substitution_spot_ok(p: Vector2) -> bool:
 		var b: Rect2 = arena.get_bounds()
 		if not b.grow(-8.0).has_point(p):
 			return false
+	if absf(ShrineElevation.target_at(p) - elevation) > ShrineElevation.HEIGHT * ShrineElevation.BOARD_AT:
+		return false  # never swap across the shrine's levels (onto the platform from the ground, or off it)
 	return not test_move(Transform2D(0.0, p), Vector2(0.01, 0.0))
 
 
@@ -828,6 +941,10 @@ func _substitution_spot_ok(p: Vector2) -> bool:
 ## Puts a downed player back at `spawn_position` with full health, no leftover motion / action / combo
 ## state and a short grace period. Safe to call any time (the hit path calls it when health reaches 0).
 func respawn() -> void:
+	dying = false
+	_death_t = 0.0
+	_hurt_t = 0.0
+	hurt_kind = ""
 	_charge_interrupted = true
 	dust.landing(global_position)
 	global_position = spawn_position
@@ -889,8 +1006,8 @@ func use_slot(slot: String) -> bool:
 				used = true
 		"kunai":
 			used = _begin_throw()
-		"paper_tag":
-			used = _begin_throw("paper_tag")
+		"paper_tag", "tag_bomb", "smoke_tag_bomb":
+			used = _begin_throw(id)
 	if used:
 		item_used.emit(id)
 	return used
@@ -917,9 +1034,11 @@ func _tick_throw(delta: float) -> void:
 	var progress := 1.0 - _throw_t / THROW_TIME
 	if not _throw_released and progress >= THROW_RELEASE:
 		_throw_released = true
-		if _throw_item == "paper_tag":
+		if _throw_item == "smoke_tag_bomb":
+			SmokeTagBomb.spawn_smoke(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+		elif _throw_item in ["paper_tag", "tag_bomb"]:
 			tags_thrown_count += 1
-			PaperTagBomb.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+			PaperTagBomb.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self, "tag_bomb" if _throw_item == "tag_bomb" else "")
 		else:
 			kunai_thrown_count += 1
 			PlayerKunai.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)

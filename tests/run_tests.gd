@@ -32,6 +32,7 @@ func _initialize() -> void:
 	test_discovery()
 	await test_anchor_stability()
 	AncientShrineSection.enabled = false  # the shrine section adds ~40 objects to the default arena; layout tests assume the plain arena
+	PlayerController.death_sequence_enabled = false  # most tests assume the instant respawn; test_damage_reactions enables it locally
 	Bandit.substitution_enabled = false  # random log swaps would flake combat tests; test_bandit_sub_kunai enables it locally
 	await test_main_scene_and_movement()
 	await test_jump_and_dodge_chaining()
@@ -47,9 +48,12 @@ func _initialize() -> void:
 	await load("res://tests/test_health_gourd.gd").new().run(ck, root)
 	await load("res://tests/test_gourd_pickup_fx.gd").new().run(ck, root)
 	await load("res://tests/test_inventory.gd").new().run(ck, root)
+	await load("res://tests/test_kunai_recovery.gd").new().run(ck, root)
 	await load("res://tests/test_paper_tag.gd").new().run(ck, root)
+	await load("res://tests/test_tag_bomb_items.gd").new().run(ck, root)
 	await load("res://tests/test_ancient_shrine.gd").new().run(ck, root)
 	await load("res://tests/test_starting_area.gd").new().run(ck, root)
+	await load("res://tests/test_damage_reactions.gd").new().run(ck, root)
 	await load("res://tests/test_blightwood_rocks.gd").new().run(ck, root)
 	await load("res://tests/test_fence_kit.gd").new().run(ck, root)
 	await load("res://tests/test_paint_tool.gd").new().run(ck, root)
@@ -67,6 +71,7 @@ func _initialize() -> void:
 	await load("res://tests/test_floor_replace.gd").new().run(ck, root)
 	await load("res://tests/test_map_editor.gd").new().run(ck, root)
 	await load("res://tests/test_builder_freeze.gd").new().run(ck, root)
+	await load("res://tests/test_tight_select.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_vision_overlay.gd").new().run(ck, root)
 	await load("res://tests/test_sense_vision_overlay.gd").new().run(ck, root)
 	await load("res://tests/test_kunai_primary_proof.gd").new().run(ck, root)
@@ -85,6 +90,7 @@ func _initialize() -> void:
 	await load("res://tests/test_builder_water.gd").new().run(ck, root)
 	await load("res://tests/test_builder_shorelines.gd").new().run(ck, root)
 	await load("res://tests/test_dynamic_shrine.gd").new().run(ck, root)
+	await load("res://tests/test_shrine_elevation.gd").new().run(ck, root)
 	await load("res://tests/test_damage_art.gd").new().run(ck, root)
 	await load("res://tests/test_wall_kit_sort.gd").new().run(ck, root)
 	await load("res://tests/test_publish_to_github.gd").new().run(ck, root)

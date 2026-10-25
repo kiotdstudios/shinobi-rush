@@ -7,7 +7,9 @@ func _ready() -> void:
 	var query := str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
 	var enabled := "--kunai-proof" in OS.get_cmdline_user_args() or "kunai=proof" in query or "flicker=proof" in query
 	var target := ""
-	if "damage=review" in query or "--damage-review" in OS.get_cmdline_user_args():target="res://scenes/art/damage_animation_review.tscn"
+	if "kunai=recovery" in query or "--kunai-recovery" in OS.get_cmdline_user_args():target="res://scenes/art/kunai_recovery_review.tscn"
+	elif "bombs=review" in query or "--bombs-review" in OS.get_cmdline_user_args():target="res://scenes/art/tag_bombs_review.tscn"
+	elif "damage=review" in query or "--damage-review" in OS.get_cmdline_user_args():target="res://scenes/art/damage_animation_review.tscn"
 	elif "shrine=review" in query or "--shrine-review" in OS.get_cmdline_user_args():target="res://scenes/art/dynamic_shrine_review.tscn"
 	elif "shore=review" in query or "--shore-review" in OS.get_cmdline_user_args():target="res://scenes/art/blightwood_shorelines_review.tscn"
 	elif "water=review" in query or "--water-review" in OS.get_cmdline_user_args():target="res://scenes/art/blightwood_water_review.tscn"

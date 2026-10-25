@@ -34,11 +34,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	Input.action_release("move_right")
 	ck.call("freeze: the player cannot walk while building", player.global_position.is_equal_approx(before))
 	ck.call("layout: the panel fills the screen top to bottom", editor.panel.offset_top == 0.0 and editor.panel.offset_bottom == 0.0)
-	ck.call("layout: the type filters are folded away by default", not editor.filters_box.visible and not editor.filters_toggle.button_pressed)
-	editor.filters_toggle.button_pressed = true
-	ck.call("layout: the filters toggle opens the checkboxes", editor.filters_box.visible)
-	editor.filters_toggle.button_pressed = false
-	ck.call("layout: the filters fold away again", not editor.filters_box.visible)
+	ck.call("layout: the type filters are folded away by default", not (editor._ui["filters"] as Control).visible)
 
 	for i in 3:
 		editor.wheel_zoom(-1)

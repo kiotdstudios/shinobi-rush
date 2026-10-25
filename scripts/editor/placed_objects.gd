@@ -159,12 +159,15 @@ const CATALOG := {
 	"temple_floor_corner_right": {"label": "Corner Right", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_right"},
 	"temple_floor_corner_bottom": {"label": "Corner Bottom", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_bottom"},
 	"temple_floor_corner_left": {"label": "Corner Left", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_left"},
+	"kunai": {"label": "Kunai (white glow)", "kind": "pickup", "gourd": "kunai"},
 	"health_gourd": {"label": "Health gourd +25%", "kind": "pickup", "gourd": "health"},
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
+	"tag_bomb": {"label": "Tag bomb (explosive)", "kind": "pickup", "gourd": "tag_bomb"},
+	"smoke_tag_bomb": {"label": "Smoke tag bomb", "kind": "pickup", "gourd": "smoke_tag_bomb"},
 	"paper_tag": {"label": "Paper tag (throwable bomb)", "kind": "pickup", "gourd": "paper_tag"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
+const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -379,6 +382,38 @@ static func art_rect(id: String, pos: Vector2) -> Rect2:
 		_art_cache[id] = used
 	var u: Rect2i = _art_cache[id]
 	return Rect2((at[1] as Vector2) + Vector2(u.position), Vector2(u.size))
+
+
+static var _alpha_images := {}
+
+
+## True when `point` lands on a visible pixel of the object's art (within `reach` px, so thin pieces stay clickable).
+## Pieces with no texture (placeholder blocks) fall back to their drawn volume.
+static func art_pixel_hit(id: String, pos: Vector2, point: Vector2, reach := 2) -> bool:
+	var at := art_texture(id, pos)
+	var tex: Texture2D = at[0]
+	if tex == null:
+		return hit_rect(id, pos).has_point(point)
+	var local := point - (at[1] as Vector2)
+	if not Rect2(Vector2.ZERO, tex.get_size()).grow(float(reach)).has_point(local):
+		return false
+	if not _alpha_images.has(id):
+		var img := tex.get_image()
+		if img != null and img.is_compressed():
+			img.decompress()
+		_alpha_images[id] = img
+	var image: Image = _alpha_images[id]
+	if image == null:
+		return true
+	var cx := int(floor(local.x))
+	var cy := int(floor(local.y))
+	for dy in range(-reach, reach + 1):
+		for dx in range(-reach, reach + 1):
+			var x := cx + dx
+			var y := cy + dy
+			if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height() and image.get_pixel(x, y).a > 0.1:
+				return true
+	return false
 
 
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
@@ -878,21 +913,28 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 
 ## Topmost object under a world point: the solid base wins over the (larger) picture so crowded trees stay pickable.
 func hit_test(point: Vector2) -> Dictionary:
-	# Solid props win before grass; hiding a type lets the owner pick what is underneath it.
-	for picture: bool in [false, true]:
-		for i in range(objects.size() - 1, -1, -1):
-			var o := objects[i]
-			if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
-				continue
-			var rect := hit_rect(o.id, o.pos) if picture else footprint_rect(o.id, o.pos).grow(10.0)
-			if rect.has_point(point):
-				return o
+	# Tight picking (owner 2026-10-24: the old click boxes were far bigger than the art and the wrong assets got
+	# selected / deleted). A prop is hit only where its picture has visible pixels (a 2px forgiveness ring), or on
+	# its solid footprint. Overlaps: the piece drawn in front (larger y) wins, then the one placed last.
+	var hit: Dictionary = {}
+	var hit_y := -INF
+	for i in objects.size():
+		var o := objects[i]
+		if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
+			continue
+		if not (art_pixel_hit(o.id, o.pos, point) or footprint_rect(o.id, o.pos).has_point(point)):
+			continue
+		if (o.pos as Vector2).y >= hit_y:
+			hit_y = (o.pos as Vector2).y
+			hit = o
+	if not hit.is_empty():
+		return hit
 	var closest: Dictionary = {}
 	var distance := INF
 	for o in objects:
 		if def_of(o.id).kind != "grass" or not type_visible(o.id):
 			continue
-		if hit_rect(o.id, o.pos).has_point(point):
+		if art_pixel_hit(o.id, o.pos, point):
 			var d := point.distance_squared_to(o.pos)
 			if d < distance:
 				distance = d

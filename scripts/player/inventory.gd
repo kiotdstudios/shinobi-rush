@@ -9,9 +9,12 @@ extends RefCounted
 signal changed
 
 const MAX_STACK := 9
+const KUNAI_MAX_STACK := 10  ## matches the existing starter loadout; thrown blades can be recovered
 const DPAD_SLOTS: Array[String] = ["up", "right", "down", "left"]
 const JUTSU_SLOTS: Array[String] = ["square", "triangle", "circle", "cross"]
 const ITEMS := {
+	"tag_bomb": {"name": "Tag Bomb", "short": "TB", "desc": "Throw an explosive paper sphere; detonates after a short fuse."},
+	"smoke_tag_bomb": {"name": "Smoke Tag Bomb", "short": "SB", "desc": "Throw a black tag sphere to release a smoke screen. No damage."},
 	"health_gourd": {"name": "Health Gourd", "short": "HP", "desc": "Restores 25% of max health."},
 	"chakra_gourd": {"name": "Chakra Gourd", "short": "CK", "desc": "Restores 25% of max chakra."},
 	"kunai": {"name": "Kunai", "short": "KN", "desc": "Throw one forward for light damage."},
@@ -21,7 +24,7 @@ const ITEMS := {
 const JUTSU := {
 	"chidori": {"name": "Chidori", "ready": false},
 }
-const START_COUNTS := {"health_gourd": 0, "chakra_gourd": 0, "kunai": 10, "paper_tag": 3}
+const START_COUNTS := {"health_gourd": 0, "chakra_gourd": 0, "kunai": 10, "paper_tag": 3, "tag_bomb": 0, "smoke_tag_bomb": 0}
 const DEFAULT_DPAD := {"up": "health_gourd", "right": "chakra_gourd", "down": "paper_tag", "left": "kunai"}
 const DEFAULT_JUTSU := {"square": "chidori", "triangle": "", "circle": "", "cross": ""}
 const SAVE_PATH := "user://inventory.json"
@@ -49,7 +52,7 @@ func slot_count(slot: String) -> int:
 func add(id: String, n: int = 1) -> int:
 	if not ITEMS.has(id):
 		return 0
-	var room := MAX_STACK - count_of(id)
+	var room := stack_limit(id) - count_of(id)
 	var put := clampi(n, 0, maxi(room, 0))
 	if put > 0:
 		counts[id] = count_of(id) + put
@@ -57,8 +60,12 @@ func add(id: String, n: int = 1) -> int:
 	return put
 
 
+static func stack_limit(id: String) -> int:
+	return KUNAI_MAX_STACK if id == "kunai" else MAX_STACK
+
+
 func has_room(id: String) -> bool:
-	return ITEMS.has(id) and count_of(id) < MAX_STACK
+	return ITEMS.has(id) and count_of(id) < stack_limit(id)
 
 
 ## Removes one of `id`. Returns false (and changes nothing) when there is none.
@@ -134,6 +141,8 @@ func load_saved() -> bool:
 ## Small picture for an item id (the gourds' own art, the black kunai). Null for an unknown id.
 static func icon(id: String) -> Texture2D:
 	match id:
+		"tag_bomb", "smoke_tag_bomb":
+			return HealthGourd.icon(id)
 		"health_gourd":
 			return HealthGourd.icon("health")
 		"chakra_gourd":

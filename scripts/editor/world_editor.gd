@@ -46,8 +46,6 @@ var grid_layer: Node2D
 var _tool_buttons: Dictionary = {}
 var _palette_buttons: Dictionary = {}
 var _filter_buttons: Dictionary = {}
-var filters_toggle: Button
-var filters_box: GridContainer
 var _category_sections: Dictionary = {}
 var palette_scroll: ScrollContainer
 var _clear_armed := false
@@ -72,13 +70,15 @@ var undo_button: Button
 var redo_button: Button
 var fill_void_button: Button
 var next_void_button: Button
-const PANEL_W_MAP := 340.0
+const PANEL_W_MAP := 400.0
 ## Set false only by tests: save/publish normally refuse while white void is left in the level.
 var void_check := true
 ## Cell the last blocked save jumped to (INF = none); drawn as a red diamond on the white void.
 var void_focus := Vector2.INF
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false
+var _ui: Dictionary = {}  ## map-editor layout pieces captured while the panel is built (rows, filters, footer)
+var _map_world_frozen := false
 var _grid_button: Button = null
 var _dim_buttons: Dictionary = {}
 
@@ -153,6 +153,8 @@ func _ready() -> void:
 	_build_ui()
 	_show_void(true)
 	set_open(false)
+	if MapEditorMode.public_game():
+		tab.visible = false  # the public game page has no World Builder
 	placed.clear_history()
 	if map_mode:
 		_enter_map_mode()
@@ -170,6 +172,8 @@ func _exit_tree() -> void:
 
 
 func _process(_d: float) -> void:
+	if map_mode and not _map_world_frozen:
+		_freeze_world()
 	var hud := hud_bar()
 	if hud != null and hud.edit_mode != open:
 		hud.set_edit_mode(open)
@@ -270,6 +274,10 @@ func _process(_d: float) -> void:
 
 
 func set_open(v: bool) -> void:
+	if v and MapEditorMode.public_game():
+		return  # no World Builder on the public game page
+	if map_mode and not v:
+		return  # the map editor is for building only: it cannot be closed into a playable level
 	if v and not open:
 		_was_paused = get_tree().paused if is_inside_tree() else false
 	open = v
@@ -371,10 +379,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 		if open and event.ctrl_pressed and event.keycode == KEY_Y:
 			redo()
-			get_viewport().set_input_as_handled()
-			return
-		if map_mode and event.keycode == KEY_F5:
-			set_open(not open)
 			get_viewport().set_input_as_handled()
 			return
 		if open and event.keycode in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN] and hud_bar() != null and hud_bar().selected_element != "":
@@ -522,8 +526,8 @@ func hud_bar() -> HealthBar:
 ## Builder, select tool: a click on a HUD piece (bars, avatar, pips, ability slots) picks it up instead of a world object.
 func press_hud(screen: Vector2) -> bool:
 	var hud := hud_bar()
-	if not open or tool != "select" or hud == null:
-		return false
+	if not open or tool != "select" or hud == null or map_mode:
+		return false  # the map editor has no player HUD to pick up
 	if not hud.press_at(screen):
 		return false
 	selected = {}
@@ -718,15 +722,50 @@ func _build_map_tabs(outer: VBoxContainer, foot: Control) -> void:
 	build_page.name = "BuildPage"
 	build_page.add_theme_constant_override("separation", 4)
 	build_page.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# The bottom of the panel is PINNED (outside the scrolling build page) so SAVE and the rest are always on screen.
+	var dock := VBoxContainer.new()
+	dock.name = "PinnedDock"
+	dock.add_theme_constant_override("separation", 6)
+	var edit_row := _ui["edit_row"] as HBoxContainer
+	var void_row := _ui["void_row"] as HBoxContainer
+	for b in void_row.get_children():  # UNDO REDO FILL NEXT on one row
+		void_row.remove_child(b)
+		edit_row.add_child(b)
+		(b as Button).add_theme_font_size_override("font_size", 12)
+	void_row.queue_free()
+	var opts := _ui["opts"] as HBoxContainer
+	var io := _ui["io"] as HBoxContainer
+	for b in io.get_children():  # SNAP COPY RESET CLEAR on one row
+		io.remove_child(b)
+		opts.add_child(b)
+	io.queue_free()
+	for n in [_ui["saves"], opts]:
+		outer.remove_child(n)
+		dock.add_child(n)
+	outer.remove_child(foot)
+	dock.add_child(foot)
+	(_ui["hints"] as Control).visible = false
+	outer.add_child(dock)
+	# The 12 palette filters collapse behind one button so they stop eating the panel.
+	var filters := _ui["filters"] as Control
+	filters.visible = false
+	var ftoggle := _toggle(outer, "FILTERS  v", func(): pass)
+	ftoggle.toggle_mode = true
+	ftoggle.button_pressed = false
+	ftoggle.toggled.connect(func(on: bool):
+		filters.visible = on
+		ftoggle.text = "FILTERS  ^" if on else "FILTERS  v")
+	outer.move_child(ftoggle, filters.get_index())
 	var movers: Array[Node] = []
 	for i in range(3, outer.get_child_count()):
-		if outer.get_child(i) != foot:
+		if outer.get_child(i) != dock:
 			movers.append(outer.get_child(i))
 	for n in movers:
 		outer.remove_child(n)
 		build_page.add_child(n)
 	outer.add_child(build_page)
 	outer.move_child(build_page, 3)
+	palette_scroll.custom_minimum_size = Vector2(0, 120)
 	var scroll := ScrollContainer.new()
 	scroll.name = "SettingsPage"
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -751,13 +790,17 @@ func _show_page(build: bool) -> void:
 
 func _enter_map_mode() -> void:
 	panel.offset_left = -PANEL_W_MAP
+	panel.offset_top = 0
+	panel.offset_bottom = 0
+	panel.clip_contents = true
 	title_label.text = "SHINOBI RUSH MAP EDITOR"
-	sub_label.text = "BUILD  -  SETTINGS  -  PLAYTEST (F5)"
-	hide_button.text = "PLAYTEST >"
-	hide_button.tooltip_text = "Play the level as it is right now. Press the EDIT tab (or F5) to come back."
-	tab.text = "<  EDIT"
-	tab.tooltip_text = "Back to the map editor (F5)"
+	sub_label.text = "BUILD  -  SETTINGS"
+	hide_button.visible = false  # build only: there is no playtest and no way to close the editor
+	tab.visible = false
+	if _filter_buttons.has("HUD layout"):
+		(_filter_buttons["HUD layout"] as Control).visible = false  # the player HUD is not part of the map
 	set_open(true)
+	_freeze_world()
 	if OS.has_feature("web"):
 		var game := Button.new()
 		game.text = "OPEN GAME"
@@ -768,6 +811,27 @@ func _enter_map_mode() -> void:
 		(hide_button.get_parent() as Control).move_child(game, 1)
 
 
+## The map editor is for building only: the player, the enemies and the player HUD are put away and frozen.
+## Safe to call every frame until the world has spawned them (it stops once the player exists).
+func _freeze_world() -> void:
+	if not map_mode or _map_world_frozen or arena == null or not is_inside_tree():
+		return
+	var player := get_tree().get_first_node_in_group("player") as Node
+	if player == null:
+		return
+	_map_world_frozen = true
+	var hud := hud_bar()
+	if hud != null:
+		hud.visible = false
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	(player as CanvasItem).visible = false
+	for c in arena.get_children():
+		if c is Bandit:
+			c.process_mode = Node.PROCESS_MODE_DISABLED
+			(c as CanvasItem).visible = false
+	_set_camera_free(true)
+
+
 ## The Settings dock (vision switches, camera zoom, Lab / Player / Controls / Diagnostics) lives inside the editor's
 ## SETTINGS tab on the map-editor page; the little popup on the bottom edge is hidden.
 func _adopt_settings_page(sp: SettingsPanel) -> void:
@@ -776,6 +840,12 @@ func _adopt_settings_page(sp: SettingsPanel) -> void:
 	sp.rows.get_parent().remove_child(sp.rows)
 	settings_page.add_child(sp.rows)
 	sp.rows.visible = true
+	for row: Variant in sp.tab_rows.values():  # Lab / Player / Controls / Diagnostics are game panels, not map tools
+		if is_instance_valid(row):
+			(row as Control).visible = false
+	for b: Variant in [sp.bandit_button, sp.sense_button]:  # enemy debug switches: not needed to build a map
+		if b != null and is_instance_valid(b):
+			(b as Control).visible = false
 	if sp.tab != null:
 		sp.tab.visible = false
 	if sp.panel != null:
@@ -1218,6 +1288,8 @@ func _build_ui() -> void:
 	redo_button.pressed.connect(redo)
 	edit_row.add_child(redo_button)
 	var void_row := HBoxContainer.new()
+	_ui["edit_row"] = edit_row
+	_ui["void_row"] = void_row
 	void_row.add_theme_constant_override("separation", 4)
 	outer.add_child(void_row)
 	fill_void_button = Button.new()
@@ -1237,24 +1309,11 @@ func _build_ui() -> void:
 	next_void_button.pressed.connect(jump_to_next_void)
 	void_row.add_child(next_void_button)
 
-	# Palette filters: hide/show the option cards by type; the world itself is untouched. Folded away by default.
-	filters_toggle = Button.new()
-	filters_toggle.text = "FILTERS  +"
-	filters_toggle.toggle_mode = true
-	filters_toggle.focus_mode = Control.FOCUS_NONE
-	filters_toggle.tooltip_text = "Show or hide the palette type checkboxes"
-	filters_toggle.custom_minimum_size = Vector2(0, 24)
-	_skin(filters_toggle)
-	outer.add_child(filters_toggle)
-	filters_box = GridContainer.new()
-	filters_box.columns = 2
-	filters_box.visible = false
-	filters_box.add_theme_constant_override("v_separation", 0)
-	filters_toggle.toggled.connect(func(on: bool) -> void:
-		filters_box.visible = on
-		filters_toggle.text = "FILTERS  -" if on else "FILTERS  +")
-	outer.add_child(filters_box)
-	var filters := filters_box
+	# Palette filters: hide/show the option cards by type; the world itself is untouched.
+	var filters := GridContainer.new()
+	_ui["filters"] = filters
+	filters.columns = 3
+	outer.add_child(filters)
 	var filter_cats: Array = PlacedObjects.CATEGORIES.duplicate()
 	filter_cats.append(["HUD layout", []])  # the HUD piece controls are a section like the others (hidden until ticked)
 	for category: Array in filter_cats:
@@ -1457,6 +1516,7 @@ func _build_ui() -> void:
 
 	# save row
 	var saves := HBoxContainer.new()
+	_ui["saves"] = saves
 	saves.add_theme_constant_override("separation", 6)
 	outer.add_child(saves)
 	save_button = Button.new()
@@ -1494,6 +1554,7 @@ func _build_ui() -> void:
 
 	# options
 	var opts := HBoxContainer.new()
+	_ui["opts"] = opts
 	opts.add_theme_constant_override("separation", 6)
 	outer.add_child(opts)
 	snap_button = Button.new()
@@ -1512,6 +1573,7 @@ func _build_ui() -> void:
 		status.text = "Copied to clipboard")
 	opts.add_child(copy)
 	var io := HBoxContainer.new()
+	_ui["io"] = io
 	io.add_theme_constant_override("separation", 6)
 	outer.add_child(io)
 	reset_button = Button.new()
@@ -1544,6 +1606,7 @@ func _build_ui() -> void:
 	status.clip_text = true
 	fv.add_child(status)
 	var hints := GridContainer.new()
+	_ui["hints"] = hints
 	hints.columns = 2
 	hints.add_theme_constant_override("h_separation", 14)
 	fv.add_child(hints)

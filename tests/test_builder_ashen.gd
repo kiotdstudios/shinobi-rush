@@ -29,7 +29,7 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("volcanic builder: runtime clock advances", tree.local_clock>clock)
 	placed.move(obj,Vector2(1500,900),false)
 	ck.call("volcanic builder: moving updates art and trunk", tree.position==Vector2(1500,900) and (obj.nodes[1] as Node2D).position==tree.position)
-	ck.call("volcanic builder: moved root pickable", placed.hit_test(Vector2(1500,900)).get("id", "")=="ashen_elder")
+	ck.call("volcanic builder: moved root pickable", placed.hit_test(Vector2(1500,900)+Vector2(0,-120)).get("id", "")=="ashen_elder")
 	editor.set_tool("place","ashen_elder")
 	editor.set_type_filter("Volcanic trees",false)
 	ck.call("volcanic builder: filter cancels painting without hiding world tree", editor.tool=="select" and tree.visible and not editor._category_sections["Volcanic trees"].visible)
