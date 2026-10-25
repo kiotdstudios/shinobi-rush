@@ -383,6 +383,38 @@ static func art_rect(id: String, pos: Vector2) -> Rect2:
 	return Rect2((at[1] as Vector2) + Vector2(u.position), Vector2(u.size))
 
 
+static var _alpha_images := {}
+
+
+## True when `point` lands on a visible pixel of the object's art (within `reach` px, so thin pieces stay clickable).
+## Pieces with no texture (placeholder blocks) fall back to their drawn volume.
+static func art_pixel_hit(id: String, pos: Vector2, point: Vector2, reach := 2) -> bool:
+	var at := art_texture(id, pos)
+	var tex: Texture2D = at[0]
+	if tex == null:
+		return hit_rect(id, pos).has_point(point)
+	var local := point - (at[1] as Vector2)
+	if not Rect2(Vector2.ZERO, tex.get_size()).grow(float(reach)).has_point(local):
+		return false
+	if not _alpha_images.has(id):
+		var img := tex.get_image()
+		if img != null and img.is_compressed():
+			img.decompress()
+		_alpha_images[id] = img
+	var image: Image = _alpha_images[id]
+	if image == null:
+		return true
+	var cx := int(floor(local.x))
+	var cy := int(floor(local.y))
+	for dy in range(-reach, reach + 1):
+		for dx in range(-reach, reach + 1):
+			var x := cx + dx
+			var y := cy + dy
+			if x >= 0 and y >= 0 and x < image.get_width() and y < image.get_height() and image.get_pixel(x, y).a > 0.1:
+				return true
+	return false
+
+
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
 static func hit_rect(id: String, pos: Vector2) -> Rect2:
 	var def := def_of(id)
@@ -880,21 +912,28 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 
 ## Topmost object under a world point: the solid base wins over the (larger) picture so crowded trees stay pickable.
 func hit_test(point: Vector2) -> Dictionary:
-	# Solid props win before grass; hiding a type lets the owner pick what is underneath it.
-	for picture: bool in [false, true]:
-		for i in range(objects.size() - 1, -1, -1):
-			var o := objects[i]
-			if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
-				continue
-			var rect := hit_rect(o.id, o.pos) if picture else footprint_rect(o.id, o.pos).grow(10.0)
-			if rect.has_point(point):
-				return o
+	# Tight picking (owner 2026-10-24: the old click boxes were far bigger than the art and the wrong assets got
+	# selected / deleted). A prop is hit only where its picture has visible pixels (a 2px forgiveness ring), or on
+	# its solid footprint. Overlaps: the piece drawn in front (larger y) wins, then the one placed last.
+	var hit: Dictionary = {}
+	var hit_y := -INF
+	for i in objects.size():
+		var o := objects[i]
+		if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
+			continue
+		if not (art_pixel_hit(o.id, o.pos, point) or footprint_rect(o.id, o.pos).has_point(point)):
+			continue
+		if (o.pos as Vector2).y >= hit_y:
+			hit_y = (o.pos as Vector2).y
+			hit = o
+	if not hit.is_empty():
+		return hit
 	var closest: Dictionary = {}
 	var distance := INF
 	for o in objects:
 		if def_of(o.id).kind != "grass" or not type_visible(o.id):
 			continue
-		if hit_rect(o.id, o.pos).has_point(point):
+		if art_pixel_hit(o.id, o.pos, point):
 			var d := point.distance_squared_to(o.pos)
 			if d < distance:
 				distance = d
