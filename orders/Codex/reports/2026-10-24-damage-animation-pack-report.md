@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-24-damage-animation-pack.md
 - Date: 2026-10-24 (America/New_York)
 - Final status: IN_PROGRESS — final browser verification/PR/deployment outstanding; not yet live.
-- Commit / PR: Not committed; report written before implementation commit.
+- Commit / PR: implementation b479ab37256dc69e4af76cda0b8a2dc6cdfdb018. Initial report written before that commit; PR publication next.
 
 ## Work completed
 Audited both manifests: neither had dedicated hit reaction, knockback or death. Added hit_react (8frames), knockback (12frames), death (16frames), all8headings for both approved characters:48clips/576production frames. Actual approved native idle PNGs seed PixelLab animate_image directly, avoiding animate_character's automatic canvas expansion and any need to rescale characters. All frames128x128 RGBA, fixed64,116origin, native hard alpha, no clipping/duplicates/resampling. Each incoming source frame0 is checked pixel-identical to its approved input; production exports source frames1..N. Death is non-looping with a held final prone pose. No new weapons, background, floor shadow or VFX.
@@ -48,3 +48,6 @@ node docs/visuals/damage-animations/browser-proof.mjs ../damage-art-final-web-20
 python docs/visuals/damage-animations/make_previews.py packaged72actual24FPS Web captures per view into normal3second and half-speed6second review GIFs, for enlarged SE and all-headings views. No art resampling or generated in-between frames. GIF replay is labeled separately from production one-shot behavior. browser-validation.json/preview-validation.json record exact results. Screenshots and all6native direction sheets were visually inspected, including both corrected knockbacks and enlarged death endpoints.
 
 Local implementation is tested and ready for the protected PR workflow. Gameplay hooks remain explicitly pending for Aki; only the isolated art review is being published by this job.
+
+## Latest-main integration before merge commit
+Implemented/tested source commit b479ab37256dc69e4af76cda0b8a2dc6cdfdb018. Integrated main3930efb61b24868b985061ce0d5a980f588715f2 with git merge --no-commit --no-ff, preserving Aki's editor/void-checker changes unchanged. BEFORE committing that merge: focused native floor-replacement + world-editor + damage-art/review harness passed313/0FAIL with no engine errors (build/damage-integration.log); fresh Web export to ../damage-art-integrated-web-20261024 passed; all28browser checks passed again with no errors using --no-capture. Exact evidence in integrated-browser-validation.json. Source character art/review images did not change during this integration, so existing tested72frame previews remain valid.

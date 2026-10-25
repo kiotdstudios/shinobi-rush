@@ -268,6 +268,7 @@ func run(ck: Callable, root: Node) -> void:
 	placed.add(original_grass.id, original_grass.pos)
 
 	# explicit save button
+	editor.void_check = false  # this check is about the save button itself; the void checker has its own tests
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(placed.save_path))
 	ck.call("builder: save button exists and Save writes the layout file", editor.save_button != null and editor.save_now() and FileAccess.file_exists(placed.save_path) and "SAVED" in editor.status.text)
 	# save / load round trip

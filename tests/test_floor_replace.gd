@@ -64,7 +64,25 @@ func run(p_ck: Callable, root: Node) -> void:
 	var tiles := arena.get_node("Ground/FloorTiles") as TileMapLayer
 	ck.call("void: opening the editor hides the stone floor and shows white", not tiles.visible and ed.void_sheet.visible)
 	ed.set_open(false)
-	ck.call("void: closing the editor restores the stone floor", tiles.visible and not ed.void_sheet.visible)
+	ck.call("void: the stone floor stays hidden in play too", not tiles.visible and ed.void_sheet.visible)
+
+	# save checker: blocked while white void remains, jumps the view to it, passes once filled
+	ed.void_check = true
+	var voids := placed.void_cells(arena.bounds)
+	ck.call("void checker: an unfinished level has void cells", voids.size() > 0)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(placed.save_path))
+	var saved := ed.save_now()
+	ck.call("void checker: save is refused with a SAVE BLOCKED message", not saved and "SAVE BLOCKED" in ed.status.text and not FileAccess.file_exists(placed.save_path))
+	ck.call("void checker: focus lands on a void cell", ed.void_focus != Vector2.INF and voids.has(ed.void_focus))
+	ck.call("void checker: publish is refused too", not ed.publish_to_github())
+	var cam := ed._camera()
+	if cam != null:
+		ck.call("void checker: camera centres on the void cell", cam.get_screen_center_position().distance_to(ed.void_focus) < 2.0, str(cam.get_screen_center_position()) + " vs " + str(ed.void_focus))
+	for c in voids:
+		placed.add("ground9_center", c, false)
+	ck.call("void checker: no void cells once every cell has art", placed.void_cells(arena.bounds).is_empty())
+	ck.call("void checker: a filled level saves", ed.save_now() and FileAccess.file_exists(placed.save_path))
+	ed.void_check = false
 
 	main.queue_free()
 	await tree.process_frame
