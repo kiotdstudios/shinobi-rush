@@ -108,7 +108,8 @@ func run(ck: Callable, root: Node) -> void:
 		every = every and (PlacedObjects.footprint_of(id).x > 0.0)
 	var listed := 0
 	for cat: Array in PlacedObjects.CATEGORIES:
-		listed += (cat[1] as Array).size()
+		for cid: String in cat[1]:
+			listed += 1 if PlacedObjects.CATALOG.has(cid) else 0  # generated entries (bridges) have their own test
 	ck.call("builder: every catalog entry is listed in a palette section", every and listed == PlacedObjects.CATALOG.size() and PlacedObjects.CATALOG.size() >= 9)
 
 	var base_trees := grove.trees.size()
