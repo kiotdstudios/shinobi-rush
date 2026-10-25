@@ -66,7 +66,8 @@ func run(ck: Callable, tree_root: Node) -> void:
 		await main.get_tree().physics_frame
 	ck.call("charge: damage interrupts until release", p.state != PlayerController.State.CHARGE and p._charge_interrupted)
 	Input.action_release("chakra_charge")
-	await main.get_tree().physics_frame
+	for i in 40:
+		await main.get_tree().physics_frame  # the hurt reaction (0.33 s) locks input first
 	Input.action_press("chakra_charge")
 	for i in 3:
 		await main.get_tree().physics_frame
