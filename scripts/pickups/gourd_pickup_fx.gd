@@ -52,12 +52,12 @@ static func start(p_gourd: HealthGourd, p_player: Node2D, p_amount: float, hp_be
 	if p_gourd.kind == "chakra":
 		fx._green = Color(0.3, 0.65, 1.0)
 		fx._white_green = Color(0.85, 0.95, 1.0)
-	elif p_gourd.kind == "paper_tag":
+	elif p_gourd.kind in ["paper_tag", "tag_bomb", "smoke_tag_bomb"]:
 		fx._green = Color(1.0, 0.55, 0.12)
 		fx._white_green = Color(1.0, 0.92, 0.7)
 	p_gourd.add_child(fx)
 	# The gourd goes into the bag now (healing happens later, from its D-pad slot), so there is no HUD fill to schedule.
-	fx._label = {"chakra": "CHAKRA GOURD", "paper_tag": "PAPER TAG"}.get(p_gourd.kind, "HEALTH GOURD")
+	fx._label = {"chakra": "CHAKRA GOURD", "paper_tag": "PAPER TAG", "tag_bomb": "TAG BOMB", "smoke_tag_bomb": "SMOKE TAG BOMB"}.get(p_gourd.kind, "HEALTH GOURD")
 	return fx
 
 

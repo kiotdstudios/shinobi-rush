@@ -1,0 +1,50 @@
+[
+  {
+    "kind": "tag_bomb",
+    "layer": "idle",
+    "id": "8196036d-4a33-4d57-b3f5-b783fa44b371",
+    "frames": 16
+  },
+  {
+    "kind": "tag_bomb",
+    "layer": "fly",
+    "id": "c50fa68d-f0df-44bc-b5e4-8eb01c0b7543",
+    "frames": 16
+  },
+  {
+    "kind": "tag_bomb",
+    "layer": "armed",
+    "id": "6ebf1ed6-2bd9-4798-8464-13d05836bc75",
+    "frames": 16
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "idle",
+    "id": "1cfc512b-78e4-42c9-91d4-e9001a8280bf",
+    "frames": 16
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "fly",
+    "id": "b167e66b-d7df-44aa-909f-b6090cda6134",
+    "frames": 16
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "armed",
+    "id": "f25a0dbe-e85c-428c-bb11-8c1bc977fcfb",
+    "frames": 16
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "smoke",
+    "id": "f784e113-66a8-4e0e-b73b-370a82ef3e2a",
+    "frames": 8
+  },
+  {
+    "kind": "smoke_tag_bomb",
+    "layer": "billow",
+    "id": "2ceae4c5-e769-41ce-9d6c-a0a5f5cf86bf",
+    "frames": 8
+  }
+]
