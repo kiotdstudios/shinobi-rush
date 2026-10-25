@@ -146,6 +146,8 @@ func _ready() -> void:
 	_build_ui()
 	_show_void(true)
 	set_open(false)
+	if MapEditorMode.public_game():
+		tab.visible = false  # the public game page has no World Builder
 	placed.clear_history()
 	if map_mode:
 		_enter_map_mode()
@@ -257,6 +259,8 @@ func _process(_d: float) -> void:
 
 
 func set_open(v: bool) -> void:
+	if v and MapEditorMode.public_game():
+		return  # no World Builder on the public game page
 	open = v
 	_set_camera_free(v)
 	panel.visible = v
