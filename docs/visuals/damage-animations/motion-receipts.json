@@ -1,0 +1,218 @@
+[
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "S",
+    "frame_count": 8,
+    "job_id": "b1ea1909-b1f7-4fca-bec3-33d32932aedb",
+    "source_dir": "b1ea1909-b1f7-4fca-bec3-33d32932aedb",
+    "receipt": "id: b1ea1909-b1f7-4fca-bec3-33d32932aedb\njob_id: b1ea1909-b1f7-4fca-bec3-33d32932aedb\naction: A single quick combat hit reaction: impact immediately snaps chest and shoulders backward, chin recoils, elbows lift defensively, knees flex to absorb the blow, then a controlled recovery back to exactly the original ready stance. Feet remain braced near the same ground origin. No walking, attacking, or idle-only breathing. Strong readable silhouette changes from the first generated frame. Face and remain SOUTH throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 8\nsize: 128x128px\ntransparent: True\nseed: 2412600\nasset_id: 615bf059-664f-5ae9-a206-407a7aaddcbd\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"b1ea1909-b1f7-4fca-bec3-33d32932aedb\")"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "S",
+    "frame_count": 12,
+    "job_id": "c56221c9-7420-4cef-8897-e02f64446b27",
+    "source_dir": "c56221c9-7420-4cef-8897-e02f64446b27",
+    "receipt": "id: c56221c9-7420-4cef-8897-e02f64446b27\njob_id: c56221c9-7420-4cef-8897-e02f64446b27\naction: One heavy combat stagger from a powerful frontal blow: torso recoils hard, arms throw outward to regain balance, knees buckle, one short backward bracing step absorbs the force, then weight comes forward and the character regains the original ready stance. Show real articulated limbs and weight transfer. Animate in place around the same ground origin; the game will translate the actor for knockback. Do not make a walking loop. Face and remain SOUTH throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 12\nsize: 128x128px\ntransparent: True\nseed: 2412601\nasset_id: d12d3724-f53b-512e-a7e3-a2a0036221cc\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"c56221c9-7420-4cef-8897-e02f64446b27\")"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "E",
+    "frame_count": 8,
+    "job_id": "329f7c3d-d304-4c43-bf6e-77b852135339",
+    "source_dir": "329f7c3d-d304-4c43-bf6e-77b852135339",
+    "receipt": "id: 329f7c3d-d304-4c43-bf6e-77b852135339\njob_id: 329f7c3d-d304-4c43-bf6e-77b852135339\naction: A single quick combat hit reaction: impact immediately snaps chest and shoulders backward, chin recoils, elbows lift defensively, knees flex to absorb the blow, then a controlled recovery back to exactly the original ready stance. Feet remain braced near the same ground origin. No walking, attacking, or idle-only breathing. Strong readable silhouette changes from the first generated frame. Face and remain EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 8\nsize: 128x128px\ntransparent: True\nseed: 2412602\nasset_id: ee80e5c6-fcb0-5f06-ad49-812fab550882\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"329f7c3d-d304-4c43-bf6e-77b852135339\")"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "E",
+    "frame_count": 12,
+    "job_id": "34ef2102-83cb-4b61-8643-3a27dd8d2115",
+    "source_dir": "34ef2102-83cb-4b61-8643-3a27dd8d2115",
+    "receipt": "id: 34ef2102-83cb-4b61-8643-3a27dd8d2115\njob_id: 34ef2102-83cb-4b61-8643-3a27dd8d2115\naction: One heavy combat stagger from a powerful frontal blow: torso recoils hard, arms throw outward to regain balance, knees buckle, one short backward bracing step absorbs the force, then weight comes forward and the character regains the original ready stance. Show real articulated limbs and weight transfer. Animate in place around the same ground origin; the game will translate the actor for knockback. Do not make a walking loop. Face and remain EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 12\nsize: 128x128px\ntransparent: True\nseed: 2412603\nasset_id: 796946ee-1f5d-5b2a-819a-1064074aa940\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"34ef2102-83cb-4b61-8643-3a27dd8d2115\")"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "NE",
+    "frame_count": 8,
+    "job_id": "806ddc26-bd08-4e27-853d-160c45ac11b3",
+    "source_dir": "806ddc26-bd08-4e27-853d-160c45ac11b3",
+    "receipt": "id: 806ddc26-bd08-4e27-853d-160c45ac11b3\njob_id: 806ddc26-bd08-4e27-853d-160c45ac11b3\naction: A single quick combat hit reaction: impact immediately snaps chest and shoulders backward, chin recoils, elbows lift defensively, knees flex to absorb the blow, then a controlled recovery back to exactly the original ready stance. Feet remain braced near the same ground origin. No walking, attacking, or idle-only breathing. Strong readable silhouette changes from the first generated frame. Face and remain NORTH-EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 8\nsize: 128x128px\ntransparent: True\nseed: 2412604\nasset_id: c473b23e-4561-54a1-a0a0-f2d70faf9f00\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"806ddc26-bd08-4e27-853d-160c45ac11b3\")"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "NE",
+    "frame_count": 12,
+    "job_id": "b682a68e-2c66-4bec-9d1f-1056f71a7ae2",
+    "source_dir": "b682a68e-2c66-4bec-9d1f-1056f71a7ae2",
+    "receipt": "id: b682a68e-2c66-4bec-9d1f-1056f71a7ae2\njob_id: b682a68e-2c66-4bec-9d1f-1056f71a7ae2\naction: One heavy combat stagger from a powerful frontal blow: torso recoils hard, arms throw outward to regain balance, knees buckle, one short backward bracing step absorbs the force, then weight comes forward and the character regains the original ready stance. Show real articulated limbs and weight transfer. Animate in place around the same ground origin; the game will translate the actor for knockback. Do not make a walking loop. Face and remain NORTH-EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 12\nsize: 128x128px\ntransparent: True\nseed: 2412605\nasset_id: ea5e39ba-10ff-5986-8cae-4bd49317127d\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"b682a68e-2c66-4bec-9d1f-1056f71a7ae2\")"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "N",
+    "frame_count": 8,
+    "job_id": "5d514aae-5854-457b-ab7f-8431373524c6",
+    "source_dir": "5d514aae-5854-457b-ab7f-8431373524c6",
+    "receipt": "id: 5d514aae-5854-457b-ab7f-8431373524c6\njob_id: 5d514aae-5854-457b-ab7f-8431373524c6\naction: A single quick combat hit reaction: impact immediately snaps chest and shoulders backward, chin recoils, elbows lift defensively, knees flex to absorb the blow, then a controlled recovery back to exactly the original ready stance. Feet remain braced near the same ground origin. No walking, attacking, or idle-only breathing. Strong readable silhouette changes from the first generated frame. Face and remain NORTH throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 8\nsize: 128x128px\ntransparent: True\nseed: 2412606\nasset_id: 3f2dbb26-f55f-5987-9095-2faed3f5338c\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"5d514aae-5854-457b-ab7f-8431373524c6\")"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "N",
+    "frame_count": 12,
+    "job_id": "eb2cf586-dbc4-44ea-a40d-5f7fe41183e6",
+    "source_dir": "eb2cf586-dbc4-44ea-a40d-5f7fe41183e6",
+    "receipt": "id: eb2cf586-dbc4-44ea-a40d-5f7fe41183e6\njob_id: eb2cf586-dbc4-44ea-a40d-5f7fe41183e6\naction: One heavy combat stagger from a powerful frontal blow: torso recoils hard, arms throw outward to regain balance, knees buckle, one short backward bracing step absorbs the force, then weight comes forward and the character regains the original ready stance. Show real articulated limbs and weight transfer. Animate in place around the same ground origin; the game will translate the actor for knockback. Do not make a walking loop. Face and remain NORTH throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 12\nsize: 128x128px\ntransparent: True\nseed: 2412607\nasset_id: 4985adcd-bc99-59ae-9c17-a2308cfcec62\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"eb2cf586-dbc4-44ea-a40d-5f7fe41183e6\")"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "NW",
+    "frame_count": 8,
+    "job_id": "3e10f149-10d3-45ae-a2a7-1081f299f636",
+    "source_dir": "3e10f149-10d3-45ae-a2a7-1081f299f636",
+    "receipt": "id: 3e10f149-10d3-45ae-a2a7-1081f299f636\njob_id: 3e10f149-10d3-45ae-a2a7-1081f299f636\naction: A single quick combat hit reaction: impact immediately snaps chest and shoulders backward, chin recoils, elbows lift defensively, knees flex to absorb the blow, then a controlled recovery back to exactly the original ready stance. Feet remain braced near the same ground origin. No walking, attacking, or idle-only breathing. Strong readable silhouette changes from the first generated frame. Face and remain NORTH-WEST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 8\nsize: 128x128px\ntransparent: True\nseed: 2412608\nasset_id: a4e7deff-bd25-58f0-b79b-19ce429c6492\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"3e10f149-10d3-45ae-a2a7-1081f299f636\")"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "NW",
+    "frame_count": 12,
+    "job_id": "a210f36a-1979-454c-8e81-d3b464c83094",
+    "source_dir": "a210f36a-1979-454c-8e81-d3b464c83094",
+    "receipt": "id: a210f36a-1979-454c-8e81-d3b464c83094\njob_id: a210f36a-1979-454c-8e81-d3b464c83094\naction: One heavy combat stagger from a powerful frontal blow: torso recoils hard, arms throw outward to regain balance, knees buckle, one short backward bracing step absorbs the force, then weight comes forward and the character regains the original ready stance. Show real articulated limbs and weight transfer. Animate in place around the same ground origin; the game will translate the actor for knockback. Do not make a walking loop. Face and remain NORTH-WEST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 12\nsize: 128x128px\ntransparent: True\nseed: 2412609\nasset_id: 135c7de8-4cad-54a4-9cbe-d7f14336dff2\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"a210f36a-1979-454c-8e81-d3b464c83094\")"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "W",
+    "frame_count": 8,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "W",
+    "frame_count": 12,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "SW",
+    "frame_count": 8,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "SW",
+    "frame_count": 12,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "S",
+    "frame_count": 8,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "S",
+    "frame_count": 12,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "E",
+    "frame_count": 8,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "E",
+    "frame_count": 12,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "NE",
+    "frame_count": 8,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "NE",
+    "frame_count": 12,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "N",
+    "frame_count": 8,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "N",
+    "frame_count": 12,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "NW",
+    "frame_count": 8,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "NW",
+    "frame_count": 12,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "W",
+    "frame_count": 8,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "W",
+    "frame_count": 12,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "SW",
+    "frame_count": 8,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "SW",
+    "frame_count": 12,
+    "receipt": "error: rate limit exceeded (10/10 jobs)\n\nhint: wait for a job to finish, then retry"
+  }
+]
