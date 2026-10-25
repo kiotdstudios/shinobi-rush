@@ -43,8 +43,8 @@ func run(p_ck: Callable, root: Node) -> void:
 	await tree.physics_frame
 	var bridge := (obj.nodes[0]) as Bridge
 	ck.call("bridge: placing creates a Bridge at the start socket", bridge != null and bridge.position == origin and bridge.state == "intact")
-	ck.call("bridge: it builds supports, rear, deck and front layers", bridge.get_node("Supports") != null and bridge.get_node("Deck") != null and (bridge.get_node("Front") as Sprite2D).z_index > 0 and (bridge.get_node("Rear") as Sprite2D).z_index < 0)
-	ck.call("bridge: deck sprite sits start-socket-aligned", (bridge.get_node("Deck") as Sprite2D).position == -Vector2(64, 64))
+	ck.call("bridge: it builds supports, rear, deck and front layers", bridge._sprites.size() == 4 and (bridge._sprites["front"] as Sprite2D).z_index > 0 and bridge._floor.get_parent() == arena.get_node("Ground"))
+	ck.call("bridge: deck sprite sits start-socket-aligned", (bridge._sprites["deck"] as Sprite2D).position == -Vector2(64, 64))
 	var step := Vector2(36, 18)
 	var mid := origin + step * 3.0
 	ck.call("bridge: deck contains its middle, start and end centres, not beyond the ends or the sides",
@@ -78,12 +78,16 @@ func run(p_ck: Callable, root: Node) -> void:
 		if player.move_and_collide(side * 4.0) != null:
 			hit = true
 			break
-	ck.call("bridge: a rail stops the player stepping off the side of the deck", hit and bridge.deck_contains(player.global_position))
+	ck.call("bridge: a rail stops the player stepping off the side of the deck", hit and bridge.deck_contains(player.global_position + Vector2(0, -13.5)))
 
 	# --- move + save/load
 	placed.move(obj, origin + Vector2(72, 36), false)
-	ck.call("bridge: moving the object moves the bridge", bridge.position == origin + Vector2(72, 36))
+	await tree.process_frame
+	ck.call("bridge: moving the object moves the bridge and its floor", bridge.position == origin + Vector2(72, 36) and (bridge._sprites["deck"] as Sprite2D).global_position == origin + Vector2(72, 36) - Vector2(64, 64))
+	var floor_node: Node = bridge._floor
 	placed.remove(obj, false)
+	await tree.process_frame
+	ck.call("bridge: removing it frees its floor layers too", not is_instance_valid(floor_node))
 	var again := placed.add("bridge_long_rope_v", origin, false)
 	var saved := placed.to_dict()
 	placed.load_dict(saved)
@@ -91,6 +95,9 @@ func run(p_ck: Callable, root: Node) -> void:
 	for o in placed.objects:
 		if o.id == "bridge_long_rope_v" and o.pos == origin:
 			found += 1
+	var water := placed.add("shore_grass_00", origin, false)
+	var ground_node := arena.get_node("Ground")
+	ck.call("bridge: water placed later still draws under the bridge floor", ground_node.get_child(ground_node.get_child_count() - 1).is_in_group("bridge_floor") and not water.is_empty())
 	ck.call("bridge: saved layouts round-trip a bridge", found == 1 and not again.is_empty())
 	for o in placed.objects.duplicate():
 		placed.remove(o, false)
@@ -127,11 +134,11 @@ func run(p_ck: Callable, root: Node) -> void:
 	ck.call("bridge: repair needs the player beside the gap", not broken.can_repair(player))
 	player.global_position = gap + Vector2(30, 10)
 	ck.call("bridge: a grounded player near the gap can repair it", broken.can_repair(player))
-	var damaged_deck := (broken.get_node("Deck") as Sprite2D).texture
+	var damaged_deck := (broken._sprites["deck"] as Sprite2D).texture
 	var signalled := [false]
 	broken.repaired.connect(func(): signalled[0] = true)
 	ck.call("bridge: repair succeeds on a broken bridge", broken.repair() and signalled[0])
-	ck.call("bridge: repaired swaps in the intact art and closes the gap", broken.state == "repaired" and (broken.get_node("Deck") as Sprite2D).texture != damaged_deck and broken.gap_polygon().is_empty() and broken.walkable_at(gap))
+	ck.call("bridge: repaired swaps in the intact art and closes the gap", broken.state == "repaired" and (broken._sprites["deck"] as Sprite2D).texture != damaged_deck and broken.gap_polygon().is_empty() and broken.walkable_at(gap))
 	player.state = PlayerController.State.IDLE
 	player.global_position = gap
 	ck.call("bridge: a repaired bridge no longer drops anyone", not broken.drops(player))

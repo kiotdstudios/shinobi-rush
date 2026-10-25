@@ -609,6 +609,8 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		nodes = [tree, _make_trunk(pos)]
 	var obj := {"id": id, "pos": pos, "nodes": nodes}
 	objects.append(obj)
+	if def.kind in ["ground", "grass"] or def.has("water_role"):
+		Bridge.raise_floors(arena.get_node_or_null("Ground"))
 	_record(["add", id, pos])
 	_apply_visibility(obj)
 	if commit:

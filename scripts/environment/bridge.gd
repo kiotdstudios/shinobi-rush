@@ -20,9 +20,10 @@ const DIR := "res://assets/environment/blightwood_bridges/"
 const U := Vector2(36.0, 18.0)
 const V := Vector2(-36.0, 18.0)
 const RAIL_THICKNESS := 8.0
-## Rail centre line sits this far OUTSIDE the deck edge, so its inner face is the edge itself. The player's
-## footprint is 50 x 27 and the deck is only ~64 px across along the diagonal, so any inset would pinch it.
-const RAIL_INSET := -4.0
+## Rail centre line sits this far OUTSIDE the deck edge. The player's blocker is a 50 x 27 rectangle raised
+## 13.5 px above the feet while the deck is only ~64 px across the diagonal, so rails on the edge itself would
+## pinch it; this leaves ~33 px of slack to walk the centre line.
+const RAIL_INSET := -12.0
 const GAP_TILES := 1.5  ## length of the broken section along the bridge
 const FALL_DAMAGE := 8.0
 const FALL_COOLDOWN := 0.6
@@ -34,6 +35,7 @@ static var _assemblies: Dictionary = {}
 var assembly_id := "short_wood_u"
 var state := "intact"  ## intact | broken | repaired
 var _rails: StaticBody2D
+var _floor: Node2D
 var _sprites: Dictionary = {}
 var _cooldown := 0.0
 
@@ -114,18 +116,50 @@ func _ready() -> void:
 func _build_sprites(d: Dictionary) -> void:
 	var sock: Array = d.start_socket
 	var origin := -Vector2(float(sock[0]), float(sock[1]))
-	# supports + rear rail sit on the floor under everything; deck is the floor you walk on; the near
-	# (front) rail draws over actors. z -1 is the Ground layer, which this node is added after.
+	# Supports, rear rail and deck are FLOOR: they live on the arena's Ground layer (z -1, drawn in tree order)
+	# so they sit above water and below every actor. The near (front) rail stays on this node at z 1 so it
+	# draws over actors.
+	_floor = Node2D.new()
+	_floor.name = "BridgeFloor_" + assembly_id
+	_floor.add_to_group("bridge_floor")
+	var ground := get_parent().get_node_or_null("Ground") if get_parent() != null else null
+	if ground != null:
+		ground.add_child(_floor)
+		_floor.global_position = global_position
+	else:
+		_floor.z_index = -1
+		add_child(_floor)
+	set_notify_transform(true)
+	visibility_changed.connect(func(): _floor.visible = visible)
 	for layer in ["supports", "rear", "deck", "front"]:
 		var s := Sprite2D.new()
 		s.name = layer.capitalize()
 		s.centered = false
 		s.position = origin
 		s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		s.z_index = 1 if layer == "front" else -1
-		add_child(s)
+		if layer == "front":
+			s.z_index = 1
+			add_child(s)
+		else:
+			_floor.add_child(s)
 		_sprites[layer] = s
 	_apply_textures(d)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSFORM_CHANGED and _floor != null and _floor.get_parent() != self:
+		_floor.global_position = global_position
+	elif what == NOTIFICATION_PREDELETE and _floor != null and is_instance_valid(_floor) and _floor.get_parent() != self:
+		_floor.queue_free()
+
+
+## Water or ground placed AFTER a bridge would otherwise draw over its deck: put every bridge floor back on top.
+static func raise_floors(ground: Node) -> void:
+	if ground == null or not ground.is_inside_tree():
+		return
+	for n: Node in ground.get_tree().get_nodes_in_group("bridge_floor"):
+		if n.get_parent() == ground:
+			ground.move_child(n, ground.get_child_count() - 1)
 
 
 func _apply_textures(d: Dictionary) -> void:
