@@ -9,7 +9,7 @@ Uses the existing approved `assets/weapons/kunai/black_kunai.png`. No character 
 - Bandit blade evaded by dodge/jump/substitution: existing evade decision remains; blade passes the target once, continues, and can recover after its eventual miss/surface hit.
 
 ## Pickups / inventory
-Builder → Pickups → **Kunai (white glow)** creates the same floating collectible/absorption effect as gourds and paper tags, with normal authored-pickup respawn. Throw-created pickups remain grounded, refund exactly one kunai once, and **never respawn**. A full inventory leaves them available. Collection transfers to the existing kunai inventory/D-pad slot; assignments are preserved.
+Map Editor → Pickups → **Kunai (white glow)** creates the same floating collectible/absorption effect as gourds and paper tags, with normal authored-pickup respawn. Throw-created pickups remain grounded, refund exactly one kunai once, and **never respawn**. A full inventory leaves them available. Hidden/frozen editor players cannot auto-collect placed loot. Collection transfers to the existing kunai inventory/D-pad slot; assignments are preserved.
 
 Kunai capacity is 10, matching the existing starter quantity. Previously the generic cap of 9 meant the first thrown starter kunai could not be recovered. Other items retain their cap of 9. At most 64 spent-blade pickups persist in the loaded world; creating another removes the oldest to bound repeated Bandit misses. Authored pickups are exempt.
 

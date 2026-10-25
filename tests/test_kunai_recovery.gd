@@ -30,6 +30,9 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("kunai pickup: registered white-light inventory item",authored.item_id()=="kunai" and HealthGourd.KINDS.kunai.color==Color.WHITE and authored._body.texture!=null)
 	ck.call("kunai pickup: builder catalog",PlacedObjects.CATALOG.has("kunai") and PlacedObjects.type_of("kunai")=="Pickups")
 	carrier.position=authored.position
+	carrier.hide()
+	ck.call("kunai pickup: hidden editor player cannot auto-collect",not authored.can_collect(carrier))
+	carrier.show()
 	ck.call("kunai pickup: collect into inventory",authored.can_collect(carrier) and authored.collect(carrier)==1 and carrier.inventory.count_of("kunai")==1)
 	ck.call("kunai pickup: cannot duplicate collection",authored.collect(carrier)==0 and carrier.inventory.count_of("kunai")==1)
 	ck.call("kunai pickup: authored pickup retains respawn",authored.respawns and authored.respawn_left==HealthGourd.RESPAWN_SECONDS)

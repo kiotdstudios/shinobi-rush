@@ -191,6 +191,8 @@ func _draw_pool() -> void:
 func can_collect(player: Node) -> bool:
 	if not available or not is_visible_in_tree() or not (player is Node2D):
 		return false
+	if not (player as Node2D).is_visible_in_tree():
+		return false  # map editor hides/freezes the actor; placing loot must not collect it
 	var inv: Variant = player.get("inventory")
 	if not (inv is PlayerInventory) or not (inv as PlayerInventory).has_room(item_id()):
 		return false

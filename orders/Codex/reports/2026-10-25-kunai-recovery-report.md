@@ -48,3 +48,8 @@ None.
 
 ## Outstanding work / next steps
 Reviewed PR CI and merge, main deployment/postdeploy, exact-SHA public visual/functional proof and final report. Until then **NOT LIVE**. Optional future work: broader loot persistence across map unloads; no persistence/save redesign is included here.
+
+## Main/editor integration — 2026-10-25
+PR https://github.com/kiotdstudios/shinobi-rush/pull/198; original implementation `f76670f97603aa01f9255661e018528bf96d6dd5`. Main advanced to Aki's map-editor merge `bd4a211448b7dfa37583a2c74cc2e131647d0a64`. Integrated via `git merge --no-commit --no-ff origin/main`, no conflicts. Added the pickup visibility guard so hidden/frozen editor players cannot auto-collect placed loot; no edits to Aki's editor implementation beyond merging it.
+
+Before integration commit: Godot import passed; map-editor + all kunai/inventory/substitution/gourd/bomb focused regressions **252 passed /0 failed**, including hidden-player rejection; debug Web export to `../kunai-recovery-editor-web-20261025` passed; integrated actual browser proof **15/15**, no console/page errors (integrated-browser/validation.json). All 85-frame GIFs decode; samples inspected. Kunai placement is in the dedicated Map Editor's Pickups palette; the public game's editor visibility remains Aki-owned. Required updated PR CI/main deployment and public proof still pending.
