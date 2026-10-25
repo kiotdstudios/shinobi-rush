@@ -46,6 +46,6 @@ func run(ck: Callable, tree_root: Node) -> void:
 	ck.call("bandit art: animation resumes after hitstop", actor.sprite.is_playing())
 	bandit.state = Bandit.State.DEAD
 	visual._process(0.0)
-	ck.call("bandit art: missing death clip uses existing fallback", not actor.visible)
+	ck.call("bandit art: death plays the authored death clip", actor.visible and actor.anim_id == "death")
 	bandit.queue_free()
 	await tree_root.get_tree().process_frame
