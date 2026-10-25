@@ -52,6 +52,7 @@ var hud_snap_button: Button = null
 ## bounds exactly the art. The selected object always shows its own box so you can see what you picked.
 const DIM_TYPES: Array[String] = ["Blightwood lights", "Blightwood rocks", "Ashen fire", "Volcanic trees", "Trees", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
 var show_grid := false
+var void_sheet: Node2D = null
 var show_dims: Dictionary = {}  ## type name -> bool
 var _settings_rows_added := false
 var _grid_button: Button = null
@@ -91,6 +92,20 @@ class GridLayer extends Node2D:
 			editor._draw_floor_grid(self)
 
 
+## Plain white sheet under everything while the editor is open. The default stone floor is hidden then, so
+## white = nothing laid yet (the raw game world) and anything you can see is real, placed floor.
+class VoidSheet extends Node2D:
+	var editor: WorldEditor
+	func _init(e: WorldEditor) -> void:
+		editor = e
+		z_index = -2
+		name = "WorldEditorVoid"
+		visible = false
+	func _draw() -> void:
+		if editor.arena != null:
+			draw_rect(editor.arena.ground_rect().grow(400.0), Color.WHITE)
+
+
 func setup(a: TrainingArena, p: PlacedObjects) -> void:
 	arena = a
 	placed = p
@@ -104,6 +119,8 @@ func _ready() -> void:
 	arena.add_child(overlay)
 	grid_layer = GridLayer.new(self)
 	arena.add_child(grid_layer)
+	void_sheet = VoidSheet.new(self)
+	arena.add_child(void_sheet)
 	_build_ui()
 	set_open(false)
 	if OS.has_feature("web"):
@@ -213,6 +230,7 @@ func set_open(v: bool) -> void:
 	_set_camera_free(v)
 	panel.visible = v
 	tab.visible = not v
+	_show_void(v)
 	var hud := hud_bar()
 	if hud != null:
 		hud.set_edit_mode(v)
@@ -222,6 +240,18 @@ func set_open(v: bool) -> void:
 		_clear_armed = false
 		_reset_armed = false
 	_refresh()
+
+
+func _show_void(on: bool) -> void:
+	if void_sheet != null:
+		void_sheet.visible = on
+		if on:
+			void_sheet.queue_redraw()
+	if arena == null:
+		return
+	var tiles := arena.get_node_or_null("Ground/FloorTiles") as TileMapLayer
+	if tiles != null:
+		tiles.visible = not on
 
 
 func set_tool(t: String, id := "") -> void:

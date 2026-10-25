@@ -219,6 +219,8 @@ var objects: Array[Dictionary] = []
 var _serial := 0
 ## SAVE_VERSION of the layout last loaded (0 = none); the arena scatters the default gourds when it is below 5.
 var loaded_version := 0
+## True once the authored starting-area layer is part of this layout (it is saved, so the owner's edits to it stick).
+var shrine_section_applied := false
 var hidden_types: Dictionary = {}
 
 
@@ -459,7 +461,11 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		if field == null:
 			return {}
 		var sprite := field.make_editable_sprite(id, pos)
-		arena.add_child(sprite)
+		if bool(def.get("tall", false)):
+			arena.add_child(sprite)
+		else:
+			# Flat grass is floor: it lives on the Ground layer so fences, walls and actors always draw over it.
+			arena.get_node("Ground").add_child(sprite)
 		nodes = [sprite]
 	elif def.kind == "blight_light":
 		var fixture := BlightwoodLight.new()
@@ -704,15 +710,33 @@ func set_type_visible(category: String, shown: bool) -> void:
 			_apply_visibility(obj)
 
 
+## True for a floor-layer object: ground tiles and flat (non-tall) grass tiles. They replace each other.
+static func is_floor_tile(id: String) -> bool:
+	var def := def_of(id)
+	return def.get("kind", "") == "ground" or (def.get("kind", "") == "grass" and not bool(def.get("tall", false)))
+
+
+## Every floor-layer object whose centre lies inside the floor cell centred at `cell`. Tiles that sit off the
+## 72 x 36 lattice (the authored starting area) still count: exactly one lattice tile centre falls in each cell.
+func floor_tiles_in_cell(cell: Vector2) -> Array:
+	var out: Array = []
+	for o in objects:
+		if is_floor_tile(o.id):
+			var d: Vector2 = (o.pos as Vector2) - cell
+			if absf(d.x) / 36.0 + absf(d.y) / 18.0 < 1.0:
+				out.append(o)
+	return out
+
+
 ## The ground tile (any kind of floor tile) sitting on the floor cell centred at `cell`, or {}.
 func ground_at(cell: Vector2) -> Dictionary:
-	for o in objects:
-		if def_of(o.id).kind == "ground" and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
+	for o in floor_tiles_in_cell(cell):
+		if def_of(o.id).kind == "ground":
 			return o
 	return {}
 
 
-## Lay `id` on the floor cell centred at `cell`, replacing a different tile already there.
+## Lay `id` on the floor cell centred at `cell`, replacing whatever floor tile (ground or flat grass) is already there.
 ## Returns true when something changed. Never commits: the caller does one `_changed()` after a whole stroke.
 func paint_cell(id: String, cell: Vector2) -> bool:
 	var def := def_of(id)
@@ -720,17 +744,34 @@ func paint_cell(id: String, cell: Vector2) -> bool:
 		return false
 	if not arena.bounds.encloses(Rect2(cell - Vector2(36, 18), Vector2(72, 36))):
 		return false
-	if def.kind == "ground":
-		var old := ground_at(cell)
-		if not old.is_empty():
-			if old.id == id:
-				return false
-			remove(old, false)
+	if is_floor_tile(id):
+		var old := floor_tiles_in_cell(cell)
+		if old.size() == 1 and old[0].id == id and (old[0].pos as Vector2).distance_squared_to(cell) < 4.0:
+			return false
+		for o in old:
+			remove(o, false)
 	else:
 		for o in objects:
 			if o.id == id and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
 				return false
 	return not add(id, cell, false).is_empty()
+
+
+## Drop floor tiles stacked exactly on top of each other (older saves re-added the starting area on every boot).
+func dedupe_floor() -> int:
+	var seen := {}
+	var dropped := 0
+	for i in range(objects.size() - 1, -1, -1):
+		var o: Dictionary = objects[i]
+		if not is_floor_tile(o.id):
+			continue
+		var key := Vector2i(roundi(o.pos.x), roundi(o.pos.y))
+		if seen.has(key):
+			remove(o, false)
+			dropped += 1
+		else:
+			seen[key] = true
+	return dropped
 
 
 func remove(obj: Dictionary, commit := true) -> void:
@@ -808,13 +849,18 @@ func hit_test(point: Vector2) -> Dictionary:
 				closest = o
 	if not closest.is_empty():
 		return closest
+	# Overlapping floor tiles (the off-lattice starting area next to painted ones): the nearest centre wins.
+	var best: Dictionary = {}
+	var best_norm := INF
 	for i in range(objects.size() - 1, -1, -1):
 		var o := objects[i]
 		if def_of(o.id).kind == "ground" and type_visible(o.id):
 			var delta: Vector2 = point - o.pos
-			if absf(delta.x) / 36.0 + absf(delta.y) / 18.0 <= 1.0:
-				return o
-	return {}
+			var norm := absf(delta.x) / 36.0 + absf(delta.y) / 18.0
+			if norm <= 1.0 and norm < best_norm - 0.0001:
+				best_norm = norm
+				best = o
+	return best
 
 
 ## BLOCKS-style entries [pos, footprint, height] for the bandit nav.
@@ -861,7 +907,7 @@ func to_dict() -> Dictionary:
 	var items: Array = []
 	for o in objects:
 		items.append({"id": o.id, "x": snappedf(o.pos.x, 0.01), "y": snappedf(o.pos.y, 0.01)})
-	return {"version": SAVE_VERSION, "items": items}
+	return {"version": SAVE_VERSION, "shrine_section": shrine_section_applied, "items": items}
 
 
 func to_json_string() -> String:
@@ -904,6 +950,7 @@ func save() -> bool:
 func load_dict(data: Dictionary) -> int:
 	clear_all(false)
 	loaded_version = int(data.get("version", 1))
+	shrine_section_applied = bool(data.get("shrine_section", false))
 	if int(data.get("version", 1)) < 2:
 		for i in WorldScale.TREE_POSITIONS.size():
 			add("tree_%d" % (i + 1), WorldScale.TREE_POSITIONS[i], false)
