@@ -80,6 +80,10 @@ func _add_track(name: String, foot: Vector2, delay: float, hold_for: float) -> v
 	s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	add_child(s)
 	s.global_position = foot - (c["pivot"] as Vector2)
+	if name == "log":
+		# Rotate/scale about the foot origin, not the image's top-left corner.
+		s.offset = -(c["pivot"] as Vector2)
+		s.global_position = foot
 	_tracks.append({"sprite": s, "clip": c, "delay": delay, "hold_for": hold_for, "name": name})
 	if name == "log":
 		_log_sprite = s
@@ -157,12 +161,13 @@ func _process(delta: float) -> void:
 func _update_log_motion() -> void:
 	if _log_sprite == null or not is_instance_valid(_log_sprite):
 		return
+	var base := to_local(_log_foot)
 	if _age < LOG_FALL_START:
 		# Big anticipation: a violent stagger followed by a split-second hang.
 		var t := _age / LOG_FALL_START
 		var shake := sin(t * TAU * 4.0) * (1.0 - t * 0.3)
 		_log_sprite.rotation = shake * 0.23 + sin(t * PI) * -0.15
-		_log_sprite.position = Vector2(shake * 6.0, -sin(t * PI) * 9.0)
+		_log_sprite.position = base + Vector2(shake * 6.0, -sin(t * PI) * 9.0)
 		_log_sprite.scale = Vector2(1.0 + 0.12 * sin(t * PI), 1.0 - 0.13 * sin(t * PI))
 	elif _age < LOG_IMPACT:
 		# Quick airborne whip and near-horizontal slam; acceleration increases
@@ -170,7 +175,7 @@ func _update_log_motion() -> void:
 		var t := clampf((_age - LOG_FALL_START) / (LOG_IMPACT - LOG_FALL_START), 0.0, 1.0)
 		var drop := t * t
 		_log_sprite.rotation = lerpf(-0.12, 1.78, drop) + sin(t * PI) * 0.22
-		_log_sprite.position = Vector2(25.0 * drop, -25.0 * sin(t * PI) + 16.0 * drop)
+		_log_sprite.position = base + Vector2(25.0 * drop, -25.0 * sin(t * PI) + 16.0 * drop)
 		_log_sprite.scale = Vector2(1.0 + 0.16 * t, 1.0 - 0.12 * t)
 	elif _age < LOG_POOF:
 		# Crunch on impact, rebound, then two increasingly tiny rattles.
@@ -178,7 +183,7 @@ func _update_log_motion() -> void:
 		var bounce := absf(sin(t * PI * 4.0)) * exp(-5.2 * t)
 		var impact_compress := exp(-22.0 * t)
 		_log_sprite.rotation = 1.78 + bounce * 0.25 - impact_compress * 0.12
-		_log_sprite.position = Vector2(25.0 + t * 5.0, 16.0 - bounce * 15.0 + impact_compress * 5.0)
+		_log_sprite.position = base + Vector2(25.0 + t * 5.0, 16.0 - bounce * 15.0 + impact_compress * 5.0)
 		_log_sprite.scale = Vector2(1.0 + impact_compress * 0.35, 1.0 - impact_compress * 0.35)
 		_log_sprite.modulate = Color.WHITE
 	else:

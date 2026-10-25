@@ -1,0 +1,14 @@
+{
+  "normal": {
+    "frames": 288,
+    "duration_ms": 12000,
+    "bytes": 2085743,
+    "source": "actual paused Godot Web frame captures; 24 source frames/sec"
+  },
+  "half-speed": {
+    "frames": 288,
+    "duration_ms": 24000,
+    "bytes": 2085864,
+    "source": "actual paused Godot Web frame captures; 24 source frames/sec"
+  }
+}

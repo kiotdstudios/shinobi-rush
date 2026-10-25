@@ -123,6 +123,7 @@ func _process(_d: float) -> void:
 	if _js_state != null:
 		_js_state.open = open
 		_js_state.count = placed.objects.size()
+		_js_state.shrine_count = placed.objects.filter(func(obj: Dictionary): return obj.id == "dynamic_shrine").size()
 		_js_state.tool = tool
 		_js_state.place_id = place_id
 		_js_state.selected_id = str(selected.get("id", ""))
@@ -960,6 +961,10 @@ func _build_ui() -> void:
 				b.icon = HealthGourd.icon(str(def.get("gourd", "health")))
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "dynamic_shrine":
+				b.icon = load(DynamicShrine.DIR + "assembled.png") as Texture2D
+				b.add_theme_constant_override("icon_max_width",64)
+				b.custom_minimum_size = Vector2(0,96)
 			elif def.kind == "blight_light":
 				b.icon = load(str(PlacedObjects.blight_info(int(def.light)).path).replace(".png", "-assembled.png")) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)

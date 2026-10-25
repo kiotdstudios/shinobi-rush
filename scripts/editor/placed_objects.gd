@@ -106,19 +106,19 @@ const CATALOG := {
 	"fence_sw_2": {"label": "Fence SW x2", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_2", "size": Vector2(188, 152), "anchor": Vector2(164, 66), "col": Vector2(-144, 72)},
 	"fence_sw_3": {"label": "Fence SW x3", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_3", "size": Vector2(260, 188), "anchor": Vector2(236, 66), "col": Vector2(-216, 108)},
 	"fence_sw_4": {"label": "Fence SW x4", "kind": "wall", "fence": true, "dir": FENCE_DIR, "art": "fence_sw_4", "size": Vector2(332, 224), "anchor": Vector2(308, 66), "col": Vector2(-288, 144)},
-	"kit_se_2": {"label": "Wall SE x2", "kind": "wall", "art": "wall_se_2", "size": Vector2(110, 152), "anchor": Vector2(8, 118), "col": Vector2(72, 36)},
-	"kit_se_3": {"label": "Wall SE x3", "kind": "wall", "art": "wall_se_3", "size": Vector2(146, 170), "anchor": Vector2(8, 118), "col": Vector2(108, 54)},
-	"kit_se_4": {"label": "Wall SE x4", "kind": "wall", "art": "wall_se_4", "size": Vector2(182, 188), "anchor": Vector2(8, 118), "col": Vector2(144, 72)},
-	"kit_se_5": {"label": "Wall SE x5", "kind": "wall", "art": "wall_se_5", "size": Vector2(218, 206), "anchor": Vector2(8, 118), "col": Vector2(180, 90)},
-	"kit_se_6": {"label": "Wall SE x6", "kind": "wall", "art": "wall_se_6", "size": Vector2(254, 224), "anchor": Vector2(8, 118), "col": Vector2(216, 108)},
-	"kit_sw_2": {"label": "Wall SW x2", "kind": "wall", "art": "wall_sw_2", "size": Vector2(110, 152), "anchor": Vector2(102, 118), "col": Vector2(-72, 36)},
-	"kit_sw_3": {"label": "Wall SW x3", "kind": "wall", "art": "wall_sw_3", "size": Vector2(146, 170), "anchor": Vector2(138, 118), "col": Vector2(-108, 54)},
-	"kit_sw_4": {"label": "Wall SW x4", "kind": "wall", "art": "wall_sw_4", "size": Vector2(182, 188), "anchor": Vector2(174, 118), "col": Vector2(-144, 72)},
-	"kit_sw_5": {"label": "Wall SW x5", "kind": "wall", "art": "wall_sw_5", "size": Vector2(218, 206), "anchor": Vector2(210, 118), "col": Vector2(-180, 90)},
-	"kit_sw_6": {"label": "Wall SW x6", "kind": "wall", "art": "wall_sw_6", "size": Vector2(254, 224), "anchor": Vector2(246, 118), "col": Vector2(-216, 108)},
+	"kit_se_2": {"label": "Wall SE x2", "kind": "wall", "art": "wall_se_2", "size": Vector2(110, 152), "anchor": Vector2(8, 118), "col": Vector2(72, 36), "depth": Vector2(29, -14.5)},
+	"kit_se_3": {"label": "Wall SE x3", "kind": "wall", "art": "wall_se_3", "size": Vector2(146, 170), "anchor": Vector2(8, 118), "col": Vector2(108, 54), "depth": Vector2(29, -14.5)},
+	"kit_se_4": {"label": "Wall SE x4", "kind": "wall", "art": "wall_se_4", "size": Vector2(182, 188), "anchor": Vector2(8, 118), "col": Vector2(144, 72), "depth": Vector2(29, -14.5)},
+	"kit_se_5": {"label": "Wall SE x5", "kind": "wall", "art": "wall_se_5", "size": Vector2(218, 206), "anchor": Vector2(8, 118), "col": Vector2(180, 90), "depth": Vector2(29, -14.5)},
+	"kit_se_6": {"label": "Wall SE x6", "kind": "wall", "art": "wall_se_6", "size": Vector2(254, 224), "anchor": Vector2(8, 118), "col": Vector2(216, 108), "depth": Vector2(29, -14.5)},
+	"kit_sw_2": {"label": "Wall SW x2", "kind": "wall", "art": "wall_sw_2", "size": Vector2(110, 152), "anchor": Vector2(102, 118), "col": Vector2(-72, 36), "depth": Vector2(-30, -15)},
+	"kit_sw_3": {"label": "Wall SW x3", "kind": "wall", "art": "wall_sw_3", "size": Vector2(146, 170), "anchor": Vector2(138, 118), "col": Vector2(-108, 54), "depth": Vector2(-30, -15)},
+	"kit_sw_4": {"label": "Wall SW x4", "kind": "wall", "art": "wall_sw_4", "size": Vector2(182, 188), "anchor": Vector2(174, 118), "col": Vector2(-144, 72), "depth": Vector2(-30, -15)},
+	"kit_sw_5": {"label": "Wall SW x5", "kind": "wall", "art": "wall_sw_5", "size": Vector2(218, 206), "anchor": Vector2(210, 118), "col": Vector2(-180, 90), "depth": Vector2(-30, -15)},
+	"kit_sw_6": {"label": "Wall SW x6", "kind": "wall", "art": "wall_sw_6", "size": Vector2(254, 224), "anchor": Vector2(246, 118), "col": Vector2(-216, 108), "depth": Vector2(-30, -15)},
 	"kit_pillar": {"label": "Pillar", "kind": "wall", "art": "pillar", "size": Vector2(64, 120), "anchor": Vector2(31, 119), "col": Vector2(0, 0)},
-	"kit_ruin_se": {"label": "Ruin SE", "kind": "wall", "art": "ruin_se", "size": Vector2(182, 158), "anchor": Vector2(-7, 143), "col": Vector2(144, 72)},
-	"kit_ruin_sw": {"label": "Ruin SW", "kind": "wall", "art": "ruin_sw", "size": Vector2(182, 158), "anchor": Vector2(188, 143), "col": Vector2(-144, 72)},
+	"kit_ruin_se": {"label": "Ruin SE", "kind": "wall", "art": "ruin_se", "size": Vector2(182, 158), "anchor": Vector2(-7, 143), "col": Vector2(144, 72), "poly": [Vector2(11, -56), Vector2(37, -69), Vector2(209, -17), Vector2(181, -2), Vector2(155, 11), Vector2(143, 11), Vector2(91, -4), Vector2(79, -9), Vector2(71, -13), Vector2(15, -53)]},
+	"kit_ruin_sw": {"label": "Ruin SW", "kind": "wall", "art": "ruin_sw", "size": Vector2(182, 158), "anchor": Vector2(188, 143), "col": Vector2(-144, 72), "poly": [Vector2(-210, -18), Vector2(-38, -68), Vector2(-12, -55), Vector2(-72, -13), Vector2(-80, -8), Vector2(-88, -5), Vector2(-144, 11), Vector2(-152, 11), Vector2(-156, 10), Vector2(-182, -3)]},
 	"grass9_corner_top": {"label": "Corner Top", "kind": "grass", "tall": false},
 	"grass9_edge_ne": {"label": "Edge Ne", "kind": "grass", "tall": false},
 	"grass9_corner_right": {"label": "Corner Right", "kind": "grass", "tall": false},
@@ -135,6 +135,7 @@ const CATALOG := {
 	"blight_rock_01": {"label": "Blightwood Rock 1", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": -3.0, "art": "rock_01", "size": Vector2(114, 128), "anchor": Vector2(57, 124), "col": Vector2(0, 0), "body": Vector2(41, 43), "poly": [Vector2(-41, -23), Vector2(0, -3), Vector2(41, -23), Vector2(0, -43)]},
 	"blight_rock_02": {"label": "Blightwood Rock 2", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": 3.0, "art": "rock_02", "size": Vector2(133, 115), "anchor": Vector2(66, 111), "col": Vector2(0, 0), "body": Vector2(48, 45), "poly": [Vector2(-48, -21), Vector2(0, 3), Vector2(48, -21), Vector2(0, -45)]},
 	"blight_rock_03": {"label": "Blightwood Rock 3", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": 7.0, "art": "rock_03", "size": Vector2(180, 137), "anchor": Vector2(90, 133), "col": Vector2(0, 0), "body": Vector2(65, 57), "poly": [Vector2(-65, -25), Vector2(0, 7), Vector2(65, -25), Vector2(0, -57)]},
+	"dynamic_shrine": {"label":"Ancient Flame Shrine", "kind":"dynamic_shrine", "landmark":true, "footprint":Vector2(340,160)},
 	"ancient_shrine": {"label": "Ancient Shrine", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/ancient_shrine/", "sort_dy": -29.0, "art": "shrine_shelter_01", "size": Vector2(256, 256), "anchor": Vector2(129, 242), "col": Vector2(0, 0), "body": Vector2(87, 112), "poly": [Vector2(-87, -69), Vector2(0, -29), Vector2(86, -72), Vector2(0, -112)]},
 	"ground9_corner_top": {"label": "Corner Top", "kind": "ground"},
 	"ground9_edge_ne": {"label": "Edge Ne", "kind": "ground"},
@@ -163,7 +164,7 @@ const CATALOG := {
 	"paper_tag": {"label": "Paper tag (throwable bomb)", "kind": "pickup", "gourd": "paper_tag"},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
+const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -249,16 +250,29 @@ static func wall_texture(id: String) -> Texture2D:
 
 ## Ground rectangle covering a wall piece's collider (a strip along `col`, WALL_THICKNESS deep).
 static func wall_rect(def: Dictionary, pos: Vector2) -> Rect2:
-	var col: Vector2 = def.col
-	var a := pos
-	var b := pos + col
-	var lo := Vector2(minf(a.x, b.x), minf(a.y, b.y) - WALL_THICKNESS)
-	var hi := Vector2(maxf(a.x, b.x), maxf(a.y, b.y))
-	if col == Vector2.ZERO:
+	var pts := wall_collider_points(def)
+	if pts.is_empty():
 		var body: Vector2 = def.get("body", Vector2(16.0, WALL_THICKNESS))
-		lo = Vector2(pos.x - body.x, pos.y - body.y)
-		hi = Vector2(pos.x + body.x, pos.y)
+		return Rect2(pos.x - body.x, pos.y - body.y, body.x * 2.0, body.y)
+	var lo := pos + pts[0]
+	var hi := lo
+	for q: Vector2 in pts:
+		lo = Vector2(minf(lo.x, pos.x + q.x), minf(lo.y, pos.y + q.y))
+		hi = Vector2(maxf(hi.x, pos.x + q.x), maxf(hi.y, pos.y + q.y))
 	return Rect2(lo, hi - lo)
+
+
+## Collider polygon of a wall piece relative to its ground point (empty = point piece, a box from "body").
+## An explicit "poly" wins (ruins, plinths); otherwise a parallelogram along `col` pushed back by `depth`
+## (default straight up WALL_THICKNESS) so it covers the wall's end cap and thickness.
+static func wall_collider_points(def: Dictionary) -> PackedVector2Array:
+	var col: Vector2 = def.col
+	if def.has("poly"):
+		return PackedVector2Array(def.poly)
+	if col == Vector2.ZERO:
+		return PackedVector2Array()
+	var depth: Vector2 = def.get("depth", Vector2(0.0, -WALL_THICKNESS))
+	return PackedVector2Array([Vector2.ZERO, col, col + depth, depth])
 
 
 ## Nearest floor-diamond VERTEX (36a, 18b with a + b odd): where a wall piece's front-bottom-left corner sits.
@@ -305,6 +319,8 @@ static var _art_cache: Dictionary = {}
 static func art_texture(id: String, pos: Vector2) -> Array:
 	var def := def_of(id)
 	match String(def.kind):
+		"dynamic_shrine":
+			return [load(DynamicShrine.DIR + "assembled.png") as Texture2D,pos-DynamicShrine.FOOT]
 		"water_fx":
 			return [load(BlightwoodWater.DIR + "waterfall-icon.png") as Texture2D, pos-Vector2(64,169)]
 		"ground":
@@ -358,6 +374,8 @@ static func art_rect(id: String, pos: Vector2) -> Rect2:
 ## What a click on the object's picture should hit (the drawn volume, bigger than the solid base).
 static func hit_rect(id: String, pos: Vector2) -> Rect2:
 	var def := def_of(id)
+	if def.kind == "dynamic_shrine":
+		return Rect2(pos-DynamicShrine.FOOT,Vector2(544,480))
 	if def.kind == "water_fx":
 		return Rect2(pos-Vector2(64,169),Vector2(128,192))
 	if def.kind == "ground":
@@ -407,7 +425,13 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	var def := def_of(id)
 	var nodes: Array[Node] = []
 	_serial += 1
-	if def.kind == "water_fx":
+	if def.kind == "dynamic_shrine":
+		var shrine := DynamicShrine.new()
+		shrine.name = "PlacedDynamicShrine%d" % _serial
+		shrine.position = pos
+		arena.add_child(shrine)
+		nodes = [shrine]
+	elif def.kind == "water_fx":
 		var water := BlightwoodWater.new()
 		water.waterfall = true
 		water.position = pos
@@ -593,14 +617,11 @@ func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 	var body := StaticBody2D.new()
 	body.name = "PlacedWallBody%d" % _serial
 	var shape := ConvexPolygonShape2D.new()
-	if col == Vector2.ZERO and def.has("poly"):
-		# whole ground footprint (the plinth diamond), so nobody can stand "inside" the building under its art
-		shape.points = PackedVector2Array(def.poly)
-	elif col == Vector2.ZERO:
+	var pts := wall_collider_points(def)
+	if pts.is_empty():
 		var half: Vector2 = def.get("body", Vector2(14.0, 14.0))
-		shape.points = PackedVector2Array([Vector2(-half.x, 0), Vector2(half.x, 0), Vector2(half.x, -half.y), Vector2(-half.x, -half.y)])
-	else:
-		shape.points = PackedVector2Array([Vector2.ZERO, col, col + Vector2(0, -WALL_THICKNESS), Vector2(0, -WALL_THICKNESS)])
+		pts = PackedVector2Array([Vector2(-half.x, 0), Vector2(half.x, 0), Vector2(half.x, -half.y), Vector2(-half.x, -half.y)])
+	shape.points = pts
 	var cs := CollisionShape2D.new()
 	cs.shape = shape
 	body.add_child(cs)
@@ -663,7 +684,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "River water" if def.kind == "water_fx" else "Blightwood lights" if def.kind in ["blight_light", "fireflies"] else "Ashen fire" if def.kind == "ashen_fire" else "Volcanic trees" if def.kind == "ashen_tree" else "Blightwood rocks" if def.get("rock", false) else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Temple walls"
+	return "Dynamic shrine" if def.kind == "dynamic_shrine" else "River water" if def.kind == "water_fx" else "Blightwood lights" if def.kind in ["blight_light", "fireflies"] else "Ashen fire" if def.kind == "ashen_fire" else "Volcanic trees" if def.kind == "ashen_tree" else "Blightwood rocks" if def.get("rock", false) else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Temple walls"
 
 
 func type_visible(id: String) -> bool:
@@ -815,10 +836,16 @@ static func _wall_obstacles(def: Dictionary, pos: Vector2) -> Array:
 		var body: Vector2 = def.get("body", Vector2(16.0, 16.0))
 		return [[pos, Vector2(body.x * 2.0, body.y), 0.0]]
 	var out: Array = []
-	var steps := int(round(absf(col.x) / 36.0))
-	var step := col / float(steps)
+	var run := col
+	var start := pos
+	if def.has("poly"):
+		var pp: PackedVector2Array = wall_collider_points(def)
+		start = pos + pp[0]
+		run = pp[1] - pp[0]
+	var steps := maxi(1, int(round(absf(run.x) / 36.0)))
+	var step := run / float(steps)
 	for i in steps:
-		var a := pos + step * float(i)
+		var a := start + step * float(i)
 		out.append([Vector2(a.x + step.x * 0.5, maxf(a.y, a.y + step.y)), Vector2(36, 36), 0.0])
 	return out
 
