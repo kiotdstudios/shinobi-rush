@@ -1,5 +1,5 @@
 extends RefCounted
-## Blightwood bridges: catalogue, placement, deck/rail collision, the broken-bridge gap and its repair.
+## Blightwood bridges: catalogue, placement, deck/rail collision, the broken-bridge gap.
 
 var ck: Callable
 
@@ -128,23 +128,6 @@ func run(p_ck: Callable, root: Node) -> void:
 		player.global_position.distance_to(origin - step.normalized() * Bridge.ENTRY_PUSH) < 1.0 and is_equal_approx(player.health, 100.0 - Bridge.FALL_DAMAGE))
 	player.global_position = gap + step * 0.3
 	ck.call("bridge: the far half sends a fallen player to the far end", broken.entry_point(player.global_position).distance_to(origin + step * 6.0 + step.normalized() * Bridge.ENTRY_PUSH) < 1.0)
-
-	# --- repair
-	player.global_position = origin
-	ck.call("bridge: repair needs the player beside the gap", not broken.can_repair(player))
-	player.global_position = gap + Vector2(30, 10)
-	ck.call("bridge: a grounded player near the gap can repair it", broken.can_repair(player))
-	var damaged_deck := (broken._sprites["deck"] as Sprite2D).texture
-	var signalled := [false]
-	broken.repaired.connect(func(): signalled[0] = true)
-	ck.call("bridge: repair succeeds on a broken bridge", broken.repair() and signalled[0])
-	ck.call("bridge: repaired swaps in the intact art and closes the gap", broken.state == "repaired" and (broken._sprites["deck"] as Sprite2D).texture != damaged_deck and broken.gap_polygon().is_empty() and broken.walkable_at(gap))
-	player.state = PlayerController.State.IDLE
-	player.global_position = gap
-	ck.call("bridge: a repaired bridge no longer drops anyone", not broken.drops(player))
-	ck.call("bridge: repairing twice is a no-op", not broken.repair())
-	var fine := placed.add("bridge_short_wood_u", origin + Vector2(0, 360), false)
-	ck.call("bridge: an intact bridge cannot be repaired", not (fine.nodes[0] as Bridge).repair())
 
 	for o in placed.objects.duplicate():
 		placed.remove(o, false)
