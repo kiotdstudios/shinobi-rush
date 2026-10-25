@@ -53,6 +53,20 @@ var hud_snap_button: Button = null
 const DIM_TYPES: Array[String] = ["Blightwood lights", "Blightwood rocks", "Ashen fire", "Volcanic trees", "Trees", "Temple walls", "Fences", "Grass", "Tall grass", "Ground / paths", "Temple ground"]
 var show_grid := false
 var void_sheet: Node2D = null
+## Map-editor page extras (MapEditorMode.active()): BUILD | SETTINGS tabs, playtest toggle, undo/redo row.
+var map_mode := false
+var title_label: Label
+var sub_label: Label
+var hide_button: Button
+var build_page: Control
+var settings_page: Control
+var tab_build_button: Button
+var tab_settings_button: Button
+var undo_button: Button
+var redo_button: Button
+var fill_void_button: Button
+var next_void_button: Button
+const PANEL_W_MAP := 330.0
 ## Set false only by tests: save/publish normally refuse while white void is left in the level.
 var void_check := true
 ## Cell the last blocked save jumped to (INF = none); drawn as a red diamond on the white void.
@@ -132,6 +146,9 @@ func _ready() -> void:
 	_build_ui()
 	_show_void(true)
 	set_open(false)
+	placed.clear_history()
+	if map_mode:
+		_enter_map_mode()
 	if OS.has_feature("web"):
 		var query := str(JavaScriptBridge.eval("window.location.search", true))
 		_js_state = JavaScriptBridge.create_object("Object")
@@ -146,6 +163,11 @@ func _process(_d: float) -> void:
 		hud.set_edit_mode(open)
 	if not _settings_rows_added and SettingsPanel.instance() != null:
 		_add_settings_rows(SettingsPanel.instance())
+		if map_mode:
+			_adopt_settings_page(SettingsPanel.instance())
+	if undo_button != null:
+		undo_button.disabled = not placed.can_undo()
+		redo_button.disabled = not placed.can_redo()
 	if _js_state != null:
 		_js_state.open = open
 		_js_state.count = placed.objects.size()
@@ -321,6 +343,21 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if open and event.keycode == KEY_S and event.ctrl_pressed:
 			save_now()
+			get_viewport().set_input_as_handled()
+			return
+		if open and event.ctrl_pressed and event.keycode == KEY_Z:
+			if event.shift_pressed:
+				redo()
+			else:
+				undo()
+			get_viewport().set_input_as_handled()
+			return
+		if open and event.ctrl_pressed and event.keycode == KEY_Y:
+			redo()
+			get_viewport().set_input_as_handled()
+			return
+		if map_mode and event.keycode == KEY_F5:
+			set_open(not open)
 			get_viewport().set_input_as_handled()
 			return
 		if open and event.keycode in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN] and hud_bar() != null and hud_bar().selected_element != "":
@@ -535,20 +572,15 @@ func save_now() -> bool:
 	return ok
 
 
-## Save checker: any floor cell with no art on it shows as white void. Returns true (and refuses the save) when
-## there is any; the view jumps to the void cell nearest the current view and marks it with a red diamond.
-func _void_blocks_save() -> bool:
-	if not void_check or arena == null:
-		return false
-	var cells := placed.void_cells(arena.bounds)
-	if cells.is_empty():
-		void_focus = Vector2.INF
-		return false
+## Move the view to the void cell nearest the current view centre (skipping the one it is already on) and mark it.
+func _focus_void(cells: Array) -> void:
 	var cam := _camera()
 	var from := cam.get_screen_center_position() if cam != null else Vector2.ZERO
-	var best: Vector2 = cells[0]
-	for c in cells:
-		if (c as Vector2).distance_squared_to(from) < best.distance_squared_to(from):
+	var best := Vector2.INF
+	for c: Vector2 in cells:
+		if cells.size() > 1 and c == void_focus:
+			continue
+		if best == Vector2.INF or c.distance_squared_to(from) < best.distance_squared_to(from):
 			best = c
 	void_focus = best
 	if not open:
@@ -558,6 +590,130 @@ func _void_blocks_save() -> bool:
 		cam.force_update_scroll()
 	if void_sheet != null:
 		void_sheet.queue_redraw()
+
+
+func jump_to_next_void() -> void:
+	var cells := placed.void_cells(arena.bounds)
+	if cells.is_empty():
+		void_focus = Vector2.INF
+		_flash("No white void left: every cell has art")
+		return
+	_focus_void(cells)
+	_flash("%d white void cells left. View is on the nearest one." % cells.size())
+
+
+## Lay the selected ground (or the stone floor) on every empty cell. One undo step.
+func fill_void() -> void:
+	var id := place_id if place_id != "" and PlacedObjects.is_floor_tile(place_id) else "temple_floor_center"
+	var made := placed.fill_void(id, arena.bounds)
+	void_focus = Vector2.INF
+	_flash("Filled %d void cells with %s (Ctrl+Z undoes it)" % [made, str(PlacedObjects.CATALOG[id].label)] if made > 0 else "No white void to fill")
+	_refresh()
+
+
+func undo() -> void:
+	selected = {}
+	_flash("Undone" if placed.undo() else "Nothing to undo")
+	_refresh()
+
+
+func redo() -> void:
+	selected = {}
+	_flash("Redone" if placed.redo() else "Nothing to redo")
+	_refresh()
+
+
+# ------------------------------------------------------------------ map-editor page
+func _build_map_tabs(outer: VBoxContainer, foot: Control) -> void:
+	map_mode = true
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	outer.add_child(row)
+	outer.move_child(row, 2)
+	var group := ButtonGroup.new()
+	tab_build_button = _toggle(row, "BUILD", func(): _show_page(true))
+	tab_settings_button = _toggle(row, "SETTINGS", func(): _show_page(false))
+	tab_build_button.button_group = group
+	tab_settings_button.button_group = group
+	tab_build_button.button_pressed = true
+	build_page = VBoxContainer.new()
+	build_page.name = "BuildPage"
+	build_page.add_theme_constant_override("separation", 8)
+	build_page.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var movers: Array[Node] = []
+	for i in range(3, outer.get_child_count()):
+		if outer.get_child(i) != foot:
+			movers.append(outer.get_child(i))
+	for n in movers:
+		outer.remove_child(n)
+		build_page.add_child(n)
+	outer.add_child(build_page)
+	outer.move_child(build_page, 3)
+	var scroll := ScrollContainer.new()
+	scroll.name = "SettingsPage"
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.visible = false
+	var box := VBoxContainer.new()
+	box.name = "SettingsBox"
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation", 6)
+	scroll.add_child(box)
+	outer.add_child(scroll)
+	outer.move_child(scroll, 4)
+	settings_page = box
+
+
+func _show_page(build: bool) -> void:
+	if build_page != null:
+		build_page.visible = build
+	if settings_page != null:
+		settings_page.get_parent().visible = not build
+
+
+func _enter_map_mode() -> void:
+	panel.offset_left = -PANEL_W_MAP
+	title_label.text = "SHINOBI RUSH MAP EDITOR"
+	sub_label.text = "BUILD  -  SETTINGS  -  PLAYTEST (F5)"
+	hide_button.text = "PLAYTEST >"
+	hide_button.tooltip_text = "Play the level as it is right now. Press the EDIT tab (or F5) to come back."
+	tab.text = "<  EDIT"
+	tab.tooltip_text = "Back to the map editor (F5)"
+	set_open(true)
+	if OS.has_feature("web"):
+		var game := Button.new()
+		game.text = "OPEN GAME"
+		game.focus_mode = Control.FOCUS_NONE
+		_skin(game)
+		game.pressed.connect(func(): MapEditorMode.open_page("index.html"))
+		(hide_button.get_parent() as Control).add_child(game)
+		(hide_button.get_parent() as Control).move_child(game, 1)
+
+
+## The Settings dock (vision switches, camera zoom, Lab / Player / Controls / Diagnostics) lives inside the editor's
+## SETTINGS tab on the map-editor page; the little popup on the bottom edge is hidden.
+func _adopt_settings_page(sp: SettingsPanel) -> void:
+	if settings_page == null or sp.rows == null:
+		return
+	sp.rows.get_parent().remove_child(sp.rows)
+	settings_page.add_child(sp.rows)
+	sp.rows.visible = true
+	if sp.tab != null:
+		sp.tab.visible = false
+	if sp.panel != null:
+		sp.panel.visible = false
+
+
+## Save checker: any floor cell with no art on it shows as white void. Returns true (and refuses the save) when
+## there is any; the view jumps to the void cell nearest the current view and marks it with a red diamond.
+func _void_blocks_save() -> bool:
+	if not void_check or arena == null:
+		return false
+	var cells := placed.void_cells(arena.bounds)
+	if cells.is_empty():
+		void_focus = Vector2.INF
+		return false
+	_focus_void(cells)
 	_flash("SAVE BLOCKED: %d white void cells have no art. View jumped to the nearest one." % cells.size())
 	return true
 
@@ -671,6 +827,15 @@ func _add_settings_rows(sp: SettingsPanel) -> void:
 		var b := _settings_toggle("Dimensions: %s" % t, ACCENT, func(on: bool) -> void: show_dims[t] = on)
 		_dim_buttons[t] = b
 		sp.add_row(b)
+	if OS.has_feature("web") and not MapEditorMode.active():
+		var link := Button.new()
+		link.name = "MapEditorLink"
+		link.text = "Shinobi Rush Map Editor  >"
+		link.tooltip_text = "Open the full map editor page in a new tab"
+		link.focus_mode = Control.FOCUS_NONE
+		link.add_theme_font_size_override("font_size", 12)
+		link.pressed.connect(func() -> void: MapEditorMode.open_page("editor.html"))
+		sp.rows.add_child(link)
 
 
 func _settings_toggle(text: String, color: Color, cb: Callable) -> Button:
@@ -921,16 +1086,19 @@ func _build_ui() -> void:
 	titles.add_theme_constant_override("separation", 0)
 	head.add_child(titles)
 	var title := Label.new()
+	title_label = title
 	title.text = "WORLD BUILDER"
 	title.add_theme_font_size_override("font_size", 19)
 	title.add_theme_color_override("font_color", Color.WHITE)
 	titles.add_child(title)
 	var sub := Label.new()
+	sub_label = sub
 	sub.text = "SHINOBI RUSH"
 	sub.add_theme_font_size_override("font_size", 10)
 	sub.add_theme_color_override("font_color", ACCENT)
 	titles.add_child(sub)
 	var hide := Button.new()
+	hide_button = hide
 	hide.text = "HIDE  >"
 	hide.focus_mode = Control.FOCUS_NONE
 	hide.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -952,6 +1120,44 @@ func _build_ui() -> void:
 	_tool_buttons["pan"] = _toggle(tools, "PAN", func(): set_tool("pan"))
 	_paint_button = _tool_buttons["paint"]
 	brush_button = _toggle(outer, "BRUSH  1 x 1  (paint: drag to lay many tiles)", func(): cycle_brush())
+	var edit_row := HBoxContainer.new()
+	edit_row.add_theme_constant_override("separation", 6)
+	outer.add_child(edit_row)
+	undo_button = Button.new()
+	undo_button.text = "UNDO"
+	undo_button.tooltip_text = "Undo the last action (Ctrl+Z)"
+	undo_button.focus_mode = Control.FOCUS_NONE
+	undo_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_skin(undo_button)
+	undo_button.pressed.connect(undo)
+	edit_row.add_child(undo_button)
+	redo_button = Button.new()
+	redo_button.text = "REDO"
+	redo_button.tooltip_text = "Redo (Ctrl+Y or Ctrl+Shift+Z)"
+	redo_button.focus_mode = Control.FOCUS_NONE
+	redo_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_skin(redo_button)
+	redo_button.pressed.connect(redo)
+	edit_row.add_child(redo_button)
+	var void_row := HBoxContainer.new()
+	void_row.add_theme_constant_override("separation", 6)
+	outer.add_child(void_row)
+	fill_void_button = Button.new()
+	fill_void_button.text = "FILL VOID"
+	fill_void_button.tooltip_text = "Lay the selected ground tile on every white (empty) cell. One undo step."
+	fill_void_button.focus_mode = Control.FOCUS_NONE
+	fill_void_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_skin(fill_void_button)
+	fill_void_button.pressed.connect(fill_void)
+	void_row.add_child(fill_void_button)
+	next_void_button = Button.new()
+	next_void_button.text = "NEXT VOID"
+	next_void_button.tooltip_text = "Jump the view to the nearest white (empty) cell"
+	next_void_button.focus_mode = Control.FOCUS_NONE
+	next_void_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_skin(next_void_button)
+	next_void_button.pressed.connect(jump_to_next_void)
+	void_row.add_child(next_void_button)
 
 	# Palette filters: hide/show the option cards by type; the world itself is untouched.
 	var filters := GridContainer.new()
@@ -1254,6 +1460,8 @@ func _build_ui() -> void:
 		help.add_theme_font_size_override("font_size", 11)
 		help.add_theme_color_override("font_color", MUTED)
 		hints.add_child(help)
+	if MapEditorMode.active():
+		_build_map_tabs(outer, foot)
 
 
 func set_type_filter(category: String, shown: bool) -> void:

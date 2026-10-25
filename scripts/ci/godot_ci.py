@@ -258,6 +258,12 @@ def project_name(project: Path) -> str:
 
 def cmd_finalize_export(args: argparse.Namespace) -> int:
     project, out = project_dir(args), Path(args.out).resolve()
+    if args.kind == "game" and (out / "index.html").is_file():
+        try:
+            export_tools.write_map_editor_page(out)
+        except ValueError as e:
+            annotate("error", str(e), title="map editor page")
+            return 1
     findings = export_tools.check_export_dir(out)
     if not report_findings(findings, "Web export"):
         return 1
