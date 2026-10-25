@@ -323,7 +323,7 @@ func set_tool(t: String, id := "") -> void:
 func snapped_pos(p: Vector2) -> Vector2:
 	if snap > 0 and _grass_tool():
 		return iso_cell_center(p)
-	if snap > 0 and _wall_tool():
+	if snap > 0 and (_wall_tool() or _bridge_tool()):
 		return PlacedObjects.iso_vertex(p)  # wall kit pieces sit on floor-diamond vertices so runs join
 	return p if snap <= 0 else (p / float(snap)).round() * float(snap)
 
@@ -343,6 +343,11 @@ static func iso_cell_center(p: Vector2) -> Vector2:
 				best_d = d
 				best = c
 	return best
+
+
+func _bridge_tool() -> bool:
+	var id := place_id if tool in ["place", "paint"] else str(selected.get("id", ""))
+	return id != "" and PlacedObjects.def_of(id).kind == "bridge"
 
 
 func _wall_tool() -> bool:
@@ -628,7 +633,7 @@ func fill_void() -> void:
 	var id := place_id if place_id != "" and PlacedObjects.is_floor_tile(place_id) else "temple_floor_center"
 	var made := placed.fill_void(id, arena.bounds)
 	void_focus = Vector2.INF
-	_flash("Filled %d void cells with %s (Ctrl+Z undoes it)" % [made, str(PlacedObjects.CATALOG[id].label)] if made > 0 else "No white void to fill")
+	_flash("Filled %d void cells with %s (Ctrl+Z undoes it)" % [made, str(PlacedObjects.def_of(id).label)] if made > 0 else "No white void to fill")
 	_refresh()
 
 
@@ -1102,7 +1107,7 @@ func _section(col: Control, title: String) -> void:
 
 ## Small procedural thumbnail for block items (front face, lit roof, shaded side) so the palette shows what you get.
 static func block_icon(id: String) -> Texture2D:
-	var def: Dictionary = PlacedObjects.CATALOG[id]
+	var def: Dictionary = PlacedObjects.def_of(id)
 	var fp: Vector2 = def.footprint
 	var img := Image.create(48, 48, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0))
@@ -1314,7 +1319,7 @@ func _build_ui() -> void:
 		grid.add_theme_constant_override("v_separation", 6)
 		section.add_child(grid)
 		for id: String in cat[1]:
-			var def: Dictionary = PlacedObjects.CATALOG[id]
+			var def: Dictionary = PlacedObjects.def_of(id)
 			var b := Button.new()
 			b.toggle_mode = true
 			b.button_group = group
@@ -1369,6 +1374,10 @@ func _build_ui() -> void:
 			elif def.kind == "ashen_tree":
 				b.icon = load(str(PlacedObjects.ashen_info(int(def.tree)).texture)) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "bridge":
+				b.icon = PlacedObjects.art_texture(id, Vector2.ZERO)[0] as Texture2D
+				b.add_theme_constant_override("icon_max_width", 96)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "tree":
 				b.icon = load(str(PlacedObjects.tree_info(int(def.tree)).texture)) as Texture2D
@@ -1689,6 +1698,6 @@ func _refresh() -> void:
 	if not selected.is_empty():
 		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
-	var what := "Painting: %s  (drag to lay tiles, %d x %d brush)" % [str(PlacedObjects.CATALOG[place_id].label), brush, brush] if tool == "paint" else "Placing: %s" % str(PlacedObjects.CATALOG[place_id].label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
+	var what := "Painting: %s  (drag to lay tiles, %d x %d brush)" % [str(PlacedObjects.def_of(place_id).label), brush, brush] if tool == "paint" else "Placing: %s" % str(PlacedObjects.def_of(place_id).label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
 	count_label.text = "%d objects" % placed.objects.size()
 	status.text = _note if Time.get_ticks_msec() < _note_until else what
