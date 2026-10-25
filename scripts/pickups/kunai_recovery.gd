@@ -114,8 +114,10 @@ func _clink() -> void:
 func _settle() -> void:
 	finished=true
 	if recoverable and clear_ground(get_parent(),landing):
-		var drops := get_tree().get_nodes_in_group("spent_kunai_pickup")
-		if drops.size()>=MAX_DROPS: drops[0].queue_free()
+		var drops := get_tree().get_nodes_in_group("spent_kunai_pickup").filter(func(node: Node) -> bool: return not node.is_queued_for_deletion())
+		while drops.size()>=MAX_DROPS:
+			var oldest: Node=drops.pop_front()
+			oldest.queue_free()
 		pickup=HealthGourd.new()
 		pickup.kind="kunai"
 		pickup.grounded=true

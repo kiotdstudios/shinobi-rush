@@ -123,5 +123,26 @@ func run(ck: Callable, root: Node) -> void:
 	inaccessible.advance(2.0)
 	ck.call("kunai inaccessible: no unreachable pickup created",not inaccessible.recoverable and inaccessible.pickup==null and inaccessible.finished)
 	ck.call("kunai sound: metallic clip generated",KunaiRecovery.clink_sound().data.size()==4410)
+	# Several settle events in one simulation frame must count pending deletions only once.
+	for node in root.get_tree().get_nodes_in_group("spent_kunai_pickup"): node.queue_free()
+	await root.get_tree().process_frame
+	ground.nav=null
+	carrier.position=Vector2(100,100)
+	for i in KunaiRecovery.MAX_DROPS:
+		var old := HealthGourd.new()
+		old.kind="kunai"
+		old.grounded=true
+		old.respawns=false
+		old.position=Vector2(1100,600)
+		ground.add_child(old)
+		old.add_to_group("spent_kunai_pickup")
+	for i in 3:
+		var simultaneous := KunaiRecovery.start(ground,Vector2(250+i*40,600),Vector2.RIGHT,-44)
+		simultaneous.set_physics_process(false)
+		simultaneous.advance(1.0)
+	var live_drops := root.get_tree().get_nodes_in_group("spent_kunai_pickup").filter(func(node: Node) -> bool: return not node.is_queued_for_deletion())
+	ck.call("kunai cap: simultaneous settles stay bounded",live_drops.size()==KunaiRecovery.MAX_DROPS)
+	await root.get_tree().process_frame
+	ck.call("kunai cap: bounded after deferred deletes",root.get_tree().get_nodes_in_group("spent_kunai_pickup").size()==KunaiRecovery.MAX_DROPS)
 	ground.queue_free()
 	await root.get_tree().process_frame
