@@ -1,0 +1,25 @@
+{
+  "generator": "built-in image_gen",
+  "pixellab_used": false,
+  "reason": "original low fog shape atlas with runtime drift; PixelLab API and configured balance reviewed",
+  "texture": "wisps.png",
+  "grid": [
+    4,
+    4
+  ],
+  "cell_size": [
+    128,
+    128
+  ],
+  "anchor": [
+    64,
+    74
+  ],
+  "variants": 16,
+  "animation": "continuous 23\u201334.4 second independent drift envelopes, not sequential flipbook frames",
+  "max_alpha": 0.2,
+  "near_player_alpha_multiplier_min": 0.08,
+  "pool_capacity": 48,
+  "filter": "nearest",
+  "baked_ground": false
+}

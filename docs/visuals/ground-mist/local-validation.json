@@ -1,0 +1,28 @@
+{
+  "tested_at": "2026-10-26T17:11:43.108Z",
+  "url": "http://127.0.0.1:65226/",
+  "checks": {
+    "sources": true,
+    "fixed_pool": true,
+    "wisps": true,
+    "player_clearing": true,
+    "drift": true,
+    "half": true,
+    "pause": true,
+    "toggle_off": true,
+    "toggle_on": true,
+    "real_player_moves": true,
+    "world_sources": true,
+    "world_pool": true,
+    "world_visible": true,
+    "no_errors": true
+  },
+  "world": {
+    "ready": true,
+    "clock": 0.2741333246231079,
+    "sources": 11,
+    "visible": 21,
+    "capacity": 48
+  },
+  "errors": []
+}
