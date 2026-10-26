@@ -139,6 +139,12 @@ var max_chakra: float = MAX_CHAKRA
 var chakra: float = MAX_CHAKRA
 ## Provisional chakra recovery while holding charge; no aura is bound yet.
 @export var chakra_charge_per_second: float = 20.0
+## Ninjas run on water, paying chakra for every second spent over it. Out of chakra they slip under and are
+## put back on the last dry spot, taking a small hit.
+@export var water_chakra_per_second: float = 10.0
+const WATER_SINK_DAMAGE := 8.0
+var _last_dry := Vector2.ZERO
+var over_water := false
 var _charge_interrupted := false
 const CHARGE_HOLD_DELAY := 0.30  ## press keeps existing substitution; sustained L2 adds charge
 var _charge_hold_time := 0.0
@@ -203,6 +209,7 @@ var kunai_thrown_count: int = 0
 
 func _ready() -> void:
 	add_to_group("player")
+	_last_dry = global_position
 	collision_mask |= ShrineElevation.EDGE_LAYER  # platform rim and stair sides only stop the player
 	spawn_position = global_position
 	# Collider comes from the shared footprint constant (the scene values mirror it).
@@ -239,7 +246,23 @@ func _ready() -> void:
 	menu.bind(self)
 
 
+func _tick_water(delta: float) -> void:
+	over_water = not dying and BlightwoodWater.over_water(get_tree(), global_position)
+	if not over_water:
+		_last_dry = global_position
+		return
+	if chakra > 0.0:
+		chakra = maxf(chakra - water_chakra_per_second * delta, 0.0)
+		chakra_changed.emit(chakra, max_chakra)
+	else:
+		over_water = false
+		global_position = _last_dry
+		velocity = Vector2.ZERO
+		take_hit(WATER_SINK_DAMAGE, Vector2.ZERO, 0.0)
+
+
 func _physics_process(delta: float) -> void:
+	_tick_water(delta)
 	var prev_state := state
 	_follow_elevation(delta)
 	var charge_held := Input.is_action_pressed("substitution")
