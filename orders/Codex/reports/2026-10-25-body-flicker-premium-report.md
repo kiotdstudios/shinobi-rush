@@ -70,3 +70,12 @@ Canonical live URL: https://kiotdstudios.github.io/shinobi-rush/?flicker=review 
 - Regenerated final previews from actual 25 FPS compositor video, extracted at 24 FPS without interpolation, rather than the original sparse screenshot samples. GIFs use unscaled cropped status/playfield panels and cumulative 10ms timing quantization; no speed-up from rounding every frame separately. Capture helper fails if fewer than eight real dodges execute. See final preview-recordings metadata.
 - Acknowledged the new full-diamond floor standard to Diel in commentary ("I read the tiles order."). No floor art repainted by this feature; Aki's fixes are retained from main and coverage tests pass.
 - Latest main advanced to 35aa84fd while testing; another normal integration pass is required before opening/merging the runtime PR. No live publication is claimed yet.
+
+## Final base integration — 35aa84fd (tested before this merge commit)
+- Prior integration commit: d3f15ebc. Merged origin/main 35aa84fd35693f4f6dba0e9f14764c16d34e7501 using `git merge --no-commit --no-ff origin/main`; clean automatic merge. Preserved Aki's builder Bandit and tag-bomb integration.
+- `python scripts/ci/godot_ci.py tests --project . --godot <exe> --log-dir build/flicker-final-base-tests`: **3221 passed, 0 failed**, including the new autoplay-input regression and latest upstream builder tests.
+- `python scripts/ci/godot_ci.py export --project . --out ../body-flicker-final-base-web-20261025 --godot <exe> --log-dir build/flicker-final-base-export`: PASS.
+- `node docs/visuals/body-flicker-premium/browser-proof.mjs ../body-flicker-final-base-web-20261025 docs/visuals/body-flicker-premium/final-base-proof`: **24/24 passed**, no browser errors.
+- `node docs/visuals/body-flicker-premium/gameplay-proof.mjs ../body-flicker-final-base-web-20261025 build/flicker-final-base-gameplay`: **4/4 passed**, including actual normal-game keyboard input, all eight headings and shared presentation; no browser errors. JSON and screenshots copied to final-base-gameplay/.
+- Final GIF preview capture now includes a minimum-eight-actual-dodges guard. Compositor-derived crops were inspected: Before/Normal 174 extracted frames, 7.25s each; Half 352 frames, 14.66s. Sizes approximately 1.27/1.71/3.10 MB. This supersedes the sparse screenshot previews recorded in the initial report.
+- `python scripts/ci/validate_orders.py` and `git diff --check`: PASS. Runtime remains REVIEW until PR gates, normal merge, main deploy/postdeploy and exact public-build verification complete.

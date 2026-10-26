@@ -25,4 +25,4 @@ Immediate gameplay response; recognizable bodies and crisp pixels; no fade-only 
 Latest direct high-priority task supersedes stale queued work. Reuse approved body and VFX art where appropriate; presentation timing follows existing action duration rather than changing gameplay to match suggested 0.38s. Player currently 0.30s total, 0.20s movement; bandit 0.20s evade and profile-driven retreat hops.
 
 ## Local delivery evidence
-Full native suite: 3118 passed; final focused presentation/health/bandit suite: 146 passed. Web: 23 review checks plus normal-game keyboard/recording checks passed; no browser errors. Awaiting reviewed integration and exact canonical deployment verification.
+Integrated latest-main full native suite: 3221 passed; focused presentation/health/bandit suite: 147 passed. Web: 24 review checks plus normal-game keyboard/recording checks passed; no browser errors. Awaiting reviewed integration and exact canonical deployment verification.
