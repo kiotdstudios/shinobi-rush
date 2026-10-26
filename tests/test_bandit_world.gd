@@ -179,6 +179,43 @@ func _in_arena(root: Node) -> void:
 	ck.call("bandit world: a hit knocks the gourd from his lips", a.drinking == "")
 	gourd.queue_free()
 
+	# --- his belt is full: a better pickup makes him put down his least wanted kind
+	a.drinking = ""
+	a.health_gourds = 2
+	a.chakra_gourds = 2
+	a.inventory.set_count("kunai", 1)
+	a.inventory.set_count("paper_tag", 1)
+	var lesser := HealthGourd.new()
+	lesser.kind = "health"
+	arena.add_child(lesser)
+	lesser.global_position = a.global_position + Vector2(-120, 0)
+	ck.call("bandit world: with two health gourds on his belt he leaves a third lying", not a._loot_wanted(lesser))
+	lesser.queue_free()
+	var bomb := HealthGourd.new()
+	bomb.kind = "tag_bomb"
+	bomb.name = "TestBomb"
+	arena.add_child(bomb)
+	bomb.global_position = a.global_position + Vector2(140, 0)
+	a.hp = a.max_hp
+	a.state = Bandit.State.PATROL
+	a.loot_target = null
+	a._loot_scan = 0.0
+	var dropped0 := a.items_dropped
+	a.set_physics_process(true)
+	t = 0.0
+	while a.inventory.count_of("tag_bomb") == 0 and t < 6.0:
+		await tree.physics_frame
+		t += 1.0 / 60.0
+	a.set_physics_process(false)
+	var drops := tree.get_nodes_in_group("kunai_pickup").filter(func(n: Node) -> bool: return n.name.begins_with("BanditDrop"))
+	ck.call("bandit world: a better pickup swaps out his least wanted kind", a.inventory.count_of("tag_bomb") == 1 and a.inventory.count_of("kunai") == 0 and a.items_dropped == dropped0 + 1, "%.1fs %s" % [t, str(a.inventory.dpad)])
+	ck.call("bandit world: what he put down lies on the ground for anyone", drops.size() == 1 and (drops[0] as HealthGourd).available and not (drops[0] as HealthGourd).respawns)
+	ck.call("bandit world: he does not go back for what he just dropped", drops.size() == 1 and not a._loot_wanted(drops[0]))
+	ck.call("bandit world: still four slots, two of each at most", a.inventory.total() == 6 and a.inventory.free_slot_for("smoke_tag_bomb") == "")
+	for d in drops:
+		d.queue_free()
+	bomb.queue_free()
+
 	_clear_pouches(tree)
 	for n in tree.get_nodes_in_group("enemy"):
 		if n != a:
@@ -248,6 +285,59 @@ func _in_blightwood(root: Node) -> void:
 		ck.call("bandit world: the bandit climbs the stairs to the landing", arrived, "at %s after %.1fs" % [str(first.global_position), t])
 		ck.call("bandit world: up there he stands at the cliff height", is_equal_approx(first.elevation, zone.height), "%.1f / %.1f" % [first.elevation, zone.height])
 		ck.call("bandit world: the player below is not in blade reach", not Combatants.same_level(first, p))
+		# --- loot up there counts: he does not need a straight look at it, only a way up
+		var prize := HealthGourd.new()
+		prize.kind = "health"
+		arena.add_child(prize)
+		prize.global_position = landing
+		for g in tree.get_nodes_in_group(HealthGourd.GROUP) + tree.get_nodes_in_group(HealthGourd.CHAKRA_GROUP):
+			if g != prize:
+				(g as HealthGourd).available = false
+		first.global_position = start
+		first.elevation = 0.0
+		first.health_gourds = 0
+		first.profile["loot_sight"] = maxf(float(first.profile.loot_sight), start.distance_to(landing) + 20.0)
+		ck.call("bandit world: from the stair foot he spots a gourd on the cliff landing", first._find_loot() == prize)
+		prize.queue_free()
+
+	# --- across the bridge: on and off only through the open ends, never through a rail
+	var bridge: Bridge = null
+	for b in tree.get_nodes_in_group("bridge"):
+		if b is Bridge and arena.is_ancestor_of(b):
+			bridge = b
+	ck.call("bandit world: the map has its bridge", bridge != null)
+	if bridge != null and first != null:
+		var route := bridge.nav_route()
+		var ends: PackedVector2Array = route[0]
+		var far_end := ends[1] + bridge.axis_step().normalized() * 40.0
+		var near_end := ends[0] - bridge.axis_step().normalized() * 40.0
+		var path := arena.nav.find_path(near_end, far_end)
+		var deck := bridge.deck_polygon()
+		var off_deck := 0
+		for i in range(1, path.size() - 1):
+			if not Geometry2D.is_point_in_polygon(path[i], deck) and path[i].distance_to(ends[0]) > 60.0 and path[i].distance_to(ends[1]) > 60.0:
+				off_deck += 1
+		ck.call("bandit world: the nav runs end to end over the bridge deck", not path.is_empty() and off_deck == 0, str(path))
+		var mid := bridge.global_position + bridge.length_vec() * 0.5
+		var beside := mid + bridge.width_vec().normalized() * 90.0
+		ck.call("bandit world: the rails close the deck's sides on the nav", not arena.nav.line_clear(mid, beside))
+		for e in tree.get_nodes_in_group("enemy"):
+			if e != first:
+				e.queue_free()
+		first.set_physics_process(false)
+		first.global_position = near_end
+		first.elevation = 0.0
+		first._path = PackedVector2Array()
+		for i in 2:
+			await tree.physics_frame
+		var bt := 0.0
+		var crossed := false
+		while bt < 10.0 and not crossed:
+			crossed = first._follow(far_end, first.chase_speed, 1.0 / 60.0, 14.0, false)
+			first.move_and_slide()
+			await tree.physics_frame
+			bt += 1.0 / 60.0
+		ck.call("bandit world: the bandit walks across the bridge", crossed, "at %s after %.1fs" % [str(first.global_position), bt])
 	main.queue_free()
 	await tree.process_frame
 	BlightwoodMap.enabled = was_enabled

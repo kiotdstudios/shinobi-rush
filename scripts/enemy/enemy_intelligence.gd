@@ -63,8 +63,8 @@ const LEVELS := {
 		"chakra_charge_low": 0.3,    # below this fraction of his pool he stops to charge chakra (ninja-style)
 		"chakra_charge_full": 0.9,   # keeps charging until the pool is back to this fraction
 		# scavenging (off the fight): ryo pouches and gourds in sight, drunk when needed
-		"loot_sight": 380.0,         # how far he spots loot lying about (needs a clear line, no facing cone)
-		"gourd_carry": 2,            # gourds of each kind he keeps in his belt
+		"loot_sight": 380.0,         # how far he spots loot lying about (no facing cone; it must be reachable on the nav)
+		"item_carry": 2,             # of each kind on his 4-slot D-pad belt (BanditInventory)
 		"heal_below": 0.5,           # drinks a health gourd under this fraction of hp, out of his target's reach
 		"heal_desperate": 0.25,      # ... or right in its face when this low
 		"drink_time": 0.5,           # feet planted while drinking

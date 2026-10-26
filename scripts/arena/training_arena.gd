@@ -344,6 +344,11 @@ func rebuild_nav() -> void:
 		if z is CliffElevation and is_ancestor_of(z):
 			var route := climb_route(z)
 			nav.open_climb(route[0], route[1], route[2])
+	for b in get_tree().get_nodes_in_group("bridge"):
+		if b is Bridge and is_ancestor_of(b):
+			var deck := (b as Bridge).nav_route()
+			nav.open_climb(deck[0], deck[1], deck[2])
+			nav.close_area((b as Bridge).gap_polygon())  # no jump: a broken bridge is a dead end for a bandit
 	for e in get_tree().get_nodes_in_group("enemy"):
 		if "nav" in e:
 			e.nav = nav

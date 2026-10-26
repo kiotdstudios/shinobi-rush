@@ -169,18 +169,37 @@ func _build_rails() -> void:
 	_rails = StaticBody2D.new()
 	_rails.name = "Rails"
 	add_child(_rails)
-	var w := width_vec()
-	var along := length_vec()
-	var wn := w.normalized()
-	for side in [-1.0, 1.0]:
-		var a: Vector2 = w * 0.5 * side - wn * side * RAIL_INSET
-		var b: Vector2 = a + along
-		var half := wn * RAIL_THICKNESS * 0.5
+	var half := width_vec().normalized() * RAIL_THICKNESS * 0.5
+	for line: Array in rail_lines():
+		var a: Vector2 = line[0]
+		var b: Vector2 = line[1]
 		var shape := ConvexPolygonShape2D.new()
 		shape.points = PackedVector2Array([a - half, b - half, b + half, a + half])
 		var cs := CollisionShape2D.new()
 		cs.shape = shape
 		_rails.add_child(cs)
+
+
+## Centre lines of the two rails, local space: [[a, b], [a, b]].
+func rail_lines() -> Array:
+	var w := width_vec()
+	var wn := w.normalized()
+	var out: Array = []
+	for side in [-1.0, 1.0]:
+		var a: Vector2 = w * 0.5 * side - wn * side * RAIL_INSET
+		out.append([a, a + length_vec()])
+	return out
+
+
+## The bridge as nav data, world px: [axis (just before the start socket -> just past the far end), [deck polygon],
+## rail segments]. Fed to ArenaNav.open_climb like a cliff stair: on and off only through the open ends.
+func nav_route() -> Array:
+	var out_step := axis_step().normalized() * ENTRY_PUSH
+	var axis := PackedVector2Array([global_position - out_step, global_position + length_vec() + out_step])
+	var rims: Array = []
+	for line: Array in rail_lines():
+		rims.append([to_global(line[0]), to_global(line[1])])
+	return [axis, [deck_polygon()], rims]
 
 
 ## The deck as a world-space quad (start edge, then end edge).

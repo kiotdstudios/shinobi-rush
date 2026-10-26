@@ -90,6 +90,25 @@ func open_climb(axis: PackedVector2Array, surfaces: Array, rims: Array) -> void:
 						break
 
 
+## Seals every cell any part of `poly` covers (sampled at a third of a cell), e.g. a broken bridge's gap that a
+## bandit cannot jump.
+func close_area(poly: PackedVector2Array) -> void:
+	if poly.size() < 3:
+		return
+	var box := Rect2(poly[0], Vector2.ZERO)
+	for p in poly:
+		box = box.expand(p)
+	var step := cell / 3.0
+	var y := box.position.y
+	while y <= box.end.y:
+		var x := box.position.x
+		while x <= box.end.x:
+			if Geometry2D.is_point_in_polygon(Vector2(x, y), poly):
+				grid.set_point_solid(cell_of(Vector2(x, y)), true)
+			x += step
+		y += step
+
+
 func _in_grid(c: Vector2i) -> bool:
 	return c.x >= 0 and c.y >= 0 and c.x < cols and c.y < rows
 

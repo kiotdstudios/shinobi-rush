@@ -20,6 +20,8 @@ extends CharacterBody2D
 ## pouches and gourds it can see, drinking a health gourd when hurt and a chakra gourd when its pool runs dry.
 
 enum State { IDLE, APPROACH, HIT_REACT, DEAD, EVADE, PATROL, NOTICE, THREATEN, ATTACK, REPOSITION, RETREAT, SEARCH, RETURN }
+const LOOT_DETOUR := 2.0  ## a reachable item's walk may be this many times `loot_sight` (stairs, round a lake to a bridge)
+const LOOT_PATH_QUERIES := 4  ## nearest candidates path-checked per loot scan
 const THROW_RELEASE_AT := 0.7  ## fraction of the throw animation at which the kunai leaves the hand
 enum AtkPhase { NONE, WINDUP1, ACTIVE1, GAP, WINDUP2, ACTIVE2, RECOVERY, THROW_WINDUP, THROW_RECOVERY, THROW_GAP }
 enum RetreatPhase { NONE, TELEGRAPH, HOP1, PAUSE, HOP2, RECOVER }
@@ -199,8 +201,18 @@ var _stuck_timer := 0.0
 var _stuck_ref := Vector2.ZERO
 var _moving_intent := false
 var elevation := 0.0  ## logical height above the ground (stairs, cliff landings), see ShrineElevation
-var health_gourds := 0  ## carried, drunk when hurt
-var chakra_gourds := 0  ## carried, drunk when the pool runs dry
+var inventory := BanditInventory.new()  ## his D-pad belt: 4 slots, `item_carry` of each kind
+var health_gourds: int:  ## carried, drunk when hurt
+	get:
+		return inventory.count_of("health_gourd")
+	set(v):
+		inventory.set_count("health_gourd", v)
+var chakra_gourds: int:  ## carried, drunk when the pool runs dry
+	get:
+		return inventory.count_of("chakra_gourd")
+	set(v):
+		inventory.set_count("chakra_gourd", v)
+var items_dropped := 0  ## items he put down to make room for better ones (tests / telemetry)
 var gourds_drunk := 0
 var loot_taken := 0  ## pickups and pouches he went for and got (tests / telemetry)
 var loot_target: Node2D = null
@@ -246,6 +258,7 @@ func _pass_crewmates() -> void:
 func set_intelligence_level(level: int) -> void:
 	intelligence_level = level
 	profile = EnemyIntelligence.profile(level)
+	inventory.per_item = int(profile.get("item_carry", 2))
 
 
 func seed_rng(seed_value: int) -> void:
@@ -1430,35 +1443,54 @@ func _loot_wanted(item: Variant) -> bool:
 		return (item as RyoPouch).amount > 0
 	if item is HealthGourd:
 		var g := item as HealthGourd
-		if not g.available:
-			return false
-		var carry := int(profile.get("gourd_carry", 0))
-		if g.kind == "health":
-			return health_gourds < carry
-		if g.kind == "chakra":
-			return chakra_gourds < carry
+		return g.available and inventory.wants(g.item_id())
 	return false
 
 
+## He knows his woods: anything within `loot_sight` that the nav can reach counts, line of sight or not, so loot up
+## a cliff stair or across a bridge is fair game. The walk itself may be up to LOOT_DETOUR times that long.
 func _find_loot() -> Node2D:
 	var sight := float(profile.get("loot_sight", 0.0))
 	if sight <= 0.0:
 		return null
-	var best: Node2D = null
-	var best_d := INF
-	for group in [RyoPouch.GROUP, HealthGourd.GROUP, HealthGourd.CHAKRA_GROUP]:
+	var near: Array = []
+	for group in _loot_groups():
 		for n in get_tree().get_nodes_in_group(group):
 			var item := n as Node2D
 			if item == null or not _loot_wanted(item):
 				continue
 			var d := global_position.distance_to(item.global_position)
-			if d > sight or d >= best_d or not line_clear_to(item.global_position):
-				continue
-			if nav != null and d > nav.cell and nav.find_path(global_position, item.global_position).is_empty():
-				continue
-			best = item
-			best_d = d
-	return best
+			if d <= sight:
+				near.append([d, item])
+	near.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
+	for i in mini(near.size(), LOOT_PATH_QUERIES):
+		var item: Node2D = near[i][1]
+		if _loot_reachable(item, float(near[i][0]), sight):
+			return item
+	return null
+
+
+static func _loot_groups() -> Array:
+	var out: Array = [RyoPouch.GROUP]
+	for k: String in HealthGourd.KINDS:
+		var g := String(HealthGourd.KINDS[k].group)
+		if not out.has(g):
+			out.append(g)
+	return out
+
+
+func _loot_reachable(item: Node2D, d: float, sight: float) -> bool:
+	if nav == null:
+		return line_clear_to(item.global_position)
+	if d <= nav.cell:
+		return true
+	var path := nav.find_path(global_position, item.global_position)
+	if path.is_empty() or path[path.size() - 1].distance_to(item.global_position) > nav.cell:
+		return false
+	var length := global_position.distance_to(path[0])
+	for i in range(1, path.size()):
+		length += path[i - 1].distance_to(path[i])
+	return length <= sight * LOOT_DETOUR
 
 
 func _in_pickup_reach(item: Node2D) -> bool:
@@ -1466,21 +1498,45 @@ func _in_pickup_reach(item: Node2D) -> bool:
 	return Vector2(d.x, d.y * 2.0).length() <= HealthGourd.PICKUP_RADIUS
 
 
-## Pouches collect themselves when he steps on them (RyoPouch scans every fighter); a gourd goes in his belt.
+## Pouches collect themselves when he steps on them (RyoPouch scans every fighter); a pickup goes on his D-pad belt,
+## and when the belt is full he first puts down the least wanted kind to make room.
 func _grab(item: Node2D) -> void:
 	if item is HealthGourd and _in_pickup_reach(item):
 		var g := item as HealthGourd
-		if g.take_by(self):
+		var id := g.item_id()
+		if not inventory.room_for(id):
+			var slot := inventory.swap_slot_for(id)
+			if slot != "":
+				drop_slot(slot)
+		if inventory.room_for(id) and g.take_by(self):
 			loot_taken += 1
-			if g.kind == "health":
-				health_gourds += 1
-			else:
-				chakra_gourds += 1
-			_log("takes a %s gourd" % g.kind)
+			inventory.add(id)
+			_log("takes a %s (%d carried)" % [id, inventory.count_of(id)])
 	elif item is RyoPouch and (item as RyoPouch).taken_by == self:
 		loot_taken += 1
 	loot_target = null
 	velocity = Vector2.ZERO
+
+
+## Puts everything on D-pad `slot` on the ground at his feet as pickups anyone can take (they do not respawn).
+## Returns how many he dropped.
+func drop_slot(slot: String) -> int:
+	var parent := get_parent()
+	var held := inventory.drop_slot(slot)
+	var n := int(held.count)
+	if n <= 0 or parent == null:
+		return 0
+	for i in n:
+		var g := HealthGourd.new()
+		g.kind = BanditInventory.pickup_kind(String(held.id))
+		g.grounded = g.kind == "kunai"
+		g.respawns = false
+		g.name = "BanditDrop"
+		parent.add_child(g)
+		g.global_position = global_position + Vector2(-facing8.x, -facing8.y * 0.5).normalized() * (28.0 + 16.0 * i)
+	items_dropped += n
+	_log("drops %d %s to make room" % [n, held.id])
+	return n
 
 
 ## Drinks a carried gourd: health when hurt (out of reach of his target, or when it is desperate), chakra when the pool

@@ -709,10 +709,15 @@ func _settle_nodes() -> void:
 
 
 func _test_toggle_stress(root: Node) -> void:
-	# _test_moving leaves the Bandit mid-fight: his landing kunai (-> recovery pickups) and dodge streaks
-	# would come and go inside the +-2 node window below. Pause his AI only while counting nodes.
+	# _test_moving leaves the Bandit mid-fight: kunai still in the air (they land as recovery pickups) and dodge
+	# streaks would come and go inside the +-2 node window below. Pause his AI and clear his blades while counting.
 	var ai_was := bandit.is_physics_processing()
 	bandit.set_physics_process(false)
+	for n in bandit.get_parent().get_children():
+		if n is BanditKunai or n is KunaiRecovery:
+			n.free()
+	for n in tree.get_nodes_in_group("spent_kunai_pickup"):
+		n.free()  # landed blades: taken or timed out (1.5 s free) mid-count otherwise
 	tog.set_on(false)
 	await _settle_nodes()
 	_clear_dust(root)
