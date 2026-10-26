@@ -85,6 +85,7 @@ func run(p_ck: Callable, root: Node) -> void:
 			after_braziers += 1
 	ck.call("blightwood map: reload does not lay it again", after_braziers == 3 and absi(placed.objects.size() - before) <= 2, "%d vs %d" % [placed.objects.size(), before])
 	_check_stair_links_after_reload(ck, placed)
+	await _check_bandit_climbs(ck, arena, tree)
 	_check_cliffs(ck, placed, arena, cells.c)
 	main.queue_free()
 
@@ -163,6 +164,61 @@ func _check_stairs(ck: Callable, placed: PlacedObjects) -> void:
 	ck.call("stairs: no cliff collider reaches onto the tread", not overlap)
 	ck.call("stairs: every flanking ledge sprite is a zone occluder", ledge_sprites > 0 and zone.occluders.size() == ledge_sprites, "%d/%d" % [zone.occluders.size(), ledge_sprites])
 	ck.call("stairs: both flanking ledge bodies are ramp ground bodies", zone.ground_bodies.size() == 2, str(zone.ground_bodies.size()))
+
+
+## Every character climbs, not just the player: a bandit walks the map nav to the stair, up onto the landing at
+## full height, and back down to the ground.
+func _check_bandit_climbs(ck: Callable, arena: TrainingArena, tree: SceneTree) -> void:
+	var stair: Dictionary = {}
+	for o in arena.placed.objects:
+		if o.id == "earth_stairs_se":
+			stair = o
+	if stair.is_empty():
+		ck.call("bandit climb: stairs laid", false)
+		return
+	var zone := stair.nodes[stair.nodes.size() - 1] as CliffElevation
+	var line_up := zone.to_global(zone.mouth - (zone.top - zone.mouth) * ShrineElevation.CLIMB_LEAD)
+	ck.call("bandit climb: the stair line-up point is on the nav", arena.nav.is_walkable(line_up), str(line_up))
+	var start := Vector2.INF
+	for r: float in [220.0, 180.0, 260.0, 150.0]:
+		for k in 16:
+			var p: Vector2 = line_up + Vector2.from_angle(TAU * k / 16.0) * r
+			if arena.nav.is_walkable(p) and is_zero_approx(ShrineElevation.target_at(p)) and start == Vector2.INF:
+				start = p
+	var landing_mid := Vector2.ZERO
+	for q: Vector2 in zone.landing:
+		landing_mid += q / float(zone.landing.size())
+	var up_goal := zone.to_global(landing_mid)
+	var bandit := (load("res://scenes/enemy/bandit.tscn") as PackedScene).instantiate() as Bandit
+	arena.add_child(bandit)
+	bandit.global_position = start
+	bandit.nav = arena.nav
+	bandit.set_physics_process(false)
+	var reached_up := await _drive(bandit, up_goal, tree, 8.0)
+	ck.call("bandit climb: reaches the cliff landing from the ground", reached_up, "at %s goal %s" % [bandit.global_position, up_goal])
+	ck.call("bandit climb: stands at full cliff height up there", is_equal_approx(bandit.elevation, zone.height), str(bandit.elevation))
+	ck.call("bandit climb: drawn raised by its elevation", is_equal_approx(bandit.visual.position.y, -bandit.elevation))
+	var reached_down := await _drive(bandit, start, tree, 8.0)
+	ck.call("bandit climb: walks back down to the ground", reached_down and is_zero_approx(bandit.elevation), "at %s e=%.1f" % [bandit.global_position, bandit.elevation])
+	bandit.queue_free()
+
+
+func _drive(bandit: Bandit, goal: Vector2, tree: SceneTree, seconds: float) -> bool:
+	var dt := 1.0 / float(Engine.physics_ticks_per_second)
+	var t := 0.0
+	while t < seconds:
+		await tree.physics_frame
+		bandit._turn_pause = 0.0
+		if bandit._follow(goal, bandit.move_speed, dt, 10.0, false):
+			for i in 30:
+				ShrineElevation.update_actor(bandit, dt)
+				bandit.visual.position.y = -bandit.elevation
+			return true
+		bandit.move_and_slide()
+		ShrineElevation.update_actor(bandit, dt)
+		bandit.visual.position.y = -bandit.elevation
+		t += dt
+	return false
 
 
 func _check_stair_links_after_reload(ck: Callable, placed: PlacedObjects) -> void:

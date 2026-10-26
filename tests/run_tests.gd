@@ -98,6 +98,7 @@ func _initialize() -> void:
 	await load("res://tests/test_dynamic_shrine.gd").new().run(ck, root)
 	await load("res://tests/test_shrine_elevation.gd").new().run(ck, root)
 	await load("res://tests/test_cliff_elevation.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_climb.gd").new().run(ck, root)
 	await load("res://tests/test_damage_art.gd").new().run(ck, root)
 	await load("res://tests/test_wall_kit_sort.gd").new().run(ck, root)
 	await load("res://tests/test_publish_to_github.gd").new().run(ck, root)

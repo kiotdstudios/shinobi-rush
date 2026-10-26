@@ -184,6 +184,9 @@ var _stuck_timer := 0.0
 var _stuck_ref := Vector2.ZERO
 var _moving_intent := false
 
+## Logical height above the ground on climbable terrain (see ShrineElevation): the figure is drawn this much higher.
+var elevation: float = 0.0
+
 @onready var visual: Node2D = $Visual
 
 
@@ -198,6 +201,7 @@ func _ready() -> void:
 	col.shape = shape
 	col.position = Vector2(0, -WorldScale.FOOTPRINT.y * 0.5)
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
+	collision_mask |= ShrineElevation.EDGE_LAYER  # stair sides and cliff rims hold every climber, not just the player
 	home = global_position
 	last_seen = home
 	_stuck_ref = global_position
@@ -228,6 +232,8 @@ func _physics_process(delta: float) -> void:
 		return  # local hitstop only: this entity's movement pauses, global timers/input elsewhere are untouched
 
 	clock += delta
+	ShrineElevation.update_actor(self, delta)
+	visual.position.y = -elevation
 	_hit_flash_timer = maxf(_hit_flash_timer - delta, 0.0)
 	_evade_cooldown = maxf(_evade_cooldown - delta, 0.0)
 	_atk_cooldown = maxf(_atk_cooldown - delta, 0.0)
@@ -924,6 +930,8 @@ func _try_hit(idx: int) -> void:
 		return
 	if not line_clear_to(_player.global_position):
 		return  # no hits through walls
+	if absf(float(_player.get("elevation") if "elevation" in _player else 0.0) - elevation) > ShrineElevation.HEIGHT * ShrineElevation.BOARD_AT:
+		return  # no hits between a cliff top and the ground below it
 	_atk_hit_done[idx] = true
 	if _player.call("take_hit", 8.0, to.normalized(), 180.0, self):
 		player_hits_landed += 1
@@ -1095,7 +1103,11 @@ func _follow(goal: Vector2, speed: float, delta: float, arrive: float, turn_beat
 		_moving_intent = false
 		return true
 	var target := goal
-	if nav != null:
+	var climb := ShrineElevation.climb_step(global_position, goal)
+	if not climb.is_empty():
+		goal = climb.target
+		target = goal
+	if nav != null and not bool(climb.get("direct", false)):
 		_repath_timer -= delta
 		if _path.is_empty() or _repath_timer <= 0.0 or goal.distance_to(_path_goal) > 90.0:
 			_path = nav.find_path(global_position, goal)

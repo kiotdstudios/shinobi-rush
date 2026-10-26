@@ -142,3 +142,67 @@ static func update_actor(actor: Node2D, delta: float) -> void:
 			var lp := (z as Node2D).to_local(actor.global_position)
 			var local_height: float = z.elevation_at(lp)
 			z.set_actor_level(actor, local_height > 0.0 and e >= z.height * BOARD_AT, local_height > 0.0)
+
+
+## How far in front of a stair mouth (in stair runs) a walker lines up before climbing.
+const CLIMB_LEAD := 1.0
+
+
+## Stair geometry of any climbable zone, zone-local: mouth/top centres and the half-width across the tread.
+static func _stairs_of(z: Node2D) -> Dictionary:
+	if z in zones:
+		return {"mouth": _l(MOUTH), "top": _l(TOP), "half": STAIR_HALF}
+	return {"mouth": z.get("mouth"), "top": z.get("top"), "half": z.get("half_width")}
+
+
+static func _zone_height(z: Node2D, local: Vector2) -> float:
+	return elevation_at(local) if z in zones else float(z.elevation_at(local))
+
+
+## Stair coordinates of a zone-local point: t runs 0 (mouth) .. 1 (top), s runs -1 .. 1 across the tread.
+static func _stair_ts(g: Dictionary, local: Vector2) -> Vector2:
+	var run: Vector2 = g.top - g.mouth
+	var half: Vector2 = g.half
+	var q: Vector2 = local - g.mouth
+	return Vector2(q.cross(half) / run.cross(half), q.cross(run) / half.cross(run))
+
+
+## Steering for a walker (any actor, not only the player) whose ground point is `from` and goal is `to`, when one of
+## them is on a climbable surface. Empty when no zone is involved (ordinary nav applies). Otherwise {"target": world
+## point, "direct": bool}: direct = steer straight at it (on or lined up with the stairs, where the grid nav has no
+## say); not direct = path there with the nav (the line-up point in front of the mouth).
+static func climb_step(from: Vector2, to: Vector2) -> Dictionary:
+	for z in zones + terrain_zones:
+		if not is_instance_valid(z) or not (z as Node2D).is_inside_tree():
+			continue
+		var node := z as Node2D
+		var g := _stairs_of(node)
+		var a := node.to_local(from)
+		var b := node.to_local(to)
+		var ta := _stair_ts(g, a)
+		var tb := _stair_ts(g, b)
+		var a_stairs := ta.x >= 0.0 and ta.x <= 1.0 and absf(ta.y) <= 1.0
+		var b_stairs := tb.x >= 0.0 and tb.x <= 1.0 and absf(tb.y) <= 1.0
+		var a_upper := not a_stairs and _zone_height(node, a) > 0.0
+		var b_upper := not b_stairs and _zone_height(node, b) > 0.0
+		if not (a_stairs or a_upper or b_stairs or b_upper):
+			continue
+		var run: Vector2 = g.top - g.mouth
+		var top := node.to_global(g.top)
+		var line_up := node.to_global(g.mouth - run * CLIMB_LEAD)
+		if b_upper and not a_upper:
+			if a_stairs or (ta.x > -CLIMB_LEAD - 0.25 and absf(ta.y) <= 1.0):
+				return {"target": top if ta.x < 0.95 else to, "direct": true}
+			return {"target": line_up, "direct": false}
+		if b_stairs and not (a_stairs or a_upper):
+			if ta.x > -CLIMB_LEAD - 0.25 and absf(ta.y) <= 1.0:
+				return {"target": to, "direct": true}
+			return {"target": line_up, "direct": false}
+		if a_upper and not b_upper:
+			if a.distance_to(g.top) > 12.0 and not b_stairs:
+				return {"target": top, "direct": true}
+			return {"target": to if b_stairs else line_up, "direct": true}
+		if a_stairs and not (b_stairs or b_upper):
+			return {"target": line_up, "direct": true}
+		return {"target": to, "direct": true}
+	return {}
