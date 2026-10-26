@@ -1,0 +1,344 @@
+{
+  "schema": 1,
+  "id": "ryo_pouch",
+  "status": "art_handoff",
+  "production_bound": false,
+  "generator": "built-in image_gen",
+  "pixellab_generation_used": false,
+  "camera": "elevated three-quarter front/SE, same nondirectional pickup presentation as gourds",
+  "texture_filter": "nearest",
+  "baked_floor_or_shadow": false,
+  "layers": {
+    "idle": {
+      "frames": [
+        "gourd_00.png",
+        "gourd_01.png",
+        "gourd_02.png",
+        "gourd_03.png",
+        "gourd_04.png",
+        "gourd_05.png",
+        "gourd_06.png",
+        "gourd_07.png",
+        "gourd_08.png",
+        "gourd_09.png",
+        "gourd_10.png",
+        "gourd_11.png",
+        "gourd_12.png",
+        "gourd_13.png",
+        "gourd_14.png",
+        "gourd_15.png"
+      ],
+      "playback_order": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "fps": 14,
+      "loop": true,
+      "blend": "normal"
+    },
+    "glow": {
+      "frames": [
+        "glow_00.png",
+        "glow_01.png",
+        "glow_02.png",
+        "glow_03.png",
+        "glow_04.png",
+        "glow_05.png",
+        "glow_06.png",
+        "glow_07.png",
+        "glow_08.png",
+        "glow_09.png",
+        "glow_10.png",
+        "glow_11.png"
+      ],
+      "playback_order": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "frame_size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        48
+      ],
+      "fps": 12,
+      "loop": true,
+      "blend": "add"
+    },
+    "ember": {
+      "frames": [
+        "ember_00.png",
+        "ember_01.png",
+        "ember_02.png",
+        "ember_03.png",
+        "ember_04.png",
+        "ember_05.png",
+        "ember_06.png",
+        "ember_07.png",
+        "ember_08.png",
+        "ember_09.png",
+        "ember_10.png",
+        "ember_11.png"
+      ],
+      "playback_order": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        10,
+        9,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1
+      ],
+      "frame_size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        48
+      ],
+      "fps": 12,
+      "loop": true,
+      "blend": "add"
+    },
+    "collect": {
+      "frames": [
+        "collect_00.png",
+        "collect_01.png",
+        "collect_02.png",
+        "collect_03.png",
+        "collect_04.png",
+        "collect_05.png",
+        "collect_06.png",
+        "collect_07.png"
+      ],
+      "playback_order": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "fps": 20,
+      "loop": false,
+      "blend": "normal",
+      "frame_duration_ms": [
+        40,
+        40,
+        50,
+        50,
+        50,
+        50,
+        70,
+        50
+      ]
+    },
+    "floor_glow": {
+      "frames": [
+        "floor_glow_00.png",
+        "floor_glow_01.png",
+        "floor_glow_02.png",
+        "floor_glow_03.png",
+        "floor_glow_04.png",
+        "floor_glow_05.png",
+        "floor_glow_06.png",
+        "floor_glow_07.png",
+        "floor_glow_08.png",
+        "floor_glow_09.png",
+        "floor_glow_10.png",
+        "floor_glow_11.png"
+      ],
+      "playback_order": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "frame_size": [
+        96,
+        96
+      ],
+      "anchor": [
+        48,
+        48
+      ],
+      "fps": 12,
+      "loop": true,
+      "blend": "add"
+    }
+  },
+  "presentation_reference": {
+    "float_height": 56,
+    "bob_px": 4,
+    "bob_radians_per_second": 2.3,
+    "pulse_radians_per_second": 3.1,
+    "glow_scale": [
+      1.25,
+      1.55
+    ],
+    "glow_rotation_radians_per_second": 0.35,
+    "body_scale": 1.0,
+    "floor_radii": [
+      46,
+      12
+    ]
+  },
+  "collection_reference": {
+    "contact_end_s": 0.08,
+    "burst_end_s": 0.18,
+    "warp_end_s": 0.35,
+    "absorb_end_s": 0.45,
+    "heal_visual_end_s": 0.55,
+    "label_end_s": 1.25,
+    "visible_body_end_s": 0.35,
+    "frame_duration_ms": [
+      40,
+      40,
+      50,
+      50,
+      50,
+      50,
+      70,
+      50
+    ],
+    "terminal_clear_frame": 7,
+    "body_squash_and_shrink_baked": true,
+    "world_travel_baked": false,
+    "integration": "Use authored collect body with position-only travel toward live chest; suppress duplicate procedural body scaling. Alternatively existing GourdPickupFx may keep using idle body with its own transforms. Aki owns integration and currency amount."
+  },
+  "sha256": {
+    "collect-sheet.png": "0976b43e8f8028426bb670e422e4a6a4abe8703d7204e9cc77717d39d0857413",
+    "collect_00.png": "a187d64484f725b5bb1e70863e4fd07c924fdc869b7e85b1e489025aff5cd833",
+    "collect_01.png": "89a8618ead076085c3c66fce5da5dda650c864182f82e789b71f1a3348364189",
+    "collect_02.png": "b0741105f687310b51f29c3de326b95cecea444e258fb65d5efe073c651537a9",
+    "collect_03.png": "1b94d65c83f7bdb98996ee96a42521547d1f2c52b20f03ab9440389eb5f762be",
+    "collect_04.png": "b75bee941412d0a7121fdcc0ff6c820e7ffc1d466a6b2611a5ade6f20bf2de4c",
+    "collect_05.png": "01d513f720f0e2c13c916ad378eeb229692cdb2c9ad3160b82162407f52ca9f7",
+    "collect_06.png": "bda42fd341a2e53ef929864f003aee59259c99321e100957d20e2e1280775ef8",
+    "collect_07.png": "1594258d650464372a84556d099c6f0fad9551bbf0efe58e7403336fee183eee",
+    "ember-sheet.png": "836865cf094cf3ffd1cf8b8b862ac22bdc159fe452321bcaa0083309cbb37b28",
+    "ember_00.png": "a3d74f9df8752a7a2a217f73383780d04cc72950bbe4df6570ea10b8b71d3888",
+    "ember_01.png": "2a94c44c0f0e8964b1acaf27d58b841f5db6812f9828a9ac31fb03781dbf4e05",
+    "ember_02.png": "d42e854f005748dbfe0612085badb2fed6454253a6efd6748e3d4ce7d21f914e",
+    "ember_03.png": "655cf9d22d8793266bc89d16218cee2ccf0242b54825e1179de00ae68c47313c",
+    "ember_04.png": "1a9c9a998d46a168f73a62629d9f539c58c276a4272b56c4466d687a40ca218f",
+    "ember_05.png": "6fb6450ec5e6ca04141e4b6de1431540f83c1c10cd03ed37cca4e2d66e9e13ea",
+    "ember_06.png": "4daa52668eac70b3e2613edf9770120a53a25623156c024dd5686cf3d81e2ad7",
+    "ember_07.png": "31cb6fb220122053cdae84967d3e07b29d9807ca4f5d74cc5348a464c0f69af4",
+    "ember_08.png": "37cc33b1a5b875a5ca9e21be035b976bbff1e25786089830d6f99bc461876f72",
+    "ember_09.png": "101f449d8932a5ba54e9f575369a3628f7004ab8dfcb60cc769ea49e6e99d566",
+    "ember_10.png": "cada5c95e342bcbc644ff61771b8959e9f30e22433776487d81f952c8fc7cf15",
+    "ember_11.png": "fd3f6a7e56c1add4f453bcbd511799d94501aa4ec6488d6ac90ebe819c61dc25",
+    "floor_glow_00.png": "cfc5cfc179d8c1f84766afece702119b218a9372027c81301a0b7cd22d9f2ca3",
+    "floor_glow_01.png": "2d61fa82b7cd3b2f9f48f8d20ca443e5abbae73a6b3008e7575dd93b43bf5a1b",
+    "floor_glow_02.png": "4fb665e5e1d407ebfcb3a15e10e17a131036908620d1be76b3e3b023271a8d1d",
+    "floor_glow_03.png": "ff7d501e272870c61b42b6da0fae1b2799fba5cb29aa0d4a4342bd8cdc606ee2",
+    "floor_glow_04.png": "6939a44726fe1e8d8ddc519a500b2f4f76d0675104b63042eb8742a89ae6623f",
+    "floor_glow_05.png": "c4cdae913c4519ca4e43892c4e34f18ddcb1376cef96c4782065297a025e4600",
+    "floor_glow_06.png": "8be15d1ae5ec949e4bd6e9fe88902aad4bec79171ac2d1f2be1458331c6e7562",
+    "floor_glow_07.png": "29de214941231b143428ff28ae417b5681fb1c9bfb1b7d75bdd1421890ce5e11",
+    "floor_glow_08.png": "2fa89d4ffc65710c06e6bf31606328e46940bb921c455ee24a41fc17b048387b",
+    "floor_glow_09.png": "c7131133e36895f42e192a640307c5d48309f3cf6c577ec270d72d61538c7fc4",
+    "floor_glow_10.png": "9192b931bb6808c6a804ccd32b96130e3de1f247392c71d3d8901e464645ad0d",
+    "floor_glow_11.png": "2ead0db25d35b60c04fdc53ed3b25d81c253baeda58e3dd29ca8f8b5920d4486",
+    "glow-sheet.png": "9abdc2305b4b54e525584cdfde7e3841ded883de0e62794d28f0adf3896af496",
+    "glow_00.png": "1a8f0f2fbc2b20f9415a9dca83c03e77c9115f0acc7f0b7ee6f85e16fa5dbb64",
+    "glow_01.png": "d3c2cb606a54e4f8f4bc9597549dd503956fbab0200475efb103e89e098e4467",
+    "glow_02.png": "f347303f96d9fddb3859f8efc709525bc61cd9743ce99e0372cbe62a89be4189",
+    "glow_03.png": "7a7003e779eeb9e10443c9a7005b58a3cdd8d8d20401ff0df4d9fc8783a51a3b",
+    "glow_04.png": "d76a5ad376b15a20b731720b93ae80b013dab44bda1363ddb335b1a7df69162d",
+    "glow_05.png": "c0e80f13f917d8f2b2691ce4aff87639df6eee4ba8360b7e910a9878610db58e",
+    "glow_06.png": "919d106e9bd349c052cb17eb13168e479a717115d37cb1b156959df6b3f41f7c",
+    "glow_07.png": "ab63dc129736c3d52072f7f60d76c1ea92eb5e3c365a3ddc6d9179a03eb3620b",
+    "glow_08.png": "bb7c17c196f201c690011fcb230c6025a7579f2fe59738ff862860165facc4d9",
+    "glow_09.png": "d7e661e43b2267fa4997438b0be2f5e0e4018871d7309cb94936350f1ff26bc4",
+    "glow_10.png": "40f6da0d31c31ed6e9fb2a6381f8cc240a6ba8e64739df5c9d9e1e7e2ee57f8a",
+    "glow_11.png": "4e6cb12173fb48404ae05444c83b8c2d9d0fbed1be7d6524825bdc5bb19703d4",
+    "gourd_00.png": "16d6209ba99679a15178a4c4395bdd0a8347fee6c599564f695d628b6db76512",
+    "gourd_01.png": "767376568079dbcbb536a4dca80bd22856d0c8e7b38b6a849c989f702618a3a6",
+    "gourd_02.png": "09c9b67e77a7a0d3ed836f23cc44b85c0943908793b6c1a1cc8cbf0c5bbc29f8",
+    "gourd_03.png": "85c1ace511cc39bdc87d8cb506589ab4858eac506ed7272239843d9d02838eaf",
+    "gourd_04.png": "d9f1e5b04d6ce286375f1675d506e527e72326973bc191a9d8940666ebea8e0a",
+    "gourd_05.png": "e014816410e4e730a6aa43008cc3b0b79080df38584de81a386fd58cfa7b58e3",
+    "gourd_06.png": "53730254be60dc406735f0810da6ee838776ad3bf68001dccb19033ce77f1ed9",
+    "gourd_07.png": "21820f38a37ef13d9b0202e5c32f3503ec7107fbc449c6d59c644a15eda2d6dd",
+    "gourd_08.png": "c1d1faffbdd18d527d64c3b0632cfb3ce71ad00361f8564efe4748099c41ecc9",
+    "gourd_09.png": "682838afa2980e24b8e5fad709719b02995fc94307780e4cc895ea5768721cbc",
+    "gourd_10.png": "c542e1e01a3266fd02a2f9e7f04bbce1ae849734adb8d3e3625416582b471e45",
+    "gourd_11.png": "6edbc684b34a50b1e4c4230d6cea58ef20e6502422cadc283aa730a8acabd276",
+    "gourd_12.png": "24724765c0ca68236779b2c572cbb69fa187459c7973e96fb29104cc6fadf138",
+    "gourd_13.png": "98b1f059d95c706ad7f67945a67847a764b28cde034851697bf7b7ee0fe56b9e",
+    "gourd_14.png": "07f55fb0d8c4bf9b58b91774eee9bf5a7b71cc8df844481500e66ae2425cf43b",
+    "gourd_15.png": "674d6c1e13edec24330aa93cface6ded49076e80d8ff7c6d4f2d5c1cf126c8f1",
+    "icon.png": "16d6209ba99679a15178a4c4395bdd0a8347fee6c599564f695d628b6db76512",
+    "idle-sheet.png": "277317b18cf795e8ce97d9ee3095e819131f1872a0b631eab7ae9d6ddc586dd6"
+  }
+}
