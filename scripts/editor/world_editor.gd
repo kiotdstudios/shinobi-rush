@@ -1698,6 +1698,7 @@ func _build_ui() -> void:
 	filters.columns = 3
 	filter_box.add_child(filters)
 	var filter_cats: Array = PlacedObjects.CATEGORIES.duplicate()
+	filter_cats.sort_custom(func(a: Array, b: Array) -> bool: return str(a[0]).nocasecmp_to(str(b[0])) < 0)
 	filter_cats.append(["HUD layout", []])  # the HUD piece controls are a section like the others (hidden until ticked)
 	for category: Array in filter_cats:
 		var name := str(category[0])
