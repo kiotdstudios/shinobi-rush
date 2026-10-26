@@ -94,3 +94,9 @@ Canonical live URL: https://kiotdstudios.github.io/shinobi-rush/?flicker=review 
 - Fresh export `../body-flicker-chidori-web-20261025`: PASS.
 - `node docs/visuals/body-flicker-premium/browser-proof.mjs ../body-flicker-chidori-web-20261025 docs/visuals/body-flicker-premium/chidori-proof`: **25/25 passed**, no browser errors.
 - New merged head must receive its own PR checks; prior heads' CI will not be used to merge it. Canonical publication remains pending.
+
+## R3 upstream integration — 305dee8f (tested before merge commit)
+- Previous tested-head PR CI completed its native/export/browser checks, but main advanced to 305dee8f410f3850cedbab11e58538526427c009 (Aki R3 lock-on). Integrated normally with `git merge --no-commit --no-ff origin/main`; clean merge; retained input/reticle changes unchanged.
+- Changed-area native regression harness `build/test_flicker_lock.gd` ran bandit chase, health/flicker, premium flicker, R3 lock-on, combat and Chidori suites: **226 passed, 0 failed** (build/flicker-lock-focused.log). The prior full combined suite was 3251/0; the new exact-head CI must run the full suite again before merge.
+- Fresh Web export `../body-flicker-lock-web-20261025`: PASS. Browser proof on this integrated build: **25/25 passed**, no browser errors; evidence lock-proof/validation.json.
+- Actual public baseline before deployment recorded separately at main 8d08423c7b2976742d7fc8e2e3eb730eaf2207c9: 4/4 actual-game keyboard/direction/presentation/error checks passed. Raw recording/evidence is retained under ignored build/flicker-public-before for the final live before/after report.
