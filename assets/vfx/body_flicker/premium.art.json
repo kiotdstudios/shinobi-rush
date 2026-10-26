@@ -1,0 +1,114 @@
+{
+  "schema": "shinobi_body_flicker_presentation_v2",
+  "id": "body_flicker_premium",
+  "frame_size": [
+    128,
+    128
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "directions": [
+    "S",
+    "SE",
+    "E",
+    "NE",
+    "N",
+    "NW",
+    "W",
+    "SW"
+  ],
+  "texture_filter": "nearest",
+  "body_generation": "No new body generation; retimed approved literal directional body frames",
+  "player": {
+    "manifest": "res://assets/characters/player/player_128.manifest.json",
+    "animation": "dodge",
+    "launch_frames": [
+      0,
+      1
+    ],
+    "travel_frames": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "landing_recovery_frames": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "bandit": {
+    "manifest": "res://assets/characters/bandit/bandit_128.art.json",
+    "launch": [
+      "run",
+      2
+    ],
+    "travel": [
+      "sprint",
+      2,
+      3,
+      4,
+      5
+    ],
+    "landing": [
+      "run",
+      5
+    ],
+    "note": "Own existing scarf body art; no player texture is substituted."
+  },
+  "components": {
+    "streaks": {
+      "manifest": "res://assets/vfx/ninja_evade/ninja_evade.art.json",
+      "frame_count": 6,
+      "fps": 30,
+      "tint": "white/pale blue/desaturated blue gray through crisp shader"
+    },
+    "afterimages": {
+      "source": "actual actor texture/frame/transform at reached positions only",
+      "pool_size": 3,
+      "lifetime_seconds": 0.13,
+      "minimum_world_spacing": 16,
+      "minimum_interval_seconds": 0.027,
+      "interpolate_positions": false
+    },
+    "smear": {
+      "source": "current character silhouette; narrow quantized scanline multiples",
+      "shader": "res://assets/vfx/body_flicker/premium_silhouette.gdshader",
+      "stretch_body": false
+    },
+    "launch_dust": {
+      "source": "res://assets/vfx/dust/skid_a/",
+      "fps": 32,
+      "space": "stationary launch ground position"
+    },
+    "arrival_displacement": {
+      "source": "res://assets/vfx/dust/ring_a/",
+      "fps": 32,
+      "space": "actual reached endpoint",
+      "collapse_seconds": 0.045
+    }
+  },
+  "timing": {
+    "authoritative": "Existing gameplay action timers; no input/movement/i-frame/cancel/dash-window changes",
+    "default_player_action_seconds": 0.3,
+    "default_player_movement_seconds": 0.2,
+    "suggested_brief_seconds": 0.38,
+    "launch_fraction": 0.12,
+    "burst_end_fraction": 0.4,
+    "arrival": "At actual stop or movement-window end; collision-shortened arrivals stay at reached point",
+    "presentation_tail_seconds": 0.14
+  },
+  "safety": {
+    "one_active_instance_per_subject": true,
+    "ghosts_at_reached_positions_only": true,
+    "teleport_gap_cancel": true,
+    "interruption_cleanup": true,
+    "movement_authority": "CharacterBody2D move_and_slide; effect never sets body velocity/position/hitbox"
+  },
+  "review_url": "https://kiotdstudios.github.io/shinobi-rush/?flicker=review"
+}

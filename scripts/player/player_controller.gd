@@ -108,6 +108,14 @@ var elevation: float = 0.0
 var camera_baseline: float = WorldScale.CAMERA_BASE_ZOOM  ## zoom of the active CameraPreset for the current figure
 var _action_timer: float = 0.0  ## seconds left in the current dodge/jump; 0 when not acting
 var _action_duration: float = 0.0  ## total authored length of the current/last action, for progress math
+var chidori_phase: ChidoriPhase = ChidoriPhase.NONE
+var chidori_t := 0.0
+var chidori_cd := 0.0
+var chidori_dir := Vector2.DOWN
+var chidori_hits: Array[Node] = []  ## enemies already struck by this rush (each is hit at most once)
+var chidori_count := 0
+var chidori_fx: ChidoriFx
+var _chidori_start := Vector2.ZERO
 var _dodge_buffer: float = 0.0  ## seconds left that a buffered dodge press is still eligible to fire
 var _jump_buffer: float = 0.0  ## seconds left that a buffered jump press is still eligible to fire
 var _footstep_timer: float = 0.0  ## seconds left until the next running dirt-puff burst
@@ -195,6 +203,21 @@ const THROW_TIME := 0.34  ## total kunai throw (wind-up, release, follow-through
 const THROW_RELEASE := 0.4  ## fraction of THROW_TIME at which the kunai leaves the hand
 const THROW_MOVE_MULT := 0.35  ## walk/run speed multiplier while the arm is busy
 const THROW_HAND := Vector2(0, 0)
+
+## Chidori (R2 + Square): charge in place, rush forward, burst on the first enemy or wall. Costs chakra.
+enum ChidoriPhase { NONE, CHARGE, RUSH, RECOVER }
+const CHIDORI_CHARGE_TIME := 0.65
+const CHIDORI_RUSH_SPEED := 720.0
+const CHIDORI_RUSH_MAX := 380.0
+const CHIDORI_RECOVER_TIME := 0.28
+const CHIDORI_COST := 25.0
+const CHIDORI_COOLDOWN := 1.2
+const CHIDORI_DAMAGE := 55.0
+const CHIDORI_SPLASH_DAMAGE := 22.0
+const CHIDORI_SPLASH_RADIUS := 110.0
+const CHIDORI_KNOCKBACK := 520.0
+const CHIDORI_CONTACT := 46.0
+const CHIDORI_HITSTOP_MS := 110.0
 var _throw_t: float = 0.0  ## seconds left in the current throw (0 = not throwing)
 var _throw_released: bool = true
 var _throw_dir: Vector2 = Vector2.DOWN
@@ -282,11 +305,13 @@ func _physics_process(delta: float) -> void:
 	# Presses are captured EVERY physics tick, including hitstop ticks (Milestone A fluidity order:
 	# "buffered inputs must survive hitstop"). Before this, a press landing inside the 3-4 tick
 	# freeze was silently dropped.
-	if Input.is_action_just_pressed("dodge"):
+	var jutsu_held := Input.is_action_pressed("jutsu_modifier")
+	chidori_cd = maxf(chidori_cd - delta, 0.0)
+	if Input.is_action_just_pressed("dodge") and not (jutsu_held and _jutsu_press("circle")):
 		_dodge_buffer = input_buffer_window
-	if Input.is_action_just_pressed("jump"):
+	if Input.is_action_just_pressed("jump") and not (jutsu_held and _jutsu_press("cross")):
 		_jump_buffer = input_buffer_window
-	if Input.is_action_just_pressed("attack_light"):
+	if Input.is_action_just_pressed("attack_light") and not (jutsu_held and _jutsu_press("square")):
 		_attack_buffer = input_buffer_window
 	if Input.is_action_just_pressed("substitution"):
 		_sub_buffer = SUB_WINDOW
@@ -307,7 +332,11 @@ func _physics_process(delta: float) -> void:
 		_tick_dying(delta)
 		return
 	if _hurt_t > 0.0:
+		_cancel_chidori()
 		_tick_hurt(delta)
+		return
+	if chidori_phase != ChidoriPhase.NONE:
+		_tick_chidori(delta)
 		return
 
 	_dodge_buffer = maxf(_dodge_buffer - delta, 0.0)
@@ -788,6 +817,7 @@ func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: 
 	if _try_substitution(attacker, from_dir):
 		return false
 	hits_taken += 1
+	_cancel_chidori()
 	if state == State.CHARGE:
 		state = State.IDLE
 		_charge_interrupted = true  # release before starting another charge after being hit
@@ -1060,6 +1090,158 @@ func aim_direction() -> Vector2:
 	if d != Vector2.ZERO:
 		return d
 	return facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
+
+
+## R2 is held and a face button was pressed: if that slot holds a playable jutsu, the press belongs to the jutsu (it never
+## also swings the sword / dodges / jumps). Returns true when the press was consumed.
+func _jutsu_press(slot: String) -> bool:
+	var id := String(inventory.jutsu.get(slot, ""))
+	if id == "" or not bool(PlayerInventory.JUTSU.get(id, {}).get("ready", false)):
+		return false
+	use_jutsu(slot)
+	return true
+
+
+## Fire the jutsu on an R2 slot. Returns false if it could not start (no chakra, cooling down, busy).
+func use_jutsu(slot: String) -> bool:
+	match String(inventory.jutsu.get(slot, "")):
+		"chidori":
+			return _begin_chidori()
+	return false
+
+
+func _begin_chidori() -> bool:
+	if chidori_phase != ChidoriPhase.NONE or chidori_cd > 0.0 or chakra < CHIDORI_COST or dying or _hurt_t > 0.0 or _throw_t > 0.0:
+		return false
+	if state != State.IDLE and state != State.MOVE and state != State.SPRINT:
+		return false
+	chakra -= CHIDORI_COST
+	chakra_changed.emit(chakra, max_chakra)
+	chidori_phase = ChidoriPhase.CHARGE
+	chidori_t = 0.0
+	chidori_dir = aim_direction()
+	if lock_aim_dir() != Vector2.ZERO:
+		facing8 = _snap8(chidori_dir)
+	chidori_hits.clear()
+	chidori_count += 1
+	velocity = Vector2.ZERO
+	if chidori_fx == null:
+		chidori_fx = ChidoriFx.new()
+		chidori_fx.name = "ChidoriFx"
+		add_child(chidori_fx)
+	chidori_fx.begin_charge(chidori_dir)
+	state = State.IDLE
+	visual.set_pose(facing8, false, false)
+	return true
+
+
+func _cancel_chidori() -> void:
+	if chidori_phase == ChidoriPhase.NONE:
+		return
+	chidori_phase = ChidoriPhase.NONE
+	chidori_cd = CHIDORI_COOLDOWN
+	if chidori_fx != null:
+		chidori_fx.stop()
+
+
+func _tick_chidori(delta: float) -> void:
+	var prev_state := state
+	chidori_t += delta
+	match chidori_phase:
+		ChidoriPhase.CHARGE:
+			velocity = Vector2.ZERO
+			var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+			var lock_dir := lock_aim_dir()
+			if lock_dir != Vector2.ZERO:  # locked on: the bolt tracks the target while charging
+				facing = lock_dir
+				facing8 = _snap8(lock_dir)
+				chidori_dir = lock_dir
+				chidori_fx.dir8 = chidori_dir
+			elif input != Vector2.ZERO:  # aim while charging
+				facing = input.normalized()
+				facing8 = _snap8(facing)
+				chidori_dir = facing8.normalized()
+				chidori_fx.dir8 = chidori_dir
+			visual.set_pose(facing8, false, false)
+			if chidori_t >= CHIDORI_CHARGE_TIME:
+				chidori_phase = ChidoriPhase.RUSH
+				chidori_t = 0.0
+				_chidori_start = global_position
+				chidori_fx.begin_rush(chidori_dir)
+				state = State.SPRINT
+		ChidoriPhase.RUSH:
+			velocity = chidori_dir * CHIDORI_RUSH_SPEED
+			move_and_slide()
+			visual.set_pose(facing8, true, true)
+			var target := _chidori_contact()
+			var blocked := get_slide_collision_count() > 0 and get_real_velocity().length() < CHIDORI_RUSH_SPEED * 0.5
+			var spent := global_position.distance_to(_chidori_start) >= CHIDORI_RUSH_MAX
+			if target != null:
+				_chidori_burst(target.global_position, true)
+			elif blocked:
+				_chidori_burst(global_position + chidori_dir * 22.0, false)
+			elif spent:
+				_chidori_burst(global_position + chidori_dir * 18.0, false, 0.5)
+		ChidoriPhase.RECOVER:
+			velocity = velocity.move_toward(Vector2.ZERO, friction * 2.0 * delta)
+			move_and_slide()
+			visual.set_pose(facing8, false, false)
+			if chidori_t >= CHIDORI_RECOVER_TIME:
+				chidori_phase = ChidoriPhase.NONE
+				state = State.IDLE
+	if state != prev_state:
+		state_changed.emit(state)
+
+
+## First live enemy touching the rush with a clear line to it (never through a wall), not yet struck by this rush.
+func _chidori_contact() -> Node2D:
+	var space := get_world_2d().direct_space_state
+	for e: Node in get_tree().get_nodes_in_group("enemy"):
+		if not (e is Node2D) or e == self or chidori_hits.has(e) or not e.has_method("take_damage"):
+			continue
+		if e.has_method("is_alive") and not bool(e.call("is_alive")):
+			continue
+		var d: Vector2 = (e as Node2D).global_position - global_position
+		if Vector2(d.x, d.y * 1.6).length() > CHIDORI_CONTACT:
+			continue
+		if _wall_between(space, global_position, (e as Node2D).global_position, e):
+			continue
+		return e as Node2D
+	return null
+
+
+func _wall_between(space: PhysicsDirectSpaceState2D, a: Vector2, b: Vector2, ignore: Node) -> bool:
+	var q := PhysicsRayQueryParameters2D.create(a + Vector2(0, -14), b + Vector2(0, -14))
+	var ex: Array[RID] = [get_rid()]
+	if ignore is CollisionObject2D:
+		ex.append((ignore as CollisionObject2D).get_rid())
+	q.exclude = ex
+	return not space.intersect_ray(q).is_empty()
+
+
+## The rush ends here: burst, damage (only when it hit an enemy), a short hit-stop, then a brief recovery.
+func _chidori_burst(at: Vector2, hit_enemy: bool, scale_k := 1.0) -> void:
+	chidori_fx.stop()
+	chidori_phase = ChidoriPhase.RECOVER
+	chidori_t = 0.0
+	chidori_cd = CHIDORI_COOLDOWN
+	velocity = -chidori_dir * 60.0
+	ChidoriImpact.spawn(get_parent(), at, chidori_dir, scale_k)
+	if not hit_enemy:
+		return
+	var space := get_world_2d().direct_space_state
+	for e: Node in get_tree().get_nodes_in_group("enemy"):
+		if not (e is Node2D) or e == self or chidori_hits.has(e) or not e.has_method("take_damage"):
+			continue
+		var d: Vector2 = (e as Node2D).global_position - at
+		var primary := Vector2(d.x, d.y * 1.6).length() <= CHIDORI_CONTACT + 8.0
+		var splash := Vector2(d.x, d.y * 2.0).length() <= CHIDORI_SPLASH_RADIUS
+		if not (primary or splash) or _wall_between(space, at, (e as Node2D).global_position, e):
+			continue
+		chidori_hits.append(e)
+		var away := d.normalized() if d.length() > 1.0 else chidori_dir
+		e.call("take_damage", CHIDORI_DAMAGE if primary else CHIDORI_SPLASH_DAMAGE, away, CHIDORI_KNOCKBACK if primary else CHIDORI_KNOCKBACK * 0.5, CHIDORI_HITSTOP_MS)
+	_hitstop_timer = maxf(_hitstop_timer, 0.07)
 
 
 ## Start a forward kunai throw (costs one kunai). Only from plain locomotion/idle, one at a time.

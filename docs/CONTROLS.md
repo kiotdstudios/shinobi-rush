@@ -17,7 +17,7 @@ Source: `project.godot` input map on main. Xbox / PlayStation gamepad equivalent
 | Pause | Esc | Menu / Start |
 | Item slots (up / right / down / left) | Arrow keys | D-pad (default: health gourd / chakra gourd / empty / kunai) |
 | Player menu (Inventory + Jutsu tabs) | I | Touchpad (the large black button) |
-| Lock on / off (nearest enemy in range) | L | R3 (click the right stick) |
+| Lock on / off (nearest enemy in range). While locked, kunai, tags, swings and Chidori all aim at the target | L | R3 (click the right stick) |
 | Aim | not used yet | Right stick (reserved) |
 
 ## Testing shortcuts (keyboard)
