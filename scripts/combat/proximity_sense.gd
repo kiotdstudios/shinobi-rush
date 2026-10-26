@@ -24,7 +24,8 @@ static func radius_for(intelligence: int) -> float:
 ## Nearest living member of `group` within `radius` of `origin`, excluding `exclude` (normally the
 ## sensing actor itself). Returns null when nothing qualifies. Distance-only: no line-of-sight or
 ## facing check, because this is a felt presence/power-level sense, not sight -- it is not blocked by
-## walls and does not care which way the sensing actor is facing.
+## walls and does not care which way the sensing actor is facing. Only a body standing inside a smoke
+## screen is masked.
 static func nearest_in_radius(origin: Vector2, radius: float, group: String, tree: SceneTree, exclude: Node = null) -> Node2D:
 	var nearest: Node2D = null
 	var nearest_d := radius
@@ -33,6 +34,8 @@ static func nearest_in_radius(origin: Vector2, radius: float, group: String, tre
 			continue
 		if node.has_method("is_alive") and not node.is_alive():
 			continue
+		if SmokeTagBomb.hides((node as Node2D).global_position):
+			continue  # a body inside a smoke screen gives nothing away, not even to the sense
 		var d: float = origin.distance_to((node as Node2D).global_position)
 		if d <= nearest_d:
 			nearest_d = d

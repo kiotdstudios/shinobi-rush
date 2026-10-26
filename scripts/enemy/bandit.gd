@@ -377,7 +377,7 @@ func _update_perception() -> void:
 	# no line of sight -- a sprinting body is felt/loud, not just seen (see ProximitySense). Owner:
 	# "when naruto running and near enemy ... player will auto detect and pull their kunai out" --
 	# the symmetric case for the Bandit: it auto-notices a nearby player even outside its sight cone.
-	senses_player = is_sprinting and global_position.distance_to(_player.global_position) <= sense_radius()
+	senses_player = is_sprinting and global_position.distance_to(_player.global_position) <= sense_radius() and not SmokeTagBomb.hides(_player.global_position)
 	# Owner 2026-10-22: "enemies should auto engage lock onto players" -- the sense is a felt power-level
 	# read, not a glimpse that needs confirming, so it skips the sight path's NOTICE suspicion delay
 	# entirely and commits straight to APPROACH (locked_target is set in _enter's State.APPROACH case).
@@ -387,7 +387,8 @@ func _update_perception() -> void:
 
 
 ## Range + (optionally) facing cone + clear line of sight. Walls block detection exactly like they
-## block movement: the ray runs against the same colliders.
+## block movement: the ray runs against the same colliders. A standing smoke screen blocks it too, and a
+## Bandit inside one sees nothing (SmokeTagBomb.first_cover).
 func can_see(target: Vector2, use_cone: bool) -> bool:
 	var to := target - global_position
 	var d := to.length()
@@ -398,6 +399,8 @@ func can_see(target: Vector2, use_cone: bool) -> bool:
 		var half := deg_to_rad(float(profile.fov_deg) * 0.5)
 		if absf(facing8.angle_to(to)) > half:
 			return false
+	if SmokeTagBomb.blocks_sight(global_position, target):
+		return false
 	return line_clear_to(target)
 
 
