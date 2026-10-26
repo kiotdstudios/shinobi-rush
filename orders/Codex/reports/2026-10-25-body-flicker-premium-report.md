@@ -86,3 +86,11 @@ Canonical live URL: https://kiotdstudios.github.io/shinobi-rush/?flicker=review 
 - Final focused suite after guard: **148 passed, 0 failed**, `build/flicker-focused-baseline.log`.
 - Fresh release Web export `../body-flicker-release-web-20261025`: PASS. Release browser proof: **25/25 passed**, now explicitly rapidly interrupting the BEFORE comparison; no browser errors. Evidence: release-proof/validation.json.
 - Push this tested guard to PR209 and wait for checks on the new head. Previous-head native CI succeeded; no old-head CI result will be used to merge the new head.
+
+## Chidori upstream integration — 8d08423c (tested before merge commit)
+- Main advanced during PR CI to 8d08423c7b2976742d7fc8e2e3eb730eaf2207c9 (Aki's Chidori). Integrated with `git merge --no-commit --no-ff origin/main`; clean merge. Did not edit Aki's Chidori controller, input or VFX implementation.
+- `python scripts/ci/godot_ci.py import ... --log-dir build/flicker-chidori-import`: PASS.
+- `python scripts/ci/godot_ci.py tests ... --log-dir build/flicker-chidori-tests`: **3251 passed, 0 failed**, including Chidori interaction tests and the final legacy-comparison interruption guard.
+- Fresh export `../body-flicker-chidori-web-20261025`: PASS.
+- `node docs/visuals/body-flicker-premium/browser-proof.mjs ../body-flicker-chidori-web-20261025 docs/visuals/body-flicker-premium/chidori-proof`: **25/25 passed**, no browser errors.
+- New merged head must receive its own PR checks; prior heads' CI will not be used to merge it. Canonical publication remains pending.
