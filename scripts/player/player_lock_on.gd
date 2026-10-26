@@ -70,6 +70,14 @@ func valid_target() -> bool:
 	return is_instance_valid(target) and target.has_method("is_alive") and target.is_alive() and _origin().distance_to(target.global_position) <= RANGE
 
 
+## Unit vector from the player to the locked target, or ZERO when there is no valid lock.
+func aim_direction() -> Vector2:
+	if not valid_target():
+		return Vector2.ZERO
+	var d: Vector2 = target.global_position - _origin()
+	return d.normalized() if d.length_squared() > 1.0 else Vector2.ZERO
+
+
 func is_targeted(enemy: Node2D) -> bool:
 	return valid_target() and target == enemy
 
