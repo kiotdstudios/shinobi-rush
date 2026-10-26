@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/arena/training_arena.tscn" id="1_arena"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -7,12 +7,22 @@
 [ext_resource type="Script" path="res://scripts/ui/animation_lab.gd" id="4_lab"]
 
 [ext_resource type="Script" path="res://scripts/art/kunai_proof_gate.gd" id="5_kunai"]
+[ext_resource type="Script" path="res://scripts/environment/waterlife.gd" id="6_waterlife"]
+[ext_resource type="Script" path="res://scripts/vfx/knockback_presentation.gd" id="7_knockback"]
+
+[ext_resource type="Script" path="res://scripts/environment/ground_mist.gd" id="8_mist"]
 
 [node name="Main" type="Node"]
 
 [node name="TrainingArena" parent="." instance=ExtResource("1_arena")]
 
 [node name="Player" parent="TrainingArena" instance=ExtResource("2_player")]
+
+[node name="Waterlife" type="Node2D" parent="TrainingArena"]
+script = ExtResource("6_waterlife")
+
+[node name="KnockbackPresentation" type="Node2D" parent="TrainingArena"]
+script = ExtResource("7_knockback")
 
 [node name="DebugHud" type="CanvasLayer" parent="."]
 process_mode = 3
@@ -23,3 +33,6 @@ script = ExtResource("4_lab")
 
 [node name="KunaiProofGate" type="Node" parent="."]
 script = ExtResource("5_kunai")
+
+[node name="GroundMist" type="Node2D" parent="TrainingArena"]
+script = ExtResource("8_mist")

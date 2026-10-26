@@ -102,9 +102,20 @@ enum AttackPhase { STARTUP, ACTIVE, RECOVERY }
 var state: State = State.IDLE
 var facing: Vector2 = Vector2.DOWN  ## last movement vector, normalized
 var facing8: Vector2 = Vector2.DOWN  ## facing snapped to 8 directions
+## Logical height above the ground (shrine stairs and platform, see ShrineElevation). The ground position is
+## unchanged by it; only the figure is drawn higher: visual_y = ground_y - elevation (a jump adds its own lift).
+var elevation: float = 0.0
 var camera_baseline: float = WorldScale.CAMERA_BASE_ZOOM  ## zoom of the active CameraPreset for the current figure
 var _action_timer: float = 0.0  ## seconds left in the current dodge/jump; 0 when not acting
 var _action_duration: float = 0.0  ## total authored length of the current/last action, for progress math
+var chidori_phase: ChidoriPhase = ChidoriPhase.NONE
+var chidori_t := 0.0
+var chidori_cd := 0.0
+var chidori_dir := Vector2.DOWN
+var chidori_hits: Array[Node] = []  ## enemies already struck by this rush (each is hit at most once)
+var chidori_count := 0
+var chidori_fx: ChidoriFx
+var _chidori_start := Vector2.ZERO
 var _dodge_buffer: float = 0.0  ## seconds left that a buffered dodge press is still eligible to fire
 var _jump_buffer: float = 0.0  ## seconds left that a buffered jump press is still eligible to fire
 var _footstep_timer: float = 0.0  ## seconds left until the next running dirt-puff burst
@@ -136,6 +147,12 @@ var max_chakra: float = MAX_CHAKRA
 var chakra: float = MAX_CHAKRA
 ## Provisional chakra recovery while holding charge; no aura is bound yet.
 @export var chakra_charge_per_second: float = 20.0
+## Ninjas run on water, paying chakra for every second spent over it. Out of chakra they slip under and are
+## put back on the last dry spot, taking a small hit.
+@export var water_chakra_per_second: float = 10.0
+const WATER_SINK_DAMAGE := 8.0
+var _last_dry := Vector2.ZERO
+var over_water := false
 var _charge_interrupted := false
 const CHARGE_HOLD_DELAY := 0.30  ## press keeps existing substitution; sustained L2 adds charge
 var _charge_hold_time := 0.0
@@ -157,6 +174,20 @@ var hits_taken: int = 0  ## enemy hits that landed on the player (read by tests 
 var hit_flash_timer: float = 0.0
 var _hit_invuln: float = 0.0  ## brief grace after a hit so one combo cannot chain-stun the player
 const HIT_INVULN_TIME := 0.45
+## Damage reactions (Codex clips: hit_react 0.333 s, knockback 0.5 s, death 0.667 s). Gameplay owns the
+## world displacement; the art has zero root motion.
+const HURT_CLIP := 0.333
+const KNOCKBACK_CLIP := 0.5
+const DEATH_CLIP := 0.667
+const DEATH_HOLD := 0.65  ## prone hold after the clip, before the respawn
+const KNOCKBACK_SHOVE := 170.0  ## shoves at least this strong (melee) play the knockback clip
+## Off in the default suite where tests assume the instant respawn; the dedicated damage test turns it on.
+static var death_sequence_enabled: bool = true
+var hurt_kind: String = ""  ## "" | hit_react | knockback
+var _hurt_t: float = 0.0
+var _hurt_dur: float = 0.333
+var dying: bool = false
+var _death_t: float = 0.0
 const HIT_FLASH_TIME := 0.18
 const HIT_TINT := Color(1.0, 0.45, 0.4, 1.0)
 
@@ -172,6 +203,21 @@ const THROW_TIME := 0.34  ## total kunai throw (wind-up, release, follow-through
 const THROW_RELEASE := 0.4  ## fraction of THROW_TIME at which the kunai leaves the hand
 const THROW_MOVE_MULT := 0.35  ## walk/run speed multiplier while the arm is busy
 const THROW_HAND := Vector2(0, 0)
+
+## Chidori (R2 + Square): charge in place, rush forward, burst on the first enemy or wall. Costs chakra.
+enum ChidoriPhase { NONE, CHARGE, RUSH, RECOVER }
+const CHIDORI_CHARGE_TIME := 0.65
+const CHIDORI_RUSH_SPEED := 720.0
+const CHIDORI_RUSH_MAX := 380.0
+const CHIDORI_RECOVER_TIME := 0.28
+const CHIDORI_COST := 25.0
+const CHIDORI_COOLDOWN := 1.2
+const CHIDORI_DAMAGE := 55.0
+const CHIDORI_SPLASH_DAMAGE := 22.0
+const CHIDORI_SPLASH_RADIUS := 110.0
+const CHIDORI_KNOCKBACK := 520.0
+const CHIDORI_CONTACT := 46.0
+const CHIDORI_HITSTOP_MS := 110.0
 var _throw_t: float = 0.0  ## seconds left in the current throw (0 = not throwing)
 var _throw_released: bool = true
 var _throw_dir: Vector2 = Vector2.DOWN
@@ -186,6 +232,8 @@ var kunai_thrown_count: int = 0
 
 func _ready() -> void:
 	add_to_group("player")
+	_last_dry = global_position
+	collision_mask |= ShrineElevation.EDGE_LAYER  # platform rim and stair sides only stop the player
 	spawn_position = global_position
 	# Collider comes from the shared footprint constant (the scene values mirror it).
 	var feet := $CollisionShape2D as CollisionShape2D
@@ -221,8 +269,25 @@ func _ready() -> void:
 	menu.bind(self)
 
 
+func _tick_water(delta: float) -> void:
+	over_water = not dying and BlightwoodWater.over_water(get_tree(), global_position)
+	if not over_water:
+		_last_dry = global_position
+		return
+	if chakra > 0.0:
+		chakra = maxf(chakra - water_chakra_per_second * delta, 0.0)
+		chakra_changed.emit(chakra, max_chakra)
+	else:
+		over_water = false
+		global_position = _last_dry
+		velocity = Vector2.ZERO
+		take_hit(WATER_SINK_DAMAGE, Vector2.ZERO, 0.0)
+
+
 func _physics_process(delta: float) -> void:
+	_tick_water(delta)
 	var prev_state := state
+	_follow_elevation(delta)
 	var charge_held := Input.is_action_pressed("substitution")
 	_charge_hold_time = _charge_hold_time + delta if charge_held else 0.0
 	if not charge_held and not Input.is_action_pressed("chakra_charge"):
@@ -240,11 +305,13 @@ func _physics_process(delta: float) -> void:
 	# Presses are captured EVERY physics tick, including hitstop ticks (Milestone A fluidity order:
 	# "buffered inputs must survive hitstop"). Before this, a press landing inside the 3-4 tick
 	# freeze was silently dropped.
-	if Input.is_action_just_pressed("dodge"):
+	var jutsu_held := Input.is_action_pressed("jutsu_modifier")
+	chidori_cd = maxf(chidori_cd - delta, 0.0)
+	if Input.is_action_just_pressed("dodge") and not (jutsu_held and _jutsu_press("circle")):
 		_dodge_buffer = input_buffer_window
-	if Input.is_action_just_pressed("jump"):
+	if Input.is_action_just_pressed("jump") and not (jutsu_held and _jutsu_press("cross")):
 		_jump_buffer = input_buffer_window
-	if Input.is_action_just_pressed("attack_light"):
+	if Input.is_action_just_pressed("attack_light") and not (jutsu_held and _jutsu_press("square")):
 		_attack_buffer = input_buffer_window
 	if Input.is_action_just_pressed("substitution"):
 		_sub_buffer = SUB_WINDOW
@@ -259,6 +326,17 @@ func _physics_process(delta: float) -> void:
 	# exactly where they stopped.
 	if _hitstop_timer > 0.0:
 		_hitstop_timer = maxf(_hitstop_timer - delta, 0.0)
+		return
+
+	if dying:
+		_tick_dying(delta)
+		return
+	if _hurt_t > 0.0:
+		_cancel_chidori()
+		_tick_hurt(delta)
+		return
+	if chidori_phase != ChidoriPhase.NONE:
+		_tick_chidori(delta)
 		return
 
 	_dodge_buffer = maxf(_dodge_buffer - delta, 0.0)
@@ -352,6 +430,9 @@ func _physics_process(delta: float) -> void:
 	elif input != Vector2.ZERO:
 		velocity = velocity.move_toward(input * target_speed, acceleration * delta)
 		facing = input.normalized()
+		var strafe := lock_aim_dir()
+		if strafe != Vector2.ZERO and not sprinting:
+			facing = strafe  # locked on: walk around the target while still facing it
 		facing8 = _snap8(facing)
 		state = State.SPRINT if sprinting else State.MOVE
 		if state == State.SPRINT:
@@ -363,6 +444,10 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 		state = State.IDLE
+		var face_lock := lock_aim_dir()
+		if face_lock != Vector2.ZERO and _throw_t <= 0.0:
+			facing = face_lock
+			facing8 = _snap8(face_lock)
 	move_and_slide()
 	_update_jump_lift()
 	if state == State.DODGE:
@@ -456,6 +541,10 @@ func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
 	if input != Vector2.ZERO:
 		facing = input.normalized()
 		facing8 = _snap8(facing)
+	var lock_dir := lock_aim_dir()
+	if lock_dir != Vector2.ZERO:
+		facing = lock_dir  # locked on: every swing (and every combo hit) turns to the target
+		facing8 = _snap8(lock_dir)
 	_attack_def = _attack_table[attack_id]
 	_combo_index = int(attack_id.substr(5)) if attack_id.begins_with("light") else 0
 	state = _state_for_attack_id(attack_id)
@@ -536,7 +625,7 @@ func _process_attack_state(delta: float, input: Vector2) -> void:
 				_update_jump_lift()
 				return
 			if airborne:
-				visual.position.y = 0.0
+				visual.position.y = -elevation
 				dust.landing(global_position)  # landed out of the swing
 			# The attack just ended: pick the state up where locomotion already is this instant (order:
 			# "continue running immediately after an attack ends" -- never a forced idle frame).
@@ -665,12 +754,21 @@ func _play_jump_visual() -> void:
 	visual.play_action_progress("jump", facing8, progress)
 
 
+## Eases `elevation` toward the height of the ground under the feet and carries the figure and camera with it.
+func _follow_elevation(delta: float) -> void:
+	var before := elevation
+	ShrineElevation.update_actor(self, delta)
+	if elevation != before:
+		_update_jump_lift()
+		camera.position.y = -elevation
+
+
 func _update_jump_lift() -> void:
 	if (state != State.JUMP and state != State.AIR_ATTACK) or _action_duration <= 0.0:
-		visual.position.y = 0.0
+		visual.position.y = -elevation
 		return
 	var progress := clampf(1.0 - (_action_timer / _action_duration), 0.0, 1.0)
-	visual.position.y = -jump_visual_height * sin(progress * PI)
+	visual.position.y = -elevation - jump_visual_height * sin(progress * PI)
 
 
 ## Height of the standing figure in world px: the loaded sprite set's `body_height_px`, else the placeholder.
@@ -704,7 +802,7 @@ func _process_charge(delta: float) -> void:
 	state = State.CHARGE
 	velocity = Vector2.ZERO
 	_footstep_timer = 0.0
-	visual.position.y = 0.0
+	visual.position.y = -elevation
 	visual.play_action("charge", facing8)
 	var restored := minf(max_chakra, chakra + chakra_charge_per_second * delta)
 	if not is_equal_approx(restored, chakra):
@@ -714,11 +812,12 @@ func _process_charge(delta: float) -> void:
 
 ## Enemy melee entry point. Returns true if the hit landed. A dodge or jump evades it completely.
 func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: Variant = null) -> bool:
-	if is_evading_melee() or _hit_invuln > 0.0:
+	if dying or is_evading_melee() or _hit_invuln > 0.0:
 		return false
 	if _try_substitution(attacker, from_dir):
 		return false
 	hits_taken += 1
+	_cancel_chidori()
 	if state == State.CHARGE:
 		state = State.IDLE
 		_charge_interrupted = true  # release before starting another charge after being hit
@@ -730,11 +829,87 @@ func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: 
 	hit_taken.emit(damage, from_dir)
 	health = maxf(health - maxf(damage, 0.0), 0.0)
 	health_changed.emit(health, max_health)
+	var dir := from_dir.normalized() if from_dir != Vector2.ZERO else -facing
 	if health <= 0.0:
 		times_downed += 1
 		downed.emit()
-		respawn()
+		if death_sequence_enabled:
+			_begin_dying(dir, shove)
+		else:
+			respawn()
+	else:
+		_begin_hurt(dir, shove)
 	return true
+
+
+func _clear_action_for_damage() -> void:
+	state = State.IDLE
+	_action_timer = 0.0
+	_attack_timer = 0.0
+	_attack_def = null
+	_combo_index = 0
+	_hit_targets.clear()
+	_dodge_buffer = 0.0
+	_jump_buffer = 0.0
+	_attack_buffer = 0.0
+
+
+## Struck: the attack/dodge/charge is cancelled, the body is thrown away from the hit and plays the
+## hit_react clip (light hit) or the knockback clip (strong melee shove), keeping its facing.
+func _begin_hurt(dir: Vector2, shove: float) -> void:
+	_clear_action_for_damage()
+	var big := shove >= KNOCKBACK_SHOVE
+	hurt_kind = "knockback" if big else "hit_react"
+	_hurt_dur = KNOCKBACK_CLIP if big else HURT_CLIP
+	_hurt_t = _hurt_dur
+	velocity = dir * shove * (2.8 if big else 2.2)
+	CameraImpact.impulse(dir, 7.0 if big else 4.0, 180.0 if big else 120.0)
+	dust.landing(global_position)
+	_show_damage_clip(hurt_kind, 0.0)
+
+
+func _tick_hurt(delta: float) -> void:
+	_hurt_t = maxf(_hurt_t - delta, 0.0)
+	# Decelerate so the body skids to a stop around 70% through the clip, then stands recovered.
+	var remaining := maxf(_hurt_dur * 0.7 - (_hurt_dur - _hurt_t), 0.02)
+	velocity = velocity.move_toward(Vector2.ZERO, velocity.length() / remaining * delta)
+	move_and_slide()
+	_show_damage_clip(hurt_kind, 1.0 - _hurt_t / _hurt_dur)
+	if _hurt_t <= 0.0:
+		hurt_kind = ""
+		velocity = Vector2.ZERO
+
+
+## Fatal blow: throw the body, play the death clip, hold the prone last frame, then respawn.
+func _begin_dying(dir: Vector2, shove: float) -> void:
+	_clear_action_for_damage()
+	_hurt_t = 0.0
+	hurt_kind = ""
+	dying = true
+	_death_t = 0.0
+	_hit_invuln = DEATH_CLIP + DEATH_HOLD + 1.0
+	velocity = dir * maxf(shove, 140.0) * 3.0
+	CameraImpact.impulse(dir, 11.0, 260.0)
+	dust.landing(global_position)
+	_show_damage_clip("death", 0.0)
+
+
+func _tick_dying(delta: float) -> void:
+	_death_t += delta
+	velocity = velocity.move_toward(Vector2.ZERO, 1400.0 * delta)
+	move_and_slide()
+	_show_damage_clip("death", clampf(_death_t / DEATH_CLIP, 0.0, 1.0))
+	var fade_start := DEATH_CLIP + DEATH_HOLD - 0.3
+	if _death_t > fade_start:
+		visual.modulate.a = clampf(1.0 - (_death_t - fade_start) / 0.3, 0.0, 1.0)
+	if _death_t >= DEATH_CLIP + DEATH_HOLD:
+		dying = false
+		respawn()
+
+
+func _show_damage_clip(kind: String, progress: float) -> void:
+	if not visual.play_action_progress(kind, facing8, progress):
+		visual.set_pose(facing8, false, false)
 
 
 ## 0..1 refill of the charge that comes back first (1.0 when no charge is recharging). Drives the HUD slot.
@@ -821,6 +996,8 @@ func _substitution_spot_ok(p: Vector2) -> bool:
 		var b: Rect2 = arena.get_bounds()
 		if not b.grow(-8.0).has_point(p):
 			return false
+	if absf(ShrineElevation.target_at(p) - elevation) > ShrineElevation.HEIGHT * ShrineElevation.BOARD_AT:
+		return false  # never swap across the shrine's levels (onto the platform from the ground, or off it)
 	return not test_move(Transform2D(0.0, p), Vector2(0.01, 0.0))
 
 
@@ -828,6 +1005,10 @@ func _substitution_spot_ok(p: Vector2) -> bool:
 ## Puts a downed player back at `spawn_position` with full health, no leftover motion / action / combo
 ## state and a short grace period. Safe to call any time (the hit path calls it when health reaches 0).
 func respawn() -> void:
+	dying = false
+	_death_t = 0.0
+	_hurt_t = 0.0
+	hurt_kind = ""
 	_charge_interrupted = true
 	dust.landing(global_position)
 	global_position = spawn_position
@@ -889,11 +1070,178 @@ func use_slot(slot: String) -> bool:
 				used = true
 		"kunai":
 			used = _begin_throw()
-		"paper_tag":
-			used = _begin_throw("paper_tag")
+		"paper_tag", "tag_bomb", "smoke_tag_bomb":
+			used = _begin_throw(id)
 	if used:
 		item_used.emit(id)
 	return used
+
+
+## Unit vector from the player to the R3 lock-on target, or ZERO when nothing is locked.
+func lock_aim_dir() -> Vector2:
+	var lock := get_node_or_null("LockOn") as PlayerLockOn
+	return lock.aim_direction() if lock != null else Vector2.ZERO
+
+
+## Where thrown / fired things go: straight at the locked target (any angle, not snapped to 8 ways), otherwise the
+## current facing. Projectiles and jutsu should ask this, never read facing8 directly.
+func aim_direction() -> Vector2:
+	var d := lock_aim_dir()
+	if d != Vector2.ZERO:
+		return d
+	return facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
+
+
+## R2 is held and a face button was pressed: if that slot holds a playable jutsu, the press belongs to the jutsu (it never
+## also swings the sword / dodges / jumps). Returns true when the press was consumed.
+func _jutsu_press(slot: String) -> bool:
+	var id := String(inventory.jutsu.get(slot, ""))
+	if id == "" or not bool(PlayerInventory.JUTSU.get(id, {}).get("ready", false)):
+		return false
+	use_jutsu(slot)
+	return true
+
+
+## Fire the jutsu on an R2 slot. Returns false if it could not start (no chakra, cooling down, busy).
+func use_jutsu(slot: String) -> bool:
+	match String(inventory.jutsu.get(slot, "")):
+		"chidori":
+			return _begin_chidori()
+	return false
+
+
+func _begin_chidori() -> bool:
+	if chidori_phase != ChidoriPhase.NONE or chidori_cd > 0.0 or chakra < CHIDORI_COST or dying or _hurt_t > 0.0 or _throw_t > 0.0:
+		return false
+	if state != State.IDLE and state != State.MOVE and state != State.SPRINT:
+		return false
+	chakra -= CHIDORI_COST
+	chakra_changed.emit(chakra, max_chakra)
+	chidori_phase = ChidoriPhase.CHARGE
+	chidori_t = 0.0
+	chidori_dir = aim_direction()
+	if lock_aim_dir() != Vector2.ZERO:
+		facing8 = _snap8(chidori_dir)
+	chidori_hits.clear()
+	chidori_count += 1
+	velocity = Vector2.ZERO
+	if chidori_fx == null:
+		chidori_fx = ChidoriFx.new()
+		chidori_fx.name = "ChidoriFx"
+		add_child(chidori_fx)
+	chidori_fx.begin_charge(chidori_dir)
+	state = State.IDLE
+	visual.set_pose(facing8, false, false)
+	return true
+
+
+func _cancel_chidori() -> void:
+	if chidori_phase == ChidoriPhase.NONE:
+		return
+	chidori_phase = ChidoriPhase.NONE
+	chidori_cd = CHIDORI_COOLDOWN
+	if chidori_fx != null:
+		chidori_fx.stop()
+
+
+func _tick_chidori(delta: float) -> void:
+	var prev_state := state
+	chidori_t += delta
+	match chidori_phase:
+		ChidoriPhase.CHARGE:
+			velocity = Vector2.ZERO
+			var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+			var lock_dir := lock_aim_dir()
+			if lock_dir != Vector2.ZERO:  # locked on: the bolt tracks the target while charging
+				facing = lock_dir
+				facing8 = _snap8(lock_dir)
+				chidori_dir = lock_dir
+				chidori_fx.dir8 = chidori_dir
+			elif input != Vector2.ZERO:  # aim while charging
+				facing = input.normalized()
+				facing8 = _snap8(facing)
+				chidori_dir = facing8.normalized()
+				chidori_fx.dir8 = chidori_dir
+			visual.set_pose(facing8, false, false)
+			if chidori_t >= CHIDORI_CHARGE_TIME:
+				chidori_phase = ChidoriPhase.RUSH
+				chidori_t = 0.0
+				_chidori_start = global_position
+				chidori_fx.begin_rush(chidori_dir)
+				state = State.SPRINT
+		ChidoriPhase.RUSH:
+			velocity = chidori_dir * CHIDORI_RUSH_SPEED
+			move_and_slide()
+			visual.set_pose(facing8, true, true)
+			var target := _chidori_contact()
+			var blocked := get_slide_collision_count() > 0 and get_real_velocity().length() < CHIDORI_RUSH_SPEED * 0.5
+			var spent := global_position.distance_to(_chidori_start) >= CHIDORI_RUSH_MAX
+			if target != null:
+				_chidori_burst(target.global_position, true)
+			elif blocked:
+				_chidori_burst(global_position + chidori_dir * 22.0, false)
+			elif spent:
+				_chidori_burst(global_position + chidori_dir * 18.0, false, 0.5)
+		ChidoriPhase.RECOVER:
+			velocity = velocity.move_toward(Vector2.ZERO, friction * 2.0 * delta)
+			move_and_slide()
+			visual.set_pose(facing8, false, false)
+			if chidori_t >= CHIDORI_RECOVER_TIME:
+				chidori_phase = ChidoriPhase.NONE
+				state = State.IDLE
+	if state != prev_state:
+		state_changed.emit(state)
+
+
+## First live enemy touching the rush with a clear line to it (never through a wall), not yet struck by this rush.
+func _chidori_contact() -> Node2D:
+	var space := get_world_2d().direct_space_state
+	for e: Node in get_tree().get_nodes_in_group("enemy"):
+		if not (e is Node2D) or e == self or chidori_hits.has(e) or not e.has_method("take_damage"):
+			continue
+		if e.has_method("is_alive") and not bool(e.call("is_alive")):
+			continue
+		var d: Vector2 = (e as Node2D).global_position - global_position
+		if Vector2(d.x, d.y * 1.6).length() > CHIDORI_CONTACT:
+			continue
+		if _wall_between(space, global_position, (e as Node2D).global_position, e):
+			continue
+		return e as Node2D
+	return null
+
+
+func _wall_between(space: PhysicsDirectSpaceState2D, a: Vector2, b: Vector2, ignore: Node) -> bool:
+	var q := PhysicsRayQueryParameters2D.create(a + Vector2(0, -14), b + Vector2(0, -14))
+	var ex: Array[RID] = [get_rid()]
+	if ignore is CollisionObject2D:
+		ex.append((ignore as CollisionObject2D).get_rid())
+	q.exclude = ex
+	return not space.intersect_ray(q).is_empty()
+
+
+## The rush ends here: burst, damage (only when it hit an enemy), a short hit-stop, then a brief recovery.
+func _chidori_burst(at: Vector2, hit_enemy: bool, scale_k := 1.0) -> void:
+	chidori_fx.stop()
+	chidori_phase = ChidoriPhase.RECOVER
+	chidori_t = 0.0
+	chidori_cd = CHIDORI_COOLDOWN
+	velocity = -chidori_dir * 60.0
+	ChidoriImpact.spawn(get_parent(), at, chidori_dir, scale_k)
+	if not hit_enemy:
+		return
+	var space := get_world_2d().direct_space_state
+	for e: Node in get_tree().get_nodes_in_group("enemy"):
+		if not (e is Node2D) or e == self or chidori_hits.has(e) or not e.has_method("take_damage"):
+			continue
+		var d: Vector2 = (e as Node2D).global_position - at
+		var primary := Vector2(d.x, d.y * 1.6).length() <= CHIDORI_CONTACT + 8.0
+		var splash := Vector2(d.x, d.y * 2.0).length() <= CHIDORI_SPLASH_RADIUS
+		if not (primary or splash) or _wall_between(space, at, (e as Node2D).global_position, e):
+			continue
+		chidori_hits.append(e)
+		var away := d.normalized() if d.length() > 1.0 else chidori_dir
+		e.call("take_damage", CHIDORI_DAMAGE if primary else CHIDORI_SPLASH_DAMAGE, away, CHIDORI_KNOCKBACK if primary else CHIDORI_KNOCKBACK * 0.5, CHIDORI_HITSTOP_MS)
+	_hitstop_timer = maxf(_hitstop_timer, 0.07)
 
 
 ## Start a forward kunai throw (costs one kunai). Only from plain locomotion/idle, one at a time.
@@ -906,7 +1254,8 @@ func _begin_throw(item := "kunai") -> bool:
 	_throw_item = item
 	_throw_t = THROW_TIME
 	_throw_released = false
-	_throw_dir = facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
+	_throw_dir = aim_direction()
+	facing8 = _snap8(_throw_dir)
 	return true
 
 
@@ -917,9 +1266,11 @@ func _tick_throw(delta: float) -> void:
 	var progress := 1.0 - _throw_t / THROW_TIME
 	if not _throw_released and progress >= THROW_RELEASE:
 		_throw_released = true
-		if _throw_item == "paper_tag":
+		if _throw_item == "smoke_tag_bomb":
+			SmokeTagBomb.spawn_smoke(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+		elif _throw_item in ["paper_tag", "tag_bomb"]:
 			tags_thrown_count += 1
-			PaperTagBomb.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)
+			PaperTagBomb.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self, "tag_bomb" if _throw_item == "tag_bomb" else "")
 		else:
 			kunai_thrown_count += 1
 			PlayerKunai.spawn(get_parent(), global_position + _throw_dir * 18.0 + THROW_HAND, _throw_dir, self)

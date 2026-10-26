@@ -25,6 +25,9 @@ signal defeated  ## hp reached 0 (the arena spawns a replacement Bandit a few se
 const SKIN := Color("#8a4a3a")
 const CLOTH := Color("#4a3a2a")
 const HIT_FLASH := Color(1.0, 0.25, 0.2, 0.9)
+const KNOCKBACK_ANIM_SPEED := 200.0  ## hits at least this hard play the 12-frame knockback clip
+const HIT_REACT_CLIP := 0.333
+const KNOCKBACK_CLIP := 0.5
 const TAUNT_TEXT := "Hand over your ryo!"
 const TAUNT_TIME := 2.4
 const EYE_OFFSET := Vector2(0, -13.5)  ## sight/attack rays run at collider height, like the walls' footprints
@@ -128,6 +131,9 @@ var last_seen: Vector2 = Vector2.ZERO
 var clock := 0.0
 
 var _hit_react_timer: float = 0.0
+var react_kind: String = "hit_react"  ## hit_react | knockback | death, read by BanditVisual
+var react_duration: float = 0.333
+var _death_time: float = 0.0
 var _hit_flash_timer: float = 0.0
 var _hitstop_timer: float = 0.0
 var _player: Node2D = null
@@ -178,6 +184,9 @@ var _stuck_timer := 0.0
 var _stuck_ref := Vector2.ZERO
 var _moving_intent := false
 
+## Logical height above the ground on climbable terrain (see ShrineElevation): the figure is drawn this much higher.
+var elevation: float = 0.0
+
 @onready var visual: Node2D = $Visual
 
 
@@ -192,6 +201,7 @@ func _ready() -> void:
 	col.shape = shape
 	col.position = Vector2(0, -WorldScale.FOOTPRINT.y * 0.5)
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
+	collision_mask |= ShrineElevation.EDGE_LAYER  # stair sides and cliff rims hold every climber, not just the player
 	home = global_position
 	last_seen = home
 	_stuck_ref = global_position
@@ -222,6 +232,8 @@ func _physics_process(delta: float) -> void:
 		return  # local hitstop only: this entity's movement pauses, global timers/input elsewhere are untouched
 
 	clock += delta
+	ShrineElevation.update_actor(self, delta)
+	visual.position.y = -elevation
 	_hit_flash_timer = maxf(_hit_flash_timer - delta, 0.0)
 	_evade_cooldown = maxf(_evade_cooldown - delta, 0.0)
 	_atk_cooldown = maxf(_atk_cooldown - delta, 0.0)
@@ -232,6 +244,10 @@ func _physics_process(delta: float) -> void:
 	_state_time += delta
 
 	if state == State.DEAD:
+		_death_time += delta
+		if velocity.length_squared() > 1.0:
+			velocity = velocity.move_toward(Vector2.ZERO, move_speed * 5.0 * delta)
+			move_and_slide()
 		return
 	if state == State.EVADE:
 		var remaining := minf(delta, _evade_timer)
@@ -914,6 +930,8 @@ func _try_hit(idx: int) -> void:
 		return
 	if not line_clear_to(_player.global_position):
 		return  # no hits through walls
+	if absf(float(_player.get("elevation") if "elevation" in _player else 0.0) - elevation) > ShrineElevation.HEIGHT * ShrineElevation.BOARD_AT:
+		return  # no hits between a cliff top and the ground below it
 	_atk_hit_done[idx] = true
 	if _player.call("take_hit", 8.0, to.normalized(), 180.0, self):
 		player_hits_landed += 1
@@ -1085,7 +1103,11 @@ func _follow(goal: Vector2, speed: float, delta: float, arrive: float, turn_beat
 		_moving_intent = false
 		return true
 	var target := goal
-	if nav != null:
+	var climb := ShrineElevation.climb_step(global_position, goal)
+	if not climb.is_empty():
+		goal = climb.target
+		target = goal
+	if nav != null and not bool(climb.get("direct", false)):
 		_repath_timer -= delta
 		if _path.is_empty() or _repath_timer <= 0.0 or goal.distance_to(_path_goal) > 90.0:
 			_path = nav.find_path(global_position, goal)
@@ -1209,15 +1231,25 @@ func take_damage(amount: float, knockback_dir: Vector2, knockback_speed: float, 
 	if hp <= 0.0:
 		_log("defeated")
 		state = State.DEAD
-		velocity = Vector2.ZERO
+		_death_time = 0.0
+		react_kind = "death"
+		velocity = knockback_dir * maxf(knockback_speed, 140.0) * 0.9  # the body is thrown, then skids to a stop
 		visual.queue_redraw()
 		defeated.emit()
 		return
 	if state in [State.ATTACK, State.THREATEN, State.REPOSITION, State.RETREAT]:
 		_atk_cooldown = maxf(_atk_cooldown, float(profile.attack_cooldown) * 0.5)
 	_enter(State.HIT_REACT, "damaged")
-	_hit_react_timer = hit_react_duration
-	velocity = knockback_dir * knockback_speed
+	var big := knockback_speed >= KNOCKBACK_ANIM_SPEED
+	react_kind = "knockback" if big else "hit_react"
+	react_duration = maxf(hit_react_duration, KNOCKBACK_CLIP if big else HIT_REACT_CLIP)
+	_hit_react_timer = react_duration
+	velocity = knockback_dir * knockback_speed * (1.25 if big else 1.0)
+
+
+## 0..1 progress through the current hurt clip (hit_react / knockback).
+func react_progress() -> float:
+	return clampf(1.0 - _hit_react_timer / maxf(react_duration, 0.001), 0.0, 1.0)
 
 
 func is_alive() -> bool:

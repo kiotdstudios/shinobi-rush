@@ -34,7 +34,7 @@ const shot = (name) => page.screenshot({ path: path.join(outDir, `probe-${name}.
 let exitCode = 1;
 try {
   const t0 = Date.now();
-  await page.goto(server.url, { waitUntil: 'load' });
+  await page.goto(server.url + '?settings=1', { waitUntil: 'load' }); // the public page hides Settings; ?settings=1 shows it
   const hooksAbsent = await page.waitForFunction(
     () => window.__SHINOBI_READY__ === true || (document.readyState === 'complete' && window.__SHINOBI_READY__ === undefined && window.__SHINOBI_STATE__ === undefined && performance.now() > 90000),
     null, { timeout: 120000, polling: 250 }).then(() => page.evaluate(() => window.__SHINOBI_READY__ !== true && window.__SHINOBI_STATE__ === undefined));
@@ -94,7 +94,18 @@ try {
   rec('bandit-sense-telemetry', typeof sense.bandit_senses_player === 'boolean' && Number.isFinite(sense.bandit_sense_radius) && sense.bandit_sense_radius > 0,
     `bandit_senses_player=${sense.bandit_senses_player} (bool) bandit_sense_radius=${sense.bandit_sense_radius}`);
 
-  // walk into the wall: hold W until the position stops changing (3 equal samples), then require it moved first
+  // The authored Blightwood map can leave the preceding D/sprint path already touching the north wall.
+  // Back away with REAL input first, so this remains an approach + collision test, not an already-blocked check.
+  const wallApproach = await state();
+  await page.keyboard.down('KeyS');
+  const approachStart = Date.now();
+  while (Date.now() - approachStart < 15000 && (await state()).y < wallApproach.y + 75) await sleep(250);
+  await page.keyboard.up('KeyS');
+  await sleep(750);
+  const approachY = (await state()).y;
+  rec('wall-approach-clearance', approachY > wallApproach.y + 50,
+    `real S input backs away y ${wallApproach.y.toFixed(1)} -> ${approachY.toFixed(1)} before W`);
+  // Hold W until the position stops changing (3 equal samples), then require it moved first.
   const startY = (await state()).y;
   await page.keyboard.down('KeyW');
   let still = 0; let prev = await state(); const tw = Date.now();
@@ -232,7 +243,7 @@ try {
     const p = await context.newPage();
     p.on('console', (m) => consoleMsgs.push({ type: m.type(), text: m.text() }));
     p.on('pageerror', (e) => consoleMsgs.push({ type: 'pageerror', text: String(e) }));
-    await p.goto(server.url + query, { waitUntil: 'load' });
+    await p.goto(server.url + (query ? query + '&settings=1' : '?settings=1'), { waitUntil: 'load' });
     await p.waitForFunction(() => window.__SHINOBI_READY__ === true && typeof window.__SHINOBI_STATE__?.vision_on === 'boolean',
       null, { timeout: 120000, polling: 250 });
     await p.mouse.click(640, 400); // canvas keyboard focus (no game action uses the mouse)

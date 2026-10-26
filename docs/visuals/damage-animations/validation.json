@@ -1,0 +1,443 @@
+{
+  "clips": 48,
+  "production_frames": 576,
+  "native_frame_size": [
+    128,
+    128
+  ],
+  "no_resampling": true,
+  "results": [
+    {
+      "character": "player",
+      "action": "hit_react",
+      "direction": "S",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "hit_react",
+      "direction": "SE",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "hit_react",
+      "direction": "E",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "hit_react",
+      "direction": "NE",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "hit_react",
+      "direction": "N",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "hit_react",
+      "direction": "NW",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "hit_react",
+      "direction": "W",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "hit_react",
+      "direction": "SW",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "knockback",
+      "direction": "S",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "knockback",
+      "direction": "SE",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "knockback",
+      "direction": "E",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "knockback",
+      "direction": "NE",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "knockback",
+      "direction": "N",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "knockback",
+      "direction": "NW",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "knockback",
+      "direction": "W",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "knockback",
+      "direction": "SW",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "death",
+      "direction": "S",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "death",
+      "direction": "SE",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "death",
+      "direction": "E",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "death",
+      "direction": "NE",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "death",
+      "direction": "N",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "death",
+      "direction": "NW",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "death",
+      "direction": "W",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "player",
+      "action": "death",
+      "direction": "SW",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "hit_react",
+      "direction": "S",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "hit_react",
+      "direction": "SE",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "hit_react",
+      "direction": "E",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "hit_react",
+      "direction": "NE",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "hit_react",
+      "direction": "N",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "hit_react",
+      "direction": "NW",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "hit_react",
+      "direction": "W",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "hit_react",
+      "direction": "SW",
+      "frames": 8,
+      "unique": 8,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "knockback",
+      "direction": "S",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "knockback",
+      "direction": "SE",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "knockback",
+      "direction": "E",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "knockback",
+      "direction": "NE",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "knockback",
+      "direction": "N",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "knockback",
+      "direction": "NW",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "knockback",
+      "direction": "W",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "knockback",
+      "direction": "SW",
+      "frames": 12,
+      "unique": 12,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "death",
+      "direction": "S",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "death",
+      "direction": "SE",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "death",
+      "direction": "E",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "death",
+      "direction": "NE",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "death",
+      "direction": "N",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "death",
+      "direction": "NW",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "death",
+      "direction": "W",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    },
+    {
+      "character": "bandit",
+      "action": "death",
+      "direction": "SW",
+      "frames": 16,
+      "unique": 16,
+      "native_rgba": true,
+      "transparent_border": true
+    }
+  ]
+}

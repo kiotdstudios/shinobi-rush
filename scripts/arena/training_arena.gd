@@ -255,6 +255,7 @@ func _ready() -> void:
 		placed.ensure_shrine()  # v7 added the Ancient Shrine landmark: every older layout gets one once
 	# Add the Ancient Shrine reference section using existing catalog art.
 	# The authored layer is rebuilt on boot; it does not overwrite user:// editor saves.
+	BlightwoodMap.populate(self)  # the starting map; when it lays itself the old courtyard section stands down
 	AncientShrineSection.populate(self)
 	editor = WorldEditor.new()
 	editor.setup(self, placed)
@@ -273,6 +274,8 @@ const BANDIT_RESPAWN_DELAY := 4.0
 ## walls to reach it. It stays off the CI controls probe's lanes (due right / due up from the spawn):
 ## its patrol keeps y <= 60 east of x=1250 and the probe only walks a few hundred px.
 func _spawn_bandit() -> void:
+	if placed != null and placed.has_bandits():
+		return  # the builder placed its own robbers: the layout decides where they stand
 	var packed := load("res://scenes/enemy/bandit.tscn") as PackedScene
 	var bandit := packed.instantiate()
 	bandit.name = "Bandit"
@@ -297,7 +300,9 @@ func _on_bandit_defeated(bandit: Bandit) -> void:
 
 ## Rebuild the bandit nav after the player-built layout changed; live enemies get the new grid at once.
 func rebuild_nav() -> void:
-	nav = ArenaNav.build(bounds, WorldScale.live_blocks() + (placed.obstacles() if placed != null else []))
+	# placed adopts every live Block as a "base_N" object, so its obstacles already cover the ones still
+	# standing -- adding live_blocks() again kept deleted walls (e.g. cleared by the map) solid in the nav.
+	nav = ArenaNav.build(bounds, placed.obstacles() if placed != null else WorldScale.live_blocks())
 	for e in get_tree().get_nodes_in_group("enemy"):
 		if "nav" in e:
 			e.nav = nav
