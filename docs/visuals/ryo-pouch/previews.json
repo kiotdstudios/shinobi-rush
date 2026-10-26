@@ -1,0 +1,26 @@
+[
+  {
+    "name": "normal",
+    "speed": 1.0,
+    "frames": 79,
+    "duration_s": 4.0,
+    "size": [
+      640,
+      360
+    ],
+    "source": "art-only compositing of generated sprites and existing pickup timing; not a live pickup backend",
+    "bytes": 2895892
+  },
+  {
+    "name": "half-speed",
+    "speed": 0.5,
+    "frames": 156,
+    "duration_s": 8.0,
+    "size": [
+      640,
+      360
+    ],
+    "source": "art-only compositing of generated sprites and existing pickup timing; not a live pickup backend",
+    "bytes": 5566271
+  }
+]
