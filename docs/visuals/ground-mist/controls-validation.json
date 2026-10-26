@@ -1,0 +1,185 @@
+{
+  "results": [
+    {
+      "name": "ready-flag",
+      "ok": true,
+      "detail": "__SHINOBI_READY__ true after 19074 ms"
+    },
+    {
+      "name": "state-object",
+      "ok": true,
+      "detail": "{\"frame\":6,\"physics_frame\":56,\"x\":0,\"y\":135,\"state\":\"IDLE\",\"sprinting\":false,\"fps\":2,\"zoom\":0.6650000214576721,\"view_w\":1924.81201171875,\"view_h\":1082.706787109375,\"camera_preset\":\"wide\",\"figure_height_px\":104,\"sprite_set_id\":\"player_128\",\"cfx_enabled\":true,\"cfx_scale\":1,\"cfx_active\":false,\"cfx_offset_x\":0,\"cfx_offset_y\":0,\"cfx_peak_px\":0,\"cfx_count\":0,\"vision_on\":false,\"vision_bandits\":0,\"vision_points\":0,\"vision_rays\":0,\"vision_ms\":0,\"vision_state\":\"\",\"vision_ai_state\":\"\",\"vision_sees\":false,\"vision_can_see\":false,\"vision_player_in\":false,\"vision_cone\":false,\"vision_range\":0,\"vision_close\":0,\"vision_fov_deg\":0,\"vision_facing_x\":0,\"vision_facing_y\":0,\"vision_mismatch\":0,\"vision_capped\":false,\"vision_nodes\":8220,\"vision_origin_x\":0,\"vision_origin_y\":0,\"target_locked\":false,\"player_kunai_drawn\":false,\"player_attack_anim\":\"idle\",\"player_weapon_visible\":false,\"player_sense_radius\":300,\"player_ryo\":50,\"settings_open\":false,\"settings_tab_x\":1027,\"settings_tab_y\":709.5,\"settings_bandit_x\":1191,\"settings_bandit_y\":685,\"settings_sense_x\":1191,\"settings_sense_y\":685,\"sense_vision_on\":false,\"sense_vision_views\":0,\"sense_vision_nodes\":8220,\"bandit_state\":\"PATROL\",\"bandit_x\":1294.8712158203125,\"bandit_y\":-182.53318786621094,\"bandit_evades\":0,\"bandit_animation\":\"sprint\",\"bandit_frame\":1,\"bandit_level\":1,\"bandit_intent\":\"patrolling\",\"bandit_sees\":false,\"bandit_senses_player\":false,\"bandit_sense_radius\":300,\"bandit_locked_on\":false,\"bandit_stolen_ryo\":0,\"bandit_flickers\":0,\"bandit_swings\":0,\"bandit_hits_landed\":0,\"bandit_stuck\":0,\"bandit_taunt\":false,\"bandit_home_dist\":52.782955169677734,\"player_hits_taken\":0,\"player_health\":100,\"player_max_health\":100,\"lab_open\":false,\"lab_animation\":\"idle\"}"
+    },
+    {
+      "name": "camera-preset-default-is-wide",
+      "ok": true,
+      "detail": "no ?camera= parameter: state.camera_preset=\"wide\", expected \"wide\""
+    },
+    {
+      "name": "camera-baseline-at-start",
+      "ok": true,
+      "detail": "expected zoom ~0.6650 and view 1924.8x1082.7; got zoom=0.6650000214576721, view=1924.81201171875x1082.706787109375"
+    },
+    {
+      "name": "move-right",
+      "ok": true,
+      "detail": "dx 104.3 over a700ms sample (KeyD held ~1000ms), state=MOVE"
+    },
+    {
+      "name": "sprint-faster",
+      "ok": true,
+      "detail": "sprint 592.0px/physics-sec vs walk 391.1px/physics-sec; state=SPRINT, sprinting=true"
+    },
+    {
+      "name": "player-sense-telemetry",
+      "ok": true,
+      "detail": "player_kunai_drawn=false (bool) player_sense_radius=300"
+    },
+    {
+      "name": "bandit-sense-telemetry",
+      "ok": true,
+      "detail": "bandit_senses_player=false (bool) bandit_sense_radius=300"
+    },
+    {
+      "name": "wall-approach-clearance",
+      "ok": true,
+      "detail": "real S input backs away y 195.1 -> 347.1 before W"
+    },
+    {
+      "name": "wall-stops-player",
+      "ok": true,
+      "detail": "y 347.1 -> -1098.0 with W held; 3 later samples spread 0.00"
+    },
+    {
+      "name": "lab-open-keeps-baseline",
+      "ok": true,
+      "detail": "after Tab (lab open) zoom=0.6650000214576721, expected ~0.6650 (opening the lab must not change the camera)"
+    },
+    {
+      "name": "lab-z-changes-zoom",
+      "ok": true,
+      "detail": "after Z zoom=1, expected 1 (native 1:1, the first non-baseline lab zoom)"
+    },
+    {
+      "name": "lab-z-second-step-is-quarter",
+      "ok": true,
+      "detail": "after a second Z zoom=1.25, expected 1.25 (quarter steps: baseline, 1, 1.25, 1.5, 1.75, 2, ...)"
+    },
+    {
+      "name": "lab-close-restores-baseline",
+      "ok": true,
+      "detail": "after Tab (lab closed) zoom=0.6650000214576721, expected ~0.6650"
+    },
+    {
+      "name": "lab-jump-available",
+      "ok": true,
+      "detail": "selected jump"
+    },
+    {
+      "name": "lab-dodge-available",
+      "ok": true,
+      "detail": "selected dodge"
+    },
+    {
+      "name": "camera-figure-height",
+      "ok": true,
+      "detail": "loaded figure height=104px"
+    },
+    {
+      "name": "camera-close-query-is-ignored-locked",
+      "ok": true,
+      "detail": "?camera=close is ignored (camera locked): expected preset=wide zoom ~0.6650 view 1924.8x1082.7; got preset=wide zoom=0.6650000214576721 view=1924.81201171875x1082.706787109375"
+    },
+    {
+      "name": "camera-garbage-falls-back-to-wide",
+      "ok": true,
+      "detail": "?camera=bogus expected preset=wide zoom ~0.6650 view 1924.8x1082.7; got preset=wide zoom=0.6650000214576721 view=1924.81201171875x1082.706787109375"
+    },
+    {
+      "name": "camera-impact-light",
+      "ok": true,
+      "detail": "wide, order band 2-3 screen px: count 0->1, peak 2.500 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721"
+    },
+    {
+      "name": "camera-impact-heavy",
+      "ok": true,
+      "detail": "wide, order band 4-6 screen px: count 1->2, peak 5.000 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721"
+    },
+    {
+      "name": "camera-impact-burst-capped",
+      "ok": true,
+      "detail": "wide, three light hits: the peak stays at or under the 6 px cap: count 2->5, peak 3.536 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721"
+    },
+    {
+      "name": "camera-impact-close-zoom",
+      "ok": true,
+      "detail": "?camera=close ignored, locked zoom ~0.6650, same bands in screen px: light count 0->1, peak 2.500 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721; heavy count 1->2, peak 5.000 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721"
+    },
+    {
+      "name": "camera-impact-off",
+      "ok": true,
+      "detail": "?camera_impact=off, keys 7 8 9 pressed: enabled=false, count=0, peak=0, active=false, offset (0, 0)"
+    },
+    {
+      "name": "camera-impact-reduced",
+      "ok": true,
+      "detail": "?camera_impact=reduced halves the heavy kick (5 -> 2.5 px), scale=0.5: count 0->1, peak 2.500 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721"
+    },
+    {
+      "name": "vision-default-off",
+      "ok": true,
+      "detail": "no ?vision= parameter: all 21 vision_* fields present (missing: none); on=false bandits=0 points=0 rays=0 nodes=8220"
+    },
+    {
+      "name": "vision-hotkeys-removed",
+      "ok": true,
+      "detail": "F1/F2/F3 pressed: on=false bandits=0 points=0 rays=0 nodes=8220 sense_vision_on=false (expect everything still off)"
+    },
+    {
+      "name": "vision-button-toggles-on-off",
+      "ok": true,
+      "detail": "Settings > Bandit vision click: ON on=true bandits=1 points=99 rays=101 nodes=8221; click again: OFF on=false bandits=0 points=0 rays=0 nodes=8220"
+    },
+    {
+      "name": "vision-follows-and-agrees-with-ai",
+      "ok": true,
+      "detail": "20 published frames, Bandit moved 313 px, states PATROL/not_alert; 0 disagreements; polygon apex vs Bandit worst 0.0000 px; last sample cone=true range=450 87 rays 0.6000000238418579 ms/rebuild"
+    },
+    {
+      "name": "vision-repeat-toggle-stable",
+      "ok": true,
+      "detail": "12 ON/OFF cycles through the Settings button (24 toggles): 0 bad states; after the last OFF on=false bandits=0 points=0 rays=0 nodes=8220 (start nodes=8220)"
+    },
+    {
+      "name": "vision-url-starts-on",
+      "ok": true,
+      "detail": "?vision=1: on=true bandits=1 points=78 rays=79 nodes=8221, state not_alert"
+    },
+    {
+      "name": "vision-url-on-then-off-leaves-nothing",
+      "ok": true,
+      "detail": "Settings click after ?vision=1: on=false bandits=0 points=0 rays=0 nodes=8220 (expect zero geometry and nodes=8220, one less than ON)"
+    },
+    {
+      "name": "sense-vision-default-off",
+      "ok": true,
+      "detail": "no toggle pressed: sense_vision_on=false sense_vision_views=0 sense_vision_nodes=8220"
+    },
+    {
+      "name": "sense-vision-button-toggles-on",
+      "ok": true,
+      "detail": "Settings > Sense vision click: sense_vision_on=true sense_vision_views=2"
+    },
+    {
+      "name": "sense-vision-button-toggles-off",
+      "ok": true,
+      "detail": "click again: sense_vision_on=false sense_vision_nodes=8220 (expect back to 8220)"
+    },
+    {
+      "name": "no-console-errors",
+      "ok": true,
+      "detail": "34 console messages, 0 error/pageerror"
+    }
+  ],
+  "console_errors": []
+}
