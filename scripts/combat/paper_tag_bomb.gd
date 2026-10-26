@@ -13,6 +13,11 @@ const FUSE := 1.66  ## seconds from release to detonation
 const FLIGHT_TIME := 0.46
 const MAX_RANGE := 300.0
 const ARC_HEIGHT := 70.0
+## The plain paper tag flies like a kunai: straight, fast and flat at hand height, then sticks to the body it hits.
+## The tag bomb keeps the lobbed arc.
+const TAG_SPEED := 640.0
+const TAG_RANGE := 520.0
+const BODY_LIFT := 34.0  ## where on an enemy's body a tag sticks (feet are the node origin)
 const HAND_LIFT := 44.0  ## hand height the tag leaves from
 const TOUCH_RADIUS := 26.0
 const FLY_FPS := 40.0
@@ -41,6 +46,8 @@ var thrower: Node2D = null
 var phase: Phase = Phase.FLY
 var age := 0.0  ## seconds since release
 var travelled := 0.0
+var stuck_to: Node2D = null  ## the enemy a tag landed on: it rides along until the fuse runs out
+var _stuck_offset := Vector2.ZERO
 var landed_on := ""  ## "", "range", "wall", "enemy" (read by tests)
 var damaged: Array[Node2D] = []  ## enemies the blast hurt (read by tests)
 var blast_t := 0.0
@@ -55,6 +62,9 @@ var _audio: AudioStreamPlayer
 var _start := Vector2.ZERO
 var _hit_done := false
 var _flight_len := MAX_RANGE
+var flight_time := FLIGHT_TIME
+var flight_len := MAX_RANGE
+var kunai_style := false  ## plain paper tag: straight kunai-like throw
 
 
 static func spawn(parent: Node, from: Vector2, aim: Vector2, who: Node2D, item_art := "") -> PaperTagBomb:
@@ -65,6 +75,11 @@ static func spawn(parent: Node, from: Vector2, aim: Vector2, who: Node2D, item_a
 	b.dir = aim.normalized() if aim != Vector2.ZERO else Vector2.RIGHT
 	b.thrower = who
 	b.art_kind = item_art
+	b.kunai_style = item_art.is_empty()
+	if b.kunai_style:
+		b.flight_len = TAG_RANGE
+		b.flight_time = TAG_RANGE / TAG_SPEED
+		b._flight_len = TAG_RANGE
 	parent.add_child(b)
 	b.global_position = from
 	b._start = from
@@ -137,7 +152,8 @@ func advance(delta: float) -> void:
 		Phase.FLY:
 			_step_fly(delta)
 		Phase.ARMED:
-			pass
+			if stuck_to != null and is_instance_valid(stuck_to):
+				global_position = stuck_to.global_position + _stuck_offset
 		Phase.BLAST:
 			_step_blast(delta)
 	if phase != Phase.BLAST and phase != Phase.DONE and age >= FUSE:
@@ -146,7 +162,7 @@ func advance(delta: float) -> void:
 
 
 func _step_fly(delta: float) -> void:
-	var speed := _flight_len / FLIGHT_TIME
+	var speed := _flight_len / flight_time
 	var a := global_position
 	var b := a + dir * speed * delta
 	var seg := b - a
@@ -159,6 +175,8 @@ func _step_fly(delta: float) -> void:
 				t = clampf(((e as Node2D).global_position - a).dot(seg) / seg.length_squared(), 0.0, 1.0)
 			if (a + seg * t).distance_to((e as Node2D).global_position) <= TOUCH_RADIUS:
 				global_position = a + seg * t
+				stuck_to = e as Node2D
+				_stuck_offset = Vector2(randf_range(-4.0, 4.0), 0.0) if kunai_style else global_position - stuck_to.global_position
 				_land("enemy")
 				return
 		var q := PhysicsRayQueryParameters2D.create(a + Vector2(0, -14), b + Vector2(0, -14))
@@ -171,7 +189,7 @@ func _step_fly(delta: float) -> void:
 			return
 	global_position = b
 	travelled += seg.length()
-	if age >= FLIGHT_TIME or travelled >= _flight_len:
+	if age >= flight_time or travelled >= _flight_len:
 		_land("range")
 
 
@@ -279,18 +297,18 @@ func _refresh_visual() -> void:
 	match phase:
 		Phase.FLY:
 			var fl := body_frames("fly")
-			var u := clampf(age / FLIGHT_TIME, 0.0, 1.0)
+			var u := clampf(age / flight_time, 0.0, 1.0)
 			if not fl.is_empty():
 				_body.texture = fl[int(age * FLY_FPS) % fl.size()]
-			_body.position = Vector2(0, -HAND_LIFT - sin(u * PI) * ARC_HEIGHT)
+			_body.position = Vector2(0, -HAND_LIFT - (0.0 if kunai_style else sin(u * PI) * ARC_HEIGHT))
 			_shadow.queue_redraw()
 		Phase.ARMED:
 			var ar := body_frames("armed")
 			var left := maxf(FUSE - age, 0.0)
-			var rate := lerpf(8.0, 30.0, 1.0 - clampf(left / maxf(FUSE - FLIGHT_TIME, 0.1), 0.0, 1.0))
+			var rate := lerpf(8.0, 30.0, 1.0 - clampf(left / maxf(FUSE - flight_time, 0.1), 0.0, 1.0))
 			if not ar.is_empty():
 				_body.texture = ar[int(age * rate) % ar.size()]
-			_body.position = Vector2(0, -24 if not art_kind.is_empty() else -4)
+			_body.position = Vector2(0, -BODY_LIFT if stuck_to != null and kunai_style else (-24 if not art_kind.is_empty() else -4))
 			_shadow.queue_redraw()
 			_halo.queue_redraw()
 		Phase.BLAST:
@@ -305,8 +323,8 @@ func _refresh_visual() -> void:
 
 
 func _draw_shadow() -> void:
-	var u := clampf(age / FLIGHT_TIME, 0.0, 1.0)
-	var lift := sin(u * PI) if phase == Phase.FLY else 0.0
+	var u := clampf(age / flight_time, 0.0, 1.0)
+	var lift := sin(u * PI) if phase == Phase.FLY and not kunai_style else 0.0
 	var w := lerpf(15.0, 9.0, lift)
 	_shadow.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.45))
 	_shadow.draw_circle(Vector2.ZERO, w, Color(0, 0, 0, lerpf(0.4, 0.2, lift)))
@@ -314,7 +332,7 @@ func _draw_shadow() -> void:
 
 func _draw_halo() -> void:
 	var left := maxf(FUSE - age, 0.0)
-	var urgency := 1.0 - clampf(left / maxf(FUSE - FLIGHT_TIME, 0.1), 0.0, 1.0)
+	var urgency := 1.0 - clampf(left / maxf(FUSE - flight_time, 0.1), 0.0, 1.0)
 	var pulse := 0.5 + 0.5 * sin(age * lerpf(10.0, 38.0, urgency))
 	_halo.draw_set_transform(Vector2(0, -4), 0.0, Vector2(1.0, 0.5))
 	for i in 4:

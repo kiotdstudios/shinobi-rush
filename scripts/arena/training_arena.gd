@@ -274,6 +274,8 @@ const BANDIT_RESPAWN_DELAY := 4.0
 ## walls to reach it. It stays off the CI controls probe's lanes (due right / due up from the spawn):
 ## its patrol keeps y <= 60 east of x=1250 and the probe only walks a few hundred px.
 func _spawn_bandit() -> void:
+	if placed != null and placed.has_bandits():
+		return  # the builder placed its own robbers: the layout decides where they stand
 	var packed := load("res://scenes/enemy/bandit.tscn") as PackedScene
 	var bandit := packed.instantiate()
 	bandit.name = "Bandit"

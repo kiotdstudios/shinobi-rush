@@ -83,6 +83,9 @@ static func frames_for(variant: String) -> Array:
 ## Plays one random variant of `kind` at world position `pos`. `facing` (optional) orients trail art.
 ## Returns the spawned sprite, or null if there is nothing to play / the cap is reached.
 func play(kind: String, pos: Vector2, facing: Vector2) -> Sprite2D:
+	# Waterlife owns water-contact spray; do not layer dry brown dust over it.
+	if get_parent() is PlayerController and (get_parent() as PlayerController).over_water:
+		return null
 	var variants := variants_for(kind)
 	if variants.is_empty() or _live >= MAX_LIVE:
 		return null
