@@ -96,6 +96,7 @@ func _initialize() -> void:
 	await load("res://tests/test_proximity_sense.gd").new().run(ck, root)
 	await load("res://tests/test_lock_on.gd").new().run(ck, root)
 	await load("res://tests/test_lock_aim.gd").new().run(ck, root)
+	await load("res://tests/test_lock_switch.gd").new().run(ck, root)
 	await load("res://tests/test_world_editor.gd").new().run(ck, root)
 	await load("res://tests/test_builder_ground.gd").new().run(ck, root)
 	await load("res://tests/test_builder_ashen.gd").new().run(ck, root)
