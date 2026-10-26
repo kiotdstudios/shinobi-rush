@@ -1,7 +1,7 @@
 # ORDER — Classic ryo pouch pickup art
 - Agent: Codex
 - Owner: Codex (art); Aki (future backend integration, per owner)
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Branch: codex/ryo-pouch
 - Dependencies: approved generic pickup timing and owner mockup
@@ -20,3 +20,5 @@ Consistent three-quarter pixel-art style; fixed canvas / anchors; matching picku
 
 ## Verification
 All art QA and Godot resource import checks passed. Five animation tracks, 60 source textures, separate gold VFX, normal/half-speed previews and Aki handoff ready. Live deployment is not applicable to this explicitly art-only assignment.
+
+Art implementation: 0df68590339152fc4413cc2a1ca7da2b5d1b764d. Delivery is the art pack, preview GIFs and Aki handoff; no gameplay pickup was registered.
