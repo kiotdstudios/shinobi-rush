@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-25-body-flicker-premium.md
 - Date: 2026-10-25 (America/New_York; UTC capture timestamps may read 2026-10-26)
 - Final status: DONE — merged, deployed and verified in canonical live gameplay
-- Commit / PR: Runtime PR209 https://github.com/kiotdstudios/shinobi-rush/pull/209 merged as 4e248c1b0c2a2e427eba49dca4c7e2b026ce306c; final evidence/report-only PR follows.
+- Commit / PR: Runtime PR209 https://github.com/kiotdstudios/shinobi-rush/pull/209 merged as 4e248c1b0c2a2e427eba49dca4c7e2b026ce306c; evidence/report-only PR210 https://github.com/kiotdstudios/shinobi-rush/pull/210 is open (not merged).
 
 ## Final verified delivery
 **LIVE:** https://kiotdstudios.github.io/shinobi-rush/?flicker=review&v=4e248c1b . The normal game also uses the new player/bandit effect without a review query.
@@ -124,3 +124,5 @@ Canonical live URL: https://kiotdstudios.github.io/shinobi-rush/?flicker=review 
 - This follow-up changes evidence/docs/order status only. Runtime was already merged/deployed by PR209; it does not claim another game deployment.
 
 - Artifact decode check: bundled FFmpeg does not include a null muxer, so the attempted null-output check was unavailable. Both final WebM files successfully decoded an end-of-stream frame to PNG; Pillow integrity checks passed. No recording defect was found.
+
+- Final evidence commit: 2f9add7fc516e216bbc33b41dc22b2e6f3bf89fc on codex/body-flicker-live-report; PR210 is an open documentation/evidence follow-up. Runtime PR209 remains the merged, verified live delivery.

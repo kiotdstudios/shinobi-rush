@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-25-full-diamond-floor-tiles.md
 - Date: 2026-10-25 (America/New_York)
 - Final status: DONE — acknowledgement and future production standard
-- Commit / PR: Documentation follow-up with Body Flicker live report; link added after creation.
+- Commit / PR: 2f9add7fc516e216bbc33b41dc22b2e6f3bf89fc; documentation follow-up PR210 https://github.com/kiotdstudios/shinobi-rush/pull/210 (open).
 
 ## Work completed
 Read the full-diamond floor order and told Diel directly, "I read the tiles order." Accepted full 72x36 opaque diamond coverage, shared registration and the floor-coverage check for future floor production. Aki already corrected the nine existing grass tiles; no floor art was regenerated or modified by Codex for this acknowledgement. The current Body Flicker task changes no terrain.
