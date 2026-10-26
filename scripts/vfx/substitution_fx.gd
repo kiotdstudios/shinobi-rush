@@ -1,7 +1,7 @@
 class_name SubstitutionFx
 extends Node2D
 ## One-shot Substitution Jutsu effect (Codex art pack, assets/vfx/substitution/substitution.json).
-## Departure smoke + ribbons + the replacement log play at the OUTGOING foot origin; the arrival
+## Layered smoke vortex + the replacement log play at the OUTGOING foot origin; the arrival
 ## burst plays at the NEW foot origin after `ARRIVAL_DELAY`. Image top-left = foot origin - pivot.
 ## The log stays on the ground for `LOG_LIFETIME` seconds, then fades and frees. Plays in _process
 ## so it freezes with the tree pause.
@@ -24,7 +24,8 @@ var _age: float = 0.0
 var _log_foot := Vector2.ZERO
 var _log_sprite: Sprite2D
 var _log_body: StaticBody2D
-var _smoke_seed := 0
+var _vortex: Array[Dictionary] = []
+var _log_impact_played := false
 
 
 ## Spawns the effect under `parent`; `old_foot`/`new_foot` are world foot origins.
@@ -61,12 +62,13 @@ static func clip(name: String) -> Dictionary:
 
 func _run(old_foot: Vector2, new_foot: Vector2) -> void:
 	_log_foot = old_foot
-	_smoke_seed = int(absf(old_foot.x * 17.0 + old_foot.y * 31.0)) % 997
+	_init_vortex()
 	_add_track("log", old_foot, 0.04, LOG_LIFETIME)
 	_create_log_collider()
-	_add_track("departure", old_foot, 0.0, 0.0)
-	_add_track("ribbons", old_foot, 0.0, 0.0)
+	# Authored front/back vortex replaces the old flat departure/ribbon overlay.
 	_add_track("arrival", new_foot, ARRIVAL_DELAY, 0.0)
+	for entry in _vortex:
+		move_child(entry.front,get_child_count()-1)  # foreground curl after log
 
 
 func _add_track(name: String, foot: Vector2, delay: float, hold_for: float) -> void:
@@ -113,7 +115,10 @@ func live_tracks() -> int:
 func _process(delta: float) -> void:
 	_age += delta
 	_update_log_motion()
-	queue_redraw()
+	_update_vortex()
+	if _age >= LOG_IMPACT and not _log_impact_played:
+		_log_impact_played = true
+		PremiumImpact.spawn(self,_log_foot+Vector2(25,3),Vector2(1,0.4).normalized(),false)
 	var alive: Array = []
 	for t in _tracks:
 		var s: Sprite2D = t["sprite"]
@@ -192,30 +197,35 @@ func _update_log_motion() -> void:
 			_log_body.queue_free()
 			_log_body = null
 
-## Pixel-like smoke puffs, small sparks and ground impact ring. Drawn in
-## world coordinates through to_local so FX stays anchored even with a
-## transformed parent. No random() per frame: reproducible puff trajectories.
-func _draw() -> void:
-	var p := to_local(_log_foot)
-	if _age >= LOG_IMPACT and _age < LOG_IMPACT + 0.52:
-		var t := (_age - LOG_IMPACT) / 0.52
-		draw_arc(p + Vector2(25, 3), lerpf(7, 57, t), 0.0, TAU, 22, Color(0.78, 0.82, 0.88, (1.0 - t) * 0.55), 2.0)
-		for i in 13:
-			var a := TAU * float(i) / 13.0
-			var q := p + Vector2(25, 3) + Vector2(cos(a) * 52.0 * t, sin(a) * 22.0 * t - sin(t * PI) * 14.0)
-			draw_rect(Rect2(q, Vector2(4, 4)), Color(0.91, 0.87, 0.76, 1.0 - t))
-	if _age >= LOG_IMPACT and _age < LOG_IMPACT + 0.14:
-		var flash := 1.0 - (_age - LOG_IMPACT) / 0.14
-		draw_circle(p + Vector2(25, 3), 17.0 * flash, Color(1.0, 0.95, 0.78, flash * 0.48))
-	if _age < LOG_POOF or _age >= LOG_SMOKE_END:
-		return
-	var t := clampf((_age - LOG_POOF) / (LOG_SMOKE_END - LOG_POOF), 0.0, 1.0)
-	var fade := pow(1.0 - t, 1.3)
-	for i in 14:
-		var a := TAU * float(i) / 14.0 + float(_smoke_seed % 13) * 0.09
-		var offset := Vector2(cos(a) * (7.0 + 36.0 * t), sin(a) * (4.0 + 17.0 * t) - 30.0 * t)
-		var wobble := sin(t * 11.0 + float(i) * 1.8) * 4.0 * t
-		var q := p + Vector2(10, -8) + offset + Vector2(wobble, 0)
-		var radius := (9.0 + float(i % 4) * 2.5) * (0.55 + t * 0.65)
-		var shade := Color(0.77, 0.83, 0.91, fade * 0.82) if i % 3 else Color(0.98, 0.98, 1.0, fade * 0.9)
-		draw_circle(q, radius, shade)
+## Five overlapping authored passes keep volume moving through wobble, fall and bounce.
+## Complementary foreground/background atlases reconstruct the source exactly around the log.
+func _init_vortex() -> void:
+	for delay: float in [0.0,0.42,0.84,1.26,LOG_POOF]:
+		var entry := {"delay":delay,"life":LOG_SMOKE_END-LOG_POOF if delay==LOG_POOF else 0.72,"started":false,"foot":_log_foot}
+		for side: String in ["back","front"]:
+			var sprite := Sprite2D.new()
+			sprite.texture = load("res://assets/vfx/premium_damage/vortex-"+side+".png")
+			sprite.hframes = 4
+			sprite.vframes = 4
+			sprite.centered = false
+			sprite.offset = Vector2(-64,-104)
+			sprite.visible = false
+			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			add_child(sprite)
+			entry[side] = sprite
+		_vortex.append(entry)
+
+func _update_vortex() -> void:
+	for entry in _vortex:
+		var t: float = (_age-float(entry.delay))/float(entry.life)
+		if t>=0.0 and not entry.started:
+			entry.started = true
+			entry.foot = _log_sprite.global_position if _log_sprite!=null and _log_sprite.visible else _log_foot+Vector2(25,16) if _age>=LOG_POOF else _log_foot
+		for side: String in ["back","front"]:
+			var sprite: Sprite2D = entry[side]
+			sprite.visible = t>=0.0 and t<1.0
+			if sprite.visible:
+				sprite.global_position = Vector2(entry.foot).round()
+				sprite.frame = mini(int(t*16.0),15)
+				sprite.modulate.a = (1.0-smoothstep(0.75,1.0,t))*(1.0 if float(entry.delay)==LOG_POOF else 0.8)
+

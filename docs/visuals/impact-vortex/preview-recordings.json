@@ -1,0 +1,28 @@
+{
+  "normal": {
+    "frames": 44,
+    "fps": 12.5,
+    "duration_s": 3.52,
+    "source": "Real Chromium25FPS compositor recording, sampled12.5FPS, no interpolation or resize",
+    "crop": [
+      80,
+      230,
+      1220,
+      590
+    ],
+    "speed": 1
+  },
+  "half-speed": {
+    "frames": 87,
+    "fps": 12.5,
+    "duration_s": 6.96,
+    "source": "Real Chromium25FPS compositor recording, sampled12.5FPS, no interpolation or resize",
+    "crop": [
+      80,
+      230,
+      1220,
+      590
+    ],
+    "speed": 0.5
+  }
+}
