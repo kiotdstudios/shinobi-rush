@@ -1,0 +1,50 @@
+[
+  {
+    "character": "player",
+    "animation": "hit_react",
+    "direction": "SE",
+    "frame_count": 8,
+    "job_id": "5b8345e5-f708-4396-8fbd-37458ab18ebc",
+    "receipt": "id: 5b8345e5-f708-4396-8fbd-37458ab18ebc\njob_id: 5b8345e5-f708-4396-8fbd-37458ab18ebc\naction: A single quick combat hit reaction: impact immediately snaps chest and shoulders backward, chin recoils, elbows lift defensively, knees flex to absorb the blow, then a controlled recovery back to exactly the original ready stance. Feet remain braced near the same ground origin. No walking, attacking, or idle-only breathing. Strong readable silhouette changes from the first generated frame. Face and remain SOUTH-EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 8\nsize: 128x128px\ntransparent: True\nseed: 2412500\nasset_id: a9240970-bc05-5af8-b7c6-80ed95ccff33\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"5b8345e5-f708-4396-8fbd-37458ab18ebc\")"
+  },
+  {
+    "character": "player",
+    "animation": "knockback",
+    "direction": "SE",
+    "frame_count": 12,
+    "job_id": "4de38c18-ff65-4723-af56-c634b737303b",
+    "receipt": "id: 4de38c18-ff65-4723-af56-c634b737303b\njob_id: 4de38c18-ff65-4723-af56-c634b737303b\naction: One heavy combat stagger from a powerful frontal blow: torso recoils hard, arms throw outward to regain balance, knees buckle, one short backward bracing step absorbs the force, then weight comes forward and the character regains the original ready stance. Show real articulated limbs and weight transfer. Animate in place around the same ground origin; the game will translate the actor for knockback. Do not make a walking loop. Face and remain SOUTH-EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 12\nsize: 128x128px\ntransparent: True\nseed: 2412501\nasset_id: a03f1f82-64ad-5749-ae7d-1fb9855d2ea2\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"4de38c18-ff65-4723-af56-c634b737303b\")"
+  },
+  {
+    "character": "player",
+    "animation": "death",
+    "direction": "SE",
+    "frame_count": 16,
+    "job_id": "e61643c9-b0ea-4133-8828-daf60991e74d",
+    "receipt": "id: e61643c9-b0ea-4133-8828-daf60991e74d\njob_id: e61643c9-b0ea-4133-8828-daf60991e74d\naction: One non-looping defeat collapse: sudden damaging impact, shoulders sag and knees buckle, drops to one knee, loses support and collapses onto their side on the ground. Finish fully prone and motionless with limbs settled; the last several frames must hold the defeated pose, never stand up or return to idle. Keep the fallen figure fully inside the canvas at the same body scale. No blood, dismemberment, ghost, smoke, dissolving, flashing or fading. Face and remain SOUTH-EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 16\nsize: 128x128px\ntransparent: True\nseed: 2412502\nasset_id: 4f891dcc-e9b9-5e76-acc9-de7bf26800d1\nasset_status: pending (saved when generation completes)\ncost: 4 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"e61643c9-b0ea-4133-8828-daf60991e74d\")"
+  },
+  {
+    "character": "bandit",
+    "animation": "hit_react",
+    "direction": "SE",
+    "frame_count": 8,
+    "job_id": "94241851-8144-4780-b23e-151eedaa7bc9",
+    "receipt": "id: 94241851-8144-4780-b23e-151eedaa7bc9\njob_id: 94241851-8144-4780-b23e-151eedaa7bc9\naction: A single quick combat hit reaction: impact immediately snaps chest and shoulders backward, chin recoils, elbows lift defensively, knees flex to absorb the blow, then a controlled recovery back to exactly the original ready stance. Feet remain braced near the same ground origin. No walking, attacking, or idle-only breathing. Strong readable silhouette changes from the first generated frame. Face and remain SOUTH-EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 8\nsize: 128x128px\ntransparent: True\nseed: 2412503\nasset_id: 0eebb40b-9c0a-53eb-b349-d290396f269f\nasset_status: pending (saved when generation completes)\ncost: 2 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"94241851-8144-4780-b23e-151eedaa7bc9\")"
+  },
+  {
+    "character": "bandit",
+    "animation": "knockback",
+    "direction": "SE",
+    "frame_count": 12,
+    "job_id": "79b6612c-29e0-417a-909f-2db363e7d920",
+    "receipt": "id: 79b6612c-29e0-417a-909f-2db363e7d920\njob_id: 79b6612c-29e0-417a-909f-2db363e7d920\naction: One heavy combat stagger from a powerful frontal blow: torso recoils hard, arms throw outward to regain balance, knees buckle, one short backward bracing step absorbs the force, then weight comes forward and the character regains the original ready stance. Show real articulated limbs and weight transfer. Animate in place around the same ground origin; the game will translate the actor for knockback. Do not make a walking loop. Face and remain SOUTH-EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 12\nsize: 128x128px\ntransparent: True\nseed: 2412504\nasset_id: 5cd22e30-d4a3-5e84-9bf2-fa1821b1d788\nasset_status: pending (saved when generation completes)\ncost: 3 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"79b6612c-29e0-417a-909f-2db363e7d920\")"
+  },
+  {
+    "character": "bandit",
+    "animation": "death",
+    "direction": "SE",
+    "frame_count": 16,
+    "job_id": "96de248f-797f-4c58-be8d-3a3081553728",
+    "receipt": "id: 96de248f-797f-4c58-be8d-3a3081553728\njob_id: 96de248f-797f-4c58-be8d-3a3081553728\naction: One non-looping defeat collapse: sudden damaging impact, shoulders sag and knees buckle, drops to one knee, loses support and collapses onto their side on the ground. Finish fully prone and motionless with limbs settled; the last several frames must hold the defeated pose, never stand up or return to idle. Keep the fallen figure fully inside the canvas at the same body scale. No blood, dismemberment, ghost, smoke, dissolving, flashing or fading. Face and remain SOUTH-EAST throughout. Preserve this exact ninja's face, hair, clothes, proportions, crisp pixel-art palette and elevated three-quarter camera. No new weapons, no sword, no costume change. Transparent background, no floor shadow, fixed camera, native 128x128 canvas.\nframes: 16\nsize: 128x128px\ntransparent: True\nseed: 2412505\nasset_id: f6b51247-2067-529a-8c98-f16bd0340847\nasset_status: pending (saved when generation completes)\ncost: 4 generations\nstatus: processing (~30-180s)\n\nhint: get_image(job_id=\"96de248f-797f-4c58-be8d-3a3081553728\")"
+  }
+]

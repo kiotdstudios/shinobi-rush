@@ -1,0 +1,2 @@
+# Ashen falling foliage
+Independent charred ash-flake tumble atlas:16unique32×32RGBA poses,4×4cells. Tiny ember rim, ash-gray highlights, dark papery center. No magenta backdrop or baked glow halo. Frame metadata is the ash section of assets/environment/ashen_trees/ashen-trees.art.json. Runtime AshenTree keeps a bounded pool of24flakes/tree; lifecycle8s, tumble6FPS. Separate from body tree art and root shader. Original sheet retained under source/. This is ash shed by the volcanic trees, not ordinary green leaves or blossom petals.

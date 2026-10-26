@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "id": "body_flicker_SE",
+  "status": "SE_proof_pending_owner_approval",
+  "frame_size": [192, 192],
+  "anchor": [96, 141],
+  "comment_anchor": "anchor x=96 (horizontal center), y=141 matches player_128 foot_anchor y=116 + 25px canvas offset so foot stays planted at the same world position on departure and arrival",
+  "fps": 24,
+  "loop": false,
+  "duration_seconds": 0.417,
+  "direction": "SE",
+  "direction_note": "SE proof only. Eight-direction expansion pending owner approval of this proof.",
+  "travel_offset_world_px": {"x": 56, "y": 40},
+  "comment_travel": "Arrival reappear position is +56x +40y from departure in world px (SE diagonal). Runtime must offset the player body node by this vector when hiding during travel.",
+  "phases": {
+    "departure": {
+      "frames": ["depart_000.png", "depart_001.png", "depart_002.png"],
+      "frame_range": [0, 2],
+      "events": [
+        {"frame": 0, "event": "flicker_start"},
+        {"frame": 1, "event": "hide_player", "note": "hide player CharacterBody2D visibility; keep collision active for 1 frame then disable"},
+        {"frame": 2, "event": "flicker_travel"}
+      ]
+    },
+    "travel": {
+      "frames": ["travel_000.png", "travel_001.png", "travel_002.png", "travel_003.png"],
+      "frame_range": [3, 6],
+      "events": []
+    },
+    "arrival": {
+      "frames": ["arrive_000.png", "arrive_001.png", "arrive_002.png"],
+      "frame_range": [7, 9],
+      "events": [
+        {"frame": 7, "event": "reappear", "note": "re-enable player visibility and collision at travel_offset_world_px from departure position"},
+        {"frame": 9, "event": "recover", "note": "jutsu cooldown timer starts; chain into kunai strike or movement is legal from this frame"}
+      ]
+    }
+  },
+  "layers": {
+    "vfx_departure": "depart_000.png through depart_002.png -- separate CPUParticles2D or AnimatedSprite2D node above player",
+    "vfx_travel": "travel_000.png through travel_003.png -- separate node; follows departure position (not the hidden player)",
+    "vfx_arrival": "arrive_000.png through arrive_002.png -- separate node spawned at reappear world position",
+    "player_body": "hidden between hide_player and reappear events; use CanvasItem.visible = false, do NOT move the CharacterBody2D until reappear"
+  },
+  "shadow_baked": false,
+  "background_baked": false,
+  "generation_method": "procedural Python (Pillow); no PixelLab API used (no paid generation without owner approval per order)",
+  "previews": ["contact_sheet_SE_proof.png"]
+}

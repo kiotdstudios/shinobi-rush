@@ -274,3 +274,28 @@ class SelfTestHarnessTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MapEditorPageTests(unittest.TestCase):
+    def test_editor_page_is_derived_from_index_with_the_flag(self):
+        import tempfile
+        from pathlib import Path
+        import export_tools
+        with tempfile.TemporaryDirectory() as t:
+            d = Path(t)
+            (d / "index.html").write_text("<html><head><title>Game</title></head><body></body></html>", encoding="utf-8")
+            out = export_tools.write_map_editor_page(d)
+            text = out.read_text(encoding="utf-8")
+            self.assertEqual(out.name, "editor.html")
+            self.assertIn("window.SHINOBI_MAP_EDITOR=true", text)
+            self.assertIn("<title>Shinobi Rush Map Editor</title>", text)
+            self.assertNotIn("SHINOBI_MAP_EDITOR", (d / "index.html").read_text(encoding="utf-8"))
+
+    def test_editor_page_needs_a_head(self):
+        import tempfile
+        from pathlib import Path
+        import export_tools
+        with tempfile.TemporaryDirectory() as t:
+            (Path(t) / "index.html").write_text("<html></html>", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                export_tools.write_map_editor_page(Path(t))

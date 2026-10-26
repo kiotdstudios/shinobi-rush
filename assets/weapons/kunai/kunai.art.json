@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "id": "black_kunai",
+  "type": "one_handed_kunai",
+  "texture": "black_kunai.png",
+  "texture_size": [
+    64,
+    64
+  ],
+  "grip_pivot_px": [
+    25,
+    31
+  ],
+  "blade_axis": "+X",
+  "native_pixel_scale": 1,
+  "weapon_length_px": 36,
+  "equippable_by": [
+    "player",
+    "bandit"
+  ],
+  "starter_weapon_intent": true,
+  "runtime_equipped": false,
+  "throw_action": "pending_owner_shield_replacement_clarification",
+  "sha256": "1e34f20c764bc561e7e73ec56077d2939790739e657b4da8b4e2ea2bda3321c5",
+  "provenance": {
+    "tool": "built_in_image_gen",
+    "raw_filename": "exec-e5e5d698-f7b0-4923-8eec-6cc489f7f2fe.png",
+    "raw_size": [
+      1254,
+      1254
+    ],
+    "processing": "alpha threshold128; shared bbox crop; nearest resize to36px length; centered64px transparent texture",
+    "prompt": "One compact black horizontal kunai, ring left, wrapped grip, matte charcoal diamond blade right; detailed original pixel art; transparent, no logo/background/shadow/effects."
+  }
+}

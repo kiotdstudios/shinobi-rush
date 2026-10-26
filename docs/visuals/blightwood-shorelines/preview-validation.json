@@ -1,0 +1,12 @@
+{
+  "normal": {
+    "frames": 192,
+    "duration_ms": 8000,
+    "bytes": 2586532
+  },
+  "half-speed": {
+    "frames": 192,
+    "duration_ms": 16000,
+    "bytes": 2586674
+  }
+}

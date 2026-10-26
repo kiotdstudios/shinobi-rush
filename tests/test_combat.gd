@@ -16,6 +16,10 @@ func run(p_ck: Callable, tree_root: Node) -> void:
 	await test_dodge_cancel_recovery(tree_root)
 	await test_mash_does_not_skip_or_restart(tree_root)
 	await test_bandit_takes_damage_and_dies(tree_root)
+	await test_air_attack_land_run(tree_root)
+	await test_stale_buffer_expires(tree_root)
+	await test_buffer_survives_hitstop(tree_root)
+	await test_cancel_eligibility(tree_root)
 
 
 func _boot(tree_root: Node) -> Array:
@@ -132,13 +136,13 @@ func test_dodge_dash_attack(tree_root: Node) -> void:
 		if player.state != PlayerController.State.DODGE:
 			break
 	ck.call("dash attack: dodge survives long enough to reach its late window", reached_late)
-	var min_v_during_transition := player.velocity.length()
+	var max_v_during_transition := player.velocity.length()
 	await _tap("attack_light")
 	for i in 3:
 		await main.get_tree().physics_frame
-		min_v_during_transition = minf(min_v_during_transition, player.velocity.length())
+		max_v_during_transition = maxf(max_v_during_transition, player.velocity.length())
 	ck.call("dash attack: late-dodge attack press becomes DASH_ATTACK (not light1, not idle)", player.state == PlayerController.State.DASH_ATTACK, player.get_state_name())
-	ck.call("dash attack: velocity never collapsed to ~0 across dodge->dash-attack", min_v_during_transition > 10.0, str(min_v_during_transition))
+	ck.call("dash attack: the dash attack launches its own lunge right out of the flicker dodge", max_v_during_transition > 10.0, str(max_v_during_transition))
 	Input.action_release("move_right")
 	main.queue_free()
 	await main.get_tree().process_frame
@@ -297,5 +301,105 @@ func test_bandit_takes_damage_and_dies(tree_root: Node) -> void:
 			await main.get_tree().physics_frame
 		swings += 1
 	ck.call("bandit: enough swings bring it to 0 hp and DEAD", not bandit.is_alive() and bandit.hp <= 0.0, "hp=%.1f state=%s swings=%d" % [bandit.hp, bandit.get_state_name(), swings])
+	main.queue_free()
+	await main.get_tree().process_frame
+
+
+# ------------------------------------------------------- Fluidity A: run -> jump -> aerial -> land -> run
+func test_air_attack_land_run(tree_root: Node) -> void:
+	var r := await _boot(tree_root)
+	var main: Node = r[0]
+	var player: PlayerController = r[2]
+	await _reset(player, Vector2(-900, 100))
+	Input.action_press("move_right")
+	for i in 20:
+		await main.get_tree().physics_frame
+	await _tap("jump")
+	ck.call("air attack: jump started", player.state == PlayerController.State.JUMP, player.get_state_name())
+	for i in 6:
+		await main.get_tree().physics_frame
+	await _tap("attack_light")
+	var saw_air := false
+	var saw_idle := false
+	var min_vx := 99999.0
+	for i in 120:
+		await main.get_tree().physics_frame
+		if player.state == PlayerController.State.AIR_ATTACK:
+			saw_air = true
+			min_vx = minf(min_vx, player.velocity.x)
+		if player.state == PlayerController.State.IDLE:
+			saw_idle = true
+		if player.state == PlayerController.State.MOVE and saw_air:
+			break
+	ck.call("air attack: attack during JUMP enters AIR_ATTACK", saw_air)
+	ck.call("air attack: jump momentum survives the swing (no velocity collapse)", min_vx > player.jump_air_speed_cap * 0.9, str(min_vx))
+	ck.call("air attack: no IDLE anywhere through jump -> air attack -> land", not saw_idle)
+	ck.call("air attack: lands straight back into MOVE (still running)", player.state == PlayerController.State.MOVE, player.get_state_name())
+	ck.call("air attack: jump visual lift reset on landing", is_zero_approx(player.visual.position.y), str(player.visual.position.y))
+	Input.action_release("move_right")
+	main.queue_free()
+	await main.get_tree().process_frame
+
+
+# ------------------------------------------------------- Fluidity A: a stale buffered press expires
+func test_stale_buffer_expires(tree_root: Node) -> void:
+	var r := await _boot(tree_root)
+	var main: Node = r[0]
+	var player: PlayerController = r[2]
+	await _reset(player, Vector2(-900, 100))
+	await _tap("dodge")
+	for i in 4:
+		await main.get_tree().physics_frame
+	await _tap("attack_light")  # early in the dodge: far outside the late window
+	var attacked := false
+	for i in 90:
+		await main.get_tree().physics_frame
+		if PlayerController._is_attack_state(player.state):
+			attacked = true
+	ck.call("buffer: attack pressed early in a dodge expires instead of firing stale after it", not attacked)
+	ck.call("buffer: attack buffer is empty afterwards", player._attack_buffer == 0.0, str(player._attack_buffer))
+	main.queue_free()
+	await main.get_tree().process_frame
+
+
+# ------------------------------------------------------- Fluidity A: hitstop must not lose input
+func test_buffer_survives_hitstop(tree_root: Node) -> void:
+	var r := await _boot(tree_root)
+	var main: Node = r[0]
+	var player: PlayerController = r[2]
+	await _reset(player, Vector2(-900, 100))
+	player._hitstop_timer = 0.12
+	await _tap("attack_light")  # 3 frames, entirely inside the freeze
+	ck.call("hitstop: press made during the freeze is captured", player._attack_buffer > 0.0, str(player._attack_buffer))
+	ck.call("hitstop: still frozen (no state change yet)", player.state == PlayerController.State.IDLE, player.get_state_name())
+	var fired := false
+	for i in 30:
+		await main.get_tree().physics_frame
+		if player.state == PlayerController.State.LIGHT1:
+			fired = true
+			break
+	ck.call("hitstop: buffered press fires once the freeze ends", fired, player.get_state_name())
+	main.queue_free()
+	await main.get_tree().process_frame
+
+
+# ------------------------------------------------------- Fluidity A: cancel eligibility is queryable
+func test_cancel_eligibility(tree_root: Node) -> void:
+	var r := await _boot(tree_root)
+	var main: Node = r[0]
+	var player: PlayerController = r[2]
+	await _reset(player, Vector2(-900, 100))
+	var e0 := player.cancel_eligibility()
+	ck.call("eligibility: idle has no combo/dodge-cancel/dash/air permissions", not (e0.combo or e0.dodge_cancel or e0.dash_attack or e0.air_attack), str(e0))
+	await _tap("attack_light")
+	var saw_recovery_combo := false
+	for i in 40:
+		await main.get_tree().physics_frame
+		if player._attack_phase == PlayerController.AttackPhase.RECOVERY and player.cancel_eligibility().combo:
+			saw_recovery_combo = true
+			break
+	ck.call("eligibility: light1 recovery opens the combo window", saw_recovery_combo)
+	var snap := player.debug_snapshot()
+	ck.call("eligibility: debug_snapshot reports state, phase and buffers", snap.has("state") and snap.has("phase") and snap.has("attack_buffer") and snap.has("cancel"))
 	main.queue_free()
 	await main.get_tree().process_frame

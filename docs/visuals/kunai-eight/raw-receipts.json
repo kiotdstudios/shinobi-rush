@@ -1,0 +1,152 @@
+{
+  "assets/characters/player/kunai_eight/source/player-E-combo.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-2e5e4a7b-72bb-4bb9-a6ef-583472f4415a.png",
+    "sha256": "7f133c3d2671a9cc434ffbb69988f71c80b36b6aec851f667d7373425ed651b4",
+    "rejected": false
+  },
+  "assets/characters/player/kunai_eight/source/player-E-dash-rejected-wide.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-cfefbcf0-7aae-4163-a567-f8a39d3d25cd.png",
+    "sha256": "8afc721eab9400e250fbcba04ef43c5ac3581555ff91cdd252881bc994da49c4",
+    "rejected": true
+  },
+  "assets/characters/player/kunai_eight/source/player-E-dash.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-4e30bd02-031f-42b8-ad86-fc1c23f17edb.png",
+    "sha256": "2cfe4d2c98a919c0f8c16bb94aaf8e78929fb8f09631b818e6a1c48cc8b085a0",
+    "rejected": false
+  },
+  "assets/characters/player/kunai_eight/source/player-N-combo.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-062a054a-b48a-4e58-a060-dd2b86bbef16.png",
+    "sha256": "61661299014e9b7ece8397fd0d28c49ee0ae9de4bbb01a83241aacda9b45cb66",
+    "rejected": false
+  },
+  "assets/characters/player/kunai_eight/source/player-N-dash.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-911a13cf-e2cc-412b-b971-67261c91cf10.png",
+    "sha256": "e317105cbffe2fd8187eb5800f7db26b969b9d6408b61fbdc74fedf7887b35ef",
+    "rejected": false
+  },
+  "assets/characters/player/kunai_eight/source/player-N-light2.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-b1fd259f-40c3-4f18-8f10-2efae7966aa1.png",
+    "sha256": "f6d63c76a07664e39eed27966056cfbb6e598ddeaac88aa3ccca5e88410b6ea3",
+    "rejected": false
+  },
+  "assets/characters/player/kunai_eight/source/player-NE-combo.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-da2512ea-9691-4c7e-a44f-9e9f3a9f1312.png",
+    "sha256": "6824afe4cbfa0e59623475e007e9955db2dd4d9bcb98db9ef432a7c96e2651fc",
+    "rejected": false
+  },
+  "assets/characters/player/kunai_eight/source/player-NE-dash-rejected-facing.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-a6fff802-3e58-4699-ab15-4244c0e321f7.png",
+    "sha256": "581a3292e19ef3529dd92285c5a5c6c3ced2d263ca71cefdde2af134eb526ab2",
+    "rejected": true
+  },
+  "assets/characters/player/kunai_eight/source/player-NE-dash-rejected-wide.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-cfd30340-62d0-4d5e-9ca5-0da5ef482608.png",
+    "sha256": "10761162a3d53465b56bc9f90872e0147c2a07089b69db3aff134e28a4fa10f4",
+    "rejected": true
+  },
+  "assets/characters/player/kunai_eight/source/player-NE-dash.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-cfd30340-62d0-4d5e-9ca5-0da5ef482608.png",
+    "sha256": "10761162a3d53465b56bc9f90872e0147c2a07089b69db3aff134e28a4fa10f4",
+    "rejected": false
+  },
+  "assets/characters/player/kunai_eight/source/player-S-combo.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-3c619aa1-31ab-4bbc-a2a9-ccc280fa7408.png",
+    "sha256": "a80ff1027c6254e29fd7ec04350c0d41b7a72629a2e4be0a00e8f06b5de2940f",
+    "rejected": false
+  },
+  "assets/characters/player/kunai_eight/source/player-S-dash.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-bf19ccf7-5c55-43ed-979a-12f46cb2afd2.png",
+    "sha256": "473722dfaf4d1d3017b61480cbea774da795a9ea6daf2b8be1a87111670691f4",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-E-combo.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-9deb9020-1353-4775-bb97-1cb318b17ec8.png",
+    "sha256": "30eb496fbb45294a44ccae8450dcaf5da92fc99ca20c534df7ff5e080cd1a466",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-E-dash.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-5022983f-eb02-4c59-aee5-c8e87c178cb7.png",
+    "sha256": "7d2a6f90d534a118995cabb58f24325164f7c054139fdb3987b37b5acf11b6d5",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-N-combo.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-1c76b2a1-0e57-494d-9419-3195f2157cce.png",
+    "sha256": "65ce99774b29529bd31d76e895353533d7eb2d2b65d944333c877c64485844c7",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-N-dash.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-67b4990a-e6ca-4fff-b847-3623fa80c784.png",
+    "sha256": "009a65289703612ec9302db31b5455988c67f69cbd63603af7a5d23af5414c9f",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-NE-combo.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-282183e3-7b31-4129-a04e-8263aed50f78.png",
+    "sha256": "a4744eb19f4b93fb52aaf736c0f2d84e52ba4c8992ce422bfe0e8b959dea89b3",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-NE-dash.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-3e03ff92-c91a-4345-b4fe-e461326411cb.png",
+    "sha256": "0d12939ce7b7b53f34550d8fda4141cb2859333d1cb9d5efbb549bf846bb6ab1",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-S-combo.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-03725a1c-632c-469d-ab35-9e635d4847af.png",
+    "sha256": "2452a167d8f5445df02710ce032952968f8dba16040d437d73cac33de67b354f",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-S-dash.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-96be9f48-5d43-4245-aeb0-0bfc1b7af024.png",
+    "sha256": "3fbf1d31908dc1438acd6536de2276d7fb9dee8b5f3fd33b91c275b4c118baee",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-S-light3.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-5b047d43-a210-4f1a-9b42-1ef1447622e4.png",
+    "sha256": "1e3108d59d5b9d199c5540b0f4512080b09ea91d850cb5b7f627ae8999804665",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-SE-combo.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-d1d31986-c8ba-4e64-9ab9-f60aae99a745.png",
+    "sha256": "717a0cba40204492a67739c1d399254919c02cfe1c7134edb334afbf1880d96d",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-SE-dash-rejected-wide.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-40980121-befb-4562-9ec4-357b35f2554f.png",
+    "sha256": "a2757ebc2b6be727b26f2f9cabfc13c149b17dadf99ed96558507ad2800fe371",
+    "rejected": true
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-SE-dash.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-40980121-befb-4562-9ec4-357b35f2554f.png",
+    "sha256": "a2757ebc2b6be727b26f2f9cabfc13c149b17dadf99ed96558507ad2800fe371",
+    "rejected": false
+  },
+  "assets/characters/bandit/kunai_eight/source/bandit-SE-light3.png": {
+    "tool": "builtin image_gen",
+    "receipt": "exec-fba68412-7b89-4f86-a1bb-34dd33c91e0e.png",
+    "sha256": "437ddb01c8f42a25486cc6624a8a7e4c1fd0a7814557262c5f95c52b6b2ceed1",
+    "rejected": false
+  }
+}

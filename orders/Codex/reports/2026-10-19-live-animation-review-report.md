@@ -2,7 +2,7 @@
 - Agent: Codex
 - Order: Order01 / explicit owner approval to publish all passed animations live
 - Date: 2026-10-19
-- Status: REVIEW - local verification passed; awaiting CI/merge/deploy
+- Status: DONE - live publication job verified; full Order01 remains IN_PROGRESS
 - Branch / PR: codex/player-128-runtime-assets / PR23
 
 ## Work
@@ -35,3 +35,15 @@ Commit/push; wait for CI; merge approved PR without bypassing checks; verify Pag
 
 ## Final integration follow-up before commit
 Removed engine-added ground ellipse in SpriteActor and placeholder visual, matching owner's shadow-free request. Native source PNGs unchanged. Python CI commit-ID fixture now uses its temporary project for fake-PCK validation instead of scanning newly added production sprites; production export validation remains strict. Before commit:140Python tests PASS,36Node tests PASS,493Godot tests PASS, fresh Web export PASS, shadow-free browser smoke PASS. Inspected settled game screenshot: actual player_128 sprites, no ellipse beneath player. Controls probe previously passed allmovement/sprint/camera/jump/dodge selections and its code is unchanged by this visual/fixture follow-up.
+
+## Verified live publication
+- Asset/integration commits7bd1a3bbf30a0a15e34fba84aabac97ccd23b7b4 and5f12842f944df3cd401ded1e6e7217965f35ad3a.
+- PR23 merged after all three PR workflows passed. Merge/deployed SHA:d9ebccfbc77400424fcd1e1558e2daeaaa612d7a.
+- Pages pipeline run39223465511: import/build/export,pre-deploy browser,Pages deployment,post-deploy live smoke and final gate allSUCCESS.
+- Live URL:https://kiotdstudios.github.io/shinobi-rush/?camera=close. build-info.json fetched and matched exact deployedSHA,kindgame.
+- Own Playwright1.64.1 live smoke PASS: HTTP200,all9served file hashes matchbuild,engine/canvas/input,zero fatal console errors.
+- Own live touch-pointer review PASS: loadedplayer_128;Lab button opens;Anim arrows selectjump anddodge;zero page/consoleerrors. Inspected live dodge screenshot: realcharacter/stand,corrected6-animation set and no rendered shadow. Evidence:.tools/live-browser-checks/live-smoke and live-touch.
+- Review controls:Lab button,Anim arrows,Dir arrows,Speed buttons,Pause/Step. Jump/dodge are lab-animation review; gameplay inputs remain reserved rather than pretending new mechanics exist.
+- Verified at:2026-10-19T08:37:19.984394+00:00
+
+Remaining Order01 work: combat/hit/equipment/VFX and gameplay integration/tuning beyond this review delivery. No blocker remains for viewing the published animation set.

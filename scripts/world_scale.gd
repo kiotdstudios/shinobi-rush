@@ -11,7 +11,7 @@ const SCALE := 2.25
 ## Zoom of the `wide` camera preset (the default; see CameraPreset, which is what the game reads): the inverse
 ## of SCALE shows the same amount of arena as before the scale pass (visible world rect = viewport * SCALE).
 ## Follows SCALE automatically. Prototype baseline, not final.
-const CAMERA_BASE_ZOOM := 1.0 / SCALE
+const CAMERA_BASE_ZOOM := 0.665
 ## Extra world drawn/visible above the top arena bound so a standing figure at the top wall is not cut off.
 const CAMERA_HEADROOM := BODY_HEIGHT
 ## Extra world drawn/visible below the bottom arena bound so the feet and ground shadow of a figure at the
@@ -59,10 +59,52 @@ const STAND_OFFSETS: Array[Vector2] = [Vector2(-225, 0), Vector2(-518, 0)]
 const STAND_DIAMOND := Vector2(144, 72)
 
 ## Blocks: [bottom-centre position, footprint (w, depth), height]. Old values times SCALE, rounded.
+## Owner 2026-10-23 ("delete all placeholder walls and replace them with new temple wall assets"):
+## any block/placed-object at or above this height is a "Wall" (matches PlacedObjects.def_of()'s own
+## pre-existing Wall/Block label) and is drawn with real temple wall face art
+## (assets/environment/kosen_courtyard/walls/) by TrainingArena.Block/BlockRear instead of the flat
+## grey placeholder polygon + "PLACEHOLDER" caption. Shorter entries (rocks, crates, the lab stand)
+## are genuinely still placeholder and are unaffected -- this order only asked for walls.
+const WALL_ART_MIN_HEIGHT := 140.0
+## Placeholder test: a block shorter than the wall-art threshold is a bare grey box (rock/crate stand-in). They no
+## longer exist in the level or the builder; only the real temple-wall blocks are spawned (see live_blocks()).
+static func is_placeholder_block(i: int) -> bool:
+	return float(BLOCKS[i][2]) < WALL_ART_MIN_HEIGHT
+
+
+## BLOCKS without the placeholder boxes: what the arena actually builds, collides with and navigates around.
+static func live_blocks() -> Array:
+	var out: Array = []
+	for i in BLOCKS.size():
+		if not is_placeholder_block(i):
+			out.append(BLOCKS[i])
+	return out
+
+
 const BLOCKS: Array = [
 	[Vector2(-585, -180), Vector2(270, 108), 126.0],
 	[Vector2(630, -270), Vector2(144, 144), 144.0],
 	[Vector2(-270, 450), Vector2(360, 90), 90.0],
 	[Vector2(540, 405), Vector2(108, 108), 108.0],
 	[Vector2(0, -585), Vector2(450, 90), 162.0],
+	# Level 1 Bandit arena (PLACEHOLDER collision blockers; art pass later). Two long walls at x=900 leave a
+	# 280 px choke point at y -80..200, with open routes north (above y -600) and south (below y 740);
+	# the two rocks east of them break line of sight and give the Bandit's patrol its far-side territory.
+	[Vector2(900, -80), Vector2(90, 520), 150.0],   # 5: north wall
+	[Vector2(900, 740), Vector2(90, 540), 150.0],   # 6: south wall
+	[Vector2(1180, 40), Vector2(120, 110), 110.0],  # 7: rock covering the choke's east mouth
+	[Vector2(1500, -330), Vector2(130, 110), 110.0],  # 8: rock inside the patrol area
 ]
+## Blossom trees (Codex art, placed by BlossomGrove): ground-anchor positions. Each trunk/stone base is solid
+## (player, bandit nav); the canopy is not. Footprint is (w, depth) of the base, extending `depth` upward from
+## the anchor like BLOCKS. All five sit west of the spawn, clear of the due-right and due-up lanes.
+const TREE_POSITIONS: Array[Vector2] = [Vector2(-920, 320), Vector2(-620, 150), Vector2(-350, -100), Vector2(-1060, -130), Vector2(-790, 720)]
+const TREE_TRUNK_FOOTPRINT := Vector2(100, 44)
+## Fire pillars (Orcha art, owner 2026-10-22: "make this little fire pillar thingy" from the shrine
+## mockup). Symmetric, south of spawn, clear of every BLOCKS wall, TREE_POSITIONS and the Bandit's
+## patrol/leash area. Purely decorative -- no collision/nav, same precedent as WindGrassField.
+## Owner 2026-10-24: removed from the level (empty list); the FirePillar scene and field stay available.
+const FIRE_PILLAR_POSITIONS: Array[Vector2] = []
+## Where the Level 1 Bandit lives: far east of the player's spawn, behind the walls above.
+const BANDIT_HOME := Vector2(1300, -130)
+const BANDIT_PATROL: Array[Vector2] = [Vector2(1250, -200), Vector2(1650, -200), Vector2(1650, 60), Vector2(1380, 60)]

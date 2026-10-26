@@ -1,0 +1,1033 @@
+{
+  "schema": "shinobi_blightwood_bridges_v1",
+  "status": "art_review",
+  "production_bound": false,
+  "texture_filter": "nearest",
+  "logical_tile_size": [
+    72,
+    36
+  ],
+  "basis": {
+    "u": [
+      36,
+      18
+    ],
+    "v": [
+      -36,
+      18
+    ]
+  },
+  "width_tiles": 2,
+  "lengths_tiles": [
+    4,
+    6,
+    8
+  ],
+  "animation": {
+    "frame_count": 1,
+    "fps": 0,
+    "loop": false
+  },
+  "palette": [
+    "#e2f2ff",
+    "#b9cbe2",
+    "#c2c6b2",
+    "#b0b59e",
+    "#99a7c2",
+    "#9aa08b",
+    "#888f79",
+    "#7699ca",
+    "#728872",
+    "#5f82b5",
+    "#777e6b",
+    "#68705c",
+    "#677077",
+    "#587262",
+    "#5a6351",
+    "#586069",
+    "#4f5846",
+    "#485f55",
+    "#4d535b",
+    "#38547c",
+    "#454e3e",
+    "#364c3e",
+    "#3f4650",
+    "#3c4437",
+    "#383d35",
+    "#203a57",
+    "#30382c",
+    "#283026",
+    "#242b1c",
+    "#1a2d2f",
+    "#1e241a",
+    "#1c202b",
+    "#131c25",
+    "#121720",
+    "#0a101b",
+    "#0a0b17"
+  ],
+  "palette_sampled_from": [
+    "assets/environment/blightwood_lights/props/wooden_post.png",
+    "assets/environment/kosen_courtyard/grass/tiles/grass9_center.png"
+  ],
+  "generator": "built-in image_gen; deterministic cleanup/palette quantization/nearest projection and composition",
+  "modules": [
+    {
+      "id": "deck_repeat_u",
+      "path": "res://assets/environment/blightwood_bridges/modules/deck_repeat_u.png",
+      "size": [
+        144,
+        72
+      ],
+      "anchor": [
+        72,
+        0
+      ],
+      "length_tiles": 2,
+      "width_tiles": 2,
+      "axis": "u"
+    },
+    {
+      "id": "deck_damaged_u",
+      "path": "res://assets/environment/blightwood_bridges/modules/deck_damaged_u.png",
+      "size": [
+        144,
+        72
+      ],
+      "anchor": [
+        72,
+        0
+      ],
+      "length_tiles": 2,
+      "width_tiles": 2,
+      "axis": "u"
+    },
+    {
+      "id": "end_cap_start_u",
+      "path": "res://assets/environment/blightwood_bridges/modules/end_cap_start_u.png",
+      "size": [
+        90,
+        45
+      ],
+      "anchor": [
+        72,
+        0
+      ],
+      "length_tiles": 0.5,
+      "width_tiles": 2,
+      "axis": "u"
+    },
+    {
+      "id": "end_cap_end_u",
+      "path": "res://assets/environment/blightwood_bridges/modules/end_cap_end_u.png",
+      "size": [
+        90,
+        45
+      ],
+      "anchor": [
+        72,
+        0
+      ],
+      "length_tiles": 0.5,
+      "width_tiles": 2,
+      "axis": "u"
+    },
+    {
+      "id": "deck_repeat_v",
+      "path": "res://assets/environment/blightwood_bridges/modules/deck_repeat_v.png",
+      "size": [
+        144,
+        72
+      ],
+      "anchor": [
+        71,
+        0
+      ],
+      "length_tiles": 2,
+      "width_tiles": 2,
+      "axis": "v"
+    },
+    {
+      "id": "deck_damaged_v",
+      "path": "res://assets/environment/blightwood_bridges/modules/deck_damaged_v.png",
+      "size": [
+        144,
+        72
+      ],
+      "anchor": [
+        71,
+        0
+      ],
+      "length_tiles": 2,
+      "width_tiles": 2,
+      "axis": "v"
+    },
+    {
+      "id": "end_cap_start_v",
+      "path": "res://assets/environment/blightwood_bridges/modules/end_cap_start_v.png",
+      "size": [
+        90,
+        45
+      ],
+      "anchor": [
+        17,
+        0
+      ],
+      "length_tiles": 0.5,
+      "width_tiles": 2,
+      "axis": "v"
+    },
+    {
+      "id": "end_cap_end_v",
+      "path": "res://assets/environment/blightwood_bridges/modules/end_cap_end_v.png",
+      "size": [
+        90,
+        45
+      ],
+      "anchor": [
+        17,
+        0
+      ],
+      "length_tiles": 0.5,
+      "width_tiles": 2,
+      "axis": "v"
+    },
+    {
+      "id": "rail_wood_u",
+      "path": "res://assets/environment/blightwood_bridges/modules/rail_wood_u.png",
+      "size": [
+        72,
+        66
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "start_socket": [
+        0,
+        0
+      ],
+      "end_socket": [
+        72,
+        36
+      ],
+      "length_tiles": 2,
+      "axis": "u",
+      "role": "railing"
+    },
+    {
+      "id": "rail_wood_v",
+      "path": "res://assets/environment/blightwood_bridges/modules/rail_wood_v.png",
+      "size": [
+        72,
+        66
+      ],
+      "anchor": [
+        71,
+        0
+      ],
+      "start_socket": [
+        71,
+        0
+      ],
+      "end_socket": [
+        -1,
+        36
+      ],
+      "length_tiles": 2,
+      "axis": "v",
+      "role": "railing"
+    },
+    {
+      "id": "rail_rope_u",
+      "path": "res://assets/environment/blightwood_bridges/modules/rail_rope_u.png",
+      "size": [
+        72,
+        66
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "start_socket": [
+        0,
+        0
+      ],
+      "end_socket": [
+        72,
+        36
+      ],
+      "length_tiles": 2,
+      "axis": "u",
+      "role": "railing"
+    },
+    {
+      "id": "rail_rope_v",
+      "path": "res://assets/environment/blightwood_bridges/modules/rail_rope_v.png",
+      "size": [
+        72,
+        66
+      ],
+      "anchor": [
+        71,
+        0
+      ],
+      "start_socket": [
+        71,
+        0
+      ],
+      "end_socket": [
+        -1,
+        36
+      ],
+      "length_tiles": 2,
+      "axis": "v",
+      "role": "railing"
+    },
+    {
+      "id": "support_post",
+      "path": "res://assets/environment/blightwood_bridges/modules/support_post.png",
+      "size": [
+        24,
+        84
+      ],
+      "anchor": [
+        12,
+        44
+      ],
+      "ground_contact": [
+        12,
+        84
+      ],
+      "role": "support",
+      "deck_connection": [
+        12,
+        44
+      ],
+      "upper_rail_connection": [
+        12,
+        12
+      ]
+    }
+  ],
+  "assemblies": [
+    {
+      "id": "short_wood_u",
+      "length_tiles": 4,
+      "width_tiles": 2,
+      "axis": "u",
+      "style": "wood",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "start_socket": [
+        64,
+        64
+      ],
+      "end_socket": [
+        208,
+        136
+      ],
+      "deck_width_vector": [
+        -72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/short_wood_u_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/short_wood_u_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/short_wood_u_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/short_wood_u_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/short_wood_u.png"
+    },
+    {
+      "id": "short_wood_v",
+      "length_tiles": 4,
+      "width_tiles": 2,
+      "axis": "v",
+      "style": "wood",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        383,
+        64
+      ],
+      "start_socket": [
+        383,
+        64
+      ],
+      "end_socket": [
+        239,
+        136
+      ],
+      "deck_width_vector": [
+        72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/short_wood_v_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/short_wood_v_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/short_wood_v_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/short_wood_v_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/short_wood_v.png"
+    },
+    {
+      "id": "short_rope_u",
+      "length_tiles": 4,
+      "width_tiles": 2,
+      "axis": "u",
+      "style": "rope",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "start_socket": [
+        64,
+        64
+      ],
+      "end_socket": [
+        208,
+        136
+      ],
+      "deck_width_vector": [
+        -72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/short_rope_u_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/short_rope_u_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/short_rope_u_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/short_rope_u_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/short_rope_u.png"
+    },
+    {
+      "id": "short_rope_v",
+      "length_tiles": 4,
+      "width_tiles": 2,
+      "axis": "v",
+      "style": "rope",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        383,
+        64
+      ],
+      "start_socket": [
+        383,
+        64
+      ],
+      "end_socket": [
+        239,
+        136
+      ],
+      "deck_width_vector": [
+        72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/short_rope_v_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/short_rope_v_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/short_rope_v_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/short_rope_v_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/short_rope_v.png"
+    },
+    {
+      "id": "short_damaged_u",
+      "length_tiles": 4,
+      "width_tiles": 2,
+      "axis": "u",
+      "style": "damaged",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "start_socket": [
+        64,
+        64
+      ],
+      "end_socket": [
+        208,
+        136
+      ],
+      "deck_width_vector": [
+        -72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/short_damaged_u_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/short_damaged_u_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/short_damaged_u_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/short_damaged_u_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/short_damaged_u.png"
+    },
+    {
+      "id": "short_damaged_v",
+      "length_tiles": 4,
+      "width_tiles": 2,
+      "axis": "v",
+      "style": "damaged",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        383,
+        64
+      ],
+      "start_socket": [
+        383,
+        64
+      ],
+      "end_socket": [
+        239,
+        136
+      ],
+      "deck_width_vector": [
+        72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/short_damaged_v_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/short_damaged_v_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/short_damaged_v_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/short_damaged_v_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/short_damaged_v.png"
+    },
+    {
+      "id": "medium_wood_u",
+      "length_tiles": 6,
+      "width_tiles": 2,
+      "axis": "u",
+      "style": "wood",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "start_socket": [
+        64,
+        64
+      ],
+      "end_socket": [
+        280,
+        172
+      ],
+      "deck_width_vector": [
+        -72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/medium_wood_u_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/medium_wood_u_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/medium_wood_u_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/medium_wood_u_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/medium_wood_u.png"
+    },
+    {
+      "id": "medium_wood_v",
+      "length_tiles": 6,
+      "width_tiles": 2,
+      "axis": "v",
+      "style": "wood",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        383,
+        64
+      ],
+      "start_socket": [
+        383,
+        64
+      ],
+      "end_socket": [
+        167,
+        172
+      ],
+      "deck_width_vector": [
+        72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/medium_wood_v_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/medium_wood_v_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/medium_wood_v_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/medium_wood_v_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/medium_wood_v.png"
+    },
+    {
+      "id": "medium_rope_u",
+      "length_tiles": 6,
+      "width_tiles": 2,
+      "axis": "u",
+      "style": "rope",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "start_socket": [
+        64,
+        64
+      ],
+      "end_socket": [
+        280,
+        172
+      ],
+      "deck_width_vector": [
+        -72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/medium_rope_u_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/medium_rope_u_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/medium_rope_u_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/medium_rope_u_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/medium_rope_u.png"
+    },
+    {
+      "id": "medium_rope_v",
+      "length_tiles": 6,
+      "width_tiles": 2,
+      "axis": "v",
+      "style": "rope",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        383,
+        64
+      ],
+      "start_socket": [
+        383,
+        64
+      ],
+      "end_socket": [
+        167,
+        172
+      ],
+      "deck_width_vector": [
+        72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/medium_rope_v_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/medium_rope_v_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/medium_rope_v_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/medium_rope_v_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/medium_rope_v.png"
+    },
+    {
+      "id": "medium_damaged_u",
+      "length_tiles": 6,
+      "width_tiles": 2,
+      "axis": "u",
+      "style": "damaged",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "start_socket": [
+        64,
+        64
+      ],
+      "end_socket": [
+        280,
+        172
+      ],
+      "deck_width_vector": [
+        -72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/medium_damaged_u_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/medium_damaged_u_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/medium_damaged_u_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/medium_damaged_u_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/medium_damaged_u.png"
+    },
+    {
+      "id": "medium_damaged_v",
+      "length_tiles": 6,
+      "width_tiles": 2,
+      "axis": "v",
+      "style": "damaged",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        383,
+        64
+      ],
+      "start_socket": [
+        383,
+        64
+      ],
+      "end_socket": [
+        167,
+        172
+      ],
+      "deck_width_vector": [
+        72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/medium_damaged_v_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/medium_damaged_v_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/medium_damaged_v_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/medium_damaged_v_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/medium_damaged_v.png"
+    },
+    {
+      "id": "long_wood_u",
+      "length_tiles": 8,
+      "width_tiles": 2,
+      "axis": "u",
+      "style": "wood",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "start_socket": [
+        64,
+        64
+      ],
+      "end_socket": [
+        352,
+        208
+      ],
+      "deck_width_vector": [
+        -72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/long_wood_u_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/long_wood_u_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/long_wood_u_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/long_wood_u_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/long_wood_u.png"
+    },
+    {
+      "id": "long_wood_v",
+      "length_tiles": 8,
+      "width_tiles": 2,
+      "axis": "v",
+      "style": "wood",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        383,
+        64
+      ],
+      "start_socket": [
+        383,
+        64
+      ],
+      "end_socket": [
+        95,
+        208
+      ],
+      "deck_width_vector": [
+        72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/long_wood_v_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/long_wood_v_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/long_wood_v_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/long_wood_v_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/long_wood_v.png"
+    },
+    {
+      "id": "long_rope_u",
+      "length_tiles": 8,
+      "width_tiles": 2,
+      "axis": "u",
+      "style": "rope",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "start_socket": [
+        64,
+        64
+      ],
+      "end_socket": [
+        352,
+        208
+      ],
+      "deck_width_vector": [
+        -72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/long_rope_u_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/long_rope_u_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/long_rope_u_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/long_rope_u_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/long_rope_u.png"
+    },
+    {
+      "id": "long_rope_v",
+      "length_tiles": 8,
+      "width_tiles": 2,
+      "axis": "v",
+      "style": "rope",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        383,
+        64
+      ],
+      "start_socket": [
+        383,
+        64
+      ],
+      "end_socket": [
+        95,
+        208
+      ],
+      "deck_width_vector": [
+        72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/long_rope_v_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/long_rope_v_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/long_rope_v_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/long_rope_v_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/long_rope_v.png"
+    },
+    {
+      "id": "long_damaged_u",
+      "length_tiles": 8,
+      "width_tiles": 2,
+      "axis": "u",
+      "style": "damaged",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        64,
+        64
+      ],
+      "start_socket": [
+        64,
+        64
+      ],
+      "end_socket": [
+        352,
+        208
+      ],
+      "deck_width_vector": [
+        -72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/long_damaged_u_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/long_damaged_u_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/long_damaged_u_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/long_damaged_u_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/long_damaged_u.png"
+    },
+    {
+      "id": "long_damaged_v",
+      "length_tiles": 8,
+      "width_tiles": 2,
+      "axis": "v",
+      "style": "damaged",
+      "size": [
+        448,
+        304
+      ],
+      "anchor": [
+        383,
+        64
+      ],
+      "start_socket": [
+        383,
+        64
+      ],
+      "end_socket": [
+        95,
+        208
+      ],
+      "deck_width_vector": [
+        72,
+        36
+      ],
+      "layers": {
+        "supports": "res://assets/environment/blightwood_bridges/layers/long_damaged_v_supports.png",
+        "rear": "res://assets/environment/blightwood_bridges/layers/long_damaged_v_rear.png",
+        "deck": "res://assets/environment/blightwood_bridges/layers/long_damaged_v_deck.png",
+        "front": "res://assets/environment/blightwood_bridges/layers/long_damaged_v_front.png"
+      },
+      "preview": "res://assets/environment/blightwood_bridges/prefabs/long_damaged_v.png"
+    }
+  ],
+  "integration": "NOT LIVE - awaiting Aki gameplay integration. PNG prefabs are previews; use separate layers for actor occlusion. No collision/navigation authored. Damaged deck is cosmetic; rope variant uses timber supports.",
+  "sha256": {
+    "layers/long_damaged_u_deck.png": "101ca250101657e80e1bacc209882f4916977512fe749f04d1ce0f43a66a51ed",
+    "layers/long_damaged_u_front.png": "119c43d4a9313b852795efbaca2bdf02cb231316719fa72d35598879956558fd",
+    "layers/long_damaged_u_rear.png": "309da3d4a72dfa2d242693650f844cf7411955063836d2db369327d645159157",
+    "layers/long_damaged_u_supports.png": "465067b0500b7d957dc34b406404c9e4953982cee00d480fd6753267927ec872",
+    "layers/long_damaged_v_deck.png": "52d4cb31c4f801f89f7ab812eedfd1da50b40496e966ddd1e74bb8a322d74465",
+    "layers/long_damaged_v_front.png": "f734502d05365f02c485e636dccc89e5ca59b04b505328e15b6779372f14cbc4",
+    "layers/long_damaged_v_rear.png": "cc349bb47307bfab33a31395fa0ca51920dd0e57eb544201c41192278e1ec107",
+    "layers/long_damaged_v_supports.png": "263f19a99a6a6246b3ceb1bc4f913f5565da5be2777306b62b527f97a50e2942",
+    "layers/long_rope_u_deck.png": "905a0d210a7f85911bbe4d5d0aab65204cf34269e372a15cc4fa3bf9452d410e",
+    "layers/long_rope_u_front.png": "825ac382c4b23b0f5268cdf1eca6ae35c5946104e28fafa74e4420ab8622692e",
+    "layers/long_rope_u_rear.png": "2233738e98b74a2f3d63357e88fc932f7b27bab160dfbe41c0717f22e4f59fde",
+    "layers/long_rope_u_supports.png": "465067b0500b7d957dc34b406404c9e4953982cee00d480fd6753267927ec872",
+    "layers/long_rope_v_deck.png": "3e1357d718ea67233282da53b376aada853cccff28b18e318ca411f2bddaf4cb",
+    "layers/long_rope_v_front.png": "6e3956bf38080672e48d9b519f4950b814ab35df0a5781f94033bf6c59544cf3",
+    "layers/long_rope_v_rear.png": "ac6f23bdcd5403b7a59fcb50c740a09b3d97126c15f77d61bc3981f76b9a88cc",
+    "layers/long_rope_v_supports.png": "263f19a99a6a6246b3ceb1bc4f913f5565da5be2777306b62b527f97a50e2942",
+    "layers/long_wood_u_deck.png": "905a0d210a7f85911bbe4d5d0aab65204cf34269e372a15cc4fa3bf9452d410e",
+    "layers/long_wood_u_front.png": "119c43d4a9313b852795efbaca2bdf02cb231316719fa72d35598879956558fd",
+    "layers/long_wood_u_rear.png": "309da3d4a72dfa2d242693650f844cf7411955063836d2db369327d645159157",
+    "layers/long_wood_u_supports.png": "465067b0500b7d957dc34b406404c9e4953982cee00d480fd6753267927ec872",
+    "layers/long_wood_v_deck.png": "3e1357d718ea67233282da53b376aada853cccff28b18e318ca411f2bddaf4cb",
+    "layers/long_wood_v_front.png": "f734502d05365f02c485e636dccc89e5ca59b04b505328e15b6779372f14cbc4",
+    "layers/long_wood_v_rear.png": "cc349bb47307bfab33a31395fa0ca51920dd0e57eb544201c41192278e1ec107",
+    "layers/long_wood_v_supports.png": "263f19a99a6a6246b3ceb1bc4f913f5565da5be2777306b62b527f97a50e2942",
+    "layers/medium_damaged_u_deck.png": "66d6d9c7cc75d8ecc6ef59cd9e22474925bb6a3113ed397092bb36143110bff0",
+    "layers/medium_damaged_u_front.png": "cb47edd2b0784390d8dc11a95b9a68c5542e79f680cba7cee1d08055798b8413",
+    "layers/medium_damaged_u_rear.png": "071d4c2690a9c8749a315a8f2524a24756efdce7a63fb790ea82880330b2d5f1",
+    "layers/medium_damaged_u_supports.png": "7311515216b2dcea6fe21fafb773231b739555bab90f84e3e83520c1c1786a70",
+    "layers/medium_damaged_v_deck.png": "449e82936976f1aa3ccb254564bf58d5aafdf478838269909d3034506f722d9e",
+    "layers/medium_damaged_v_front.png": "aa48ea3195f1ec535f0c69df3f1f26f640034283b70e4ea630b7dc58b315fb58",
+    "layers/medium_damaged_v_rear.png": "2a30029ed82988f890f232819d90afc3d5760f7cbeb2795d6d26cea2fa67ddb3",
+    "layers/medium_damaged_v_supports.png": "a90b69f95ae66b98990da4a260f7bee574b3e87fd76d7cda076326c7b6dff727",
+    "layers/medium_rope_u_deck.png": "6b2f899fd14968216353c3c9f925be97533c6f76bc1e7db8e8313588753186ff",
+    "layers/medium_rope_u_front.png": "307a4985285cf992eb7e0b9ec2007f4bdcfbcdbf076df552f6566fbfc1e7a732",
+    "layers/medium_rope_u_rear.png": "21e9e4d178571476bf6df47e0c1d057b8c9912f6cec5701ddff44cceee9a0c6e",
+    "layers/medium_rope_u_supports.png": "7311515216b2dcea6fe21fafb773231b739555bab90f84e3e83520c1c1786a70",
+    "layers/medium_rope_v_deck.png": "ab13ade759b389b6154b3bdf7cb7d36924ab61e8c6466eba37ea0e5bbf824044",
+    "layers/medium_rope_v_front.png": "a73d9625195cd3b0b92208d3ade883fa9938be42de105270aa64cccfae972cf4",
+    "layers/medium_rope_v_rear.png": "d9c32a9e8cda4f0daec5fcaca9d884215240ada0a440cc01b5043e2d8e94807e",
+    "layers/medium_rope_v_supports.png": "a90b69f95ae66b98990da4a260f7bee574b3e87fd76d7cda076326c7b6dff727",
+    "layers/medium_wood_u_deck.png": "6b2f899fd14968216353c3c9f925be97533c6f76bc1e7db8e8313588753186ff",
+    "layers/medium_wood_u_front.png": "cb47edd2b0784390d8dc11a95b9a68c5542e79f680cba7cee1d08055798b8413",
+    "layers/medium_wood_u_rear.png": "071d4c2690a9c8749a315a8f2524a24756efdce7a63fb790ea82880330b2d5f1",
+    "layers/medium_wood_u_supports.png": "7311515216b2dcea6fe21fafb773231b739555bab90f84e3e83520c1c1786a70",
+    "layers/medium_wood_v_deck.png": "ab13ade759b389b6154b3bdf7cb7d36924ab61e8c6466eba37ea0e5bbf824044",
+    "layers/medium_wood_v_front.png": "aa48ea3195f1ec535f0c69df3f1f26f640034283b70e4ea630b7dc58b315fb58",
+    "layers/medium_wood_v_rear.png": "2a30029ed82988f890f232819d90afc3d5760f7cbeb2795d6d26cea2fa67ddb3",
+    "layers/medium_wood_v_supports.png": "a90b69f95ae66b98990da4a260f7bee574b3e87fd76d7cda076326c7b6dff727",
+    "layers/short_damaged_u_deck.png": "e49759bcaf1d4bff71cdc68e6d8e7e54b67cee2daea530259ae064d30ec90311",
+    "layers/short_damaged_u_front.png": "301ea600f2c22ae310a2403a65f6f7d106540da10a53e452685ffa6b6c0d606e",
+    "layers/short_damaged_u_rear.png": "0528dd112ea14ce83486d9e283818c2061e94dc6d2056108539025b57398e445",
+    "layers/short_damaged_u_supports.png": "72e2b7cbf73df3baf819463dea78b395dc6204599f344cde69d598a1db719a6c",
+    "layers/short_damaged_v_deck.png": "da25ef8e0fd531e9fb78856976ebee4a7d983a3beb96970c6787a4da337b2194",
+    "layers/short_damaged_v_front.png": "a9a6c0b242af4764f6971eb0abc7225ec8f06c6cdf9858bd7c17818b2669aebe",
+    "layers/short_damaged_v_rear.png": "227be4036688aa74319d459bc4fbd1bdbe7e1ce69dad47c2ff22b77e7341da8a",
+    "layers/short_damaged_v_supports.png": "55e4b1ade674239f60cfb4ff98db5af7f04c3490877da4a95b562849790f4f2d",
+    "layers/short_rope_u_deck.png": "e5583638e2e6bbca4cb319d94d6da0c75e374ce6e30556dfa81ead36590fed49",
+    "layers/short_rope_u_front.png": "ea04bb9295697ee05b60a32d1f564e37dda959603b080b1c24ca79b24ae89220",
+    "layers/short_rope_u_rear.png": "8add382c1216449f9553adbfcccd42ffab8ac0bee67d6cc08f515a3883fba545",
+    "layers/short_rope_u_supports.png": "72e2b7cbf73df3baf819463dea78b395dc6204599f344cde69d598a1db719a6c",
+    "layers/short_rope_v_deck.png": "c31ad416d2b8cf1c3f52c6f3af0b017586e16ea06f2764b4a5b8e471d8e80f79",
+    "layers/short_rope_v_front.png": "c60193c1fd38fbd01852696524ae38e54dacb6ccd33434f8560e215cf0c8a862",
+    "layers/short_rope_v_rear.png": "258321f05d89231c48c31a5d63ac6f0a563a5bbfd45a44fe04a3a86229b3d7fa",
+    "layers/short_rope_v_supports.png": "55e4b1ade674239f60cfb4ff98db5af7f04c3490877da4a95b562849790f4f2d",
+    "layers/short_wood_u_deck.png": "e5583638e2e6bbca4cb319d94d6da0c75e374ce6e30556dfa81ead36590fed49",
+    "layers/short_wood_u_front.png": "301ea600f2c22ae310a2403a65f6f7d106540da10a53e452685ffa6b6c0d606e",
+    "layers/short_wood_u_rear.png": "0528dd112ea14ce83486d9e283818c2061e94dc6d2056108539025b57398e445",
+    "layers/short_wood_u_supports.png": "72e2b7cbf73df3baf819463dea78b395dc6204599f344cde69d598a1db719a6c",
+    "layers/short_wood_v_deck.png": "c31ad416d2b8cf1c3f52c6f3af0b017586e16ea06f2764b4a5b8e471d8e80f79",
+    "layers/short_wood_v_front.png": "a9a6c0b242af4764f6971eb0abc7225ec8f06c6cdf9858bd7c17818b2669aebe",
+    "layers/short_wood_v_rear.png": "227be4036688aa74319d459bc4fbd1bdbe7e1ce69dad47c2ff22b77e7341da8a",
+    "layers/short_wood_v_supports.png": "55e4b1ade674239f60cfb4ff98db5af7f04c3490877da4a95b562849790f4f2d",
+    "modules/deck_damaged_u.png": "621b18f9b2f0e3e35276371cd3c6b4388b54fdc93e33cd672a5f5aa4ce2f1034",
+    "modules/deck_damaged_v.png": "dfda9aa186f3d28dffabd958fd0ced3baf2c0eec0062a1911d7127124f411216",
+    "modules/deck_repeat_u.png": "63de4c2071b3a8b2351b82f6f378a842ea3619fab498878f68dac5f4b6f531f8",
+    "modules/deck_repeat_v.png": "c87b027495e231a0d85aaeb5c4bead5f86a45f7b2111cad01823e2314d530a29",
+    "modules/end_cap_end_u.png": "b37fccef6d5fc19324da698bfedfb7c4b0564f84b5373a14fc56abebf5eb7233",
+    "modules/end_cap_end_v.png": "555bc5fb307fb78f5cb92c919a1077ccc0fe32e4712c9fb24d376d3863bc9f1b",
+    "modules/end_cap_start_u.png": "69f599b38640c8a9aad408815aa615dbea51a5d36866bd42471bb5c44bf93036",
+    "modules/end_cap_start_v.png": "674862e718210f8e0464531ac908378fe17088f704f98dd41ace93c2c0e11202",
+    "modules/rail_rope_u.png": "6c899cfc9531160883e7d40972d2041b5b9337f98220f994e9f68fea16e9caa5",
+    "modules/rail_rope_v.png": "38bb8bce3c78d69c485594113b1475dcc691fc0e02a207f7e56362d915f03ecf",
+    "modules/rail_wood_u.png": "cf0f8e16dc95bf77c6bc435757485ae2d67772c75c03263ddba17df9d11b53f7",
+    "modules/rail_wood_v.png": "61064e3408c670efd67ed7a6210b8130da86b967dfc15100c8cd2ab05a159ac9",
+    "modules/support_post.png": "268f1a16430efdb2b4ac8cb08e93d2d4755e986aabef38dd7d56bc268fb6aa9c",
+    "prefabs/long_damaged_u.png": "a54dc7d64c2d98c78ccb130edc5c40aaa894effe2006499a582b080a4331a300",
+    "prefabs/long_damaged_v.png": "177610152ace2a6dc85256676ddc994f9dd6165f7cce3b4a5df7f80b8e3d01a8",
+    "prefabs/long_rope_u.png": "89c387d9e42ad36bb2ec473fa29e67ac6b773c0b45d7b276de11649c45e30a03",
+    "prefabs/long_rope_v.png": "a0503944be25ff195ca90e2ab020e4f3ebce8a2a1a24c22153405b4f145fa0e3",
+    "prefabs/long_wood_u.png": "9fec1c9121ee3b4331b5cd320b923393e24bd0cc34bde1940db98b0a13c98dee",
+    "prefabs/long_wood_v.png": "c89c703c1ab1632b31554ecc616b70e4ee856d0ab830092c9ac6cc1657e9980a",
+    "prefabs/medium_damaged_u.png": "979b7e2fc9559f1e03a90325e04bbd26a8a9df8f4ccb77ff03db9fbe47b83de4",
+    "prefabs/medium_damaged_v.png": "5dc68524867c0644738935ce3245d8faa876e8e0114f12e68339b28608483e34",
+    "prefabs/medium_rope_u.png": "1e1d6763856ca9586a3d4fab870c90ee47a5c14d63139d4cc849ace216b93629",
+    "prefabs/medium_rope_v.png": "b3b9bb46bb14c6819874ab050f6f44e9e1c427705a25cc60456df112b860f61a",
+    "prefabs/medium_wood_u.png": "51ee5398c02c2eaf5038025a1a73e9e7bdfb6784cda2070065281a492b8032a5",
+    "prefabs/medium_wood_v.png": "cc704e2e7890b1d99af687ef546b3453409b1af780c1928f4d4d19c6e7710e42",
+    "prefabs/short_damaged_u.png": "ec1fca5b16e69a48b32f9ad5c21ca56612b600c04e5b3bdca59b0cc7e91ade26",
+    "prefabs/short_damaged_v.png": "0f7600d9708575a96938e935803e688b522f744103316eaa1dee9b696575544d",
+    "prefabs/short_rope_u.png": "b41aa58c415a4a1133d135e8892a9abe26ad578ae75290163826a8a704ffddef",
+    "prefabs/short_rope_v.png": "12331858977afd729d2342f2791025dfd485052e1ce3377d30da57df0235a41c",
+    "prefabs/short_wood_u.png": "8f032d419e2710242c9caa373ab0cd25f68f33d47707e6812e57d3e4681ed272",
+    "prefabs/short_wood_v.png": "89b406154ca98c89a935dc3ebe0bd4ab687f9409ffb74e9431234717c04e449b"
+  }
+}

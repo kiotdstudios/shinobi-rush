@@ -1,0 +1,2342 @@
+{
+  "player-S": {
+    "source_sha256": "c4402ba4085476593b89dc64269dd2535bb34b0981ee96d0be1f63cf465f4a81",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          26,
+          17,
+          101,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          26,
+          17,
+          101,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          26,
+          17,
+          101,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          26,
+          17,
+          102,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          26,
+          17,
+          102,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          26,
+          17,
+          101,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          26,
+          17,
+          102,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          26,
+          17,
+          102,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          26,
+          17,
+          102,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          26,
+          17,
+          101,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          26,
+          17,
+          101,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          26,
+          17,
+          102,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          26,
+          17,
+          102,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          26,
+          17,
+          101,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          26,
+          17,
+          102,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          26,
+          17,
+          102,
+          119
+        ],
+        "registration": [
+          0,
+          -3
+        ],
+        "height": 102
+      }
+    ],
+    "height_range": [
+      101,
+      102
+    ]
+  },
+  "player-SE": {
+    "source_sha256": "5d54c62af13d07b4496e9d809fc5e353059162571e47981177c91b0c081eb564",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          29,
+          23,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 92
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          29,
+          23,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 92
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          29,
+          23,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 92
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          29,
+          23,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 92
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          30,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          29,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          30,
+          24,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 91
+      }
+    ],
+    "height_range": [
+      91,
+      92
+    ]
+  },
+  "player-E": {
+    "source_sha256": "86a37781e6b450d0e04baa3d61f41722dd435132ed04873de741a8a3501d453c",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          27,
+          23,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 93
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          27,
+          23,
+          101,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 93
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          27,
+          23,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 93
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          27,
+          23,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 93
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          27,
+          22,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          27,
+          22,
+          101,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          27,
+          22,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          27,
+          22,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          27,
+          22,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          27,
+          22,
+          101,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          27,
+          22,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          27,
+          23,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 93
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          27,
+          23,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 93
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          27,
+          23,
+          101,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 93
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          27,
+          23,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 93
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          27,
+          23,
+          102,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 93
+      }
+    ],
+    "height_range": [
+      93,
+      94
+    ]
+  },
+  "player-NE": {
+    "source_sha256": "08d314b4b28eaae74b31e2d22dc02488d5300a62391c342ee54434187b0968ca",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          32,
+          24,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          32,
+          24,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          32,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          32,
+          24,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          32,
+          24,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          31,
+          24,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          32,
+          24,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          32,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          32,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          31,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          32,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          32,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          32,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          31,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          32,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          32,
+          25,
+          101,
+          119
+        ],
+        "registration": [
+          -2,
+          -3
+        ],
+        "height": 94
+      }
+    ],
+    "height_range": [
+      94,
+      95
+    ]
+  },
+  "player-N": {
+    "source_sha256": "2c2c343fb9780c8baf1cb70dd3c628f82c239c2e4a5780f450cda56ba270f1dc",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          29,
+          21,
+          98,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          29,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          29,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          30,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          29,
+          21,
+          98,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          29,
+          20,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          29,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          30,
+          20,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          29,
+          21,
+          98,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          29,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          29,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          30,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          29,
+          21,
+          98,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          29,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          29,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          30,
+          21,
+          99,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 94
+      }
+    ],
+    "height_range": [
+      94,
+      95
+    ]
+  },
+  "bandit-S": {
+    "source_sha256": "3e8303f354f4377cbfccfd02218a9c0b3f98725c2cfe7c39edbf3fd17afd3503",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          34,
+          19,
+          100,
+          120
+        ],
+        "registration": [
+          0,
+          -4
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          34,
+          19,
+          100,
+          120
+        ],
+        "registration": [
+          0,
+          -4
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          34,
+          19,
+          100,
+          120
+        ],
+        "registration": [
+          0,
+          -4
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          34,
+          19,
+          100,
+          120
+        ],
+        "registration": [
+          0,
+          -4
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          34,
+          13,
+          100,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 105
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          34,
+          13,
+          100,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 105
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          34,
+          13,
+          100,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 105
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          34,
+          13,
+          100,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 105
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          34,
+          17,
+          100,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          34,
+          17,
+          100,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          34,
+          17,
+          100,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          34,
+          17,
+          100,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          34,
+          14,
+          100,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          34,
+          14,
+          100,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          34,
+          14,
+          100,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 101
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          34,
+          14,
+          100,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 101
+      }
+    ],
+    "height_range": [
+      101,
+      105
+    ]
+  },
+  "bandit-SE": {
+    "source_sha256": "a3c247e89e3499fa34dbec297841c6484492fba33b24c3ac9fc6f11c02c97374",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          31,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          30,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          31,
+          24,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 91
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          31,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          31,
+          23,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 92
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          30,
+          23,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 92
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          31,
+          23,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 92
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          31,
+          23,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 92
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          31,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          30,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          31,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          30,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          31,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          30,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          31,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          31,
+          25,
+          97,
+          115
+        ],
+        "registration": [
+          -3,
+          1
+        ],
+        "height": 90
+      }
+    ],
+    "height_range": [
+      90,
+      92
+    ]
+  },
+  "bandit-E": {
+    "source_sha256": "896b9ffc1f40dc8d565651cdc1ce2c0fb5444e81adbba41674773ce8bdc01c73",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          40,
+          17,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 104
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          40,
+          17,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 104
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          40,
+          17,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 104
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          40,
+          18,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 103
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          40,
+          17,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 104
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          40,
+          17,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 104
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          40,
+          17,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 104
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          40,
+          17,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 104
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          40,
+          17,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 104
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          40,
+          17,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 104
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          40,
+          18,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 103
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          40,
+          18,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 103
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          40,
+          18,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 103
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          40,
+          18,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 103
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          40,
+          18,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 103
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          40,
+          18,
+          98,
+          121
+        ],
+        "registration": [
+          -5,
+          -5
+        ],
+        "height": 103
+      }
+    ],
+    "height_range": [
+      103,
+      104
+    ]
+  },
+  "bandit-NE": {
+    "source_sha256": "0aa56ccafc77ce459f48ebb34bab73628a6e72b6d2151b3b380c7183048d2a72",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          30,
+          21,
+          97,
+          118
+        ],
+        "registration": [
+          -1,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          29,
+          21,
+          97,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          29,
+          21,
+          98,
+          118
+        ],
+        "registration": [
+          -2,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          30,
+          21,
+          97,
+          118
+        ],
+        "registration": [
+          -1,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          29,
+          20,
+          97,
+          118
+        ],
+        "registration": [
+          -1,
+          -2
+        ],
+        "height": 98
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          29,
+          20,
+          97,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 98
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          30,
+          20,
+          98,
+          118
+        ],
+        "registration": [
+          -2,
+          -2
+        ],
+        "height": 98
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          29,
+          20,
+          97,
+          118
+        ],
+        "registration": [
+          -1,
+          -2
+        ],
+        "height": 98
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          29,
+          21,
+          97,
+          118
+        ],
+        "registration": [
+          -1,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          30,
+          21,
+          97,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          29,
+          21,
+          98,
+          118
+        ],
+        "registration": [
+          -2,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          29,
+          21,
+          97,
+          118
+        ],
+        "registration": [
+          -1,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          29,
+          21,
+          97,
+          118
+        ],
+        "registration": [
+          -1,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          29,
+          21,
+          97,
+          118
+        ],
+        "registration": [
+          0,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          30,
+          21,
+          98,
+          118
+        ],
+        "registration": [
+          -2,
+          -2
+        ],
+        "height": 97
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          29,
+          21,
+          97,
+          118
+        ],
+        "registration": [
+          -1,
+          -2
+        ],
+        "height": 97
+      }
+    ],
+    "height_range": [
+      97,
+      98
+    ]
+  },
+  "bandit-N": {
+    "source_sha256": "f46f08cd6075880e7411271e36a5fadfa6f2d1f0211ebeb48f2121d4f38e0332",
+    "unique": 16,
+    "frames": [
+      {
+        "source_frame": 0,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 1,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 2,
+        "source_bbox": [
+          31,
+          20,
+          98,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 3,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          115
+        ],
+        "registration": [
+          0,
+          1
+        ],
+        "height": 95
+      },
+      {
+        "source_frame": 4,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 5,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 6,
+        "source_bbox": [
+          31,
+          20,
+          98,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 7,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 8,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 9,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 10,
+        "source_bbox": [
+          31,
+          20,
+          98,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 11,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 12,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 13,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 14,
+        "source_bbox": [
+          31,
+          20,
+          98,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      },
+      {
+        "source_frame": 15,
+        "source_bbox": [
+          31,
+          20,
+          97,
+          116
+        ],
+        "registration": [
+          0,
+          0
+        ],
+        "height": 96
+      }
+    ],
+    "height_range": [
+      95,
+      96
+    ]
+  }
+}

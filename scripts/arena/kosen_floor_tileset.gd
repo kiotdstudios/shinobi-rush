@@ -2,9 +2,9 @@ class_name KosenFloorTileset
 extends RefCounted
 ## Builds the Kosen courtyard floor TileSet in code (no hand-authored .tres): one small,
 ## reusable isometric tile set covering every variant category the ground-tileset order asked
-## for. Source art: assets/environment/kosen_courtyard/floor_tiles/ (PixelLab create_tiles_pro,
-## squashed from the tool's native 1:1 top-down square diamond to the game's 2:1 isometric
-## ratio so it matches WorldScale's diamond grid convention).
+## for. Source art: assets/environment/kosen_courtyard/floor_tiles/, generated with PixelLab
+## create_tiles_pro (isometric, 64x64 slabs) from a text prompt matching the owner's stone floor
+## mockup palette; only each slab's flat top face is kept, resized to the game's 72x36 diamond.
 ##
 ## Deterministic variation: pick_interior_source_id() is a pure function of the cell
 ## coordinate (hash, not randf()), so the same arena always paints the same way across runs —
@@ -17,28 +17,57 @@ const TILE_SIZE := Vector2i(72, 36)
 
 const TILE_DIR := "res://assets/environment/kosen_courtyard/floor_tiles/"
 
-## Source order fixes each file's source_id (position in this array == source_id), so callers
-## can address sources by the named constants below without a separate lookup table.
+## Source order fixes each file's source_id (position in this array == source_id).
+## Owner-approved 9-slice family (center + 4 edges + 4 corners, one consistent dark-slate
+## look) plus a few plain/cracked/mossy centre variants so the interior does not repeat.
 const ALL_FILES: Array[String] = [
-	"floor_base_a.png",           # 0 - base stone floor
-	"floor_base_b.png",           # 1 - base stone floor, alt mortar tone
-	"floor_alt_herringbone.png",  # 2 - alternate stone texture (herringbone laid)
-	"floor_cracked.png",          # 3 - cracked / weathered stone
-	"floor_dirt_stone.png",       # 4 - dirt-to-stone transition
-	"floor_dirt.png",             # 5 - packed dirt
-	"floor_decor_a.png",          # 6 - decorative detail (gold cloud inlay)
-	"floor_decor_b.png",          # 7 - decorative detail, alt motif
-	"floor_edge.png",             # 8 - worn lighter edge (one side), perimeter ring
-	"floor_corner.png",           # 9 - worn lighter corner (two sides), perimeter corners
+	"floor9_center.png",         # 0  centre floor
+	"floor9_center_b.png",       # 1  centre floor, alt
+	"floor9_cracked_a.png",      # 2  centre, cracked
+	"floor9_cracked_b.png",      # 3  centre, heavily cracked
+	"floor9_moss_a.png",         # 4  centre, mossy
+	"floor9_edge_nw.png",        # 5  lip on the upper-left side
+	"floor9_edge_ne.png",        # 6  lip on the upper-right side
+	"floor9_edge_se.png",        # 7  lip on the lower-right side
+	"floor9_edge_sw.png",        # 8  lip on the lower-left side
+	"floor9_corner_top.png",     # 9  lip on both upper sides (top vertex)
+	"floor9_corner_right.png",   # 10 lip on both right sides (right vertex)
+	"floor9_corner_bottom.png",  # 11 lip on both lower sides (bottom vertex)
+	"floor9_corner_left.png",    # 12 lip on both left sides (left vertex)
 ]
 
-const EDGE_SOURCE_ID := 8
-const CORNER_SOURCE_ID := 9
+const EDGE_NW := 5
+const EDGE_NE := 6
+const EDGE_SE := 7
+const EDGE_SW := 8
+const CORNER_TOP := 9
+const CORNER_RIGHT := 10
+const CORNER_BOTTOM := 11
+const CORNER_LEFT := 12
 
-## Weighted picks for interior (non-perimeter) cells, aligned to ALL_FILES[0..7]. Base/alt
-## textures dominate; cracked/dirt/decorative are sprinkled in so they read as variation, not
-## the main pattern.
-const INTERIOR_WEIGHTS: Array[int] = [10, 10, 6, 3, 2, 1, 1, 1]
+## Weighted picks for interior cells, aligned to ALL_FILES[0..4].
+const INTERIOR_WEIGHTS: Array[int] = [40, 40, 10, 4, 6]
+
+
+## Rim tile for a border cell, from which sides of the ground rectangle it touches. A screen-space
+## rectangle's top border reads as the diamond's upper rim, so it gets the top-vertex piece, and
+## so on; the four rectangle corners get the single-side edge pieces.
+static func ring_source_id(near_left: bool, near_right: bool, near_top: bool, near_bottom: bool) -> int:
+	if near_top and near_left:
+		return EDGE_NW
+	if near_top and near_right:
+		return EDGE_NE
+	if near_bottom and near_right:
+		return EDGE_SE
+	if near_bottom and near_left:
+		return EDGE_SW
+	if near_top:
+		return CORNER_TOP
+	if near_bottom:
+		return CORNER_BOTTOM
+	if near_left:
+		return CORNER_LEFT
+	return CORNER_RIGHT
 
 
 static func build() -> TileSet:

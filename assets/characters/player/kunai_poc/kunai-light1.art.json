@@ -1,0 +1,173 @@
+{
+  "schema": "shinobi_kunai_body_poc_v1",
+  "id": "player_se_kunai_light1_poc",
+  "status": "owner_visual_review",
+  "runtime_integrated": false,
+  "directions": [
+    "SE"
+  ],
+  "frame_size": [
+    128,
+    128
+  ],
+  "body_height_px": 104,
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "fps": 24,
+  "duration_ms": 300.0,
+  "loop": false,
+  "default_review_speed": 0.5,
+  "contact_frames": [
+    2
+  ],
+  "hitbox_active_frames": [
+    2,
+    3
+  ],
+  "transition_ready_frames": [
+    4,
+    5
+  ],
+  "timing_status": "300ms proposal matches current light1 windows; not runtime bound",
+  "weapon": {
+    "manifest": "../../../weapons/kunai/kunai.art.json",
+    "independent": true
+  },
+  "source": {
+    "tool": "built_in_image_gen",
+    "raw": "../source/kunai-thrust-se-v1/raw.png",
+    "raw_sha256": "60bfe50025971bd38ac392cfbf30f0db18d72b207c2c6ee9feff64ea9c537c4c",
+    "palette_reference": "../sprites/production/idle/SE_000.png",
+    "processing": "fixed nearest512-to128 extraction; binary alpha; shared approved-SE palette; row registration y-3/-1; shared123/128 clip scale and offset2,5; no per-frame bbox fit"
+  },
+  "frames": [
+    {
+      "frame_index": 0,
+      "body_frame": "body/SE_000.png",
+      "body_sha256": "7bdbc856c35f76e42840aefe2f89b5bf815dd0dbf6fd9eace61ba45df9aafc59",
+      "right_hand_px": [
+        64,
+        72
+      ],
+      "weapon_angle_deg": 135,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        62,
+        70,
+        5,
+        5
+      ],
+      "start_ms": 0,
+      "duration_ms": 41.666666666666664,
+      "phase": "startup",
+      "contact": false
+    },
+    {
+      "frame_index": 1,
+      "body_frame": "body/SE_001.png",
+      "body_sha256": "da2c06ffa6237b2e75ed47b4d1f05ee9f4d8b0f6804368fc65f7521431586fd2",
+      "right_hand_px": [
+        45,
+        62
+      ],
+      "weapon_angle_deg": -150,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        43,
+        60,
+        5,
+        5
+      ],
+      "start_ms": 41.666666666666664,
+      "duration_ms": 41.666666666666664,
+      "phase": "startup",
+      "contact": false
+    },
+    {
+      "frame_index": 2,
+      "body_frame": "body/SE_002.png",
+      "body_sha256": "553e851cca58b47d2cc72b559ee2cdf43a0ca034657314132a7762fd4a831764",
+      "right_hand_px": [
+        96,
+        70
+      ],
+      "weapon_angle_deg": 15,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        94,
+        68,
+        5,
+        5
+      ],
+      "start_ms": 83.33333333333333,
+      "duration_ms": 33.333333333333336,
+      "phase": "active",
+      "contact": true
+    },
+    {
+      "frame_index": 3,
+      "body_frame": "body/SE_003.png",
+      "body_sha256": "4f3fdce6c583e12ce4f7a20fe0522677156c13e96d3c183914534fa7917bc4df",
+      "right_hand_px": [
+        108,
+        70
+      ],
+      "weapon_angle_deg": 25,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        106,
+        68,
+        5,
+        5
+      ],
+      "start_ms": 116.66666666666666,
+      "duration_ms": 33.333333333333336,
+      "phase": "active",
+      "contact": false
+    },
+    {
+      "frame_index": 4,
+      "body_frame": "body/SE_004.png",
+      "body_sha256": "c7a2c7a89deb67c5b95d95c2cccd63f533bac810ef88e2f064acd59221d888a2",
+      "right_hand_px": [
+        57,
+        67
+      ],
+      "weapon_angle_deg": 115,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        55,
+        65,
+        5,
+        5
+      ],
+      "start_ms": 150.0,
+      "duration_ms": 75,
+      "phase": "recovery",
+      "contact": false
+    },
+    {
+      "frame_index": 5,
+      "body_frame": "body/SE_005.png",
+      "body_sha256": "7db63818d0a884f0046b110bb957a36348c18813ff68a7d573482d6a74849185",
+      "right_hand_px": [
+        65,
+        73
+      ],
+      "weapon_angle_deg": 135,
+      "weapon_layer": "front",
+      "hand_occlusion_rect": [
+        63,
+        71,
+        5,
+        5
+      ],
+      "start_ms": 225.0,
+      "duration_ms": 75,
+      "phase": "recovery",
+      "contact": false
+    }
+  ]
+}

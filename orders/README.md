@@ -127,3 +127,19 @@ Codex may use its own proven art-generation skills; **review PixelLab API skills
 
 ## FINAL OWNER DECISION — Production sprite frame size (2026-10-18)
 **LOCKED: All standard production character sprite frames MUST be 128×128 pixels, RGBA with transparency.** This overrides any earlier 64×64 vs 128×128 evaluation or scale-approval requirement in this file or linked orders. Do not create 64×64 production character sprites. Legacy 64×64 artwork may be retained as reference only. Larger canvases may be used for attacks/VFX extending outside the base frame, but keep the character's world-space/body scale, proportions, foot anchor and alignment consistent. Maintain eight-direction animation targets and premium fluid motion. PixelLab remains optional after mandatory skill/API review as separately documented.
+
+## Single official live testing URL — mandatory for ALL agents
+
+**Canonical shared browser build:** https://kiotdstudios.github.io/shinobi-rush/
+
+Aki, Codex, Orcha, and Kiro must all use this **same URL** for integrated gameplay/art verification. A local export, PR preview, screenshot, GitHub branch or passing PR checks **does not update this URL**. Only the Godot CI workflow triggered by a successful push/merge to `main` deploys the site after build and pre-deploy browser smoke checks; the post-deploy smoke job must also pass. Do not add a second testing site or imply that an unmerged PR is live.
+
+**Required completion checklist for any runtime-visible change:**
+1. Implement and test on the agent's branch; attach evidence and a PR.
+2. Integrate via the repository's approved review/merge process (never bypass protections).
+3. Verify the **main** Godot CI workflow succeeded, including `deploy` and `smoke-postdeploy`, for the actual merged commit. If workflow is pending/failed, status remains `REVIEW` or `BLOCKED`, not `DONE`.
+4. Open **https://kiotdstudios.github.io/shinobi-rush/** (use `?camera=close` when close-camera visual inspection is needed), check the build/version SHA when exposed, perform the actual relevant gameplay/visual smoke test, and record date/time, exact URL, merged SHA, workflow run link and observed result in the agent's job report.
+5. If the deployed build SHA does not match the merged main SHA, if Pages is stale, or if the live test fails, investigate/report immediately and do not claim delivery. A subsequent main commit may supersede a prior deployment; report which revision was actually tested.
+6. If the task is documentation-only or art not yet integrated at runtime, explicitly label it **NOT LIVE — awaiting integration**, rather than claiming it is published.
+
+**Cross-agent handoff:** Codex/Orcha provide animation assets and event/socket metadata to Aki for gameplay integration; Kiro supplies camera-event integration as needed. Whoever owns the integration must coordinate the merge and live verification; each agent must distinguish their own PR success from actual shared-site publication.

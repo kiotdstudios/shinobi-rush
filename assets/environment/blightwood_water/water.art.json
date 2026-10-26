@@ -1,0 +1,250 @@
+{
+  "schema": "shinobi_blightwood_water_v1",
+  "status": "review",
+  "logical_tile_size": [
+    72,
+    36
+  ],
+  "texture_filter": "nearest",
+  "tiles": [
+    {
+      "role": "corner_top",
+      "path": "res://assets/environment/blightwood_water/tiles/water9_corner_top.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "shore_edges": [
+        "u-",
+        "v-"
+      ]
+    },
+    {
+      "role": "edge_ne",
+      "path": "res://assets/environment/blightwood_water/tiles/water9_edge_ne.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "shore_edges": [
+        "v-"
+      ]
+    },
+    {
+      "role": "corner_right",
+      "path": "res://assets/environment/blightwood_water/tiles/water9_corner_right.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "shore_edges": [
+        "u+",
+        "v-"
+      ]
+    },
+    {
+      "role": "edge_nw",
+      "path": "res://assets/environment/blightwood_water/tiles/water9_edge_nw.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "shore_edges": [
+        "u-"
+      ]
+    },
+    {
+      "role": "center",
+      "path": "res://assets/environment/blightwood_water/tiles/water9_center.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "shore_edges": []
+    },
+    {
+      "role": "edge_se",
+      "path": "res://assets/environment/blightwood_water/tiles/water9_edge_se.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "shore_edges": [
+        "u+"
+      ]
+    },
+    {
+      "role": "corner_left",
+      "path": "res://assets/environment/blightwood_water/tiles/water9_corner_left.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "shore_edges": [
+        "u-",
+        "v+"
+      ]
+    },
+    {
+      "role": "edge_sw",
+      "path": "res://assets/environment/blightwood_water/tiles/water9_edge_sw.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "shore_edges": [
+        "v+"
+      ]
+    },
+    {
+      "role": "corner_bottom",
+      "path": "res://assets/environment/blightwood_water/tiles/water9_corner_bottom.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        18
+      ],
+      "shore_edges": [
+        "u+",
+        "v+"
+      ]
+    }
+  ],
+  "animations": {
+    "surface": {
+      "count": 16,
+      "hashes": [
+        "e0a39fa4e0229037699a02624287b6bbb5a928d11fff0e602db231e4444d7bde",
+        "5a84f8d36313f6fefa5599fe90269d1382c316d46608a296227225d380235e25",
+        "6e9f53566804cd3a7492148cdcf8b24c753c72764cea772698e8a85cc82b789f",
+        "67f87cb7fabc3b81a3ac34c4dce1405bf7c6cb607f7a53c75a785261765baca6",
+        "d22dde7ae0679c1a28580c75d6f3a9afe570b81c31029bf2ab87f8b6f6cd5381",
+        "0d40abe31ef1453e26bd454026c44bc445ecd6b1d838e66193bcd0be1d21f74d",
+        "7d875ad0be2eb39f7d977d7abb55d98df06df920e9ab2ea5f77827d183ea6d86",
+        "3499d600ca390bab8bd8d2ea65a968db630f18452f2d68d28908595cb8ae8272",
+        "a0326bb6142bdc4cc6f4dfddae125c176809217919ead7e6cc857146f21e8982",
+        "2c34faaa34b0eda76ddf31cc00abcac8ec372e2dc6fa6101633d8d2d8bab2a5b",
+        "c8e010a0ca29e4cea90a13ba5e233ddc697d6d833a30cd4c901a68b95d1b76b8",
+        "77449e1a328020466ae872e17d841eefc3c3dc78ca54909313c7c831dce6a554",
+        "2e10c4cf5770ae5012254379b7ca219bfe26c04472a67542682055251ab3add5",
+        "a6f984bec788f1a824d2ceb4a70c22e81596292a2cfde30cbe962cfc97609cdf",
+        "99cb60901e3b162efe75c2f6429268425524d28250e385c58ff1e324e2fd4392",
+        "0f8f7ed05a1e2519bf921998cb7695d1455576c1a510837162eace61e7c849cd"
+      ],
+      "size": [
+        128,
+        128
+      ],
+      "fps": 16
+    },
+    "waterfall": {
+      "count": 16,
+      "hashes": [
+        "4dc3a266c01d7669f30da13a534f08ff4215734fb89fb58f3f15ea61bff228ad",
+        "eeb8cba8fdd93d508fe076310f17cab85e983e6fc1813d0e87aea42720b4cc13",
+        "aeffe735783b065edbbaca8c73c1f5090db2b781a1d4f905dd66f1a045dfb5ec",
+        "169d2d6b94bd98ab3c153c334726169901e27aba11fae4c62330b403fc7c0960",
+        "bc34e85c07cb05701106ddc2b84b37f59bb59822df05ba0963b81ac9844d9012",
+        "3201cd142357c778c5123ac5477afc7cd086da7ebd24042cc9a8cc1f6a3e2824",
+        "f8715341e2b11a098ebd56490fbd1c356d9dd2a6b8421fc0c5456f90718b76bc",
+        "b1644a3d1d62376dcfb1c5658ec00f94cd87ecc40b81a64221b6014f2ff27a27",
+        "fc3e936fa0b1e2555298de9d6531333c16c21e0c65fda0c00329ad0d82d33728",
+        "b8ac4e342b4053b51269a55b659a35f718266c4e3c971491deea3c45740c3acf",
+        "2331f2c58c1147aec01a9187c3cc27ddec667a2d532b0b12b9dfecd953976444",
+        "f0ae89f38da3ecf25ae1054fda4d2f2e24a1138a58694b1d7949ef13746ae103",
+        "ba39e59717ca0b5dc4ff47e8348c7b3f3bfa975ebc8d71afe78b4949e5b32b36",
+        "6df63172986c4768b783aae8af761c43603527a4787f27fed6f19c8bbe78b1d9",
+        "9a54eef3f1474bec7b5ae17802090688db80f7e31e3503c0f7608e6c3cbe8127",
+        "9f64d2f1fc9a0a241812fcdd837e11b6662e2a94a107f3b56e715db1b8e2f556"
+      ],
+      "size": [
+        128,
+        192
+      ],
+      "fps": 18
+    },
+    "foam": {
+      "count": 16,
+      "hashes": [
+        "b7c6bdff53bbaee1056953781e2e107709494a67ee9a83367388d68b7c69e111",
+        "4eaca9cb4ed6d3b90c17a2fbb1fed9f8a48919ef5551da46304a8a3f9633f2f8",
+        "fe8a0a669effae246944d7537aeb0f101198441d6d95ccfc67098d905c72df7d",
+        "52cc42756f8510d87f84dc51c2a7d41ed232852a12d2642c806d4131751f912e",
+        "4bf715a670b919a9899ea2640346303db92799a54d06bd6420861462ae82876a",
+        "a76e8b62cf5264cd0a8aff25e535769b7b5bd7f2e601ad64c3d08a48e92e932a",
+        "66c12dcfbaef1aec3873d08c8c0c9e02f24bac6b05e055cba4d8d45818ad0300",
+        "35678eeae49135db95aceeb553cb87bc7251256cd226ef71c56c2e250ef9603b",
+        "9cff94d8ac8259ff58c1c6ae06c513f192d2e785aac8b7fafadafe7a2ba9eb9c",
+        "ae0af4f8f346c59c58ffa1a62b707d488f3e531829113e276e5a1c79b6e53f47",
+        "b29c1c46167e14bab0abe9d969cc6c31e7e6fc923c292c33292c1ffd42c6319e",
+        "982f879360b49808d4e029c29bd640da030a2a956b76030be1072072d8faaf92",
+        "97b6a90d551560fea34ba7789c38ffee6089130921d1f80dd166321d9012a2b9",
+        "84412fbb2a96ea7c12d074a1687b97da8082ae802f1b5c9fa58e6f9cea815d6b",
+        "c93825cd96dab013e6497e0ca5f3c3bf12d231b2919fd3ff5bf17e3f975f2b32",
+        "f3b29c3be0d6f19167981ed0300d6a2cb99f96b8b7626e59d814fe75aa7fd446"
+      ],
+      "size": [
+        128,
+        64
+      ],
+      "fps": 13
+    }
+  },
+  "waterfall_anchor": [
+    64,
+    169
+  ],
+  "fall_sprite_offset": [
+    0,
+    -73
+  ],
+  "foam_sprite_offset": [
+    0,
+    -1
+  ],
+  "separate_layers": [
+    "river_surface",
+    "falling_water",
+    "landing_foam",
+    "spray"
+  ],
+  "droplet_pool": 18,
+  "gameplay": "Decorative only; no water collision/swimming behavior or automatic map placement.",
+  "provider": "PixelLab",
+  "processing": "Native cleanup, one-pixel frame removal, toroidal edge band repair, exact diamond alpha clipping; original waterfall apron cropped out for separate foam. No interpolation or scaling."
+}

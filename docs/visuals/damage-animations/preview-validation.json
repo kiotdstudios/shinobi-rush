@@ -1,0 +1,30 @@
+{
+  "normal.gif": {
+    "source_frames": 72,
+    "encoded_frames": 72,
+    "duration_ms": 3000,
+    "bytes": 583562,
+    "source": "actual Godot Web captures at24 source FPS; review replay only"
+  },
+  "half-speed.gif": {
+    "source_frames": 72,
+    "encoded_frames": 72,
+    "duration_ms": 6000,
+    "bytes": 583469,
+    "source": "actual Godot Web captures at24 source FPS; review replay only"
+  },
+  "all-normal.gif": {
+    "source_frames": 72,
+    "encoded_frames": 72,
+    "duration_ms": 3000,
+    "bytes": 939665,
+    "source": "actual Godot Web captures at24 source FPS; review replay only"
+  },
+  "all-half-speed.gif": {
+    "source_frames": 72,
+    "encoded_frames": 72,
+    "duration_ms": 6000,
+    "bytes": 939724,
+    "source": "actual Godot Web captures at24 source FPS; review replay only"
+  }
+}

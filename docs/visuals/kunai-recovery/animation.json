@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "source": "assets/weapons/kunai/black_kunai.png",
+  "frame_size": [
+    64,
+    64
+  ],
+  "renderer": "time-based rigid Sprite2D motion; nearest filter; no new bitmap frames",
+  "phases": {
+    "surface_stick_ms": 400,
+    "fall_ms": 300,
+    "bounce_ms": 480,
+    "bounces": 2
+  },
+  "ground_scale": [
+    0.7,
+    0.45
+  ],
+  "pickup_glow": "independent white pool, halo and glints",
+  "audio": "synthesized 22050 Hz metallic clink, two diminishing contacts",
+  "outcomes": {
+    "character": "damage then consume, no pickup",
+    "surface": "brief embed; impact-side reachable-floor recovery only",
+    "miss": "fall, tumble, bounce and one-use collectible"
+  },
+  "inventory_limit": 10,
+  "authored_respawn_seconds": 30,
+  "spent_pickup_respawns": false,
+  "max_spent_pickups": 64
+}
