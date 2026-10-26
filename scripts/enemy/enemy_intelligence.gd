@@ -65,6 +65,7 @@ const LEVELS := {
 		# scavenging (off the fight): ryo pouches and gourds in sight, drunk when needed
 		"loot_sight": 380.0,         # how far he spots loot lying about (no facing cone; it must be reachable on the nav)
 		"item_carry": 2,             # of each kind on his 4-slot D-pad belt (BanditInventory)
+		"item_throw_chance": 0.5,    # a throw uses a carried tag bomb / paper tag instead of a kunai (kunai on the belt always join the fan)
 		"heal_below": 0.5,           # drinks a health gourd under this fraction of hp, out of his target's reach
 		"heal_desperate": 0.25,      # ... or right in its face when this low
 		"drink_time": 0.5,           # feet planted while drinking

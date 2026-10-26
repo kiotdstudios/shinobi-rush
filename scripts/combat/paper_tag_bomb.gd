@@ -167,8 +167,8 @@ func _step_fly(delta: float) -> void:
 	var b := a + dir * speed * delta
 	var seg := b - a
 	if is_inside_tree():
-		for e: Node in get_tree().get_nodes_in_group("enemy"):
-			if not (e is Node2D) or e == thrower:
+		for e: Node in _victims():
+			if not (e is Node2D):
 				continue
 			var t := 0.0
 			if seg.length_squared() > 0.0001:
@@ -274,12 +274,20 @@ func _step_blast(delta: float) -> void:
 		queue_free()
 
 
+## Who this tag can stick to and hurt: the player's tags hit every "enemy" as before; a bandit's tag hits whoever is
+## hostile to his crew (the player, a rival crew), never his own crewmates.
+func _victims() -> Array:
+	if thrower is Bandit and is_instance_valid(thrower):
+		return Combatants.all(get_tree()).filter(func(n: Node2D) -> bool: return Combatants.hostile(thrower, n) and Combatants.alive(n))
+	return get_tree().get_nodes_in_group("enemy").filter(func(n: Node) -> bool: return n != thrower)
+
+
 ## Hurt every enemy inside the blast; damage and knockback fade toward the edge (never below 40%).
 func apply_damage() -> void:
 	if not is_inside_tree():
 		return
-	for e: Node in get_tree().get_nodes_in_group("enemy"):
-		if not (e is Node2D) or e == thrower or not e.has_method("take_damage"):
+	for e: Node in _victims():
+		if not (e is Node2D) or not (e.has_method("take_damage") or e.has_method("take_hit")):
 			continue
 		var d: Vector2 = (e as Node2D).global_position - global_position
 		var r := Vector2(d.x, d.y * 2.0).length()
@@ -287,7 +295,10 @@ func apply_damage() -> void:
 			continue
 		var k := lerpf(1.0, 0.4, r / BLAST_RADIUS)
 		var away := d.normalized() if d.length() > 1.0 else dir
-		e.call("take_damage", DAMAGE * k, away, KNOCKBACK * k, HITSTOP_MS)
+		if e.has_method("take_damage"):
+			e.call("take_damage", DAMAGE * k, away, KNOCKBACK * k, HITSTOP_MS)
+		else:
+			e.call("take_hit", DAMAGE * k, away, KNOCKBACK * k, thrower)
 		damaged.append(e as Node2D)
 
 

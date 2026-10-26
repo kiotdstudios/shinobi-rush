@@ -216,6 +216,67 @@ func _in_arena(root: Node) -> void:
 		d.queue_free()
 	bomb.queue_free()
 
+	# --- in a fight he uses what he carries: tag bomb, belt kunai, smoke for the getaway
+	a.inventory.set_count("tag_bomb", 0)
+	a.inventory.set_count("paper_tag", 0)
+	a.inventory.set_count("kunai", 0)
+	a.inventory.set_count("smoke_tag_bomb", 0)
+	a.profile["item_throw_chance"] = 1.0
+	ck.call("bandit fight: an empty belt means his own kunai", a._pick_throw_item(220.0) == "")
+	a.inventory.set_count("tag_bomb", 1)
+	ck.call("bandit fight: a carried tag bomb is his pick in its range, not past it", a._pick_throw_item(220.0) == "tag_bomb" and a._pick_throw_item(PaperTagBomb.MAX_RANGE + 50.0) == "")
+	mate.global_position = a.global_position + Vector2(220, 40)
+	p.global_position = a.global_position + Vector2(220, 0)
+	p._hit_invuln = 0.0
+	p.health = p.max_health
+	a._player = p
+	a.state = Bandit.State.THREATEN
+	a.atk_phase = Bandit.AtkPhase.NONE
+	var thrown0 := a.items_thrown
+	a._begin_throw()
+	var tag: PaperTagBomb = null
+	t = 0.0
+	while t < 4.0 and (tag == null or not tag.detonated or not tag._hit_done):
+		if a.atk_phase != Bandit.AtkPhase.NONE:
+			a._tick_throw(1.0 / 60.0)
+		if tag == null:
+			for n in arena.get_children():
+				if n is PaperTagBomb and (n as PaperTagBomb).thrower == a:
+					tag = n
+		await tree.physics_frame
+		t += 1.0 / 60.0
+	ck.call("bandit fight: he throws the tag bomb off his belt", tag != null and tag.art_kind == "tag_bomb" and a.inventory.count_of("tag_bomb") == 0 and a.items_thrown == thrown0 + 1)
+	ck.call("bandit fight: his tag sticks to the player and the blast hurts him", tag != null and tag.landed_on == "enemy" and tag.damaged.has(p) and p.health < p.max_health, "%s %s hp %.0f" % [tag.landed_on if tag else "-", str(tag.damaged) if tag else "-", p.health])
+	ck.call("bandit fight: the blast spares his own crewmate", tag != null and not tag.damaged.has(mate) and mate.hp == mate.max_hp)
+	if tag != null and is_instance_valid(tag):
+		tag.queue_free()
+	p.health = p.max_health
+	a.atk_phase = Bandit.AtkPhase.NONE
+	a.state = Bandit.State.THREATEN
+	a.inventory.set_count("kunai", 1)
+	var k0 := a.kunai_thrown
+	a._begin_throw()
+	t = 0.0
+	while t < 3.0 and a.atk_phase != Bandit.AtkPhase.NONE:
+		a._tick_throw(1.0 / 60.0)
+		t += 1.0 / 60.0
+	ck.call("bandit fight: a kunai off his belt joins the fan", a.kunai_thrown == k0 + maxi(int(a.profile.throw_burst_count), 1) + 1 and a.inventory.count_of("kunai") == 0, "%d -> %d" % [k0, a.kunai_thrown])
+	for n in arena.get_children():
+		if n is BanditKunai:
+			n.queue_free()
+	a.inventory.set_count("smoke_tag_bomb", 1)
+	a._begin_retreat()
+	var smoke: SmokeTagBomb = null
+	for n in arena.get_children():
+		if n is SmokeTagBomb and (n as SmokeTagBomb).thrower == a:
+			smoke = n
+	ck.call("bandit fight: he throws smoke to cover his retreat", smoke != null and a.inventory.count_of("smoke_tag_bomb") == 0 and a.state == Bandit.State.RETREAT)
+	if smoke != null:
+		smoke.queue_free()
+	a.state = Bandit.State.PATROL
+	a.retreat_phase = Bandit.RetreatPhase.NONE
+	p.global_position = WorldScale.BANDIT_HOME + Vector2(-2600, 600)
+
 	_clear_pouches(tree)
 	for n in tree.get_nodes_in_group("enemy"):
 		if n != a:

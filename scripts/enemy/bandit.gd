@@ -213,6 +213,9 @@ var chakra_gourds: int:  ## carried, drunk when the pool runs dry
 	set(v):
 		inventory.set_count("chakra_gourd", v)
 var items_dropped := 0  ## items he put down to make room for better ones (tests / telemetry)
+var items_thrown := 0  ## belt items he used in a fight: tags, bombs, smoke, extra kunai (tests / telemetry)
+var _throw_item := ""  ## belt item the current throw uses; "" = his own kunai
+var _burst_total := 1
 var gourds_drunk := 0
 var loot_taken := 0  ## pickups and pouches he went for and got (tests / telemetry)
 var loot_target: Node2D = null
@@ -713,7 +716,8 @@ func _can_throw(dist: float) -> bool:
 
 
 func _begin_throw() -> void:
-	_enter(State.ATTACK, "kunai")
+	_throw_item = _pick_throw_item(global_position.distance_to(_player.global_position))
+	_enter(State.ATTACK, _throw_item if _throw_item != "" else "kunai")
 	atk_phase = AtkPhase.THROW_WINDUP
 	_burst_left = 0
 	_burst_index = 0
@@ -732,7 +736,16 @@ func _tick_throw(delta: float) -> void:
 			_atk_dir = (_player.global_position - global_position).normalized()
 		facing8 = WorldScale.snap8(_atk_dir)
 		if _atk_timer <= 0.0:
-			_burst_left = maxi(int(profile.get("throw_burst_count", 1)), 1)
+			if _throw_item != "":
+				_release_item()
+				atk_phase = AtkPhase.THROW_RECOVERY
+				_atk_timer = float(profile.get("throw_recovery", 0.3))
+				return
+			_burst_total = maxi(int(profile.get("throw_burst_count", 1)), 1)
+			if inventory.consume("kunai"):
+				_burst_total += 1  # a blade off his belt joins the fan
+				items_thrown += 1
+			_burst_left = _burst_total
 			_burst_index = 0
 			_release_kunai()
 			_after_release()
@@ -760,13 +773,37 @@ func _after_release() -> void:
 
 func _release_kunai() -> void:
 	kunai_thrown += 1
-	var n := maxi(int(profile.get("throw_burst_count", 1)), 1)
+	var n := maxi(_burst_total, 1)
 	var spread := deg_to_rad(float(profile.get("throw_spread_deg", 9.0)))
 	var dir := _atk_dir.rotated((float(_burst_index) - float(n - 1) * 0.5) * spread)
 	_burst_index += 1
 	_burst_left = maxi(_burst_left - 1, 0)
 	_log("kunai thrown %d/%d" % [_burst_index, n])
 	BanditKunai.spawn(get_parent(), global_position + dir * 18.0, dir, self, _player, float(profile.get("throw_damage", 6.0)), float(profile.get("throw_speed", 520.0)))
+
+
+## A tag bomb (lobbed, blast) or paper tag (flat, sticks) off his belt instead of a kunai, when he carries one, the
+## target is within its range and the `item_throw_chance` roll says so. Rolls only when he has one, so a bandit with an
+## empty belt throws exactly as before.
+func _pick_throw_item(dist: float) -> String:
+	var options: Array[String] = []
+	if inventory.count_of("tag_bomb") > 0 and dist <= PaperTagBomb.MAX_RANGE:
+		options.append("tag_bomb")
+	if inventory.count_of("paper_tag") > 0 and dist <= PaperTagBomb.TAG_RANGE:
+		options.append("paper_tag")
+	if options.is_empty() or _rng.randf() >= float(profile.get("item_throw_chance", 0.0)):
+		return ""
+	return options[0]
+
+
+func _release_item() -> void:
+	var id := _throw_item
+	_throw_item = ""
+	if not inventory.consume(id):
+		return
+	items_thrown += 1
+	_log("throws a %s" % id)
+	PaperTagBomb.spawn(get_parent(), global_position + _atk_dir * 18.0, _atk_dir, self, "tag_bomb" if id == "tag_bomb" else "")
 
 
 ## Pay for a chakra move. Returns false (and flags that he wants to charge) when the pool is short. Nothing uses it yet; substitution is free.
@@ -1042,6 +1079,11 @@ func _safe_direction(away: Vector2, probe: float) -> Vector2:
 ## Rare retreat: telegraph, then TWO short backward Body Flicker hops with a beat between them.
 func _begin_retreat() -> void:
 	_enter(State.RETREAT, "double flicker")
+	if _player != null and is_instance_valid(_player) and inventory.consume("smoke_tag_bomb"):
+		items_thrown += 1  # smoke between them covers the getaway
+		var aim := (_player.global_position - global_position).normalized()
+		SmokeTagBomb.spawn_smoke(get_parent(), global_position + aim * 18.0, aim, self)
+		_log("throws a smoke_tag_bomb to cover the retreat")
 	retreat_phase = RetreatPhase.TELEGRAPH
 	_retreat_timer = float(profile.retreat_telegraph)
 	velocity = Vector2.ZERO
