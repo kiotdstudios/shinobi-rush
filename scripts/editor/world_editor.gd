@@ -151,21 +151,9 @@ class VoidSheet extends Node2D:
 		z_index = -2
 		name = "WorldEditorVoid"
 		visible = false
-	var _seen_revision := -1
-	func _process(_d: float) -> void:
-		if visible and editor.placed != null and editor.placed.revision != _seen_revision:
-			_seen_revision = editor.placed.revision
-			queue_redraw()
 	func _draw() -> void:
 		if editor.arena != null:
 			draw_rect(editor.arena.ground_rect().grow(400.0), Color.WHITE)
-			# Flat grass tiles are tufts that cover only part of their cell: fill the whole cell under them with the
-			# grass colour so no white void shows around a grass tile.
-			for o in editor.placed.objects:
-				if PlacedObjects.def_of(o.id).get("kind", "") == "grass" and PlacedObjects.is_floor_tile(o.id):
-					var c := PlacedObjects.lattice_center(o.pos as Vector2)
-					var d := PackedVector2Array([c + Vector2(0, -19.5), c + Vector2(37.5, 0), c + Vector2(0, 19.5), c + Vector2(-37.5, 0)])
-					draw_colored_polygon(d, PlacedObjects.floor_fill_color(o.id))
 		if editor.void_focus != Vector2.INF:
 			var c := editor.void_focus
 			var pts := PackedVector2Array([c + Vector2(0, -18), c + Vector2(36, 0), c + Vector2(0, 18), c + Vector2(-36, 0), c + Vector2(0, -18)])
