@@ -256,7 +256,7 @@ func _ready() -> void:
 	# Add the Ancient Shrine reference section using existing catalog art.
 	# The authored layer is rebuilt on boot; it does not overwrite user:// editor saves.
 	blightwood_laid = BlightwoodMap.populate(self) > 0  # the starting map; when it lays itself the old courtyard section stands down
-	if blightwood_laid:
+	if blightwood_laid and not placed.has_bandits():
 		_spawn_rival_crews()
 	AncientShrineSection.populate(self)
 	editor = WorldEditor.new()
@@ -288,6 +288,8 @@ var blightwood_laid := false
 ## walls to reach it. It stays off the CI controls probe's lanes (due right / due up from the spawn):
 ## its patrol keeps y <= 60 east of x=1250 and the probe only walks a few hundred px.
 func _spawn_bandit(slot: int = 0) -> Bandit:
+	if placed != null and placed.has_bandits():
+		return null  # the builder placed its own robbers: the layout decides where they stand
 	var packed := load("res://scenes/enemy/bandit.tscn") as PackedScene
 	var bandit := packed.instantiate() as Bandit
 	if slot == 0:

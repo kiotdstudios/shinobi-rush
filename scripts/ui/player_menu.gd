@@ -269,7 +269,7 @@ func _draw_menu() -> void:
 	if tab == 0 and cur != "":
 		desc = String(PlayerInventory.ITEMS[cur].desc)
 	elif tab == 1 and cur == "chidori":
-		desc = "Lightning fist strike (coming soon)."
+		desc = "Hold R2 + the slot button: charge, rush forward, burst on impact. Costs 25 chakra."
 	elif cur == "":
 		desc = "Empties the slot you place it on."
 	_text(font, list_pos + Vector2(0, list.size() * row_height + 8), desc, 14, COL_DIM, 340.0)
