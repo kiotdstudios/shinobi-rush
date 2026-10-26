@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/arena/training_arena.tscn" id="1_arena"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -8,6 +8,7 @@
 
 [ext_resource type="Script" path="res://scripts/art/kunai_proof_gate.gd" id="5_kunai"]
 [ext_resource type="Script" path="res://scripts/environment/waterlife.gd" id="6_waterlife"]
+[ext_resource type="Script" path="res://scripts/vfx/knockback_presentation.gd" id="7_knockback"]
 
 [node name="Main" type="Node"]
 
@@ -17,6 +18,9 @@
 
 [node name="Waterlife" type="Node2D" parent="TrainingArena"]
 script = ExtResource("6_waterlife")
+
+[node name="KnockbackPresentation" type="Node2D" parent="TrainingArena"]
+script = ExtResource("7_knockback")
 
 [node name="DebugHud" type="CanvasLayer" parent="."]
 process_mode = 3

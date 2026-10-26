@@ -1,9 +1,9 @@
 # ORDER — Blightwood water running and rare frog
 - Agent: Codex
 - Owner: Codex
-- Status: IN_PROGRESS
+- Status: DONE
 - Priority: P1 — scheduled owner request at 2026-10-26 01:25 America/New_York
-- Branch/PR: codex/water-life
+- Branch/PR: codex/water-life — PR213 merged, live bde58e778da9bf593ef7d33bbf443853339a21dc
 - Dependencies: Existing Blightwood water and water-walking rules; gameplay integration owned by Aki.
 
 ## Objective
@@ -23,3 +23,6 @@ Transparent sharp pixel art, aligned ground-plane effects, no emissions on dry l
 
 ## Handoff / Notes
 This scheduled owner request takes precedence over stale queued orders. No work on the separate 5 AM knockback/substitution assignment yet.
+
+## Verified live delivery
+PR213 merged. Main Godot CI40302987794 passed native/export/predeploy/deploy/postdeploy/gate. Canonical public proof2026-10-26T10:13:31.860Z:15/15checks, no errors, exact bde58e77 SHA, including real keyboard water entry/exit and normal chakra costs. Chief note: docs/visuals/waterlife/CHIEF-NOTE.md. One-time scheduling automation deleted after verification.

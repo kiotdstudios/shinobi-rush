@@ -1,9 +1,9 @@
 # ORDER — Knockback impacts and substitution smoke vortex
 - Agent: Codex
 - Owner: Codex
-- Status: QUEUED
+- Status: REVIEW
 - Priority: P1 — scheduled owner request at 2026-10-26 05:00 America/New_York
-- Branch/PR: To be created after preserving active waterlife work.
+- Branch/PR: codex/impact-vortex (waterlife PR213 preserved separately).
 - Dependencies: Existing damage and substitution presentation; preserve gameplay ownership.
 
 ## Objective
