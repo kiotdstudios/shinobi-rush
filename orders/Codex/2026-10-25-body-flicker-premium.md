@@ -1,7 +1,7 @@
 # ORDER — Premium Body Flicker dodge presentation
 - Agent: Codex
 - Owner: Codex
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Branch/PR: codex/body-flicker-premium / https://github.com/kiotdstudios/shinobi-rush/pull/209
 - Dependencies: Existing authoritative player dodge and bandit evade/retreat movement; approved 128px art.
@@ -25,4 +25,7 @@ Immediate gameplay response; recognizable bodies and crisp pixels; no fade-only 
 Latest direct high-priority task supersedes stale queued work. Reuse approved body and VFX art where appropriate; presentation timing follows existing action duration rather than changing gameplay to match suggested 0.38s. Player currently 0.30s total, 0.20s movement; bandit 0.20s evade and profile-driven retreat hops.
 
 ## Local delivery evidence
-Integrated latest-main full native suite: 3251 passed; focused presentation/health/bandit suite: 148 passed. Web: 25 review checks plus normal-game keyboard/recording checks passed; no browser errors. Awaiting reviewed integration and exact canonical deployment verification.
+Integrated latest-main full native suite: 3251 passed; focused presentation/health/bandit suite: 148 passed. Web: 25 review checks plus normal-game keyboard/recording checks passed; no browser errors. PR209 merged; canonical 4e248c1b deployed and verified.
+
+## Live delivery
+PR209 merged as 4e248c1b0c2a2e427eba49dca4c7e2b026ce306c. Main CI 40260710058 passed all jobs, including deploy/postdeploy/gate. Verified the exact public build on 2026-10-25 at 23:10 EDT: 25/25 review checks and 4/4 actual-game keyboard checks, no browser errors. Final native CI: 3266/0. Evidence: docs/visuals/body-flicker-premium/deployment.json, live-proof/, public-before/ and public-after/. Before/after WebM files now record the actual canonical public game, not the local comparison mode.

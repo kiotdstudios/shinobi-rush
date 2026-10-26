@@ -1,0 +1,39 @@
+{
+  "status": "live_verified",
+  "runtime_pr": "https://github.com/kiotdstudios/shinobi-rush/pull/209",
+  "merged_sha": "4e248c1b0c2a2e427eba49dca4c7e2b026ce306c",
+  "tested_pr_head": "e543734a9b1f68908f11b54c44bba8c1a8149838",
+  "pr_ci": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40259677681",
+  "main_ci": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40260710058",
+  "main_jobs": "all succeeded, including deploy, postdeploy and gate",
+  "native": {
+    "passed": 3266,
+    "failed": 0,
+    "scripts_validated": 379,
+    "scenes_validated": 25,
+    "resource_failures": 0
+  },
+  "review": {
+    "url": "https://kiotdstudios.github.io/shinobi-rush/?flicker=review",
+    "tested_at_utc": "2026-10-26T03:10:03.565Z",
+    "passed": 25,
+    "failed": 0,
+    "errors": []
+  },
+  "actual_game": {
+    "url": "https://kiotdstudios.github.io/shinobi-rush/?camera=close&kunai_inspect=1&v=4e248c1b0c2a2e427eba49dca4c7e2b026ce306c",
+    "tested_at_utc": "2026-10-26T03:10:36.672Z",
+    "tested_at_new_york": "2026-10-25 23:10:36 -04:00",
+    "passed": 4,
+    "failed": 0,
+    "errors": []
+  },
+  "before_sha": "8d08423c7b2976742d7fc8e2e3eb730eaf2207c9",
+  "recordings": {
+    "before": "gameplay-before.webm",
+    "after": "gameplay-after.webm",
+    "source": "actual canonical public game, real keyboard input; no baseline emulation in these final videos",
+    "audio": false,
+    "normal_world_recorded_render_fps": "3\u20134 observed in headless Chromium for both baseline and new build; not a hardware performance benchmark. Close-up GIFs use the isolated real-controller review."
+  }
+}

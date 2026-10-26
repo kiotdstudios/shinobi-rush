@@ -2,8 +2,24 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-25-body-flicker-premium.md
 - Date: 2026-10-25 (America/New_York; UTC capture timestamps may read 2026-10-26)
-- Final status: REVIEW — local implementation tested; reviewed integration/deployment pending
-- Commit / PR: Not committed at report creation; implementation and integration links follow below.
+- Final status: DONE — merged, deployed and verified in canonical live gameplay
+- Commit / PR: Runtime PR209 https://github.com/kiotdstudios/shinobi-rush/pull/209 merged as 4e248c1b0c2a2e427eba49dca4c7e2b026ce306c; final evidence/report-only PR follows.
+
+## Final verified delivery
+**LIVE:** https://kiotdstudios.github.io/shinobi-rush/?flicker=review&v=4e248c1b . The normal game also uses the new player/bandit effect without a review query.
+
+- Exact merged/deployed SHA: **4e248c1b0c2a2e427eba49dca4c7e2b026ce306c**. Runtime PR209 is merged.
+- Exact tested PR head: e543734a9b1f68908f11b54c44bba8c1a8149838. PR CI [40259677681](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40259677681) passed required checks.
+- Main CI [40260710058](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40260710058): **all jobs succeeded**, including native import/validate/tests/export, predeploy browser/controls/debug checks, Pages deployment, postdeploy live smoke and gate.
+- Main native summary: **3266 passed / 0 failed**. Resource validation: **379 scripts / 25 scenes / 0 failures**.
+- Canonical live review: **25/25 passed**, including both actors' eight directions, actual wall stop/sample bounds, rapid baseline interruption, real autoplay triggers and Normal/Half playback. **No browser errors**. Tested at 2026-10-26T03:10:03.565Z (2026-10-25 23:10 EDT).
+- Actual normal-game keyboard test: **4/4 passed**, including all eight animation directions and the new shared presentation. **No browser errors**. Tested at 2026-10-26T03:10:36.672Z = **2026-10-25 23:10:36 EDT**.
+- Recorded the actual public baseline at 8d08423c before deployment and the actual public updated game at 4e248c1b afterward. Final gameplay-before.webm / gameplay-after.webm replace the earlier local-comparison videos. Source JSON and screenshots are public-before/ and public-after/.
+- Inspected live travel, wall-stop and bandit screenshots, plus the normal-world screenshot. Approved character identities/scale remain intact; afterimage samples stay on reached positions, and the compact effects do not hide the body. Existing world/background gaps and dense grass composition are unchanged by this job; no terrain repair is claimed.
+- Recording limitation: the normal-world headless Chromium capture reported 3–4 render FPS in both baseline and updated builds. These recordings prove real gameplay/input integration; no hardware frame-rate claim is made. The close-up normal/half GIFs use 25 FPS compositor recordings of the isolated real-controller review, extracted at 24 FPS without interpolation.
+- Final evidence is indexed in docs/visuals/body-flicker-premium/deployment.json. Questions: None. Outstanding runtime work: None; visual owner feedback can guide future refinements.
+
+The following sections retain the pre-commit work/testing history; their pending statuses describe those earlier checkpoints, not the final delivery above.
 
 ## Work completed
 Implemented the owner's pasted Body Flicker brief as a shared presentation component for the existing player dodge and bandit evade/retreat. The player uses its approved 128x128 eight-direction dodge poses, selected from actual action progress for launch, burst/travel, landing and recovery. Bandits use their own run/sprint body art. Replaced the bandit's old near-invisible alpha fade with an opaque recognizable body and the same effect system.
@@ -100,3 +116,11 @@ Canonical live URL: https://kiotdstudios.github.io/shinobi-rush/?flicker=review 
 - Changed-area native regression harness `build/test_flicker_lock.gd` ran bandit chase, health/flicker, premium flicker, R3 lock-on, combat and Chidori suites: **226 passed, 0 failed** (build/flicker-lock-focused.log). The prior full combined suite was 3251/0; the new exact-head CI must run the full suite again before merge.
 - Fresh Web export `../body-flicker-lock-web-20261025`: PASS. Browser proof on this integrated build: **25/25 passed**, no browser errors; evidence lock-proof/validation.json.
 - Actual public baseline before deployment recorded separately at main 8d08423c7b2976742d7fc8e2e3eb730eaf2207c9: 4/4 actual-game keyboard/direction/presentation/error checks passed. Raw recording/evidence is retained under ignored build/flicker-public-before for the final live before/after report.
+
+## Final report-only verification before commit
+- Verified all live JSON check values true and both after-build SHA values equal the merged SHA.
+- Inspected actual public screenshots; VP9 compression of both real public recordings completed successfully.
+- python scripts/ci/validate_orders.py; git diff --check; JSON and image integrity checks: run before this documentation/evidence commit.
+- This follow-up changes evidence/docs/order status only. Runtime was already merged/deployed by PR209; it does not claim another game deployment.
+
+- Artifact decode check: bundled FFmpeg does not include a null muxer, so the attempted null-output check was unavailable. Both final WebM files successfully decoded an end-of-stream frame to PNG; Pillow integrity checks passed. No recording defect was found.

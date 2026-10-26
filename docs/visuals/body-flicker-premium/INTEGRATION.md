@@ -33,3 +33,8 @@ The body stays visible and opaque; only the independent silhouette snapshots fad
 The historical distance assertion at exactly 90% of a discrete dodge distance received a **0.01 px floating-point tolerance**; an observed 134.9992 px used to fail against a strict 135 px comparison. No movement tuning changed.
 
 See the job report for exact pre-commit/native/Web/live test results and the verified deployed SHA. Until canonical deployment verification is recorded, status remains REVIEW rather than DONE.
+
+## Live verification — 2026-10-25 23:10 EDT
+Runtime PR209 is merged and deployed as `4e248c1b0c2a2e427eba49dca4c7e2b026ce306c`; main CI 40260710058 passed deploy, postdeploy and gate. Canonical review checks passed 25/25; actual normal-game keyboard checks passed 4/4. No browser errors. See deployment.json and live-proof/.
+
+The final gameplay-before.webm and gameplay-after.webm are actual public-game recordings at the before/after SHAs, replacing the earlier local comparison recordings. The ordinary-world headless capture reported 3–4 render FPS for both versions; use the close-up normal/half GIFs to inspect poses and timing. No hardware performance claim is made.

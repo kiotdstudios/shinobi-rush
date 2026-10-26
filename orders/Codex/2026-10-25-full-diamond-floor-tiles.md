@@ -1,7 +1,7 @@
 # ORDER — Floor tiles must be FULL diamonds (read this first, tell Chief you did)
 - Agent: Codex
 - Owner: Codex
-- Status: QUEUED
+- Status: DONE — floor standard acknowledged; existing Aki fix retained and coverage tests passed
 - Priority: P0 (direct owner request from Chief)
 - Branch/PR: aki/void-seams (Aki already fixed the nine grass tiles; this order is the standard going forward)
 - Dependencies: none
@@ -41,3 +41,6 @@ Full test suite passes, including `test_floor_coverage`. No new white void in th
 A joke so you remember it: why did the grass tile go to therapy? It only ever felt half covered. Do not let your next tile be the one that needs a blanket.
 
 If you ignore this order, the white void gets you.
+
+## Codex acknowledgement — 2026-10-25
+Told Diel in this task: "I read the tiles order." Full-diamond coverage and common registration are accepted for future floor work. Aki's nine corrected grass tiles remain unchanged; no new floor art was produced for the Body Flicker task. Main CI at 4e248c1b passed 3266 native tests, including floor coverage. See reports/2026-10-25-floor-diamond-standard-report.md.
