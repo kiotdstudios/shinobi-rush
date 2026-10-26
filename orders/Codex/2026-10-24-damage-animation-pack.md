@@ -1,9 +1,9 @@
 # ORDER â€” Player and Bandit damage animation pack
 - Agent: Codex
 - Owner: Codex (art); gameplay integration remains with Aki
-- Status: REVIEW — local asset/native/browser checks passed; PR/live art review pending
+- Status: DONE — art pack and live review delivered; gameplay combat binding remains a separate Aki task.
 - Priority: P1 â€” latest direct owner request
-- Branch: codex/damage-animation-pack
+- Branch/PR: codex/damage-animation-pack / https://github.com/kiotdstudios/shinobi-rush/pull/188
 - Dependencies: Existing approved player/bandit sprites and manifests; PixelLab available.
 
 ## Objective
@@ -23,3 +23,6 @@ Distinct recoil, heavy stagger/recovery and final prone death. No neutral loop p
 
 ## Audit / Handoff
 Player manifest has idle/walk/run/sprint/jump/dodge/light1/light2/light3/dash_attack/charge; bandit has idle/run/sprint/light1/light2/light3/dash_attack/kunai_guard/throw/charge. No dedicated damage art in either. Planned IDs: hit_react, knockback, death. Current player defeat respawns immediately; exposing a death duration requires Aki's gameplay integration rather than silently changing that rule. Latest direct task takes precedence over historical queued art orders.
+
+## Public delivery
+Runtime merge1a5b897e10486847de4a53d03e37c6340562a86b. Main workflow40154927657 passed through deploy, postdeploy and gate. Exact canonical SHA verified; all28public art-review checks passed with no errors. Native integrated suite2738PASS/0FAIL. Source metadata and Aki integration notes explicitly mark combat hooks as pending. Owner visual approval is not claimed.
