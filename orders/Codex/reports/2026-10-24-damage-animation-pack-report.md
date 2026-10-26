@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-24-damage-animation-pack.md
 - Date: 2026-10-24 (America/New_York)
-- Final status: IN_PROGRESS â€” final browser verification/PR/deployment outstanding; not yet live.
-- Commit / PR: implementation b479ab37256dc69e4af76cda0b8a2dc6cdfdb018. Initial report written before that commit; PR publication next.
+- Final status: DONE — animation assets committed/integrated and public art review verified; gameplay binding is explicitly pending for Aki.
+- Commit / PR: runtime merge1a5b897e10486847de4a53d03e37c6340562a86b / https://github.com/kiotdstudios/shinobi-rush/pull/188. Initial report written before implementation commit.
 
 ## Work completed
 Audited both manifests: neither had dedicated hit reaction, knockback or death. Added hit_react (8frames), knockback (12frames), death (16frames), all8headings for both approved characters:48clips/576production frames. Actual approved native idle PNGs seed PixelLab animate_image directly, avoiding animate_character's automatic canvas expansion and any need to rescale characters. All frames128x128 RGBA, fixed64,116origin, native hard alpha, no clipping/duplicates/resampling. Each incoming source frame0 is checked pixel-identical to its approved input; production exports source frames1..N. Death is non-looping with a held final prone pose. No new weapons, background, floor shadow or VFX.
@@ -51,3 +51,24 @@ Local implementation is tested and ready for the protected PR workflow. Gameplay
 
 ## Latest-main integration before merge commit
 Implemented/tested source commit b479ab37256dc69e4af76cda0b8a2dc6cdfdb018. Integrated main3930efb61b24868b985061ce0d5a980f588715f2 with git merge --no-commit --no-ff, preserving Aki's editor/void-checker changes unchanged. BEFORE committing that merge: focused native floor-replacement + world-editor + damage-art/review harness passed313/0FAIL with no engine errors (build/damage-integration.log); fresh Web export to ../damage-art-integrated-web-20261024 passed; all28browser checks passed again with no errors using --no-capture. Exact evidence in integrated-browser-validation.json. Source character art/review images did not change during this integration, so existing tested72frame previews remain valid.
+
+## Protected PR result
+PR https://github.com/kiotdstudios/shinobi-rush/pull/188 merged normally as1a5b897e10486847de4a53d03e37c6340562a86b after required Repository checks and Godot gate passed on head2abd4d4be28cd07bfa26659e75c4924e4afc2f27. PR Godot run40154204033 passed through browser controls/debug probes. Native job121051979164 logs report2738PASS/0FAIL and339scripts/22scenes validated with0failures. This full integrated result is distinct from earlier local2727 and206/313focused checks. Main deployment/public verification remain pending at this entry.
+
+## Main native/resource build evidence
+Main workflow40154927657 import/test/export job121054207694 completed success for runtime1a5b897e10486847de4a53d03e37c6340562a86b. Connected GitHub log retrieval confirms339scripts/22scenes validated with0failures and full native summary2738PASS/0FAIL. Deployment/postdeploy and own exact public review checks remain pending at this entry.
+
+
+## Final canonical public verification
+- Canonical review: https://kiotdstudios.github.io/shinobi-rush/?damage=review . Public probe uses paused=1 for deterministic inspection.
+- Exact deployed/tested SHA: 1a5b897e10486847de4a53d03e37c6340562a86b (matches PR188 merge).
+- Tested at: 2026-10-25T02:49:21.930Z (ISO UTC; local job date2026-10-24 America/New_York).
+- Command: node docs/visuals/damage-animations/browser-proof.mjs https://kiotdstudios.github.io/shinobi-rush/ build/damage-live --no-capture . All28checks PASS; no console/page errors. Verified16actors, literal8way headings, normal/half/pause/step/replay, all3actions, terminal holds and independent illustrative travel.
+- Inspected actual PUBLIC death-all.png and knockback-all.png with view_image: both approved skins render at stable scale/anchors, all directions show distinct action poses, death stays prone and no unwanted white graphics remain. Local enlarged SE snapshots and all6native key-pose sheets were also inspected before publication.
+- Main workflow https://github.com/kiotdstudios/shinobi-rush/actions/runs/40154927657 completed SUCCESS through native/import/export, predeploy browser checks, Pages deployment, postdeploy live smoke and final gate. Full merged native suite2738PASS/0FAIL;339scripts/22scenes validated with0failures.
+- Exact public URL/time/SHA/checks: docs/visuals/damage-animations/live-browser-validation.json; actual screenshots: live-all-directions.png, live-death-all.png, live-knockback-all.png.
+
+## Final scope / handoff
+No remaining art-pack/review work. Deliverable:48clips/576native128RGBAframes, both updated manifests, non-loop timing/event metadata, raw/rejected source provenance,4actual Web GIFs,6native direction sheets, automated native/browser coverage and published review. Owner visual approval remains separate. Gameplay damage/death/HP/respawn hooks are NOT claimed implemented: detailed source locations and recommended normalized-progress binding are in INTEGRATION.md for Aki. Existing immediate player respawn remains unchanged.
+
+This follow-up commit contains only report/status updates and recorded public screenshots/JSON. Live deployment: not applicable to the follow-up itself (no runtime change); runtime delivery above is already live and verified. validate_orders.py and git diff --check passed before committing final evidence. The report follow-up uses a normal PR and required checks without bypass.
