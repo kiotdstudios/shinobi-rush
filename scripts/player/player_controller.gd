@@ -430,6 +430,9 @@ func _physics_process(delta: float) -> void:
 	elif input != Vector2.ZERO:
 		velocity = velocity.move_toward(input * target_speed, acceleration * delta)
 		facing = input.normalized()
+		var strafe := lock_aim_dir()
+		if strafe != Vector2.ZERO and not sprinting:
+			facing = strafe  # locked on: walk around the target while still facing it
 		facing8 = _snap8(facing)
 		state = State.SPRINT if sprinting else State.MOVE
 		if state == State.SPRINT:
@@ -441,6 +444,10 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
 		state = State.IDLE
+		var face_lock := lock_aim_dir()
+		if face_lock != Vector2.ZERO and _throw_t <= 0.0:
+			facing = face_lock
+			facing8 = _snap8(face_lock)
 	move_and_slide()
 	_update_jump_lift()
 	if state == State.DODGE:
@@ -534,6 +541,10 @@ func _begin_attack(attack_id: String, input: Vector2 = Vector2.ZERO) -> void:
 	if input != Vector2.ZERO:
 		facing = input.normalized()
 		facing8 = _snap8(facing)
+	var lock_dir := lock_aim_dir()
+	if lock_dir != Vector2.ZERO:
+		facing = lock_dir  # locked on: every swing (and every combo hit) turns to the target
+		facing8 = _snap8(lock_dir)
 	_attack_def = _attack_table[attack_id]
 	_combo_index = int(attack_id.substr(5)) if attack_id.begins_with("light") else 0
 	state = _state_for_attack_id(attack_id)
@@ -1068,6 +1079,21 @@ func use_slot(slot: String) -> bool:
 	return used
 
 
+## Unit vector from the player to the R3 lock-on target, or ZERO when nothing is locked.
+func lock_aim_dir() -> Vector2:
+	var lock := get_node_or_null("LockOn") as PlayerLockOn
+	return lock.aim_direction() if lock != null else Vector2.ZERO
+
+
+## Where thrown / fired things go: straight at the locked target (any angle, not snapped to 8 ways), otherwise the
+## current facing. Projectiles and jutsu should ask this, never read facing8 directly.
+func aim_direction() -> Vector2:
+	var d := lock_aim_dir()
+	if d != Vector2.ZERO:
+		return d
+	return facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
+
+
 ## R2 is held and a face button was pressed: if that slot holds a playable jutsu, the press belongs to the jutsu (it never
 ## also swings the sword / dodges / jumps). Returns true when the press was consumed.
 func _jutsu_press(slot: String) -> bool:
@@ -1095,7 +1121,9 @@ func _begin_chidori() -> bool:
 	chakra_changed.emit(chakra, max_chakra)
 	chidori_phase = ChidoriPhase.CHARGE
 	chidori_t = 0.0
-	chidori_dir = facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
+	chidori_dir = aim_direction()
+	if lock_aim_dir() != Vector2.ZERO:
+		facing8 = _snap8(chidori_dir)
 	chidori_hits.clear()
 	chidori_count += 1
 	velocity = Vector2.ZERO
@@ -1125,7 +1153,13 @@ func _tick_chidori(delta: float) -> void:
 		ChidoriPhase.CHARGE:
 			velocity = Vector2.ZERO
 			var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-			if input != Vector2.ZERO:  # aim while charging
+			var lock_dir := lock_aim_dir()
+			if lock_dir != Vector2.ZERO:  # locked on: the bolt tracks the target while charging
+				facing = lock_dir
+				facing8 = _snap8(lock_dir)
+				chidori_dir = lock_dir
+				chidori_fx.dir8 = chidori_dir
+			elif input != Vector2.ZERO:  # aim while charging
 				facing = input.normalized()
 				facing8 = _snap8(facing)
 				chidori_dir = facing8.normalized()
@@ -1222,7 +1256,8 @@ func _begin_throw(item := "kunai") -> bool:
 	_throw_item = item
 	_throw_t = THROW_TIME
 	_throw_released = false
-	_throw_dir = facing8.normalized() if facing8 != Vector2.ZERO else Vector2.DOWN
+	_throw_dir = aim_direction()
+	facing8 = _snap8(_throw_dir)
 	return true
 
 

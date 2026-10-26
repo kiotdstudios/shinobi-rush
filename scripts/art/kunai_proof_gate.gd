@@ -7,7 +7,10 @@ func _ready() -> void:
 	var query := str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
 	var enabled := "--kunai-proof" in OS.get_cmdline_user_args() or "kunai=proof" in query or "flicker=proof" in query
 	var target := ""
-	if "flicker=review" in query or "--body-flicker-review" in OS.get_cmdline_user_args():target="res://scenes/art/body_flicker_review.tscn"
+	if "impact=review" in query or "--impact-vortex-review" in OS.get_cmdline_user_args():target="res://scenes/art/impact_vortex_review.tscn"
+	elif "waterlife=review" in query or "--waterlife-review" in OS.get_cmdline_user_args():target="res://scenes/art/waterlife_review.tscn"
+	elif "waterlife=play" in query or "--waterlife-play" in OS.get_cmdline_user_args():target="res://scenes/art/waterlife_play.tscn"
+	elif "flicker=review" in query or "--body-flicker-review" in OS.get_cmdline_user_args():target="res://scenes/art/body_flicker_review.tscn"
 	elif "kunai=recovery" in query or "--kunai-recovery" in OS.get_cmdline_user_args():target="res://scenes/art/kunai_recovery_review.tscn"
 	elif "bombs=review" in query or "--bombs-review" in OS.get_cmdline_user_args():target="res://scenes/art/tag_bombs_review.tscn"
 	elif "damage=review" in query or "--damage-review" in OS.get_cmdline_user_args():target="res://scenes/art/damage_animation_review.tscn"
