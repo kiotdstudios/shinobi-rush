@@ -1,12 +1,15 @@
 class_name PlayerLockOn
 extends Node2D
-## Target selection (R3 / L) plus the lock-on animation. Does not steer movement, camera, combat or attack hitboxes.
+## Target selection (R3 / L) plus the lock-on animation. Flick the right stick while locked to hop to the next enemy in that direction.
 ##
 ## The reticle is drawn in code (no bitmap art), in world space, over the target:
 ##   ACQUIRE  brackets spin and slam in from far out with a back-ease, ground ring shrinks onto the feet, white snap flash
 ##   LOCKED   brackets breathe, a dashed ring turns, the ground ring pulses outward, a red chevron bobs over the head
 ##   RELEASE  brackets burst outward and fade (also plays when the target dies or leaves range)
 const RANGE := 650.0
+const FLICK_ON := 0.7  ## right-stick push that counts as a flick
+const FLICK_OFF := 0.35  ## the stick must fall back below this before the next flick
+const FLICK_CONE := 70.0  ## degrees either side of the flick a new target may sit
 const ACQUIRE_T := 0.32
 const RELEASE_T := 0.22
 const R0 := 46.0
@@ -21,6 +24,7 @@ var phase := Phase.NONE
 var phase_time := 0.0
 var _shown: Node2D
 var _clock := 0.0
+var _flick_armed := true
 var _anchor := Vector2.ZERO  ## world position of the target's feet (kept after it dies so the release still plays)
 
 
@@ -66,6 +70,49 @@ func toggle() -> void:
 			target = enemy
 
 
+## Right-stick flick while locked: jump to the enemy that lies most in that direction (relative to the current target),
+## within range. Returns true when the lock moved.
+func switch_target(dir: Vector2) -> bool:
+	if not valid_target() or dir.length_squared() < 0.01:
+		return false
+	dir = dir.normalized()
+	var from: Vector2 = target.global_position
+	var best: Node2D = null
+	var best_score := INF
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if enemy == target or not enemy is Node2D or not enemy.has_method("is_alive") or not enemy.is_alive():
+			continue
+		if _origin().distance_to(enemy.global_position) > RANGE:
+			continue
+		var d: Vector2 = enemy.global_position - from
+		if d.length_squared() < 1.0:
+			continue
+		var off := rad_to_deg(absf(dir.angle_to(d)))
+		if off > FLICK_CONE:
+			continue
+		var score := d.length() * (1.0 + off / 45.0)
+		if score < best_score:
+			best_score = score
+			best = enemy
+	if best == null:
+		return false
+	target = best
+	return true
+
+
+func _poll_flick() -> void:
+	var stick := Vector2.ZERO
+	for pad in Input.get_connected_joypads():
+		var v := Vector2(Input.get_joy_axis(pad, JOY_AXIS_RIGHT_X), Input.get_joy_axis(pad, JOY_AXIS_RIGHT_Y))
+		if v.length() > stick.length():
+			stick = v
+	if stick.length() < FLICK_OFF:
+		_flick_armed = true
+	elif _flick_armed and stick.length() >= FLICK_ON:
+		_flick_armed = false
+		switch_target(stick)
+
+
 func valid_target() -> bool:
 	return is_instance_valid(target) and target.has_method("is_alive") and target.is_alive() and _origin().distance_to(target.global_position) <= RANGE
 
@@ -84,6 +131,7 @@ func is_targeted(enemy: Node2D) -> bool:
 
 func _process(delta: float) -> void:
 	_clock += delta
+	_poll_flick()
 	advance(delta)
 	queue_redraw()
 
