@@ -81,3 +81,8 @@ func run(ck: Callable, root: Node) -> void:
 	b.position+=Vector2(600,0);second._process(1.0/60.0)
 	ck.call("premium flicker: teleport-sized discontinuity cancels without bridging",second.cancelled and second.sample_positions.is_empty() and not second._smear.visible)
 	ground.queue_free();await root.get_tree().process_frame
+	var review: Node2D=(load("res://scenes/art/body_flicker_review.tscn") as PackedScene).instantiate();root.add_child(review)
+	review._click("All 8")
+	await root.get_tree().create_timer(2.05).timeout
+	ck.call("premium flicker: review autoplay drives repeated actual dodge input",review.player.flicker_count>=3 and review.auto)
+	review.queue_free();await root.get_tree().process_frame

@@ -21,7 +21,7 @@ try{
  await click('Bandit');await click('SE');await sleep(130);const bandit=await state();const br=JSON.parse(bandit.result_json);checks.bandit_reuse=bandit.bandit&&br.pool===3&&br.body_source==='sprint'&&br.direction==='SE';await page.screenshot({path:out+'/bandit.png'});await sleep(650);
  for(const dir of dirs.filter(d=>d!=='SE')){await click(dir);await sleep(130);const s=await state();const r=JSON.parse(s.result_json);checks['bandit_'+dir]=r.pool===3&&r.direction===dir;await sleep(550);}
  await click('Player');await click('Before');await click('SE');await sleep(130);checks.before=(await state()).legacy;await page.screenshot({path:out+'/before.png'});await sleep(650);await click('After');
- await click('Normal');checks.normal=(await state()).speed===1;await click('E');await sleep(70);await page.screenshot({path:out+'/normal.png'});await sleep(400);
+ await click('Normal');checks.normal=(await state()).speed===1;const startCount=(await state()).player_count;await click('All 8');await sleep(1950);checks.autoplay_real_triggers=(await state()).player_count>=startCount+3;await click('E');await sleep(70);await page.screenshot({path:out+'/normal.png'});await sleep(400);
  checks.no_errors=errors.length===0;
  const build=server?null:await(await page.request.get(base+'build-info.json?v='+Date.now())).json();
  writeFileSync(out+'/validation.json',JSON.stringify({url:page.url(),tested_at:new Date().toISOString(),build_sha:build?.commit_sha,checks,cases,wall,bandit,errors},null,2));console.log(JSON.stringify({checks,errors}));

@@ -58,3 +58,15 @@ None.
 Integrate latest main via reviewed PR, run native/export/browser checks after integration, obtain required CI and merge normally, then wait for canonical main deploy/postdeploy smoke and verify the exact deployed SHA with both review and real-game keyboard proof. Status must remain REVIEW until that succeeds. Final report-only evidence update follows deployment.
 
 Canonical live URL: https://kiotdstudios.github.io/shinobi-rush/?flicker=review . NOT YET VERIFIED LIVE for this change at report creation.
+
+## Integration pass — 8fef224f (before merge commit)
+- Implementation commit: 2c60e732. Integrated origin/main 8fef224fab1b83a83a6c62563fb41d3e7b520d81 with `git merge --no-commit --no-ff origin/main`; automatic merge, no conflicts.
+- `python scripts/ci/godot_ci.py import ... --log-dir build/flicker-integrated-import`: PASS.
+- `python scripts/ci/godot_ci.py validate-resources ... --log-dir build/flicker-integrated-validate`: PASS, 370 scripts, 25 scenes, 0 failures.
+- `python scripts/ci/godot_ci.py tests ... --log-dir build/flicker-integrated-tests`: PASS, **3201 passed, 0 failed**, including Aki's floor coverage checks. The only expected warning is the deliberately invalid sprite-sheet fixture.
+- Fresh integrated Web export and browser review: PASS, initially 23 checks, then **24 checks** after adding an actual autoplay-input regression assertion. Evidence: integrated-proof/validation.json.
+- Normal-game keyboard recording proof after integration: PASS, **4 checks**, including all eight headings and no browser errors. Evidence: integrated-gameplay/gameplay-validation.json. Raw duplicate videos retained in ignored build/.
+- Visual inspection of recorded GIF frames caught review-only autoplay input being pressed outside a physics tick. Corrected it to trigger on physics ticks; final focused harness rerun is **147 passed, 0 failed**, including real repeated autoplay dodges. Production controllers did not change.
+- Regenerated final previews from actual 25 FPS compositor video, extracted at 24 FPS without interpolation, rather than the original sparse screenshot samples. GIFs use unscaled cropped status/playfield panels and cumulative 10ms timing quantization; no speed-up from rounding every frame separately. Capture helper fails if fewer than eight real dodges execute. See final preview-recordings metadata.
+- Acknowledged the new full-diamond floor standard to Diel in commentary ("I read the tiles order."). No floor art repainted by this feature; Aki's fixes are retained from main and coverage tests pass.
+- Latest main advanced to 35aa84fd while testing; another normal integration pass is required before opening/merging the runtime PR. No live publication is claimed yet.

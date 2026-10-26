@@ -62,6 +62,7 @@ func _click(text: String) -> void:
 		"Normal":speed=1.0;Engine.time_scale=speed
 		"Half":speed=0.5;Engine.time_scale=speed
 func _trigger(direction: int) -> void:
+	index=direction
 	_release();path.clear();last_samples.clear();result.clear()
 	for subject in [player,bandit]:
 		for child in subject.get_children():
@@ -84,16 +85,15 @@ func _trigger(direction: int) -> void:
 		if dir.x!=0:Input.action_press("move_right" if dir.x>0 else "move_left")
 		if dir.y!=0:Input.action_press("move_down" if dir.y>0 else "move_up")
 		Input.action_press("dodge");release_ticks=2
-	index=direction
 func _physics_process(_delta: float) -> void:
+	if auto and clock>=next_at:
+		_trigger(index);index=(index+1)%8;next_at=clock+0.9
 	if release_ticks>0:
 		release_ticks-=1
 		if release_ticks==0:_release()
 	if use_bandit and bandit.state!=Bandit.State.EVADE:bandit.set_physics_process(false)
 func _process(delta: float) -> void:
 	clock+=delta
-	if auto and clock>=next_at:
-		_trigger(index);index=(index+1)%8;next_at=clock+0.9
 	var subject: CharacterBody2D=bandit if use_bandit else player
 	var fx: EvadeStreakFx
 	for child in subject.get_children():
