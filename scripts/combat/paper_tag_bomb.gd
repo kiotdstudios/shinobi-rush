@@ -41,6 +41,8 @@ var thrower: Node2D = null
 var phase: Phase = Phase.FLY
 var age := 0.0  ## seconds since release
 var travelled := 0.0
+var stuck_to: Node2D = null  ## the enemy a tag landed on: it rides along until the fuse runs out
+var _stuck_offset := Vector2.ZERO
 var landed_on := ""  ## "", "range", "wall", "enemy" (read by tests)
 var damaged: Array[Node2D] = []  ## enemies the blast hurt (read by tests)
 var blast_t := 0.0
@@ -137,7 +139,8 @@ func advance(delta: float) -> void:
 		Phase.FLY:
 			_step_fly(delta)
 		Phase.ARMED:
-			pass
+			if stuck_to != null and is_instance_valid(stuck_to):
+				global_position = stuck_to.global_position + _stuck_offset
 		Phase.BLAST:
 			_step_blast(delta)
 	if phase != Phase.BLAST and phase != Phase.DONE and age >= FUSE:
@@ -159,6 +162,8 @@ func _step_fly(delta: float) -> void:
 				t = clampf(((e as Node2D).global_position - a).dot(seg) / seg.length_squared(), 0.0, 1.0)
 			if (a + seg * t).distance_to((e as Node2D).global_position) <= TOUCH_RADIUS:
 				global_position = a + seg * t
+				stuck_to = e as Node2D
+				_stuck_offset = global_position - stuck_to.global_position
 				_land("enemy")
 				return
 		var q := PhysicsRayQueryParameters2D.create(a + Vector2(0, -14), b + Vector2(0, -14))
