@@ -166,6 +166,14 @@ const HIT_TINT := Color(1.0, 0.45, 0.4, 1.0)
 var sensed_enemy: Node2D = null  ## nearest enemy inside the sense circle this frame while SPRINTing, else null
 var kunai_drawn: bool = false  ## true the instant `sensed_enemy` is non-null (read by tests / web smoke state)
 
+## -- Held items (owner 2026-10-25: "10x kunai, health gourd, chakra gourd, and paper tags", D-pad) --
+var held_items := HeldItems.new()
+## Thrown-kunai tuning. Reuses BanditKunai (now shared, see its class doc) with the player's own
+## damage/speed rather than the Bandit's throw-profile numbers. PROVISIONAL, not balance.
+@export var kunai_throw_damage: float = 10.0
+@export var kunai_throw_speed: float = 600.0
+@export var paper_tag_damage: float = 18.0
+
 @onready var visual: PlayerVisual = $PlayerVisual
 @onready var camera: Camera2D = $Camera2D
 @onready var dust: DustPuff = $DustPuff
@@ -201,6 +209,10 @@ func _ready() -> void:
 	bar.name = "HealthBar"
 	add_child(bar)
 	bar.bind(self)
+	var items_hud := HeldItemsHud.new()
+	items_hud.name = "HeldItemsHud"
+	add_child(items_hud)
+	items_hud.bind(self)
 
 
 func _physics_process(delta: float) -> void:
@@ -230,6 +242,9 @@ func _physics_process(delta: float) -> void:
 		_attack_buffer = input_buffer_window
 	if Input.is_action_just_pressed("substitution"):
 		_sub_buffer = SUB_WINDOW
+	for i in 4:
+		if Input.is_action_just_pressed("use_item_%d" % (i + 1)):
+			use_item_slot(i)
 
 	# Local hitstop: pause this body's own velocity/position integration only -- NOT Engine.time_scale
 	# (the order forbids a global freeze). Buffers do not decay while frozen, so a press made just
@@ -874,6 +889,35 @@ func restore_health(amount: float) -> float:
 	if health != before:
 		health_changed.emit(health, max_health)
 	return health - before
+
+
+## Grants `n` of a held item (HealthGourd.collect calls this instead of healing directly -- owner
+## 2026-10-25: gourds are now collected into the inventory and used from the D-pad, not auto-drunk).
+func add_held_item(item_id: String, n: int = 1) -> void:
+	held_items.add(item_id, n)
+
+
+## Uses whatever item currently occupies D-pad slot `slot_index` (0=up,1=right,2=down,3=left --
+## HeldItems.order, rearrangeable from the inventory screen). No-op if that slot is empty.
+func use_item_slot(slot_index: int) -> void:
+	if slot_index < 0 or slot_index >= held_items.order.size():
+		return
+	var item_id: String = held_items.order[slot_index]
+	match item_id:
+		"kunai":
+			if held_items.spend("kunai"):
+				var kn := BanditKunai.spawn(get_parent(), global_position + facing8 * 18.0, facing8, self, null, kunai_throw_damage, kunai_throw_speed)
+				if kn != null:
+					kn.hit_group = "enemy"
+		"health_gourd":
+			if held_items.spend("health_gourd"):
+				restore_health(max_health * HealthGourd.FRACTION)
+		"chakra_gourd":
+			if held_items.spend("chakra_gourd"):
+				restore_chakra(max_chakra * HealthGourd.FRACTION)
+		"paper_tag":
+			if held_items.spend("paper_tag"):
+				PaperTag.spawn(get_parent(), global_position + facing8 * 18.0, facing8, self, paper_tag_damage, "enemy")
 
 
 func reset_camera() -> void:

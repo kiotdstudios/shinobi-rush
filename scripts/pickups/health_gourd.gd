@@ -1,7 +1,10 @@
 class_name HealthGourd
 extends Node2D
-## Gourd pickup: floats and glows above the floor. kind "health" (red) restores 25% of max HP, kind "chakra" (blue)
-## restores 25% of max chakra, each only when the player is actually missing some.
+## Gourd pickup: floats and glows above the floor. kind "health" (red) and kind "chakra" (blue) are
+## collected into the player's held-items inventory (one per pickup; see PlayerController.
+## add_held_item / use_item_slot) -- owner 2026-10-25 changed this from an old instant-heal-on-touch
+## design, where each restored 25% of max HP/chakra directly and ONLY while the player was missing
+## some. The gourd itself is unchanged by any of that: still floats, still respawns.
 ##
 ## Art is PixelLab-generated (assets/pickups/health_gourd/): `gourd_NN.png` is the looping float/sway
 ## sequence of the gourd itself, `glow_NN.png` the looping red aura (drawn additively behind it) and
@@ -9,8 +12,7 @@ extends Node2D
 ## the same point, so the loop never jitters. The node sits on the FLOOR (its position is where it
 ## casts its pool of red light) and the art hovers FLOAT_HEIGHT above that.
 ##
-## A taken gourd fades out and comes back after RESPAWN_SECONDS. It is only taken when the player is
-## actually hurt, so walking past at full health wastes nothing.
+## A taken gourd fades out and comes back after RESPAWN_SECONDS.
 
 signal collected(amount: float)
 
@@ -158,13 +160,12 @@ func _draw_pool() -> void:
 
 
 ## Is this gourd currently able to be taken by a player standing at `feet`?
+## Owner 2026-10-25: the "only when actually missing some" gate belonged to the OLD instant-heal
+## design. Gourds are now stockpiled items (add_held_item), so a full-health/full-chakra player can
+## still collect them -- gating on current HP/chakra here would just reproduce the original bug
+## report ("can't pick up any items").
 func can_collect(player: Node) -> bool:
-	var restore := "restore_chakra" if kind == "chakra" else "restore_health"
-	if not available or not is_visible_in_tree() or not (player is Node2D) or not player.has_method(restore):
-		return false
-	var have := "chakra" if kind == "chakra" else "health"
-	var cap := "max_chakra" if kind == "chakra" else "max_health"
-	if float(player.get(have)) >= float(player.get(cap)):
+	if not available or not is_visible_in_tree() or not (player is Node2D) or not player.has_method("add_held_item"):
 		return false
 	var d: Vector2 = (player as Node2D).global_position - global_position
 	return Vector2(d.x, d.y * 2.0).length() <= PICKUP_RADIUS
@@ -177,16 +178,20 @@ func _try_collect() -> void:
 			return
 
 
-## Refill `player` by FRACTION of their maximum, play the take-it animation and start the respawn timer.
-## Returns the amount actually restored (HP or chakra, depending on kind).
+## Play the take-it animation and start the respawn timer.
+## Owner 2026-10-25: gourds are now COLLECTED into the player's held-items inventory (one per pickup)
+## instead of healing instantly -- the player drinks them later from the D-pad (see
+## PlayerController.use_item_slot). The take-it animation (GourdPickupFx) and respawn timer are
+## unchanged; only the stat effect moved. Returns 1.0 (one item gained) for the fx/signal, not an
+## HP/chakra amount any more -- nothing is restored at pickup time.
 func collect(player: Node) -> float:
-	var gained: float
+	var item_id := "chakra_gourd" if kind == "chakra" else "health_gourd"
+	if player.has_method("add_held_item"):
+		player.call("add_held_item", item_id, 1)
+	var gained := 1.0
 	var before_fraction := 1.0
-	if kind == "chakra":
-		gained = player.call("restore_chakra", float(player.get("max_chakra")) * FRACTION)
-	else:
+	if kind != "chakra":
 		before_fraction = clampf(float(player.get("health")) / maxf(float(player.get("max_health")), 0.001), 0.0, 1.0)
-		gained = player.call("restore_health", float(player.get("max_health")) * FRACTION)
 	available = false
 	respawn_left = RESPAWN_SECONDS
 	collected.emit(gained)

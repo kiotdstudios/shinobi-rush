@@ -1,5 +1,9 @@
 extends RefCounted
-## Health gourd absorb animation: squash, burst, magnetic warp to the player's CURRENT chest, absorb, HUD fill, layered sound.
+## Health gourd absorb animation: squash, burst, magnetic warp to the player's CURRENT chest, absorb, layered sound.
+## Owner 2026-10-25: collecting a gourd now adds it to the held-items inventory instead of healing on
+## pickup (see HealthGourd.collect / PlayerController.add_held_item) -- the take-it animation itself
+## (squash/burst/warp/absorb timings) is unchanged and still tested here; only the stat-effect
+## assertions changed (health stays put; the HUD bar no longer plays a fill since nothing moved).
 
 var ck: Callable
 
@@ -17,10 +21,12 @@ func run(p_ck: Callable, root: Node) -> void:
 	var bar := player.get_node("HealthBar") as HealthBar
 
 	player.global_position = g.global_position
-	player.health = 50.0
+	player.health = 50.0  # direct assignment, no health_changed signal -- bar.fraction is whatever it already was
+	var bar_fraction_before := bar.fraction
 	var gained := g.collect(player)
 	var fx := g.fx
-	ck.call("gourd fx: healing stays exact (+25) and the pickup is used up", is_equal_approx(gained, 25.0) and is_equal_approx(player.health, 75.0) and not g.available)
+	ck.call("gourd fx: collecting adds 1 to the inventory, leaves HP untouched, and the pickup is used up",
+		is_equal_approx(gained, 1.0) and is_equal_approx(player.health, 50.0) and player.held_items.count("health_gourd") == 1 and not g.available)
 	ck.call("gourd fx: collecting starts the effect", fx != null and is_instance_valid(fx))
 	if fx == null:
 		main.queue_free()
@@ -60,18 +66,15 @@ func run(p_ck: Callable, root: Node) -> void:
 			spirals += 1
 	ck.call("gourd fx: absorb - 6-10 healing sparks spiral up", spirals >= 6 and spirals <= 10, str(spirals))
 	ck.call("gourd fx: absorb - the gourd itself is gone", not v.visible)
-	# 5. HUD
-	ck.call("gourd fx: HUD - true HP is restored at once, drawn bar waits at the old value", bar.heal_animating() and is_equal_approx(bar.shown_fraction(), 0.5) and is_equal_approx(bar.fraction, 0.75))
-	bar._process(0.5)  # past the wait
-	bar._process(0.125)
-	var mid := bar.shown_fraction()
-	ck.call("gourd fx: HUD - fill animates (about 250 ms) instead of jumping", mid > 0.5 and mid < 0.75, str(mid))
-	bar._process(0.2)
-	ck.call("gourd fx: HUD - fill ends on the real value, then flashes once and settles", is_equal_approx(bar.shown_fraction(), 0.75) and not bar.heal_animating())
+	# 5. HUD -- no fill plays any more: pickup no longer heals, so there is nothing to animate.
+	ck.call("gourd fx: HUD - does not start a heal-fill animation (nothing was restored)", not bar.heal_animating() and is_equal_approx(bar.fraction, bar_fraction_before))
 	bar._process(0.5)
-	ck.call("gourd fx: HUD - flash fades back to normal", bar._heal_flash == 0.0)
+	bar._process(0.125)
+	bar._process(0.2)
+	bar._process(0.5)
+	ck.call("gourd fx: HUD - bar stays exactly where it was through the whole take-it animation", is_equal_approx(bar.shown_fraction(), bar_fraction_before) and is_equal_approx(bar.fraction, bar_fraction_before))
 	fx.advance(0.2)  # t = 0.57
-	ck.call("gourd fx: +HP label is still alive after the HUD fill starts", not fx.finished)
+	ck.call("gourd fx: pickup burst visuals are still alive at this point", not fx.finished)
 	fx.advance(1.0)
 	ck.call("gourd fx: it cleans itself up", fx.finished)
 

@@ -54,9 +54,11 @@ static func start(p_gourd: HealthGourd, p_player: Node2D, p_amount: float, hp_be
 		fx._white_green = Color(0.85, 0.95, 1.0)
 		fx._label = "CHAKRA"
 	p_gourd.add_child(fx)
-	var bar := p_player.get_node_or_null("HealthBar") as HealthBar
-	if bar != null and p_gourd.kind != "chakra":
-		bar.begin_heal_anim(hp_before_fraction, T_ABSORB)
+	# Owner 2026-10-25: collecting a gourd no longer heals at pickup time (it adds to the held-items
+	# inventory instead -- see HealthGourd.collect), so there is no real HUD fill to animate any
+	# more. `hp_before_fraction` is kept as a parameter for callers/tests, but begin_heal_anim() is
+	# deliberately NOT called: animating a fill from a value to that SAME value was a no-op that
+	# only existed to paper over the old call site, not a real effect.
 	return fx
 
 
