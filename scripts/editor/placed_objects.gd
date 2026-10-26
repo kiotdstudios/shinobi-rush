@@ -77,11 +77,11 @@ const CATALOG := {
 	"water9_corner_bottom": {"label": "Water Corner Bottom", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "corner_bottom"},
 	"waterfall_small": {"label": "Small Waterfall", "kind": "water_fx", "footprint": Vector2(80, 32)},
 
-	"blight_wooden_post": {"label": "Wooden Lantern", "kind": "blight_light", "light": 0, "footprint": Vector2(54, 30)},
-	"blight_stone_pagoda": {"label": "Pagoda Lantern", "kind": "blight_light", "light": 1, "footprint": Vector2(84, 42)},
-	"blight_branch_lantern": {"label": "Branch Lantern", "kind": "blight_light", "light": 2, "footprint": Vector2(70, 38)},
-	"blight_stone_brazier": {"label": "Spirit Brazier", "kind": "blight_light", "light": 3, "footprint": Vector2(96, 46)},
-	"blight_spirit_totem": {"label": "Spirit Totem", "kind": "blight_light", "light": 4, "footprint": Vector2(75, 40)},
+	"blight_wooden_post": {"label": "Wooden Lantern", "kind": "blight_light", "light": 0, "footprint": Vector2(27, 15)},
+	"blight_stone_pagoda": {"label": "Pagoda Lantern", "kind": "blight_light", "light": 1, "footprint": Vector2(42, 21)},
+	"blight_branch_lantern": {"label": "Branch Lantern", "kind": "blight_light", "light": 2, "footprint": Vector2(35, 19)},
+	"blight_stone_brazier": {"label": "Spirit Brazier", "kind": "blight_light", "light": 3, "footprint": Vector2(48, 23)},
+	"blight_spirit_totem": {"label": "Spirit Totem", "kind": "blight_light", "light": 4, "footprint": Vector2(37.5, 20)},
 	"blight_fireflies": {"label": "Forest Fireflies", "kind": "fireflies", "footprint": Vector2(32, 16)},
 
 	"fire_tall_pillar": {"label": "Tall Pillar", "kind": "ashen_fire", "fire": 0, "footprint": Vector2(42, 22)},
@@ -360,7 +360,7 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 			return [load(WindGrassTileset.DIR + id + ".png") as Texture2D, pos - Vector2(56, 136 if def.tall else 84)]
 		"blight_light":
 			var info := blight_info(int(def.light))
-			return [load(str(info.path).replace(".png", "-assembled.png")) as Texture2D, pos-Vector2(float(info.foot_anchor[0]), float(info.foot_anchor[1]))]
+			return [load(str(info.path).replace(".png", "-assembled.png")) as Texture2D, pos-Vector2(float(info.foot_anchor[0]), float(info.foot_anchor[1]))*BlightwoodLight.SIZE]
 		"fireflies":
 			return [load("res://assets/vfx/blightwood_lights/firefly-icon.png") as Texture2D, pos-Vector2(16, 16)]
 		"ashen_fire":
@@ -389,6 +389,11 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 
 ## The rectangle that exactly bounds the object's VISIBLE art (transparent padding trimmed). Used for the
 ## builder's dimension boxes, hover and selection, so a box never covers more than the picture.
+## How big the art is drawn relative to its texture (Blightwood lights are half size).
+static func art_scale(id: String) -> float:
+	return BlightwoodLight.SIZE if str(def_of(id).get("kind", "")) == "blight_light" else 1.0
+
+
 static func art_rect(id: String, pos: Vector2) -> Rect2:
 	var at := art_texture(id, pos)
 	var tex: Texture2D = at[0]
@@ -405,7 +410,8 @@ static func art_rect(id: String, pos: Vector2) -> Rect2:
 				used = r
 		_art_cache[id] = used
 	var u: Rect2i = _art_cache[id]
-	return Rect2((at[1] as Vector2) + Vector2(u.position), Vector2(u.size))
+	var k := art_scale(id)
+	return Rect2((at[1] as Vector2) + Vector2(u.position) * k, Vector2(u.size) * k)
 
 
 static var _alpha_images := {}
@@ -418,7 +424,7 @@ static func art_pixel_hit(id: String, pos: Vector2, point: Vector2, reach := 2) 
 	var tex: Texture2D = at[0]
 	if tex == null:
 		return hit_rect(id, pos).has_point(point)
-	var local := point - (at[1] as Vector2)
+	var local := (point - (at[1] as Vector2)) / art_scale(id)
 	if not Rect2(Vector2.ZERO, tex.get_size()).grow(float(reach)).has_point(local):
 		return false
 	if not _alpha_images.has(id):

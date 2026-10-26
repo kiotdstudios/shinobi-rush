@@ -36,6 +36,12 @@ func run(ck: Callable, root: Node) -> void:
 			ck.call("blightwood: pendulum can return to registered rest pose "+ids[i],fixture.pendant.rotation==0)
 		else:
 			ck.call("blightwood: lantern glass or twelve-frame spirit fire "+ids[i],fixture.flame==null if i==1 else fixture.flame.hframes*fixture.flame.vframes==12)
+	var f0 := owned[0]
+	var drawn := PlacedObjects.art_rect(ids[0], f0.position)
+	var texsz := (PlacedObjects.art_texture(ids[0], f0.position)[0] as Texture2D).get_size()
+	ck.call("blightwood: every light is drawn at half size", is_equal_approx(f0.scale.x, 0.5) and is_equal_approx(f0.get_global_transform().get_scale().x, 0.5) and drawn.size.x <= texsz.x * 0.5 + 0.5)
+	ck.call("blightwood: the selection box matches the half-size art", f0.body.get_global_rect().size.x <= texsz.x * 0.5 + 1.0 if f0.body.has_method("get_global_rect") else drawn.size.x < texsz.x)
+	ck.call("blightwood: fireflies stay crisp dots while their orbit shrinks", is_equal_approx(f0.swarm.get_global_transform().get_scale().x, 1.0) and f0.swarm.radius.x <= float(PlacedObjects.blight_info(0).fly_radius[0]) * 0.5 + 0.01)
 	ck.call("blightwood: five physical footprints in navigation",placed.obstacles().size()==baseline+5)
 	var swarm_obj := placed.add("blight_fireflies",Vector2(1600,990),false)
 	var swarm := swarm_obj.nodes[0] as ForestFireflies
