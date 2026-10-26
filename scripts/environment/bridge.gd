@@ -9,11 +9,9 @@ extends Node2D
 ##  * Deck:  anyone can walk onto and along it through the two open ends.
 ##  * Rails: solid collision along both long edges, so the deck cannot be entered or left sideways.
 ##  * Broken (`*_damaged_*`): a gap across the middle of the deck. Walking into it drops the player: a small
-##    fall hit and they are put back at the nearer end. A JUMP (or air attack) clears it. Striking the broken
-##    planks from beside the gap (light attack) repairs the bridge: the intact art replaces the damaged art
-##    and the gap closes.
+##    fall hit and they are put back at the nearer end. A JUMP (or air attack) clears it; there is no repair,
+##    a broken bridge stays broken and the player has to jump it.
 
-signal repaired
 signal fell
 
 const DIR := "res://assets/environment/blightwood_bridges/"
@@ -27,13 +25,12 @@ const RAIL_INSET := -12.0
 const GAP_TILES := 1.5  ## length of the broken section along the bridge
 const FALL_DAMAGE := 8.0
 const FALL_COOLDOWN := 0.6
-const REPAIR_RANGE := 110.0  ## player must be this close to the middle of the gap to repair it
 const ENTRY_PUSH := 28.0  ## where a fallen player is put back, beyond the deck end
 
 static var _assemblies: Dictionary = {}
 
 var assembly_id := "short_wood_u"
-var state := "intact"  ## intact | broken | repaired
+var state := "intact"  ## intact | broken
 var _rails: StaticBody2D
 var _floor: Node2D
 var _sprites: Dictionary = {}
@@ -108,6 +105,7 @@ func _ready() -> void:
 		return
 	state = "broken" if is_damaged() else "intact"
 	name = "Bridge_" + assembly_id
+	add_to_group("bridge")
 	_build_sprites(data())
 	_build_rails()
 	set_physics_process(true)
@@ -235,22 +233,6 @@ static func airborne(player: Node) -> bool:
 	return st == PlayerController.State.JUMP or st == PlayerController.State.AIR_ATTACK
 
 
-func can_repair(player: Node2D) -> bool:
-	return state == "broken" and not airborne(player) and player.global_position.distance_to(gap_center()) <= REPAIR_RANGE
-
-
-func repair() -> bool:
-	if state != "broken":
-		return false
-	state = "repaired"
-	var d := data()
-	var intact := assembly("%s_wood_%s" % [assembly_id.get_slice("_", 0), str(d.axis)])
-	if not intact.is_empty():
-		_apply_textures(intact)
-	repaired.emit()
-	return true
-
-
 ## Pure rule used by the physics tick (and the tests): does this player drop into the gap?
 func drops(player: Node2D) -> bool:
 	return state == "broken" and not airborne(player) and not bool(player.get("dying")) and gap_contains(player.global_position)
@@ -275,5 +257,3 @@ func _physics_process(delta: float) -> void:
 		return
 	if _cooldown <= 0.0 and drops(player):
 		fall(player)
-	elif Input.is_action_just_pressed("attack_light") and can_repair(player):
-		repair()
