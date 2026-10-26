@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-26-waterlife.md
 - Date: 2026-10-26
-- Final status: REVIEW — tested implementation; awaiting reviewed integration and canonical live verification.
-- Commit / PR: Pending implementation commit.
+- Final status: DONE — merged, deployed and verified on canonical public build.
+- Commit / PR:348ae24f implementation; e9602899 preview timing; PR213 merged as bde58e778da9bf593ef7d33bbf443853339a21dc.
 
 ## Work completed
 Created five original image_gen source images after reading PixelLab documentation and checking connected credentials (205.80 generations available; no PixelLab generation charged). Exported transparent 16-frame water contact/ripple sheet, 16-frame concentrated blue foot chakra loop, six floating pad/lotus variants, 16 purple-frog poses including tongue and a separate fly. Deterministic processor preserves sources, uses shared nearest scaling and fixed layer anchors, checks uniqueness and edge containment. It does not draw replacement art or synthesize in-betweens.
@@ -44,4 +44,11 @@ Foot offsets estimate approved sprite soles; exact per-frame toe sockets remain 
 None.
 
 ## Outstanding work / next steps
-Required PR checks, reviewed merge, main deploy/postdeploy checks, exact canonical build SHA verification and live browser proof. Until then NOT LIVE — awaiting integration. Complete the separate5AM knockback/substitution assignment after preserving this delivery.
+None for waterlife: reviewed integration, deploy/postdeploy and actual canonical verification are complete. The separate5AM knockback/substitution assignment is tracked in its own order/report.
+
+## Final canonical delivery
+Runtime PR: https://github.com/kiotdstudios/shinobi-rush/pull/213 (merged). Required PR run40300445662 passed; main run https://github.com/kiotdstudios/shinobi-rush/actions/runs/40302987794 passed every required job, including deploy, postdeploy and gate.
+
+Actual canonical Chromium test at2026-10-26T10:13:31.860Z (06:13New York): https://kiotdstudios.github.io/shinobi-rush/?waterlife=review and ?waterlife=play. Build-info matched bde58e778da9bf593ef7d33bbf443853339a21dc exactly.15/15checks passed, no errors: Normal/Half/Pause/Step, complete forced frog loop, six floating plant variants, bounded pool and real-controller keyboard movement from dry to wet, normal chakra drain, stationary no-running-spray and dry exit. Screenshots visually inspected; live-proof/validation.json and PNGs provide evidence.
+
+The forced review frog is explicitly not proof of a naturally won rare roll. Game probability remains1/1,000,000 per eligible visit. Chief note is committed in main. Scheduled one-time automation was deleted after verification. No remaining implementation work for this order; final evidence is carried in the follow-up delivery/report commit.

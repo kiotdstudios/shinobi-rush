@@ -47,3 +47,11 @@ Final release-browser proof and normal/half GIFs recorded; reviewed PR, required
 
 ## Integration checkpoint
 Merged origin/main bde58e778da9bf593ef7d33bbf443853339a21dc with --no-commit --no-ff. This is the already-reviewed waterlife PR213 base; no gameplay conflict or behavior change. Final focused86/0 rerun and order/diff checks precede integration commit.
+
+## CI regression investigation and fixture correction
+Initial PR214 Godot CI40304682176 (head734b9fd1) failed four existing World Builder grass-selection/deletion checks:3311passed/4failed. Downloaded immutable artifact12642655343 and read full tests-builtin.log. Native reproduction inserted a floating health gourd30px below the fixed grass click: the old editor fixture reproduced exactly the same four failures (83/4), because foreground pickup art correctly takes picking priority. This points to the fixture random scatter, not VFX changing picking. The reset/scatter-count assertion remains intact; subsequent object-editing fixtures now remove random pickups before recording their base object counts. No builder runtime/picking behavior changed. Isolated corrected editor fixture87/0. Full suite rerun and order/diff checks recorded below before the fix commit.
+
+Extra actual normal-game keyboard capture had no console errors and moved the player, but the wandering bandit stayed over1000px away behind the authored world during the short attempt; no natural-world combat hit is claimed from that capture. Confirmed hit/substitution coverage comes from real-controller review and native combat regressions.
+
+### Fixture-fix verification before commit
+Controlled old-fixture reproduction (build/editor_pick_repro_runner.gd) with a gourd30px below the dragged grass produced exactly83passed/4failed, matching all four CI failure labels. Corrected isolated editor87/0; final full suite rerun via godot_ci.py tests --log-dir build/impact-vortex-ci-fix-tests:3315passed/0failed, expected bad-sheet warning only. No runtime code changed after final release-browser18/18proof. Order structure and staged diff checks passed before publishing the fix.

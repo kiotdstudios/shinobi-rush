@@ -1,0 +1,25 @@
+{
+  "failed_run": 40304682176,
+  "head_sha": "734b9fd1c454946bbb417dfcc69d4c487ca55cf9",
+  "artifact": 12642655343,
+  "native_summary": {
+    "passed": 3311,
+    "failed": 4
+  },
+  "failures": [
+    "builder filters: hide the palette options only; the world art stays visible and pickable, layout untouched",
+    "builder filters: reveal restores art and picking",
+    "builder grass: delete removes only the picked tile",
+    "builder grass: v4 reload preserves deletions and counts"
+  ],
+  "reproduction": "Existing editor fixture with health_gourd at dragged_grass.pos + Vector2(0,30) reproduces precisely all four failures:83passed/4failed. At the same point without overlap, grass picking succeeds.",
+  "fix": "After reset-scatter counts are tested, remove random pickup props from subsequent deterministic editor fixtures before taking their base object counts. Runtime picking unchanged.",
+  "fixed_editor": {
+    "passed": 87,
+    "failed": 0
+  },
+  "fixed_full_native": {
+    "passed": 3315,
+    "failed": 0
+  }
+}

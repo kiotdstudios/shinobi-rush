@@ -9,7 +9,14 @@
       920,
       560
     ],
-    "speed": 1
+    "speed": 1,
+    "output_size": [
+      280,
+      200
+    ],
+    "gif_frames": 89,
+    "gif_duration_ms": 7120,
+    "postprocess_scale": "0.5 nearest-neighbor from the2x review crop"
   },
   "half-speed": {
     "frames": 177,
@@ -21,6 +28,13 @@
       920,
       560
     ],
-    "speed": 0.5
+    "speed": 0.5,
+    "output_size": [
+      280,
+      200
+    ],
+    "gif_frames": 177,
+    "gif_duration_ms": 14160,
+    "postprocess_scale": "0.5 nearest-neighbor from the2x review crop"
   }
 }

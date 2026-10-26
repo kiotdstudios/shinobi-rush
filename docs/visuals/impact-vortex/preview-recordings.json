@@ -10,7 +10,13 @@
       1220,
       590
     ],
-    "speed": 1
+    "speed": 1,
+    "output_size": [
+      1140,
+      360
+    ],
+    "gif_frames": 44,
+    "gif_duration_ms": 3520
   },
   "half-speed": {
     "frames": 87,
@@ -23,6 +29,12 @@
       1220,
       590
     ],
-    "speed": 0.5
+    "speed": 0.5,
+    "output_size": [
+      1140,
+      360
+    ],
+    "gif_frames": 87,
+    "gif_duration_ms": 6960
   }
 }
