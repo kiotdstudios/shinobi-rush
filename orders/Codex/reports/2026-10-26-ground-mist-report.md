@@ -2,8 +2,8 @@
 - Agent: Codex
 - Order: orders/Codex/2026-10-26-ground-mist.md
 - Date: 2026-10-26
-- Final status: REVIEW — reviewed integration / live deployment pending
-- Commit / PR: Pre-commit checks complete; implementation commit / PR recorded in follow-up
+- Final status: DONE — reviewed, merged, deployed and verified on canonical live build
+- Commit / PR: e968e9f1cb1ccbe7caba04d810f60c7fbc6b0779; https://github.com/kiotdstudios/shinobi-rush/pull/218; live merge 7d01146062116f197b74686d771b5b205e5945d1
 
 ## Work completed
 Created sixteen original thin, broken sage/blue-grey mist silhouettes. The atlas uses native 128×128 RGBA cells with transparent backgrounds, no floor plate, and nearest sampling. Sources came from built-in image_gen after reviewing the official PixelLab MCP documentation and confirming configured access. No PixelLab generation was claimed or performed.
@@ -50,5 +50,14 @@ Full-map art is intentionally subtle on the high-detail floor; the native-pixel 
 ## Questions for project owner
 None.
 
+## Reviewed integration and verified live delivery
+PR #218 merged through the normal workflow at 7d01146062116f197b74686d771b5b205e5945d1. Main workflow https://github.com/kiotdstudios/shinobi-rush/actions/runs/40401431454 passed every required job, including pre-deploy, deployment, post-deploy live smoke and godot-ci-gate. Main native result: 3,441 passed / 0 failed; resource validation: 400 scripts / 29 scenes / 0 failures.
+
+`node docs/visuals/ground-mist/browser-proof.mjs https://kiotdstudios.github.io/shinobi-rush/ build/mist-public-proof-7d011` passed 14/14 checks with zero page/console errors at 2026-10-26T21:31:47.178Z. The public build-info SHA was exactly the merged commit. Actual map: 11 discovered tree/shrine sources, 21 visible wisps, fixed 48-slot pool. Screenshots and validation are under docs/visuals/ground-mist/live-proof/; exact CI jobs are in deployment.json.
+
+Live review: https://kiotdstudios.github.io/shinobi-rush/?mist=review&v=7d011460
+
+This follow-up changes only report/evidence files. Before committing it: validate_orders.py, git diff --check and JSON assertions for build SHA, all 14 checks and empty errors passed. No runtime bytes changed.
+
 ## Outstanding work / next steps
-Final serial full suite passed (3,441 / 0); 36 controls and 14 mist browser checks passed. Push branch, reviewed PR / required CI, merge using repository workflow, verify canonical live exact build SHA and update this report. No changes to the pending waterlife QA checkout.
+None for this order. Preexisting primary-checkout and dynamic-shrine QA work was preserved.
