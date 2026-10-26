@@ -24,6 +24,7 @@ func run(check: Callable, root: Node) -> void:
 	if arena == null or player == null or bandit == null:
 		main.queue_free()
 		return
+	bandit.profile["loot_sight"] = 0.0  # the layout gourds are scattered at random; scavenging one would walk him off these scripted routes
 
 	await _test_arena_layout()
 	await _test_navigation_data()
