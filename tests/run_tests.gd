@@ -45,6 +45,7 @@ func _initialize() -> void:
 	await load("res://tests/test_combat.gd").new().run(ck, root)
 	await load("res://tests/test_jump.gd").new().run(ck, root)
 	await load("res://tests/test_health_flicker.gd").new().run(ck, root)
+	await load("res://tests/test_body_flicker_premium.gd").new().run(ck, root)
 	await load("res://tests/test_health_gourd.gd").new().run(ck, root)
 	await load("res://tests/test_gourd_pickup_fx.gd").new().run(ck, root)
 	await load("res://tests/test_inventory.gd").new().run(ck, root)

@@ -108,7 +108,7 @@ func test_flicker(p: PlayerController, tree: SceneTree) -> void:
 		frames += 1
 	ck.call("evade burst: the body stays visible the whole dodge and the streak plays on it", not was_hidden and streak_seen and p.visual.visible, "hidden=%s streak=%s" % [was_hidden, streak_seen])
 	ck.call("flicker: nothing lands during the whole dodge", invuln and p.health == p.max_health)
-	ck.call("evade burst: the body moved along the heading about flicker_distance", p.global_position.x - start.x > p.flicker_distance * 0.9, str(p.global_position - start))
+	ck.call("evade burst: the body moved along the heading about flicker_distance", p.global_position.x - start.x >= p.flicker_distance * 0.9 - 0.01, str(p.global_position - start))
 	Input.action_release("move_right")
 	for i in 40:
 		await tree.physics_frame

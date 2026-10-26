@@ -42,7 +42,7 @@ func run(ck: Callable, root: Node) -> void:
 	bandit._physics_process(0.02)
 	visual._process(0)
 	ck.call("bandit evade: real lock triggers burst", bandit.state == Bandit.State.EVADE and bandit.evade_count == 1 and visual.streak.visible)
-	ck.call("bandit evade: correct six-frame separate effect", visual.streak.sprite_frames.get_frame_count("default") == 6 and visual.actor.anim_id == "sprint")
+	ck.call("bandit evade: shared presentation has bounded ghosts and own launch pose", visual.streak.ghosts.size() == 3 and visual.actor.anim_id == "run")
 	bandit._physics_process(0.25)
 	bandit._physics_process(0.02)
 	ck.call("bandit evade: cooldown prevents repeat spam", bandit.evade_count == 1 and bandit.state != Bandit.State.EVADE)
