@@ -228,4 +228,3 @@ func _update_vortex() -> void:
 				sprite.global_position = Vector2(entry.foot).round()
 				sprite.frame = mini(int(t*16.0),15)
 				sprite.modulate.a = (1.0-smoothstep(0.75,1.0,t))*(1.0 if float(entry.delay)==LOG_POOF else 0.8)
-

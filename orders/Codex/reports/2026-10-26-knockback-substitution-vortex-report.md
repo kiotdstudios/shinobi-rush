@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-26-knockback-substitution-vortex.md
 - Date: 2026-10-26
 - Final status: REVIEW — implementation tested; awaiting reviewed PR integration and canonical live verification.
-- Commit / PR: Pending implementation commit.
+- Commit / PR: Implementation aac25020; integration commit and PR pending.
 
 ## Work completed
 Audited existing player/bandit damage assets: both already have approved128×128 eight-direction knockback bodies bound to gameplay. Preserved them. Added a12-frame authored directional contact/fragment impact with two sharp high-contrast early contact frames, reached-position damaged-body afterimages in a12-slot pool, and physical skid dust. A presentation node reads accepted hits/health changes and existing knockback state; it writes no health, movement, timers, input, AI or camera configuration. Impact nodes are capped at32 per observer. Rejected/invulnerable damage produces no new impact.
@@ -35,7 +35,7 @@ Raw art uses built-in image_gen, after PixelLab review/credential check earlier 
 Exact logs: ignored build/impact-vortex-* and build/impact_focus.gd. Executable: primary checkout .tools/godot-4.7.2/Godot_v4.7.2-stable_win64_console.exe; bundled Codex Python/Node runtimes.
 
 ## Issues encountered
-Initial review constant attempted to call normalized() inside a GDScript constant expression; fixed by normalizing at use, then validated/exported. Initial standalone focused harness left bandit substitution enabled, causing pre-existing damage-art assertions to encounter a legitimate substitution; corrected harness setup to match the full runner's substitution-disabled fixture. Rerun86/0 and full suite3315/0 passed. This was not a combat change.
+The initial local implementation commit retained one extra blank line at EOF; removed during the integration commit, with final git diff --check rerun clean before publication. Initial review constant attempted to call normalized() inside a GDScript constant expression; fixed by normalizing at use, then validated/exported. Initial standalone focused harness left bandit substitution enabled, causing pre-existing damage-art assertions to encounter a legitimate substitution; corrected harness setup to match the full runner's substitution-disabled fixture. Rerun86/0 and full suite3315/0 passed. This was not a combat change.
 
 Headless Chromium does not establish physical gamepad/hardware performance. Keyboard/browser review and existing native control tests were executed. Short GIF sampling may omit a20ms flash; the contact sheet and live half-speed viewer expose authored impact frames. No full-screen strobe or new camera rule is introduced.
 
@@ -44,3 +44,6 @@ None.
 
 ## Outstanding work / next steps
 Final release-browser proof and normal/half GIFs recorded; reviewed PR, required CI, main deploy/postdeploy, exact live SHA and browser verification. Until those complete: NOT LIVE — awaiting integration. Earlier waterlife delivery is preserved in merged PR213; its live pipeline is tracked separately.
+
+## Integration checkpoint
+Merged origin/main bde58e778da9bf593ef7d33bbf443853339a21dc with --no-commit --no-ff. This is the already-reviewed waterlife PR213 base; no gameplay conflict or behavior change. Final focused86/0 rerun and order/diff checks precede integration commit.
