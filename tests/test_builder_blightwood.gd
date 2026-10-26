@@ -9,7 +9,7 @@ func run(ck: Callable, root: Node) -> void:
 	placed.autosave = false
 	var editor := arena.editor
 	editor.set_open(true)
-	ck.call("blightwood: dedicated six-card category",editor._filter_buttons.has("Blightwood lights") and PlacedObjects.CATEGORIES[0][1].size()==6)
+	ck.call("blightwood: dedicated six-card category",editor._filter_buttons.has("Blightwood lights") and PlacedObjects.CATEGORIES.filter(func(c): return c[0]=="Blightwood lights")[0][1].size()==6)
 	var ids := ["blight_wooden_post","blight_stone_pagoda","blight_branch_lantern","blight_stone_brazier","blight_spirit_totem"]
 	var baseline := placed.obstacles().size()
 	var owned: Array[BlightwoodLight] = []

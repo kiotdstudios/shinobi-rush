@@ -59,6 +59,7 @@ func build(_layer: Node) -> void:
 	tab.tooltip_text = "Click to open: all panels (Lab, Player, Controls, Diagnostics), vision switches and camera zoom."
 	DockTab.style(tab, COLOR)
 	tab.toggled.connect(set_open)
+	tab.visible = not MapEditorMode.public_game()  # the public game page has no Settings
 	add_child(tab)
 	panel = PanelContainer.new()
 	panel.name = "SettingsList"
@@ -275,6 +276,8 @@ static func telemetry() -> Dictionary:
 
 
 func set_open(v: bool) -> void:
+	if v and MapEditorMode.public_game():
+		return  # no Settings on the public game page
 	open = v
 	if panel != null:
 		panel.visible = v

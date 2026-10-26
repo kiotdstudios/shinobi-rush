@@ -20,6 +20,8 @@ var drops: Array[Sprite2D] = []
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	if is_open_water():
+		add_to_group("open_water")  # ninjas can run on it, at a chakra cost (see PlayerController)
 	if auto_advance:
 		clock = shared_clock  # placement while paused must join the existing frozen flow field
 	if waterfall:
@@ -46,6 +48,27 @@ func _ready() -> void:
 			bank.texture = load(SHORE_DIR + "land/" + stem + ".png") as Texture2D
 			add_child(bank)
 	advance(0.0)
+
+## A full water tile: no bank, no waterfall. Partly-land shore tiles are treated as ground.
+func is_open_water() -> bool:
+	return not waterfall and (shore_family.is_empty() and role == "center" or shore_family != "" and shore_mask == 0)
+
+
+## True when world point p is over an open-water tile (72 x 36 diamond), and not on a bridge deck.
+static func over_water(tree: SceneTree, p: Vector2) -> bool:
+	var hit := false
+	for n: Node in tree.get_nodes_in_group("open_water"):
+		var d := (n as Node2D).global_position - p
+		if absf(d.x) / 36.0 + absf(d.y) / 18.0 <= 1.0:
+			hit = true
+			break
+	if not hit:
+		return false
+	for b: Node in tree.get_nodes_in_group("bridge"):
+		if (b as Bridge).deck_contains(p):
+			return false
+	return true
+
 
 func _atlas(path: String, cols: int, rows: int) -> Sprite2D:
 	var sprite := Sprite2D.new()

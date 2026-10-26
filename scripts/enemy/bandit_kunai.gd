@@ -16,6 +16,7 @@ var damage: float = 6.0
 var thrower: Node2D = null
 var target: Node2D = null
 var travelled: float = 0.0
+var _passed_target := false
 var hit_result: String = ""  ## "", "hit", "evaded", "wall", "range" -- read by tests
 
 
@@ -52,38 +53,34 @@ func _physics_process(delta: float) -> void:
 
 ## One simulation step (public so tests can drive it deterministically).
 func step(delta: float) -> void:
-	if hit_result != "":
-		return
+	if hit_result not in ["","evaded"]: return
 	var a := global_position
-	var b := a + dir * speed * delta
-	if target != null and is_instance_valid(target):
-		var seg := b - a
-		var t := 0.0
-		if seg.length_squared() > 0.0001:
-			t = clampf((target.global_position - a).dot(seg) / seg.length_squared(), 0.0, 1.0)
-		if (a + seg * t).distance_to(target.global_position) <= HIT_RADIUS:
-			global_position = a + seg * t
-			var who: Node2D = thrower if (thrower != null and is_instance_valid(thrower)) else null
-			if target.has_method("take_hit") and bool(target.call("take_hit", damage, dir, 120.0, who)):
-				hit_result = "hit"
-			else:
-				hit_result = "evaded"
-			queue_free()
-			return
-	if is_inside_tree():
-		var q := PhysicsRayQueryParameters2D.create(a + Vector2(0, -14), b + Vector2(0, -14))
-		var ex: Array[RID] = []
-		if is_instance_valid(thrower) and thrower is CollisionObject2D:
-			ex.append((thrower as CollisionObject2D).get_rid())
-		if is_instance_valid(target) and target is CollisionObject2D:
-			ex.append((target as CollisionObject2D).get_rid())
-		q.exclude = ex
-		if not get_world_2d().direct_space_state.intersect_ray(q).is_empty():
-			hit_result = "wall"
-			queue_free()
-			return
-	global_position = b
-	travelled += (b - a).length()
-	if travelled >= MAX_RANGE:
-		hit_result = "range"
+	var length := minf(speed*delta,maxf(MAX_RANGE-travelled,0.0))
+	var b := a+dir*length
+	var seg := b-a
+	var wall := KunaiRecovery.wall_hit(self,a,b,thrower)
+	var wall_t := 2.0 if wall.is_empty() or length<0.001 else a.distance_to(wall.position-KunaiRecovery.LIFT)/length
+	if not _passed_target and is_instance_valid(target):
+		var t := clampf((target.global_position-a).dot(seg)/maxf(seg.length_squared(),0.0001),0,1)
+		if (a+seg*t).distance_to(target.global_position)<=HIT_RADIUS and t<wall_t:
+			var who: Node2D = thrower if is_instance_valid(thrower) else null
+			if target.has_method("take_hit") and bool(target.call("take_hit",damage,dir,120.0,who)):
+				global_position=a+seg*t
+				hit_result="hit"
+				queue_free()
+				return
+			# Dodge/jump/substitution remains unchanged; the missed blade continues without retesting this target.
+			_passed_target=true
+			hit_result="evaded"
+	if not wall.is_empty():
+		global_position=wall.position-KunaiRecovery.LIFT
+		hit_result="wall"
+		KunaiRecovery.start(get_parent(),global_position,dir,DRAW_LIFT.y,wall.normal)
+		queue_free()
+		return
+	global_position=b
+	travelled+=length
+	if travelled>=MAX_RANGE-0.01:
+		hit_result="range"
+		KunaiRecovery.start(get_parent(),global_position,dir,DRAW_LIFT.y)
 		queue_free()

@@ -108,7 +108,8 @@ func run(ck: Callable, root: Node) -> void:
 		every = every and (PlacedObjects.footprint_of(id).x > 0.0)
 	var listed := 0
 	for cat: Array in PlacedObjects.CATEGORIES:
-		listed += (cat[1] as Array).size()
+		for cid: String in cat[1]:
+			listed += 1 if PlacedObjects.CATALOG.has(cid) else 0  # generated entries (bridges) have their own test
 	ck.call("builder: every catalog entry is listed in a palette section", every and listed == PlacedObjects.CATALOG.size() and PlacedObjects.CATALOG.size() >= 9)
 
 	var base_trees := grove.trees.size()
@@ -162,6 +163,11 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().physics_frame
 	ck.call("builder: reset brings the five starting trees back in place", _non_pickups(placed) == 5 + nb + 1 + grass_total and grove.trees.size() == 5 and _solid_at(arena, orig_pos + Vector2(0, -20)) and not arena.nav.is_walkable(orig_pos + Vector2(0, -20)))
 	ck.call("builder: reset also scatters a fresh set of health and chakra gourds", placed.objects.size() - _non_pickups(placed) == PlacedObjects.DEFAULT_GOURDS + PlacedObjects.DEFAULT_CHAKRA_GOURDS, str(placed.objects.size() - _non_pickups(placed)))
+	# Scatter is deliberately random and its coverage is checked above. Floating pickup
+	# art is picked ahead of grass, so it must not occlude the fixed editing fixtures below.
+	for obj in placed.objects.duplicate():
+		if PlacedObjects.def_of(obj.id).kind == "pickup":
+			placed.remove(obj, false)
 	editor.set_open(false)
 	base_trees = grove.trees.size()
 	base_objs = placed.objects.size()
@@ -248,7 +254,7 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("builder filters: hidden palette options leave world collision/nav alone", placed.type_visible("tree_1") and not arena.nav.is_walkable(WorldScale.TREE_POSITIONS[0] + Vector2(0, -20)))
 	editor.set_type_filter("Grass", true)
 	editor.set_type_filter("Trees", true)
-	ck.call("builder filters: reveal restores art and picking", (g.nodes[0] as CanvasItem).visible and placed.hit_test(g.pos) == g)
+	ck.call("builder filters: reveal restores art and picking", (g.nodes[0] as CanvasItem).visible and placed.hit_test(g.pos) == g, "picked=" + str(placed.hit_test(g.pos).get("id", "none")))
 	editor.press(g.pos)
 	editor.release()
 	editor.delete_selected()

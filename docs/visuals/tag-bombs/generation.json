@@ -1,0 +1,19 @@
+{
+  "reference": "owner concept 427C0015-2A1F-4C85-91DF-88B2CF69EAA0",
+  "generator": "PixelLab create_image_pro + animate_image",
+  "white_job": "b27b038b-886c-4324-8f74-50849e875436",
+  "black_job": "a2d41e3b-b309-4dfd-9fbe-71d38a10e183",
+  "canvas": [
+    128,
+    128
+  ],
+  "base_seeds": [
+    65101,
+    65102
+  ],
+  "smoke_base_job": "728b1471-9785-45d1-a1a4-42715587131f",
+  "postprocessing": "Native-pixel palette correction neutralizes cool gray in black bomb body/white ink while preserving red seams; no spatial interpolation or resizing. Source originals retained.",
+  "generated_frames": 112,
+  "reuse": "Existing separate paper_tag pickup aura/embers and paper_tag_blast effects",
+  "smoke_effect": "8 burst +8 billow unique 256px frames with five independently staggered runtime clouds"
+}

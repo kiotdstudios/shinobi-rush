@@ -8,7 +8,7 @@ static var _art_set: SpriteSet
 static var _art_checked := false
 
 @export_enum("auto", "run", "sprint") var approach_animation: String = "auto"
-var streak: AnimatedSprite2D
+var streak: EvadeStreakFx
 var _last_evade := 0
 var _last_flicker := 0
 var actor: SpriteActor
@@ -17,6 +17,8 @@ var weapon_layer: KunaiWeaponVisual
 const CLOTH := Color("#5a3a2a")
 const LIMB := Color("#3a2a1a")
 const SKIN := Color("#8a4a3a")
+const DEATH_CLIP := 0.667
+const DEATH_FADE_DELAY := 1.6
 const DEAD_TINT := Color("#555555")
 const MOVING_STATES := [Bandit.State.APPROACH, Bandit.State.EVADE, Bandit.State.PATROL, Bandit.State.SEARCH, Bandit.State.RETURN, Bandit.State.REPOSITION]
 const SLASH_COLOR := Color(1.0, 0.85, 0.6, 0.9)
@@ -40,25 +42,38 @@ func _ready() -> void:
 		_art_set = SpriteSet.parse(FileAccess.get_file_as_string(ART_PATH), ART_PATH)
 		if not _art_set.is_valid():
 			push_warning("Bandit art unavailable: " + _art_set.first_error())
-	streak = AnimatedSprite2D.new()
-	streak.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	streak.sprite_frames = SpriteFrames.new()
-	streak.sprite_frames.set_animation_loop("default", false)
-	streak.sprite_frames.set_animation_speed("default", 30.0)
-	for i in 6:
-		streak.sprite_frames.add_frame("default", load("res://assets/vfx/ninja_evade/streak_%03d.png" % i))
-	streak.position = Vector2(0, -48)
-	streak.visible = false
-	add_child(streak)
 	_process(0.0)
 
 
 func _process(_delta: float) -> void:
 	if bandit == null or actor == null:
 		return
-	actor.visible = _art_set != null and _art_set.is_valid() and bandit.state != Bandit.State.DEAD
+	var art_ok := _art_set != null and _art_set.is_valid()
+	var dead := bandit.state == Bandit.State.DEAD
+	var damage_clip := ""
+	var damage_progress := 0.0
+	if art_ok and dead and _art_set.animations.has("death"):
+		damage_clip = "death"
+		damage_progress = clampf(bandit._death_time / DEATH_CLIP, 0.0, 1.0)  # holds the prone last frame
+	elif art_ok and bandit.state == Bandit.State.HIT_REACT and _art_set.animations.has(bandit.react_kind):
+		damage_clip = bandit.react_kind
+		damage_progress = bandit.react_progress()
+	actor.visible = art_ok and (not dead or damage_clip != "")
 	if not actor.visible:weapon_layer.visible=false
-	if actor.visible:
+	if damage_clip != "":
+		weapon_layer.visible = false
+		actor.show_animation_at(_art_set, damage_clip, SpriteSet.dir_name(bandit.facing8), damage_progress)
+		var dt := Color.WHITE
+		if bandit._hit_flash_timer > 0.0:
+			dt = Bandit.HIT_FLASH
+		elif dead and bandit._death_time > DEATH_CLIP + DEATH_FADE_DELAY:
+			dt.a = clampf(1.0 - (bandit._death_time - DEATH_CLIP - DEATH_FADE_DELAY) / 0.8, 0.0, 1.0)
+		actor.modulate = dt
+		# Squash on impact, settles over the first quarter of the clip.
+		var punch := clampf(1.0 - damage_progress * 4.0, 0.0, 1.0) if not dead else 0.0
+		actor.scale = Vector2(1.0 + 0.12 * punch, 1.0 - 0.12 * punch)
+	elif actor.visible:
+		actor.scale = Vector2.ONE
 		var combat_pose := _show_kunai_pose()
 		var throw_progress := bandit.get_throw_progress()
 		var moving := bandit.state in MOVING_STATES and bandit.velocity.length_squared() > 1.0
@@ -93,28 +108,17 @@ func _process(_delta: float) -> void:
 			tint = Color(1.0, 1.0 - 0.55 * tell, 1.0 - 0.55 * tell)  # reddens as the swing nears
 		elif bandit.state == Bandit.State.RETREAT and tell > 0.0:
 			tint = Color(1.0 - 0.3 * tell, 0.9, 1.0)  # cold flash before the flicker
-		if bandit.flicker_hopping:
-			tint.a = 0.12  # mid-flicker the body is barely there
 		actor.modulate = tint
 		weapon_layer.modulate=tint
-	if streak != null:
-		if bandit.evade_count != _last_evade:
-			_last_evade = bandit.evade_count
-			streak.rotation = bandit.velocity.angle()
-			streak.visible = true
-			streak.play("default")
-			streak.set_frame_and_progress(0, 0.0)
-		if bandit.flicker_count != _last_flicker:
-			_last_flicker = bandit.flicker_count
-			streak.rotation = bandit._retreat_hop_velocity.angle()
-			streak.visible = true
-			streak.play("default")
-			streak.set_frame_and_progress(0, 0.0)
-		if bandit.state != Bandit.State.EVADE and bandit.state != Bandit.State.RETREAT:
-			streak.visible = false
-		elif bandit.state == Bandit.State.RETREAT and not streak.is_playing():
-			streak.visible = false
-		streak.speed_scale = 0.0 if bandit._hitstop_timer > 0.0 else 1.0
+	if bandit.evade_count != _last_evade:
+		_last_evade = bandit.evade_count
+		streak = EvadeStreakFx.spawn(bandit,bandit.velocity)
+	if bandit.flicker_count != _last_flicker:
+		_last_flicker = bandit.flicker_count
+		streak = EvadeStreakFx.spawn(bandit,bandit._retreat_hop_velocity)
+	if is_instance_valid(streak) and bandit.state in [Bandit.State.HIT_REACT,Bandit.State.DEAD]:
+		streak.finish(true)
+		streak.visible=false
 	queue_redraw()
 
 
