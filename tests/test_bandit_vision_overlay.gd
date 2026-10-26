@@ -695,8 +695,26 @@ func _clear_dust(root: Node) -> void:
 			c.free()
 
 
+## Wait until no node comes or goes for 20 frames (capped), so the reading only sees what the toggle does.
+func _settle_nodes() -> void:
+	var last := Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
+	var steady := 0
+	for i in 600:
+		await tree.process_frame
+		var now := Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
+		steady = steady + 1 if now == last else 0
+		last = now
+		if steady >= 20:
+			return
+
+
 func _test_toggle_stress(root: Node) -> void:
+	# _test_moving leaves the Bandit mid-fight: his landing kunai (-> recovery pickups) and dodge streaks
+	# would come and go inside the +-2 node window below. Pause his AI only while counting nodes.
+	var ai_was := bandit.is_physics_processing()
+	bandit.set_physics_process(false)
 	tog.set_on(false)
+	await _settle_nodes()
 	_clear_dust(root)
 	await _frames(3)
 	var base_nodes := Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
@@ -724,6 +742,7 @@ func _test_toggle_stress(root: Node) -> void:
 	var before := BanditVisionRegion.compute_count
 	await _frames(30)
 	ck.call("vision toggles: OFF computes nothing in 30 frames", BanditVisionRegion.compute_count == before)
+	bandit.set_physics_process(ai_was)
 
 
 # ------------------------------------------------------------------------------------------------ input / camera / panels
