@@ -1,0 +1,26 @@
+{
+  "normal": {
+    "frames": 142,
+    "fps": 12.5,
+    "source": "Real Chromium compositor recording, 25FPS video sampled at12.5FPS; no interpolation",
+    "crop": [
+      360,
+      160,
+      920,
+      560
+    ],
+    "speed": 1
+  },
+  "half-speed": {
+    "frames": 282,
+    "fps": 12.5,
+    "source": "Real Chromium compositor recording, 25FPS video sampled at12.5FPS; no interpolation",
+    "crop": [
+      360,
+      160,
+      920,
+      560
+    ],
+    "speed": 0.5
+  }
+}

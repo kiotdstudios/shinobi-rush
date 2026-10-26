@@ -1,0 +1,105 @@
+{
+  "schema": "shinobi_waterlife_v1",
+  "generator": "built-in image_gen; deterministic chroma cleanup, connected component extraction, shared nearest scaling and translation",
+  "texture_filter": "nearest",
+  "grid": [
+    72,
+    36
+  ],
+  "clips": {
+    "splash": {
+      "frames": 16,
+      "frame_size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        96
+      ],
+      "fps": 24,
+      "loop": false
+    },
+    "feet-chakra": {
+      "frames": 16,
+      "frame_size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        96
+      ],
+      "fps": 24,
+      "loop": true
+    },
+    "plants": {
+      "frames": 6,
+      "frame_size": [
+        72,
+        72
+      ],
+      "anchor": [
+        36,
+        36
+      ],
+      "variants": [
+        "single_pad",
+        "double_pad",
+        "triple_pad",
+        "white_lotus",
+        "lilac_lotus",
+        "lotus_bud"
+      ],
+      "motion": "subpixel accumulation, rounded bob; 0.7px sway / 0.65px heave, +/-0.018rad roll"
+    },
+    "frog": {
+      "frames": 16,
+      "frame_size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        104
+      ],
+      "runtime_scale": 0.5,
+      "beats": {
+        "arrival": [
+          0,
+          3
+        ],
+        "settle": [
+          4,
+          5
+        ],
+        "tongue": [
+          6,
+          10
+        ],
+        "recovery": [
+          11,
+          11
+        ],
+        "departure": [
+          12,
+          15
+        ]
+      },
+      "runtime_duration_seconds": 4.8
+    },
+    "fly": {
+      "size": [
+        9,
+        7
+      ],
+      "independent": true
+    }
+  },
+  "frog_rarity": {
+    "denominator": 1000000,
+    "winning_integer": 0,
+    "roll_unit": "one continuous eligible water visit with a nearby lily; rearm after >=10 uninterrupted seconds dry",
+    "preview": "forced only inside isolated waterlife=review scene"
+  }
+}

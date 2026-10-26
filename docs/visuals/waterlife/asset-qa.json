@@ -1,0 +1,39 @@
+{
+  "splash": {
+    "unique_frames": 16,
+    "frames": 16,
+    "edge_touch_frames": [],
+    "alpha": true,
+    "sha256": "69ada3523558ef469399c50a32d1601232c5d2dc0d15d940bc1d040bcffd9e29"
+  },
+  "feet-chakra": {
+    "unique_frames": 16,
+    "frames": 16,
+    "edge_touch_frames": [],
+    "alpha": true,
+    "sha256": "cca96bf69496e0e2f1824ad7b1ed52f2c7352da58ed4e7b6d4299117d78bb722"
+  },
+  "plants": {
+    "unique_frames": 6,
+    "frames": 6,
+    "edge_touch_frames": [],
+    "alpha": true,
+    "sha256": "4cf58527eb9cc7043cd93fe0060d4eb63c2ea3f4d007b6a278c276f5fd362b29"
+  },
+  "frog": {
+    "unique_frames": 16,
+    "frames": 16,
+    "edge_touch_frames": [],
+    "alpha": true,
+    "sha256": "3cdcd06acdc098817c27732bf885272ce1c503b1371a886e7053b6c61f5fc45c"
+  },
+  "fly": {
+    "unique_frames": 1,
+    "frames": 1,
+    "edge_touch_frames": [
+      0
+    ],
+    "alpha": true,
+    "sha256": "8d15790e629264ad302754fdab9841d341a1bd68058102c802c7f0ca66a81fc5"
+  }
+}
