@@ -117,6 +117,8 @@ func tall_count() -> int:
 	return tall.get_used_cells().size() + edited_tall
 
 ## Shared animated material keeps editable sprites synchronized with the original field.
+const UNDERLAY := "res://assets/environment/blightwood_shorelines/tiles/shore_grass_15.png"
+
 func make_editable_sprite(id: String, pos: Vector2) -> Sprite2D:
 	var is_tall := id.begins_with("grass_tall_")
 	var sprite := Sprite2D.new()
@@ -130,6 +132,14 @@ func make_editable_sprite(id: String, pos: Vector2) -> Sprite2D:
 		edited_tall += 1
 	else:
 		edited_ground += 1
+		# The flat grass art sits ~12 px above its floor cell, so its bottom edge leaves a see-through sliver wherever a
+		# different floor tile (dirt, stone, water bank, cliff) starts right below. An opaque grass diamond under it fills that.
+		var under := Sprite2D.new()
+		under.name = "Underlay"
+		under.texture = load(UNDERLAY) as Texture2D
+		under.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		under.show_behind_parent = true
+		sprite.add_child(under)
 	return sprite
 
 func removed_editable(id: String) -> void:

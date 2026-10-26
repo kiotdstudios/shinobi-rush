@@ -230,6 +230,7 @@ var _serial := 0
 var loaded_version := 0
 ## True once the authored starting-area layer is part of this layout (it is saved, so the owner's edits to it stick).
 var shrine_section_applied := false
+var blightwood_map_applied := false  ## the Blightwood starting map was laid once into this layout
 ## Undo / redo. Each group is one editor action (a click, a whole paint stroke, a fill) stored as small ops:
 ## ["add", id, pos] | ["remove", id, pos] | ["move", id, from, to]. Nothing else is stored, so it stays cheap.
 const UNDO_LIMIT := 200
@@ -1079,7 +1080,7 @@ func to_dict() -> Dictionary:
 	var items: Array = []
 	for o in objects:
 		items.append({"id": o.id, "x": snappedf(o.pos.x, 0.01), "y": snappedf(o.pos.y, 0.01)})
-	return {"version": SAVE_VERSION, "shrine_section": shrine_section_applied, "items": items}
+	return {"version": SAVE_VERSION, "shrine_section": shrine_section_applied, "blightwood_map": blightwood_map_applied, "items": items}
 
 
 func to_json_string() -> String:
@@ -1125,6 +1126,7 @@ func load_dict(data: Dictionary) -> int:
 	clear_all(false)
 	loaded_version = int(data.get("version", 1))
 	shrine_section_applied = bool(data.get("shrine_section", false))
+	blightwood_map_applied = bool(data.get("blightwood_map", false))
 	if int(data.get("version", 1)) < 2:
 		for i in WorldScale.TREE_POSITIONS.size():
 			add("tree_%d" % (i + 1), WorldScale.TREE_POSITIONS[i], false)
