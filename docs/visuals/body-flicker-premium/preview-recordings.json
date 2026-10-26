@@ -1,0 +1,39 @@
+{
+  "source": "real compositor recording; no motion interpolation",
+  "extraction_fps": 24,
+  "source_fps": 25,
+  "size": [
+    500,
+    524
+  ],
+  "gameplay_autoplay_checked_minimum_dodges": 8,
+  "clips": {
+    "before": {
+      "mode": "Before",
+      "speed": "Normal",
+      "recorded_ms": 7400,
+      "extract_tail_seconds": 7.2,
+      "source": "Playwright real compositor recording, 25 FPS; extract 24 FPS, no interpolation",
+      "extracted_frames": 174,
+      "gif_ms": 7250
+    },
+    "normal": {
+      "mode": "After",
+      "speed": "Normal",
+      "recorded_ms": 7400,
+      "extract_tail_seconds": 7.2,
+      "source": "Playwright real compositor recording, 25 FPS; extract 24 FPS, no interpolation",
+      "extracted_frames": 174,
+      "gif_ms": 7250
+    },
+    "half-speed": {
+      "mode": "After",
+      "speed": "Half",
+      "recorded_ms": 14800,
+      "extract_tail_seconds": 14.600000000000001,
+      "source": "Playwright real compositor recording, 25 FPS; extract 24 FPS, no interpolation",
+      "extracted_frames": 352,
+      "gif_ms": 14660
+    }
+  }
+}

@@ -159,15 +159,17 @@ const CATALOG := {
 	"temple_floor_corner_right": {"label": "Corner Right", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_right"},
 	"temple_floor_corner_bottom": {"label": "Corner Bottom", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_bottom"},
 	"temple_floor_corner_left": {"label": "Corner Left", "kind": "ground", "group": "Temple ground", "dir": "res://assets/environment/kosen_courtyard/floor_tiles/", "file": "floor9_corner_left"},
+	"player_spawn": {"label": "Player spawn", "kind": "spawn"},
 	"kunai": {"label": "Kunai (white glow)", "kind": "pickup", "gourd": "kunai"},
 	"health_gourd": {"label": "Health gourd +25%", "kind": "pickup", "gourd": "health"},
 	"chakra_gourd": {"label": "Chakra gourd +25%", "kind": "pickup", "gourd": "chakra"},
 	"tag_bomb": {"label": "Tag bomb (explosive)", "kind": "pickup", "gourd": "tag_bomb"},
 	"smoke_tag_bomb": {"label": "Smoke tag bomb", "kind": "pickup", "gourd": "smoke_tag_bomb"},
 	"paper_tag": {"label": "Paper tag (throwable bomb)", "kind": "pickup", "gourd": "paper_tag"},
+	"bandit_l1": {"label": "Bandit (Level 1 robber)", "kind": "bandit", "level": 1},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
+const CATEGORIES := [["Player spawn", ["player_spawn"]], ["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Bridges", ["bridge_short_wood_u", "bridge_short_wood_v", "bridge_medium_wood_u", "bridge_medium_wood_v", "bridge_long_wood_u", "bridge_long_wood_v", "bridge_short_rope_u", "bridge_short_rope_v", "bridge_medium_rope_u", "bridge_medium_rope_v", "bridge_long_rope_u", "bridge_long_rope_v", "bridge_short_damaged_u", "bridge_short_damaged_v", "bridge_medium_damaged_u", "bridge_medium_damaged_v", "bridge_long_damaged_u", "bridge_long_damaged_v"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai"]], ["Enemies", ["bandit_l1"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -212,6 +214,11 @@ static func def_of(id: String) -> Dictionary:
 		if n >= 0 and n < WorldScale.BLOCKS.size() and not WorldScale.is_placeholder_block(n):
 			var b: Array = WorldScale.BLOCKS[n]
 			return {"label": "Wall" if float(b[2]) >= WorldScale.WALL_ART_MIN_HEIGHT else "Block", "kind": "block", "footprint": b[1], "height": float(b[2])}
+	if id.begins_with("bridge_") and not Bridge.assembly(id.substr(7)).is_empty():
+		var a: Dictionary = Bridge.assembly(id.substr(7))
+		var d := {"label": "%s %s %s" % [str(a.id).get_slice("_", 0).capitalize(), str(a.style).capitalize(), str(a.axis).to_upper()], "kind": "bridge", "assembly": str(a.id)}
+		d["footprint"] = Bridge.deck_bounds(a).size
+		return d
 	return {}
 
 var arena: TrainingArena
@@ -233,6 +240,7 @@ var _pending: Array = []
 var _replaying := false
 var _recording := true
 var hidden_types: Dictionary = {}
+var locked_types: Dictionary = {}  ## category -> true: cannot be picked, dragged, erased or painted over
 
 
 static func tree_info(index: int) -> Dictionary:
@@ -310,7 +318,7 @@ static func footprint_of(id: String) -> Vector2:
 	var def := def_of(id)
 	if def.kind == "wall":
 		return wall_rect(def, Vector2.ZERO).size
-	if def.kind == "pickup":
+	if def.kind in ["pickup", "spawn", "bandit"]:
 		return PICKUP_FOOTPRINT
 	return Vector2(72, 36) if def.kind in ["grass", "ground"] else WorldScale.TREE_TRUNK_FOOTPRINT if def.kind in ["tree", "ashen_tree"] else def.footprint
 
@@ -320,6 +328,8 @@ static func footprint_rect(id: String, pos: Vector2) -> Rect2:
 	var fp := footprint_of(id)
 	if def_of(id).kind == "wall":
 		return wall_rect(def_of(id), pos)
+	if def_of(id).kind == "bridge":
+		return Rect2(pos + Bridge.deck_bounds(Bridge.assembly(str(def_of(id).assembly))).position, fp)
 	if def_of(id).kind in ["grass", "ground"]:
 		return Rect2(pos - fp * 0.5, fp)  # a grass tile is centred on its diamond cell, not standing on it
 	return Rect2(pos.x - fp.x * 0.5, pos.y - fp.y, fp.x, fp.y)
@@ -332,6 +342,10 @@ static var _art_cache: Dictionary = {}
 static func art_texture(id: String, pos: Vector2) -> Array:
 	var def := def_of(id)
 	match String(def.kind):
+		"bridge":
+			var a: Dictionary = Bridge.assembly(str(def.assembly))
+			var sock: Array = a.start_socket
+			return [load(str(a.preview)) as Texture2D, pos - Vector2(float(sock[0]), float(sock[1]))]
 		"dynamic_shrine":
 			return [load(DynamicShrine.DIR + "assembled.png") as Texture2D,pos-DynamicShrine.FOOT]
 		"water_fx":
@@ -356,6 +370,12 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 			return [load(str(info.texture)) as Texture2D, pos - Vector2(float(info.anchor[0]), float(info.anchor[1]))]
 		"wall":
 			return [wall_texture(id), pos - (def.anchor as Vector2)]
+		"spawn":
+			return [SpawnMarker.icon(), pos - SpawnMarker.FOOT]
+		"bandit":
+			var btex: Texture2D = load("res://assets/characters/bandit/sprites/idle/S_000.png")
+			if btex != null:
+				return [btex, pos - Vector2(64, 116)]
 		"pickup":
 			var icon := HealthGourd.icon(str(def.get("gourd", "health")))
 			if icon != null:
@@ -427,8 +447,12 @@ static func hit_rect(id: String, pos: Vector2) -> Rect2:
 		return Rect2(pos - Vector2(36, 18), Vector2(72, 36))
 	if def.kind == "grass":
 		return Rect2(pos - Vector2(56, 136 if def.tall else 84), Vector2(112, 160 if def.tall else 112))
+	if def.kind == "spawn":
+		return Rect2(pos - SpawnMarker.FOOT, Vector2(SpawnMarker.SIZE))
 	if def.kind == "pickup":
 		return Rect2(pos.x - 40.0, pos.y - 140.0, 80.0, 150.0)
+	if def.kind == "bandit":
+		return Rect2(pos.x - 36.0, pos.y - 104.0, 72.0, 112.0)
 	if def.kind == "blight_light":
 		var info := blight_info(int(def.light))
 		return Rect2(pos-Vector2(float(info.foot_anchor[0]), float(info.foot_anchor[1])), Vector2(float(info.size[0]),float(info.size[1])))
@@ -453,7 +477,7 @@ func can_place(id: String, pos: Vector2) -> bool:
 	var rect := footprint_rect(id, pos).grow(8.0)
 	if not arena.bounds.encloses(rect):
 		return false
-	if def_of(id).kind in ["grass", "ground", "pickup", "fireflies", "water_fx"]:
+	if def_of(id).kind in ["grass", "ground", "pickup", "spawn", "fireflies", "water_fx", "bridge", "bandit"]:
 		return true  # grass and floating pickups never block anyone
 	var actors: Array[Node] = []
 	actors.append_array(get_tree().get_nodes_in_group("player"))
@@ -468,9 +492,24 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	if arena == null or def_of(id).is_empty():
 		return {}
 	var def := def_of(id)
+	if def.kind == "spawn":
+		for o in objects:
+			if o.id == id:  # there is exactly one spawn: placing again moves it
+				move(o, pos, commit)
+				return o
 	var nodes: Array[Node] = []
 	_serial += 1
-	if def.kind == "dynamic_shrine":
+	if def.kind == "spawn":
+		var marker := SpawnMarker.new()
+		marker.position = pos
+		arena.add_child(marker)
+		nodes = [marker]
+	elif def.kind == "bridge":
+		var bridge := Bridge.make(str(def.assembly))
+		bridge.position = pos
+		arena.add_child(bridge)
+		nodes = [bridge]
+	elif def.kind == "dynamic_shrine":
 		var shrine := DynamicShrine.new()
 		shrine.name = "PlacedDynamicShrine%d" % _serial
 		shrine.position = pos
@@ -562,6 +601,8 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		nodes = [front, rear]
 	elif def.kind == "wall":
 		nodes = _make_wall(id, pos)
+	elif def.kind == "bandit":
+		nodes = [make_bandit(pos, int(def.get("level", 1)), "PlacedBandit%d" % _serial)]
 	elif def.kind == "pickup":
 		var gourd := HealthGourd.new()
 		gourd.kind = str(def.get("gourd", "health"))
@@ -577,6 +618,10 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		nodes = [tree, _make_trunk(pos)]
 	var obj := {"id": id, "pos": pos, "nodes": nodes}
 	objects.append(obj)
+	if def.kind == "bandit":
+		(nodes[0] as Bandit).defeated.connect(_on_placed_bandit_defeated.bind(obj))
+	if def.kind in ["ground", "grass"] or def.has("water_role"):
+		Bridge.raise_floors(arena.get_node_or_null("Ground"))
 	_record(["add", id, pos])
 	_apply_visibility(obj)
 	if commit:
@@ -634,6 +679,58 @@ static func _wall_slice_transform(def: Dictionary, pos: Vector2, x0: float, w: f
 ## [slice sprites..., collider]. Each slice sorts at its OWN local ground y (see _wall_slice_count/
 ## _wall_slice_transform); the collider stays a single thin parallelogram along the whole run --
 ## only the VISUAL sort is diagonal-aware, collision is already geometry-correct as-is.
+## A builder-placed Bandit: a real Bandit standing at `pos` (its home), at the chosen intelligence level.
+## It is frozen while the world is being edited and wakes up in play (see `set_bandits_frozen`).
+func make_bandit(pos: Vector2, level: int, node_name: String) -> Bandit:
+	var packed := load("res://scenes/enemy/bandit.tscn") as PackedScene
+	var bandit := packed.instantiate() as Bandit
+	bandit.name = node_name
+	bandit.position = pos
+	bandit.set_meta("placed", true)
+	arena.add_child(bandit)
+	bandit.set_home(pos)
+	bandit.set_intelligence_level(level)
+	if arena.nav != null:
+		bandit.nav = arena.nav
+	bandit.process_mode = Node.PROCESS_MODE_DISABLED if bandits_frozen else Node.PROCESS_MODE_INHERIT
+	return bandit
+
+
+var bandits_frozen := false
+
+
+## True when the layout has at least one placed Bandit (then the arena's default robber is not spawned).
+func has_bandits() -> bool:
+	for o in objects:
+		if def_of(o.id).kind == "bandit":
+			return true
+	return false
+
+
+## Freeze (editing) or wake (playing) every placed Bandit. They stay visible so the builder can show where they stand.
+func set_bandits_frozen(frozen: bool) -> void:
+	bandits_frozen = frozen
+	for o in objects:
+		if def_of(o.id).kind != "bandit":
+			continue
+		for n: Node in o.nodes:
+			if is_instance_valid(n):
+				n.process_mode = Node.PROCESS_MODE_DISABLED if frozen else Node.PROCESS_MODE_INHERIT
+
+
+## A defeated placed Bandit is replaced a few seconds later by a fresh one at its home.
+func _on_placed_bandit_defeated(obj: Dictionary) -> void:
+	await arena.get_tree().create_timer(TrainingArena.BANDIT_RESPAWN_DELAY).timeout
+	if not is_inside_tree() or not objects.has(obj):
+		return
+	var old: Node = obj.nodes[0]
+	var fresh := make_bandit(obj.pos, int(def_of(obj.id).get("level", 1)), "PlacedBandit%d" % _serial)
+	fresh.defeated.connect(_on_placed_bandit_defeated.bind(obj))
+	obj.nodes = [fresh]
+	if is_instance_valid(old):
+		old.queue_free()
+
+
 func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 	var def := def_of(id)
 	var col: Vector2 = def.col
@@ -734,7 +831,7 @@ func adopt_grass() -> int:
 
 static func type_of(id: String) -> String:
 	var def := def_of(id)
-	return "Dynamic shrine" if def.kind == "dynamic_shrine" else "River water" if def.kind == "water_fx" else "Blightwood lights" if def.kind in ["blight_light", "fireflies"] else "Ashen fire" if def.kind == "ashen_fire" else "Volcanic trees" if def.kind == "ashen_tree" else "Blightwood rocks" if def.get("rock", false) else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Temple walls"
+	return "Player spawn" if def.kind == "spawn" else "Bridges" if def.kind == "bridge" else "Dynamic shrine" if def.kind == "dynamic_shrine" else "River water" if def.kind == "water_fx" else "Blightwood lights" if def.kind in ["blight_light", "fireflies"] else "Ashen fire" if def.kind == "ashen_fire" else "Volcanic trees" if def.kind == "ashen_tree" else "Blightwood rocks" if def.get("rock", false) else "Landmarks" if def.get("landmark", false) else str(def.get("group", "Ground / paths")) if def.kind == "ground" else "Pickups" if def.kind == "pickup" else "Enemies" if def.kind == "bandit" else "Tall grass" if def.kind == "grass" and def.tall else "Grass" if def.kind == "grass" else "Trees" if def.kind == "tree" else "Fences" if def.get("fence", false) else "Temple walls" if def.kind == "wall" else "Temple walls"
 
 
 func type_visible(id: String) -> bool:
@@ -745,6 +842,28 @@ func _apply_visibility(obj: Dictionary) -> void:
 	for n: Node in obj.nodes:
 		if is_instance_valid(n) and n is CanvasItem:
 			(n as CanvasItem).visible = type_visible(obj.id)
+
+
+func type_locked(id: String) -> bool:
+	return bool(locked_types.get(type_of(id), false))
+
+
+func set_type_locked(category: String, locked: bool) -> void:
+	locked_types[category] = locked
+
+
+## Every unlocked, visible object whose picture centre lies inside `area` (box select). Floor tiles count by tile centre.
+func objects_in_rect(area: Rect2) -> Array:
+	var out: Array = []
+	for o in objects:
+		if not type_visible(o.id) or type_locked(o.id):
+			continue
+		var c: Vector2 = o.pos
+		if not is_floor_tile(o.id):
+			c = art_rect(o.id, o.pos).get_center()
+		if area.has_point(c):
+			out.append(o)
+	return out
 
 
 func set_type_visible(category: String, shown: bool) -> void:
@@ -829,6 +948,9 @@ func paint_cell(id: String, cell: Vector2) -> bool:
 		return false
 	if is_floor_tile(id):
 		var old := floor_tiles_in_cell(cell)
+		for o in old:
+			if type_locked(o.id):
+				return false
 		if old.size() == 1 and old[0].id == id and (old[0].pos as Vector2).distance_squared_to(cell) < 4.0:
 			return false
 		for o in old:
@@ -838,6 +960,27 @@ func paint_cell(id: String, cell: Vector2) -> bool:
 			if o.id == id and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
 				return false
 	return not add(id, cell, false).is_empty()
+
+
+## Drop a stamp (items {id, x, y} relative to `origin`). Floor pieces replace the floor under them; props are placed
+## only where `can_place` allows. One undo step. Returns the new objects.
+func paste(items: Array, origin: Vector2) -> Array:
+	var made: Array = []
+	for it in items:
+		var id: String = it.id
+		if def_of(id).is_empty() or def_of(id).kind == "spawn":
+			continue
+		var pos := origin + Vector2(float(it.x), float(it.y))
+		if is_floor_tile(id):
+			if paint_cell(id, lattice_center(pos)):
+				made.append(floor_tiles_in_cell(lattice_center(pos)).back())
+		elif can_place(id, pos):
+			var o := add(id, pos, false)
+			if not o.is_empty():
+				made.append(o)
+	if not made.is_empty():
+		_changed()
+	return made
 
 
 ## Drop floor tiles stacked exactly on top of each other (older saves re-added the starting area on every boot).
@@ -906,6 +1049,8 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 	else:
 		for n: Node2D in nodes:
 			n.position = pos
+			if n is Bandit:
+				(n as Bandit).set_home(pos)
 	if commit:
 		_changed()
 
@@ -920,7 +1065,7 @@ func hit_test(point: Vector2) -> Dictionary:
 	var hit_y := -INF
 	for i in objects.size():
 		var o := objects[i]
-		if not type_visible(o.id) or def_of(o.id).kind in ["grass", "ground"]:
+		if not type_visible(o.id) or type_locked(o.id) or def_of(o.id).kind in ["grass", "ground"]:
 			continue
 		if not (art_pixel_hit(o.id, o.pos, point) or footprint_rect(o.id, o.pos).has_point(point)):
 			continue
@@ -932,7 +1077,7 @@ func hit_test(point: Vector2) -> Dictionary:
 	var closest: Dictionary = {}
 	var distance := INF
 	for o in objects:
-		if def_of(o.id).kind != "grass" or not type_visible(o.id):
+		if def_of(o.id).kind != "grass" or not type_visible(o.id) or type_locked(o.id):
 			continue
 		if art_pixel_hit(o.id, o.pos, point):
 			var d := point.distance_squared_to(o.pos)
@@ -946,7 +1091,7 @@ func hit_test(point: Vector2) -> Dictionary:
 	var best_norm := INF
 	for i in range(objects.size() - 1, -1, -1):
 		var o := objects[i]
-		if def_of(o.id).kind == "ground" and type_visible(o.id):
+		if def_of(o.id).kind == "ground" and type_visible(o.id) and not type_locked(o.id):
 			var delta: Vector2 = point - o.pos
 			var norm := absf(delta.x) / 36.0 + absf(delta.y) / 18.0
 			if norm <= 1.0 and norm < best_norm - 0.0001:
@@ -962,7 +1107,7 @@ func obstacles() -> Array:
 		var kind: String = def_of(o.id).kind
 		if kind == "wall":
 			out.append_array(_wall_obstacles(def_of(o.id), o.pos))
-		elif kind not in ["grass", "ground", "pickup", "fireflies", "water_fx"]:
+		elif kind not in ["grass", "ground", "pickup", "spawn", "fireflies", "water_fx", "bridge", "bandit"]:
 			out.append([o.pos, footprint_of(o.id), 0.0])
 	return out
 
@@ -1057,7 +1202,12 @@ func load_dict(data: Dictionary) -> int:
 	var made := 0
 	var spawn := Vector2(0, 135)
 	if arena != null and arena.has_node("Spawn"):
-		spawn = (arena.get_node("Spawn") as Node2D).position
+		if _default_spawn == Vector2.INF:
+			_default_spawn = (arena.get_node("Spawn") as Node2D).position
+		spawn = _default_spawn
+	for item in data.get("items", []):
+		if typeof(item) == TYPE_DICTIONARY and str(item.get("id", "")) == "player_spawn" and typeof(item.get("x")) in [TYPE_FLOAT, TYPE_INT] and typeof(item.get("y")) in [TYPE_FLOAT, TYPE_INT]:
+			spawn = Vector2(float(item.x), float(item.y))  # keep other pieces clear of where the player will really stand
 	for item in data.get("items", []):
 		if typeof(item) != TYPE_DICTIONARY or def_of(str(item.get("id", ""))).is_empty():
 			continue
@@ -1066,13 +1216,14 @@ func load_dict(data: Dictionary) -> int:
 		var id := str(item.id)
 		var pos := Vector2(float(item.x), float(item.y))
 		var rect := footprint_rect(id, pos)
-		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind not in ["grass", "ground", "pickup", "fireflies", "water_fx"] and rect.grow(60.0).has_point(spawn)):
+		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind not in ["grass", "ground", "pickup", "spawn", "fireflies", "water_fx", "bridge", "bandit"] and rect.grow(60.0).has_point(spawn)):
 			continue
 		if not add(id, pos, false).is_empty():
 			made += 1
 	_recording = was_recording
 	clear_history()
 	_changed(false)
+	_apply_spawn(true)
 	return made
 
 
@@ -1107,7 +1258,7 @@ func _overlaps_solid(rect: Rect2) -> bool:
 			return true
 	for o in objects:
 		var kind: String = def_of(o.id).kind
-		if kind not in ["grass", "pickup", "fireflies"] and rect.intersects(footprint_rect(o.id, o.pos)):
+		if kind not in ["grass", "pickup", "spawn", "fireflies", "bridge", "bandit"] and rect.intersects(footprint_rect(o.id, o.pos)):
 			return true
 	return false
 
@@ -1163,7 +1314,7 @@ func _gourd_spot_ok(pos: Vector2, taken: Array[Vector2]) -> bool:
 			return false
 	var gourd_box := Rect2(pos.x - 40.0, pos.y - 140.0, 80.0, 150.0)  # what a click on the gourd would hit
 	for o in objects:
-		if def_of(o.id).kind in ["grass", "ground", "pickup", "fireflies", "water_fx"]:
+		if def_of(o.id).kind in ["grass", "ground", "pickup", "spawn", "fireflies", "water_fx", "bridge", "bandit"]:
 			continue
 		if footprint_rect(o.id, o.pos).grow(90.0).has_point(pos) or hit_rect(o.id, o.pos).grow(20.0).has_point(pos) or hit_rect(o.id, o.pos).intersects(gourd_box):
 			return false
@@ -1212,7 +1363,34 @@ func load_default_from_repo(path := DEFAULT_LAYOUT_PATH) -> int:
 
 
 
+## Where the player starts and respawns: the builder's spawn marker if one is placed, else the arena's own Spawn.
+var _default_spawn := Vector2.INF
+
+
+func spawn_point() -> Vector2:
+	for o in objects:
+		if def_of(o.id).kind == "spawn":
+			return o.pos
+	return _default_spawn
+
+
+func _apply_spawn(teleport := false) -> void:
+	if arena == null or not arena.has_node("Spawn"):
+		return
+	var marker := arena.get_node("Spawn") as Node2D
+	if _default_spawn == Vector2.INF:
+		_default_spawn = marker.position
+	var at := spawn_point()
+	marker.position = at
+	var player := get_tree().get_first_node_in_group("player") as PlayerController if is_inside_tree() else null
+	if player != null:
+		player.spawn_position = at
+		if teleport:
+			player.global_position = at
+
+
 func _changed(write := true) -> void:
+	_apply_spawn()
 	_flush_pending()
 	if arena != null:
 		arena.rebuild_nav()
