@@ -1,0 +1,36 @@
+[
+  {
+    "name": "normal",
+    "frames": 50,
+    "duration_s": 4.0,
+    "size": [
+      400,
+      200
+    ],
+    "crop": [
+      870,
+      350,
+      1270,
+      550
+    ],
+    "source": "actual Chromium compositor video; 12.5 FPS sampled; shared palette; native pixel crop near the eastern tree; no interpolation",
+    "bytes": 3480915
+  },
+  {
+    "name": "half-speed",
+    "frames": 100,
+    "duration_s": 8.0,
+    "size": [
+      400,
+      200
+    ],
+    "crop": [
+      870,
+      350,
+      1270,
+      550
+    ],
+    "source": "actual Chromium compositor video; 12.5 FPS sampled; shared palette; native pixel crop near the eastern tree; no interpolation",
+    "bytes": 6797834
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "verified_at": "2026-10-26T21:22:26.732733+00:00",
+  "godot": "4.7.2 pinned Windows console",
+  "checks": {
+    "sixty_source_textures": true,
+    "all_rgba_and_sized": true,
+    "hashes_match": true,
+    "collect_visible_350ms": true,
+    "collect_total_400ms": true,
+    "no_gameplay_bound": true,
+    "godot_import": true
+  },
+  "output": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\n\nRYO_ART_IMPORT: 5 animation tracks / 70 playback frames / 60 source textures / terminal clear / 0.4s collect / additive material: PASS"
+}

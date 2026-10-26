@@ -1,0 +1,169 @@
+{
+  "unique_variants": 16,
+  "frame_size": [
+    128,
+    128
+  ],
+  "checks": [
+    {
+      "variant": 0,
+      "bbox": [
+        12,
+        52,
+        117,
+        76
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 1,
+      "bbox": [
+        10,
+        51,
+        119,
+        77
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 2,
+      "bbox": [
+        11,
+        47,
+        117,
+        81
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 3,
+      "bbox": [
+        15,
+        49,
+        114,
+        80
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 4,
+      "bbox": [
+        10,
+        51,
+        118,
+        77
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 5,
+      "bbox": [
+        9,
+        48,
+        119,
+        81
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 6,
+      "bbox": [
+        9,
+        50,
+        119,
+        78
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 7,
+      "bbox": [
+        10,
+        45,
+        118,
+        83
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 8,
+      "bbox": [
+        11,
+        48,
+        118,
+        80
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 9,
+      "bbox": [
+        15,
+        50,
+        114,
+        78
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 10,
+      "bbox": [
+        9,
+        50,
+        119,
+        79
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 11,
+      "bbox": [
+        10,
+        50,
+        118,
+        78
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 12,
+      "bbox": [
+        10,
+        51,
+        119,
+        77
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 13,
+      "bbox": [
+        9,
+        52,
+        119,
+        76
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 14,
+      "bbox": [
+        9,
+        50,
+        119,
+        78
+      ],
+      "edge_contact": false
+    },
+    {
+      "variant": 15,
+      "bbox": [
+        10,
+        50,
+        118,
+        78
+      ],
+      "edge_contact": false
+    }
+  ]
+}

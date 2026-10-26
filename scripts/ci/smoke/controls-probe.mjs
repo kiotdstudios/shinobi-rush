@@ -94,7 +94,18 @@ try {
   rec('bandit-sense-telemetry', typeof sense.bandit_senses_player === 'boolean' && Number.isFinite(sense.bandit_sense_radius) && sense.bandit_sense_radius > 0,
     `bandit_senses_player=${sense.bandit_senses_player} (bool) bandit_sense_radius=${sense.bandit_sense_radius}`);
 
-  // walk into the wall: hold W until the position stops changing (3 equal samples), then require it moved first
+  // The authored Blightwood map can leave the preceding D/sprint path already touching the north wall.
+  // Back away with REAL input first, so this remains an approach + collision test, not an already-blocked check.
+  const wallApproach = await state();
+  await page.keyboard.down('KeyS');
+  const approachStart = Date.now();
+  while (Date.now() - approachStart < 15000 && (await state()).y < wallApproach.y + 75) await sleep(250);
+  await page.keyboard.up('KeyS');
+  await sleep(750);
+  const approachY = (await state()).y;
+  rec('wall-approach-clearance', approachY > wallApproach.y + 50,
+    `real S input backs away y ${wallApproach.y.toFixed(1)} -> ${approachY.toFixed(1)} before W`);
+  // Hold W until the position stops changing (3 equal samples), then require it moved first.
   const startY = (await state()).y;
   await page.keyboard.down('KeyW');
   let still = 0; let prev = await state(); const tw = Date.now();
