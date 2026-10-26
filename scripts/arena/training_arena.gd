@@ -298,7 +298,9 @@ func _on_bandit_defeated(bandit: Bandit) -> void:
 
 ## Rebuild the bandit nav after the player-built layout changed; live enemies get the new grid at once.
 func rebuild_nav() -> void:
-	nav = ArenaNav.build(bounds, WorldScale.live_blocks() + (placed.obstacles() if placed != null else []))
+	# placed adopts every live Block as a "base_N" object, so its obstacles already cover the ones still
+	# standing -- adding live_blocks() again kept deleted walls (e.g. cleared by the map) solid in the nav.
+	nav = ArenaNav.build(bounds, placed.obstacles() if placed != null else WorldScale.live_blocks())
 	for e in get_tree().get_nodes_in_group("enemy"):
 		if "nav" in e:
 			e.nav = nav

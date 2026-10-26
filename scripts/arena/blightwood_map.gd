@@ -64,16 +64,16 @@ static func stair_landing() -> Array[Vector2]:
 static func props() -> Array:
 	var p: Array = []
 	p.append(["ancient_shrine", pw(640, 388)])
-	for b in [Vector2(765, 392), Vector2(1105, 424), Vector2(713, 582)]:
+	for b in [Vector2(765, 392), Vector2(1110, 424), Vector2(713, 582)]:
 		p.append(["blight_stone_brazier", pw(b.x, b.y)])
-	var rocks := [Vector2(545, 425), Vector2(875, 385), Vector2(800, 472), Vector2(985, 478), Vector2(835, 548), Vector2(650, 588)]
+	var rocks := [Vector2(545, 425), Vector2(875, 410), Vector2(800, 472), Vector2(972, 486), Vector2(835, 548), Vector2(650, 588)]
 	for i in rocks.size():
 		p.append(["blight_rock_0%d" % (i % 3 + 1), pw(rocks[i].x, rocks[i].y)])
-	p.append(["blight_stone_pagoda", pw(1010, 330)])
+	p.append(["blight_stone_pagoda", pw(1000, 333)])
 	p.append(["blight_wooden_post", pw(520, 470)])
 	p.append(["blight_fireflies", pw(800, 470)])
-	for t in [["tree_3", 90, 300], ["tree_4", 210, 380], ["tree_1", 150, 190], ["tree_2", 330, 300], ["tree_5", 60, 120], ["tree_4", 440, 215],
-			["tree_5", 1440, 110], ["tree_4", 540, 640], ["tree_3", 260, 590], ["tree_1", 1040, 235]]:
+	for t in [["tree_3", 90, 245], ["tree_4", 215, 380], ["tree_1", 150, 190], ["tree_2", 330, 300], ["tree_5", 60, 120], ["tree_4", 433, 222],
+			["tree_5", 1387, 163], ["tree_4", 536, 638], ["tree_3", 325, 553], ["tree_1", 992, 263]]:
 		p.append([t[0], pw(t[1], t[2])])
 	for g in [Vector2(580, 450), Vector2(480, 520), Vector2(1120, 470), Vector2(940, 600), Vector2(1030, 640), Vector2(290, 480)]:
 		p.append(["grass_tall_0%d" % (int(g.x + g.y) % 4), pw(g.x, g.y)])
@@ -100,15 +100,15 @@ static func stair_ledges() -> Array[Vector2]:
 ## Fences: [id, upper end]. "se" pieces run down-right from the point, "sw" pieces down-left.
 static func fences() -> Array:
 	return [
-		["fence_sw_3", pw(682, 210)],   # behind the shrine
+		["fence_sw_3", pw(661, 231)],   # behind the shrine
 		["fence_sw_3", pw(570, 300)],   # left of the shrine
-		["fence_se_4", pw(742, 208)],   # back right, down to the right brazier
-		["fence_se_3", pw(920, 300)],
-		["fence_sw_4", pw(432, 450)],   # far-left run to the stairs rock (mirrored: falls toward the cliff)
+		["fence_se_4", pw(802, 208)],   # back right, down to the right brazier
+		["fence_se_3", pw(939, 305)],
+		["fence_sw_4", pw(472, 450)],   # far-left run to the stairs rock (mirrored: falls toward the cliff)
 		["fence_se_3", pw(230, 440)],
 		["fence_se_4", pw(935, 540)],   # front right, toward the bridge
 		["fence_se_2", pw(1160, 500)],
-		["fence_se_4", pw(1215, 575)],
+		["fence_se_4", pw(1099, 544)],
 		["fence_se_3", pw(1020, 95)],   # top right, beside the stream
 		["fence_sw_1", pw(800, 880)],
 		["fence_sw_1", pw(1160, 880)],
