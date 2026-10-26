@@ -308,6 +308,7 @@ func set_open(v: bool) -> void:
 		return  # the map editor is for building only: it cannot be closed into a playable level
 	SpawnMarker.shown = v
 	open = v
+	placed.set_bandits_frozen(v or map_mode)
 	_set_camera_free(v)
 	panel.visible = v
 	tab.visible = not v
@@ -1145,13 +1146,14 @@ func _freeze_world() -> void:
 	if player == null:
 		return
 	_map_world_frozen = true
+	placed.set_bandits_frozen(true)
 	var hud := hud_bar()
 	if hud != null:
 		hud.visible = false
 	player.process_mode = Node.PROCESS_MODE_DISABLED
 	(player as CanvasItem).visible = false
 	for c in arena.get_children():
-		if c is Bandit:
+		if c is Bandit and not c.has_meta("placed"):
 			c.process_mode = Node.PROCESS_MODE_DISABLED
 			(c as CanvasItem).visible = false
 	_set_camera_free(true)
@@ -1791,6 +1793,10 @@ func _build_ui() -> void:
 				b.custom_minimum_size = Vector2(0,96)
 			elif def.kind == "ashen_tree":
 				b.icon = load(str(PlacedObjects.ashen_info(int(def.tree)).texture)) as Texture2D
+				b.add_theme_constant_override("icon_max_width", 64)
+				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "bandit":
+				b.icon = PlacedObjects.art_texture(id, Vector2.ZERO)[0] as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "bridge":
