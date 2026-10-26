@@ -337,7 +337,9 @@ func _on_bandit_defeated(bandit: Bandit, slot: int = 0) -> void:
 
 ## Rebuild the bandit nav after the player-built layout changed; live enemies get the new grid at once.
 func rebuild_nav() -> void:
-	nav = ArenaNav.build(bounds, WorldScale.live_blocks() + (placed.obstacles() if placed != null else []))
+	# The arena's own walls are layout objects ("base_N") once adopted, so obstacles() already holds the ones still
+	# standing (moved or deleted walls included); live_blocks() is only the fallback before the layout exists.
+	nav = ArenaNav.build(bounds, placed.obstacles() if placed != null else WorldScale.live_blocks())
 	for z in ShrineElevation.terrain_zones:
 		if z is CliffElevation and is_ancestor_of(z):
 			var route := climb_route(z)

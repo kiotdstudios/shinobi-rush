@@ -73,7 +73,7 @@ static func props() -> Array:
 	p.append(["blight_wooden_post", pw(520, 470)])
 	p.append(["blight_fireflies", pw(800, 470)])
 	for t in [["tree_3", 90, 300], ["tree_4", 210, 380], ["tree_1", 150, 190], ["tree_2", 330, 300], ["tree_5", 60, 120], ["tree_4", 440, 215],
-			["tree_5", 1440, 110], ["tree_4", 540, 640], ["tree_3", 260, 590], ["tree_1", 1040, 235]]:
+			["tree_5", 1400, 145], ["tree_4", 540, 640], ["tree_3", 260, 590], ["tree_1", 1040, 235]]:
 		p.append([t[0], pw(t[1], t[2])])
 	for g in [Vector2(580, 450), Vector2(480, 520), Vector2(1120, 470), Vector2(940, 600), Vector2(1030, 640), Vector2(290, 480)]:
 		p.append(["grass_tall_0%d" % (int(g.x + g.y) % 4), pw(g.x, g.y)])
@@ -100,16 +100,16 @@ static func stair_ledges() -> Array[Vector2]:
 ## Fences: [id, upper end]. "se" pieces run down-right from the point, "sw" pieces down-left.
 static func fences() -> Array:
 	return [
-		["fence_sw_3", pw(682, 210)],   # behind the shrine
+		["fence_sw_3", pw(670.75, 221.25)],   # behind the shrine (nudged off the cliff rock)
 		["fence_sw_3", pw(570, 300)],   # left of the shrine
 		["fence_se_4", pw(742, 208)],   # back right, down to the right brazier
 		["fence_se_3", pw(920, 300)],
 		["fence_sw_4", pw(432, 450)],   # far-left run to the stairs rock (mirrored: falls toward the cliff)
-		["fence_se_3", pw(230, 440)],
+		["fence_se_3", pw(265, 440)],  # nudged right off the cliff rock
 		["fence_se_4", pw(935, 540)],   # front right, toward the bridge
 		["fence_se_2", pw(1160, 500)],
-		["fence_se_4", pw(1215, 575)],
-		["fence_se_3", pw(1020, 95)],   # top right, beside the stream
+		["fence_se_4", pw(1192.5, 620)],  # nudged down off the cliff rock
+		["fence_se_3", pw(1050, 60)],   # top right, beside the stream (nudged up off the cliff rock so it stays walkable)
 		["fence_sw_1", pw(800, 880)],
 		["fence_sw_1", pw(1160, 880)],
 	]

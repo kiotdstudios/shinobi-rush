@@ -72,6 +72,8 @@ func _boot(root: Node) -> bool:
 	tog = lab.vision if lab != null else null
 	var ok := arena != null and player != null and bandit != null and lab != null and tog != null
 	ck.call("vision: the real arena boots with the Bandit, the player, the lab and the vision switch", ok)
+	if ok:
+		bandit.profile["loot_sight"] = 0.0  # scavenging the layout gourds would walk him off the scripted vision scenarios
 	if not ok:
 		main.queue_free()
 		await tree.process_frame

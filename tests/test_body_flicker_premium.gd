@@ -3,6 +3,9 @@ class Ground extends Node2D:
 	func get_bounds() -> Rect2:return Rect2(-2000,-2000,4000,4000)
 var DIRS := [Vector2.DOWN,Vector2(1,1).normalized(),Vector2.RIGHT,Vector2(1,-1).normalized(),Vector2.UP,Vector2(-1,-1).normalized(),Vector2.LEFT,Vector2(-1,1).normalized()]
 func run(ck: Callable, root: Node) -> void:
+	# One physics tick per awaited frame: on a slow machine the engine catch-up ticks finish a dodge before the
+	# per-frame sampling below ever sees it.
+	var steps_was:=Engine.max_physics_steps_per_frame;Engine.max_physics_steps_per_frame=1
 	var ground:=Ground.new();root.add_child(ground)
 	var p: PlayerController=(load("res://scenes/player/player.tscn") as PackedScene).instantiate();ground.add_child(p);p.camera.enabled=false
 	for action in ["move_left","move_right","move_up","move_down","dodge","attack_light"]:Input.action_release(action)
@@ -94,3 +97,4 @@ func run(ck: Callable, root: Node) -> void:
 	await root.get_tree().create_timer(2.05).timeout
 	ck.call("premium flicker: review autoplay drives repeated actual dodge input",review.player.flicker_count>=3 and review.auto)
 	review.queue_free();await root.get_tree().process_frame
+	Engine.max_physics_steps_per_frame=steps_was
