@@ -22,7 +22,7 @@ const ITEMS := {
 }
 ## Jutsu you can place on an R2 slot. `ready` false = listed and assignable but not playable yet.
 const JUTSU := {
-	"chidori": {"name": "Chidori", "ready": false},
+	"chidori": {"name": "Chidori", "ready": true},
 }
 const START_COUNTS := {"health_gourd": 0, "chakra_gourd": 0, "kunai": 10, "paper_tag": 3, "tag_bomb": 0, "smoke_tag_bomb": 0}
 const DEFAULT_DPAD := {"up": "health_gourd", "right": "chakra_gourd", "down": "paper_tag", "left": "kunai"}
