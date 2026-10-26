@@ -70,13 +70,13 @@ func run(p_ck: Callable, root: Node) -> void:
 	arena.add_child(far)
 	var origin := arena.bounds.get_center()
 	var b := PaperTagBomb.spawn(arena, origin, Vector2.RIGHT, player)
-	near.global_position = origin + Vector2(PaperTagBomb.MAX_RANGE, 0) + Vector2(40, 10)
-	far.global_position = origin + Vector2(PaperTagBomb.MAX_RANGE + 900, 0)
+	near.global_position = origin + Vector2(b.flight_len, 0) + Vector2(40, 10)
+	far.global_position = origin + Vector2(b.flight_len + 900, 0)
 	var step := 1.0 / 60.0
 	while b.phase == PaperTagBomb.Phase.FLY and b.age < 2.0:
 		b.advance(step)
-	ck.call("tag bomb: it lands after its flight, short of its max range", b.phase == PaperTagBomb.Phase.ARMED and b.travelled <= PaperTagBomb.MAX_RANGE + 10.0, "%s %s" % [b.landed_on, b.travelled])
-	ck.call("tag bomb: it flies roughly one second less than the fuse", b.age <= PaperTagBomb.FLIGHT_TIME + 0.05)
+	ck.call("tag bomb: it lands after its flight, short of its max range", b.phase == PaperTagBomb.Phase.ARMED and b.travelled <= b.flight_len + 10.0, "%s %s" % [b.landed_on, b.travelled])
+	ck.call("tag bomb: it flies roughly one second less than the fuse", b.age <= b.flight_time + 0.05)
 	near.global_position = b.global_position + Vector2(60, 0)
 	while b.age < PaperTagBomb.FUSE - 0.05:
 		b.advance(step)
@@ -102,6 +102,37 @@ func run(p_ck: Callable, root: Node) -> void:
 		b2.advance(step)
 	ck.call("tag bomb: it lands on the first enemy it touches", b2.landed_on == "enemy" and b2.global_position.x < origin.x + 160.0, "%s %s" % [b2.landed_on, b2.global_position.x - origin.x])
 	b2.queue_free()
+	# throw feel: the plain tag flies like a kunai (straight, flat, fast) and sticks to the body; the tag bomb keeps the lob
+	far.global_position = origin + Vector2(0, 4000)
+	near.global_position = origin + Vector2(0, 4000)
+	var flat := PaperTagBomb.spawn(arena, origin, Vector2.RIGHT, player)
+	var lob := PaperTagBomb.spawn(arena, origin, Vector2.RIGHT, player, "tag_bomb")
+	var peak_flat := 0.0
+	var peak_lob := 0.0
+	for i in 20:
+		flat.advance(step)
+		lob.advance(step)
+		peak_flat = maxf(peak_flat, absf(flat._body.position.y + PaperTagBomb.HAND_LIFT))
+		peak_lob = maxf(peak_lob, absf(lob._body.position.y + PaperTagBomb.HAND_LIFT))
+	ck.call("tag throw: the plain tag flies flat like a kunai", flat.kunai_style and peak_flat < 0.5, str(peak_flat))
+	ck.call("tag throw: the plain tag is as fast as a kunai", flat.flight_len / flat.flight_time >= PlayerKunai.SPEED - 1.0)
+	ck.call("tag throw: the tag bomb keeps the lobbed arc", not lob.kunai_style and peak_lob > 20.0, str(peak_lob))
+	flat.queue_free()
+	lob.queue_free()
+	var victim := Dummy.new() as Node2D
+	victim.add_to_group("enemy")
+	arena.add_child(victim)
+	victim.global_position = origin + Vector2(150, 0)
+	var stick := PaperTagBomb.spawn(arena, origin, Vector2.RIGHT, player)
+	while stick.phase == PaperTagBomb.Phase.FLY and stick.age < 2.0:
+		stick.advance(step)
+	stick.advance(step)
+	ck.call("tag stick: it lands on the enemy and is drawn on its body, not its feet", stick.stuck_to == victim and stick._body.position.y <= -PaperTagBomb.BODY_LIFT + 0.5, str(stick._body.position))
+	victim.global_position += Vector2(30, 10)
+	stick.advance(step)
+	ck.call("tag stick: it rides with the enemy", stick.global_position.distance_to(victim.global_position) < 6.0)
+	stick.queue_free()
+	victim.queue_free()
 	near.queue_free()
 	far.queue_free()
 	await tree.process_frame
