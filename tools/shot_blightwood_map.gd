@@ -37,4 +37,33 @@ func _init() -> void:
 	for i in 10:
 		await process_frame
 	root.get_viewport().get_texture().get_image().save_png(out.path_join("map_courtyard.png"))
+	if cam != null:
+		cam.zoom = Vector2(1.6, 1.6)
+		var at := BlightwoodMap.pw(385, 690)
+		cam.offset = Vector2.ZERO
+		cam.global_position = at
+		cam.position_smoothing_enabled = false
+		cam.reset_smoothing()
+		cam.force_update_scroll()
+	for i in 10:
+		await process_frame
+	root.get_viewport().get_texture().get_image().save_png(out.path_join("map_stairs.png"))
+	var player := get_first_node_in_group("player") as PlayerController
+	var zone: CliffElevation
+	for o in arena.placed.objects:
+		if o.id == "earth_stairs_se":
+			zone = o.nodes.back() as CliffElevation
+	if zone != null and player != null:
+		player.set_physics_process(false)
+		player.global_position = zone.to_global(zone.top + Vector2(12, -6))
+		player.elevation = 0
+		player._follow_elevation(1.0)
+		cam.global_position = BlightwoodMap.stair_point()
+		cam.position = cam.global_position - player.global_position
+		cam.offset = Vector2.ZERO
+		cam.force_update_scroll()
+		for i in 10:
+			await process_frame
+		root.get_viewport().get_texture().get_image().save_png(out.path_join("map_stairs_elevated.png"))
+		print("shot upper height=", player.elevation)
 	quit()

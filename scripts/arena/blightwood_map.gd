@@ -39,6 +39,27 @@ static func terrain_cells() -> Dictionary:
 	return out
 
 
+## Map stair: mouth on a floor-diamond vertex so its two-edge tread lines up with the tiles.
+static func stair_point() -> Vector2:
+	return PlacedObjects.iso_vertex(pw(385, 705))
+
+
+## Dirt cells behind the stair head, under the catalog landing (two edges wide, three deep).
+static func stair_landing() -> Array[Vector2]:
+	var def := PlacedObjects.def_of("earth_stairs_se")
+	var top: Vector2 = stair_point() + (def.ramp_top as Vector2)
+	var half: Vector2 = def.ramp_half
+	var back := Vector2(36, -18) * 3.0
+	var area := PackedVector2Array([top - half, top + half, top + half + back, top - half + back])
+	var landing: Array[Vector2] = []
+	for i in 4:
+		for j in 6:
+			var c := PlacedObjects.lattice_center(top - half + Vector2(36, 18) * (i + 0.5) * 0.5 + Vector2(36, -18) * (j + 0.5) * 0.5)
+			if Geometry2D.is_point_in_polygon(c, area) and not landing.has(c):
+				landing.append(c)
+	return landing
+
+
 ## Props: [id, world position]. Positions are reference-image pixels run through pw().
 static func props() -> Array:
 	var p: Array = []
@@ -57,8 +78,23 @@ static func props() -> Array:
 	for g in [Vector2(580, 450), Vector2(480, 520), Vector2(1120, 470), Vector2(940, 600), Vector2(1030, 640), Vector2(290, 480)]:
 		p.append(["grass_tall_0%d" % (int(g.x + g.y) % 4), pw(g.x, g.y)])
 	p.append(["waterfall_small", pw(800, 725)])
+	var stair := stair_point()
+	p.append(["earth_stairs_se", stair])
+	# Cliff faces continue the stair-head line on both sides: the left ledge ends at the top's
+	# back corner, the right one starts at its front corner (ledge front run = (200, 100)).
+	for ledge in stair_ledges():
+		p.append(["cliff_ledge_se", ledge])
 	p.append(["bridge_medium_wood_u", pw(1370, 735)])
 	return p
+
+
+## Ground points of the two cliff ledges flanking the stair head.
+static func stair_ledges() -> Array[Vector2]:
+	var def := PlacedObjects.def_of("earth_stairs_se")
+	var top: Vector2 = stair_point() + (def.ramp_top as Vector2)
+	var half: Vector2 = def.ramp_half
+	var run: Vector2 = PlacedObjects.def_of("cliff_ledge_se").col
+	return [top - half - run, top + half]
 
 
 ## Fences: [id, upper end]. "se" pieces run down-right from the point, "sw" pieces down-left.
@@ -98,6 +134,8 @@ static func populate(arena: TrainingArena) -> int:
 	for ch in ["g", "d", "s"]:
 		tiler.apply(cells[ch], TERRAIN_ID[ch])
 	tiler.apply(cells.w, "water")
+	# Dirt landing joins the stair head to the terrace, rather than ending in rock fill.
+	tiler.apply(stair_landing(), "ground")
 	var count := 0
 	var spawn := spawn_point()
 	if placed.can_place("player_spawn", spawn):
@@ -112,6 +150,7 @@ static func populate(arena: TrainingArena) -> int:
 	for item: Array in fences():
 		if placed.can_place(item[0], item[1]) and not placed.add(item[0], item[1], false).is_empty():
 			count += 1
+	placed.link_stair_zones()
 	placed.blightwood_map_applied = true
 	placed.shrine_section_applied = true  # the old courtyard section must not be laid over the map
 	arena.rebuild_nav()

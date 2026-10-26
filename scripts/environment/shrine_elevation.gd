@@ -34,6 +34,8 @@ const MONUMENT := [Vector2(285, 312), Vector2(22, 6)]
 
 ## Every solid shrine in the tree (DynamicShrine registers itself).
 static var zones: Array = []
+## Other climbable terrain uses its own geometry, sharing the actor easing path.
+static var terrain_zones: Array = []
 
 
 static func _l(p: Vector2) -> Vector2:
@@ -104,6 +106,9 @@ static func target_at(p: Vector2) -> float:
 	for z in zones:
 		if is_instance_valid(z) and z.is_inside_tree():
 			best = maxf(best, elevation_at((z as Node2D).to_local(p)))
+	for z in terrain_zones:
+		if is_instance_valid(z) and z.is_inside_tree():
+			best = maxf(best, z.elevation_at((z as Node2D).to_local(p)))
 	return best
 
 
@@ -120,16 +125,20 @@ static func front_edge_y(art_x: float) -> float:
 ## Called every physics tick by an actor that has an `elevation` property: eases it toward the target for its current
 ## ground position and tells each shrine which level the actor is on (collision exceptions and draw order).
 static func update_actor(actor: Node2D, delta: float) -> void:
-	if zones.is_empty() and actor.get("elevation") == 0.0:
+	if zones.is_empty() and terrain_zones.is_empty() and actor.get("elevation") == 0.0:
 		return
-	var target := 0.0
-	for z in zones:
-		if is_instance_valid(z) and z.is_inside_tree():
-			target = maxf(target, elevation_at((z as Node2D).to_local(actor.global_position)))
+	var target := target_at(actor.global_position)
 	var e: float = move_toward(float(actor.get("elevation")), target, RATE * delta)
 	actor.set("elevation", e)
 	var upper := e >= HEIGHT * BOARD_AT
 	for z in zones:
 		if is_instance_valid(z) and z.is_inside_tree():
 			var lp := (z as Node2D).to_local(actor.global_position)
-			z.set_actor_level(actor, upper, e > 0.5 or in_stairs(lp))
+			var on_this := elevation_at(lp) > 0.0 or in_stairs(lp)
+			z.set_actor_level(actor, upper and on_this, on_this and (e > 0.5 or in_stairs(lp)))
+
+	for z in terrain_zones:
+		if is_instance_valid(z) and z.is_inside_tree():
+			var lp := (z as Node2D).to_local(actor.global_position)
+			var local_height: float = z.elevation_at(lp)
+			z.set_actor_level(actor, local_height > 0.0 and e >= z.height * BOARD_AT, local_height > 0.0)
