@@ -55,12 +55,15 @@ static func start(p_gourd: HealthGourd, p_player: Node2D, p_amount: float, hp_be
 	elif p_gourd.kind == "chakra":
 		fx._green = Color(0.3, 0.65, 1.0)
 		fx._white_green = Color(0.85, 0.95, 1.0)
+	elif p_gourd.kind == "ryo":
+		fx._green = Color(1.0, 0.78, 0.18)
+		fx._white_green = Color(1.0, 0.96, 0.75)
 	elif p_gourd.kind in ["paper_tag", "tag_bomb", "smoke_tag_bomb"]:
 		fx._green = Color(1.0, 0.55, 0.12)
 		fx._white_green = Color(1.0, 0.92, 0.7)
 	p_gourd.add_child(fx)
 	# The gourd goes into the bag now (healing happens later, from its D-pad slot), so there is no HUD fill to schedule.
-	fx._label = {"kunai": "KUNAI", "chakra": "CHAKRA GOURD", "paper_tag": "PAPER TAG", "tag_bomb": "TAG BOMB", "smoke_tag_bomb": "SMOKE TAG BOMB"}.get(p_gourd.kind, "HEALTH GOURD")
+	fx._label = {"kunai": "KUNAI", "chakra": "CHAKRA GOURD", "paper_tag": "PAPER TAG", "tag_bomb": "TAG BOMB", "smoke_tag_bomb": "SMOKE TAG BOMB", "ryo": "RYO"}.get(p_gourd.kind, "HEALTH GOURD")
 	return fx
 
 
@@ -332,6 +335,8 @@ func _label_outline(a: float) -> Color:
 			return Color(0.02, 0.15, 0.06, 0.9 * a)
 		"PAPER TAG":
 			return Color(0.2, 0.06, 0.0, 0.9 * a)
+		"RYO":
+			return Color(0.22, 0.12, 0.0, 0.9 * a)
 	return Color(0.02, 0.06, 0.2, 0.9 * a)
 
 
@@ -341,6 +346,8 @@ func _label_fill(a: float) -> Color:
 			return Color(0.6, 1.0, 0.7, a)
 		"PAPER TAG":
 			return Color(1.0, 0.8, 0.45, a)
+		"RYO":
+			return Color(1.0, 0.86, 0.35, a)
 	return Color(0.65, 0.85, 1.0, a)
 
 
