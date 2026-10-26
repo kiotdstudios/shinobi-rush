@@ -1,8 +1,10 @@
 class_name BanditKunai
 extends Node2D
 ## Thrown kunai fired by the Bandit's ranged attack. Flies straight along the aim direction chosen when
-## the throw's aim froze, stops on walls, and hands a landed hit to `Player.take_hit` (so jump / dodge
-## evade it and a timed Substitution swallows it). Uses the shared production black kunai asset.
+## the throw's aim froze, stops on walls, and hands a landed hit to `take_hit` of the FIRST fighter in its path -- the
+## aimed-at target, a rival bandit, even a crewmate who steps into it; never the thrower (so jump / dodge evade it and a
+## timed Substitution swallows it). Levels do not matter: a kunai reaches up onto a landing. Uses the shared production
+## black kunai asset.
 
 const SPEED := 520.0
 const MAX_RANGE := 560.0
@@ -16,7 +18,10 @@ var damage: float = 6.0
 var thrower: Node2D = null
 var target: Node2D = null
 var travelled: float = 0.0
+var lift := 0.0  ## the thrower's elevation: the blade flies at his hand height
 var _passed_target := false
+var _passed: Array[Node2D] = []
+var struck: Node2D = null  ## who it hit, if anyone
 var hit_result: String = ""  ## "", "hit", "evaded", "wall", "range" -- read by tests
 
 
@@ -30,6 +35,7 @@ static func spawn(parent: Node, from: Vector2, aim: Vector2, who: Node2D, tgt: N
 	kn.damage = dmg
 	kn.thrower = who
 	kn.target = tgt
+	kn.lift = Combatants.level_of(who)
 	parent.add_child(kn)
 	kn.global_position = from
 	kn.z_index = 5
@@ -41,7 +47,7 @@ func _ready() -> void:
 	body.name = "BlackKunai"
 	body.texture = TEXTURE
 	body.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	body.position = DRAW_LIFT
+	body.position = DRAW_LIFT - Vector2(0, lift)
 	body.offset = Vector2(0, 1)  # texture blade axis is at y=31 on its 64px canvas
 	body.rotation = dir.angle()  # source blade points +X; fixed throw aim drives every heading
 	add_child(body)
@@ -60,18 +66,25 @@ func step(delta: float) -> void:
 	var seg := b-a
 	var wall := KunaiRecovery.wall_hit(self,a,b,thrower)
 	var wall_t := 2.0 if wall.is_empty() or length<0.001 else a.distance_to(wall.position-KunaiRecovery.LIFT)/length
-	if not _passed_target and is_instance_valid(target):
-		var t := clampf((target.global_position-a).dot(seg)/maxf(seg.length_squared(),0.0001),0,1)
-		if (a+seg*t).distance_to(target.global_position)<=HIT_RADIUS and t<wall_t:
-			var who: Node2D = thrower if is_instance_valid(thrower) else null
-			if target.has_method("take_hit") and bool(target.call("take_hit",damage,dir,120.0,who)):
-				global_position=a+seg*t
-				hit_result="hit"
-				queue_free()
-				return
-			# Dodge/jump/substitution remains unchanged; the missed blade continues without retesting this target.
-			_passed_target=true
-			hit_result="evaded"
+	var victim: Node2D = null
+	var victim_t := wall_t
+	for c in _candidates():
+		var t := clampf((c.global_position-a).dot(seg)/maxf(seg.length_squared(),0.0001),0,1)
+		if t<victim_t and (a+seg*t).distance_to(c.global_position)<=HIT_RADIUS:
+			victim=c
+			victim_t=t
+	if victim!=null:
+		var who: Node2D = thrower if is_instance_valid(thrower) else null
+		if victim.has_method("take_hit") and bool(victim.call("take_hit",damage,dir,120.0,who)):
+			global_position=a+seg*victim_t
+			hit_result="hit"
+			struck=victim
+			queue_free()
+			return
+		# Dodge/jump/substitution remains unchanged; the missed blade continues without retesting this fighter.
+		_passed.append(victim)
+		_passed_target=_passed_target or victim==target
+		hit_result="evaded"
 	if not wall.is_empty():
 		global_position=wall.position-KunaiRecovery.LIFT
 		hit_result="wall"
@@ -84,3 +97,15 @@ func step(delta: float) -> void:
 		hit_result="range"
 		KunaiRecovery.start(get_parent(),global_position,dir,DRAW_LIFT.y)
 		queue_free()
+
+
+## Everyone the blade can still hit: every living fighter but the thrower, plus the aimed-at target even if it is a
+## stand-in outside the fighter groups.
+func _candidates() -> Array[Node2D]:
+	var out: Array[Node2D] = []
+	for c in Combatants.all(get_tree()):
+		if c!=thrower and Combatants.alive(c) and c not in _passed:
+			out.append(c)
+	if is_instance_valid(target) and target!=thrower and target not in out and target not in _passed:
+		out.append(target)
+	return out

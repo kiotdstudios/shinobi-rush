@@ -255,7 +255,9 @@ func _ready() -> void:
 		placed.ensure_shrine()  # v7 added the Ancient Shrine landmark: every older layout gets one once
 	# Add the Ancient Shrine reference section using existing catalog art.
 	# The authored layer is rebuilt on boot; it does not overwrite user:// editor saves.
-	BlightwoodMap.populate(self)  # the starting map; when it lays itself the old courtyard section stands down
+	blightwood_laid = BlightwoodMap.populate(self) > 0  # the starting map; when it lays itself the old courtyard section stands down
+	if blightwood_laid:
+		_spawn_rival_crews()
 	AncientShrineSection.populate(self)
 	editor = WorldEditor.new()
 	editor.setup(self, placed)
@@ -268,40 +270,106 @@ func _ready() -> void:
 
 const BANDIT_RESPAWN_DELAY := 4.0
 
+## Extra bandit slots [crew, home, patrol] that only stand up on the Blightwood map: a second Red Scarf on the
+## east side and the two Jade Fang rivals in the west woods. Slot 0 is always the original "Bandit".
+const RIVAL_SLOTS := [
+	[0, Vector2(1500, 300), [Vector2(1500, 300), Vector2(1750, 250), Vector2(1650, 150)]],
+	[1, Vector2(-1500, 300), [Vector2(-1500, 300), Vector2(-1650, 150), Vector2(-1350, -100)]],
+	[1, Vector2(-1200, 700), [Vector2(-1200, 700), Vector2(-800, 750), Vector2(-1500, 300)]],
+]
+
+const PLAYER_DOWN_DROP := 0.5
+
+var blightwood_laid := false
+
 
 ## The Level 1 robber Bandit: spawned on the FAR (east) side of the arena, behind the two long walls,
 ## so the player starts alone near the spawn and has to travel through the choke point or around the
 ## walls to reach it. It stays off the CI controls probe's lanes (due right / due up from the spawn):
 ## its patrol keeps y <= 60 east of x=1250 and the probe only walks a few hundred px.
-func _spawn_bandit() -> void:
+func _spawn_bandit(slot: int = 0) -> Bandit:
 	var packed := load("res://scenes/enemy/bandit.tscn") as PackedScene
-	var bandit := packed.instantiate()
-	bandit.name = "Bandit"
-	bandit.position = WorldScale.BANDIT_HOME
-	bandit.patrol_points = PackedVector2Array(WorldScale.BANDIT_PATROL)
+	var bandit := packed.instantiate() as Bandit
+	if slot == 0:
+		bandit.name = "Bandit"
+		bandit.position = WorldScale.BANDIT_HOME
+		bandit.patrol_points = PackedVector2Array(WorldScale.BANDIT_PATROL)
+	else:
+		var def: Array = RIVAL_SLOTS[slot - 1]
+		bandit.name = "Bandit%d" % (slot + 1)
+		bandit.crew_id = int(def[0])
+		bandit.position = def[1]
+		bandit.patrol_points = PackedVector2Array(def[2])
 	add_child(bandit)
 	if "nav" in bandit:
 		bandit.nav = nav
-	bandit.defeated.connect(_on_bandit_defeated.bind(bandit))
+	bandit.defeated.connect(_on_bandit_defeated.bind(bandit, slot))
+	return bandit
 
 
-## A defeated Bandit is replaced: after a short beat the body is removed and a fresh one starts again at the far-side home.
-func _on_bandit_defeated(bandit: Bandit) -> void:
+func _spawn_rival_crews() -> void:
+	for i in RIVAL_SLOTS.size():
+		_spawn_bandit(i + 1)
+	for p in get_tree().get_nodes_in_group("player"):
+		if p is PlayerController:
+			(p as PlayerController).downed.connect(_on_player_downed.bind(p))
+
+
+## A downed ninja drops half his purse where he fell (emitted before the respawn moves him), for whoever gets there first.
+func _on_player_downed(p: PlayerController) -> void:
+	var share := int(ceil(p.ryo * PLAYER_DOWN_DROP))
+	if share > 0:
+		RyoPouch.drop(self, p.global_position, p.lose_ryo(share), p)
+
+
+## A defeated Bandit is replaced: after a short beat the body is removed and a fresh one starts again at its own slot's home.
+func _on_bandit_defeated(bandit: Bandit, slot: int = 0) -> void:
 	await get_tree().create_timer(BANDIT_RESPAWN_DELAY).timeout
 	if not is_inside_tree():
 		return
 	if is_instance_valid(bandit):
 		bandit.name = "BanditDown"
 		bandit.queue_free()
-	_spawn_bandit()
+	_spawn_bandit(slot)
 
 
 ## Rebuild the bandit nav after the player-built layout changed; live enemies get the new grid at once.
 func rebuild_nav() -> void:
 	nav = ArenaNav.build(bounds, WorldScale.live_blocks() + (placed.obstacles() if placed != null else []))
+	for z in ShrineElevation.terrain_zones:
+		if z is CliffElevation and is_ancestor_of(z):
+			var route := climb_route(z)
+			nav.open_climb(route[0], route[1], route[2])
 	for e in get_tree().get_nodes_in_group("enemy"):
 		if "nav" in e:
 			e.nav = nav
+
+
+## A cliff stair as nav data, world px: [axis (in front of the mouth -> top step -> landing centre), [stair run polygon,
+## landing polygon], rim segments]. The rims are read back from the zone's own edge colliders (stair sides, landing rim), so the nav
+## walls match what actually stops a body.
+static func climb_route(z: CliffElevation) -> Array:
+	var run := (z.top - z.mouth).normalized()
+	var centre := z.top
+	if z.landing.size() >= 3:
+		centre = Vector2.ZERO
+		for p in z.landing:
+			centre += p
+		centre /= float(z.landing.size())
+	var axis := PackedVector2Array([z.to_global(z.mouth - run * 36.0), z.to_global(z.top), z.to_global(centre)])
+	var run_poly := PackedVector2Array()
+	for p in z.stair_polygon():
+		run_poly.append(z.to_global(p))
+	var surface := PackedVector2Array()
+	for p in z.landing:
+		surface.append(z.to_global(p))
+	var rims: Array = []
+	if z.edge_body != null:
+		for shape in z.edge_body.get_children():
+			if shape is CollisionPolygon2D and (shape as CollisionPolygon2D).polygon.size() == 4:
+				var q := (shape as CollisionPolygon2D).polygon
+				rims.append([z.to_global((q[0] + q[3]) * 0.5), z.to_global((q[1] + q[2]) * 0.5)])
+	return [axis, [run_poly, surface], rims]
 
 
 ## Trunk bases as BLOCKS-style entries [anchor, footprint, height] (height unused by collision/nav).

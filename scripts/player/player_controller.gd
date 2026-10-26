@@ -660,6 +660,8 @@ func _check_attack_hits() -> void:
 			continue
 		if not enemy.is_alive():
 			continue
+		if not Combatants.same_level(self, enemy):
+			continue  # a blade cannot reach up a cliff or down off a landing
 		var to_enemy: Vector2 = enemy.global_position - global_position
 		var dist := to_enemy.length()
 		if dist <= 0.0 or dist > _attack_def.reach:
@@ -1092,6 +1094,13 @@ func reset_camera() -> void:
 ## _physics_process): how far away a nearby enemy is auto-detected while sprinting ("naruto running").
 func sense_radius() -> float:
 	return ProximitySense.radius_for(intelligence)
+
+
+## Picked-up ryo (a RyoPouch dropped by a downed fighter).
+func gain_ryo(amount: int) -> void:
+	if amount > 0:
+		ryo += amount
+		ryo_changed.emit(ryo)
 
 
 ## Removes up to `amount` ryo (clamped to what is actually carried) and returns the amount actually

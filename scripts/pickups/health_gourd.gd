@@ -252,6 +252,28 @@ func collect(player: Node) -> float:
 	return gained
 
 
+## A bandit tucking the gourd into his belt (he has no bag, see Bandit loot): it fades and respawns like a collected one.
+func take_by(taker: Node2D) -> bool:
+	if not available or not is_visible_in_tree() or taker == null:
+		return false
+	available = false
+	respawn_left = RESPAWN_SECONDS if respawns else 0.0
+	if not respawns:
+		get_tree().create_timer(1.5).timeout.connect(queue_free)
+	collected.emit(1.0)
+	if _tween != null:
+		_tween.kill()
+	if fx != null and is_instance_valid(fx):
+		fx.queue_free()
+	_tween = create_tween().set_parallel(true)
+	_tween.tween_property(_visual, "modulate:a", 0.0, 0.25)
+	_tween.tween_property(_pool, "modulate:a", 0.0, 0.25)
+	_tween.chain().tween_callback(func() -> void:
+		_visual.visible = false
+		_pool.visible = false)
+	return true
+
+
 func _return() -> void:
 	available = true
 	if fx != null and is_instance_valid(fx):

@@ -72,6 +72,7 @@ func _initialize() -> void:
 	await load("res://tests/test_bandit_chase.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_robber.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_sub_kunai.gd").new().run(ck, root)
+	await load("res://tests/test_bandit_world.gd").new().run(ck, root)
 	await load("res://tests/test_log_pips.gd").new().run(ck, root)
 	await load("res://tests/test_wall_colliders.gd").new().run(ck, root)
 	await load("res://tests/test_floor_replace.gd").new().run(ck, root)
