@@ -20,7 +20,11 @@ func _init() -> void:
 	add_child(grip)
 	weapon = Sprite2D.new()
 	weapon.centered = false
-	weapon.position = Vector2(-25, -31)
+	weapon.scale = Vector2.ONE * WeaponRig.VISUAL_SCALE
+	# Non-centered sprite: content coords get scaled around the node origin, so the grip pivot
+	# (WeaponRig.GRIP_PIVOT_PX) must be negated and scaled the same way to stay anchored at the
+	# hand socket (grip's local origin) regardless of VISUAL_SCALE. See WeaponRig.VISUAL_SCALE.
+	weapon.position = -WeaponRig.GRIP_PIVOT_PX * WeaponRig.VISUAL_SCALE
 	weapon.texture = load("res://assets/weapons/kunai/black_kunai.png")
 	grip.add_child(weapon)
 	hand = Sprite2D.new()

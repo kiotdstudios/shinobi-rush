@@ -40,8 +40,9 @@ func _ready() -> void:
 	body.name = "BlackKunai"
 	body.texture = TEXTURE
 	body.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	body.scale = Vector2.ONE * WeaponRig.VISUAL_SCALE  ## matches the held kunai (KunaiPoseActor); see WeaponRig.VISUAL_SCALE
 	body.position = DRAW_LIFT
-	body.offset = Vector2(0, 1)  # texture blade axis is at y=31 on its 64px canvas
+	body.offset = Vector2(0, 1)  # texture blade axis is at y=31 on its 64px canvas; offset scales with body.scale automatically
 	body.rotation = dir.angle()  # source blade points +X; fixed throw aim drives every heading
 	add_child(body)
 
