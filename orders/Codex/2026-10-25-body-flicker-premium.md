@@ -3,7 +3,7 @@
 - Owner: Codex
 - Status: REVIEW
 - Priority: P1
-- Branch/PR: codex/body-flicker-premium
+- Branch/PR: codex/body-flicker-premium / https://github.com/kiotdstudios/shinobi-rush/pull/209
 - Dependencies: Existing authoritative player dodge and bandit evade/retreat movement; approved 128px art.
 
 ## Objective
@@ -25,4 +25,4 @@ Immediate gameplay response; recognizable bodies and crisp pixels; no fade-only 
 Latest direct high-priority task supersedes stale queued work. Reuse approved body and VFX art where appropriate; presentation timing follows existing action duration rather than changing gameplay to match suggested 0.38s. Player currently 0.30s total, 0.20s movement; bandit 0.20s evade and profile-driven retreat hops.
 
 ## Local delivery evidence
-Integrated latest-main full native suite: 3221 passed; focused presentation/health/bandit suite: 147 passed. Web: 24 review checks plus normal-game keyboard/recording checks passed; no browser errors. Awaiting reviewed integration and exact canonical deployment verification.
+Integrated latest-main full native suite: 3221 passed; focused presentation/health/bandit suite: 148 passed. Web: 25 review checks plus normal-game keyboard/recording checks passed; no browser errors. Awaiting reviewed integration and exact canonical deployment verification.

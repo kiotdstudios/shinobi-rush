@@ -238,6 +238,12 @@ func _arrive() -> void:
 	_play_ground(1,subject.global_position)
 
 func finish(interrupted: bool=false) -> void:
+	if legacy:
+		active=false
+		cancelled=interrupted
+		self_modulate.a=0.0
+		queue_free()
+		return
 	if not active and not interrupted:return
 	active=false
 	cancelled=interrupted

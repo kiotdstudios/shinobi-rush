@@ -81,6 +81,14 @@ func run(ck: Callable, root: Node) -> void:
 	b.position+=Vector2(600,0);second._process(1.0/60.0)
 	ck.call("premium flicker: teleport-sized discontinuity cancels without bridging",second.cancelled and second.sample_positions.is_empty() and not second._smear.visible)
 	ground.queue_free();await root.get_tree().process_frame
+	EvadeStreakFx.legacy_preview=true
+	var baseline: Node2D=(load("res://scenes/art/body_flicker_review.tscn") as PackedScene).instantiate();root.add_child(baseline)
+	baseline.player._begin_dodge(Vector2.RIGHT)
+	var old:=baseline.player.get_node("EvadeStreakFx") as EvadeStreakFx
+	old.finish(true)
+	ck.call("premium flicker: interrupting baseline comparison needs no new-effect children",old.cancelled and old.is_queued_for_deletion())
+	baseline.queue_free();await root.get_tree().process_frame
+	EvadeStreakFx.legacy_preview=false
 	var review: Node2D=(load("res://scenes/art/body_flicker_review.tscn") as PackedScene).instantiate();root.add_child(review)
 	review._click("All 8")
 	await root.get_tree().create_timer(2.05).timeout

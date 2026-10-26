@@ -79,3 +79,10 @@ Canonical live URL: https://kiotdstudios.github.io/shinobi-rush/?flicker=review 
 - `node docs/visuals/body-flicker-premium/gameplay-proof.mjs ../body-flicker-final-base-web-20261025 build/flicker-final-base-gameplay`: **4/4 passed**, including actual normal-game keyboard input, all eight headings and shared presentation; no browser errors. JSON and screenshots copied to final-base-gameplay/.
 - Final GIF preview capture now includes a minimum-eight-actual-dodges guard. Compositor-derived crops were inspected: Before/Normal 174 extracted frames, 7.25s each; Half 352 frames, 14.66s. Sizes approximately 1.27/1.71/3.10 MB. This supersedes the sparse screenshot previews recorded in the initial report.
 - `python scripts/ci/validate_orders.py` and `git diff --check`: PASS. Runtime remains REVIEW until PR gates, normal merge, main deploy/postdeploy and exact public-build verification complete.
+
+## PR / final comparison-mode hardening
+- Runtime PR: https://github.com/kiotdstudios/shinobi-rush/pull/209 (attached). Combined tested head before this hardening: 7e5ba9c46f5c95e7480c2446c1072ce206654797.
+- During final self-review, found that rapidly interrupting the optional BEFORE comparison could try to clear nodes that only exist in the new effect. Added a legacy-only immediate cleanup guard and regression. Normal production presentation/movement is unchanged.
+- Final focused suite after guard: **148 passed, 0 failed**, `build/flicker-focused-baseline.log`.
+- Fresh release Web export `../body-flicker-release-web-20261025`: PASS. Release browser proof: **25/25 passed**, now explicitly rapidly interrupting the BEFORE comparison; no browser errors. Evidence: release-proof/validation.json.
+- Push this tested guard to PR209 and wait for checks on the new head. Previous-head native CI succeeded; no old-head CI result will be used to merge the new head.
