@@ -1,0 +1,21 @@
+{
+  "impact": {
+    "frames": 12,
+    "unique": 12,
+    "edge_touch_frames": [],
+    "size": [
+      128,
+      128
+    ]
+  },
+  "vortex": {
+    "frames": 16,
+    "unique": 16,
+    "edge_touch_frames": [],
+    "size": [
+      128,
+      128
+    ],
+    "front_back_union_pixel_exact": true
+  }
+}

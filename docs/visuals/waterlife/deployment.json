@@ -1,0 +1,11 @@
+{
+  "water_pr": 213,
+  "merge_sha": "bde58e778da9bf593ef7d33bbf443853339a21dc",
+  "pr_ci": 40300445662,
+  "main_ci": 40302987794,
+  "main_all_jobs": "success including deploy/postdeploy/gate",
+  "public_checks": 15,
+  "public_errors": 0,
+  "tested_at": "2026-10-26T10:13:31.860Z",
+  "automation": "deleted after completion"
+}
