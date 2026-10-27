@@ -2,7 +2,7 @@
 - Agent: Codex
 - Date: 2026-10-27 America/New_York
 - Order: `orders/Codex/2026-10-27-open-pr-integration.md`
-- Status: REVIEW — final combined native/import/resource/Web checks passed; required integration CI/deployment pending. NOT LIVE.
+- Status: DONE — reviewed integration merged, main CI/deploy/postdeploy passed, exact canonical build and actual gameplay/terrain verified.
 - Branch / PR: `codex/2026-10-27-pr-integration`; implementation/conflict-resolution merge `3ea04dc0`, source-ancestry-only merge `a55833ad`; [PR231](https://github.com/kiotdstudios/shinobi-rush/pull/231).
 
 ## Review and work completed
@@ -60,5 +60,19 @@ Before committing the correction, ran `node scripts/ci/smoke/controls-probe.mjs 
 ## Questions for project owner
 None currently; existing instructions and repository evidence resolved implementation choices.
 
-## Outstanding work
-All nine exact source heads verified as ancestors; source-ancestry recording did not alter tested scripts/tests. Push reviewed integration PR, wait required CI, normal merge, verify main deploy/postdeploy and exact canonical browser build. Delete the one-time automation only after this pass has a terminal outcome; no daily repetition.
+## Integration and canonical live verification
+All nine exact source heads verified as ancestors; source-ancestry recording did not alter tested scripts/tests. PR231 head `edd008dde5eab50a9f53c897c2a3edccf3252fee` passed all required checks in [Godot CI 40475021887](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40475021887) and merged normally at **`c4c336964e42e73a59b0b2984aa9aae57e4f15be`** on 2026-10-27 08:56:32Z. All nine original PRs were automatically marked merged; open-PR search returned zero. Exact runtime tree matches the tested candidate.
+
+**[Main run 40477062807](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40477062807) succeeded**, including 3876/0 native tests, export, predeploy smoke, full controls and debug probes, Pages deploy, postdeploy smoke and final gate. Postdeploy smoke verified all 10 served file hashes and exact merged SHA, working input and zero fatal console errors. Job metadata and filtered logs are in `docs/reviews/2026-10-27-live-integration/`.
+
+Actual tested site: **https://kiotdstudios.github.io/shinobi-rush/**, 2026-10-27 approximately 09:24–09:29 UTC (05:24–05:29 America/New_York). Read `build-info.json` and confirmed the full merged SHA above, not a local export or branch preview.
+
+| Canonical command / manual visual check | Result |
+| --- | --- |
+| `node scripts/ci/smoke/pr-integration-probe.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha c4c336964e42e73a59b0b2984aa9aae57e4f15be --out-dir docs/reviews/2026-10-27-live-integration/gameplay` | **7/7 PASS**: exact build, four bandits/two crews, real Inventory Square drop, no immediate re-pick, leave/return recovery, three smoke banks/active cover, zero engine/browser errors |
+| `node scripts/ci/smoke/natural-path-probe.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --out-dir docs/reviews/2026-10-27-live-integration/natural-path` | **9/9 PASS**, same-camera before/after; both movement checks; 3154 floor/object entries and 103 obstacles unchanged; no errors |
+| `node scripts/ci/smoke/path-dirt-probe.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --out-dir docs/reviews/2026-10-27-live-integration/path-dirt` | **4/4 PASS**: actual map 121-tile demo, dedicated filter, real movement, no errors |
+| Opened captured canonical before/after, transition-demo and smoke screenshots | New soil and irregular blended edges render at the existing scale; demo has continuous floor coverage; detailed three-bank smoke visible. Before view deliberately disables only new natural-path presentation and is not an older deployment. |
+
+## Outstanding work / next steps
+None for this scheduled integration assignment. Isolated art studies remain unpromoted and Aki's cliff specification remains future work as documented above. The final report/evidence follow-up is documentation only: **Live deployment: not applicable** to its own changes; the runtime delivery is verified at the exact SHA above. Remove the one-time automation after the report follow-up is safely pushed/integrated; no daily repetition.

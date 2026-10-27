@@ -2,7 +2,7 @@
 - Agent: Codex
 - Date: 2026-10-26 America/New_York
 - Order: `orders/Codex/2026-10-26-natural-dirt-path-revision.md`
-- Status: REVIEW — implementation, final art, native regression and actual Web-game comparison passed; required PR integration/deployment pending.
+- Status: DONE — integrated through PR231; main deployment/postdeploy and canonical actual-game verification passed at c4c33696.
 - Commit / PR: Implementation `ed5ffac0daea8773f8a3d8564ef8547f778dabc9`; https://github.com/kiotdstudios/shinobi-rush/pull/226 on `codex/brown-dirt-path`. PR title/body updated with actual-game evidence and integration scope.
 
 ## Work completed
@@ -44,4 +44,4 @@ Existing gray/green ground was main's integrated before state; the rejected rect
 None.
 
 ## Outstanding work / next steps
-Required PR CI is running after push; repository checks already passed on the implementation head. Repository auto-merge is disabled (normal enable-auto-merge request returned that setting); use the ordinary reviewed merge after required CI succeeds, without changing protection settings. Then verify main deploy and canonical live game. **NOT LIVE — awaiting reviewed integration.** Local screenshots and local Web verification do not constitute canonical deployment.
+None for this delivery. PR226 merged through [PR231](https://github.com/kiotdstudios/shinobi-rush/pull/231) at `c4c336964e42e73a59b0b2984aa9aae57e4f15be`; [main CI 40477062807](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40477062807) passed including deploy/postdeploy and 3876/0 combined native tests. On 2026-10-27 09:27:41Z, `natural-path-probe.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --out-dir docs/reviews/2026-10-27-live-integration/natural-path` passed **9/9**, same camera, movement in both views, 3154 entries/103 obstacles unchanged and zero errors. Exact build SHA was independently checked by the companion integration probe. Canonical screenshots visually inspected. See the October 27 integration report and evidence folder. This final report update has no runtime changes.

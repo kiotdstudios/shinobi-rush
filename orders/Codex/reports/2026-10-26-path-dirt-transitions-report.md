@@ -2,7 +2,7 @@
 - Agent: Codex
 - Date: 2026-10-26 America/New_York
 - Order: `orders/Codex/2026-10-26-path-dirt-transitions.md`
-- Status: REVIEW — art, builder integration, focused checks, full native regression and actual Web-game review passed. NOT LIVE; scheduled integration pending.
+- Status: DONE — PR230 integrated after PR226 through PR231; main deployment/postdeploy and canonical actual-game verification passed at c4c33696.
 - Branch: `codex/ground-dirt-transitions`
 - Commit / PR: Implementation `0739a332c8c2372cc2aee8e28a8464c81d6e3ed6`; https://github.com/kiotdstudios/shinobi-rush/pull/230, depends on PR226. Latest main `46a01f10` (PR225 stair fix) merged without changing its implementation.
 
@@ -42,4 +42,4 @@ Initial focused local runner started before the SceneTree root was ready, so sce
 None.
 
 ## Outstanding work / next steps
-PR230 pushed, attached to this task, and explicitly added to the existing one-time 3:40 AM New York open-PR automation; no duplicate automation created. The automation records the current worktree branch and PR226 dependency. **NOT LIVE — required review, integration, main deployment and canonical game verification remain pending.**
+None for this delivery. PR230 merged after parent PR226 through [PR231](https://github.com/kiotdstudios/shinobi-rush/pull/231) at `c4c336964e42e73a59b0b2984aa9aae57e4f15be`; [main CI 40477062807](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40477062807) passed including deploy/postdeploy and 3876/0 combined native tests. On 2026-10-27, `path-dirt-probe.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --out-dir docs/reviews/2026-10-27-live-integration/path-dirt` passed **4/4**: native 121-tile actual map demo, dedicated filter, real player movement and zero errors. Exact build independently verified by integration probe; canonical screenshot inspected. See the October 27 integration report and evidence folder. This final report update has no runtime changes.

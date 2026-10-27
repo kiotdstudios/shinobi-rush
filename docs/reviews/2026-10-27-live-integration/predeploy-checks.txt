@@ -1,0 +1,76 @@
+2026-10-27T09:04:09.2379240Z [smoke] PASS webgl2-available - WebGL 2.0 (OpenGL ES 3.0 Chromium); ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)
+2026-10-27T09:04:09.2638294Z [smoke] PASS build-info - kind=game (expected game), commit=c4c336964e42e73a59b0b2984aa9aae57e4f15be (expected c4c336964e42e73a59b0b2984aa9aae57e4f15be), attempts=1
+2026-10-27T09:04:09.5553426Z [smoke] PASS served-files-match-build - 10 files verified by sha256
+2026-10-27T09:04:09.6267950Z [smoke] PASS page-load - HTTP 200 text/html; charset=utf-8
+2026-10-27T09:04:32.1935369Z [smoke] PASS engine-start - status overlay removed after 24388 ms
+2026-10-27T09:04:51.1302130Z [smoke] PASS canvas-visible - 1280x720 css px, drawing buffer 1280x720
+2026-10-27T09:04:53.4729089Z [smoke] PASS ready-hook - window.__SHINOBI_READY__ === true
+2026-10-27T09:05:18.3590453Z [smoke] PASS canvas-not-blank - distinct colours=507, dominant colour #555555 covers 9.9%
+2026-10-27T09:05:47.7700817Z [smoke] PASS input-effect - 59.790% of sampled pixels changed after KeyD:500,Space:100,KeyJ:100 (needs >= 0.10%)
+2026-10-27T09:05:47.7770621Z [smoke] PASS engine-evidence - Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support. | Compatibility renderer confirmed
+2026-10-27T09:05:48.7565930Z [smoke] PASS no-fatal-console - 8 events, 4 warning(s), 0 fatal
+2026-10-27T09:05:48.7609940Z [smoke] VERDICT PASS (exit 0) label=pre-deploy
+2026-10-27T09:06:12.4868634Z [probe] PASS ready-flag - __SHINOBI_READY__ true after 23177 ms
+2026-10-27T09:06:14.8424112Z [probe] PASS state-object - {"frame":4,"physics_frame":40,"x":0,"y":135,"state":"IDLE","sprinting":false,"fps":1,"zoom":0.6650000214576721,"view_w":1924.81201171875,"view_h":1082.706787109375,"camera_preset":"wide","figure_height_px":104,"sprite_set_id":"player_128","cfx_enabled":true,"cfx_scale":1,"cfx_active":false,"cfx_offset_x":0,"cfx_offset_y":0,"cfx_peak_px":0,"cfx_count":0,"vision_on":false,"vision_bandits":0,"vision_points":0,"vision_rays":0,"vision_ms":0,"vision_state":"","vision_ai_state":"","vision_sees":false,"vision_can_see":false,"vision_player_in":false,"vision_cone":false,"vision_range":0,"vision_close":0,"vision_fov_deg":0,"vision_facing_x":0,"vision_facing_y":0,"vision_mismatch":0,"vision_capped":false,"vision_nodes":8315,"vision_origin_x":0,"vision_origin_y":0,"target_locked":false,"player_kunai_drawn":false,"player_attack_anim":"idle","player_weapon_visible":false,"player_sense_radius":300,"player_ryo":50,"settings_open":false,"settings_tab_x":1027,"settings_tab_y":709.5,"settings_bandit_x":1191,"settings_bandit_y":685,"settings_sense_x":1191,"settings_sense_y":685,"sense_vision_on":false,"sense_vision_views":0,"sense_vision_nodes":8315,"bandit_state":"PATROL","bandit_x":1263.5621337890625,"bandit_y":-180.98471069335938,"bandit_evades":0,"bandit_animation":"idle","bandit_frame":0,"bandit_level":1,"bandit_intent":"patrolling","bandit_sees":false,"bandit_senses_player":false,"bandit_sense_radius":300,"bandit_locked_on":false,"bandit_stolen_ryo":0,"bandit_flickers":0,"bandit_swings":0,"bandit_hits_landed":0,"bandit_stuck":0,"bandit_taunt":false,"bandit_home_dist":62.66704559326172,"player_hits_taken":0,"player_health":100,"player_max_health":100,"lab_open":false,"lab_animation":"idle"}
+2026-10-27T09:06:25.5099917Z [probe] PASS camera-preset-default-is-wide - no ?camera= parameter: state.camera_preset="wide", expected "wide"
+2026-10-27T09:06:25.5101280Z [probe] PASS camera-baseline-at-start - expected zoom ~0.6650 and view 1924.8x1082.7; got zoom=0.6650000214576721, view=1924.81201171875x1082.706787109375
+2026-10-27T09:06:37.8574423Z [probe] PASS move-right - dx 51.8 over a700ms sample (KeyD held ~1000ms), state=MOVE
+2026-10-27T09:07:02.9178779Z [probe] PASS sprint-faster - sprint 576.6px/physics-sec vs walk 388.5px/physics-sec; state=SPRINT, sprinting=true
+2026-10-27T09:07:02.9222055Z [probe] PASS player-sense-telemetry - player_kunai_drawn=false (bool) player_sense_radius=300
+2026-10-27T09:07:02.9234857Z [probe] PASS bandit-sense-telemetry - bandit_senses_player=false (bool) bandit_sense_radius=300
+2026-10-27T09:07:07.7936925Z [probe] PASS wall-approach-clearance - real S input backs away y 195.4 -> 316.5 before W
+2026-10-27T09:07:33.7932325Z [probe] PASS wall-stops-player - y 316.5 -> -1098.0 with W held; 3 later samples spread 0.00
+2026-10-27T09:07:36.5317108Z [probe] PASS lab-open-keeps-baseline - after Tab (lab open) zoom=0.6650000214576721, expected ~0.6650 (opening the lab must not change the camera)
+2026-10-27T09:07:38.8391615Z [probe] PASS lab-z-changes-zoom - after Z zoom=1, expected 1 (native 1:1, the first non-baseline lab zoom)
+2026-10-27T09:07:41.3286756Z [probe] PASS lab-z-second-step-is-quarter - after a second Z zoom=1.25, expected 1.25 (quarter steps: baseline, 1, 1.25, 1.5, 1.75, 2, ...)
+2026-10-27T09:07:43.5621284Z [probe] PASS lab-close-restores-baseline - after Tab (lab closed) zoom=0.6650000214576721, expected ~0.6650
+2026-10-27T09:07:58.7364072Z [probe] PASS lab-jump-available - selected jump
+2026-10-27T09:08:05.1298354Z [probe] PASS lab-dodge-available - selected dodge
+2026-10-27T09:08:41.7732467Z [probe] PASS camera-figure-height - loaded figure height=104px
+2026-10-27T09:08:41.7760886Z [probe] PASS camera-close-query-is-ignored-locked - ?camera=close is ignored (camera locked): expected preset=wide zoom ~0.6650 view 1924.8x1082.7; got preset=wide zoom=0.6650000214576721 view=1924.81201171875x1082.706787109375
+2026-10-27T09:09:14.4954754Z [probe] PASS camera-garbage-falls-back-to-wide - ?camera=bogus expected preset=wide zoom ~0.6650 view 1924.8x1082.7; got preset=wide zoom=0.6650000214576721 view=1924.81201171875x1082.706787109375
+2026-10-27T09:10:01.6979833Z [probe] PASS camera-impact-light - wide, order band 2-3 screen px: count 0->1, peak 2.500 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721
+2026-10-27T09:10:01.7010301Z [probe] PASS camera-impact-heavy - wide, order band 4-6 screen px: count 1->2, peak 5.000 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721
+2026-10-27T09:10:01.7030899Z [probe] PASS camera-impact-burst-capped - wide, three light hits: the peak stays at or under the 6 px cap: count 2->5, peak 3.536 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721
+2026-10-27T09:10:43.8552631Z [probe] PASS camera-impact-close-zoom - ?camera=close ignored, locked zoom ~0.6650, same bands in screen px: light count 0->1, peak 2.500 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721; heavy count 1->2, peak 5.000 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721
+2026-10-27T09:11:50.9431606Z [probe] PASS camera-impact-off - ?camera_impact=off, keys 7 8 9 pressed: enabled=false, count=0, peak=0, active=false, offset (0, 0)
+2026-10-27T09:12:26.9751327Z [probe] PASS camera-impact-reduced - ?camera_impact=reduced halves the heavy kick (5 -> 2.5 px), scale=0.5: count 0->1, peak 2.500 px, active=false, offset (0, 0), zoom 0.6650000214576721 -> 0.6650000214576721
+2026-10-27T09:13:00.2537125Z [probe] PASS vision-default-off - no ?vision= parameter: all 21 vision_* fields present (missing: none); on=false bandits=0 points=0 rays=0 nodes=8315
+2026-10-27T09:13:07.3428874Z [probe] PASS vision-hotkeys-removed - F1/F2/F3 pressed: on=false bandits=0 points=0 rays=0 nodes=8315 sense_vision_on=false (expect everything still off)
+2026-10-27T09:13:42.1035832Z [probe] PASS vision-button-toggles-on-off - Settings > Bandit vision click: ON on=true bandits=4 points=78 rays=356 nodes=8316; click again: OFF on=false bandits=0 points=0 rays=0 nodes=8315
+2026-10-27T09:14:15.9383283Z [probe] PASS vision-follows-and-agrees-with-ai - 20 published frames, Bandit moved 282 px, states PATROL/not_alert; 0 disagreements; polygon apex vs Bandit worst 0.0000 px; last sample cone=true range=450 324 rays 2.5999999046325684 ms/rebuild
+2026-10-27T09:18:09.5768704Z [probe] PASS vision-repeat-toggle-stable - 12 ON/OFF cycles through the Settings button (24 toggles): 0 bad states; after the last OFF on=false bandits=0 points=0 rays=0 nodes=8315 (start nodes=8315)
+2026-10-27T09:18:37.3074098Z [probe] PASS vision-url-starts-on - ?vision=1: on=true bandits=4 points=78 rays=332 nodes=8316, state not_alert
+2026-10-27T09:18:52.9366369Z [probe] PASS vision-url-on-then-off-leaves-nothing - Settings click after ?vision=1: on=false bandits=0 points=0 rays=0 nodes=8315 (expect zero geometry and nodes=8315, one less than ON)
+2026-10-27T09:19:18.0721061Z [probe] PASS sense-vision-default-off - no toggle pressed: sense_vision_on=false sense_vision_views=0 sense_vision_nodes=8315
+2026-10-27T09:19:34.7417560Z [probe] PASS sense-vision-button-toggles-on - Settings > Sense vision click: sense_vision_on=true sense_vision_views=5
+2026-10-27T09:19:43.0409510Z [probe] PASS sense-vision-button-toggles-off - click again: sense_vision_on=false sense_vision_nodes=8315 (expect back to 8315)
+2026-10-27T09:19:43.5500194Z [probe] PASS no-console-errors - 34 console messages, 0 error/pageerror
+2026-10-27T09:19:43.6287528Z [probe] VERDICT PASS
+2026-10-27T09:20:07.4509259Z [debug-probe] PASS ready-flag - __SHINOBI_READY__ true with ?debug=1
+2026-10-27T09:20:28.8185966Z [debug-probe] PASS debug-on-hooks-installed - hooks=object callback=function console wrapped=true
+2026-10-27T09:21:03.5599931Z [debug-probe] PASS download-event - suggested filename "shinobi-debug-20261027-091947-c4c3369.jsonl", 7820 bytes
+2026-10-27T09:21:03.5603872Z [debug-probe] PASS jsonl-parses - 28 lines (header + 27 events)
+2026-10-27T09:21:03.5607200Z [debug-probe] PASS header-fields - session 10243e17059b, schema 1, build c4c336964e42e73a59b0b2984aa9aae57e4f15be
+2026-10-27T09:21:03.5611263Z [debug-probe] PASS build-identity - header sha "c4c336964e42e73a59b0b2984aa9aae57e4f15be" vs served c4c3369, file shinobi-debug-20261027-091947-c4c3369.jsonl (CI: enforced)
+2026-10-27T09:21:03.5613484Z [debug-probe] PASS events-ordered - 27 events with core keys, one session, t_ms non-decreasing
+2026-10-27T09:21:03.5615155Z [debug-probe] PASS induced-error-captured - kind=error t_ms=73536 utc=2026-10-27T09:21:00Z
+2026-10-27T09:21:03.5616922Z [debug-probe] PASS induced-rejection-captured - kind=unhandledrejection t_ms=73537 utc=2026-10-27T09:21:00Z
+2026-10-27T09:21:03.5619217Z [debug-probe] PASS stack-sanitized - stacks non-empty, no query strings, local paths or token patterns
+2026-10-27T09:21:03.5620919Z [debug-probe] PASS no-leaks-in-log - whole export free of token/local-path patterns
+2026-10-27T09:21:03.5622234Z [debug-probe] PASS no-typed-text - unique typed string "qzxjkv2626" absent from the export
+2026-10-27T09:21:03.5623249Z [debug-probe] PASS size-bounded-1 - 7820 bytes
+2026-10-27T09:21:08.0861225Z [debug-probe] PASS size-bounded-flood - 20000 errors dispatched in 373 ms -> 10975 bytes, 39 events, 10 flood events kept
+2026-10-27T09:21:08.0863673Z [debug-probe] PASS flood-dropped - dropped={"disabled":0,"evicted_bytes":0,"evicted_count":0,"evicted_window":0,"oversize":0,"rate_limited":19990,"throttled":0,"total":19990} coalesced=0
+2026-10-27T09:21:08.0865688Z [debug-probe] PASS events-ordered-flood - ordering holds after the flood
+2026-10-27T09:21:16.3941330Z [debug-probe] PASS bug-report-copied - 11813 bytes in clipboard
+2026-10-27T09:21:16.3943241Z [debug-probe] PASS bug-report-no-leaks - report free of token/local-path patterns
+2026-10-27T09:21:16.3944688Z [debug-probe] PASS bug-report-no-typed-text - typed string absent from the report
+2026-10-27T09:21:16.3946733Z [debug-probe] PASS no-debug-network - 0 http(s) requests observed after ready, none cross-origin / non-GET / debug-looking
+2026-10-27T09:21:19.1573225Z [debug-probe] PASS no-storage-writes - localStorage 0 keys, sessionStorage 0 keys, cookie empty, IndexedDB [/userfs] unchanged
+2026-10-27T09:21:57.6861800Z [debug-probe] PASS off-no-hooks - hooks=undefined callback=undefined console wrapped=false
+2026-10-27T09:21:57.6863681Z [debug-probe] PASS off-no-listeners - error+unhandledrejection listeners registered: debug ON 2, OFF 0 (debug adds exactly 2)
+2026-10-27T09:22:02.4157986Z [debug-probe] PASS off-no-indicator - DEBUG ON indicator-coloured pixels in the top-right panel area: ON 614, OFF 0
+2026-10-27T09:22:09.0912708Z [debug-probe] PASS off-no-export - F7/F8 do nothing while debug is off (no download)
+2026-10-27T09:22:15.8020867Z [debug-probe] PASS no-unexpected-page-errors - 10 console messages, 0 unexpected pageerror (induced errors are expected)
+2026-10-27T09:22:15.8646041Z [debug-probe] VERDICT PASS
