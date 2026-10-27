@@ -1,0 +1,474 @@
+{
+  "schema": "shinobi_path_to_dirt_v1",
+  "canvas": [
+    72,
+    36
+  ],
+  "anchor": [
+    36,
+    18
+  ],
+  "logical_tile_size": [
+    72,
+    36
+  ],
+  "mask_bits": {
+    "bottom": 1,
+    "left": 2,
+    "right": 4,
+    "top": 8
+  },
+  "mask_meaning": "Set corner is dirt; unset corner is existing ground/path. Same corner-bit convention as shoreline kits.",
+  "nine_roles": {
+    "corner_top": 8,
+    "edge_ne": 12,
+    "corner_right": 4,
+    "edge_nw": 10,
+    "center": 15,
+    "edge_se": 5,
+    "corner_left": 2,
+    "edge_sw": 3,
+    "corner_bottom": 1
+  },
+  "variations": 3,
+  "texture_filter": "nearest",
+  "collision": "none; full floor diamond",
+  "sources": {
+    "assets\\environment\\blightwood\\ground_path\\ground9_center.png": "f2c589e286d59b02f3e1f740633791f3b8aaa3754b5c8b1b31f2eec81844541d",
+    "assets\\environment\\blightwood\\brown_dirt_path\\source\\earth-periodic.png": "481adfc61fa949cd469892ec4ce953b367e8c50491f389ade687286b8f7ae322"
+  },
+  "tiles": [
+    {
+      "id": "path_dirt_00_a",
+      "mask": 0,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_00_a.png",
+      "dirt_pixels": 0,
+      "opaque_pixels": 1296,
+      "sha256": "f2c589e286d59b02f3e1f740633791f3b8aaa3754b5c8b1b31f2eec81844541d"
+    },
+    {
+      "id": "path_dirt_01_a",
+      "mask": 1,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_01_a.png",
+      "dirt_pixels": 195,
+      "opaque_pixels": 1296,
+      "sha256": "f97d56fc170ac3b16fe485573060878e77945ed788ba94d6544ba20d07090400"
+    },
+    {
+      "id": "path_dirt_02_a",
+      "mask": 2,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_02_a.png",
+      "dirt_pixels": 194,
+      "opaque_pixels": 1296,
+      "sha256": "6767a84827da1d72403635b18a31c8311c5f8bd63b1a870d27a65ff35b2242a1"
+    },
+    {
+      "id": "path_dirt_03_a",
+      "mask": 3,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_03_a.png",
+      "dirt_pixels": 639,
+      "opaque_pixels": 1296,
+      "sha256": "414d02453cfcf8defc805fb3af3ea1589f28b75b66cc84d70e507b60f7a8bf34"
+    },
+    {
+      "id": "path_dirt_04_a",
+      "mask": 4,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_04_a.png",
+      "dirt_pixels": 184,
+      "opaque_pixels": 1296,
+      "sha256": "1dd83ab45eda1ecb8dafdbb632dd329f220621611c92b2f1f438bf177262ad47"
+    },
+    {
+      "id": "path_dirt_05_a",
+      "mask": 5,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_05_a.png",
+      "dirt_pixels": 654,
+      "opaque_pixels": 1296,
+      "sha256": "6ef523d6d194df0d9c1de0c495f920632b4736430fbf53fb37990eb8e98c5aca"
+    },
+    {
+      "id": "path_dirt_06_a",
+      "mask": 6,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_06_a.png",
+      "dirt_pixels": 631,
+      "opaque_pixels": 1296,
+      "sha256": "b58f57d15eeb1bce944fd473d3724bb8971c6dd5aeb4c662e16510b892a9dd19"
+    },
+    {
+      "id": "path_dirt_07_a",
+      "mask": 7,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_07_a.png",
+      "dirt_pixels": 1099,
+      "opaque_pixels": 1296,
+      "sha256": "fb614466684c3402440ea3ea90e1c529010fb5f0bf2e861f85573037dbad6be3"
+    },
+    {
+      "id": "path_dirt_08_a",
+      "mask": 8,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_08_a.png",
+      "dirt_pixels": 199,
+      "opaque_pixels": 1296,
+      "sha256": "332f8660da47d5c2be8b6ae72128b98ce7648dddc8bd6fc61f55c6bd55a10037"
+    },
+    {
+      "id": "path_dirt_09_a",
+      "mask": 9,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_09_a.png",
+      "dirt_pixels": 639,
+      "opaque_pixels": 1296,
+      "sha256": "f2a51fe87ec9802ba68c7dc690a8b905e373ffc3f24c5bb5f999fe3a28106303"
+    },
+    {
+      "id": "path_dirt_10_a",
+      "mask": 10,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_10_a.png",
+      "dirt_pixels": 651,
+      "opaque_pixels": 1296,
+      "sha256": "ee2560b2cd76f804fa81bf2d60136fc08650c995be80dbedb2578e019bbef31a"
+    },
+    {
+      "id": "path_dirt_11_a",
+      "mask": 11,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_11_a.png",
+      "dirt_pixels": 1083,
+      "opaque_pixels": 1296,
+      "sha256": "1b1bfa8a2676c001937c5dcb71da6f77a3b41759ddda85baeecb26cb1a4add26"
+    },
+    {
+      "id": "path_dirt_12_a",
+      "mask": 12,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_12_a.png",
+      "dirt_pixels": 648,
+      "opaque_pixels": 1296,
+      "sha256": "273f17141260c0d7e29bf806412b3c772bf3c16dc75e53375f39b3acdd8e48cd"
+    },
+    {
+      "id": "path_dirt_13_a",
+      "mask": 13,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_13_a.png",
+      "dirt_pixels": 1092,
+      "opaque_pixels": 1296,
+      "sha256": "75ed5633e412ec1fadc620553e47ec989d8124ad109851c9fbce197a9cb7f0db"
+    },
+    {
+      "id": "path_dirt_14_a",
+      "mask": 14,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_14_a.png",
+      "dirt_pixels": 1092,
+      "opaque_pixels": 1296,
+      "sha256": "a6d607ab14df026e5450b58b243d47b4eff9d111c83023273bea7b9338b6cabf"
+    },
+    {
+      "id": "path_dirt_15_a",
+      "mask": 15,
+      "variation": 0,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_15_a.png",
+      "dirt_pixels": 1296,
+      "opaque_pixels": 1296,
+      "sha256": "afe8dd7fbc472d3206c9760110afeffd347de07e00ccb2a7bad5758451a8b9d6"
+    },
+    {
+      "id": "path_dirt_00_b",
+      "mask": 0,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_00_b.png",
+      "dirt_pixels": 0,
+      "opaque_pixels": 1296,
+      "sha256": "f2c589e286d59b02f3e1f740633791f3b8aaa3754b5c8b1b31f2eec81844541d"
+    },
+    {
+      "id": "path_dirt_01_b",
+      "mask": 1,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_01_b.png",
+      "dirt_pixels": 216,
+      "opaque_pixels": 1296,
+      "sha256": "a2b1e8f38f37fb44e90a615b1c82508cd27de8a46b1d3fa06c71d54cef0bb8c3"
+    },
+    {
+      "id": "path_dirt_02_b",
+      "mask": 2,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_02_b.png",
+      "dirt_pixels": 196,
+      "opaque_pixels": 1296,
+      "sha256": "0ff09ad497b13105f40ae98885b3059d74c22697a0f8ae7d94d72e6aa90096d1"
+    },
+    {
+      "id": "path_dirt_03_b",
+      "mask": 3,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_03_b.png",
+      "dirt_pixels": 633,
+      "opaque_pixels": 1296,
+      "sha256": "c580168486c78371813154d4b7c5ca4df948ce7cc6d80997444e530cabb79500"
+    },
+    {
+      "id": "path_dirt_04_b",
+      "mask": 4,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_04_b.png",
+      "dirt_pixels": 203,
+      "opaque_pixels": 1296,
+      "sha256": "e627b92e8213f83a20e131ee29c72c2a2fbdc7be92b1d26c774d22de3af9a204"
+    },
+    {
+      "id": "path_dirt_05_b",
+      "mask": 5,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_05_b.png",
+      "dirt_pixels": 642,
+      "opaque_pixels": 1296,
+      "sha256": "3924fd08c81251b7ebff26bef7d05fc465949d1d044a35da831d112a3ac39bf2"
+    },
+    {
+      "id": "path_dirt_06_b",
+      "mask": 6,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_06_b.png",
+      "dirt_pixels": 633,
+      "opaque_pixels": 1296,
+      "sha256": "4e7fdd8095995744e6b7c99f732ebe2bef3e46f73877e828ae25b750d2790db4"
+    },
+    {
+      "id": "path_dirt_07_b",
+      "mask": 7,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_07_b.png",
+      "dirt_pixels": 1097,
+      "opaque_pixels": 1296,
+      "sha256": "7213d321aa8972b834243a19afcfa3f10b570885a5d941ebe5574919caea51d5"
+    },
+    {
+      "id": "path_dirt_08_b",
+      "mask": 8,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_08_b.png",
+      "dirt_pixels": 201,
+      "opaque_pixels": 1296,
+      "sha256": "78b6ea3eb237b60d8686a7820a7f3d29dffd05e96ad8c9ab01a09e69ccb8a52a"
+    },
+    {
+      "id": "path_dirt_09_b",
+      "mask": 9,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_09_b.png",
+      "dirt_pixels": 633,
+      "opaque_pixels": 1296,
+      "sha256": "4df74826e5742a5325566df976383894cf3419463f7d1b1d7409502215ba3640"
+    },
+    {
+      "id": "path_dirt_10_b",
+      "mask": 10,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_10_b.png",
+      "dirt_pixels": 643,
+      "opaque_pixels": 1296,
+      "sha256": "def530f1d60e1eb3fb47a8ca781cd395c23089cf6aed0185e236c012594be02f"
+    },
+    {
+      "id": "path_dirt_11_b",
+      "mask": 11,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_11_b.png",
+      "dirt_pixels": 1104,
+      "opaque_pixels": 1296,
+      "sha256": "e8d14fca690e43ae7d62699890292f60a85bfdf64c0c903023d33dab514c98db"
+    },
+    {
+      "id": "path_dirt_12_b",
+      "mask": 12,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_12_b.png",
+      "dirt_pixels": 641,
+      "opaque_pixels": 1296,
+      "sha256": "be068a9f03bde5f6db4226d380bc160bd94d6f027c04efefc1e25e3d0a23736a"
+    },
+    {
+      "id": "path_dirt_13_b",
+      "mask": 13,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_13_b.png",
+      "dirt_pixels": 1093,
+      "opaque_pixels": 1296,
+      "sha256": "3f4b8c7e5e5928b427156431ea1479c2bcb59f53deeb39e2623e9b519c369216"
+    },
+    {
+      "id": "path_dirt_14_b",
+      "mask": 14,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_14_b.png",
+      "dirt_pixels": 1113,
+      "opaque_pixels": 1296,
+      "sha256": "cca6140beaba6f4bfb1ef56c5c5b4b7ef52ee260316a27131de31bbf5413a122"
+    },
+    {
+      "id": "path_dirt_15_b",
+      "mask": 15,
+      "variation": 1,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_15_b.png",
+      "dirt_pixels": 1296,
+      "opaque_pixels": 1296,
+      "sha256": "afe8dd7fbc472d3206c9760110afeffd347de07e00ccb2a7bad5758451a8b9d6"
+    },
+    {
+      "id": "path_dirt_00_c",
+      "mask": 0,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_00_c.png",
+      "dirt_pixels": 0,
+      "opaque_pixels": 1296,
+      "sha256": "f2c589e286d59b02f3e1f740633791f3b8aaa3754b5c8b1b31f2eec81844541d"
+    },
+    {
+      "id": "path_dirt_01_c",
+      "mask": 1,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_01_c.png",
+      "dirt_pixels": 206,
+      "opaque_pixels": 1296,
+      "sha256": "e439d6fe1de9367e57f17163113d97a9120fa7c015532bc0cc70f66b3af9471e"
+    },
+    {
+      "id": "path_dirt_02_c",
+      "mask": 2,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_02_c.png",
+      "dirt_pixels": 215,
+      "opaque_pixels": 1296,
+      "sha256": "9c6c7cf104e0c02eacad2bb57099066b2b438c1d764b69636d596c8e60f6ee25"
+    },
+    {
+      "id": "path_dirt_03_c",
+      "mask": 3,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_03_c.png",
+      "dirt_pixels": 632,
+      "opaque_pixels": 1296,
+      "sha256": "1f34823aff628483fb67131b0bcce793ba532c6bf21bd9d6d0b4081283a86296"
+    },
+    {
+      "id": "path_dirt_04_c",
+      "mask": 4,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_04_c.png",
+      "dirt_pixels": 194,
+      "opaque_pixels": 1296,
+      "sha256": "52fa0f09781b5177521015efd7610ee806824133f4259dd38c9decf4e7a4a728"
+    },
+    {
+      "id": "path_dirt_05_c",
+      "mask": 5,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_05_c.png",
+      "dirt_pixels": 635,
+      "opaque_pixels": 1296,
+      "sha256": "9009af97cb796fc37261a407c9feb237dcae3744930f80e0f613f3e7b8e3ce0a"
+    },
+    {
+      "id": "path_dirt_06_c",
+      "mask": 6,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_06_c.png",
+      "dirt_pixels": 636,
+      "opaque_pixels": 1296,
+      "sha256": "de92cd0cf36a754b8d6716c91196719d5ebc3befb507cba45895744f777d7f9f"
+    },
+    {
+      "id": "path_dirt_07_c",
+      "mask": 7,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_07_c.png",
+      "dirt_pixels": 1060,
+      "opaque_pixels": 1296,
+      "sha256": "ad983969ef4cb487068c016d61b83f50018f18a93697aa6a45177dc02a7e3a82"
+    },
+    {
+      "id": "path_dirt_08_c",
+      "mask": 8,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_08_c.png",
+      "dirt_pixels": 183,
+      "opaque_pixels": 1296,
+      "sha256": "bffc1d358fdc4b415a673ce4a80efd94cca8a77fd6ec8667b887df493ccc71e8"
+    },
+    {
+      "id": "path_dirt_09_c",
+      "mask": 9,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_09_c.png",
+      "dirt_pixels": 599,
+      "opaque_pixels": 1296,
+      "sha256": "d0cc59a5d6aae4b8db831165073b16bb8df3b13695ee02e3f8729b3cc61c3acd"
+    },
+    {
+      "id": "path_dirt_10_c",
+      "mask": 10,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_10_c.png",
+      "dirt_pixels": 614,
+      "opaque_pixels": 1296,
+      "sha256": "9962eef7352eea221207146adf3ba42004b4a6f4d47b2787397e3256f0bb43cc"
+    },
+    {
+      "id": "path_dirt_11_c",
+      "mask": 11,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_11_c.png",
+      "dirt_pixels": 1090,
+      "opaque_pixels": 1296,
+      "sha256": "7d12e37f1e6b98f50d666309d7985aa063df26cab8c701e9cc3d79fe89127168"
+    },
+    {
+      "id": "path_dirt_12_c",
+      "mask": 12,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_12_c.png",
+      "dirt_pixels": 664,
+      "opaque_pixels": 1296,
+      "sha256": "3a4041c63c5eb0f4edbafe40df973f35764d5cc3040c0764d77fdbe223195cfe"
+    },
+    {
+      "id": "path_dirt_13_c",
+      "mask": 13,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_13_c.png",
+      "dirt_pixels": 1116,
+      "opaque_pixels": 1296,
+      "sha256": "a8a6c1804fb9db52b1c5b7ab374563af2cd2c3ed96ff030cb03724eb75cd36c7"
+    },
+    {
+      "id": "path_dirt_14_c",
+      "mask": 14,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_14_c.png",
+      "dirt_pixels": 1103,
+      "opaque_pixels": 1296,
+      "sha256": "b9012ebbf0a16487cfedcef6aeda4ae7b7f16cafcb7e0449dce8438ee0a897c6"
+    },
+    {
+      "id": "path_dirt_15_c",
+      "mask": 15,
+      "variation": 2,
+      "path": "res://assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_15_c.png",
+      "dirt_pixels": 1296,
+      "opaque_pixels": 1296,
+      "sha256": "afe8dd7fbc472d3206c9760110afeffd347de07e00ccb2a7bad5758451a8b9d6"
+    }
+  ]
+}
