@@ -199,7 +199,7 @@ func _rebuild_arcs() -> void:
 	for i in n:
 		if seen >= lit:
 			break
-		if _rng.randf() > float(lit) / float(n) * 1.4:
+		if _rng.randf() > float(lit) / float(n) * 1.4 and n - i > lit - seen:  # may skip a slot only while the lit count can still be reached
 			continue
 		seen += 1
 		var ground := _rng.randf() < 0.22
