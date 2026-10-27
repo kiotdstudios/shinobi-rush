@@ -1,0 +1,283 @@
+name: Full browser regression
+# The complete browser regression: smoke test + the whole controls probe (walk, sprint, wall, camera, impact, vision) +
+# the debug-log probe. It is NOT on the critical path of a routine deploy (see godot-ci.yml); it runs
+#   - nightly at 07:00 UTC (03:00 Eastern daylight time / 02:00 Eastern standard time),
+#   - on demand: Actions > Full browser regression > Run workflow (choose the branch or tag; it tests that ref's tip),
+#   - on every `release-*` tag push: the major-release gate (tag the exact commit you intend to release, see
+#     docs/development/GODOT_CI_AND_DEPLOYMENT.md "Release procedure"),
+#   - on pull requests that touch this workflow or the smoke suite itself.
+# It builds its own Web export from the commit it runs on and verifies build-info.json against that SHA before testing,
+# so it can never test an unrelated deploy. It never deploys anything and requests no write permissions.
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+  push:
+    tags: ["release-*"]
+  pull_request:
+    paths:
+      - ".github/workflows/full-regression.yml"
+      - "scripts/ci/smoke/**"
+permissions:
+  contents: read
+concurrency:
+  group: full-regression-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  build:
+    name: Build the Web export of this commit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      project_dir: ${{ steps.discover.outputs.project_dir }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Discover Godot project at runtime
+        id: discover
+        env:
+          GODOT_PROJECT_DIR: ${{ vars.GODOT_PROJECT_DIR }}
+        run: python3 scripts/ci/discover_project.py
+      - name: Remember the project directory for the steps below
+        env:
+          DISCOVERED_PROJECT_DIR: ${{ steps.discover.outputs.project_dir }}
+        run: echo "PROJECT_DIR=${DISCOVERED_PROJECT_DIR}" >> "$GITHUB_ENV"
+      - name: Prepare working directories
+        run: |
+          {
+            echo "EVIDENCE_DIR=${RUNNER_TEMP}/evidence"
+            echo "EXPORT_DIR=${RUNNER_TEMP}/web-export"
+            echo "GODOT_INSTALL_DIR=${HOME}/.cache/shinobi-rush/godot"
+          } >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/evidence/logs"
+      - name: Load pinned tool versions
+        run: python3 scripts/ci/pins.py github-env >> "$GITHUB_ENV"
+      - name: Restore Godot install cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/shinobi-rush/godot
+          key: godot-${{ runner.os }}-${{ env.GODOT_CACHE_KEY }}
+      - name: Install pinned Godot and Web export templates
+        run: python3 scripts/ci/install_godot.py install --platform linux --dest "$GODOT_INSTALL_DIR" --github-env
+      - name: Headless import
+        run: python3 scripts/ci/godot_ci.py import --project "$PROJECT_DIR" --log-dir "$EVIDENCE_DIR/logs"
+      - name: Validate project settings and Web export preset
+        run: python3 scripts/ci/validate_godot_project.py --project "$PROJECT_DIR" --json-out "$EVIDENCE_DIR/project-validation.json" --github
+      - name: Validate all scripts and scenes load
+        run: python3 scripts/ci/godot_ci.py validate-resources --project "$PROJECT_DIR" --log-dir "$EVIDENCE_DIR/logs"
+      - name: Export Web build (single-threaded, Compatibility renderer)
+        run: python3 scripts/ci/godot_ci.py export --project "$PROJECT_DIR" --out "$EXPORT_DIR" --log-dir "$EVIDENCE_DIR/logs"
+      - name: Validate export and write build-info.json
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python3 scripts/ci/godot_ci.py finalize-export --project "$PROJECT_DIR" --out "$EXPORT_DIR" --kind game
+      - name: Upload web export (the exact bytes every regression job below tests)
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: regression-web-export
+          path: ${{ runner.temp }}/web-export
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
+      - name: Upload build evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: full-regression-build-evidence
+          path: ${{ runner.temp }}/evidence
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+
+  smoke:
+    name: Full regression - browser smoke
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare working directories
+        run: |
+          {
+            echo "EVIDENCE_DIR=${RUNNER_TEMP}/evidence"
+            echo "EXPORT_DIR=${RUNNER_TEMP}/web-export"
+          } >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/evidence"
+      - name: Load pinned tool versions
+        run: python3 scripts/ci/pins.py github-env >> "$GITHUB_ENV"
+      - name: Download the web export built by the build job in this run
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: regression-web-export
+          path: ${{ runner.temp }}/web-export
+      - name: Verify export integrity against build-info.json
+        run: python3 scripts/ci/godot_ci.py check-export --dir "$EXPORT_DIR" --kind game --expect-sha "$GITHUB_SHA"
+      - name: Set up Node.js (pinned)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: scripts/ci/smoke/package-lock.json
+      - name: Install smoke-test dependencies (locked)
+        working-directory: scripts/ci/smoke
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore Playwright browser cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}-headless-shell-v1
+      - name: Install Chromium headless shell for Playwright
+        working-directory: scripts/ci/smoke
+        run: npx playwright install --no-progress --with-deps --only-shell chromium
+      - name: Run browser smoke test (local static server, no COOP/COEP headers)
+        working-directory: scripts/ci/smoke
+        run: >-
+          node smoke.mjs
+          --serve-dir "$EXPORT_DIR"
+          --out-dir "$EVIDENCE_DIR/smoke"
+          --label full-regression
+          --expected-sha "$GITHUB_SHA"
+      - name: Upload evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: full-regression-smoke-evidence
+          path: ${{ runner.temp }}/evidence
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+
+  controls-probe:
+    name: Full regression - controls probe
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare working directories
+        run: |
+          {
+            echo "EVIDENCE_DIR=${RUNNER_TEMP}/evidence"
+            echo "EXPORT_DIR=${RUNNER_TEMP}/web-export"
+          } >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/evidence"
+      - name: Load pinned tool versions
+        run: python3 scripts/ci/pins.py github-env >> "$GITHUB_ENV"
+      - name: Download the web export built by the build job in this run
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: regression-web-export
+          path: ${{ runner.temp }}/web-export
+      - name: Verify export integrity against build-info.json
+        run: python3 scripts/ci/godot_ci.py check-export --dir "$EXPORT_DIR" --kind game --expect-sha "$GITHUB_SHA"
+      - name: Set up Node.js (pinned)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: scripts/ci/smoke/package-lock.json
+      - name: Install smoke-test dependencies (locked)
+        working-directory: scripts/ci/smoke
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore Playwright browser cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}-headless-shell-v1
+      - name: Install Chromium headless shell for Playwright
+        working-directory: scripts/ci/smoke
+        run: npx playwright install --no-progress --with-deps --only-shell chromium
+      - name: Run controls probe (walk, sprint, wall, camera, impact and vision checks through window.__SHINOBI_STATE__)
+        working-directory: scripts/ci/smoke
+        run: >-
+          node controls-probe.mjs
+          --serve-dir "$EXPORT_DIR"
+          --out-dir "$EVIDENCE_DIR/controls-probe"
+      - name: Upload evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: full-regression-controls-evidence
+          path: ${{ runner.temp }}/evidence
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+
+  debug-probe:
+    name: Full regression - debug-log probe
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare working directories
+        run: |
+          {
+            echo "EVIDENCE_DIR=${RUNNER_TEMP}/evidence"
+            echo "EXPORT_DIR=${RUNNER_TEMP}/web-export"
+          } >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/evidence"
+      - name: Load pinned tool versions
+        run: python3 scripts/ci/pins.py github-env >> "$GITHUB_ENV"
+      - name: Download the web export built by the build job in this run
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: regression-web-export
+          path: ${{ runner.temp }}/web-export
+      - name: Verify export integrity against build-info.json
+        run: python3 scripts/ci/godot_ci.py check-export --dir "$EXPORT_DIR" --kind game --expect-sha "$GITHUB_SHA"
+      - name: Set up Node.js (pinned)
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: scripts/ci/smoke/package-lock.json
+      - name: Install smoke-test dependencies (locked)
+        working-directory: scripts/ci/smoke
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Restore Playwright browser cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}-headless-shell-v1
+      - name: Install Chromium headless shell for Playwright
+        working-directory: scripts/ci/smoke
+        run: npx playwright install --no-progress --with-deps --only-shell chromium
+      - name: Run debug-log probe (opt-in ?debug=1 capture, export, privacy and flood checks)
+        working-directory: scripts/ci/smoke
+        run: >-
+          node debug-probe.mjs
+          --serve-dir "$EXPORT_DIR"
+          --out-dir "$EVIDENCE_DIR/debug-probe"
+      - name: Upload evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: full-regression-debug-evidence
+          path: ${{ runner.temp }}/evidence
+          if-no-files-found: warn
+          retention-days: 30
+          overwrite: true
+
+  # One stable status for the whole suite: never green unless every regression job passed on the same export.
+  full-regression-gate:
+    name: Full regression result
+    needs: [build, smoke, controls-probe, debug-probe]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Evaluate the full regression
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: python3 scripts/ci/pages_gate.py regression

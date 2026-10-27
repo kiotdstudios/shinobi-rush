@@ -17,11 +17,12 @@ Owner: Kiro (Order 01, DONE and verified live on 2026-10-18). Audience: anyone w
 | --- | --- |
 | `.github/workflows/repository-checks.yml` | Required check `validate-orders-and-project` (orders, instructions, project discovery). Unchanged semantics. |
 | `.github/workflows/godot-ci.yml` | Godot pipeline: detect, build, pre-deploy smoke, deploy (main only), post-deploy smoke, `godot-ci-gate`. |
+| `.github/workflows/full-regression.yml` | The FULL browser regression (smoke + the whole controls probe + the debug-log probe, in parallel jobs on one export of one commit) and its `Full regression result` gate. Nightly, on demand, on `release-*` tags and on PRs that touch it or `scripts/ci/smoke/`. Never deploys; read-only token. |
 | `.github/workflows/pipeline-self-test.yml` | Tooling verification (lint, unit tests, positive and negative end-to-end cases). Never deploys. |
 | `scripts/ci/godot-version.env` | The single pin file (Godot, Node, Playwright, actionlint, runner image). |
 | `scripts/ci/*.py` | Python standard-library tooling used by the workflows and by local runs. Unit tests: `scripts/ci/tests/`. |
 | `scripts/ci/godot_walker.py` | Holds the GDScript text of the headless resource walker (loads every script, scene and resource in the project). `godot_ci.py` writes it to a temporary folder outside the project each time, so no `.gd` file is committed. |
-| `scripts/ci/smoke/` | Node + Playwright browser smoke test (`smoke.mjs`) and the controls probe (`controls-probe.mjs`), pinned with a lockfile. |
+| `scripts/ci/smoke/` | Node + Playwright browser smoke test (`smoke.mjs`), the controls probe (`controls-probe.mjs`) and the debug-log probe (`debug-probe.mjs`), pinned with a lockfile. |
 | `scripts/ci/validate_sprite_manifests.py` | Sprite manifest validator (stdlib Python); unit tests in `scripts/ci/test_validate_sprite_manifests.py`. |
 | `project.godot`, `export_presets.cfg`, `scenes/`, `scripts/` (game code), `tests/` | The Godot project at the repository root (stage 2). `tests/run_tests.gd` is the dependency-free test runner. |
 | `.gdignore` files | Empty marker files that hide non-game folders from Godot (list and rules: [below](#gdignore-files-and-the-one-assets-exception)). |
@@ -44,7 +45,8 @@ pull_request | push to main | workflow_dispatch
         |
   smoke-predeploy   real Chromium against a local static server (no COOP/COEP, like Pages); runs on PRs too
                     -> check-export (files vs build-info.json; sprite manifests and PNG imports inside index.pck)
-                    -> smoke.mjs (engine start, canvas, ready hook, input effect, console) then controls-probe.mjs
+                    -> smoke.mjs (engine start, canvas, ready hook, input effect, bounded player-movement assertion, console)
+                    (the comprehensive controls and debug probes are NOT here; see "Two tiers" below)
         |
      deploy         ONLY push to main / dispatch from main; Pages preflight, configure, upload, deploy
         |
@@ -54,6 +56,29 @@ pull_request | push to main | workflow_dispatch
 ```
 
 Nothing is published from pull requests. The `deploy` job has `pages: write` and `id-token: write`; no other job has any write permission.
+
+## Two tiers: fast deploy and full regression
+
+Routine pushes take the FAST path above: build and tests, one pre-deploy browser smoke (`smoke.mjs`: engine start, canvas, ready hook, input effect and a bounded `player-moves` assertion that real key input changes `window.__SHINOBI_STATE__.x`), deploy of the exact smoke-tested bytes, and the live post-deploy smoke with SHA match. Job names, the `deploy` contract and `godot-ci-gate` semantics are unchanged, so required checks do not change.
+
+The comprehensive probes were removed from that critical path only, not from the repository. They run in `full-regression.yml`:
+
+| Trigger | What it tests |
+| --- | --- |
+| Nightly, 07:00 UTC (03:00 Eastern daylight / 02:00 Eastern standard) | tip of the default branch |
+| Manual: Actions > Full browser regression > Run workflow, pick the branch or tag | the tip of that ref (to test one exact commit, push a tag such as `release-candidate-2026-10-27` on it and run on the tag) |
+| Push of a tag named `release-*` | exactly the tagged commit: this is the major-release gate |
+| Pull request touching `full-regression.yml` or `scripts/ci/smoke/**` | that PR head, so the suite is validated before it changes |
+
+Each run builds its own export from the commit it runs on, checks `build-info.json` against that SHA, and runs `smoke`, `controls-probe` and `debug-probe` as parallel jobs on those same bytes. `Full regression result` fails if any job failed, was cancelled or was skipped. Evidence (screenshots, JSON, logs) is uploaded per job as `full-regression-*-evidence` for 30 days, and a failing nightly shows as a red run on the Actions tab (and GitHub's failed-workflow notification). It requests no write permission, so it cannot open issues; watch the Actions tab.
+
+**Trade-off.** A fast deployment no longer guarantees that the full camera, vision and debug suite passed for that exact push. The last nightly tells you whether the suite was green on the previous night's tip.
+
+### Release procedure
+
+1. Choose the commit to release. Tag it: `git tag release-YYYY-MM-DD <sha> && git push origin release-YYYY-MM-DD`.
+2. Wait for the `Full browser regression` run on that tag. Release only if `Full regression result` is green; its summary names the SHA.
+3. Never release on a red or missing full-regression run for the release commit.
 
 ## Gates
 
