@@ -1,6 +1,6 @@
 # ORDER — scheduled 3:40 AM open-PR review and integration
 - Agent / Owner: Codex
-- Status: IN_PROGRESS
+- Status: REVIEW — combined candidate 3876/0 native; 6/6 real-input Web checks; fresh required CI and verified deployment pending.
 - Branch: codex/2026-10-27-pr-integration
 - Dependencies: current main, all nine open PR heads, required checks and deployment.
 

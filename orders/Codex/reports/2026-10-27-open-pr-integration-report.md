@@ -3,7 +3,7 @@
 - Date: 2026-10-27 America/New_York
 - Order: `orders/Codex/2026-10-27-open-pr-integration.md`
 - Status: REVIEW — final combined native/import/resource/Web checks passed; required integration CI/deployment pending. NOT LIVE.
-- Branch / PR: `codex/2026-10-27-pr-integration`; not yet pushed.
+- Branch / PR: `codex/2026-10-27-pr-integration`; implementation/conflict-resolution merge `3ea04dc0`, source-ancestry-only merge `a55833ad`; candidate PR not yet pushed.
 
 ## Review and work completed
 Inspected all nine open PRs, exact heads, descriptions, changes, review threads and CI. Existing worktree was clean on `codex/ground-dirt-transitions`; its branch/source commits are preserved. Started the integration branch from current main `46a01f1006407d3b6239fbd82a74d2cf1a9bb318`.
@@ -17,7 +17,7 @@ Inspected all nine open PRs, exact heads, descriptions, changes, review threads 
 | 220 | Verified historical live-mist documentation/evidence only; original date/SHA retained. |
 | 227 | Aki cliff-kit specification only. Merging the document does not deliver or approve unfinished cliff art/runtime work. |
 | 228 | Smoke visibility, existing bandit-world/belt/crew work and rock-base cleanup reviewed; conflicted against current main. Resolved in candidate, retaining latest stairs and new path catalog. |
-| 229 | Small inventory-drop feature reviewed. Patch included in combined tests; source-head ancestry to be recorded after tested conflict resolution. |
+| 229 | Small inventory-drop feature reviewed and fixed. Patch included in combined tests; source-head ancestry recorded after verification that the merge leaves the tested runtime tree byte-identical. |
 
 Direct normal merge of PR226 returned HTTP405: **2 of 2 required status checks expected**. Read the active ruleset: required checks bind to GitHub Actions app15368, and strict up-to-date policy is enabled. Actual named head checks were successful, but PR226 was behind current main. The integration candidate starts at current main and will get fresh checks for the complete combined tree. No rule or check bypass, status spoofing, force push or direct main write.
 
@@ -56,4 +56,4 @@ Strict branch freshness prevented direct PR226 merge. Used an ordinary integrati
 None currently; existing instructions and repository evidence resolved implementation choices.
 
 ## Outstanding work
-Record source ancestry, push reviewed integration PR, wait required CI, normal merge, verify main deploy/postdeploy and exact canonical browser build. Delete the one-time automation only after this pass has a terminal outcome; no daily repetition.
+All nine exact source heads verified as ancestors; source-ancestry recording did not alter tested scripts/tests. Push reviewed integration PR, wait required CI, normal merge, verify main deploy/postdeploy and exact canonical browser build. Delete the one-time automation only after this pass has a terminal outcome; no daily repetition.

@@ -302,5 +302,18 @@
     "pr": 226,
     "result": "HTTP405: 2 of 2 required status checks expected",
     "reason": "Strict up-to-date branch rule; PR226 behind current main. Integration candidate begins from current main; no protection bypass."
-  }
+  },
+  "integration_ancestry": {
+    "35": true,
+    "36": true,
+    "176": true,
+    "220": true,
+    "226": true,
+    "227": true,
+    "228": true,
+    "229": true,
+    "230": true
+  },
+  "tested_runtime_commit": "3ea04dc0",
+  "ancestry_only_commit": "a55833adac9a7915d3b523329bb77e3487e274f3"
 }
