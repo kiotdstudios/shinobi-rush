@@ -459,7 +459,7 @@ func _physics_process(delta: float) -> void:
 	elif state == State.CHARGE:
 		visual.play_action("charge", facing8)
 	else:
-		visual.set_pose(facing8, state == State.SPRINT, state != State.IDLE)
+		visual.set_locomotion(delta, facing8, state == State.SPRINT, state != State.IDLE, input)
 		if _throw_t > 0.0:
 			_play_throw_visual()
 		elif kunai_drawn:

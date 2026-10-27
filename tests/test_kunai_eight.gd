@@ -76,7 +76,7 @@ func run(ck: Callable, root: Node) -> void:
 	enemy.state=Bandit.State.PATROL
 	enemy.velocity=Vector2.RIGHT*enemy.move_speed
 	visual._process(0)
-	ck.call("kunai eight: patrol clears full weapon/trail layer",not visual.weapon_visible() and visual.actor.anim_id in ["run","sprint"],str([visual.weapon_visible(),visual.actor.anim_id]))
+	ck.call("kunai eight: patrol clears full weapon/trail layer",not visual.weapon_visible() and visual.actor.anim_id in ["move_start","move_start_sprint"],str([visual.weapon_visible(),visual.actor.anim_id]))
 	enemy.state=Bandit.State.THREATEN
 	visual._process(0)
 	ck.call("kunai eight: threaten has authored guard",visual.weapon_visible() and visual.actor.anim_id=="kunai_guard")

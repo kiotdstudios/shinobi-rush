@@ -2,7 +2,9 @@
 
 **Owner: Aki (animation creation, integration, testing)**  
 **Priority: P0 â€” gameplay feel**  
-**Status: implementation order; not yet implemented**
+**Status: REVIEW — owner reassigned execution to Codex via PR #224; implementation and local tests complete, integration/live verification pending.**
+
+Implementation branch: `codex/movement-transitions` (submitted to this PR's existing head branch). Visual drivers only; existing gameplay state, physics, camera and attack timing remain authoritative.
 
 ## Objective
 Make both the **player and bandit** feel alive, weighty, and responsive during ordinary traversal. Deliver **all three** P0 transitions for **both actors**: (1) idle-to-run/start, (2) run-to-idle/stop, (3) sharp-direction pivot/turn. This is six actor/transition deliverables, including art **and** runtime wiring. Don't finish only the player.

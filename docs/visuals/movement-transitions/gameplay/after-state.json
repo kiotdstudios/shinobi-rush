@@ -1,0 +1,47 @@
+{
+  "start": {
+    "ready": true,
+    "before": false,
+    "clock": 0.4073333442211151,
+    "events_json": "{\"bandit\":{\"start\":1},\"player\":{}}",
+    "player_animation": "idle",
+    "player_x": 420,
+    "player_y": 520,
+    "player_state": "IDLE",
+    "bandit_animation": "sprint",
+    "bandit_x": 967.4996948242188,
+    "bandit_y": 460,
+    "player_transition": "",
+    "bandit_transition": "",
+    "player_frame": 4,
+    "bandit_frame": 4
+  },
+  "end": {
+    "ready": true,
+    "before": false,
+    "clock": 7.620466709136963,
+    "events_json": "{\"bandit\":{\"start\":10,\"stop\":9},\"player\":{\"pivot\":1,\"start\":4,\"stop\":3}}",
+    "player_animation": "idle",
+    "player_x": 390.38470458984375,
+    "player_y": 493.9526062011719,
+    "player_state": "IDLE",
+    "bandit_animation": "sprint",
+    "bandit_x": 1046.8690185546875,
+    "bandit_y": 610.106689453125,
+    "player_transition": "",
+    "bandit_transition": "",
+    "player_frame": 0,
+    "bandit_frame": 4
+  },
+  "events": {
+    "bandit": {
+      "start": 10,
+      "stop": 9
+    },
+    "player": {
+      "pivot": 1,
+      "start": 4,
+      "stop": 3
+    }
+  }
+}
