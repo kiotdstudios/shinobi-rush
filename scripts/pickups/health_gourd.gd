@@ -26,11 +26,14 @@ const KINDS := {
 	"smoke_tag_bomb": {"dir": "res://assets/pickups/smoke_tag_bomb/", "group": "smoke_bomb_pickup", "color": Color(0.9, 0.12, 0.16), "aura": Color(1.0, 0.5, 0.45)},
 	"health": {"dir": "res://assets/pickups/health_gourd/", "group": "health_pickup", "color": Color(1.0, 0.18, 0.1), "aura": Color(1.0, 0.5, 0.4)},
 	"chakra": {"dir": "res://assets/pickups/chakra_gourd/", "group": "chakra_pickup", "color": Color(0.15, 0.55, 1.0), "aura": Color(0.45, 0.8, 1.0)},
+	"ryo": {"dir": "res://assets/pickups/ryo_pouch/", "group": "ryo_pickup", "color": Color(1.0, 0.78, 0.18), "aura": Color(1.0, 0.85, 0.35)},
 	"paper_tag": {"dir": "res://assets/pickups/paper_tag/", "group": "tag_pickup", "color": Color(1.0, 0.45, 0.08), "aura": Color(1.0, 0.7, 0.3)},
 }
 ## Floor-plane pick-up radius (the iso floor is squashed 2:1, so y is doubled before measuring).
 const PICKUP_RADIUS := 40.0
 const RESPAWN_SECONDS := 30.0
+## Ryo in one pouch. Pouches are one-time loot (they never respawn).
+const RYO_AMOUNT := 50
 const FLOAT_HEIGHT := 56.0
 const GOURD_FPS := 14.0
 const BOB := 4.0
@@ -90,6 +93,8 @@ static func icon(p_kind := "health") -> Texture2D:
 
 func _ready() -> void:
 	add_to_group(String(KINDS[kind].group))
+	if kind == "ryo":
+		respawns = false
 	_pool = Node2D.new()
 	_pool.name = "LightPool"
 	_pool.z_index = -1
@@ -194,7 +199,9 @@ func can_collect(player: Node) -> bool:
 	if not (player as Node2D).is_visible_in_tree():
 		return false  # map editor hides/freezes the actor; placing loot must not collect it
 	var inv: Variant = player.get("inventory")
-	if not (inv is PlayerInventory) or not (inv as PlayerInventory).has_room(item_id()):
+	if not (inv is PlayerInventory):
+		return false
+	if kind != "ryo" and not (inv as PlayerInventory).has_room(item_id()):
 		return false
 	var d: Vector2 = (player as Node2D).global_position - global_position
 	return Vector2(d.x, d.y * 2.0).length() <= PICKUP_RADIUS
@@ -209,6 +216,8 @@ func item_id() -> String:
 			return "chakra_gourd"
 		"paper_tag":
 			return "paper_tag"
+		"ryo":
+			return "ryo"
 	return "health_gourd"
 
 
@@ -227,7 +236,7 @@ func collect(player: Node) -> float:
 	var inv: Variant = player.get("inventory")
 	var gained := 0.0
 	if inv is PlayerInventory:
-		gained = float((inv as PlayerInventory).add(item_id(), 1))
+		gained = float((inv as PlayerInventory).add_ryo(RYO_AMOUNT)) if kind == "ryo" else float((inv as PlayerInventory).add(item_id(), 1))
 	if gained <= 0.0:
 		return 0.0
 	var before_fraction := 1.0

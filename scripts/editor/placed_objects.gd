@@ -77,11 +77,11 @@ const CATALOG := {
 	"water9_corner_bottom": {"label": "Water Corner Bottom", "kind": "ground", "group": "River water", "dir": "res://assets/environment/blightwood_water/tiles/", "water_role": "corner_bottom"},
 	"waterfall_small": {"label": "Small Waterfall", "kind": "water_fx", "footprint": Vector2(80, 32)},
 
-	"blight_wooden_post": {"label": "Wooden Lantern", "kind": "blight_light", "light": 0, "footprint": Vector2(54, 30)},
-	"blight_stone_pagoda": {"label": "Pagoda Lantern", "kind": "blight_light", "light": 1, "footprint": Vector2(84, 42)},
-	"blight_branch_lantern": {"label": "Branch Lantern", "kind": "blight_light", "light": 2, "footprint": Vector2(70, 38)},
-	"blight_stone_brazier": {"label": "Spirit Brazier", "kind": "blight_light", "light": 3, "footprint": Vector2(96, 46)},
-	"blight_spirit_totem": {"label": "Spirit Totem", "kind": "blight_light", "light": 4, "footprint": Vector2(75, 40)},
+	"blight_wooden_post": {"label": "Wooden Lantern", "kind": "blight_light", "light": 0, "footprint": Vector2(27, 15)},
+	"blight_stone_pagoda": {"label": "Pagoda Lantern", "kind": "blight_light", "light": 1, "footprint": Vector2(42, 21)},
+	"blight_branch_lantern": {"label": "Branch Lantern", "kind": "blight_light", "light": 2, "footprint": Vector2(35, 19)},
+	"blight_stone_brazier": {"label": "Spirit Brazier", "kind": "blight_light", "light": 3, "footprint": Vector2(48, 23)},
+	"blight_spirit_totem": {"label": "Spirit Totem", "kind": "blight_light", "light": 4, "footprint": Vector2(37.5, 20)},
 	"blight_fireflies": {"label": "Forest Fireflies", "kind": "fireflies", "footprint": Vector2(32, 16)},
 
 	"fire_tall_pillar": {"label": "Tall Pillar", "kind": "ashen_fire", "fire": 0, "footprint": Vector2(42, 22)},
@@ -169,10 +169,11 @@ const CATALOG := {
 	"tag_bomb": {"label": "Tag bomb (explosive)", "kind": "pickup", "gourd": "tag_bomb"},
 	"smoke_tag_bomb": {"label": "Smoke tag bomb", "kind": "pickup", "gourd": "smoke_tag_bomb"},
 	"paper_tag": {"label": "Paper tag (throwable bomb)", "kind": "pickup", "gourd": "paper_tag"},
+	"ryo_pouch": {"label": "Ryo pouch (+50 ryo)", "kind": "pickup", "gourd": "ryo"},
 	"bandit_l1": {"label": "Bandit (Level 1 robber)", "kind": "bandit", "level": 1},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Player spawn", ["player_spawn"]], ["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Bridges", ["bridge_short_wood_u", "bridge_short_wood_v", "bridge_medium_wood_u", "bridge_medium_wood_v", "bridge_long_wood_u", "bridge_long_wood_v", "bridge_short_rope_u", "bridge_short_rope_v", "bridge_medium_rope_u", "bridge_medium_rope_v", "bridge_long_rope_u", "bridge_long_rope_v", "bridge_short_damaged_u", "bridge_short_damaged_v", "bridge_medium_damaged_u", "bridge_medium_damaged_v", "bridge_long_damaged_u", "bridge_long_damaged_v"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine", "earth_stairs_se", "earth_stairs_sw", "cliff_ledge_se"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai"]], ["Enemies", ["bandit_l1"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
+const CATEGORIES := [["Player spawn", ["player_spawn"]], ["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Bridges", ["bridge_short_wood_u", "bridge_short_wood_v", "bridge_medium_wood_u", "bridge_medium_wood_v", "bridge_long_wood_u", "bridge_long_wood_v", "bridge_short_rope_u", "bridge_short_rope_v", "bridge_medium_rope_u", "bridge_medium_rope_v", "bridge_long_rope_u", "bridge_long_rope_v", "bridge_short_damaged_u", "bridge_short_damaged_v", "bridge_medium_damaged_u", "bridge_medium_damaged_v", "bridge_long_damaged_u", "bridge_long_damaged_v"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine", "earth_stairs_se", "earth_stairs_sw", "cliff_ledge_se"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai", "ryo_pouch"]], ["Enemies", ["bandit_l1"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -360,7 +361,7 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 			return [load(WindGrassTileset.DIR + id + ".png") as Texture2D, pos - Vector2(56, 136 if def.tall else 84)]
 		"blight_light":
 			var info := blight_info(int(def.light))
-			return [load(str(info.path).replace(".png", "-assembled.png")) as Texture2D, pos-Vector2(float(info.foot_anchor[0]), float(info.foot_anchor[1]))]
+			return [load(str(info.path).replace(".png", "-assembled.png")) as Texture2D, pos-Vector2(float(info.foot_anchor[0]), float(info.foot_anchor[1]))*BlightwoodLight.SIZE]
 		"fireflies":
 			return [load("res://assets/vfx/blightwood_lights/firefly-icon.png") as Texture2D, pos-Vector2(16, 16)]
 		"ashen_fire":
@@ -389,6 +390,11 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 
 ## The rectangle that exactly bounds the object's VISIBLE art (transparent padding trimmed). Used for the
 ## builder's dimension boxes, hover and selection, so a box never covers more than the picture.
+## How big the art is drawn relative to its texture (Blightwood lights are half size).
+static func art_scale(id: String) -> float:
+	return BlightwoodLight.SIZE if str(def_of(id).get("kind", "")) == "blight_light" else 1.0
+
+
 static func art_rect(id: String, pos: Vector2) -> Rect2:
 	var at := art_texture(id, pos)
 	var tex: Texture2D = at[0]
@@ -405,7 +411,8 @@ static func art_rect(id: String, pos: Vector2) -> Rect2:
 				used = r
 		_art_cache[id] = used
 	var u: Rect2i = _art_cache[id]
-	return Rect2((at[1] as Vector2) + Vector2(u.position), Vector2(u.size))
+	var k := art_scale(id)
+	return Rect2((at[1] as Vector2) + Vector2(u.position) * k, Vector2(u.size) * k)
 
 
 static var _alpha_images := {}
@@ -418,7 +425,7 @@ static func art_pixel_hit(id: String, pos: Vector2, point: Vector2, reach := 2) 
 	var tex: Texture2D = at[0]
 	if tex == null:
 		return hit_rect(id, pos).has_point(point)
-	var local := point - (at[1] as Vector2)
+	var local := (point - (at[1] as Vector2)) / art_scale(id)
 	if not Rect2(Vector2.ZERO, tex.get_size()).grow(float(reach)).has_point(local):
 		return false
 	if not _alpha_images.has(id):
