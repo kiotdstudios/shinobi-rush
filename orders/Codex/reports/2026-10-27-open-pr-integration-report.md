@@ -3,7 +3,7 @@
 - Date: 2026-10-27 America/New_York
 - Order: `orders/Codex/2026-10-27-open-pr-integration.md`
 - Status: REVIEW — final combined native/import/resource/Web checks passed; required integration CI/deployment pending. NOT LIVE.
-- Branch / PR: `codex/2026-10-27-pr-integration`; implementation/conflict-resolution merge `3ea04dc0`, source-ancestry-only merge `a55833ad`; candidate PR not yet pushed.
+- Branch / PR: `codex/2026-10-27-pr-integration`; implementation/conflict-resolution merge `3ea04dc0`, source-ancestry-only merge `a55833ad`; [PR231](https://github.com/kiotdstudios/shinobi-rush/pull/231).
 
 ## Review and work completed
 Inspected all nine open PRs, exact heads, descriptions, changes, review threads and CI. Existing worktree was clean on `codex/ground-dirt-transitions`; its branch/source commits are preserved. Started the integration branch from current main `46a01f1006407d3b6239fbd82a74d2cf1a9bb318`.
@@ -51,6 +51,11 @@ Pinned Python and Node from `C:/Users/dielp/.cache/codex-runtimes/codex-primary-
 
 ## Issues encountered
 Strict branch freshness prevented direct PR226 merge. Used an ordinary integration candidate based on current main, preserving original source ancestry, to validate the actual combined state. Other issues and exact fixes are listed above. No source PR has been closed or discarded merely to clear the list.
+
+### Required CI first attempt and tested tooling correction
+[Run 40471465492](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40471465492) imported, validated, passed native tests, exported and passed the standard browser smoke with zero fatal errors. The controls probe failed three vision assertions because it still required exactly one bandit, while PR228 intentionally adds three rivals. Actual output showed four bandits, one shared overlay node, zero AI/overlay disagreements, successful cleanup, and zero browser errors. Corrected both exact-count checks to require the authored four bandits; retained the 12 toggle cycles, strict node cleanup and AI agreement checks. No runtime code or test thresholds changed. Full corrected local Web controls probe must pass before this tooling correction is committed.
+
+Before committing the correction, ran `node scripts/ci/smoke/controls-probe.mjs --serve-dir ../pr-integration-web-20261027 --out-dir build/pr-integration/controls-corrected`: full probe **PASS**, including all 12 ON/OFF cycles, four visible bandits, no node leaks and zero console errors. Evidence: `docs/reviews/2026-10-27-integration-gameplay/controls-result.json`. `node --check`, orders validation and `git diff --check` also passed. Runtime export bytes are unchanged; the already-passed 3876-assertion native suite remains applicable.
 
 ## Questions for project owner
 None currently; existing instructions and repository evidence resolved implementation choices.
