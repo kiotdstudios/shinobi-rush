@@ -7,7 +7,8 @@ func _ready() -> void:
 	var query := str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
 	var enabled := "--kunai-proof" in OS.get_cmdline_user_args() or "kunai=proof" in query or "flicker=proof" in query
 	var target := ""
-	if "mist=review" in query or "--mist-review" in OS.get_cmdline_user_args():target="res://scenes/art/ground_mist_review.tscn"
+	if "movement=review" in query or "--movement-review" in OS.get_cmdline_user_args():target="res://scenes/art/movement_transition_review.tscn"
+	elif "mist=review" in query or "--mist-review" in OS.get_cmdline_user_args():target="res://scenes/art/ground_mist_review.tscn"
 	elif "impact=review" in query or "--impact-vortex-review" in OS.get_cmdline_user_args():target="res://scenes/art/impact_vortex_review.tscn"
 	elif "waterlife=review" in query or "--waterlife-review" in OS.get_cmdline_user_args():target="res://scenes/art/waterlife_review.tscn"
 	elif "waterlife=play" in query or "--waterlife-play" in OS.get_cmdline_user_args():target="res://scenes/art/waterlife_play.tscn"

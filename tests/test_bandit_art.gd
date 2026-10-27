@@ -27,10 +27,12 @@ func run(ck: Callable, tree_root: Node) -> void:
 			bandit.state = Bandit.State.IDLE if action == "idle" else Bandit.State.APPROACH
 			bandit.velocity = Vector2.ZERO if action == "idle" else bandit.facing8 * bandit.move_speed
 			visual._process(0.0)
+			visual._process(0.2)  # inspect settled loops after the new non-locking transition
 			ck.call("bandit art: %s %s" % [action, SpriteSet.DIRS8[i]], actor.anim_id == action and actor.dir == SpriteSet.DIRS8[i] and actor.visible)
 			ck.call("bandit art: stable foot anchor", actor.sprite.position == Vector2(-64, -116) and actor.scale == Vector2.ONE)
 	bandit.velocity = Vector2.ZERO
 	visual._process(0.0)
+	visual._process(0.2)  # brake must finish and return to idle
 	ck.call("bandit art: stopped approach uses idle", actor.anim_id == "idle")
 	bandit.state = Bandit.State.HIT_REACT
 	bandit._hit_flash_timer = 0.1

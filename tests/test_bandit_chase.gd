@@ -20,7 +20,9 @@ func run(ck: Callable, root: Node) -> void:
 	ck.call("bandit chase: detects and sprints", bandit.state == Bandit.State.APPROACH and bandit.is_sprinting and is_equal_approx(bandit.velocity.length(), bandit.chase_speed))
 	var visual := bandit.visual as BanditVisual
 	visual._process(0)
-	ck.call("bandit chase: uses authored sprint", visual.actor.anim_id == "sprint")
+	ck.call("bandit chase: uses authored sprint launch", visual.actor.anim_id == "move_start_sprint")
+	visual._process(0.11)
+	ck.call("bandit chase: launch hands off to authored sprint", visual.actor.anim_id == "sprint")
 	visual.actor.sprite.set_frame_and_progress(5, 0.4)
 	bandit.facing8 = Vector2.UP
 	visual._process(0)

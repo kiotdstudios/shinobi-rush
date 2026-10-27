@@ -1,0 +1,218 @@
+{
+  "results": [
+    {
+      "name": "before real input moves immediately",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "before": true,
+        "clock": 0.7883666753768921,
+        "events_json": "{\"bandit\":{},\"player\":{}}",
+        "player_animation": "run",
+        "player_x": 549.5,
+        "player_y": 520,
+        "player_state": "MOVE",
+        "bandit_animation": "idle",
+        "bandit_x": 1030.166259765625,
+        "bandit_y": 460,
+        "player_transition": "",
+        "bandit_transition": "",
+        "player_frame": 4,
+        "bandit_frame": 1
+      }
+    },
+    {
+      "name": "before attack interrupts traversal",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "before": true,
+        "clock": 3.350177764892578,
+        "events_json": "{\"bandit\":{},\"player\":{}}",
+        "player_animation": "light1",
+        "player_x": 400.50970458984375,
+        "player_y": 474.2651062011719,
+        "player_state": "LIGHT1",
+        "bandit_animation": "idle",
+        "bandit_x": 867.851806640625,
+        "bandit_y": 480.17449951171875,
+        "player_transition": "",
+        "bandit_transition": "",
+        "player_frame": 3,
+        "bandit_frame": 1
+      }
+    },
+    {
+      "name": "before comparison disables only transitions",
+      "ok": true,
+      "detail": {
+        "bandit": {},
+        "player": {}
+      }
+    },
+    {
+      "name": "after real input moves immediately",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "before": false,
+        "clock": 0.8200333118438721,
+        "events_json": "{\"bandit\":{\"start\":1,\"stop\":1},\"player\":{\"start\":1}}",
+        "player_animation": "run",
+        "player_x": 549.5,
+        "player_y": 520,
+        "player_state": "MOVE",
+        "bandit_animation": "idle",
+        "bandit_x": 1030.166259765625,
+        "bandit_y": 460,
+        "player_transition": "",
+        "bandit_transition": "",
+        "player_frame": 5,
+        "bandit_frame": 0
+      }
+    },
+    {
+      "name": "after attack interrupts traversal",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "before": false,
+        "clock": 3.3745665550231934,
+        "events_json": "{\"bandit\":{\"start\":5,\"stop\":4},\"player\":{\"pivot\":1,\"start\":4,\"stop\":3}}",
+        "player_animation": "light1",
+        "player_x": 390.38470458984375,
+        "player_y": 493.9526062011719,
+        "player_state": "LIGHT1",
+        "bandit_animation": "move_start_sprint",
+        "bandit_x": 875.6375122070312,
+        "bandit_y": 479.3121643066406,
+        "player_transition": "",
+        "bandit_transition": "start",
+        "player_frame": 3,
+        "bandit_frame": 0
+      }
+    },
+    {
+      "name": "player start observed",
+      "ok": true,
+      "detail": {
+        "bandit": {
+          "start": 10,
+          "stop": 9
+        },
+        "player": {
+          "pivot": 1,
+          "start": 4,
+          "stop": 3
+        }
+      }
+    },
+    {
+      "name": "player stop observed",
+      "ok": true,
+      "detail": {
+        "bandit": {
+          "start": 10,
+          "stop": 9
+        },
+        "player": {
+          "pivot": 1,
+          "start": 4,
+          "stop": 3
+        }
+      }
+    },
+    {
+      "name": "player pivot observed",
+      "ok": true,
+      "detail": {
+        "bandit": {
+          "start": 10,
+          "stop": 9
+        },
+        "player": {
+          "pivot": 1,
+          "start": 4,
+          "stop": 3
+        }
+      }
+    },
+    {
+      "name": "bandit start observed in real patrol",
+      "ok": true,
+      "detail": {
+        "bandit": {
+          "start": 10,
+          "stop": 9
+        },
+        "player": {
+          "pivot": 1,
+          "start": 4,
+          "stop": 3
+        }
+      }
+    },
+    {
+      "name": "bandit stop observed in real patrol",
+      "ok": true,
+      "detail": {
+        "bandit": {
+          "start": 10,
+          "stop": 9
+        },
+        "player": {
+          "pivot": 1,
+          "start": 4,
+          "stop": 3
+        }
+      }
+    },
+    {
+      "name": "bandit patrol keeps moving",
+      "ok": true,
+      "detail": {
+        "start": {
+          "ready": true,
+          "before": false,
+          "clock": 0.4073333442211151,
+          "events_json": "{\"bandit\":{\"start\":1},\"player\":{}}",
+          "player_animation": "idle",
+          "player_x": 420,
+          "player_y": 520,
+          "player_state": "IDLE",
+          "bandit_animation": "sprint",
+          "bandit_x": 967.4996948242188,
+          "bandit_y": 460,
+          "player_transition": "",
+          "bandit_transition": "",
+          "player_frame": 4,
+          "bandit_frame": 4
+        },
+        "end": {
+          "ready": true,
+          "before": false,
+          "clock": 7.620466709136963,
+          "events_json": "{\"bandit\":{\"start\":10,\"stop\":9},\"player\":{\"pivot\":1,\"start\":4,\"stop\":3}}",
+          "player_animation": "idle",
+          "player_x": 390.38470458984375,
+          "player_y": 493.9526062011719,
+          "player_state": "IDLE",
+          "bandit_animation": "sprint",
+          "bandit_x": 1046.8690185546875,
+          "bandit_y": 610.106689453125,
+          "player_transition": "",
+          "bandit_transition": "",
+          "player_frame": 0,
+          "bandit_frame": 4
+        }
+      }
+    },
+    {
+      "name": "no browser/engine errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "utc": "2026-10-27T00:06:30.609Z"
+}
