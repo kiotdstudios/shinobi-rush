@@ -1,0 +1,33 @@
+{
+  "url": "https://kiotdstudios.github.io/shinobi-rush/?shore=review&paused=1",
+  "tested_at": "2026-10-27T21:08:56.294Z",
+  "build_sha": "4ebda47269945600bfde7e4aac59a80e4d13d3fd",
+  "checks": {
+    "ready": true,
+    "current_moves": true,
+    "rooted_shore": true,
+    "normal_speed": true,
+    "half_speed": true,
+    "pause": true,
+    "step": true,
+    "grass_focus": true,
+    "dirt_focus": true,
+    "rock_focus": true,
+    "all_focus": true,
+    "captured": 0,
+    "no_errors": true
+  },
+  "errors": [],
+  "last": {
+    "ready": true,
+    "clock": 0,
+    "speed": 0.5,
+    "paused": true,
+    "focus": "All",
+    "tiles": 93,
+    "current_time": 0,
+    "root_x": 0,
+    "root_y": -72,
+    "buttons_json": "{\"All\":{\"x\":305.0,\"y\":57.5},\"Dirt\":{\"x\":398.0,\"y\":57.5},\"Grass\":{\"x\":349.0,\"y\":57.5},\"Half speed\":{\"x\":136.0,\"y\":57.5},\"Normal\":{\"x\":53.5,\"y\":57.5},\"Pause\":{\"x\":212.5,\"y\":57.5},\"Rock\":{\"x\":444.0,\"y\":57.5},\"Step\":{\"x\":265.5,\"y\":57.5}}"
+  }
+}

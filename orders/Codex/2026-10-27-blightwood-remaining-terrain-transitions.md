@@ -3,6 +3,10 @@
 **Owner:** Codex (pixel art and asset delivery)  
 **Priority:** P1 — map visual cohesion  
 **Type:** Work order only; no new tiles are created by this PR.
+**Status:** IN_PROGRESS — coverage audit delivered; material-family scope/approval pending before generation.
+
+## Coverage audit — October 27
+See [precise matrix and recommended scope](../../docs/reviews/pr240/COVERAGE_AUDIT.md), actual material comparison, authored shared-edge counts and canonical browser evidence. Key corrections: the natural dirt atlas is position-bound and uses exposed-side masks rather than a reusable corner family; old `shore_dirt` is olive path palette, not new brown soil; temple joins are present (37 grass/temple, one dirt/temple base shared edge); bridge end caps already exist. Do not duplicate those kits. No new asset/runtime implementation in this audit; remaining checklist is intentionally unapproved/uncompleted.
 
 ## Goal
 Finish the **missing terrain-to-terrain transition combinations** for the first Blightwood map so grass, dirt, existing ground/path, stone/rock, and river shorelines blend organically in the locked isometric pixel style. Reuse the existing tile sets; **do not recreate** PR #230's ground/path→dirt 16-mask kit or PR #226's brown dirt/grass-fringe work.

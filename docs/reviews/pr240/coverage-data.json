@@ -1,0 +1,243 @@
+{
+  "source_main": "3b0a4f60",
+  "map_sha256": "b7aaacd0bf8c0109bf2d26030413e4d8d1f37598f6712873b2d1bc26b17a178c",
+  "authored_cell_counts": {
+    "g": 1439,
+    "c": 776,
+    "s": 185,
+    "w": 391,
+    "d": 317
+  },
+  "shared_edge_counts": {
+    "cd": 33,
+    "cg": 344,
+    "cs": 90,
+    "cw": 189,
+    "dg": 205,
+    "ds": 1,
+    "dw": 5,
+    "gs": 37,
+    "gw": 66
+  },
+  "shared_edge_examples_world": {
+    "cg": [
+      [
+        -756,
+        -702
+      ],
+      [
+        -792,
+        -684
+      ]
+    ],
+    "cs": [
+      [
+        -540,
+        -702
+      ],
+      [
+        -504,
+        -684
+      ]
+    ],
+    "cw": [
+      [
+        684,
+        -702
+      ],
+      [
+        720,
+        -684
+      ]
+    ],
+    "gs": [
+      [
+        -72,
+        -684
+      ],
+      [
+        -36,
+        -666
+      ]
+    ],
+    "gw": [
+      [
+        612,
+        -450
+      ],
+      [
+        648,
+        -432
+      ]
+    ],
+    "dg": [
+      [
+        -144,
+        -252
+      ],
+      [
+        -108,
+        -234
+      ]
+    ],
+    "cd": [
+      [
+        0,
+        -252
+      ],
+      [
+        -36,
+        -234
+      ]
+    ],
+    "ds": [
+      [
+        432,
+        -216
+      ],
+      [
+        468,
+        -198
+      ]
+    ],
+    "dw": [
+      [
+        1008,
+        396
+      ],
+      [
+        972,
+        414
+      ]
+    ]
+  },
+  "count_scope": "authored base grid, before shoreline retiling, stair landing overwrite, props and natural-path presentation",
+  "fresh_asset_checks": {
+    "path_dirt_48_size_opaque_diamond_hashes": true,
+    "shoreline_48_binary_land_water_exact_union": true
+  },
+  "shoreline_masks": {
+    "grass": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "dirt": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "rock": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ]
+  },
+  "path_dirt_canonical": 48,
+  "path_dirt_unique_images": 44,
+  "natural_atlas_entries": 676,
+  "natural_entry_materials": {
+    "g": 359,
+    "d": 317
+  },
+  "shore_dirt_brown_palette_overlap": 0,
+  "shore_dirt_fill_colors": 6,
+  "brown_fill_colors": 24,
+  "shoreline_palette_sources": {
+    "grass": "assets/environment/kosen_courtyard/grass/tiles/grass9_center.png",
+    "dirt": "assets/environment/blightwood/ground_path/ground9_center.png",
+    "rock": "assets/environment/kosen_courtyard/floor_tiles/floor9_center.png",
+    "water": "assets/environment/blightwood_water/source/surface-option2.png"
+  },
+  "materials": [
+    {
+      "name": "Grass",
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_center.png",
+      "size": [
+        112,
+        112
+      ],
+      "sha256": "9a66d27089525cdf65e49af4ed75d9664ed25da8a78446e50cd137df432965e1",
+      "opaque_colors": 22
+    },
+    {
+      "name": "Ground / paths",
+      "path": "assets/environment/blightwood/ground_path/ground9_center.png",
+      "size": [
+        72,
+        36
+      ],
+      "sha256": "f2c589e286d59b02f3e1f740633791f3b8aaa3754b5c8b1b31f2eec81844541d",
+      "opaque_colors": 22
+    },
+    {
+      "name": "Brown dirt (pure mask)",
+      "path": "assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_15_a.png",
+      "size": [
+        72,
+        36
+      ],
+      "sha256": "afe8dd7fbc472d3206c9760110afeffd347de07e00ccb2a7bad5758451a8b9d6",
+      "opaque_colors": 24
+    },
+    {
+      "name": "Temple stone",
+      "path": "assets/environment/kosen_courtyard/floor_tiles/floor9_center.png",
+      "size": [
+        72,
+        36
+      ],
+      "sha256": "7645da3c9883c73f8e85c9f817d10ac477061de4b37fcebc93468437c4798571",
+      "opaque_colors": 13
+    },
+    {
+      "name": "Cliff / rocky land fill",
+      "path": "assets/environment/blightwood_shorelines/land/rock_15.png",
+      "size": [
+        72,
+        36
+      ],
+      "sha256": "f7b718c09dc11d30d37e84d1b6a246cf20c495d20a97d0d76ba665cd7b8f886a",
+      "opaque_colors": 6
+    }
+  ]
+}
