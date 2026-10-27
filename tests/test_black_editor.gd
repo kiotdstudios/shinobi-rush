@@ -74,6 +74,12 @@ func run(p_ck: Callable, root: Node) -> void:
 	var variation_id := str(variation_tiles.back().id) if not variation_tiles.is_empty() else ""
 	ck.call("black editor: random variation is stable across repeat brush", variation_id != "" and not ed._apply_cells([variation_cell]) and str(placed.floor_tiles_in_cell(variation_cell).back().id) == variation_id)
 	ed.random_variation = false
+	ck.call("black editor: Rules exposes the original void controls", (func() -> bool:
+		ed.black_assets.set_tab("Rules")
+		var row: Control = ed.black_assets.rules_page.find_child("VoidControls", false, false)
+		var ok := row != null and row.get_parent() == ed.black_assets.rules_page and row.is_visible_in_tree() and ed.fill_void_button.get_parent() == row and ed.next_void_button.get_parent() == row and ed.fill_void_button.pressed.is_connected(ed.fill_void)
+		ed.black_assets.set_tab("Tiles")
+		return ok).call())
 	ck.call("black editor: legacy controls remain accessible", ed.build_page != null and ed.settings_page != null and shell.legacy_build_scroll != null)
 	ck.call("black editor: valid JSON import roundtrips exact items", (func() -> bool:
 		var before := placed.to_dict()

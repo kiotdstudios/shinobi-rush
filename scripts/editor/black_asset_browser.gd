@@ -301,6 +301,16 @@ func _build_rules() -> void:
 	rules_page.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	rules_page.add_theme_constant_override("separation", 6)
 	add_child(rules_page)
+	# Map mode moved these buttons into its pinned dock and freed the original void row.
+	# Rehouse the live controls rather than duplicate their save-safety callbacks.
+	var void_row := HBoxContainer.new()
+	void_row.name = "VoidControls"
+	void_row.add_theme_constant_override("separation", 4)
+	rules_page.add_child(void_row)
+	for b: Button in [editor.fill_void_button, editor.next_void_button]:
+		if b.get_parent() != null:
+			b.get_parent().remove_child(b)
+		void_row.add_child(b)
 	for c: Control in [editor.tools_toggle, editor.tools_body]:
 		if c == null:
 			continue
