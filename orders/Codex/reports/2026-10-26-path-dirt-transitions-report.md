@@ -4,7 +4,7 @@
 - Order: `orders/Codex/2026-10-26-path-dirt-transitions.md`
 - Status: REVIEW — art, builder integration, focused checks, full native regression and actual Web-game review passed. NOT LIVE; scheduled integration pending.
 - Branch: `codex/ground-dirt-transitions`
-- Commit / PR: Not committed yet; depends on PR226. Latest main `46a01f10` (PR225 stair fix) merged without changing its implementation.
+- Commit / PR: Implementation `0739a332c8c2372cc2aee8e28a8464c81d6e3ed6`; https://github.com/kiotdstudios/shinobi-rush/pull/230, depends on PR226. Latest main `46a01f10` (PR225 stair fix) merged without changing its implementation.
 
 ## Work completed
 Created a companion kit blending the exact existing **Ground / paths** surface into PR226's brown earth. Reused existing pixels and colors, with broken irregular material boundaries, curved corner coverage and three interior variations. No new raw art, grass generation, palette, terrain geometry or map repainting. All floor diamonds are opaque; only the outside of each 72×36 canvas is transparent. Anchor remains `(36,18)`.
@@ -42,4 +42,4 @@ Initial focused local runner started before the SceneTree root was ready, so sce
 None.
 
 ## Outstanding work / next steps
-Commit/push companion PR and link dependency PR226. Include in the owner's scheduled 3:40 AM New York open-PR review/integration pass. **NOT LIVE — required review, integration, main deployment and canonical game verification remain pending.**
+PR230 pushed, attached to this task, and explicitly added to the existing one-time 3:40 AM New York open-PR automation; no duplicate automation created. The automation records the current worktree branch and PR226 dependency. **NOT LIVE — required review, integration, main deployment and canonical game verification remain pending.**

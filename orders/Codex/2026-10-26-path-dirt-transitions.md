@@ -2,6 +2,7 @@
 - Agent: Codex
 - Status: REVIEW — 3763/0 full native, 211/0 focused, 4/4 Web-game checks. NOT LIVE; scheduled review/integration pending.
 - Branch: codex/ground-dirt-transitions
+- PR: https://github.com/kiotdstudios/shinobi-rush/pull/230
 - Dependencies: PR226 brown earth material, existing Ground / paths artwork.
 
 ## Objective
