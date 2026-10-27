@@ -2,7 +2,7 @@
 - Agent: Codex
 - Date: 2026-10-27
 - Order: `orders/Codex/2026-10-27-blightwood-remaining-terrain-transitions.md`
-- Status: REVIEW — production files, native/editor regression and actual Web tests passed; required PR integration and canonical deployment pending. NOT LIVE.
+- Status: DONE — requested Codex file delivery integrated and live verified. Overall map/automatic-blending acceptance remains separate with Aki/owner.
 - Branch / PR: `codex/pr240-coverage-audit`; existing [PR240](https://github.com/kiotdstudios/shinobi-rush/pull/240).
 
 ## Work completed / files
@@ -25,9 +25,16 @@ Initial seam verifier included a digital diamond's empty endpoint samples; limit
 Initial browser probe used a letterboxed 1440×900 viewport while UI rectangles were native 1280×720, so real button clicks missed. Re-ran at native viewport without changing input/gameplay. Review framing was widened and swatches moved onto exact lattice rows so all16 masks and brown-bank swatches fit the view; final Web probe reruns that opt-in demo. These demo-only changes do not alter the normal camera or tested editor behavior.
 
 ## Questions / outstanding
-No new owner question: latest request authorizes creation. Remaining Aki-owned auto blending, real cliff/waterfall fit and height geometry are explicitly handed off, not claimed complete by flat art. Complete native/Web tests, write evidence, push PR240, follow normal review/required CI and canonical deployment. No claim that every possible map transition or geometry task is complete.
+No new owner question. Requested Codex files are delivered and live. Aki-owned auto blending, real cliff/waterfall fit and height geometry are explicitly handed off, not claimed complete by flat art. No claim that every possible map transition or geometry task is complete.
 
 ## Current-main refresh before integration
 Initial head `e8b6b01da8c60fc43a978b2a7e2f4be5a778d610` passed required [Godot CI 40589608385](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40589608385) and the complete [full browser regression 40589608296](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40589608296), including controls/camera/vision/debug. While waiting, Aki merged PR242 (`7399c4a3754f4cb3dfd22021357fc2d785ff2545`), fixing save/reload loss of a rock near the player spawn. Merged current main with `--no-commit`, preserving that guard and its map regression. Before committing the merge, the complete combined native rerun passed **4412 / 0**, no engine errors, log `build/terrain-transitions/tests-integrated/tests-builtin.log`. Combined validation/export/Web retest follows before this merge commit. No rule bypass or force push.
 
 Combined pre-merge-commit verification completed: `validate-resources` PASS **431/30/2, zero failures**, log `build/terrain-transitions/validate-integrated`; debug export PASS to `../terrain-transitions-web-integrated-20261027`, log `build/terrain-transitions/export-integrated`; actual-game `terrain-transitions-probe.mjs --serve-dir ../terrain-transitions-web-integrated-20261027 --out-dir docs/visuals/terrain-transitions/gameplay` **9/9 PASS**, zero errors, UTC `2026-10-27T22:14:49.700Z`. The tracked gameplay evidence is refreshed to this combined tree; earlier evidence remains in the original implementation commit. Orders and whitespace checks passed before this tested main refresh commit.
+
+## Integration / exact canonical proof
+- Implementation `e8b6b01da8c60fc43a978b2a7e2f4be5a778d610`; tested main refresh `e6d944fee7ebf030aaecc46481c7301f1362ca98`.
+- Fresh required [CI 40593485065](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40593485065) passed; ordinary PR240 merge at **`bf96f014dd10887cbed45b0f433c271d6db22740`**. No protection bypass, force push or main overwrite.
+- [Main CI 40595087133](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40595087133) succeeded including deploy and postdeploy. Complete refreshed [full browser regression 40593484998](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40593484998) also passed all controls/camera/vision/debug checks.
+- `node scripts/ci/smoke/terrain-transitions-probe.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha bf96f014dd10887cbed45b0f433c271d6db22740 --out-dir docs/visuals/terrain-transitions/live-gameplay`: **10/10 PASS**, UTC **2026-10-27T22:44:14.035Z**, exact build, seven actual family switches, bank filter, real movement, zero errors. Canonical screenshots inspected. Files are available in eight new builder categories; authored map isn't automatically repainted.
+- Final evidence/status update is documentation only; **Live deployment: not applicable** to that follow-up. Verified runtime remains the exact main SHA above. Final docs validation includes orders, JSON/PNG decoding and whitespace checks before commit.

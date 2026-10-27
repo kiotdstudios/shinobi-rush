@@ -3,7 +3,7 @@
 **Owner:** Codex (pixel art and asset delivery)  
 **Priority:** P1 — map visual cohesion  
 **Type:** Coverage audit plus missing flat terrain families and brown-bank land patch.
-**Status:** REVIEW — seven flat families/brown-bank patch created; latest-main combined 4412/0 native and 9/9 Web checks; fresh required CI/integration/live verification pending.
+**Status:** REVIEW — requested Codex files delivered/live at bf96f014; 4412/0 native, 10/10 canonical checks, main deploy/postdeploy and full browser regression passed. Aki geometry/auto-blending and owner final world acceptance remain separate.
 
 ## Owner continuation / implementation
 Owner explicitly requested “create all files still needed” after reviewing the audit. Implemented seven scoped flat families (grass/path, grass/temple, dirt/temple, grass/rock, dirt/rock, temple/rock, reusable grass/dirt), 308 registered tiles, plus 16 brown shore land layers and 16 editor icons. No duplicate existing path/dirt set, water animation or bridge end caps. Flat rock material assets are delivered for manual placement; vertical cliff geometry and measured landing/waterfall fit remain Aki's integration tasks, documented in `docs/visuals/terrain-transitions/AKI_HANDOFF.md`. Original audit below is historical, before this implementation.
@@ -64,3 +64,6 @@ Build a **material adjacency matrix** and visually inspect existing runtime and 
 - [ ] Remaining auto-blending / cliff-waterfall integration work clearly assigned to Aki.
 
 **Do not claim “all map transitions complete” until the material adjacency matrix, in-game tests, and owner approval confirm it.**
+
+## Codex file-delivery completion
+[PR240](https://github.com/kiotdstudios/shinobi-rush/pull/240) merged as `bf96f014dd10887cbed45b0f433c271d6db22740`; [main deployment](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40595087133) and exact canonical verification passed. See `docs/visuals/terrain-transitions/LIVE_DELIVERY.md` and `reports/2026-10-27-remaining-terrain-files-report.md`. Flat families, brown bank layers, builder categories, tests, contacts, seam diagrams and live demo are delivered. Existing bridge caps/water frames reused. Remaining Aki-owned integrations are in `docs/visuals/terrain-transitions/AKI_HANDOFF.md`; this status intentionally does not approve all map geometry or automatic blending.
