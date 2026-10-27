@@ -1077,6 +1077,34 @@ func use_slot(slot: String) -> bool:
 	return used
 
 
+## Maps a bag item id to the HealthGourd `kind` that represents it in the world (inverse of
+## `HealthGourd.item_id()`): the two gourds have a world kind name that differs from their bag id,
+## everything else (kunai / paper_tag / tag_bomb / smoke_tag_bomb) uses the same string for both.
+static func _world_kind_for(id: String) -> String:
+	match id:
+		"health_gourd":
+			return "health"
+		"chakra_gourd":
+			return "chakra"
+		_:
+			return id
+
+
+## Player Menu's Square/drop: takes one `id` out of the bag and sets it back down in the world in
+## front of the player, same as any other pickup (so it can be walked over and collected again,
+## by this player or anyone else). Does nothing when the bag is already empty of it.
+func drop_item(id: String) -> bool:
+	if health <= 0.0 or not inventory.consume(id):
+		return false
+	var pickup := HealthGourd.new()
+	pickup.kind = _world_kind_for(id)
+	pickup.grounded = id == "kunai"
+	pickup.respawns = false
+	get_parent().add_child(pickup)
+	pickup.global_position = global_position + facing8 * 28.0
+	return true
+
+
 ## Unit vector from the player to the R3 lock-on target, or ZERO when nothing is locked.
 func lock_aim_dir() -> Vector2:
 	var lock := get_node_or_null("LockOn") as PlayerLockOn
