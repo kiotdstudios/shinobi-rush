@@ -1,0 +1,105 @@
+{
+  "generator": "PixelLab",
+  "base_image": {
+    "tool": "create_image_pro_flash",
+    "job_id": "f937a2a6-0f77-405e-a097-3088eecb5542",
+    "size": [
+      256,
+      256
+    ],
+    "seed": 29,
+    "style_image": "assets/pickups/smoke_tag_bomb/billow_04.png",
+    "crop_for_animation": [
+      0,
+      40,
+      256,
+      232
+    ],
+    "description": "dense ninja smoke-bomb smoke screen cloud, a wide low bank of thick billowing charcoal and ash-grey smoke puffs hugging the ground, rounded overlapping cumulus puffs with soft volumetric shading, lighter grey highlights on top, dark charcoal underside, wisps curling at the edges, opaque enough to hide a person, 3/4 top-down isometric game view, transparent background, no ground, no fire, no characters"
+  },
+  "animations": [
+    {
+      "name": "burst",
+      "layer": "screen_burst",
+      "tool": "animate_image_pixminimax",
+      "job_id": "a57bf063-18fa-4550-afb4-c6f9f1d1041c",
+      "returned_frames": 13,
+      "use": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "fps": 14,
+      "note": "frames 0-6 only shrink the seed puff; 7 is the pop, 12 is pinned to the bank"
+    },
+    {
+      "name": "loop",
+      "layer": "screen_loop",
+      "tool": "animate_image_pixminimax",
+      "job_id": "2ea091c0-8a28-42cd-a3a0-7fa420ce3e3f",
+      "returned_frames": 13,
+      "use": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "fps": 10,
+      "note": "first and last pinned to the bank; 12 duplicates 0 and is dropped"
+    },
+    {
+      "name": "fade",
+      "layer": "screen_fade",
+      "tool": "animate_image_pixminimax",
+      "job_id": "52d6c262-fcd6-43ee-95b5-24cbfa075684",
+      "returned_frames": 13,
+      "use": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "fps": 11,
+      "note": "11-12 are empty",
+      "cleanup": [
+        {
+          "frame": 3,
+          "below_y": 150,
+          "max_px": 120
+        }
+      ]
+    }
+  ],
+  "rejected": [
+    {
+      "job_id": "2db45347-d5c2-4b92-a40a-ea4ca6f5cb96",
+      "why": "base candidate, smaller and flatter bank"
+    },
+    {
+      "job_id": "2db80932-63be-4b98-83c1-f952b2a791c6",
+      "why": "loop grows past the canvas edge (frames 4-8 clipped) and pops back at 9"
+    },
+    {
+      "job_id": "23aec9b8-e89f-4515-ac0d-264a83f84572",
+      "why": "animate_image loop: seamless but barely moves (~400 px change per frame vs ~4500)"
+    }
+  ]
+}

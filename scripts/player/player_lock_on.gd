@@ -62,7 +62,7 @@ func toggle() -> void:
 	target = null
 	var nearest := RANGE
 	for enemy in get_tree().get_nodes_in_group("enemy"):
-		if not enemy is Node2D or not enemy.has_method("is_alive") or not enemy.is_alive():
+		if not enemy is Node2D or not enemy.has_method("is_alive") or not enemy.is_alive() or not _in_view(enemy):
 			continue
 		var distance: float = _origin().distance_to(enemy.global_position)
 		if distance < nearest:
@@ -82,7 +82,7 @@ func switch_target(dir: Vector2) -> bool:
 	for enemy in get_tree().get_nodes_in_group("enemy"):
 		if enemy == target or not enemy is Node2D or not enemy.has_method("is_alive") or not enemy.is_alive():
 			continue
-		if _origin().distance_to(enemy.global_position) > RANGE:
+		if _origin().distance_to(enemy.global_position) > RANGE or not _in_view(enemy):
 			continue
 		var d: Vector2 = enemy.global_position - from
 		if d.length_squared() < 1.0:
@@ -114,7 +114,12 @@ func _poll_flick() -> void:
 
 
 func valid_target() -> bool:
-	return is_instance_valid(target) and target.has_method("is_alive") and target.is_alive() and _origin().distance_to(target.global_position) <= RANGE
+	return is_instance_valid(target) and target.has_method("is_alive") and target.is_alive() and _origin().distance_to(target.global_position) <= RANGE and _in_view(target)
+
+
+## Smoke breaks the lock: nothing inside or behind a standing screen can be targeted.
+func _in_view(enemy: Node2D) -> bool:
+	return not SmokeTagBomb.blocks_sight(_origin(), enemy.global_position)
 
 
 ## Unit vector from the player to the locked target, or ZERO when there is no valid lock.

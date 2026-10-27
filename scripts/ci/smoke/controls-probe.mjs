@@ -265,7 +265,10 @@ try {
   };
   const visionIsOn = () => window.__SHINOBI_STATE__.vision_on === true && window.__SHINOBI_STATE__.vision_points > 0;
   const visionIsOff = () => window.__SHINOBI_STATE__.vision_on === false;
-  const onOk = (s, base) => !!s && s.vision_on === true && s.vision_bandits === 1 && s.vision_points >= 8 && s.vision_rays >= 8 && s.vision_nodes === base + 1;
+  // Authored world: the original bandit plus three rival-crew members (PR228).
+  // One shared overlay node must draw all four, without leaking nodes on toggles.
+  const expectedVisionBandits = 4;
+  const onOk = (s, base) => !!s && s.vision_on === true && s.vision_bandits === expectedVisionBandits && s.vision_points >= 8 && s.vision_rays >= 8 && s.vision_nodes === base + 1;
   const offOk = (s, base) => !!s && s.vision_on === false && s.vision_bandits === 0 && s.vision_points === 0 && s.vision_rays === 0 && s.vision_state === '' && s.vision_nodes === base;
   const vsum = (s) => (s ? `on=${s.vision_on} bandits=${s.vision_bandits} points=${s.vision_points} rays=${s.vision_rays} nodes=${s.vision_nodes}` : 'timed out waiting for the published state');
   const vp = await visionOpen('');
@@ -341,7 +344,7 @@ try {
   const vq = await visionOpen('?vision=1');
   try {
     const q0 = await vq.until(visionIsOn);
-    rec('vision-url-starts-on', !!q0 && q0.vision_on === true && q0.vision_bandits === 1 && q0.vision_points >= 8 && VISION_CATS.includes(q0.vision_state), `?vision=1: ${vsum(q0)}, state ${q0 ? q0.vision_state : '?'}`);
+    rec('vision-url-starts-on', !!q0 && q0.vision_on === true && q0.vision_bandits === expectedVisionBandits && q0.vision_points >= 8 && VISION_CATS.includes(q0.vision_state), `?vision=1: ${vsum(q0)}, state ${q0 ? q0.vision_state : '?'}`);
     await vq.click();
     const q1 = await vq.until(visionIsOff);
     rec('vision-url-on-then-off-leaves-nothing', !!q0 && !!q1 && offOk(q1, q0.vision_nodes - 1), `Settings click after ?vision=1: ${vsum(q1)} (expect zero geometry and nodes=${q0 ? q0.vision_nodes - 1 : '?'}, one less than ON)`);

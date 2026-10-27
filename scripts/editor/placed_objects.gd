@@ -17,6 +17,54 @@ const DEFAULT_LAYOUT_PATH := "res://data/world_layout.json"
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
 const SAVE_VERSION := 7
 const CATALOG := {
+	"path_dirt_00_a": {"label": "Ground fill A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_00_b": {"label": "Ground fill B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_00_c": {"label": "Ground fill C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_01_a": {"label": "South corner A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_01_b": {"label": "South corner B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_01_c": {"label": "South corner C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_02_a": {"label": "West corner A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_02_b": {"label": "West corner B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_02_c": {"label": "West corner C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_03_a": {"label": "SW edge A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_03_b": {"label": "SW edge B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_03_c": {"label": "SW edge C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_04_a": {"label": "East corner A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_04_b": {"label": "East corner B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_04_c": {"label": "East corner C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_05_a": {"label": "SE edge A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_05_b": {"label": "SE edge B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_05_c": {"label": "SE edge C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_06_a": {"label": "Split east-west A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_06_b": {"label": "Split east-west B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_06_c": {"label": "Split east-west C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_07_a": {"label": "Inner north A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_07_b": {"label": "Inner north B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_07_c": {"label": "Inner north C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_08_a": {"label": "North corner A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_08_b": {"label": "North corner B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_08_c": {"label": "North corner C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_09_a": {"label": "Split north-south A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_09_b": {"label": "Split north-south B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_09_c": {"label": "Split north-south C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_10_a": {"label": "NW edge A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_10_b": {"label": "NW edge B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_10_c": {"label": "NW edge C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_11_a": {"label": "Inner east A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_11_b": {"label": "Inner east B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_11_c": {"label": "Inner east C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_12_a": {"label": "NE edge A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_12_b": {"label": "NE edge B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_12_c": {"label": "NE edge C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_13_a": {"label": "Inner west A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_13_b": {"label": "Inner west B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_13_c": {"label": "Inner west C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_14_a": {"label": "Inner south A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_14_b": {"label": "Inner south B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_14_c": {"label": "Inner south C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_15_a": {"label": "Dirt fill A", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_15_b": {"label": "Dirt fill B", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
+	"path_dirt_15_c": {"label": "Dirt fill C", "kind": "ground", "group": "Path to dirt", "dir": "res://assets/environment/blightwood/path_dirt_transitions/tiles/"},
 	"shore_grass_00": {"label": "Water fill", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 0},
 	"shore_grass_01": {"label": "Outer Bottom", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 1},
 	"shore_grass_02": {"label": "Outer Left", "kind": "ground", "group": "Grass banks", "dir": "res://assets/environment/blightwood_shorelines/tiles/", "water_role": "center", "shore_family": "grass", "shore_mask": 2},
@@ -173,7 +221,7 @@ const CATALOG := {
 	"bandit_l1": {"label": "Bandit (Level 1 robber)", "kind": "bandit", "level": 1},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Player spawn", ["player_spawn"]], ["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Bridges", ["bridge_short_wood_u", "bridge_short_wood_v", "bridge_medium_wood_u", "bridge_medium_wood_v", "bridge_long_wood_u", "bridge_long_wood_v", "bridge_short_rope_u", "bridge_short_rope_v", "bridge_medium_rope_u", "bridge_medium_rope_v", "bridge_long_rope_u", "bridge_long_rope_v", "bridge_short_damaged_u", "bridge_short_damaged_v", "bridge_medium_damaged_u", "bridge_medium_damaged_v", "bridge_long_damaged_u", "bridge_long_damaged_v"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine", "earth_stairs_se", "earth_stairs_sw", "cliff_ledge_se"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai", "ryo_pouch"]], ["Enemies", ["bandit_l1"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
+const CATEGORIES := [["Player spawn", ["player_spawn"]], ["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Bridges", ["bridge_short_wood_u", "bridge_short_wood_v", "bridge_medium_wood_u", "bridge_medium_wood_v", "bridge_long_wood_u", "bridge_long_wood_v", "bridge_short_rope_u", "bridge_short_rope_v", "bridge_medium_rope_u", "bridge_medium_rope_v", "bridge_long_rope_u", "bridge_long_rope_v", "bridge_short_damaged_u", "bridge_short_damaged_v", "bridge_medium_damaged_u", "bridge_medium_damaged_v", "bridge_long_damaged_u", "bridge_long_damaged_v"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Path to dirt", ["path_dirt_00_a", "path_dirt_00_b", "path_dirt_00_c", "path_dirt_01_a", "path_dirt_01_b", "path_dirt_01_c", "path_dirt_02_a", "path_dirt_02_b", "path_dirt_02_c", "path_dirt_03_a", "path_dirt_03_b", "path_dirt_03_c", "path_dirt_04_a", "path_dirt_04_b", "path_dirt_04_c", "path_dirt_05_a", "path_dirt_05_b", "path_dirt_05_c", "path_dirt_06_a", "path_dirt_06_b", "path_dirt_06_c", "path_dirt_07_a", "path_dirt_07_b", "path_dirt_07_c", "path_dirt_08_a", "path_dirt_08_b", "path_dirt_08_c", "path_dirt_09_a", "path_dirt_09_b", "path_dirt_09_c", "path_dirt_10_a", "path_dirt_10_b", "path_dirt_10_c", "path_dirt_11_a", "path_dirt_11_b", "path_dirt_11_c", "path_dirt_12_a", "path_dirt_12_b", "path_dirt_12_c", "path_dirt_13_a", "path_dirt_13_b", "path_dirt_13_c", "path_dirt_14_a", "path_dirt_14_b", "path_dirt_14_c", "path_dirt_15_a", "path_dirt_15_b", "path_dirt_15_c"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine", "earth_stairs_se", "earth_stairs_sw", "cliff_ledge_se"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai", "ryo_pouch"]], ["Enemies", ["bandit_l1"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -345,6 +393,8 @@ static var _art_cache: Dictionary = {}
 
 ## The object's picture: [Texture2D, top-left world origin] for kinds drawn from a texture, else [null, ZERO].
 static func art_texture(id: String, pos: Vector2) -> Array:
+	var natural := NaturalDirtPath.texture_for(id,pos)
+	if natural != null:return [natural,pos-Vector2(56,84)]
 	var def := def_of(id)
 	match String(def.kind):
 		"bridge":
@@ -547,6 +597,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		sprite.position = pos
 		# Ground owns the floor at z=-1. Draw after its floor, below grass/actors.
+		NaturalDirtPath.apply(sprite,id,pos)
 		arena.get_node("Ground").add_child(sprite)
 		nodes = [sprite]
 	elif def.kind == "grass":
@@ -554,6 +605,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		if field == null:
 			return {}
 		var sprite := field.make_editable_sprite(id, pos)
+		NaturalDirtPath.apply(sprite,id,pos)
 		if bool(def.get("tall", false)):
 			arena.add_child(sprite)
 		else:
@@ -1076,6 +1128,18 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 			n.position = pos
 			if n is Bandit:
 				(n as Bandit).set_home(pos)
+	# Refresh location-dependent transition art after a builder move, including
+	# restoring the original floor when a tile leaves the authored path region.
+	if nodes[0] is Sprite2D and (def.kind == "ground" or (def.kind == "grass" and not bool(def.get("tall",false)))):
+		var sprite := nodes[0] as Sprite2D
+		if def.kind == "ground":
+			sprite.texture = ground_texture(obj.id)
+			sprite.centered = true
+			sprite.offset = Vector2.ZERO
+		else:
+			sprite.texture = load(WindGrassTileset.DIR+str(obj.id)+".png") as Texture2D
+			sprite.material = (arena.get_node("WindGrassField") as WindGrassField).ground_wind
+		NaturalDirtPath.apply(sprite,obj.id,pos)
 	if commit:
 		_changed()
 
@@ -1353,10 +1417,6 @@ func ensure_shrine() -> bool:
 
 
 func _overlaps_solid(rect: Rect2) -> bool:
-	for b in WorldScale.live_blocks():
-		var fp: Vector2 = b[1]
-		if rect.intersects(Rect2(b[0].x - fp.x * 0.5, b[0].y - fp.y, fp.x, fp.y)):
-			return true
 	for o in objects:
 		var kind: String = def_of(o.id).kind
 		if kind not in ["grass", "pickup", "spawn", "fireflies", "bridge", "bandit"] and rect.intersects(footprint_rect(o.id, o.pos)):

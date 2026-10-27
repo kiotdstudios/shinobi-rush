@@ -48,6 +48,9 @@ static var _cache: Dictionary = {}
 ## "health" or "chakra"; set before the node enters the tree.
 var kind := "health"
 var available := true
+## A menu drop stays in the world until its owner leaves the pickup radius.
+## Other fighters may still collect it immediately.
+var collection_owner: Node2D = null
 var grounded := false  ## recovered kunai rests on the floor; authored pickups hover
 var respawns := true
 var resting_rotation := 0.35
@@ -198,13 +201,17 @@ func can_collect(player: Node) -> bool:
 		return false
 	if not (player as Node2D).is_visible_in_tree():
 		return false  # map editor hides/freezes the actor; placing loot must not collect it
+	var d: Vector2 = (player as Node2D).global_position - global_position
+	var distance := Vector2(d.x, d.y * 2.0).length()
+	if is_instance_valid(collection_owner) and player == collection_owner:
+		if distance <= PICKUP_RADIUS:return false
+		collection_owner = null
 	var inv: Variant = player.get("inventory")
 	if not (inv is PlayerInventory):
 		return false
 	if kind != "ryo" and not (inv as PlayerInventory).has_room(item_id()):
 		return false
-	var d: Vector2 = (player as Node2D).global_position - global_position
-	return Vector2(d.x, d.y * 2.0).length() <= PICKUP_RADIUS
+	return distance <= PICKUP_RADIUS
 
 
 ## The inventory item this gourd turns into.
@@ -259,6 +266,28 @@ func collect(player: Node) -> float:
 	if fx == null:
 		_visual.visible = false
 	return gained
+
+
+## A bandit tucking the gourd into his belt (he has no bag, see Bandit loot): it fades and respawns like a collected one.
+func take_by(taker: Node2D) -> bool:
+	if not available or not is_visible_in_tree() or taker == null:
+		return false
+	available = false
+	respawn_left = RESPAWN_SECONDS if respawns else 0.0
+	if not respawns:
+		get_tree().create_timer(1.5).timeout.connect(queue_free)
+	collected.emit(1.0)
+	if _tween != null:
+		_tween.kill()
+	if fx != null and is_instance_valid(fx):
+		fx.queue_free()
+	_tween = create_tween().set_parallel(true)
+	_tween.tween_property(_visual, "modulate:a", 0.0, 0.25)
+	_tween.tween_property(_pool, "modulate:a", 0.0, 0.25)
+	_tween.chain().tween_callback(func() -> void:
+		_visual.visible = false
+		_pool.visible = false)
+	return true
 
 
 func _return() -> void:

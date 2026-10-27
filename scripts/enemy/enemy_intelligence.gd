@@ -62,6 +62,13 @@ const LEVELS := {
 		"chakra_regen": 4.0,         # chakra per second (passive)
 		"chakra_charge_low": 0.3,    # below this fraction of his pool he stops to charge chakra (ninja-style)
 		"chakra_charge_full": 0.9,   # keeps charging until the pool is back to this fraction
+		# scavenging (off the fight): ryo pouches and gourds in sight, drunk when needed
+		"loot_sight": 380.0,         # how far he spots loot lying about (no facing cone; it must be reachable on the nav)
+		"item_carry": 2,             # of each kind on his 4-slot D-pad belt (BanditInventory)
+		"item_throw_chance": 0.5,    # a throw uses a carried tag bomb / paper tag instead of a kunai (kunai on the belt always join the fan)
+		"heal_below": 0.5,           # drinks a health gourd under this fraction of hp, out of his target's reach
+		"heal_desperate": 0.25,      # ... or right in its face when this low
+		"drink_time": 0.5,           # feet planted while drinking
 		"chakra_charge_rate": 28.0,  # chakra per second while charging (far faster than passive regen)
 		"chakra_charge_safe_dist": 220.0,  # only charges while the player is farther away than this (or unaware of him)
 	},

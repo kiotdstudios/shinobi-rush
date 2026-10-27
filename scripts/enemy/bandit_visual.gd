@@ -26,6 +26,36 @@ const SLASH_COLOR := Color(1.0, 0.85, 0.6, 0.9)
 const TELL_COLOR := Color(1.0, 0.2, 0.15)
 
 var bandit: Bandit
+var crew_applied := -999
+
+## Recolours only the art's crimson scarf/headband (hue ~0.93-0.97, well apart from the skin and leather at ~0.02-0.07)
+## to the crew hue, keeping its painted shading.
+const CREW_SHADER := """
+shader_type canvas_item;
+uniform float target_hue = 0.46;
+uniform float hue_lo = 0.90;
+uniform float hue_hi = 0.995;
+uniform float min_sat = 0.35;
+vec3 rgb2hsv(vec3 c) {
+	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+	vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+	vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+	float d = q.x - min(q.w, q.y);
+	float e = 1.0e-10;
+	return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+vec3 hsv2rgb(vec3 c) {
+	vec3 p = abs(fract(c.xxx + vec3(1.0, 2.0 / 3.0, 1.0 / 3.0)) * 6.0 - 3.0);
+	return c.z * mix(vec3(1.0), clamp(p - 1.0, 0.0, 1.0), c.y);
+}
+void fragment() {
+	vec3 hsv = rgb2hsv(COLOR.rgb);
+	if (hsv.x >= hue_lo && hsv.x <= hue_hi && hsv.y >= min_sat) {
+		COLOR.rgb = hsv2rgb(vec3(target_hue, hsv.y, hsv.z));
+	}
+}
+"""
+static var _crew_shader: Shader
 
 
 func _ready() -> void:
@@ -49,6 +79,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if bandit == null or actor == null:
 		return
+	if crew_applied != bandit.crew_id:
+		apply_crew()
 	var art_ok := _art_set != null and _art_set.is_valid()
 	var dead := bandit.state == Bandit.State.DEAD
 	var damage_clip := ""
@@ -135,6 +167,21 @@ func _process(delta: float) -> void:
 		streak.finish(true)
 		streak.visible=false
 	queue_redraw()
+
+
+func apply_crew() -> void:
+	crew_applied = bandit.crew_id
+	var hue := float(Bandit.crew_info(bandit.crew_id).hue)
+	if hue < 0.0:
+		actor.sprite.material = null
+		return
+	if _crew_shader == null:
+		_crew_shader = Shader.new()
+		_crew_shader.code = CREW_SHADER
+	var mat := ShaderMaterial.new()
+	mat.shader = _crew_shader
+	mat.set_shader_parameter("target_hue", hue)
+	actor.sprite.material = mat
 
 
 func weapon_visible() -> bool:
@@ -241,7 +288,8 @@ func _draw_hp_and_label(top_y: float = -78.0) -> void:
 		_draw_chakra_aura()
 	var block := UnitBars.size_for(bandit.max_substitutions)
 	var y0 := top_y - block.y + 6.0  ## bars sit on the old HP-bar line, growing upward over the head
-	draw_string(font, Vector2(-30.0, y0 - 4.0), "BANDIT L%d (%s)" % [bandit.intelligence_level, bandit.get_state_name()], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.75))
+	var crew := Bandit.crew_info(bandit.crew_id)
+	draw_string(font, Vector2(-30.0, y0 - 4.0), "%s L%d (%s)" % [String(crew.name).to_upper(), bandit.intelligence_level, bandit.get_state_name()], HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(crew.color as Color, 0.85))
 	if bandit.state == Bandit.State.DEAD:
 		return
 	var frac := clampf(bandit.hp / bandit.max_hp, 0.0, 1.0)
@@ -268,6 +316,12 @@ func _draw_intent_overlays() -> void:
 			var t := bandit.get_attack_progress()
 			if t > 0.0:
 				draw_arc(Vector2(0, -54), 20.0 + 18.0 * (1.0 - t), 0.0, TAU, 24, Color(0.6, 0.85, 1.0, 0.9), 2.0)
+	if bandit.drinking != "":
+		var icon := HealthGourd.icon(bandit.drinking)
+		if icon != null:
+			draw_set_transform(head + Vector2(18, 10), -0.6, Vector2.ONE * 0.45)
+			draw_texture(icon, -icon.get_size() * 0.5)
+			draw_set_transform(Vector2.ZERO)
 	if bandit.taunt_timer > 0.0:
 		var text := Bandit.TAUNT_TEXT
 		var size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 14)

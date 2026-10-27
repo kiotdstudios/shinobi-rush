@@ -141,9 +141,86 @@
         128,
         208
       ]
+    },
+    "screen_burst": {
+      "frames": [
+        "screen_burst_00.png",
+        "screen_burst_01.png",
+        "screen_burst_02.png",
+        "screen_burst_03.png",
+        "screen_burst_04.png",
+        "screen_burst_05.png"
+      ],
+      "frame_size": [
+        256,
+        192
+      ],
+      "fps": 14,
+      "loop": false,
+      "unique_frames": 6,
+      "anchor": [
+        128,
+        166
+      ],
+      "pixellab_job": "a57bf063-18fa-4550-afb4-c6f9f1d1041c"
+    },
+    "screen_loop": {
+      "frames": [
+        "screen_loop_00.png",
+        "screen_loop_01.png",
+        "screen_loop_02.png",
+        "screen_loop_03.png",
+        "screen_loop_04.png",
+        "screen_loop_05.png",
+        "screen_loop_06.png",
+        "screen_loop_07.png",
+        "screen_loop_08.png",
+        "screen_loop_09.png",
+        "screen_loop_10.png",
+        "screen_loop_11.png"
+      ],
+      "frame_size": [
+        256,
+        192
+      ],
+      "fps": 10,
+      "loop": true,
+      "unique_frames": 12,
+      "anchor": [
+        128,
+        166
+      ],
+      "pixellab_job": "2ea091c0-8a28-42cd-a3a0-7fa420ce3e3f"
+    },
+    "screen_fade": {
+      "frames": [
+        "screen_fade_00.png",
+        "screen_fade_01.png",
+        "screen_fade_02.png",
+        "screen_fade_03.png",
+        "screen_fade_04.png",
+        "screen_fade_05.png",
+        "screen_fade_06.png",
+        "screen_fade_07.png",
+        "screen_fade_08.png",
+        "screen_fade_09.png",
+        "screen_fade_10.png"
+      ],
+      "frame_size": [
+        256,
+        192
+      ],
+      "fps": 11,
+      "loop": false,
+      "unique_frames": 11,
+      "anchor": [
+        128,
+        166
+      ],
+      "pixellab_job": "52d6c262-fcd6-43ee-95b5-24cbfa075684"
     }
   },
   "runtime_body_scale": 0.5,
   "pickup_glow": "existing paper_tag aura/embers tinted independently",
-  "effects": "independent layered smoke; no damage; no AI stealth"
+  "effects": "screen_burst -> screen_loop -> screen_fade, three runtime banks; blocks sight both ways while standing (SmokeTagBomb.first_cover); smoke/billow are the retired first pass"
 }

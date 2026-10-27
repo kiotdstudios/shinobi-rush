@@ -30,6 +30,18 @@ func run(p_ck: Callable, root: Node) -> void:
 					body = nd
 		ck.call("rock: %s is solid" % id, body != null)
 		ck.call("rock: %s is a nav obstacle" % id, placed.obstacles().size() >= n + 1)
+	for n in 3:
+		var id := "blight_rock_0%d" % (n + 1)
+		var img := PlacedObjects.wall_texture(id).get_image()
+		if img.is_compressed():
+			img.decompress()
+		var green := 0
+		for y in img.get_height():
+			for x in img.get_width():
+				var c := img.get_pixel(x, y)
+				if c.a > 0.5 and c.g > c.r + 0.08 and c.g > c.b + 0.08:
+					green += 1
+		ck.call("rock: %s has no baked grass" % id, green == 0, str(green))
 	var json := placed.to_dict()
 	var count := 0
 	for it in json.items:

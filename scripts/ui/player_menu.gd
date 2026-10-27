@@ -127,6 +127,20 @@ func place_jutsu_on(slot: String) -> void:
 		_redraw()
 
 
+## Square: Inventory tab only, not while placing. Takes one of the highlighted item out of the bag
+## and sets it down in the world in front of the player (same spot/rules as any other pickup, so it
+## can be walked over and picked back up). Does nothing on the empty-slot entry or an empty count.
+func drop_highlighted() -> void:
+	if tab != 0 or placing:
+		return
+	var list := entries()
+	if cursor >= list.size():
+		return
+	var id := list[cursor]
+	if id != "" and _player.drop_item(id):
+		_redraw()
+
+
 func _redraw() -> void:
 	if _canvas != null:
 		_canvas.queue_redraw()
@@ -212,6 +226,8 @@ func _process(_delta: float) -> void:
 		switch_tab(1)
 	elif accept:
 		accept()
+	elif tab == 0 and "square" in face:
+		drop_highlighted()
 
 
 # ------------------------------------------------------------------ drawing
@@ -288,7 +304,7 @@ func _draw_menu() -> void:
 			var jid: String = inv.jutsu[s]
 			_slot_cell(font, cx + (offs2[s] as Vector2) * (cell + 8.0) - Vector2(cell, cell) * 0.5, cell, "", String(JUTSU_FACE[s]), 0, placing, String(PlayerInventory.JUTSU[jid].name) if jid != "" else "")
 	# footer
-	var hint := "Up / Down choose   Cross pick   Circle / Menu button close"
+	var hint := "Up / Down choose   Cross pick   Square drop   Circle / Menu button close" if tab == 0 else "Up / Down choose   Cross pick   Circle / Menu button close"
 	if placing:
 		hint = ("Press the D-pad direction to put it on   Circle cancel" if tab == 0 else "Press Square / Triangle / Circle / Cross to put it on   Menu button cancels")
 	_text(font, panel.position + Vector2(0, panel.size.y - 18), hint, 14, COL_DIM, panel.size.x, HORIZONTAL_ALIGNMENT_CENTER)

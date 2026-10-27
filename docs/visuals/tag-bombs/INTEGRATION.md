@@ -2,7 +2,7 @@
 
 Two new items preserve all existing gourds and flat paper tags:
 - `tag_bomb`: ivory sphere with black decorative calligraphy and scarlet seams. Existing paper-tag ballistic, wall/enemy landing, 1.66-second fuse, 45 damage and explosion effect.
-- `smoke_tag_bomb`: black sphere with white decorative calligraphy and red seams. Same ballistic flight/fuse, separate rolling smoke, no explosion damage, hitstop or scorch. Smoke visually screens the scene; **AI stealth/line-of-sight reactions are not implemented**.
+- `smoke_tag_bomb`: black sphere with white decorative calligraphy and red seams. Same ballistic flight/fuse, separate rolling smoke, no explosion damage, hitstop or scorch. Smoke screens the scene and blocks sight both ways while it stands (see `docs/visuals/smoke-screen/README.md`).
 
 Both are available under builder **Pickups**, editable/movable/deletable through the existing placement system. Walk close to collect (stack cap 9, pickup respawns after 30 seconds), then open Inventory and assign either item to a D-pad slot. Defaults and starting quantities of old items are preserved; new bombs start at zero and are obtained from placed pickups.
 

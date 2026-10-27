@@ -1,0 +1,55 @@
+{
+  "implementation_sha": "e968e9f1cb1ccbe7caba04d810f60c7fbc6b0779",
+  "merge_sha": "7d01146062116f197b74686d771b5b205e5945d1",
+  "pull_request": "https://github.com/kiotdstudios/shinobi-rush/pull/218",
+  "workflow": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40401431454",
+  "ci_jobs": [
+    {
+      "id": 121847998247,
+      "name": "Detect Godot project",
+      "conclusion": "success"
+    },
+    {
+      "id": 121848170550,
+      "name": "Import, validate, test and export (Web)",
+      "conclusion": "success"
+    },
+    {
+      "id": 121850886550,
+      "name": "Pre-deploy browser smoke test",
+      "conclusion": "success"
+    },
+    {
+      "id": 121859434999,
+      "name": "Deploy to GitHub Pages (main only)",
+      "conclusion": "success"
+    },
+    {
+      "id": 121859985608,
+      "name": "Post-deploy live smoke test",
+      "conclusion": "success"
+    },
+    {
+      "id": 121861038103,
+      "name": "godot-ci-gate",
+      "conclusion": "success"
+    }
+  ],
+  "native_tests": {
+    "passed": 3441,
+    "failed": 0
+  },
+  "resources": {
+    "scripts": 400,
+    "scenes": 29,
+    "failures": 0
+  },
+  "public_review": {
+    "passed": 14,
+    "failed": 0,
+    "errors": 0,
+    "tested_at": "2026-10-26T21:31:47.178Z",
+    "build_sha": "7d01146062116f197b74686d771b5b205e5945d1"
+  },
+  "url": "https://kiotdstudios.github.io/shinobi-rush/?mist=review&v=7d011460"
+}

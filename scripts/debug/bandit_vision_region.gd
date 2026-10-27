@@ -7,6 +7,7 @@ extends RefCounted
 ##   d = |target - position|
 ##   reach = profile.sight_range * (1.0 if use_cone else 1.2)      d must not exceed it
 ##   use_cone and d > profile.close_sense  ->  |facing8.angle_to(to)| must not exceed fov_deg / 2
+##   the floor segment position -> target must not enter a standing smoke screen (SmokeTagBomb.first_cover)
 ##   a ray from position + EYE_OFFSET to target + EYE_OFFSET must hit nothing (own body and the player excluded,
 ##   default mask, bodies only)
 ## and `use_cone` is `not chasing`, chasing being NOTICE / APPROACH / THREATEN / ATTACK / REPOSITION / RETREAT.
@@ -213,6 +214,14 @@ func _cast(t: float, rmax: float) -> Sample:
 			s.cid = int(res["collider_id"])
 			s.shape = int(res["shape"])
 			s.normal = res["normal"]
+		# The smoke edge is just another occluder: the ray stops where it enters a screen (at 0 when the Bandit is inside one).
+		var smoke := SmokeTagBomb.first_cover(origin, origin + u * rmax)
+		if not smoke.is_empty() and float(smoke.t) * rmax < s.r:
+			s.hit = true
+			s.r = float(smoke.t) * rmax
+			s.cid = -(smoke.screen as Node).get_instance_id()
+			s.shape = 0
+			s.normal = smoke.normal
 	s.pos = origin + u * s.r
 	return s
 
