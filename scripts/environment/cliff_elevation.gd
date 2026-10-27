@@ -9,6 +9,8 @@ var landing := PackedVector2Array()
 var build_edges := true
 var edge_body: StaticBody2D
 var occluders: Array[Node2D] = []
+## The stair's own art: sorted in front of the ledges meeting its head, ground depth while someone climbs.
+var art: Array[Node2D] = []
 var ground_bodies: Array[StaticBody2D] = []
 var _occluder_depths := {}
 var _on_surface := {}
@@ -67,7 +69,7 @@ func set_actor_level(actor: Node, _upper: bool, on_ramp: bool) -> void:
 	for key in _on_surface.keys():
 		if _on_surface[key].get_ref() == null:
 			_on_surface.erase(key)
-	for sprite in occluders:
+	for sprite in occluders + art:
 		if not is_instance_valid(sprite):
 			continue
 		var sid := sprite.get_instance_id()

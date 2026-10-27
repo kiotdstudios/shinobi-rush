@@ -136,8 +136,8 @@ const CATALOG := {
 	"blight_rock_02": {"label": "Blightwood Rock 2", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": 3.0, "art": "rock_02", "size": Vector2(133, 115), "anchor": Vector2(66, 111), "col": Vector2(0, 0), "body": Vector2(48, 45), "poly": [Vector2(-48, -21), Vector2(0, 3), Vector2(48, -21), Vector2(0, -45)]},
 	"blight_rock_03": {"label": "Blightwood Rock 3", "kind": "wall", "rock": true, "dir": "res://assets/environment/blightwood/rocks/", "sort_dy": 7.0, "art": "rock_03", "size": Vector2(180, 137), "anchor": Vector2(90, 133), "col": Vector2(0, 0), "body": Vector2(65, 57), "poly": [Vector2(-65, -25), Vector2(0, 7), Vector2(65, -25), Vector2(0, -57)]},
 	"dynamic_shrine": {"label":"Ancient Flame Shrine", "kind":"dynamic_shrine", "landmark":true, "footprint":Vector2(340,160)},
-	"earth_stairs_se": {"label": "Earth Stairs (faces SE)", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/stairs/", "art": "earth_stairs_se", "size": Vector2(208, 200), "anchor": Vector2(44, 178), "col": Vector2(0, 0), "body": Vector2(36, 18), "walkable": true, "ramp_mouth": Vector2(0, 0), "ramp_top": Vector2(72, -36), "ramp_half": Vector2(36, 18), "rise": 66.0, "landing": [Vector2(36, -54), Vector2(108, -18), Vector2(158, -43), Vector2(86, -79)]},
-	"earth_stairs_sw": {"label": "Earth Stairs (faces SW)", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/stairs/", "art": "earth_stairs_sw", "size": Vector2(208, 200), "anchor": Vector2(164, 178), "col": Vector2(0, 0), "body": Vector2(36, 18), "walkable": true, "ramp_mouth": Vector2(0, 0), "ramp_top": Vector2(-72, -36), "ramp_half": Vector2(-36, 18), "rise": 66.0, "landing": [Vector2(-36, -54), Vector2(-108, -18), Vector2(-158, -43), Vector2(-86, -79)]},
+	"earth_stairs_se": {"label": "Earth Stairs (faces SE)", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/stairs/", "art": "earth_stairs_se", "size": Vector2(208, 200), "sort_dy": -54.0, "anchor": Vector2(44, 178), "col": Vector2(0, 0), "body": Vector2(36, 18), "walkable": true, "ramp_mouth": Vector2(0, 0), "ramp_top": Vector2(72, -36), "ramp_half": Vector2(36, 18), "rise": 66.0, "landing": [Vector2(36, -54), Vector2(108, -18), Vector2(158, -43), Vector2(86, -79)]},
+	"earth_stairs_sw": {"label": "Earth Stairs (faces SW)", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/stairs/", "art": "earth_stairs_sw", "size": Vector2(208, 200), "sort_dy": -54.0, "anchor": Vector2(164, 178), "col": Vector2(0, 0), "body": Vector2(36, 18), "walkable": true, "ramp_mouth": Vector2(0, 0), "ramp_top": Vector2(-72, -36), "ramp_half": Vector2(-36, 18), "rise": 66.0, "landing": [Vector2(-36, -54), Vector2(-108, -18), Vector2(-158, -43), Vector2(-86, -79)]},
 	"cliff_ledge_se": {"label": "Mossy Cliff Ledge", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/stairs/", "sort_dy": 0.0, "art": "cliff_ledge_se", "size": Vector2(288, 240), "anchor": Vector2(18, 117), "col": Vector2(200, 100), "poly": [Vector2(0, 0), Vector2(200, 100), Vector2(250, 75), Vector2(50, -25)]},
 	"ancient_shrine": {"label": "Ancient Shrine", "kind": "wall", "landmark": true, "dir": "res://assets/environment/blightwood/ancient_shrine/", "sort_dy": -29.0, "art": "shrine_shelter_01", "size": Vector2(256, 256), "anchor": Vector2(129, 242), "col": Vector2(0, 0), "body": Vector2(87, 112), "poly": [Vector2(-87, -69), Vector2(0, -29), Vector2(86, -72), Vector2(0, -112)]},
 	"ground9_corner_top": {"label": "Corner Top", "kind": "ground"},
@@ -777,8 +777,10 @@ func _make_wall(id: String, pos: Vector2) -> Array[Node]:
 		nodes.append(sprite)
 		x0 += w
 	if bool(def.get("walkable", false)):
-		# Walkable art is ground: never drawn over an actor climbing it.
-		(nodes[0] as Sprite2D).z_index = -1
+		# Walkable art is ground: never drawn over an actor climbing it. A stair instead sorts at its head
+		# (sort_dy) so it draws over the cliff face behind it, and its zone drops it while someone climbs.
+		if not def.has("ramp_mouth"):
+			(nodes[0] as Sprite2D).z_index = -1
 		# Last node follows `pos` in move(); a ramp def makes it the live elevation zone.
 		var foot: Node2D = CliffElevation.new() if def.has("ramp_mouth") else Node2D.new()
 		if foot is CliffElevation:
@@ -1268,6 +1270,47 @@ func load_dict(data: Dictionary) -> int:
 	return made
 
 
+## How far a cliff piece's end is pulled onto a stair head corner or another piece's end so they join flush.
+const JOINT_SNAP := 30.0
+
+
+## Ground points other pieces join at: a wall run's two ends, or a stair's two head corners.
+static func joints_of(id: String, pos: Vector2) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	var def := def_of(id)
+	if def.get("kind", "") != "wall":
+		return out
+	if def.has("ramp_top"):
+		var top: Vector2 = pos + (def.ramp_top as Vector2)
+		out.append(top - (def.ramp_half as Vector2))
+		out.append(top + (def.ramp_half as Vector2))
+	elif not bool(def.get("walkable", false)) and (def.col as Vector2) != Vector2.ZERO:
+		out.append(pos)
+		out.append(pos + (def.col as Vector2))
+	return out
+
+
+## `pos` shifted so the nearest joint of `id` lands exactly on a joint of a placed piece within JOINT_SNAP.
+## Only landmark pieces (stairs, cliff ledges) join this way; the wall kit already joins on the floor lattice.
+func snap_joint(id: String, pos: Vector2, exclude: Dictionary = {}) -> Vector2:
+	var own := joints_of(id, pos)
+	if own.is_empty():
+		return pos
+	var landmark := bool(def_of(id).get("landmark", false))
+	var shift := Vector2.ZERO
+	var best := JOINT_SNAP
+	for o in objects:
+		if is_same(o, exclude) or not (landmark or bool(def_of(o.id).get("landmark", false))):
+			continue
+		for j: Vector2 in joints_of(o.id, o.pos):
+			for p: Vector2 in own:
+				var d := p.distance_to(j)
+				if d < best:
+					best = d
+					shift = j - p
+	return pos + shift
+
+
 ## Re-links every stair zone to the cliff walls meeting its head corners: their sprites drop below
 ## an actor on the landing and their bodies stop snagging it on the ramp. Idempotent; the links are
 ## live node refs, so it must run again after anything rebuilds the nodes (load_dict, map populate).
@@ -1278,6 +1321,10 @@ func link_stair_zones() -> void:
 			continue
 		zone.occluders.clear()
 		zone.ground_bodies.clear()
+		zone.art.clear()
+		for n: Node in o.nodes:
+			if n is Sprite2D:
+				zone.art.append(n)
 		var top: Vector2 = o.pos + zone.top
 		for w in objects:
 			var def := def_of(w.id)
@@ -1461,6 +1508,7 @@ func _apply_spawn(teleport := false) -> void:
 
 func _changed(write := true) -> void:
 	_apply_spawn()
+	link_stair_zones()
 	_flush_pending()
 	if arena != null:
 		arena.rebuild_nav()
