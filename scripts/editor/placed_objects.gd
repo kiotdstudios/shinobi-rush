@@ -345,6 +345,8 @@ static var _art_cache: Dictionary = {}
 
 ## The object's picture: [Texture2D, top-left world origin] for kinds drawn from a texture, else [null, ZERO].
 static func art_texture(id: String, pos: Vector2) -> Array:
+	var natural := NaturalDirtPath.texture_for(id,pos)
+	if natural != null:return [natural,pos-Vector2(56,84)]
 	var def := def_of(id)
 	match String(def.kind):
 		"bridge":
@@ -547,6 +549,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		sprite.position = pos
 		# Ground owns the floor at z=-1. Draw after its floor, below grass/actors.
+		NaturalDirtPath.apply(sprite,id,pos)
 		arena.get_node("Ground").add_child(sprite)
 		nodes = [sprite]
 	elif def.kind == "grass":
@@ -554,6 +557,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 		if field == null:
 			return {}
 		var sprite := field.make_editable_sprite(id, pos)
+		NaturalDirtPath.apply(sprite,id,pos)
 		if bool(def.get("tall", false)):
 			arena.add_child(sprite)
 		else:
@@ -1076,6 +1080,18 @@ func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 			n.position = pos
 			if n is Bandit:
 				(n as Bandit).set_home(pos)
+	# Refresh location-dependent transition art after a builder move, including
+	# restoring the original floor when a tile leaves the authored path region.
+	if nodes[0] is Sprite2D and (def.kind == "ground" or (def.kind == "grass" and not bool(def.get("tall",false)))):
+		var sprite := nodes[0] as Sprite2D
+		if def.kind == "ground":
+			sprite.texture = ground_texture(obj.id)
+			sprite.centered = true
+			sprite.offset = Vector2.ZERO
+		else:
+			sprite.texture = load(WindGrassTileset.DIR+str(obj.id)+".png") as Texture2D
+			sprite.material = (arena.get_node("WindGrassField") as WindGrassField).ground_wind
+		NaturalDirtPath.apply(sprite,obj.id,pos)
 	if commit:
 		_changed()
 
