@@ -1831,6 +1831,318 @@
           "damage/frames/death/SW_015.png"
         ]
       }
+    },
+    "move_start": {
+      "fps": 30.0,
+      "loop": false,
+      "foot_anchor": [
+        64,
+        116
+      ],
+      "source_policy": "curated approved poses; no resampling, mirroring or sprite rotation",
+      "duration_ms": 100,
+      "frames": {
+        "S": [
+          "sprites/production/idle/S_000.png",
+          "sprites/production/run/S_001.png",
+          "sprites/production/run/S_002.png"
+        ],
+        "SE": [
+          "sprites/production/idle/SE_000.png",
+          "sprites/production/run/SE_001.png",
+          "sprites/production/run/SE_002.png"
+        ],
+        "E": [
+          "sprites/production/idle/E_000.png",
+          "sprites/production/run/E_001.png",
+          "sprites/production/run/E_002.png"
+        ],
+        "NE": [
+          "sprites/production/idle/NE_000.png",
+          "sprites/production/run/NE_001.png",
+          "sprites/production/run/NE_002.png"
+        ],
+        "N": [
+          "sprites/production/idle/N_000.png",
+          "sprites/production/run/N_001.png",
+          "sprites/production/run/N_002.png"
+        ],
+        "NW": [
+          "sprites/production/idle/NW_000.png",
+          "sprites/production/run/NW_001.png",
+          "sprites/production/run/NW_002.png"
+        ],
+        "W": [
+          "sprites/production/idle/W_000.png",
+          "sprites/production/run/W_001.png",
+          "sprites/production/run/W_002.png"
+        ],
+        "SW": [
+          "sprites/production/idle/SW_000.png",
+          "sprites/production/run/SW_001.png",
+          "sprites/production/run/SW_002.png"
+        ]
+      }
+    },
+    "move_stop": {
+      "fps": 23.076923076923077,
+      "loop": false,
+      "foot_anchor": [
+        64,
+        116
+      ],
+      "source_policy": "curated approved poses; no resampling, mirroring or sprite rotation",
+      "duration_ms": 130,
+      "frames": {
+        "S": [
+          "sprites/production/run/S_002.png",
+          "sprites/production/run/S_001.png",
+          "sprites/production/idle/S_000.png"
+        ],
+        "SE": [
+          "sprites/production/run/SE_002.png",
+          "sprites/production/run/SE_001.png",
+          "sprites/production/idle/SE_000.png"
+        ],
+        "E": [
+          "sprites/production/run/E_002.png",
+          "sprites/production/run/E_001.png",
+          "sprites/production/idle/E_000.png"
+        ],
+        "NE": [
+          "sprites/production/run/NE_002.png",
+          "sprites/production/run/NE_001.png",
+          "sprites/production/idle/NE_000.png"
+        ],
+        "N": [
+          "sprites/production/run/N_002.png",
+          "sprites/production/run/N_001.png",
+          "sprites/production/idle/N_000.png"
+        ],
+        "NW": [
+          "sprites/production/run/NW_002.png",
+          "sprites/production/run/NW_001.png",
+          "sprites/production/idle/NW_000.png"
+        ],
+        "W": [
+          "sprites/production/run/W_002.png",
+          "sprites/production/run/W_001.png",
+          "sprites/production/idle/W_000.png"
+        ],
+        "SW": [
+          "sprites/production/run/SW_002.png",
+          "sprites/production/run/SW_001.png",
+          "sprites/production/idle/SW_000.png"
+        ]
+      }
+    },
+    "move_pivot": {
+      "fps": 25.0,
+      "loop": false,
+      "foot_anchor": [
+        64,
+        116
+      ],
+      "source_policy": "curated approved poses; no resampling, mirroring or sprite rotation",
+      "duration_ms": 120,
+      "frames": {
+        "S": [
+          "sprites/production/run/S_000.png",
+          "sprites/production/run/S_001.png",
+          "sprites/production/run/S_002.png"
+        ],
+        "SE": [
+          "sprites/production/run/SE_000.png",
+          "sprites/production/run/SE_001.png",
+          "sprites/production/run/SE_002.png"
+        ],
+        "E": [
+          "sprites/production/run/E_000.png",
+          "sprites/production/run/E_001.png",
+          "sprites/production/run/E_002.png"
+        ],
+        "NE": [
+          "sprites/production/run/NE_000.png",
+          "sprites/production/run/NE_001.png",
+          "sprites/production/run/NE_002.png"
+        ],
+        "N": [
+          "sprites/production/run/N_000.png",
+          "sprites/production/run/N_001.png",
+          "sprites/production/run/N_002.png"
+        ],
+        "NW": [
+          "sprites/production/run/NW_000.png",
+          "sprites/production/run/NW_001.png",
+          "sprites/production/run/NW_002.png"
+        ],
+        "W": [
+          "sprites/production/run/W_000.png",
+          "sprites/production/run/W_001.png",
+          "sprites/production/run/W_002.png"
+        ],
+        "SW": [
+          "sprites/production/run/SW_000.png",
+          "sprites/production/run/SW_001.png",
+          "sprites/production/run/SW_002.png"
+        ]
+      }
+    },
+    "move_start_sprint": {
+      "fps": 30.0,
+      "loop": false,
+      "foot_anchor": [
+        64,
+        116
+      ],
+      "source_policy": "curated approved poses; no resampling, mirroring or sprite rotation",
+      "duration_ms": 100,
+      "frames": {
+        "S": [
+          "sprites/production/run/S_001.png",
+          "sprites/production/sprint/S_002.png",
+          "sprites/production/sprint/S_003.png"
+        ],
+        "SE": [
+          "sprites/production/run/SE_001.png",
+          "sprites/production/sprint/SE_002.png",
+          "sprites/production/sprint/SE_003.png"
+        ],
+        "E": [
+          "sprites/production/run/E_001.png",
+          "sprites/production/sprint/E_002.png",
+          "sprites/production/sprint/E_003.png"
+        ],
+        "NE": [
+          "sprites/production/run/NE_001.png",
+          "sprites/production/sprint/NE_002.png",
+          "sprites/production/sprint/NE_003.png"
+        ],
+        "N": [
+          "sprites/production/run/N_001.png",
+          "sprites/production/sprint/N_002.png",
+          "sprites/production/sprint/N_003.png"
+        ],
+        "NW": [
+          "sprites/production/run/NW_001.png",
+          "sprites/production/sprint/NW_002.png",
+          "sprites/production/sprint/NW_003.png"
+        ],
+        "W": [
+          "sprites/production/run/W_001.png",
+          "sprites/production/sprint/W_002.png",
+          "sprites/production/sprint/W_003.png"
+        ],
+        "SW": [
+          "sprites/production/run/SW_001.png",
+          "sprites/production/sprint/SW_002.png",
+          "sprites/production/sprint/SW_003.png"
+        ]
+      }
+    },
+    "move_stop_sprint": {
+      "fps": 23.076923076923077,
+      "loop": false,
+      "foot_anchor": [
+        64,
+        116
+      ],
+      "source_policy": "curated approved poses; no resampling, mirroring or sprite rotation",
+      "duration_ms": 130,
+      "frames": {
+        "S": [
+          "sprites/production/sprint/S_002.png",
+          "sprites/production/run/S_001.png",
+          "sprites/production/idle/S_000.png"
+        ],
+        "SE": [
+          "sprites/production/sprint/SE_002.png",
+          "sprites/production/run/SE_001.png",
+          "sprites/production/idle/SE_000.png"
+        ],
+        "E": [
+          "sprites/production/sprint/E_002.png",
+          "sprites/production/run/E_001.png",
+          "sprites/production/idle/E_000.png"
+        ],
+        "NE": [
+          "sprites/production/sprint/NE_002.png",
+          "sprites/production/run/NE_001.png",
+          "sprites/production/idle/NE_000.png"
+        ],
+        "N": [
+          "sprites/production/sprint/N_002.png",
+          "sprites/production/run/N_001.png",
+          "sprites/production/idle/N_000.png"
+        ],
+        "NW": [
+          "sprites/production/sprint/NW_002.png",
+          "sprites/production/run/NW_001.png",
+          "sprites/production/idle/NW_000.png"
+        ],
+        "W": [
+          "sprites/production/sprint/W_002.png",
+          "sprites/production/run/W_001.png",
+          "sprites/production/idle/W_000.png"
+        ],
+        "SW": [
+          "sprites/production/sprint/SW_002.png",
+          "sprites/production/run/SW_001.png",
+          "sprites/production/idle/SW_000.png"
+        ]
+      }
+    },
+    "move_pivot_sprint": {
+      "fps": 25.0,
+      "loop": false,
+      "foot_anchor": [
+        64,
+        116
+      ],
+      "source_policy": "curated approved poses; no resampling, mirroring or sprite rotation",
+      "duration_ms": 120,
+      "frames": {
+        "S": [
+          "sprites/production/sprint/S_000.png",
+          "sprites/production/sprint/S_001.png",
+          "sprites/production/sprint/S_002.png"
+        ],
+        "SE": [
+          "sprites/production/sprint/SE_000.png",
+          "sprites/production/sprint/SE_001.png",
+          "sprites/production/sprint/SE_002.png"
+        ],
+        "E": [
+          "sprites/production/sprint/E_000.png",
+          "sprites/production/sprint/E_001.png",
+          "sprites/production/sprint/E_002.png"
+        ],
+        "NE": [
+          "sprites/production/sprint/NE_000.png",
+          "sprites/production/sprint/NE_001.png",
+          "sprites/production/sprint/NE_002.png"
+        ],
+        "N": [
+          "sprites/production/sprint/N_000.png",
+          "sprites/production/sprint/N_001.png",
+          "sprites/production/sprint/N_002.png"
+        ],
+        "NW": [
+          "sprites/production/sprint/NW_000.png",
+          "sprites/production/sprint/NW_001.png",
+          "sprites/production/sprint/NW_002.png"
+        ],
+        "W": [
+          "sprites/production/sprint/W_000.png",
+          "sprites/production/sprint/W_001.png",
+          "sprites/production/sprint/W_002.png"
+        ],
+        "SW": [
+          "sprites/production/sprint/SW_000.png",
+          "sprites/production/sprint/SW_001.png",
+          "sprites/production/sprint/SW_002.png"
+        ]
+      }
     }
   }
 }

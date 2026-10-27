@@ -12,6 +12,8 @@ signal sprite_set_changed(new_set: SpriteSet)
 
 @onready var placeholder: PlaceholderVisual = $PlaceholderVisual
 
+var locomotion := LocomotionTransition.new()
+
 var actor: SpriteActor
 var sprite_set: SpriteSet
 var last_anim: String = ""
@@ -50,6 +52,7 @@ func set_sprite_set(s: SpriteSet) -> void:
 	if s != null and not s.is_valid():
 		s = null
 	sprite_set = s
+	locomotion.interrupt()
 	last_anim = ""
 	last_dir = ""
 	actor.visible = s != null
@@ -62,12 +65,33 @@ func set_sprite_set(s: SpriteSet) -> void:
 
 
 func set_pose(dir8: Vector2, sprinting: bool, moving: bool) -> void:
+	locomotion.interrupt()
 	_pose = [dir8, sprinting, moving]
 	weapon_layer.visible = false  ## locomotion never shows the weapon overlay
 	if sprite_set == null:
 		placeholder.set_pose(dir8, sprinting, moving)
 		return
 	_apply()
+
+
+## Traversal entry point; delta belongs to the physics clock, not render FPS.
+func set_locomotion(delta: float, dir8: Vector2, sprinting: bool, moving: bool, travel: Vector2) -> void:
+	_pose = [dir8, sprinting, moving]
+	weapon_layer.visible = false
+	locomotion.update(delta, moving, travel, dir8, sprinting)
+	if sprite_set == null:
+		placeholder.set_pose(dir8, sprinting, moving)
+		return
+	if sprite_set != null and locomotion.show(actor, sprite_set):
+		actor.visible = true
+		placeholder.visible = false
+		last_anim = actor.anim_id
+		last_dir = actor.dir
+		return
+	_apply()
+	if locomotion.completed and moving and actor.sprite.sprite_frames != null:
+		# Continue after the final push-off pose rather than replaying frame zero.
+		actor.sprite.set_frame_and_progress(mini(3, actor.sprite.sprite_frames.get_frame_count(actor.sprite.animation)-1), 0.0)
 
 
 ## One-shot action override (dodge, jump): shows `aid` facing `dir8` regardless of the normal
@@ -82,6 +106,7 @@ func play_action(aid: String, dir8: Vector2) -> bool:
 	if WeaponRig.supports(aid) and sprite_set.id=="player_128" and KunaiCombatData.frames("player",SpriteSet.dir_name(dir8),aid).is_empty():
 		weapon_layer.visible=false
 		return false
+	locomotion.interrupt()
 	var shown := actor.show_animation(sprite_set, aid, SpriteSet.dir_name(dir8), false)
 	actor.visible = shown
 	placeholder.visible = not shown
@@ -100,6 +125,7 @@ func play_action_progress(aid: String, dir8: Vector2, progress: float) -> bool:
 	weapon_layer.visible = false
 	if sprite_set == null or not sprite_set.animations.has(aid):
 		return false
+	locomotion.interrupt()
 	var shown := actor.show_animation_at(sprite_set, aid, SpriteSet.dir_name(dir8), progress)
 	actor.visible = shown
 	placeholder.visible = not shown
