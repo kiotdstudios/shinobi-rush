@@ -139,6 +139,7 @@ jobs:
           --serve-dir "$EXPORT_DIR"
           --out-dir "$EVIDENCE_DIR/smoke"
           --label full-regression
+          --require-player-movement
           --expected-sha "$GITHUB_SHA"
       - name: Upload evidence
         if: ${{ always() }}
