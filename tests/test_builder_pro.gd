@@ -184,7 +184,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	placed.load_dict({"version": 7, "items": []})
 	AutoTile.new(placed).apply([origin], "temple")
 	var layer := PlacedObjects.type_of(_id_in(placed, origin))
-	ck.call("layers: the layer rows exist", ed._layer_buttons.has(layer))
+	ck.call("layers: map mode has grouped layer controls without duplicate legacy rows", ed.black_inspector != null and ed.black_inspector._layer_rows.has(BlackInspector.group_of(_id_in(placed, origin))) and ed._layer_buttons.is_empty())
 	ck.call("layers: unlocked floor can be picked", not placed.hit_test(origin).is_empty())
 	ed.set_layer_locked(layer, true)
 	ck.call("layers: a locked layer cannot be picked", placed.hit_test(origin).is_empty())
