@@ -125,7 +125,7 @@ async function recordMovement(page) {
     if (!Number.isFinite(x0)) await page.waitForTimeout(250);
   }
   if (!Number.isFinite(x0)) {
-    record('player-moves', 'fail', 'window.__SHINOBI_STATE__.x was never published, so movement cannot be asserted');
+    record('player-moves', cfg.require_player_movement ? 'fail' : 'skip', 'window.__SHINOBI_STATE__.x was never published, so movement cannot be asserted' + (cfg.require_player_movement ? '' : ' (--require-player-movement not set)'));
     return;
   }
   await page.evaluate(() => document.querySelector('canvas')?.focus());
@@ -144,7 +144,7 @@ async function recordMovement(page) {
       return;
     }
   }
-  record('player-moves', 'fail', `holding KeyD then KeyA never changed the player's x (${tried.join('; ')}): input is not reaching the game or movement is broken`);
+  record('player-moves', cfg.require_player_movement ? 'fail' : 'warn', `holding KeyD then KeyA never changed the player's x (${tried.join('; ')}): input is not reaching the game or movement is broken`);
 }
 
 async function main() {

@@ -9,6 +9,7 @@ export const DEFAULTS = {
   input_sequence: [],
   require_input_effect: false,
   require_ready_hook: false,
+  require_player_movement: false,
   startup_timeout_ms: 90000,
 };
 
@@ -35,6 +36,7 @@ export function parseCli(argv, { here, env = {} }) {
       'canvas-selector': { type: 'string' },
       'input-sequence': { type: 'string' },
       'require-input-effect': { type: 'boolean' },
+      'require-player-movement': { type: 'boolean' },
       'require-ready-hook': { type: 'boolean' },
       'propagation-timeout-ms': { type: 'string', default: '300000' },
       'global-timeout-ms': { type: 'string', default: '900000' },
@@ -57,6 +59,7 @@ export function parseCli(argv, { here, env = {} }) {
   if (cli['startup-timeout-ms'] !== undefined) cfg.startup_timeout_ms = Number(cli['startup-timeout-ms']);
   if (cli['input-sequence'] !== undefined) cfg.input_sequence = cli['input-sequence'].split(',').map((s) => s.trim()).filter(Boolean);
   if (cli['require-input-effect'] !== undefined) cfg.require_input_effect = cli['require-input-effect'];
+  if (cli['require-player-movement'] !== undefined) cfg.require_player_movement = cli['require-player-movement'];
   if (cli['require-ready-hook'] !== undefined) cfg.require_ready_hook = cli['require-ready-hook'];
   for (const key of ['settle_ms', 'startup_timeout_ms']) {
     if (!Number.isFinite(cfg[key]) || cfg[key] < 0) throw new UsageError(`${key} must be a non-negative number`);

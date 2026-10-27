@@ -55,6 +55,32 @@ func run(p_ck: Callable, root: Node) -> void:
 	await tree.create_timer(TrainingArena.BANDIT_RESPAWN_DELAY + 0.6).timeout
 	ck.call("bandit builder: a defeated placed bandit is replaced at its home", o2.nodes[0] != first and (o2.nodes[0] as Bandit).is_alive() and (o2.nodes[0] as Bandit).position.is_equal_approx(pos2))
 
+
+	# Jade Fang: the same bandit in the rival crew's colours
+	ck.call("jade builder: catalog entry under Enemies", PlacedObjects.CATALOG.has("bandit_jade_l1") and PlacedObjects.type_of("bandit_jade_l1") == "Enemies")
+	var red_art: Texture2D = PlacedObjects.art_texture("bandit_l1", Vector2(500, 500))[0]
+	var jade_art: Texture2D = PlacedObjects.art_texture("bandit_jade_l1", Vector2(500, 500))[0]
+	ck.call("jade builder: palette art is recoloured, not the red original", jade_art != null and _pixels_differing(jade_art, red_art) > 100)
+	var jade := placed.add("bandit_jade_l1", pos + Vector2(0, 160))
+	ck.call("jade builder: placing makes a Jade Fang bandit", not jade.is_empty() and (jade.nodes[0] as Bandit).crew_id == 1 and String(Bandit.crew_info(1).name) == "Jade Fang")
+	var red := placed.add("bandit_l1", pos + Vector2(0, 260))
+	ck.call("jade builder: the plain bandit stays Red Scarf", (red.nodes[0] as Bandit).crew_id == 0)
+	var jsaved := placed.to_dict()
+	placed.load_dict({"version": 7, "items": []})
+	await tree.process_frame
+	placed.load_dict(jsaved)
+	await tree.process_frame
+	var crews: Array = []
+	for o in placed.objects:
+		if o.id == "bandit_jade_l1":
+			crews.append((o.nodes[0] as Bandit).crew_id)
+	ck.call("jade builder: save/load keeps the Jade Fang crew", crews == [1])
+	placed.set_bandits_frozen(true)
+	for o in placed.objects.duplicate():
+		if o.id in ["bandit_jade_l1"] or (o.id == "bandit_l1" and o != o2):
+			placed.remove(o)
+	await tree.process_frame
+
 	placed.remove(o2)
 	await tree.process_frame
 	ck.call("bandit builder: remove deletes it", placed.objects.is_empty())
@@ -86,3 +112,21 @@ func run(p_ck: Callable, root: Node) -> void:
 	MapEditorMode.forced = false
 	main.queue_free()
 	await tree.process_frame
+
+
+## How many pixels differ between two textures of the same size (decompressing as needed).
+func _pixels_differing(a: Texture2D, b: Texture2D) -> int:
+	var ia := a.get_image()
+	var ib := b.get_image()
+	if ia.is_compressed():
+		ia.decompress()
+	if ib.is_compressed():
+		ib.decompress()
+	if ia.get_size() != ib.get_size():
+		return 999999
+	var n := 0
+	for y in ia.get_height():
+		for x in ia.get_width():
+			if ia.get_pixel(x, y) != ib.get_pixel(x, y):
+				n += 1
+	return n
