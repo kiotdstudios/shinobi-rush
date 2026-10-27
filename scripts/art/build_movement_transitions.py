@@ -48,4 +48,3 @@ for who, filename in [('player','player_128.manifest.json'),('bandit','bandit_12
     path.write_text(json.dumps(manifest,indent=2)+'\n')
 (DOC/'pose-inventory.json').write_text(json.dumps(audit,indent=2)+'\n')
 print('PASS: 2 actors x 6 gait/action clips x 8 directions x 3 unique approved RGBA poses; no new texture memory')
-

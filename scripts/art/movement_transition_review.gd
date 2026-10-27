@@ -86,5 +86,3 @@ func _process(delta: float) -> void:
 
 func _exit_tree() -> void:
 	Engine.time_scale = 1.0
-
-

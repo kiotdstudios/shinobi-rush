@@ -43,3 +43,7 @@ Both actors receive start, stop and pivot presentation, including run/sprint var
 Art reuse is intentional and allowed by the brief: these are curated approved poses, not newly drawn custom anatomy. The pivot rotates directional silhouette selection, never the 2D sprite transform. The review scene isolates patrol perception so the two subjects can be compared without combat; normal-game perception is unchanged. Controller input is tested with keyboard equivalents; physical gamepad hardware is not available in this environment.
 
 Do not mark DONE or advertise the canonical deployment until the final tests, reviewed PR integration and exact main SHA/public-browser proof are recorded. Commit SHA and deployment evidence will be added after checks.
+
+## Implementation commit
+
+Implementation: `98d73bf686b94ab9deb5d36aef90b04d01a2b37a`; PR https://github.com/kiotdstudios/shinobi-rush/pull/224. Follow-up commit only records this SHA and trims trailing blank lines.
