@@ -1,0 +1,123 @@
+{
+  "checks": [
+    {
+      "name": "grass_path actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_path",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "grass_temple actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_temple",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "dirt_temple actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "dirt_temple",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "grass_rock actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_rock",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "dirt_rock actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "dirt_rock",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "temple_rock actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "temple_rock",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "grass_dirt actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_dirt",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "real player crosses new floor",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_dirt",
+        "pieces": 121,
+        "player_x": 149.71633911132812,
+        "player_y": 125.55521392822266,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "no engine/browser errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "utc": "2026-10-27T22:14:49.700Z"
+}

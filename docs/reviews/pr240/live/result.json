@@ -1,0 +1,165 @@
+{
+  "checks": [
+    {
+      "name": "before uses actual main map",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "natural": false,
+        "player_x": 0,
+        "player_y": 135,
+        "floor_count": 3154,
+        "obstacles": 103
+      }
+    },
+    {
+      "name": "before comparison selected",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "natural": false,
+        "player_x": 0,
+        "player_y": 135,
+        "floor_count": 3154,
+        "obstacles": 103
+      }
+    },
+    {
+      "name": "before player can cross clearing",
+      "ok": true,
+      "detail": {
+        "start": {
+          "ready": true,
+          "natural": false,
+          "player_x": 0,
+          "player_y": 135,
+          "floor_count": 3154,
+          "obstacles": 103
+        },
+        "moved": {
+          "ready": true,
+          "natural": false,
+          "player_x": 149.71633911132812,
+          "player_y": 125.55521392822266,
+          "floor_count": 3154,
+          "obstacles": 103
+        }
+      }
+    },
+    {
+      "name": "after uses actual main map",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "natural": true,
+        "player_x": 0,
+        "player_y": 135,
+        "floor_count": 3154,
+        "obstacles": 103
+      }
+    },
+    {
+      "name": "after comparison selected",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "natural": true,
+        "player_x": 0,
+        "player_y": 135,
+        "floor_count": 3154,
+        "obstacles": 103
+      }
+    },
+    {
+      "name": "after player can cross clearing",
+      "ok": true,
+      "detail": {
+        "start": {
+          "ready": true,
+          "natural": true,
+          "player_x": 0,
+          "player_y": 135,
+          "floor_count": 3154,
+          "obstacles": 103
+        },
+        "moved": {
+          "ready": true,
+          "natural": true,
+          "player_x": 149.71633911132812,
+          "player_y": 125.55521392822266,
+          "floor_count": 3154,
+          "obstacles": 103
+        }
+      }
+    },
+    {
+      "name": "floor/object counts unchanged",
+      "ok": true,
+      "detail": {
+        "before": {
+          "ready": true,
+          "natural": false,
+          "player_x": 0,
+          "player_y": 135,
+          "floor_count": 3154,
+          "obstacles": 103
+        },
+        "after": {
+          "ready": true,
+          "natural": true,
+          "player_x": 0,
+          "player_y": 135,
+          "floor_count": 3154,
+          "obstacles": 103
+        }
+      }
+    },
+    {
+      "name": "collision obstacle count unchanged",
+      "ok": true,
+      "detail": {
+        "before": {
+          "ready": true,
+          "natural": false,
+          "player_x": 0,
+          "player_y": 135,
+          "floor_count": 3154,
+          "obstacles": 103
+        },
+        "after": {
+          "ready": true,
+          "natural": true,
+          "player_x": 0,
+          "player_y": 135,
+          "floor_count": 3154,
+          "obstacles": 103
+        }
+      }
+    },
+    {
+      "name": "no browser/engine errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "states": {
+    "before": {
+      "ready": true,
+      "natural": false,
+      "player_x": 0,
+      "player_y": 135,
+      "floor_count": 3154,
+      "obstacles": 103
+    },
+    "after": {
+      "ready": true,
+      "natural": true,
+      "player_x": 0,
+      "player_y": 135,
+      "floor_count": 3154,
+      "obstacles": 103
+    }
+  },
+  "utc": "2026-10-27T21:08:03.949Z"
+}

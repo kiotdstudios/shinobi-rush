@@ -3,6 +3,7 @@ extends Node2D
 ## Decorative water only. No terrain collision/swimming changes.
 const DIR := "res://assets/environment/blightwood_water/"
 const SHORE_DIR := "res://assets/environment/blightwood_shorelines/"
+const BROWN_SHORE_DIR := "res://assets/environment/blightwood/brown_shorelines/"
 static var shared_clock := 0.0
 static var shared_frame := -1
 var role := "center"
@@ -37,7 +38,8 @@ func _ready() -> void:
 	else:
 		surface = Sprite2D.new()
 		var stem := "%s_%02d" % [shore_family, shore_mask]
-		surface.texture = load(DIR + "tiles/water9_" + role + ".png" if shore_family.is_empty() else SHORE_DIR + "water_masks/" + stem + ".png") as Texture2D
+		var mask_stem := "dirt_%02d" % shore_mask if shore_family == "brown" else stem
+		surface.texture = load(DIR + "tiles/water9_" + role + ".png" if shore_family.is_empty() else SHORE_DIR + "water_masks/" + mask_stem + ".png") as Texture2D
 		var mat := ShaderMaterial.new()
 		mat.shader = load("res://shaders/blightwood_water.gdshader") as Shader
 		mat.set_shader_parameter("current_atlas", load(DIR + "surface-atlas.png"))
@@ -45,7 +47,7 @@ func _ready() -> void:
 		add_child(surface)
 		if not shore_family.is_empty():
 			bank = Sprite2D.new()
-			bank.texture = load(SHORE_DIR + "land/" + stem + ".png") as Texture2D
+			bank.texture = load((BROWN_SHORE_DIR if shore_family == "brown" else SHORE_DIR) + "land/" + stem + ".png") as Texture2D
 			add_child(bank)
 	advance(0.0)
 

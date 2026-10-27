@@ -1,0 +1,111 @@
+{
+  "canvas": [
+    72,
+    36
+  ],
+  "anchor": [
+    36,
+    18
+  ],
+  "one": "brown land",
+  "zero": "existing animated water",
+  "tiles": [
+    {
+      "id": "shore_brown_00",
+      "mask": 0,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_00.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_00.png"
+    },
+    {
+      "id": "shore_brown_01",
+      "mask": 1,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_01.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_01.png"
+    },
+    {
+      "id": "shore_brown_02",
+      "mask": 2,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_02.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_02.png"
+    },
+    {
+      "id": "shore_brown_03",
+      "mask": 3,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_03.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_03.png"
+    },
+    {
+      "id": "shore_brown_04",
+      "mask": 4,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_04.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_04.png"
+    },
+    {
+      "id": "shore_brown_05",
+      "mask": 5,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_05.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_05.png"
+    },
+    {
+      "id": "shore_brown_06",
+      "mask": 6,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_06.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_06.png"
+    },
+    {
+      "id": "shore_brown_07",
+      "mask": 7,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_07.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_07.png"
+    },
+    {
+      "id": "shore_brown_08",
+      "mask": 8,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_08.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_08.png"
+    },
+    {
+      "id": "shore_brown_09",
+      "mask": 9,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_09.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_09.png"
+    },
+    {
+      "id": "shore_brown_10",
+      "mask": 10,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_10.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_10.png"
+    },
+    {
+      "id": "shore_brown_11",
+      "mask": 11,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_11.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_11.png"
+    },
+    {
+      "id": "shore_brown_12",
+      "mask": 12,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_12.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_12.png"
+    },
+    {
+      "id": "shore_brown_13",
+      "mask": 13,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_13.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_13.png"
+    },
+    {
+      "id": "shore_brown_14",
+      "mask": 14,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_14.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_14.png"
+    },
+    {
+      "id": "shore_brown_15",
+      "mask": 15,
+      "land": "res://assets/environment/blightwood/brown_shorelines/land/brown_15.png",
+      "water_mask": "res://assets/environment/blightwood_shorelines/water_masks/dirt_15.png"
+    }
+  ],
+  "source": "existing dirt shoreline alpha; existing brown-soil RGB; no new water frames"
+}

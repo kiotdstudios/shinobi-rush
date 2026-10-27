@@ -1,0 +1,33 @@
+# Job report — remaining terrain transition files (PR240)
+- Agent: Codex
+- Date: 2026-10-27
+- Order: `orders/Codex/2026-10-27-blightwood-remaining-terrain-transitions.md`
+- Status: REVIEW — production files, native/editor regression and actual Web tests passed; required PR integration and canonical deployment pending. NOT LIVE.
+- Branch / PR: `codex/pr240-coverage-audit`; existing [PR240](https://github.com/kiotdstudios/shinobi-rush/pull/240).
+
+## Work completed / files
+Owner continuation explicitly authorized creation of the remaining files after the coverage audit. Seven flat families: grass/path, grass/temple, dirt/temple, grass/rock, dirt/rock, temple/rock and reusable grass/dirt. Each includes all16 corner masks with unique A/B/C mixed variants and single pure fills: 44 per family, **308 PNGs**. New `terrain_transitions` manifest/source hashes and README, seven contact sheets and connected layouts, repeatable `build_remaining_transitions.py`, exact seam and palette checks. Existing original source art, authored map, PR226 natural atlas and PR230 kit remain untouched.
+
+Brown shoreline patch: **16 land PNGs +16 icons**, new manifest; runtime explicitly reuses existing dirt water masks/current shader/animation. Eight new builder categories registered with stable IDs in clearly marked generated catalog section. Native floor, no collisions. Flat rock sets aren't cliff faces. Added `?terraintransitions=review` actual-game nonpersistent demo (seven selectable families, all16 swatches, connected floor and brown shore strip), browser probe and native undo/persistence tests. Aki handoff states material identity/auto-selection and height/waterfall fit contracts; no competing AutoTile or height system.
+
+## Tests before commit
+- Generator: PASS seven families, 308 registered images, all opaque floor diamonds, **6832 compatible mask/variant pixel-edge checks**. All colors sampled from approved sources. New pure fills aren't duplicated as B/C.
+- Import: PASS pinned Godot4.7.2. New PNG sidecars use lossless import, no mipmaps; runtime nearest filtering. Unrelated regenerated legacy UID files preserved separately, not included.
+- Full native `godot_ci.py tests --project . --godot ../godot-4.7.2/Godot_v4.7.2-stable_win64_console.exe --log-dir build/terrain-transitions/tests`: **4411 passed, 0 failed**, no engine errors (intentional malformed SpriteSet fixture warning only).
+- Resource validation first attempt found two untyped values in the opt-in review script; fixed explicit Vector2/String declarations. Final `validate-resources ... --log-dir build/terrain-transitions/validate-final`: **431 scripts, 30 scenes, 2 resources, zero failures**. No normal runtime code changed after the full native suite; corrected demo subsequently exercised in Web.
+- Debug Web export PASS. Final framing export under `../terrain-transitions-web-proof-20261027`, `build/terrain-transitions/export-proof`; local unknown SHA explicitly not a deployment.
+- `node scripts/ci/smoke/terrain-transitions-probe.mjs --serve-dir ../terrain-transitions-web-proof-20261027 --out-dir docs/visuals/terrain-transitions/gameplay`: final **9/9 PASS**, seven actual-game selectable family layouts, 121 connected cells per family, brown-bank filter, real player crossing and no engine/browser errors. Screenshots inspected. Final title placement moved right of the unchanged HUD, then re-exported/rechecked; final UTC `2026-10-27T21:45:11.875Z`.
+- Orders validation, sprite manifests (1/0), JS syntax and whitespace checks: PASS. All **340** production PNGs decode; all **340** sidecars use lossless import/no mipmaps. Source art, authored map, player/enemy and AutoTile diffs empty. Generator idempotence confirmed catalog SHA unchanged on regeneration. All A/B/C variants shown in contacts.
+
+## Issues encountered
+Initial seam verifier included a digital diamond's empty endpoint samples; limited comparisons to the same valid samples on both adjoining sides. All compatible actual edge pixels still tested. First contact inspection revealed olive fallback pixels in stone silhouettes; replaced them with nearest opaque pixels from the same source material before testing/commit. Source PNGs unchanged. No known runtime failure accepted.
+
+Initial browser probe used a letterboxed 1440×900 viewport while UI rectangles were native 1280×720, so real button clicks missed. Re-ran at native viewport without changing input/gameplay. Review framing was widened and swatches moved onto exact lattice rows so all16 masks and brown-bank swatches fit the view; final Web probe reruns that opt-in demo. These demo-only changes do not alter the normal camera or tested editor behavior.
+
+## Questions / outstanding
+No new owner question: latest request authorizes creation. Remaining Aki-owned auto blending, real cliff/waterfall fit and height geometry are explicitly handed off, not claimed complete by flat art. Complete native/Web tests, write evidence, push PR240, follow normal review/required CI and canonical deployment. No claim that every possible map transition or geometry task is complete.
+
+## Current-main refresh before integration
+Initial head `e8b6b01da8c60fc43a978b2a7e2f4be5a778d610` passed required [Godot CI 40589608385](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40589608385) and the complete [full browser regression 40589608296](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40589608296), including controls/camera/vision/debug. While waiting, Aki merged PR242 (`7399c4a3754f4cb3dfd22021357fc2d785ff2545`), fixing save/reload loss of a rock near the player spawn. Merged current main with `--no-commit`, preserving that guard and its map regression. Before committing the merge, the complete combined native rerun passed **4412 / 0**, no engine errors, log `build/terrain-transitions/tests-integrated/tests-builtin.log`. Combined validation/export/Web retest follows before this merge commit. No rule bypass or force push.
+
+Combined pre-merge-commit verification completed: `validate-resources` PASS **431/30/2, zero failures**, log `build/terrain-transitions/validate-integrated`; debug export PASS to `../terrain-transitions-web-integrated-20261027`, log `build/terrain-transitions/export-integrated`; actual-game `terrain-transitions-probe.mjs --serve-dir ../terrain-transitions-web-integrated-20261027 --out-dir docs/visuals/terrain-transitions/gameplay` **9/9 PASS**, zero errors, UTC `2026-10-27T22:14:49.700Z`. The tracked gameplay evidence is refreshed to this combined tree; earlier evidence remains in the original implementation commit. Orders and whitespace checks passed before this tested main refresh commit.
