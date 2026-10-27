@@ -29,6 +29,9 @@ var btn_grid: Button
 var btn_snap: Button
 var btn_settings: Button
 var view_menu: MenuButton
+var minimap: EditorMinimap
+var minimap_open := true
+var shortcuts_panel: PanelContainer
 var left_handle: Button
 var right_handle: Button
 var layer_rows: Dictionary = {}  ## layer name -> {"eye": Button, "lock": Button}
@@ -108,6 +111,8 @@ func build() -> void:
 	_build_right()
 	_build_status()
 	_build_handles()
+	_build_minimap()
+	_build_shortcuts()
 	_apply_layout()
 	refresh()
 
@@ -196,6 +201,12 @@ func _build_toolbar() -> void:
 	pop.add_check_item("Right sidebar    ]", 1)
 	pop.add_check_item("Floor grid    G", 2)
 	pop.add_check_item("Snap to grid", 3)
+	pop.add_check_item("Minimap    M", 4)
+	pop.add_item("Zoom in", 5)
+	pop.add_item("Zoom out", 6)
+	pop.add_item("Fit whole map", 7)
+	pop.add_item("Zoom 100%", 8)
+	pop.add_item("Keyboard shortcuts    F1", 9)
 	pop.add_theme_stylebox_override("panel", flat(Color("#101010"), WorldEditor.EDGE, 1, 4))
 	pop.add_theme_stylebox_override("hover", flat(Color("#2a2a2a")))
 	pop.add_theme_color_override("font_color", Color("#F5F5F5"))
@@ -242,7 +253,89 @@ func _on_view_item(id: int) -> void:
 		3:
 			editor.snap = 0 if editor.snap > 0 else 30
 			editor._refresh()
+		4:
+			set_minimap_open(not minimap_open)
+		5:
+			editor.zoom_by(1.25)
+		6:
+			editor.zoom_by(0.8)
+		7:
+			editor.fit_map()
+		8:
+			editor.set_view_zoom(1.0)
+		9:
+			toggle_shortcuts()
 	refresh()
+
+
+func _build_minimap() -> void:
+	minimap = EditorMinimap.new()
+	minimap.setup(editor)
+	add_child(minimap)
+	minimap.visible = minimap_open
+
+
+func set_minimap_open(on: bool) -> void:
+	minimap_open = on
+	minimap.visible = on
+	_place_minimap()
+
+
+## Bottom-right corner of the free canvas, clear of the sidebars and the status bar.
+func _place_minimap() -> void:
+	if minimap == null:
+		return
+	var cr := canvas_rect()
+	minimap.position = Vector2(cr.end.x - minimap.size.x - 12.0, cr.end.y - minimap.size.y - 12.0)
+
+
+const SHORTCUTS := [
+	["Ctrl+S", "Save"], ["Ctrl+Z / Ctrl+Y", "Undo / redo"], ["Ctrl+C / Ctrl+V", "Copy / paste the selection"],
+	["Delete", "Delete the selection"], ["Mouse wheel", "Zoom at the cursor"], ["Middle-drag", "Pan the view"],
+	["Middle-click", "Pick the asset under the cursor"], ["Right-click", "Back to Select / Move"],
+	["G", "Floor grid"], ["M", "Minimap"], ["[  and  ]", "Left / right sidebar"], ["F1", "This list"],
+]
+
+
+func _build_shortcuts() -> void:
+	shortcuts_panel = PanelContainer.new()
+	shortcuts_panel.name = "Shortcuts"
+	shortcuts_panel.add_theme_stylebox_override("panel", flat(Color("#101010"), WorldEditor.EDGE, 1, 6))
+	shortcuts_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	shortcuts_panel.visible = false
+	add_child(shortcuts_panel)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 4)
+	shortcuts_panel.add_child(col)
+	_section_title(col, "KEYBOARD AND MOUSE")
+	for row: Array in SHORTCUTS:
+		var h := HBoxContainer.new()
+		col.add_child(h)
+		var k := Label.new()
+		k.text = row[0]
+		k.custom_minimum_size = Vector2(130, 0)
+		k.add_theme_font_size_override("font_size", 12)
+		k.add_theme_color_override("font_color", Color("#F5F5F5"))
+		h.add_child(k)
+		var d := Label.new()
+		d.text = row[1]
+		d.add_theme_font_size_override("font_size", 12)
+		d.add_theme_color_override("font_color", WorldEditor.MUTED)
+		h.add_child(d)
+	var close := Button.new()
+	close.text = "CLOSE"
+	close.focus_mode = Control.FOCUS_NONE
+	editor._skin(close)
+	close.pressed.connect(toggle_shortcuts)
+	col.add_child(close)
+
+
+func toggle_shortcuts() -> void:
+	shortcuts_panel.visible = not shortcuts_panel.visible
+	if shortcuts_panel.visible:
+		await get_tree().process_frame
+		var cr := canvas_rect()
+		shortcuts_panel.position = cr.get_center() - shortcuts_panel.size * 0.5
 
 
 # ------------------------------------------------------------------ sidebars
@@ -590,6 +683,10 @@ func refresh() -> void:
 	pop.set_item_checked(1, right_open)
 	pop.set_item_checked(2, editor.show_grid)
 	pop.set_item_checked(3, editor.snap > 0)
+	pop.set_item_checked(4, minimap_open)
+	if minimap != null:
+		minimap.tick()
+		_place_minimap()
 	for nm: String in layer_rows:
 		var hidden := bool(editor.placed.hidden_types.get(nm, false))
 		var locked := bool(editor.placed.locked_types.get(nm, false))

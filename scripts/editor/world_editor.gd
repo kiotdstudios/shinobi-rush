@@ -436,6 +436,14 @@ func _unhandled_input(event: InputEvent) -> void:
 				show_grid = not show_grid
 				get_viewport().set_input_as_handled()
 				return
+			if event.keycode == KEY_M:
+				shell.set_minimap_open(not shell.minimap_open)
+				get_viewport().set_input_as_handled()
+				return
+			if event.keycode == KEY_F1:
+				shell.toggle_shortcuts()
+				get_viewport().set_input_as_handled()
+				return
 		if open and event.keycode == KEY_S and event.ctrl_pressed:
 			save_now()
 			get_viewport().set_input_as_handled()
@@ -476,6 +484,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		pan_by((event as InputEventMouseMotion).relative)
 		get_viewport().set_input_as_handled()
 		return
+	if event is InputEventMouseMotion and _mid_down:
+		_mid_moved += (event as InputEventMouseMotion).relative.length()
+		pan_by((event as InputEventMouseMotion).relative)
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT and tool == "pan":
@@ -496,8 +509,20 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				release()
 			get_viewport().set_input_as_handled()
+		elif mb.button_index == MOUSE_BUTTON_MIDDLE and map_mode:
+			if mb.pressed:
+				_mid_down = true
+				_mid_moved = 0.0
+			elif _mid_down:
+				_mid_down = false
+				if _mid_moved < 4.0:  # a click that never moved is still the eyedropper
+					eyedrop(_mouse_world(), Input.is_key_pressed(KEY_ALT))
+			get_viewport().set_input_as_handled()
 		elif mb.button_index == MOUSE_BUTTON_MIDDLE and mb.pressed:
 			eyedrop(_mouse_world(), Input.is_key_pressed(KEY_ALT))
+			get_viewport().set_input_as_handled()
+		elif map_mode and mb.pressed and mb.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			zoom_by(1.1 if mb.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.1, mb.position)
 			get_viewport().set_input_as_handled()
 		elif mb.button_index == MOUSE_BUTTON_RIGHT and mb.pressed:
 			set_tool("select")
@@ -543,6 +568,68 @@ func pan_by(screen_delta: Vector2) -> void:
 	if cam != null:
 		cam.offset -= screen_delta / cam.zoom
 		cam.force_update_scroll()
+
+
+const VIEW_ZOOM_MIN := 0.1
+const VIEW_ZOOM_MAX := 1.5  ## the camera's max zoom stays 1.5 in the editor too
+var _mid_down := false  ## map editor: middle mouse held (drag pans; a click without moving still eyedrops)
+var _mid_moved := 0.0
+
+
+## World point at the middle of the visible canvas.
+func view_center() -> Vector2:
+	var cam := _camera()
+	return cam.get_screen_center_position() if cam != null else Vector2.ZERO
+
+
+## Move the view so `world` sits in the middle of the free canvas (the part not under a sidebar).
+func center_on(world: Vector2) -> void:
+	var cam := _camera()
+	if cam == null:
+		return
+	var free_mid := shell.canvas_rect().get_center() if shell != null else get_viewport().get_visible_rect().get_center()
+	var want_shift := (get_viewport().get_visible_rect().get_center() - free_mid) / cam.zoom.x  # canvas centre is off the screen centre
+	cam.offset += world + want_shift - cam.get_screen_center_position()
+	cam.force_update_scroll()
+
+
+## Zoom by a factor, keeping the world point under `screen` where it is (wheel zoom). Clamped to the editor's range.
+func zoom_by(factor: float, screen: Vector2 = Vector2(-1, -1)) -> float:
+	var cam := _camera()
+	if cam == null:
+		return 0.0
+	var z0 := cam.zoom.x
+	var z1 := clampf(z0 * factor, VIEW_ZOOM_MIN, VIEW_ZOOM_MAX)
+	if is_equal_approx(z0, z1):
+		return z1
+	var vp := get_viewport().get_visible_rect().size
+	var pt := screen if screen.x >= 0.0 else (shell.canvas_rect().get_center() if shell != null else vp * 0.5)
+	cam.offset += (pt - vp * 0.5) * (1.0 / z0 - 1.0 / z1)
+	cam.zoom = Vector2.ONE * z1
+	cam.force_update_scroll()
+	return z1
+
+
+## Zoom to an exact value (1.0 = the 100% the status bar shows).
+func set_view_zoom(base_ratio: float) -> void:
+	var cam := _camera()
+	if cam == null:
+		return
+	var target := clampf(WorldScale.CAMERA_BASE_ZOOM * base_ratio, VIEW_ZOOM_MIN, VIEW_ZOOM_MAX)
+	zoom_by(target / cam.zoom.x)
+
+
+## Show the whole arena in the free canvas.
+func fit_map() -> void:
+	var cam := _camera()
+	if cam == null or arena == null:
+		return
+	var area := shell.canvas_rect() if shell != null else get_viewport().get_visible_rect()
+	var b := arena.bounds
+	var z := clampf(minf(area.size.x / b.size.x, area.size.y / b.size.y) * 0.95, VIEW_ZOOM_MIN, VIEW_ZOOM_MAX)
+	cam.zoom = Vector2.ONE * z
+	cam.force_update_scroll()
+	center_on(b.get_center())
 
 
 ## The player's HUD (HealthBar canvas layer), or null when there is no player yet.
