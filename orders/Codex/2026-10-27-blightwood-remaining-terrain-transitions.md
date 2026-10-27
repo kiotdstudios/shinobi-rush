@@ -2,8 +2,11 @@
 
 **Owner:** Codex (pixel art and asset delivery)  
 **Priority:** P1 — map visual cohesion  
-**Type:** Work order only; no new tiles are created by this PR.
-**Status:** IN_PROGRESS — coverage audit delivered; material-family scope/approval pending before generation.
+**Type:** Coverage audit plus missing flat terrain families and brown-bank land patch.
+**Status:** REVIEW — seven flat families/brown-bank patch created; 4411/0 native and 9/9 Web checks; required CI/integration/live verification pending.
+
+## Owner continuation / implementation
+Owner explicitly requested “create all files still needed” after reviewing the audit. Implemented seven scoped flat families (grass/path, grass/temple, dirt/temple, grass/rock, dirt/rock, temple/rock, reusable grass/dirt), 308 registered tiles, plus 16 brown shore land layers and 16 editor icons. No duplicate existing path/dirt set, water animation or bridge end caps. Flat rock material assets are delivered for manual placement; vertical cliff geometry and measured landing/waterfall fit remain Aki's integration tasks, documented in `docs/visuals/terrain-transitions/AKI_HANDOFF.md`. Original audit below is historical, before this implementation.
 
 ## Coverage audit — October 27
 See [precise matrix and recommended scope](../../docs/reviews/pr240/COVERAGE_AUDIT.md), actual material comparison, authored shared-edge counts and canonical browser evidence. Key corrections: the natural dirt atlas is position-bound and uses exposed-side masks rather than a reusable corner family; old `shore_dirt` is olive path palette, not new brown soil; temple joins are present (37 grass/temple, one dirt/temple base shared edge); bridge end caps already exist. Do not duplicate those kits. No new asset/runtime implementation in this audit; remaining checklist is intentionally unapproved/uncompleted.

@@ -1,5 +1,7 @@
 # PR240 — existing work versus remaining terrain needs
 
+**Historical audit before implementation.** The owner subsequently requested “create all files still needed.” Seven flat material families and the brown-bank land patch are now implemented; current delivery/evidence is in `orders/Codex/reports/2026-10-27-remaining-terrain-files-report.md` and `docs/visuals/terrain-transitions/`. The matrix below records the original gaps, not a claim those delivered assets are still absent. Aki-owned geometry/automatic blending remains explicitly separate.
+
 Audit: 2026-10-27. PR240 originally adds **one 59-line order, no assets or runtime implementation**. Reviewed source main `3b0a4f60` and original order head `0dcde1c3`; merged current main into the review branch to retain the new editor. Canonical browser proof identifies runtime `4ebda47269945600bfde7e4aac59a80e4d13d3fd` (the later main changes concern CI). No terrain, map, controller, editor or auto-tile implementation changed in this audit.
 
 ## What actually exists

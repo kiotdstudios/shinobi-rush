@@ -1,0 +1,2270 @@
+{
+  "schema": "shinobi_remaining_transitions_v1",
+  "canvas": [
+    72,
+    36
+  ],
+  "anchor": [
+    36,
+    18
+  ],
+  "corner_bits": {
+    "bottom": 1,
+    "left": 2,
+    "right": 4,
+    "top": 8
+  },
+  "filter": "nearest",
+  "collision": "none",
+  "scope": "flat material joins only; not cliff faces or automatic blending",
+  "sources": {
+    "grass": {
+      "path": "assets/environment/kosen_courtyard/grass/tiles/grass9_center.png",
+      "sha256": "9a66d27089525cdf65e49af4ed75d9664ed25da8a78446e50cd137df432965e1"
+    },
+    "path": {
+      "path": "assets/environment/blightwood/ground_path/ground9_center.png",
+      "sha256": "f2c589e286d59b02f3e1f740633791f3b8aaa3754b5c8b1b31f2eec81844541d"
+    },
+    "dirt": {
+      "path": "assets/environment/blightwood/path_dirt_transitions/tiles/path_dirt_15_a.png",
+      "sha256": "afe8dd7fbc472d3206c9760110afeffd347de07e00ccb2a7bad5758451a8b9d6"
+    },
+    "temple": {
+      "path": "assets/environment/kosen_courtyard/floor_tiles/floor9_center.png",
+      "sha256": "7645da3c9883c73f8e85c9f817d10ac477061de4b37fcebc93468437c4798571"
+    },
+    "rock": {
+      "path": "assets/environment/blightwood_shorelines/land/rock_15.png",
+      "sha256": "f7b718c09dc11d30d37e84d1b6a246cf20c495d20a97d0d76ba665cd7b8f886a"
+    }
+  },
+  "families": [
+    {
+      "id": "grass_path",
+      "label": "Grass to path",
+      "zero": "path",
+      "one": "grass",
+      "tiles": [
+        {
+          "id": "grass_path_00_a",
+          "mask": 0,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_00_a.png",
+          "sha256": "2defc00da84e752cfa1fc7362ab2272595047eff21abee7d8bd7f6d39ef1722c"
+        },
+        {
+          "id": "grass_path_01_a",
+          "mask": 1,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_01_a.png",
+          "sha256": "3fc36a8bf6aafe07903038babf3b8b4611056a3e88a58e4ac289a9ed49779ded"
+        },
+        {
+          "id": "grass_path_01_b",
+          "mask": 1,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_01_b.png",
+          "sha256": "0e7a2d071f3f20991cdaeed955000c252ed5b1fb0004ef7523ee1755e2880c7c"
+        },
+        {
+          "id": "grass_path_01_c",
+          "mask": 1,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_01_c.png",
+          "sha256": "0f154d9caf72b2da569d2862ccc88329381ae692060ef0e0efa6708f828e48a6"
+        },
+        {
+          "id": "grass_path_02_a",
+          "mask": 2,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_02_a.png",
+          "sha256": "02a1a1bf33bb36dd01fe80f361ad7472e03ff58179174746489d0bfc9c10a6f3"
+        },
+        {
+          "id": "grass_path_02_b",
+          "mask": 2,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_02_b.png",
+          "sha256": "ac97a497c46a295c51f6348ffdaa168f4f5b67b0289af94cf2df37b05a23df53"
+        },
+        {
+          "id": "grass_path_02_c",
+          "mask": 2,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_02_c.png",
+          "sha256": "bd8a0d767598a7b621a102ead5f10855fad5eb039bc4ef15dfb1b466509752ea"
+        },
+        {
+          "id": "grass_path_03_a",
+          "mask": 3,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_03_a.png",
+          "sha256": "057e1103f83d259cdc2f3493332b14630949fced8c4224c6ef467d5476250d8d"
+        },
+        {
+          "id": "grass_path_03_b",
+          "mask": 3,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_03_b.png",
+          "sha256": "03838821093cfdf19139a588de22d8e7f0b549e24852ae4923cf32ab0045b3b0"
+        },
+        {
+          "id": "grass_path_03_c",
+          "mask": 3,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_03_c.png",
+          "sha256": "8c9ffdfa569f4b879edc5415936bcafd832749df57f32e2f3df30914be22d592"
+        },
+        {
+          "id": "grass_path_04_a",
+          "mask": 4,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_04_a.png",
+          "sha256": "fb5198f1783b5f8b7bd0467d71b5ad24c67ea0c392deca0bd2f965305fe61978"
+        },
+        {
+          "id": "grass_path_04_b",
+          "mask": 4,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_04_b.png",
+          "sha256": "2b9f2d669087ac2128d48f8f7fd40f0432dadd0f2d505d5ecb20dcfb84ff6c59"
+        },
+        {
+          "id": "grass_path_04_c",
+          "mask": 4,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_04_c.png",
+          "sha256": "2485981afc0c5aed492b28d76dc8d9e4c0473c381c50b4bd21ab3c93021ed558"
+        },
+        {
+          "id": "grass_path_05_a",
+          "mask": 5,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_05_a.png",
+          "sha256": "58d420b4ea353e7ffc9ec85703795b3d9a64b8f4eaa0bd99b0bf07c1897181cb"
+        },
+        {
+          "id": "grass_path_05_b",
+          "mask": 5,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_05_b.png",
+          "sha256": "60112c1b80f68e2a12862f73a478b8d52235857210082d5fe36f967073e127dd"
+        },
+        {
+          "id": "grass_path_05_c",
+          "mask": 5,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_05_c.png",
+          "sha256": "14e9e6f2b14ea63cb368f58ce5fd5ea44594ddce17d4e863f5d43b18de449265"
+        },
+        {
+          "id": "grass_path_06_a",
+          "mask": 6,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_06_a.png",
+          "sha256": "ab7317e2fd5cdc13e19e86447928138c2b47b144bf42803cc8a690ba0afcd7d3"
+        },
+        {
+          "id": "grass_path_06_b",
+          "mask": 6,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_06_b.png",
+          "sha256": "41daa6e69549ef5238738120f4b037ebb40e5b1d29241be0fddb72ff47a0191b"
+        },
+        {
+          "id": "grass_path_06_c",
+          "mask": 6,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_06_c.png",
+          "sha256": "f06689029a667a14b281e81f44a8a34983dc2280a3299934ac49f7a3f97dc677"
+        },
+        {
+          "id": "grass_path_07_a",
+          "mask": 7,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_07_a.png",
+          "sha256": "d8b8f93e9b8221b142270a6d5dc3020ef9cd1164c9a2803692f27a832f47fc31"
+        },
+        {
+          "id": "grass_path_07_b",
+          "mask": 7,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_07_b.png",
+          "sha256": "9e802908a0624876d33d5b89ceadc9ff024f0450225cf8a1c838f55a86cd7250"
+        },
+        {
+          "id": "grass_path_07_c",
+          "mask": 7,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_07_c.png",
+          "sha256": "8f788d89c4ae76a40171f89da2bd021eb675d2b6ce9c62df2ee45225f7765092"
+        },
+        {
+          "id": "grass_path_08_a",
+          "mask": 8,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_08_a.png",
+          "sha256": "cce6e462cc4974a05c6d927a263f8ee0590cd29667c330b68ddb20a4e407cc24"
+        },
+        {
+          "id": "grass_path_08_b",
+          "mask": 8,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_08_b.png",
+          "sha256": "a3eb85c801c715f0c6812ed470aaa2242c46cc937bbdfb0ce7050b4258bd977c"
+        },
+        {
+          "id": "grass_path_08_c",
+          "mask": 8,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_08_c.png",
+          "sha256": "90dbe54a9a12774ea259f742e55355d536db8e33021e66af020320bf72d83921"
+        },
+        {
+          "id": "grass_path_09_a",
+          "mask": 9,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_09_a.png",
+          "sha256": "723212dbb91dc4a46a463b28495e3c45313e76fb269d4e4da1c6bcbf3af933ef"
+        },
+        {
+          "id": "grass_path_09_b",
+          "mask": 9,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_09_b.png",
+          "sha256": "abbc19284aaa7d9e4d695ea48b178a103b49fe160ee4ccbbd2d93a6c29f26811"
+        },
+        {
+          "id": "grass_path_09_c",
+          "mask": 9,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_09_c.png",
+          "sha256": "2e542688b92fe91276bac72254e0ce5a38b758ef38e9ddf8900aea6942f33128"
+        },
+        {
+          "id": "grass_path_10_a",
+          "mask": 10,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_10_a.png",
+          "sha256": "4ab6bf1cfa3d489d7652d2d71d9311013c74f819ef3919f075d660140a978a32"
+        },
+        {
+          "id": "grass_path_10_b",
+          "mask": 10,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_10_b.png",
+          "sha256": "ebd13ba95166de5f0a31b093c9a55a474c017bc79768411d6be328376e77f408"
+        },
+        {
+          "id": "grass_path_10_c",
+          "mask": 10,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_10_c.png",
+          "sha256": "587ac49c9c3d3e9290638f21267c480683befc9b6c949347e89a390d94619592"
+        },
+        {
+          "id": "grass_path_11_a",
+          "mask": 11,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_11_a.png",
+          "sha256": "ec59af7447559bf0afda5391a4c409a407aa567e453be8b18f9fc0ea945addc1"
+        },
+        {
+          "id": "grass_path_11_b",
+          "mask": 11,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_11_b.png",
+          "sha256": "85edc4d3a856dbe100439eb889df71a534217018c5bc09bda6833b25cb55a0df"
+        },
+        {
+          "id": "grass_path_11_c",
+          "mask": 11,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_11_c.png",
+          "sha256": "eff10d52fd40be73f385ead65a3b914eae18cc36ea2e702051e3ac63791509d2"
+        },
+        {
+          "id": "grass_path_12_a",
+          "mask": 12,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_12_a.png",
+          "sha256": "ddcd0a961aa0d610064668b9ac2f4d4e51ec8a6d66bfc2d9f8184cce43af48fb"
+        },
+        {
+          "id": "grass_path_12_b",
+          "mask": 12,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_12_b.png",
+          "sha256": "f60515f4f1e885ee157c4df11d096cca0a937228a760ada71d7aa23e57c44c21"
+        },
+        {
+          "id": "grass_path_12_c",
+          "mask": 12,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_12_c.png",
+          "sha256": "a9ab747164c34510f36d209b047676cf7c83738811f366aa6319e165c111bf92"
+        },
+        {
+          "id": "grass_path_13_a",
+          "mask": 13,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_13_a.png",
+          "sha256": "9eb45cafd0d98acbb33925b39fa58c60b02c7a049d3b3ae183c63cb7309f6c71"
+        },
+        {
+          "id": "grass_path_13_b",
+          "mask": 13,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_13_b.png",
+          "sha256": "9db27449ff33ad46243b1c546a755e51cbf315fd133954fc9d5eae8a30923157"
+        },
+        {
+          "id": "grass_path_13_c",
+          "mask": 13,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_13_c.png",
+          "sha256": "55036bc22af0f8ca36d2d6c3b0efdbe06b11d4d88ee8356fd062f053ce5a2c7d"
+        },
+        {
+          "id": "grass_path_14_a",
+          "mask": 14,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_14_a.png",
+          "sha256": "b32df74ba6bd3fffa434726ad6e25845834ae2c3a3de7bdbba506fde64bfcf5c"
+        },
+        {
+          "id": "grass_path_14_b",
+          "mask": 14,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_14_b.png",
+          "sha256": "2e3c20f4bcb79eafe19393aee054c9d56e5c13bf755a2c08e3dd95ec1e2b210b"
+        },
+        {
+          "id": "grass_path_14_c",
+          "mask": 14,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_14_c.png",
+          "sha256": "dcb19fca6a2c3f0074246fb636606dfdafe00c38c34b4e642a794900983bc2d6"
+        },
+        {
+          "id": "grass_path_15_a",
+          "mask": 15,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_path_15_a.png",
+          "sha256": "451f9a34bafe2f178a291276f4c950ad9af76edefc0995e3a86df049f6ba637f"
+        }
+      ],
+      "compatible_seam_checks": 976,
+      "unique_images": 44
+    },
+    {
+      "id": "grass_temple",
+      "label": "Grass to temple",
+      "zero": "temple",
+      "one": "grass",
+      "tiles": [
+        {
+          "id": "grass_temple_00_a",
+          "mask": 0,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_00_a.png",
+          "sha256": "be4e4d1feccd3717785c3a46c7218f4178f8f0bbc440d6364f2b7b26f87584d7"
+        },
+        {
+          "id": "grass_temple_01_a",
+          "mask": 1,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_01_a.png",
+          "sha256": "28cb49f80747a9fd7796a827fea1b19810eda999375f1c15a057c107eb8f2fe8"
+        },
+        {
+          "id": "grass_temple_01_b",
+          "mask": 1,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_01_b.png",
+          "sha256": "9fb03c26f00b09e3e1174d1f8cb61cb3fbc5f4d469bd715c16d2565fc42fbfe4"
+        },
+        {
+          "id": "grass_temple_01_c",
+          "mask": 1,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_01_c.png",
+          "sha256": "0b08e9040d1677a6aa90e451a886d575ba56bcdf85df1bd271ca119b631f5088"
+        },
+        {
+          "id": "grass_temple_02_a",
+          "mask": 2,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_02_a.png",
+          "sha256": "270ad1bf6bde5470ae892205b37486c7506d8f2bb1c230d60cc0798b9362e65c"
+        },
+        {
+          "id": "grass_temple_02_b",
+          "mask": 2,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_02_b.png",
+          "sha256": "b23e0a430bfa006f008cb3101d5b0e7d6141c059c1b8bfddeda14780c96bfe1f"
+        },
+        {
+          "id": "grass_temple_02_c",
+          "mask": 2,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_02_c.png",
+          "sha256": "6c13cbf5bcc50eb5905978b11b991d874e8f67f9b8c12eadc95ef3467dc10b29"
+        },
+        {
+          "id": "grass_temple_03_a",
+          "mask": 3,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_03_a.png",
+          "sha256": "9f8dba26317809b32b8eea58ab3766342449ed09c96f67482b9405c48cb1c800"
+        },
+        {
+          "id": "grass_temple_03_b",
+          "mask": 3,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_03_b.png",
+          "sha256": "bca180d5a314b09f0d91e57104599b37de9ceb5d92be956361493165b8ca1d53"
+        },
+        {
+          "id": "grass_temple_03_c",
+          "mask": 3,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_03_c.png",
+          "sha256": "dea29a4ffc9ce7fee3b55d29cd30541908a48da4135de0798e1fc02ca8e1046d"
+        },
+        {
+          "id": "grass_temple_04_a",
+          "mask": 4,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_04_a.png",
+          "sha256": "a1e832362a3e4d555fe6b0481b44216b14c8d44ef638ca1bf40d5548bc48a69f"
+        },
+        {
+          "id": "grass_temple_04_b",
+          "mask": 4,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_04_b.png",
+          "sha256": "bc85570373056aee9da552e6a2bed4f6d07f046ef8a84d94ae38685f68643083"
+        },
+        {
+          "id": "grass_temple_04_c",
+          "mask": 4,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_04_c.png",
+          "sha256": "5be25d45a3f5ef0bee37d5561b3f186d9f770a79541df516d50e33b5bdea2cfc"
+        },
+        {
+          "id": "grass_temple_05_a",
+          "mask": 5,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_05_a.png",
+          "sha256": "ffbc90ed6d105b12b808a06eb2a661722bce4d8a7907ae2ff37d24f56695bb62"
+        },
+        {
+          "id": "grass_temple_05_b",
+          "mask": 5,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_05_b.png",
+          "sha256": "ab7fb91723e34fd0113acdc2416ac0305efd3bcbea109842b372f28d4ab0fbc1"
+        },
+        {
+          "id": "grass_temple_05_c",
+          "mask": 5,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_05_c.png",
+          "sha256": "bc175355bfae6b9a07f08d3aee2d1144e832dde16142c734c3f144dede30ff19"
+        },
+        {
+          "id": "grass_temple_06_a",
+          "mask": 6,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_06_a.png",
+          "sha256": "21c5eef858b68de9be716beea902cf5743a2f15bf66f6368c8294f6d569e88f5"
+        },
+        {
+          "id": "grass_temple_06_b",
+          "mask": 6,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_06_b.png",
+          "sha256": "877e1635393d800d5ffe71c02abfb989beebaf148159a3b24af384f3fba028d3"
+        },
+        {
+          "id": "grass_temple_06_c",
+          "mask": 6,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_06_c.png",
+          "sha256": "7a487a3a00cfae0b3370448c13537c0475fbbf4622344459943b59885ff66fe2"
+        },
+        {
+          "id": "grass_temple_07_a",
+          "mask": 7,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_07_a.png",
+          "sha256": "7eb87518839da1b0cbb2e5fe6ca79f05840bfc3ab1b2326cad89ae49da7bc248"
+        },
+        {
+          "id": "grass_temple_07_b",
+          "mask": 7,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_07_b.png",
+          "sha256": "1d58b7c01336299e7c0db59a82ffeb9b07f5b024f9b407bf1a0581d7d4677006"
+        },
+        {
+          "id": "grass_temple_07_c",
+          "mask": 7,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_07_c.png",
+          "sha256": "ab740716e6eff13afac943ad6d0d9ceb4d057ec3cb6d334c02df8bb9f07f8218"
+        },
+        {
+          "id": "grass_temple_08_a",
+          "mask": 8,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_08_a.png",
+          "sha256": "f01a8f3de3dd3c549cfb35817ca811056f0f00619d6b96c7ce059088f0003eaa"
+        },
+        {
+          "id": "grass_temple_08_b",
+          "mask": 8,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_08_b.png",
+          "sha256": "bb06cba6d0598bee115feda6f29c253af780ad13d98229118e582e1626c90961"
+        },
+        {
+          "id": "grass_temple_08_c",
+          "mask": 8,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_08_c.png",
+          "sha256": "0d93e095feccd66a996936862e0b65d65f7a6c45112707a189a8a334dc4bd1da"
+        },
+        {
+          "id": "grass_temple_09_a",
+          "mask": 9,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_09_a.png",
+          "sha256": "c298925ed0b87134064f52264f3cad3e6a0d17b9d6f98df4d646f1351900ea6b"
+        },
+        {
+          "id": "grass_temple_09_b",
+          "mask": 9,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_09_b.png",
+          "sha256": "fa9ab26ec51a9559906279dccd6cc14ccfc584b2c84882e20d7205010ed642f5"
+        },
+        {
+          "id": "grass_temple_09_c",
+          "mask": 9,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_09_c.png",
+          "sha256": "ca40f457be5a07c50e13110cfe52d2b98df14d60855000527e2c9963efb4cc82"
+        },
+        {
+          "id": "grass_temple_10_a",
+          "mask": 10,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_10_a.png",
+          "sha256": "4fc73cdfc20be8f3b4672e0c28a3a4c31456294d315b1337847751576ce945be"
+        },
+        {
+          "id": "grass_temple_10_b",
+          "mask": 10,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_10_b.png",
+          "sha256": "e6557ef5c9f73e9982ba709668dbb1c9194a4843b15dcaa3d2b4edee0ec3252d"
+        },
+        {
+          "id": "grass_temple_10_c",
+          "mask": 10,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_10_c.png",
+          "sha256": "e6fe5482b4d2d1ab41841f54c913183e81f11e3c72d428474e373883933d2432"
+        },
+        {
+          "id": "grass_temple_11_a",
+          "mask": 11,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_11_a.png",
+          "sha256": "b9f75b907f509eabb4c4b7749c9fe1a243e6e95e4fc56d0bce72f1aa6ee9b5d1"
+        },
+        {
+          "id": "grass_temple_11_b",
+          "mask": 11,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_11_b.png",
+          "sha256": "0a731ff24617a1485e0d756ee8dd696bf96b85f67f3c2b0335249cb3194c0131"
+        },
+        {
+          "id": "grass_temple_11_c",
+          "mask": 11,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_11_c.png",
+          "sha256": "64dad027c5cc97479143378c71b6a7125d6f5242e7ef74c148338a432868707b"
+        },
+        {
+          "id": "grass_temple_12_a",
+          "mask": 12,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_12_a.png",
+          "sha256": "03653eb21a3978a710908c715a6b28a8d2cbb7a793f70a5d3d0db3132e794fa9"
+        },
+        {
+          "id": "grass_temple_12_b",
+          "mask": 12,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_12_b.png",
+          "sha256": "170f17519870f8484d44e82bbce5a75faee802fff18d7a4fd28c6e6d482dac0d"
+        },
+        {
+          "id": "grass_temple_12_c",
+          "mask": 12,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_12_c.png",
+          "sha256": "8786c9a1aab388c930141a760341955047aa7849e53ee2d6f759dc8e87eab94b"
+        },
+        {
+          "id": "grass_temple_13_a",
+          "mask": 13,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_13_a.png",
+          "sha256": "226f36b8aac2150c0c2485bb778a9d8534b173721355b97dc8153b6ef3bc6a72"
+        },
+        {
+          "id": "grass_temple_13_b",
+          "mask": 13,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_13_b.png",
+          "sha256": "de74f6ca1d1def88140f71794d1fed458a785ba4203c14beae15f871233a50d5"
+        },
+        {
+          "id": "grass_temple_13_c",
+          "mask": 13,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_13_c.png",
+          "sha256": "430929e49e35d490e1e03cff0ade0ac7b4a7df1e81ce096eb8b565923624e6ad"
+        },
+        {
+          "id": "grass_temple_14_a",
+          "mask": 14,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_14_a.png",
+          "sha256": "64a95698cd012aeca3f972aa0b52782abd4278a8ea6c8327cc85f4a2cf733704"
+        },
+        {
+          "id": "grass_temple_14_b",
+          "mask": 14,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_14_b.png",
+          "sha256": "07a944345970f340b608d239fdccf0cb061f93b464362eb07086036000959b50"
+        },
+        {
+          "id": "grass_temple_14_c",
+          "mask": 14,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_14_c.png",
+          "sha256": "efa1b596c2b1a52a49c84944628919d86649e5d4960d20946bda7647f96af152"
+        },
+        {
+          "id": "grass_temple_15_a",
+          "mask": 15,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_temple_15_a.png",
+          "sha256": "451f9a34bafe2f178a291276f4c950ad9af76edefc0995e3a86df049f6ba637f"
+        }
+      ],
+      "compatible_seam_checks": 976,
+      "unique_images": 44
+    },
+    {
+      "id": "dirt_temple",
+      "label": "Dirt to temple",
+      "zero": "temple",
+      "one": "dirt",
+      "tiles": [
+        {
+          "id": "dirt_temple_00_a",
+          "mask": 0,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_00_a.png",
+          "sha256": "be4e4d1feccd3717785c3a46c7218f4178f8f0bbc440d6364f2b7b26f87584d7"
+        },
+        {
+          "id": "dirt_temple_01_a",
+          "mask": 1,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_01_a.png",
+          "sha256": "05b35b0215a6f088602351b94de642936fcebd9c13c68e64351c8097f0b455b1"
+        },
+        {
+          "id": "dirt_temple_01_b",
+          "mask": 1,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_01_b.png",
+          "sha256": "c3825d6ae9292ef1c3583eaa19a9fd010fa4fd4ebab787830c50b7a9ed6d6fbc"
+        },
+        {
+          "id": "dirt_temple_01_c",
+          "mask": 1,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_01_c.png",
+          "sha256": "6e4df9fd6135f5fa55027fc8760e3d71c1d76b47937dd43aa62406977fbab237"
+        },
+        {
+          "id": "dirt_temple_02_a",
+          "mask": 2,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_02_a.png",
+          "sha256": "2c57991ca20b3768931ce12ef8641db2e35eb728858628e48bbd8b01f27f9097"
+        },
+        {
+          "id": "dirt_temple_02_b",
+          "mask": 2,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_02_b.png",
+          "sha256": "a8d4956f322e6490954210ac490a2e528e3057301520adced6db45d8a75d8f7a"
+        },
+        {
+          "id": "dirt_temple_02_c",
+          "mask": 2,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_02_c.png",
+          "sha256": "2d48903f989ffd4dda9ce63670f22d3c54458a47d9729437e1750733915bea75"
+        },
+        {
+          "id": "dirt_temple_03_a",
+          "mask": 3,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_03_a.png",
+          "sha256": "c6716d59d93eb9e55c0261c138158c52b96b232e5b6103dbe3356db8f5a9d84e"
+        },
+        {
+          "id": "dirt_temple_03_b",
+          "mask": 3,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_03_b.png",
+          "sha256": "2981ec9a9c4ff546a97c1ff602a0b7e578772a129d8c945c83efa676d6a32282"
+        },
+        {
+          "id": "dirt_temple_03_c",
+          "mask": 3,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_03_c.png",
+          "sha256": "29d2c228aee57992dd8ce81f12d80c7224a1d9b732059563601e58fec91cd27b"
+        },
+        {
+          "id": "dirt_temple_04_a",
+          "mask": 4,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_04_a.png",
+          "sha256": "214b874885307ee84ba8819e6dd2a670a2399eaa11a6e2508fd05bfd874a8291"
+        },
+        {
+          "id": "dirt_temple_04_b",
+          "mask": 4,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_04_b.png",
+          "sha256": "4dbcbe9fe42ff0551adb604f18ad6e8b6e3cca0c3e47d179128edcd002db7b06"
+        },
+        {
+          "id": "dirt_temple_04_c",
+          "mask": 4,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_04_c.png",
+          "sha256": "48efffa01ec28d20645392a86f3b2c49cc03175ebf4826f3a8641d55ae025678"
+        },
+        {
+          "id": "dirt_temple_05_a",
+          "mask": 5,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_05_a.png",
+          "sha256": "6b61a0a2ec2780b12333c1a9927cf970633669b8b6f70a7fc9c8ac91463ccf63"
+        },
+        {
+          "id": "dirt_temple_05_b",
+          "mask": 5,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_05_b.png",
+          "sha256": "cd3768843d5a9f5f233e7232082923aa868648efba21cd7c8698c6819a8a2a1d"
+        },
+        {
+          "id": "dirt_temple_05_c",
+          "mask": 5,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_05_c.png",
+          "sha256": "94ef49cd2bc7d8809cd85eb668387dd9d6b7c91afed533cbaed07bc8201ec0b0"
+        },
+        {
+          "id": "dirt_temple_06_a",
+          "mask": 6,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_06_a.png",
+          "sha256": "46c4cbbf9be90a543603b3fbcf538552026be5367d03b0ad7f006123edf75ed1"
+        },
+        {
+          "id": "dirt_temple_06_b",
+          "mask": 6,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_06_b.png",
+          "sha256": "b106698f2ff1533fcb76cca2b902af7db8e361075ab64921a97f1cd293928bda"
+        },
+        {
+          "id": "dirt_temple_06_c",
+          "mask": 6,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_06_c.png",
+          "sha256": "4e5802259024a5c577d73eaadf7f5fac8e1cf6c5529030713e38092d64bc5162"
+        },
+        {
+          "id": "dirt_temple_07_a",
+          "mask": 7,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_07_a.png",
+          "sha256": "deb16022243bbe5f1ddbddfa5942c2bfd132cdffbac927b23a114f4f6c1fcaf4"
+        },
+        {
+          "id": "dirt_temple_07_b",
+          "mask": 7,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_07_b.png",
+          "sha256": "eef9de5c61f822a5f97aa24bf87b04bf0c423f39efdc0dc119f38497b97cd457"
+        },
+        {
+          "id": "dirt_temple_07_c",
+          "mask": 7,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_07_c.png",
+          "sha256": "3f4cf27ed5d53b85f37299e37db65f8789b826a19e3edb7f3ee97a03d495eae6"
+        },
+        {
+          "id": "dirt_temple_08_a",
+          "mask": 8,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_08_a.png",
+          "sha256": "45d52bd23fcda499009e15229307995fbd1ad5b5566371dcf1f9ae17afeacbe9"
+        },
+        {
+          "id": "dirt_temple_08_b",
+          "mask": 8,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_08_b.png",
+          "sha256": "ebe203a047e693884e63643968c5ff09c815d4486c91001ff15c528f7d7ad34a"
+        },
+        {
+          "id": "dirt_temple_08_c",
+          "mask": 8,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_08_c.png",
+          "sha256": "dbfbc3e7c5ec746fd56f11413e80d9411071ee9d854d58fc1fa7d2697910d1e7"
+        },
+        {
+          "id": "dirt_temple_09_a",
+          "mask": 9,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_09_a.png",
+          "sha256": "73ccc6850a620d4cd2a502e6fcacfb5e28be62bda89329a9825d7291ce1d915e"
+        },
+        {
+          "id": "dirt_temple_09_b",
+          "mask": 9,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_09_b.png",
+          "sha256": "287fd8c8a829d1801fb21322ed6c94531a015b65364ef33b00008194cf64b9de"
+        },
+        {
+          "id": "dirt_temple_09_c",
+          "mask": 9,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_09_c.png",
+          "sha256": "0e9a0c36e878a89fd00a109c19fbb8b9e53c456f9696c6316a9fd26ceb9a3e31"
+        },
+        {
+          "id": "dirt_temple_10_a",
+          "mask": 10,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_10_a.png",
+          "sha256": "cb0c1b151d99c8bc64d6d7599a821fd585a2129e26a876aeea7f585b34a6a8a0"
+        },
+        {
+          "id": "dirt_temple_10_b",
+          "mask": 10,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_10_b.png",
+          "sha256": "e96cc56d350b9d2add0e522818f0ac5093a7451420c8a22c5803daf3e54d1bd7"
+        },
+        {
+          "id": "dirt_temple_10_c",
+          "mask": 10,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_10_c.png",
+          "sha256": "b7b723ea04bc1e28e815e42d4ad4a299a5d88f485234229791d0cbb7b51c4714"
+        },
+        {
+          "id": "dirt_temple_11_a",
+          "mask": 11,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_11_a.png",
+          "sha256": "87b07bacbdfc0b18cc664a36a78db10793537808c74b9a7fc8b211ae4f2a22d1"
+        },
+        {
+          "id": "dirt_temple_11_b",
+          "mask": 11,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_11_b.png",
+          "sha256": "d89f8821c1d42ed3d467d154239dd1c71af8d12a9c2add0babf47552f213e4c6"
+        },
+        {
+          "id": "dirt_temple_11_c",
+          "mask": 11,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_11_c.png",
+          "sha256": "7e230c6ace463d72cfee5e752218e2132e5b5ae90c21bf2c88cf83b921a64b5e"
+        },
+        {
+          "id": "dirt_temple_12_a",
+          "mask": 12,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_12_a.png",
+          "sha256": "d3ea1c2113e3fb8ab152132bd892dfe71677b87067d8a6d9b8790f8d64170ba4"
+        },
+        {
+          "id": "dirt_temple_12_b",
+          "mask": 12,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_12_b.png",
+          "sha256": "01d2e8da62ca844a03d4ad64712ec0b25c5d8a8b2492fdd69e53e29d720f1220"
+        },
+        {
+          "id": "dirt_temple_12_c",
+          "mask": 12,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_12_c.png",
+          "sha256": "b3498021fe9e4ae7cf097c3c3bc35df02bf45784fec8dad049d7499e5a10d81d"
+        },
+        {
+          "id": "dirt_temple_13_a",
+          "mask": 13,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_13_a.png",
+          "sha256": "c23b50eb3c7c96f9fb5668ce72e70e759221e16cb3464064180ec907e533c630"
+        },
+        {
+          "id": "dirt_temple_13_b",
+          "mask": 13,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_13_b.png",
+          "sha256": "e96a00ab4e66de96f4d64f2779467ede2c708cda7cbde667c6bfeb6e82f35653"
+        },
+        {
+          "id": "dirt_temple_13_c",
+          "mask": 13,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_13_c.png",
+          "sha256": "b354794b2746b1d0b9258f11b8840c3745d96f036617f851d1b9e51745059db8"
+        },
+        {
+          "id": "dirt_temple_14_a",
+          "mask": 14,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_14_a.png",
+          "sha256": "dbc76213c4ca75fdc8b2f842b1572f19918bd9f4b9153b185615622b56b9a77f"
+        },
+        {
+          "id": "dirt_temple_14_b",
+          "mask": 14,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_14_b.png",
+          "sha256": "32c1a7e00af59867b920917bed01d2a89ceac49648c54b3ca601fa77f0154f01"
+        },
+        {
+          "id": "dirt_temple_14_c",
+          "mask": 14,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_14_c.png",
+          "sha256": "3bf60015a28a705f94270918e63e13657bb0d628a13a6c5c9b7897cf2621f1e3"
+        },
+        {
+          "id": "dirt_temple_15_a",
+          "mask": 15,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_temple_15_a.png",
+          "sha256": "80142bbaaa62b678a193247eb1be9159989042ee2fb1785bf262b50f2389c086"
+        }
+      ],
+      "compatible_seam_checks": 976,
+      "unique_images": 44
+    },
+    {
+      "id": "grass_rock",
+      "label": "Grass to rock",
+      "zero": "rock",
+      "one": "grass",
+      "tiles": [
+        {
+          "id": "grass_rock_00_a",
+          "mask": 0,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_00_a.png",
+          "sha256": "e7b53645b053189392d0635c5bde67305c2cea5aaa35776c7477e603e0792fe2"
+        },
+        {
+          "id": "grass_rock_01_a",
+          "mask": 1,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_01_a.png",
+          "sha256": "ddb68738594373bf4749aae118994ed75919e9e2a61590d40b9f31f9114cb473"
+        },
+        {
+          "id": "grass_rock_01_b",
+          "mask": 1,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_01_b.png",
+          "sha256": "1170863f38b66c1c61c63f06af054af3c46001ec0ca0b6cb32676aa28cd6debf"
+        },
+        {
+          "id": "grass_rock_01_c",
+          "mask": 1,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_01_c.png",
+          "sha256": "acd343c62afef295bdbaffb0d66060a49d7047a1a5ec7974e6d643b5627a5567"
+        },
+        {
+          "id": "grass_rock_02_a",
+          "mask": 2,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_02_a.png",
+          "sha256": "bdf1ce31ff869469938773188299aba9d92f82136ec41182e67b7ed7af7f393d"
+        },
+        {
+          "id": "grass_rock_02_b",
+          "mask": 2,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_02_b.png",
+          "sha256": "54142ac567366bba85c44bf145872bbeed98c055f8f841928b6731e025f0f64e"
+        },
+        {
+          "id": "grass_rock_02_c",
+          "mask": 2,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_02_c.png",
+          "sha256": "85c3416ffd1ddb57070ee1c3ad735a2115881b47513c8b5a4f4954900050b024"
+        },
+        {
+          "id": "grass_rock_03_a",
+          "mask": 3,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_03_a.png",
+          "sha256": "218b49692c2851cbfd6ce42ff564ee2a2aeb0459dc596da03084310ab9a049f3"
+        },
+        {
+          "id": "grass_rock_03_b",
+          "mask": 3,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_03_b.png",
+          "sha256": "eb0593adca1317d660a6073f205b4f3b522c346cb8555e3f33ffb8bfff6845ad"
+        },
+        {
+          "id": "grass_rock_03_c",
+          "mask": 3,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_03_c.png",
+          "sha256": "55ad55d9f5c3bd9cf48ce7178677044bb9f6d48c46b3c544166cf3bb11e0367f"
+        },
+        {
+          "id": "grass_rock_04_a",
+          "mask": 4,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_04_a.png",
+          "sha256": "9a957b83c78d80061b370ce6b7585c87be786970d438b977dfc62f624d667d65"
+        },
+        {
+          "id": "grass_rock_04_b",
+          "mask": 4,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_04_b.png",
+          "sha256": "32ebe0592ffe42098c555436a38dec8c80ab369ae5df5b329f7633f4ba47dafb"
+        },
+        {
+          "id": "grass_rock_04_c",
+          "mask": 4,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_04_c.png",
+          "sha256": "2ae8c98bdb9f7ebad04b8b06e48249c882ff68d1c27337066964264c80b446d3"
+        },
+        {
+          "id": "grass_rock_05_a",
+          "mask": 5,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_05_a.png",
+          "sha256": "41947bfa8562cc11fbf126960279d2667f72a3b32b7a71d801c2306e0d6e60d9"
+        },
+        {
+          "id": "grass_rock_05_b",
+          "mask": 5,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_05_b.png",
+          "sha256": "1e24492ef67c6fc4473d4df201034b2b2a4762337e7f7f6ccfc1f88f4203b514"
+        },
+        {
+          "id": "grass_rock_05_c",
+          "mask": 5,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_05_c.png",
+          "sha256": "d00eaea5e5d16fbc3a800b718663b95c9c31d9cd25c5353db799fb192cbd9624"
+        },
+        {
+          "id": "grass_rock_06_a",
+          "mask": 6,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_06_a.png",
+          "sha256": "1de33fe7bd4bc817388df28e812e19eb1a41a8bc6f675287d760d251287d99fd"
+        },
+        {
+          "id": "grass_rock_06_b",
+          "mask": 6,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_06_b.png",
+          "sha256": "16396d00e466427177823a63fa4318068b2a8e8452c04ef11d0cd0717f36a2c5"
+        },
+        {
+          "id": "grass_rock_06_c",
+          "mask": 6,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_06_c.png",
+          "sha256": "9189fa409624d41cf8008a3b88dae84016dca093e986ad09fcd4edfbd412cfc8"
+        },
+        {
+          "id": "grass_rock_07_a",
+          "mask": 7,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_07_a.png",
+          "sha256": "1dafc893d99f8ffd429d6518f09baade9a736d9d57b0d6cef8b88ec5705a7a36"
+        },
+        {
+          "id": "grass_rock_07_b",
+          "mask": 7,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_07_b.png",
+          "sha256": "8776c9ff078bd87a7878c81caf798ded2a4c6b3d95fba004f3b35f5259359889"
+        },
+        {
+          "id": "grass_rock_07_c",
+          "mask": 7,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_07_c.png",
+          "sha256": "0a28cfe2cce64c140d315e5114675cb981eb0e2f758d2ae3940368ee6c01b1c3"
+        },
+        {
+          "id": "grass_rock_08_a",
+          "mask": 8,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_08_a.png",
+          "sha256": "37d20c1d586348991a1d38fd0d10319853082b021e620bd67ce5e60fc45b7289"
+        },
+        {
+          "id": "grass_rock_08_b",
+          "mask": 8,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_08_b.png",
+          "sha256": "1a2306c68d9a58fc4768d7a684ecfac2d9be56802a29f008479748ba1e1e511d"
+        },
+        {
+          "id": "grass_rock_08_c",
+          "mask": 8,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_08_c.png",
+          "sha256": "8c6fd60eaf2e0f5c58799ff7d4773f61f1d3abc0a3f4fcf7bf954ff1a4054816"
+        },
+        {
+          "id": "grass_rock_09_a",
+          "mask": 9,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_09_a.png",
+          "sha256": "dcf44874d526f56dcc7e6972c1cd1e44741be291c5a69142efb7cdcdef0e7e75"
+        },
+        {
+          "id": "grass_rock_09_b",
+          "mask": 9,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_09_b.png",
+          "sha256": "0750568618ea3fcb5e2a41070ead4a1fc7b0e22eb5c4bee701e1098b02fb6729"
+        },
+        {
+          "id": "grass_rock_09_c",
+          "mask": 9,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_09_c.png",
+          "sha256": "6692072d79aefecc467ba69be4ccc74d95dbd05dfbbe45ea7fab5795fc46fb1f"
+        },
+        {
+          "id": "grass_rock_10_a",
+          "mask": 10,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_10_a.png",
+          "sha256": "5221a4f4673950d6c9b33de97efcee2607c96194103de2b0486b26341ce006c3"
+        },
+        {
+          "id": "grass_rock_10_b",
+          "mask": 10,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_10_b.png",
+          "sha256": "43d82262f2d161a809dc708f95bde3aeb89a7cafea1be67b9584b28ca0bd54cc"
+        },
+        {
+          "id": "grass_rock_10_c",
+          "mask": 10,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_10_c.png",
+          "sha256": "0f7d5dc5cb2e2ff4d0ea328b979e924e6ed5a9f88a1f4182ff6f63fb9aed33f3"
+        },
+        {
+          "id": "grass_rock_11_a",
+          "mask": 11,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_11_a.png",
+          "sha256": "e3e5652e219809cf0d4654116ad1ba18d0674faaf85ce18ba2cac67aba46ab78"
+        },
+        {
+          "id": "grass_rock_11_b",
+          "mask": 11,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_11_b.png",
+          "sha256": "80a2a3834c89bf5807e2813d3bd0f97fbf4c570bcc420f7542ba4312c34866b8"
+        },
+        {
+          "id": "grass_rock_11_c",
+          "mask": 11,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_11_c.png",
+          "sha256": "7bc84849c7059fb9b31ab2a2138fc6c2e9011a711922a8cc03c472aa2b0de244"
+        },
+        {
+          "id": "grass_rock_12_a",
+          "mask": 12,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_12_a.png",
+          "sha256": "20bcfdc7c3b5a2272a306990f40275357c014432bf6da4c82574c6d70eda3657"
+        },
+        {
+          "id": "grass_rock_12_b",
+          "mask": 12,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_12_b.png",
+          "sha256": "768b31883fed0a2d14ec3f15be4c86e3754db8f2c6c0064cbb24bc0bde390142"
+        },
+        {
+          "id": "grass_rock_12_c",
+          "mask": 12,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_12_c.png",
+          "sha256": "ee123fbeabecb558a3318a27e0203d280109f42c4ab4cc4a867e3f85c1ef315e"
+        },
+        {
+          "id": "grass_rock_13_a",
+          "mask": 13,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_13_a.png",
+          "sha256": "1455386a0a0624cc1fa2dbef29cfb85f64fdc1b97133c2b92ab1b503261ab7f8"
+        },
+        {
+          "id": "grass_rock_13_b",
+          "mask": 13,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_13_b.png",
+          "sha256": "7bc11c0f16f1567745e3ca8dc23b5c78cac5a6db0fa43ffc5c22ca58b04a0a89"
+        },
+        {
+          "id": "grass_rock_13_c",
+          "mask": 13,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_13_c.png",
+          "sha256": "226f33aab9dbb4750dd6c536fe9ee3fa0143a590bacc2e6351f0f6a37d24f426"
+        },
+        {
+          "id": "grass_rock_14_a",
+          "mask": 14,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_14_a.png",
+          "sha256": "5559be443ff15f259973de6a9ea8ac1cebf03f3fefa94b5cc883052a8350e164"
+        },
+        {
+          "id": "grass_rock_14_b",
+          "mask": 14,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_14_b.png",
+          "sha256": "98f54731569fdecde484084e2ce02c4a1194c590e91eb254537edac9854e7ee5"
+        },
+        {
+          "id": "grass_rock_14_c",
+          "mask": 14,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_14_c.png",
+          "sha256": "fd1cfb70c6ea31f8e547d7fb0b67b5507b6eab0f5f92b3ba312eb98d3bd7d4fb"
+        },
+        {
+          "id": "grass_rock_15_a",
+          "mask": 15,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_rock_15_a.png",
+          "sha256": "451f9a34bafe2f178a291276f4c950ad9af76edefc0995e3a86df049f6ba637f"
+        }
+      ],
+      "compatible_seam_checks": 976,
+      "unique_images": 44
+    },
+    {
+      "id": "dirt_rock",
+      "label": "Dirt to rock",
+      "zero": "rock",
+      "one": "dirt",
+      "tiles": [
+        {
+          "id": "dirt_rock_00_a",
+          "mask": 0,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_00_a.png",
+          "sha256": "e7b53645b053189392d0635c5bde67305c2cea5aaa35776c7477e603e0792fe2"
+        },
+        {
+          "id": "dirt_rock_01_a",
+          "mask": 1,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_01_a.png",
+          "sha256": "db07e0266d1597695319188cd659bd364241f9947daff38813a55db3251bece6"
+        },
+        {
+          "id": "dirt_rock_01_b",
+          "mask": 1,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_01_b.png",
+          "sha256": "6b0617ec4cce5781529039af016c3857db7a26eed243b10e91c347bd709c30b2"
+        },
+        {
+          "id": "dirt_rock_01_c",
+          "mask": 1,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_01_c.png",
+          "sha256": "c6a795b580f04110f7a3ce6619756bb4726eda0261905ea8685b7fc853ab6f4b"
+        },
+        {
+          "id": "dirt_rock_02_a",
+          "mask": 2,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_02_a.png",
+          "sha256": "a6c61f4cd46dd0e1ab01f55e62401ff96318a0a63db1bc9859babece93d95099"
+        },
+        {
+          "id": "dirt_rock_02_b",
+          "mask": 2,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_02_b.png",
+          "sha256": "228cda416b01ebfc78e641968aa0577e69b31094e83c17366180b6799ae2e3f8"
+        },
+        {
+          "id": "dirt_rock_02_c",
+          "mask": 2,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_02_c.png",
+          "sha256": "f64e0ab472ff6af06f633cfb1a1b569d9f436b7cf54cbca3e82f5f4ccb8f95c7"
+        },
+        {
+          "id": "dirt_rock_03_a",
+          "mask": 3,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_03_a.png",
+          "sha256": "05e9c3a513d870813de78a5e05199199bfa8d434cbf60946e29ee43b96ecfcd3"
+        },
+        {
+          "id": "dirt_rock_03_b",
+          "mask": 3,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_03_b.png",
+          "sha256": "edcd9dc37bd06630c64c2ec8015a65df1fa30575202559a2c939f587a6b24609"
+        },
+        {
+          "id": "dirt_rock_03_c",
+          "mask": 3,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_03_c.png",
+          "sha256": "4840c3fa2013a2f067e405aa46108a6a19f8fd648ec553b926c83e170e72dcd1"
+        },
+        {
+          "id": "dirt_rock_04_a",
+          "mask": 4,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_04_a.png",
+          "sha256": "e54b8ae1163f0a8183a738db132b4d4fef28b3afe10fbd87620727e196329b63"
+        },
+        {
+          "id": "dirt_rock_04_b",
+          "mask": 4,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_04_b.png",
+          "sha256": "f73efc09fb46c262dd687fec0d741fdf83ec6310d29bbfcf59584f34706cb0d8"
+        },
+        {
+          "id": "dirt_rock_04_c",
+          "mask": 4,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_04_c.png",
+          "sha256": "c569100ca6dd92abc22896fa1b5cce769709a2db1b12b69a3b4890625b15d138"
+        },
+        {
+          "id": "dirt_rock_05_a",
+          "mask": 5,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_05_a.png",
+          "sha256": "939a5ddb9a3adc27b4db98d318488f83a705c1a6661fbfd3cf7858abd848abd4"
+        },
+        {
+          "id": "dirt_rock_05_b",
+          "mask": 5,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_05_b.png",
+          "sha256": "76d3a89b051b1fd082def24bed9f07fe0e6dd6b3b6cf3e81c6cf66656ea637a2"
+        },
+        {
+          "id": "dirt_rock_05_c",
+          "mask": 5,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_05_c.png",
+          "sha256": "eafbdbf7ddb20f1eb216073b5b85e511ebd4dd9d0495ca9d00fe05da4c28e66c"
+        },
+        {
+          "id": "dirt_rock_06_a",
+          "mask": 6,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_06_a.png",
+          "sha256": "a017499868aa37254804a6d9edaabedf86277e90259b52d22d661eb9aace87a9"
+        },
+        {
+          "id": "dirt_rock_06_b",
+          "mask": 6,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_06_b.png",
+          "sha256": "897ec00aec66424e1be9769be81046cf30de6343e13b632192c56cde29b9a3d3"
+        },
+        {
+          "id": "dirt_rock_06_c",
+          "mask": 6,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_06_c.png",
+          "sha256": "37585c32bf6211b2875cd4dfa844521b67ab7dbfe4058f4c5cd51488c8dce905"
+        },
+        {
+          "id": "dirt_rock_07_a",
+          "mask": 7,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_07_a.png",
+          "sha256": "de68a37ad113577d003ab069383d2f36d4980626647d16d9a4339ff154428392"
+        },
+        {
+          "id": "dirt_rock_07_b",
+          "mask": 7,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_07_b.png",
+          "sha256": "4628d978287beb6e84fc20d494bc638e610f9997e9402d96bb9b63b4eccfbb3a"
+        },
+        {
+          "id": "dirt_rock_07_c",
+          "mask": 7,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_07_c.png",
+          "sha256": "a07dd91545ea61ca01990370b09c3fc226af274f7c8623be7826c3c9b3b8391a"
+        },
+        {
+          "id": "dirt_rock_08_a",
+          "mask": 8,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_08_a.png",
+          "sha256": "a690546862a131178cf9a0fcaa5e7c65b8aa691925e32f7f13b5a87a0a5adb55"
+        },
+        {
+          "id": "dirt_rock_08_b",
+          "mask": 8,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_08_b.png",
+          "sha256": "543b1fc336be560a811da35eeaa39f8d08b19903296ca0ea7bc1fcf0fdcd13a0"
+        },
+        {
+          "id": "dirt_rock_08_c",
+          "mask": 8,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_08_c.png",
+          "sha256": "de227e425f829bfd25c144792dc767b3aa9c34a7adc5d31fa8a81baffc5ed8e4"
+        },
+        {
+          "id": "dirt_rock_09_a",
+          "mask": 9,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_09_a.png",
+          "sha256": "81dc6d6d0d3d2443d85cf8300a4782c36c486faf17399a7b05c1d5c00e4ea097"
+        },
+        {
+          "id": "dirt_rock_09_b",
+          "mask": 9,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_09_b.png",
+          "sha256": "56f1518efb3600ef252c5bc98d2ef9d0a60068ae5abd844670126cb527ee85fa"
+        },
+        {
+          "id": "dirt_rock_09_c",
+          "mask": 9,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_09_c.png",
+          "sha256": "00eee47d81a7070cd422ad4f317a721ad460c80eddc274ac8cd9aa86a08d0ed1"
+        },
+        {
+          "id": "dirt_rock_10_a",
+          "mask": 10,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_10_a.png",
+          "sha256": "092dc7a2583418b04cd2424f86d86b3cfbe7c6fb66745ca4a005a9c68a1bcaba"
+        },
+        {
+          "id": "dirt_rock_10_b",
+          "mask": 10,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_10_b.png",
+          "sha256": "675341253a776533740161eefbfecf20faabdccbe61cba6fe108fe0382c4490e"
+        },
+        {
+          "id": "dirt_rock_10_c",
+          "mask": 10,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_10_c.png",
+          "sha256": "f29dc6da454a789ae07f8f3283ebb6938a4864af18f18b858aa4649c4686fdd1"
+        },
+        {
+          "id": "dirt_rock_11_a",
+          "mask": 11,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_11_a.png",
+          "sha256": "e021f4e87566808778ed091b3fd0b17feeb4de2ed30fd77451726ba9ca1bb23a"
+        },
+        {
+          "id": "dirt_rock_11_b",
+          "mask": 11,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_11_b.png",
+          "sha256": "29302bd933813b44e95509e2126dd2a9a60967514a8b4bd83999c222cb0a6553"
+        },
+        {
+          "id": "dirt_rock_11_c",
+          "mask": 11,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_11_c.png",
+          "sha256": "dbda6b0d496df13a130bcd7d590f3c5e4a1f8dbef4018700cd6f2986c6888eec"
+        },
+        {
+          "id": "dirt_rock_12_a",
+          "mask": 12,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_12_a.png",
+          "sha256": "fa987e031cde707a7ed686ae2fd8d30bf0622f21f4b1d843b5ba77c979a504cc"
+        },
+        {
+          "id": "dirt_rock_12_b",
+          "mask": 12,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_12_b.png",
+          "sha256": "b763d4772845f09c6a307a6fa002ff19da2aa6bfcb15b9e033de27031c13559c"
+        },
+        {
+          "id": "dirt_rock_12_c",
+          "mask": 12,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_12_c.png",
+          "sha256": "8e4f0f5d2fb447058fb163b0d73d544a4081615a1cda9ba817f4c0c699cba090"
+        },
+        {
+          "id": "dirt_rock_13_a",
+          "mask": 13,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_13_a.png",
+          "sha256": "e3db2e1fecdfff45a6d3ad576d5f1ef99d30490e25ee8076a0a7c8502b881289"
+        },
+        {
+          "id": "dirt_rock_13_b",
+          "mask": 13,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_13_b.png",
+          "sha256": "ebe2bad1410738bcb180ffa1719d62365f5708f22c4350d2633bbf0d91cae28d"
+        },
+        {
+          "id": "dirt_rock_13_c",
+          "mask": 13,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_13_c.png",
+          "sha256": "a9c9035bbab3d1364c9f29071f713750b230c8a9160aaf6d6a38f73143c22205"
+        },
+        {
+          "id": "dirt_rock_14_a",
+          "mask": 14,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_14_a.png",
+          "sha256": "1acec6da7a213b0e8daa2d25331a01478d8a7bc28e96139623868c8cd202a491"
+        },
+        {
+          "id": "dirt_rock_14_b",
+          "mask": 14,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_14_b.png",
+          "sha256": "6f8e4f3b0f42a15a2a5c4cc37c4c7a026fdd5dfd38f4798d95f014e06d759693"
+        },
+        {
+          "id": "dirt_rock_14_c",
+          "mask": 14,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_14_c.png",
+          "sha256": "c139a330dde7ee6e0389c651424657db15ad5539c9b56444fa113fc9e173d309"
+        },
+        {
+          "id": "dirt_rock_15_a",
+          "mask": 15,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/dirt_rock_15_a.png",
+          "sha256": "80142bbaaa62b678a193247eb1be9159989042ee2fb1785bf262b50f2389c086"
+        }
+      ],
+      "compatible_seam_checks": 976,
+      "unique_images": 44
+    },
+    {
+      "id": "temple_rock",
+      "label": "Temple to rock",
+      "zero": "rock",
+      "one": "temple",
+      "tiles": [
+        {
+          "id": "temple_rock_00_a",
+          "mask": 0,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_00_a.png",
+          "sha256": "e7b53645b053189392d0635c5bde67305c2cea5aaa35776c7477e603e0792fe2"
+        },
+        {
+          "id": "temple_rock_01_a",
+          "mask": 1,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_01_a.png",
+          "sha256": "3c05fb0fe3ca4ce32c4581813411f4af4fcb729cee01a93d43238f6cb7635f03"
+        },
+        {
+          "id": "temple_rock_01_b",
+          "mask": 1,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_01_b.png",
+          "sha256": "4afaaf1ceabad3803092629bcc8b4d66115a4f967dfc22d3dfee815b6b4b18e0"
+        },
+        {
+          "id": "temple_rock_01_c",
+          "mask": 1,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_01_c.png",
+          "sha256": "775956902a8afd2e7f939fe9ba963179b93a95f2bdb704d5977999586b16c962"
+        },
+        {
+          "id": "temple_rock_02_a",
+          "mask": 2,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_02_a.png",
+          "sha256": "8664b24a366917bc92abc6c17c86ecff825050effdc4d25d9df9dbd3264cdd90"
+        },
+        {
+          "id": "temple_rock_02_b",
+          "mask": 2,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_02_b.png",
+          "sha256": "656e33c9b49e52476de2a69e63c0a7a6536fb8758a89d310fc66874008c4f09e"
+        },
+        {
+          "id": "temple_rock_02_c",
+          "mask": 2,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_02_c.png",
+          "sha256": "97692a6ae0dcee310553e6a7f340b03e0f7a324f3c94e1cb2c4e903d4c8be25c"
+        },
+        {
+          "id": "temple_rock_03_a",
+          "mask": 3,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_03_a.png",
+          "sha256": "42a65d884865d0c1fdca22c95a07bd652206f9c720897ccc564945b308444cb5"
+        },
+        {
+          "id": "temple_rock_03_b",
+          "mask": 3,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_03_b.png",
+          "sha256": "070a6599e57bb0eeb96efdf9391d6828df1ed239cecf9c0ecbbffb78962e48bc"
+        },
+        {
+          "id": "temple_rock_03_c",
+          "mask": 3,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_03_c.png",
+          "sha256": "a3f38e99a97a5c78b5570aaf34dd8f324c04c40bde0d7d490d6b4587c071dbae"
+        },
+        {
+          "id": "temple_rock_04_a",
+          "mask": 4,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_04_a.png",
+          "sha256": "69fa65996aab573ac7e36c56b6f3d686e6fae4abb5d08dc349246c68fcd047ca"
+        },
+        {
+          "id": "temple_rock_04_b",
+          "mask": 4,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_04_b.png",
+          "sha256": "b0b1f61fd961b3b2d0931b7014ffc70676f94d3a3bef76fbac5364bab9d69971"
+        },
+        {
+          "id": "temple_rock_04_c",
+          "mask": 4,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_04_c.png",
+          "sha256": "175615d89408a04fb9cea3f3dd5099194fe0e207e9754459ef36f273866ec0da"
+        },
+        {
+          "id": "temple_rock_05_a",
+          "mask": 5,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_05_a.png",
+          "sha256": "8701dbafc5fae58da186cbcb22c7d1c87e0c535ed795e07a608db0f3055f6862"
+        },
+        {
+          "id": "temple_rock_05_b",
+          "mask": 5,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_05_b.png",
+          "sha256": "d66d6122c15c317c9f32e610cd8d9c537d522c59b9c935d0598ccc2a7ef3583e"
+        },
+        {
+          "id": "temple_rock_05_c",
+          "mask": 5,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_05_c.png",
+          "sha256": "bc05fd37f3855030d33e817fa2c7c39b05dd4d37944bebae1ac2d68a92695637"
+        },
+        {
+          "id": "temple_rock_06_a",
+          "mask": 6,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_06_a.png",
+          "sha256": "cb03fc3a0feb6eb1ac0987897524af7a0ecdb67e86f70cd7b2d5ce4ca424be4f"
+        },
+        {
+          "id": "temple_rock_06_b",
+          "mask": 6,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_06_b.png",
+          "sha256": "672329c77a4a2708e01c1d3f2cae83c71c5c72d1805747d408bc7c32e1e2db6c"
+        },
+        {
+          "id": "temple_rock_06_c",
+          "mask": 6,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_06_c.png",
+          "sha256": "862697645342d5451760f638db6a4dc5ed127df1d6ecb323b63321d949845bb8"
+        },
+        {
+          "id": "temple_rock_07_a",
+          "mask": 7,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_07_a.png",
+          "sha256": "1a7e3d2de294201460af201430a542cdfd0a96c787bce242442a10cebdee4276"
+        },
+        {
+          "id": "temple_rock_07_b",
+          "mask": 7,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_07_b.png",
+          "sha256": "d7380e657de0a1362c1af1395af2309e1f4eec8a4892a8f2afe826378593c43b"
+        },
+        {
+          "id": "temple_rock_07_c",
+          "mask": 7,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_07_c.png",
+          "sha256": "f6e83ae2a0e4dc9aab621985471c40a69645b16c62ed7439f2a46305dbe23b66"
+        },
+        {
+          "id": "temple_rock_08_a",
+          "mask": 8,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_08_a.png",
+          "sha256": "bd03784ffe00494724a488d57914abbd32d630aee06c2c237b78f2dfff604be6"
+        },
+        {
+          "id": "temple_rock_08_b",
+          "mask": 8,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_08_b.png",
+          "sha256": "6a12c45dffef494c8cdb29ec07112e599545a36e1eaafa8eaad1a42dfa5853a4"
+        },
+        {
+          "id": "temple_rock_08_c",
+          "mask": 8,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_08_c.png",
+          "sha256": "8eee7c92de341b85af627505bc62fd2d354b6ddbe8704d4ee2a28d62c47f92a7"
+        },
+        {
+          "id": "temple_rock_09_a",
+          "mask": 9,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_09_a.png",
+          "sha256": "7bff900e3300746e92da3620c668e61ca744feaa2287d333c9b500e1fbbf9b26"
+        },
+        {
+          "id": "temple_rock_09_b",
+          "mask": 9,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_09_b.png",
+          "sha256": "a2add4ef6d148c01c3f1de70c64eb5f5910589df4cc9cb2b4b65b24f10daa569"
+        },
+        {
+          "id": "temple_rock_09_c",
+          "mask": 9,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_09_c.png",
+          "sha256": "1cd5e35e0dbdab78fa32a63dacec7691562b82e77b95deaa40dae71a18f08953"
+        },
+        {
+          "id": "temple_rock_10_a",
+          "mask": 10,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_10_a.png",
+          "sha256": "196787f3099b716348ab4d4a99cf7df8802dae50342315e263d98297e7686d46"
+        },
+        {
+          "id": "temple_rock_10_b",
+          "mask": 10,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_10_b.png",
+          "sha256": "de4130b25fce0d1385532db87f89640c1fa3581f06750192135084eb5021f322"
+        },
+        {
+          "id": "temple_rock_10_c",
+          "mask": 10,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_10_c.png",
+          "sha256": "e440a70fddeec6685244d0c78a5b921979634cf732b4c1b929f44df0587faae2"
+        },
+        {
+          "id": "temple_rock_11_a",
+          "mask": 11,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_11_a.png",
+          "sha256": "8c5a0b955dc3b4382503c0e587d444b63e2e622eff3ee3fd4ba79e8524fbded9"
+        },
+        {
+          "id": "temple_rock_11_b",
+          "mask": 11,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_11_b.png",
+          "sha256": "bfb2105821a6611da32f940004bed78371a87e5148a31c285383568a478a279f"
+        },
+        {
+          "id": "temple_rock_11_c",
+          "mask": 11,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_11_c.png",
+          "sha256": "fcead0eaee674b3cddc80347b591788452d07cfa9e5dabbc759d173fcab146ed"
+        },
+        {
+          "id": "temple_rock_12_a",
+          "mask": 12,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_12_a.png",
+          "sha256": "cdc679a7fa62f84db34a3bba1cbcb14d019472f6e52a555f616ab83825009456"
+        },
+        {
+          "id": "temple_rock_12_b",
+          "mask": 12,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_12_b.png",
+          "sha256": "e677cad584c795bb94bae975854a5b395163590d6a7133d8f016eb074ea24e10"
+        },
+        {
+          "id": "temple_rock_12_c",
+          "mask": 12,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_12_c.png",
+          "sha256": "1d224712cbb920bde5941834a1bc4d79bc1e27cfe5557cc5708c2c26812c27cf"
+        },
+        {
+          "id": "temple_rock_13_a",
+          "mask": 13,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_13_a.png",
+          "sha256": "d2571d901d53374be63e08446d568ce3542e012b6ae8181cb3e87b943ea19d41"
+        },
+        {
+          "id": "temple_rock_13_b",
+          "mask": 13,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_13_b.png",
+          "sha256": "6d6cac611da1828f0070a8e4225c6bfad8d6023d536f884c9f183d8eb490e5e6"
+        },
+        {
+          "id": "temple_rock_13_c",
+          "mask": 13,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_13_c.png",
+          "sha256": "014c0d61ee0788560f8fd25167a27ee3a961a8ccf3482fdedd83561d89883710"
+        },
+        {
+          "id": "temple_rock_14_a",
+          "mask": 14,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_14_a.png",
+          "sha256": "07a6bb44ab17acf1e1893f8354300c2df329e024247fc07b61a2e081d4ce8492"
+        },
+        {
+          "id": "temple_rock_14_b",
+          "mask": 14,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_14_b.png",
+          "sha256": "8c7315223a55ce503aa011b72aecbd6e2e8c22d8c8f0b2916fc40aa4886b86d1"
+        },
+        {
+          "id": "temple_rock_14_c",
+          "mask": 14,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_14_c.png",
+          "sha256": "93b9dc8506f3ab627d2b6202b81b4755460f759966ea8b35d29d1566eebe5068"
+        },
+        {
+          "id": "temple_rock_15_a",
+          "mask": 15,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/temple_rock_15_a.png",
+          "sha256": "be4e4d1feccd3717785c3a46c7218f4178f8f0bbc440d6364f2b7b26f87584d7"
+        }
+      ],
+      "compatible_seam_checks": 976,
+      "unique_images": 44
+    },
+    {
+      "id": "grass_dirt",
+      "label": "Grass to dirt",
+      "zero": "dirt",
+      "one": "grass",
+      "tiles": [
+        {
+          "id": "grass_dirt_00_a",
+          "mask": 0,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_00_a.png",
+          "sha256": "80142bbaaa62b678a193247eb1be9159989042ee2fb1785bf262b50f2389c086"
+        },
+        {
+          "id": "grass_dirt_01_a",
+          "mask": 1,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_01_a.png",
+          "sha256": "ab14b779dd97ae92c8dfb05668b0882e2402174fc08d7e15fe00225a0595e249"
+        },
+        {
+          "id": "grass_dirt_01_b",
+          "mask": 1,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_01_b.png",
+          "sha256": "e5a81e58077f1dadf6f9d5b1df810c2b77f897dc83a89797ac57b8b86bbdd4e7"
+        },
+        {
+          "id": "grass_dirt_01_c",
+          "mask": 1,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_01_c.png",
+          "sha256": "5c804813953e243d12f9b45282316d55c9a6342c33a1f91598d3111e7b188a6f"
+        },
+        {
+          "id": "grass_dirt_02_a",
+          "mask": 2,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_02_a.png",
+          "sha256": "a5374266180410d865baf78845b272f33ab7689ef9b9f49072d593bdbb6a1344"
+        },
+        {
+          "id": "grass_dirt_02_b",
+          "mask": 2,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_02_b.png",
+          "sha256": "86513504910ba6b5bb59ac91dfd37719f2992a85895561d079e41ecfc08b6fe5"
+        },
+        {
+          "id": "grass_dirt_02_c",
+          "mask": 2,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_02_c.png",
+          "sha256": "02716ce299c9468982e0c65a5ff6e3fbb301cef4da61c434152c9fc51c3e9398"
+        },
+        {
+          "id": "grass_dirt_03_a",
+          "mask": 3,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_03_a.png",
+          "sha256": "32213508756f5aa8037994259510d327df564b2594cfd6f84b81f1ca03cfef48"
+        },
+        {
+          "id": "grass_dirt_03_b",
+          "mask": 3,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_03_b.png",
+          "sha256": "9cd75f8212d20aa92063de231c45a3baee0f3e2afd4c09dad3a348dc62796d81"
+        },
+        {
+          "id": "grass_dirt_03_c",
+          "mask": 3,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_03_c.png",
+          "sha256": "c225f9d93ee99be3690d7558d806631608e3b3a30ebd73021ddec4b19a2b9f15"
+        },
+        {
+          "id": "grass_dirt_04_a",
+          "mask": 4,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_04_a.png",
+          "sha256": "1988826234d28a2b0d328091524bf3f29d1718dcef42f80faf9819602e55dcbd"
+        },
+        {
+          "id": "grass_dirt_04_b",
+          "mask": 4,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_04_b.png",
+          "sha256": "296710d176a4c7f0f39cb7a4dcaae0b225789f384cdd6337cfa5a8124ae22564"
+        },
+        {
+          "id": "grass_dirt_04_c",
+          "mask": 4,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_04_c.png",
+          "sha256": "bd811f7ba4d4c4e87e897e6dbe2a122b9c8de254a6c70d2499bc14e1ad40d719"
+        },
+        {
+          "id": "grass_dirt_05_a",
+          "mask": 5,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_05_a.png",
+          "sha256": "c22c675534b870f84d91aef8aadfc1e0b00764a9429443e357350ef30a263a2c"
+        },
+        {
+          "id": "grass_dirt_05_b",
+          "mask": 5,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_05_b.png",
+          "sha256": "03b5b280a13f9520dfee484c209feec6553cd08dacbbc1abe7530107e7eebbd1"
+        },
+        {
+          "id": "grass_dirt_05_c",
+          "mask": 5,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_05_c.png",
+          "sha256": "25c457bfaf2a06cb741520c688dc7f681d6521f9023bb1f6fed0740f6aab7c59"
+        },
+        {
+          "id": "grass_dirt_06_a",
+          "mask": 6,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_06_a.png",
+          "sha256": "23075cf18466e158395cfd6eef285e9658ac085ded541b7a84c6725de55a9a97"
+        },
+        {
+          "id": "grass_dirt_06_b",
+          "mask": 6,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_06_b.png",
+          "sha256": "92a056daebef39916159198bf1572f28b65bcea78122c601f749d8d8de495051"
+        },
+        {
+          "id": "grass_dirt_06_c",
+          "mask": 6,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_06_c.png",
+          "sha256": "d028124a8dc5ebcd23667ecc40316a44fa898e3d61dddd60098ef00753fa3aad"
+        },
+        {
+          "id": "grass_dirt_07_a",
+          "mask": 7,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_07_a.png",
+          "sha256": "96f26acf7a770e66030f75a048fdad0da3c8477faa13ef261da8a55e4b7f53d6"
+        },
+        {
+          "id": "grass_dirt_07_b",
+          "mask": 7,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_07_b.png",
+          "sha256": "49460de2bee8e7528748da5fdcd02df58b99133eeffddd8e9e88eac494343d2c"
+        },
+        {
+          "id": "grass_dirt_07_c",
+          "mask": 7,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_07_c.png",
+          "sha256": "a8fa0b2d4497494f8a9fc69754ec300646ea3f690850e25383b4394c7b337b31"
+        },
+        {
+          "id": "grass_dirt_08_a",
+          "mask": 8,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_08_a.png",
+          "sha256": "12cb87443a024a0dc8607328aeca524adc1b31d5fb09be15b84eb7ea13b430d0"
+        },
+        {
+          "id": "grass_dirt_08_b",
+          "mask": 8,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_08_b.png",
+          "sha256": "2ef2de8c33eddc9fac590991e5318c702209d823ec2b781c5151ec8f772c4f30"
+        },
+        {
+          "id": "grass_dirt_08_c",
+          "mask": 8,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_08_c.png",
+          "sha256": "3cd4714c0368db1f3cb08ade0a0204d50c7417df389832b82dc1ef751d692147"
+        },
+        {
+          "id": "grass_dirt_09_a",
+          "mask": 9,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_09_a.png",
+          "sha256": "d756b84ef8414dc7db7e20e0b234f19302c42ee2fe92f519981da8049f58d8fc"
+        },
+        {
+          "id": "grass_dirt_09_b",
+          "mask": 9,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_09_b.png",
+          "sha256": "476f95cd14a9a632c9d4efbfe96961739ffc32c0f92c7481974e5d05723a0945"
+        },
+        {
+          "id": "grass_dirt_09_c",
+          "mask": 9,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_09_c.png",
+          "sha256": "1383f51d12da9706d09646bea80e747483609aa8b971de91e1436a3a858074f8"
+        },
+        {
+          "id": "grass_dirt_10_a",
+          "mask": 10,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_10_a.png",
+          "sha256": "daf69ab63f77f33bf7448c50a7fb9b13e8355f3d7012da78990c7232d96a658e"
+        },
+        {
+          "id": "grass_dirt_10_b",
+          "mask": 10,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_10_b.png",
+          "sha256": "1233b03f1be3f4db49c6aff0663ce508bf2027aa9b3959555de97c60ac759d38"
+        },
+        {
+          "id": "grass_dirt_10_c",
+          "mask": 10,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_10_c.png",
+          "sha256": "54a206e088d2481935ef803fa09eb0ec8fe8fbdf11c94ad9005cee23ec649fa8"
+        },
+        {
+          "id": "grass_dirt_11_a",
+          "mask": 11,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_11_a.png",
+          "sha256": "85d6ed68aac2ff6d2424be985ccf74b1cc9ed5dfd56f08b81d96c72e25c7b3e8"
+        },
+        {
+          "id": "grass_dirt_11_b",
+          "mask": 11,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_11_b.png",
+          "sha256": "3e1fa8615530b1aac9fe50328580c35a473f853731d913464e561e780425cb06"
+        },
+        {
+          "id": "grass_dirt_11_c",
+          "mask": 11,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_11_c.png",
+          "sha256": "3f1ce864531b24cf768be5f059f71a060c8ffad4673343b4b97f78951d717c62"
+        },
+        {
+          "id": "grass_dirt_12_a",
+          "mask": 12,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_12_a.png",
+          "sha256": "c92b62f24c7ee3c271ab3fb95071281523529d0e36cba30cb4f7671ba9a0eeaf"
+        },
+        {
+          "id": "grass_dirt_12_b",
+          "mask": 12,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_12_b.png",
+          "sha256": "18f39467a95d5008104bb1b2ba8c29712362e6dae9afd58de0f7e18b06792f92"
+        },
+        {
+          "id": "grass_dirt_12_c",
+          "mask": 12,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_12_c.png",
+          "sha256": "8a31ed710a35e31056e8e8a29e822594387dda0002cf5f9cce6b676beb3f0015"
+        },
+        {
+          "id": "grass_dirt_13_a",
+          "mask": 13,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_13_a.png",
+          "sha256": "3e932aa5a8c1517aa56c4babf99a5ce94d3299fb93b3f03ee0ba617dd8a965bd"
+        },
+        {
+          "id": "grass_dirt_13_b",
+          "mask": 13,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_13_b.png",
+          "sha256": "5a44df841bb408224de7a3d18cc9b935ffeae7b455e3e5484c7c2f3db395929d"
+        },
+        {
+          "id": "grass_dirt_13_c",
+          "mask": 13,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_13_c.png",
+          "sha256": "57193e47766b195b79b417afe240ea4bae38847b9042ccdc0f204697d393a2fd"
+        },
+        {
+          "id": "grass_dirt_14_a",
+          "mask": 14,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_14_a.png",
+          "sha256": "2b23cee4dd1c096ab260eff3887b0d4de127cc71116fc07653fa436a3551ec28"
+        },
+        {
+          "id": "grass_dirt_14_b",
+          "mask": 14,
+          "variation": 1,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_14_b.png",
+          "sha256": "a7200943307dab47307c738709d99292e4ccacdb3dfec06c37d452f511d65f81"
+        },
+        {
+          "id": "grass_dirt_14_c",
+          "mask": 14,
+          "variation": 2,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_14_c.png",
+          "sha256": "3b0ff524db91657a020f3d565241ff3046295f1af80b722e2844e4023b3deb90"
+        },
+        {
+          "id": "grass_dirt_15_a",
+          "mask": 15,
+          "variation": 0,
+          "path": "res://assets/environment/blightwood/terrain_transitions/tiles/grass_dirt_15_a.png",
+          "sha256": "451f9a34bafe2f178a291276f4c950ad9af76edefc0995e3a86df049f6ba637f"
+        }
+      ],
+      "compatible_seam_checks": 976,
+      "unique_images": 44
+    }
+  ]
+}
