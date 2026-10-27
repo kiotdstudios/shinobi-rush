@@ -105,6 +105,7 @@ func _initialize() -> void:
 	await load("res://tests/test_natural_dirt_path.gd").new().run(ck, root)
 	await load("res://tests/test_path_dirt_transitions.gd").new().run(ck, root)
 	await load("res://tests/test_remaining_transitions.gd").new().run(ck, root)
+	await load("res://tests/test_terrain_blend.gd").new().run(ck, root)
 	await load("res://tests/test_proximity_sense.gd").new().run(ck, root)
 	await load("res://tests/test_lock_on.gd").new().run(ck, root)
 	await load("res://tests/test_smoke_screen.gd").new().run(ck, root)

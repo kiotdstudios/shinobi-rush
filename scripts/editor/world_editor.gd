@@ -17,10 +17,11 @@ const BRUSHES: Array[int] = [1, 3, 5]
 var brush := 1  ## paint tool: the brush is a brush x brush block of floor cells
 const SHAPES: Array[String] = ["brush", "rect", "line"]
 const BANK_LABELS := {"": "AUTO", "grass": "GRASS", "dirt": "DIRT", "rock": "ROCK"}
-const TERRAIN_COLORS := {"water": Color("#3aa0ff"), "grass": Color("#4fd25a"), "ground": Color("#b9824a"), "temple": Color("#b8b8c8"), "": Color("#ff4d4d")}
+const TERRAIN_COLORS := {"water": Color("#3aa0ff"), "grass": Color("#4fd25a"), "ground": Color("#b9824a"), "temple": Color("#b8b8c8"), "dirt": Color("#8a5a2b"), "rock": Color("#8c8f98"), "": Color("#ff4d4d")}
 var auto_terrain := "water"  ## terrain tool: "water" | "grass" | "ground" | "temple" | "" (clear floor)
 var bank_family := ""  ## terrain tool: "" follows the neighbouring land, else "grass" | "dirt" | "rock"
 var shape := "brush"  ## paint / terrain: "brush" (drag), "rect" (drag a box) or "line"
+var auto_blend := true  ## terrain tool: neighbouring materials pick corner-mask transition tiles on their own
 var erase_autofix := true  ## erasing a floor tile re-picks the edges around the hole
 var selection: Array = []  ## box-selected objects (group move / copy / delete)
 var clipboard: Array = []  ## copied stamp items {id, x, y} relative to an anchor floor cell
@@ -696,6 +697,7 @@ func _apply_cells(cells: Array) -> bool:
 		if _auto == null:
 			_auto = AutoTile.new(placed, bank_family)
 		_auto.bank_family = bank_family
+		_auto.blend = auto_blend
 		return _auto.apply(cells, auto_terrain) > 0
 	var any := false
 	for cell: Vector2 in cells:
@@ -759,7 +761,9 @@ func press(world: Vector2) -> void:
 			var o := placed.hit_test(world)
 			if not o.is_empty():
 				if erase_autofix and PlacedObjects.is_floor_tile(o.id):
-					AutoTile.new(placed).erase(o)
+					var eraser := AutoTile.new(placed)
+					eraser.blend = auto_blend
+					eraser.erase(o)
 					placed._changed()
 				else:
 					placed.remove(o)
@@ -1005,6 +1009,9 @@ func eyedrop(world: Vector2, floor_only := false) -> bool:
 	var id: String = o.id
 	if PlacedObjects.is_floor_tile(id):
 		var t := AutoTile.terrain_of(id)
+		var owned := String(placed.cell_mat.get(PlacedObjects.lattice_center(o.pos as Vector2), ""))
+		if owned in TerrainBlend.MATERIALS:
+			t = owned  # a blended tile picks up the material the owner painted, not "land"
 		if tool == "terrain" and t in AutoTile.TERRAINS:
 			auto_terrain = t
 			_refresh()
@@ -1045,6 +1052,40 @@ func set_layer_locked(category: String, locked: bool) -> void:
 	if locked and not selected.is_empty() and PlacedObjects.type_of(selected.id) == category:
 		selected = {}
 	selection = selection.filter(func(o): return PlacedObjects.type_of(o.id) != category)
+	_refresh()
+
+
+func toggle_auto_blend() -> void:
+	auto_blend = not auto_blend
+	_auto = null
+	_flash("Auto Blend %s" % ("ON: neighbouring materials blend themselves" if auto_blend else "OFF: tiles are picked by hand"))
+	_refresh()
+
+
+## Manual override: lock (or, if every picked tile is already locked, unlock) the selected floor tiles. A locked
+## tile keeps its art and is never retiled by Auto Blend; the lock is saved with the map.
+func toggle_lock_selected() -> void:
+	var picks: Array = selection.duplicate()
+	if picks.is_empty() and not selected.is_empty():
+		picks = [selected]
+	picks = picks.filter(func(o): return PlacedObjects.is_floor_tile(o.id))
+	if picks.is_empty():
+		_flash("Select a floor tile first (LOCK TILE)")
+		return
+	var tiler := AutoTile.new(placed)
+	tiler.blend = true
+	var all_locked := true
+	for o: Dictionary in picks:
+		all_locked = all_locked and tiler.is_locked(PlacedObjects.lattice_center(o.pos as Vector2))
+	for o: Dictionary in picks:
+		var cell := PlacedObjects.lattice_center(o.pos as Vector2)
+		if all_locked:
+			tiler.unlock(cell)
+		else:
+			tiler.lock(cell)
+	placed._changed()
+	_auto = null
+	_flash("%s %d tile%s" % ["Unlocked" if all_locked else "Locked", picks.size(), "" if picks.size() == 1 else "s"])
 	_refresh()
 
 
@@ -2313,10 +2354,10 @@ func _build_pro_tools(outer: VBoxContainer) -> void:
 
 	_section(col, "Auto-tile terrain  (edges and banks pick themselves)")
 	var trow := _flow(col)
-	for t: String in ["water", "grass", "ground", "temple", ""]:
+	for t: String in ["water", "grass", "ground", "dirt", "temple", "rock", ""]:
 		var label := "CLEAR" if t == "" else t.to_upper()
 		_terrain_buttons[t] = _mini(trow, label, set_terrain.bind(t))
-		(_terrain_buttons[t] as Button).tooltip_text = "Paint %s: the right edge, corner or bank piece is chosen for every cell you touch" % label.to_lower()
+		(_terrain_buttons[t] as Button).tooltip_text = "Paint %s: the right edge, corner, bank or material-blend piece is chosen for every cell you touch" % label.to_lower()
 	bank_button = _mini(col, "BANK LOOK", cycle_bank, false)
 	bank_button.tooltip_text = "Which bank art water gets next to land: follow the land, or force grass / dirt / rock"
 	var srow := _flow(col)
@@ -2329,6 +2370,11 @@ func _build_pro_tools(outer: VBoxContainer) -> void:
 	var fix := _mini(erow, "ERASE FIXES EDGES", toggle_erase_autofix)
 	fix.tooltip_text = "When you erase a floor tile, the pieces around the hole re-pick their edges"
 	_terrain_buttons["_fix"] = fix
+	var blend_btn := _mini(erow, "AUTO BLEND", toggle_auto_blend)
+	blend_btn.tooltip_text = "Grass, ground, dirt, temple and rock blend into each other with the right corner tiles. Off = classic painting"
+	_terrain_buttons["_blend"] = blend_btn
+	var lock_btn := _mini(erow, "LOCK TILE", toggle_lock_selected, false)
+	lock_btn.tooltip_text = "Lock the selected floor tile(s): Auto Blend never retiles them. Press again to unlock"
 
 	_section(col, "Select, copy, stamps")
 	var brow := _flow(col)
@@ -2443,6 +2489,8 @@ func _refresh() -> void:
 	for t: String in _terrain_buttons:
 		if t == "_fix":
 			(_terrain_buttons[t] as Button).set_pressed_no_signal(erase_autofix)
+		elif t == "_blend":
+			(_terrain_buttons[t] as Button).set_pressed_no_signal(auto_blend)
 		else:
 			(_terrain_buttons[t] as Button).set_pressed_no_signal(tool == "terrain" and auto_terrain == t)
 	for sh: String in _shape_buttons:
@@ -2472,6 +2520,6 @@ func _refresh() -> void:
 	if not selected.is_empty():
 		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
-	var what := ("Terrain: %s  (%s)" % [("clear floor" if auto_terrain == "" else auto_terrain), shape]) if tool == "terrain" else "Box select: drag a box" if tool == "box" else "Stamp: click to drop (%d pieces)" % clipboard.size() if tool == "stamp" else "Painting: %s  (drag to lay tiles, %d x %d brush)" % [str(PlacedObjects.def_of(place_id).label), brush, brush] if tool == "paint" else "Placing: %s" % str(PlacedObjects.def_of(place_id).label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
+	var what := ("Terrain: %s  (%s, Auto Blend %s)" % [("clear floor" if auto_terrain == "" else auto_terrain), shape, "ON" if auto_blend else "OFF"]) if tool == "terrain" else "Box select: drag a box" if tool == "box" else "Stamp: click to drop (%d pieces)" % clipboard.size() if tool == "stamp" else "Painting: %s  (drag to lay tiles, %d x %d brush)" % [str(PlacedObjects.def_of(place_id).label), brush, brush] if tool == "paint" else "Placing: %s" % str(PlacedObjects.def_of(place_id).label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
 	count_label.text = "%d objects" % placed.objects.size()
 	status.text = _note if Time.get_ticks_msec() < _note_until else what
