@@ -33,6 +33,7 @@ var left_handle: Button
 var right_handle: Button
 var layer_rows: Dictionary = {}  ## layer name -> {"eye": Button, "lock": Button}
 var props_empty: Label
+var _layer_total := -1
 var st_tool: Label
 var st_asset: Label
 var st_layer: Label
@@ -332,6 +333,20 @@ func _build_right() -> void:
 	hint.add_theme_font_size_override("font_size", 10)
 	hint.add_theme_color_override("font_color", WorldEditor.MUTED)
 	col.add_child(hint)
+	var bulk := HBoxContainer.new()
+	bulk.add_theme_constant_override("separation", 4)
+	col.add_child(bulk)
+	for spec: Array in [["SHOW ALL", "Show every layer"], ["UNLOCK ALL", "Unlock every layer"]]:
+		var bb := Button.new()
+		bb.text = spec[0]
+		bb.tooltip_text = spec[1]
+		bb.focus_mode = Control.FOCUS_NONE
+		bb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bb.custom_minimum_size = Vector2(0, 26)
+		editor._skin(bb)
+		bb.add_theme_font_size_override("font_size", 11)
+		bb.pressed.connect(show_all_layers if spec[0] == "SHOW ALL" else unlock_all_layers)
+		bulk.add_child(bb)
 	var layer_scroll := ScrollContainer.new()
 	layer_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	layer_scroll.custom_minimum_size = Vector2(0, 300)
@@ -354,10 +369,16 @@ func _build_right() -> void:
 		lab.add_theme_font_size_override("font_size", 12)
 		lab.add_theme_color_override("font_color", Color("#F5F5F5"))
 		r.add_child(lab)
+		var cnt := Label.new()
+		cnt.add_theme_font_size_override("font_size", 11)
+		cnt.add_theme_color_override("font_color", WorldEditor.MUTED)
+		cnt.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		cnt.custom_minimum_size = Vector2(34, 0)
+		r.add_child(cnt)
 		var lk := _glyph_button(r, "lock", "Lock / unlock " + nm, func() -> void:
 			editor.set_layer_locked(nm, not bool(editor.placed.locked_types.get(nm, false)))
 			refresh())
-		layer_rows[nm] = {"eye": eye, "lock": lk}
+		layer_rows[nm] = {"eye": eye, "lock": lk, "name": lab, "count": cnt}
 
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 8)
@@ -373,6 +394,34 @@ func _build_right() -> void:
 	insp.get_parent().remove_child(insp)
 	col.add_child(insp)
 	insp.add_theme_stylebox_override("panel", flat(WorldEditor.CARD, WorldEditor.EDGE, 1, 4))
+	insp.get_child(0).visible = false  # the old one-line inspector row; the Properties card replaces it
+	editor.properties = PropertiesPanel.new()
+	editor.properties.setup(editor)
+	insp.add_child(editor.properties)
+
+
+func show_all_layers() -> void:
+	for nm: String in layer_rows:
+		if bool(editor.placed.hidden_types.get(nm, false)):
+			editor.set_layer_hidden(nm, false)
+	refresh()
+
+
+func unlock_all_layers() -> void:
+	for nm: String in layer_rows:
+		if bool(editor.placed.locked_types.get(nm, false)):
+			editor.set_layer_locked(nm, false)
+	refresh()
+
+
+## Object count per layer. Counting walks every object, so it only runs when the total changes (and every half second).
+func _recount_layers() -> void:
+	var counts: Dictionary = {}
+	for o: Dictionary in editor.placed.objects:
+		var t := PlacedObjects.type_of(str(o.id))
+		counts[t] = int(counts.get(t, 0)) + 1
+	for nm: String in layer_rows:
+		(layer_rows[nm].count as Label).text = str(int(counts.get(nm, 0)))
 
 
 func _glyph_button(parent: Node, kind: String, tip: String, cb: Callable) -> Button:
@@ -549,6 +598,19 @@ func refresh() -> void:
 		(layer_rows[nm].eye as Button).get_child(0).queue_redraw()
 		(layer_rows[nm].lock as Button).get_child(0).queue_redraw()
 	props_empty.visible = not editor.inspector.visible
+	if editor.properties != null and editor.inspector.visible:
+		editor.properties.refresh()  # follows undo / redo and drags too
+	var total := editor.placed.objects.size()
+	if total != _layer_total or _frames % 30 == 0:
+		_layer_total = total
+		_recount_layers()
+	var sel_layer := ""
+	if not editor.selected.is_empty():
+		sel_layer = PlacedObjects.type_of(str(editor.selected.id))
+	for nm: String in layer_rows:
+		var lab_c := layer_rows[nm].name as Label
+		lab_c.add_theme_color_override("font_color", Color("#FFFFFF") if nm == sel_layer else Color("#A0A0A0") if bool(editor.placed.hidden_types.get(nm, false)) else Color("#F5F5F5"))
+		lab_c.add_theme_font_size_override("font_size", 13 if nm == sel_layer else 12)
 	st_tool.text = editor.status.text
 	var asset_id := editor.place_id
 	if asset_id == "" and not editor.selected.is_empty():
