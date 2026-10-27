@@ -89,6 +89,7 @@ func _initialize() -> void:
 	await load("res://tests/test_editor_shell.gd").new().run(ck, root)
 	await load("res://tests/test_asset_browser.gd").new().run(ck, root)
 	await load("res://tests/test_properties_panel.gd").new().run(ck, root)
+	await load("res://tests/test_editor_minimap.gd").new().run(ck, root)
 	await load("res://tests/test_tight_select.gd").new().run(ck, root)
 	await load("res://tests/test_bandit_vision_overlay.gd").new().run(ck, root)
 	await load("res://tests/test_sense_vision_overlay.gd").new().run(ck, root)
