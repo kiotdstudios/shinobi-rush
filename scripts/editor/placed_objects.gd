@@ -1653,6 +1653,9 @@ func load_dict(data: Dictionary) -> int:
 	for item in data.get("items", []):
 		if typeof(item) == TYPE_DICTIONARY and str(item.get("id", "")) == "player_spawn" and typeof(item.get("x")) in [TYPE_FLOAT, TYPE_INT] and typeof(item.get("y")) in [TYPE_FLOAT, TYPE_INT]:
 			spawn = Vector2(float(item.x), float(item.y))  # keep other pieces clear of where the player will really stand
+	# The generated Blightwood map deliberately lays a rock within 60px of the spawn; add() accepts it
+	# on a fresh boot, so the reload guard must too or every save/reload silently drops it.
+	var spawn_clearance := 0.0 if blightwood_map_applied else 60.0
 	for item in data.get("items", []):
 		if typeof(item) != TYPE_DICTIONARY or def_of(str(item.get("id", ""))).is_empty():
 			continue
@@ -1661,7 +1664,7 @@ func load_dict(data: Dictionary) -> int:
 		var id := str(item.id)
 		var pos := Vector2(float(item.x), float(item.y))
 		var rect := footprint_rect(id, pos)
-		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind not in ["grass", "ground", "pickup", "spawn", "fireflies", "water_fx", "bridge", "bandit"] and rect.grow(60.0).has_point(spawn)):
+		if not pos.is_finite() or not arena.bounds.encloses(rect) or (def_of(id).kind not in ["grass", "ground", "pickup", "spawn", "fireflies", "water_fx", "bridge", "bandit"] and rect.grow(spawn_clearance).has_point(spawn)):
 			continue
 		if not add(id, pos, false).is_empty():
 			made += 1

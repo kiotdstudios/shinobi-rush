@@ -3,7 +3,7 @@
 **Owner:** Codex (pixel art and asset delivery)  
 **Priority:** P1 — map visual cohesion  
 **Type:** Coverage audit plus missing flat terrain families and brown-bank land patch.
-**Status:** REVIEW — seven flat families/brown-bank patch created; 4411/0 native and 9/9 Web checks; required CI/integration/live verification pending.
+**Status:** REVIEW — seven flat families/brown-bank patch created; latest-main combined 4412/0 native and 9/9 Web checks; fresh required CI/integration/live verification pending.
 
 ## Owner continuation / implementation
 Owner explicitly requested “create all files still needed” after reviewing the audit. Implemented seven scoped flat families (grass/path, grass/temple, dirt/temple, grass/rock, dirt/rock, temple/rock, reusable grass/dirt), 308 registered tiles, plus 16 brown shore land layers and 16 editor icons. No duplicate existing path/dirt set, water animation or bridge end caps. Flat rock material assets are delivered for manual placement; vertical cliff geometry and measured landing/waterfall fit remain Aki's integration tasks, documented in `docs/visuals/terrain-transitions/AKI_HANDOFF.md`. Original audit below is historical, before this implementation.
