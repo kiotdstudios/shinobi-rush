@@ -1,0 +1,29 @@
+{
+  "tested_at": "2026-10-26T21:31:47.178Z",
+  "url": "https://kiotdstudios.github.io/shinobi-rush/",
+  "build_sha": "7d01146062116f197b74686d771b5b205e5945d1",
+  "checks": {
+    "sources": true,
+    "fixed_pool": true,
+    "wisps": true,
+    "player_clearing": true,
+    "drift": true,
+    "half": true,
+    "pause": true,
+    "toggle_off": true,
+    "toggle_on": true,
+    "real_player_moves": true,
+    "world_sources": true,
+    "world_pool": true,
+    "world_visible": true,
+    "no_errors": true
+  },
+  "world": {
+    "ready": true,
+    "clock": 0.2666666805744171,
+    "sources": 11,
+    "visible": 21,
+    "capacity": 48
+  },
+  "errors": []
+}
