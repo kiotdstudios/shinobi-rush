@@ -1,6 +1,6 @@
 # ORDER — natural Blightwood dirt path revision
 - Agent: Codex
-- Status: REVIEW — 3647/0 native; 131/0 final floor checks; 9/9 actual Web-game comparison. NOT LIVE until integrated and verified.
+- Status: DONE — PR226 integrated through PR231; main deployment/postdeploy passed; canonical live comparison 9/9 at c4c33696.
 - Branch: codex/brown-dirt-path
 - PR: https://github.com/kiotdstudios/shinobi-rush/pull/226
 - Dependencies: existing grass/earth art, authored Blightwood map, floor coverage standard.
@@ -16,3 +16,6 @@ Composite existing generated earth and approved grass through one continuous map
 
 ## Acceptance criteria
 Asymmetrical clearing, curved and variable-width connections, broken grass tufts and darker/lighter earth variation; no full diamond voids, layout/collision edits or save overwrite. Native/build/browser checks pass. Normal reviewed PR integration and verified canonical live deployment required before DONE.
+
+## Live completion
+2026-10-27: merged through [PR231](https://github.com/kiotdstudios/shinobi-rush/pull/231), main `c4c336964e42e73a59b0b2984aa9aae57e4f15be`; [CI/deploy/postdeploy](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40477062807) all passed. Actual canonical game before/after comparison passed 9/9, same camera, 3154 floor/object entries and 103 obstacles. Evidence: `docs/reviews/2026-10-27-live-integration/natural-path/`.
