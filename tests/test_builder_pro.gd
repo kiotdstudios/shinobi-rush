@@ -232,7 +232,7 @@ func run(p_ck: Callable, root: Node) -> void:
 
 	# --- UI
 	ck.call("ui: terrain, shape and tool buttons exist", ed._terrain_buttons.has("water") and ed._terrain_buttons.has("") and ed._shape_buttons.has("rect") and ed._tool_buttons.has("box"))
-	ck.call("ui: the pro-tools block is open in the map editor", ed.tools_body.visible)
+	ck.call("ui: the pro-tools block is available in the map editor (the black shell starts it collapsed)", ed.tools_body != null and (ed.shell != null or ed.tools_body.visible))
 	ed.set_pro_tools_open(false)
 	ck.call("ui: the block collapses", not ed.tools_body.visible)
 	ed.set_pro_tools_open(true)

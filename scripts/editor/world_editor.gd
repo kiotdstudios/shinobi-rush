@@ -6,7 +6,7 @@ extends CanvasLayer
 ##   Select / Move: click an object to pick it, drag to move it, Delete removes it.   Erase: click objects to remove them.
 ## The layout autosaves (user://world_builder_layout.json). While the panel is hidden nothing is editable.
 const PANEL_W := 236.0
-const ACCENT := Color("#FF6B00")
+static var ACCENT := Color("#FF6B00")  ## active-control colour (the black map editor swaps it for white, see use_palette)
 const SNAPS: Array[int] = [30, 15, 0]
 
 var arena: TrainingArena
@@ -56,6 +56,8 @@ var place_id := ""
 var snap := 30
 var selected: Dictionary = {}
 var dragging := false
+var shell: EditorShell = null  ## the all-black map-editor chrome (map editor page only)
+var _ui_root: Control = null
 var panel_hidden := false  ## map editor: the tools panel is collapsed to its tab
 var _drag_origin := Vector2.ZERO
 var _drag_offset := Vector2.ZERO
@@ -175,6 +177,7 @@ func _ready() -> void:
 	arena.add_child(grid_layer)
 	void_sheet = VoidSheet.new(self)
 	arena.add_child(void_sheet)
+	use_palette(MapEditorMode.active())
 	_build_ui()
 	_show_void(true)
 	set_open(false)
@@ -183,6 +186,9 @@ func _ready() -> void:
 	placed.clear_history()
 	if map_mode:
 		_enter_map_mode()
+		shell = EditorShell.new(self)
+		_ui_root.add_child(shell)
+		shell.build()
 	if OS.has_feature("web"):
 		var query := str(JavaScriptBridge.eval("window.location.search", true))
 		_js_state = JavaScriptBridge.create_object("Object")
@@ -296,9 +302,12 @@ func _process(_d: float) -> void:
 func set_panel_hidden(hidden: bool) -> void:
 	if not map_mode:
 		return
+	panel_hidden = hidden
+	if shell != null:
+		shell.set_left_open(not hidden)
+		return
 	panel.visible = not hidden
 	tab.visible = hidden
-	panel_hidden = hidden
 
 
 func set_open(v: bool) -> void:
@@ -412,6 +421,19 @@ func _unhandled_input(event: InputEvent) -> void:
 			set_panel_hidden(not panel_hidden)
 			get_viewport().set_input_as_handled()
 			return
+		if shell != null and not event.ctrl_pressed and not (get_viewport().gui_get_focus_owner() is LineEdit):
+			if event.keycode == KEY_BRACKETLEFT:
+				shell.set_left_open(not shell.left_open)
+				get_viewport().set_input_as_handled()
+				return
+			if event.keycode == KEY_BRACKETRIGHT:
+				shell.set_right_open(not shell.right_open)
+				get_viewport().set_input_as_handled()
+				return
+			if event.keycode == KEY_G:
+				show_grid = not show_grid
+				get_viewport().set_input_as_handled()
+				return
 		if open and event.keycode == KEY_S and event.ctrl_pressed:
 			save_now()
 			get_viewport().set_input_as_handled()
@@ -1455,12 +1477,32 @@ func draw_overlay(c: Node2D) -> void:
 
 
 # ------------------------------------------------------------------ UI
-const BG := Color("#0c0c10")
-const CARD := Color("#16161c")
-const CARD_HOVER := Color("#1f1f27")
-const EDGE := Color("#2b2b35")
-const DANGER := Color("#ff4d4d")
-const MUTED := Color(1, 1, 1, 0.55)
+static var BG := Color("#0c0c10")
+static var CARD := Color("#16161c")
+static var CARD_HOVER := Color("#1f1f27")
+static var EDGE := Color("#2b2b35")
+static var DANGER := Color("#ff4d4d")
+static var MUTED := Color(1, 1, 1, 0.55)
+
+
+## The in-game World Builder keeps its orange look; the Map Editor page is all black / white / grey.
+static func use_palette(black: bool) -> void:
+	if black:
+		ACCENT = Color("#F5F5F5")
+		BG = Color("#101010")
+		CARD = Color("#191919")
+		CARD_HOVER = Color("#242424")
+		EDGE = Color("#303030")
+		DANGER = Color("#c25555")
+		MUTED = Color("#A0A0A0")
+	else:
+		ACCENT = Color("#FF6B00")
+		BG = Color("#0c0c10")
+		CARD = Color("#16161c")
+		CARD_HOVER = Color("#1f1f27")
+		EDGE = Color("#2b2b35")
+		DANGER = Color("#ff4d4d")
+		MUTED = Color(1, 1, 1, 0.55)
 
 var inspector: PanelContainer
 var inspector_name: Label
@@ -1551,6 +1593,7 @@ static func block_icon(id: String) -> Texture2D:
 func _build_ui() -> void:
 	var root := Control.new()
 	root.name = "Root"
+	_ui_root = root
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
@@ -1604,6 +1647,7 @@ func _build_ui() -> void:
 	# header
 	var head := HBoxContainer.new()
 	outer.add_child(head)
+	_ui["head"] = head
 	var titles := VBoxContainer.new()
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	titles.add_theme_constant_override("separation", 0)
@@ -1632,6 +1676,7 @@ func _build_ui() -> void:
 	bar.color = ACCENT
 	bar.custom_minimum_size = Vector2(0, 3)
 	outer.add_child(bar)
+	_ui["bar"] = bar
 
 	# tools
 	var tools := HBoxContainer.new()
@@ -2146,6 +2191,7 @@ func _build_pro_tools(outer: VBoxContainer) -> void:
 	_mini(prow, "NEXT PROBLEM", next_problem, false).tooltip_text = "Fly the view to the next problem"
 	_mini(prow, "CLEAR FLAGS", clear_problem_flags, false)
 
+	var layers_from := col.get_child_count()
 	_section(col, "Layers  (hide to see through, lock to keep from moving)")
 	for nm: String in layer_names():
 		var lrow := HBoxContainer.new()
@@ -2162,6 +2208,10 @@ func _build_pro_tools(outer: VBoxContainer) -> void:
 		hb.size_flags_horizontal = Control.SIZE_SHRINK_END
 		lb.size_flags_horizontal = Control.SIZE_SHRINK_END
 		_layer_buttons[nm] = {"hide": hb, "lock": lb}
+	var old_layers: Array = []
+	for i in range(layers_from, col.get_child_count()):
+		old_layers.append(col.get_child(i))
+	_ui["old_layers"] = old_layers  # the black map editor shows these in its right sidebar instead
 	set_pro_tools_open(MapEditorMode.active())
 
 
