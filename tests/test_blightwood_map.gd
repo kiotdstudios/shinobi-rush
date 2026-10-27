@@ -75,7 +75,8 @@ func run(p_ck: Callable, root: Node) -> void:
 	var data := placed.to_dict()
 	ck.call("blightwood map: the flag is saved", bool(data.get("blightwood_map", false)))
 	var before := placed.objects.size()
-	placed.load_dict(data)
+	var reloaded := placed.load_dict(data)
+	ck.call("blightwood map: save then reload keeps every object", reloaded == before and placed.objects.size() == before, "%d reloaded vs %d saved" % [placed.objects.size(), before])
 	BlightwoodMap.enabled = true
 	BlightwoodMap.populate(arena)
 	BlightwoodMap.enabled = false
@@ -83,7 +84,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	for o in placed.objects:
 		if o.id == "blight_stone_brazier":
 			after_braziers += 1
-	ck.call("blightwood map: reload does not lay it again", after_braziers == 3 and absi(placed.objects.size() - before) <= 2, "%d vs %d" % [placed.objects.size(), before])
+	ck.call("blightwood map: reload does not lay it again", after_braziers == 3 and placed.objects.size() == before, "%d vs %d" % [placed.objects.size(), before])
 	_check_stair_links_after_reload(ck, placed)
 	await _check_bandit_climbs(ck, arena, tree)
 	_check_cliffs(ck, placed, arena, cells.c)
