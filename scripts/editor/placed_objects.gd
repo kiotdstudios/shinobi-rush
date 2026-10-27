@@ -1417,10 +1417,6 @@ func ensure_shrine() -> bool:
 
 
 func _overlaps_solid(rect: Rect2) -> bool:
-	for b in WorldScale.live_blocks():
-		var fp: Vector2 = b[1]
-		if rect.intersects(Rect2(b[0].x - fp.x * 0.5, b[0].y - fp.y, fp.x, fp.y)):
-			return true
 	for o in objects:
 		var kind: String = def_of(o.id).kind
 		if kind not in ["grass", "pickup", "spawn", "fireflies", "bridge", "bandit"] and rect.intersects(footprint_rect(o.id, o.pos)):

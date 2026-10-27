@@ -1,0 +1,306 @@
+{
+  "date": "2026-10-27",
+  "base": "46a01f1006407d3b6239fbd82a74d2cf1a9bb318",
+  "pull_requests": [
+    {
+      "number": 35,
+      "title": "Art: fast running jutsu with trailing-arm lightning charge",
+      "head": "codex/stylized-running-jutsu",
+      "sha": "a2499dd677bf9f21dc73797ba57bb2058ef29098",
+      "draft": false,
+      "mergeable": true,
+      "files": 211,
+      "review_threads": [],
+      "reviews": [],
+      "ci": [
+        {
+          "id": 40417187058,
+          "name": "Godot CI",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 40417186747,
+          "name": "Repository checks",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "number": 36,
+      "title": "Art: summoning hand slam, large ground contract and separate smoke",
+      "head": "codex/summoning-jutsu-art",
+      "sha": "d2164592e540e544704fb4a5e92eb6b188d1aa68",
+      "draft": false,
+      "mergeable": true,
+      "files": 113,
+      "review_threads": [],
+      "reviews": [],
+      "ci": [
+        {
+          "id": 39408673020,
+          "name": "Repository checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 39408673019,
+          "name": "Godot CI",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "number": 176,
+      "title": "Story ideas: Cinder Style and Fire/Earth/Lava jutsu",
+      "head": "story/cinder-jutsu-ideas-20261024",
+      "sha": "3cfc06ef8e4c183f9462d1ab20d5f6ac63d3530e",
+      "draft": false,
+      "mergeable": true,
+      "files": 1,
+      "review_threads": [],
+      "reviews": [],
+      "ci": [
+        {
+          "id": 40402702814,
+          "name": "Repository checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 40402703094,
+          "name": "Godot CI",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "number": 220,
+      "title": "Record verified live ground-mist delivery",
+      "head": "codex/ground-mist-live-proof",
+      "sha": "89bc622b168f0da6fff6878ac8a17fa55c55cbf9",
+      "draft": true,
+      "mergeable": true,
+      "files": 6,
+      "review_threads": [],
+      "reviews": [],
+      "ci": [
+        {
+          "id": 40405663168,
+          "name": "Repository checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 40405663189,
+          "name": "Godot CI",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "number": 226,
+      "title": "Blightwood: natural dirt clearing and winding grass-blended trails",
+      "head": "codex/brown-dirt-path",
+      "sha": "7bd7786bada5aaa10c23e9d92dcd93079eeeac31",
+      "draft": false,
+      "mergeable": true,
+      "files": 91,
+      "review_threads": [],
+      "reviews": [],
+      "ci": [
+        {
+          "id": 40442143027,
+          "name": "Godot CI",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 40442143016,
+          "name": "Repository checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 40442143103,
+          "name": "Pipeline self-test",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "number": 227,
+      "title": "Aki order: modular Blightwood cliff kit matching existing stairs + waterfall",
+      "head": "orders/aki-blightwood-modular-cliff-kit-20261026",
+      "sha": "73e262dfd35de6c96582524b04cd56b3363a329a",
+      "draft": true,
+      "mergeable": true,
+      "files": 1,
+      "review_threads": [],
+      "reviews": [],
+      "ci": [
+        {
+          "id": 40437940204,
+          "name": "Repository checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 40437940136,
+          "name": "Godot CI",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "number": 228,
+      "title": "Smoke screen blocks sight + Blightwood rock 3 grass removal",
+      "head": "aki/bandit-life",
+      "sha": "eed1225477a00c94634f54b9503a2c1d6a23e46a",
+      "draft": false,
+      "mergeable": false,
+      "files": 162,
+      "review_threads": [],
+      "reviews": [],
+      "ci": []
+    },
+    {
+      "number": 229,
+      "title": "Inventory: drop a bag item back into the world (Player Menu Square)",
+      "head": "orcha/inventory-drop-item",
+      "sha": "c4bc4d1a2ab0ac0555b7b2f9adf760a33ec6892e",
+      "draft": false,
+      "mergeable": true,
+      "files": 3,
+      "review_threads": [],
+      "reviews": [],
+      "ci": [
+        {
+          "id": 40446846768,
+          "name": "Repository checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 40446846830,
+          "name": "Godot CI",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "number": 230,
+      "title": "Blightwood: existing ground/path to dirt transitions and builder filter",
+      "head": "codex/ground-dirt-transitions",
+      "sha": "ae8d1a12ca02786559653bbd419e16cf0218d405",
+      "draft": false,
+      "mergeable": true,
+      "files": 256,
+      "review_threads": [],
+      "reviews": [],
+      "ci": [
+        {
+          "id": 40447774972,
+          "name": "Repository checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 40447775004,
+          "name": "Pipeline self-test",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 40447774983,
+          "name": "Godot CI",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "rules": {
+    "id": 25328492,
+    "name": "Agent Rules",
+    "target": "branch",
+    "source_type": "Repository",
+    "source": "kiotdstudios/shinobi-rush",
+    "enforcement": "active",
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/heads/main"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "deletion"
+      },
+      {
+        "type": "required_status_checks",
+        "parameters": {
+          "strict_required_status_checks_policy": true,
+          "do_not_enforce_on_create": false,
+          "required_status_checks": [
+            {
+              "context": "validate-orders-and-project",
+              "integration_id": 15368
+            },
+            {
+              "context": "godot-ci-gate",
+              "integration_id": 15368
+            }
+          ]
+        }
+      },
+      {
+        "type": "non_fast_forward"
+      },
+      {
+        "type": "pull_request",
+        "parameters": {
+          "required_approving_review_count": 0,
+          "dismiss_stale_reviews_on_push": false,
+          "required_reviewers": [],
+          "require_code_owner_review": false,
+          "require_last_push_approval": false,
+          "required_review_thread_resolution": false,
+          "require_extra_approval_for_unattributed_changes": true,
+          "allowed_merge_methods": [
+            "merge",
+            "squash",
+            "rebase"
+          ]
+        }
+      }
+    ],
+    "node_id": "RRS_lACqUmVwb3NpdG9yec5U3gjRzgGCe2w",
+    "created_at": "2026-10-17T22:51:18.947-04:00",
+    "updated_at": "2026-10-18T15:38:24.969-04:00",
+    "bypass_actors": [],
+    "current_user_can_bypass": "never",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/kiotdstudios/shinobi-rush/rulesets/25328492"
+      },
+      "html": {
+        "href": "https://github.com/kiotdstudios/shinobi-rush/rules/25328492"
+      }
+    }
+  },
+  "normal_merge_attempt": {
+    "pr": 226,
+    "result": "HTTP405: 2 of 2 required status checks expected",
+    "reason": "Strict up-to-date branch rule; PR226 behind current main. Integration candidate begins from current main; no protection bypass."
+  }
+}

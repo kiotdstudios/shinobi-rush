@@ -81,6 +81,12 @@ func run(p_ck: Callable, root: Node) -> void:
 	ck.call("use: an empty slot does nothing", not player.use_slot("down"))
 	player.health = player.max_health
 
+	# drop (Player Menu's Square): takes one out of the bag and sets a matching pickup down in the world
+	player.inventory.counts["chakra_gourd"] = 1
+	var chakra_pickups_before := tree.get_nodes_in_group("chakra_pickup").size()
+	ck.call("drop: drop_item removes one from the bag and places a matching pickup in the world", player.drop_item("chakra_gourd") and player.inventory.count_of("chakra_gourd") == 0 and tree.get_nodes_in_group("chakra_pickup").size() == chakra_pickups_before + 1)
+	ck.call("drop: dropping with none left in the bag does nothing", not player.drop_item("chakra_gourd"))
+
 	# kunai throw
 	var kn0 := player.inventory.count_of("kunai")
 	player.facing8 = Vector2.RIGHT
@@ -140,7 +146,21 @@ func run(p_ck: Callable, root: Node) -> void:
 	menu.accept()
 	menu.cancel()
 	ck.call("menu: Circle drops a pick without placing it", not menu.placing and menu.is_open)
+	var hp_pickups_before := tree.get_nodes_in_group("health_pickup").size()
+	menu.drop_highlighted()  # cursor is 0: health_gourd, which has 1 left in the bag
+	ck.call("menu: Square drops the highlighted item into the world", player.inventory.count_of("health_gourd") == 0 and tree.get_nodes_in_group("health_pickup").size() == hp_pickups_before + 1)
+	menu.cursor = menu.entries().find("")
+	menu.drop_highlighted()
+	ck.call("menu: dropping the empty-slot entry does nothing", tree.get_nodes_in_group("health_pickup").size() == hp_pickups_before + 1)
+	menu.cursor = 1  # chakra_gourd: already emptied by the drop_item() test above
+	menu.drop_highlighted()
+	ck.call("menu: dropping an item the bag doesn't have does nothing", tree.get_nodes_in_group("chakra_pickup").size() == chakra_pickups_before + 1)
+	menu.cursor = 0
 	menu.switch_tab(1)
+	var tab1_pickups_before := tree.get_nodes_in_group("kunai_pickup").size()
+	menu.cursor = 0  # chidori: exercises the tab guard itself, not a cursor-bounds early-out
+	menu.drop_highlighted()
+	ck.call("menu: drop does nothing on the Jutsu tab", tree.get_nodes_in_group("kunai_pickup").size() == tab1_pickups_before)
 	menu.cursor = 0  # chidori
 	menu.accept()
 	menu.place_jutsu_on("cross")

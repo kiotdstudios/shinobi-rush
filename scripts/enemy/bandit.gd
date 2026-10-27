@@ -13,8 +13,15 @@ extends CharacterBody2D
 ## BanditVisual binds Codex's red-scarf idle/run/sprint art. There is no dedicated attack/alert art
 ## yet: the telegraphs are drawn as code overlays (see BanditVisual) and art is requested in
 ## orders/Codex/2026-10-21-bandit-level1-action-art.md.
+##
+## A bandit is a fighter like the player (see Combatants): it climbs stairs with the same elevation rules, takes hits
+## through the same `take_hit`, carries ryo it drops as a RyoPouch when downed, and picks its target from every
+## hostile fighter in sight -- the player or a bandit of a rival crew (`crew_id`). Off the fight it scavenges: ryo
+## pouches and gourds it can see, drinking a health gourd when hurt and a chakra gourd when its pool runs dry.
 
 enum State { IDLE, APPROACH, HIT_REACT, DEAD, EVADE, PATROL, NOTICE, THREATEN, ATTACK, REPOSITION, RETREAT, SEARCH, RETURN }
+const LOOT_DETOUR := 2.0  ## a reachable item's walk may be this many times `loot_sight` (stairs, round a lake to a bridge)
+const LOOT_PATH_QUERIES := 4  ## nearest candidates path-checked per loot scan
 const THROW_RELEASE_AT := 0.7  ## fraction of the throw animation at which the kunai leaves the hand
 enum AtkPhase { NONE, WINDUP1, ACTIVE1, GAP, WINDUP2, ACTIVE2, RECOVERY, THROW_WINDUP, THROW_RECOVERY, THROW_GAP }
 enum RetreatPhase { NONE, TELEGRAPH, HOP1, PAUSE, HOP2, RECOVER }
@@ -32,6 +39,12 @@ const TAUNT_TEXT := "Hand over your ryo!"
 const TAUNT_TIME := 2.4
 const EYE_OFFSET := Vector2(0, -13.5)  ## sight/attack rays run at collider height, like the walls' footprints
 const LOG_MAX := 40
+## Bandit crews. `hue` recolours the art's red scarf/headband (BanditVisual); a negative hue keeps the painted red.
+const CREWS: Array[Dictionary] = [
+	{"name": "Red Scarf", "hue": -1.0, "color": Color("#c23a48")},
+	{"name": "Jade Fang", "hue": 0.46, "color": Color("#2fb5a3")},
+]
+const GOURD_SHARE := 0.25  ## a drunk gourd restores this share of the pool, like HealthGourd.FRACTION for the player
 ## States in which this Bandit is actively engaged with `locked_target` (owner 2026-10-22: "enemies
 ## should auto engage lock onto players"). Deliberately separate from the narrower `chasing` list in
 ## `_update_perception()` (which only widens the sight check) -- this one drives `is_locked_on()` and
@@ -79,6 +92,10 @@ const ENGAGED_STATES: Array = [State.NOTICE, State.APPROACH, State.THREATEN, Sta
 ## combat -- every player is still chased, threatened and fought the same regardless of ryo. PROVISIONAL
 ## PROTOTYPE value, not balance.
 @export var ryo_steal_threshold: int = 30
+## Crew index into CREWS: crewmates never fight each other, rival crews fight on sight.
+@export var crew_id: int = 0
+## Ryo in his purse: it grows with what he steals or scoops up and drops as a RyoPouch where he goes down.
+@export var ryo: int = 12
 
 var is_sprinting := false
 var evade_count := 0
@@ -183,10 +200,31 @@ var _repath_timer := 0.0
 var _stuck_timer := 0.0
 var _stuck_ref := Vector2.ZERO
 var _moving_intent := false
+var elevation := 0.0  ## logical height above the ground (stairs, cliff landings), see ShrineElevation
+var inventory := BanditInventory.new()  ## his D-pad belt: 4 slots, `item_carry` of each kind
+var health_gourds: int:  ## carried, drunk when hurt
+	get:
+		return inventory.count_of("health_gourd")
+	set(v):
+		inventory.set_count("health_gourd", v)
+var chakra_gourds: int:  ## carried, drunk when the pool runs dry
+	get:
+		return inventory.count_of("chakra_gourd")
+	set(v):
+		inventory.set_count("chakra_gourd", v)
+var items_dropped := 0  ## items he put down to make room for better ones (tests / telemetry)
+var items_thrown := 0  ## belt items he used in a fight: tags, bombs, smoke, extra kunai (tests / telemetry)
+var _throw_item := ""  ## belt item the current throw uses; "" = his own kunai
+var _burst_total := 1
+var gourds_drunk := 0
+var loot_taken := 0  ## pickups and pouches he went for and got (tests / telemetry)
+var loot_target: Node2D = null
+var drinking := ""  ## "health" | "chakra" while a gourd is at his lips
+var last_attacker: Node2D = null
+var _drink_timer := 0.0
+var _loot_scan := 0.0
 
 ## Logical height above the ground on climbable terrain (see ShrineElevation): the figure is drawn this much higher.
-var elevation: float = 0.0
-
 @onready var visual: Node2D = $Visual
 
 
@@ -209,11 +247,22 @@ func _ready() -> void:
 	var arena := get_parent()
 	if arena is TrainingArena:
 		nav = (arena as TrainingArena).nav
+	_pass_crewmates()
+
+
+## Crewmates slip past each other instead of shoving (the nav grid does not know where the others stand, so a
+## crewmate in the corridor would pin him); a rival's body still blocks like the player's does.
+func _pass_crewmates() -> void:
+	for other in get_tree().get_nodes_in_group("enemy"):
+		if other is Bandit and other != self and (other as Bandit).crew_id == crew_id:
+			add_collision_exception_with(other)
+			(other as Bandit).add_collision_exception_with(self)
 
 
 func set_intelligence_level(level: int) -> void:
 	intelligence_level = level
 	profile = EnemyIntelligence.profile(level)
+	inventory.per_item = int(profile.get("item_carry", 2))
 
 
 func seed_rng(seed_value: int) -> void:
@@ -278,7 +327,7 @@ func _physics_process(delta: float) -> void:
 	_find_player()
 	_update_perception()
 
-	if _tick_chakra_charge(delta):
+	if _tick_self_care(delta) or _tick_chakra_charge(delta):
 		velocity = Vector2.ZERO
 		move_and_slide()
 		visual.queue_redraw()
@@ -286,7 +335,8 @@ func _physics_process(delta: float) -> void:
 
 	match state:
 		State.IDLE, State.PATROL:
-			_tick_patrol(delta)
+			if not _tick_loot(delta):
+				_tick_patrol(delta)
 		State.NOTICE:
 			_tick_notice(delta)
 		State.APPROACH:
@@ -300,9 +350,11 @@ func _physics_process(delta: float) -> void:
 		State.RETREAT:
 			_tick_retreat(delta)
 		State.SEARCH:
-			_tick_search(delta)
+			if not _tick_loot(delta):
+				_tick_search(delta)
 		State.RETURN:
-			_tick_return(delta)
+			if not _tick_loot(delta):
+				_tick_return(delta)
 
 	if state == State.EVADE:
 		move_and_slide()
@@ -326,7 +378,7 @@ func _update_perception() -> void:
 	# no line of sight -- a sprinting body is felt/loud, not just seen (see ProximitySense). Owner:
 	# "when naruto running and near enemy ... player will auto detect and pull their kunai out" --
 	# the symmetric case for the Bandit: it auto-notices a nearby player even outside its sight cone.
-	senses_player = is_sprinting and global_position.distance_to(_player.global_position) <= sense_radius()
+	senses_player = is_sprinting and global_position.distance_to(_player.global_position) <= sense_radius() and not SmokeTagBomb.hides(_player.global_position)
 	# Owner 2026-10-22: "enemies should auto engage lock onto players" -- the sense is a felt power-level
 	# read, not a glimpse that needs confirming, so it skips the sight path's NOTICE suspicion delay
 	# entirely and commits straight to APPROACH (locked_target is set in _enter's State.APPROACH case).
@@ -336,7 +388,8 @@ func _update_perception() -> void:
 
 
 ## Range + (optionally) facing cone + clear line of sight. Walls block detection exactly like they
-## block movement: the ray runs against the same colliders.
+## block movement: the ray runs against the same colliders. A standing smoke screen blocks it too, and a
+## Bandit inside one sees nothing (SmokeTagBomb.first_cover).
 func can_see(target: Vector2, use_cone: bool) -> bool:
 	var to := target - global_position
 	var d := to.length()
@@ -347,6 +400,8 @@ func can_see(target: Vector2, use_cone: bool) -> bool:
 		var half := deg_to_rad(float(profile.fov_deg) * 0.5)
 		if absf(facing8.angle_to(to)) > half:
 			return false
+	if SmokeTagBomb.blocks_sight(global_position, target):
+		return false
 	return line_clear_to(target)
 
 
@@ -393,6 +448,7 @@ func _steal_ryo(p: Node) -> void:
 	var taken: int = p.call("lose_ryo", int(p.get("ryo")))
 	if taken > 0:
 		stolen_ryo += taken
+		ryo += taken
 		_log("stole %d ryo" % taken)
 
 
@@ -599,7 +655,7 @@ func _tick_approach(delta: float) -> void:
 	if _can_throw(dist):
 		_begin_throw()
 		return
-	if sees_player and dist <= combat_distance:
+	if sees_player and dist <= combat_distance and Combatants.same_level(self, _player):
 		_enter(State.THREATEN, "in range")
 		velocity = Vector2.ZERO
 		_face(to_player)
@@ -638,6 +694,9 @@ func _tick_threaten(delta: float) -> void:
 	if dist > combat_distance + 40.0:
 		_enter(State.APPROACH, "player backed off")
 		return
+	if not Combatants.same_level(self, _player):
+		_enter(State.APPROACH, "target changed level")
+		return
 	_threaten_timer = maxf(_threaten_timer - delta, 0.0)
 	if sees_player and _threaten_timer <= 0.0 and _atk_cooldown <= 0.0 and dist <= float(profile.attack_reach):
 		_begin_attack()
@@ -661,7 +720,8 @@ func _can_throw(dist: float) -> bool:
 
 
 func _begin_throw() -> void:
-	_enter(State.ATTACK, "kunai")
+	_throw_item = _pick_throw_item(global_position.distance_to(_player.global_position))
+	_enter(State.ATTACK, _throw_item if _throw_item != "" else "kunai")
 	atk_phase = AtkPhase.THROW_WINDUP
 	_burst_left = 0
 	_burst_index = 0
@@ -680,7 +740,16 @@ func _tick_throw(delta: float) -> void:
 			_atk_dir = (_player.global_position - global_position).normalized()
 		facing8 = WorldScale.snap8(_atk_dir)
 		if _atk_timer <= 0.0:
-			_burst_left = maxi(int(profile.get("throw_burst_count", 1)), 1)
+			if _throw_item != "":
+				_release_item()
+				atk_phase = AtkPhase.THROW_RECOVERY
+				_atk_timer = float(profile.get("throw_recovery", 0.3))
+				return
+			_burst_total = maxi(int(profile.get("throw_burst_count", 1)), 1)
+			if inventory.consume("kunai"):
+				_burst_total += 1  # a blade off his belt joins the fan
+				items_thrown += 1
+			_burst_left = _burst_total
 			_burst_index = 0
 			_release_kunai()
 			_after_release()
@@ -708,13 +777,37 @@ func _after_release() -> void:
 
 func _release_kunai() -> void:
 	kunai_thrown += 1
-	var n := maxi(int(profile.get("throw_burst_count", 1)), 1)
+	var n := maxi(_burst_total, 1)
 	var spread := deg_to_rad(float(profile.get("throw_spread_deg", 9.0)))
 	var dir := _atk_dir.rotated((float(_burst_index) - float(n - 1) * 0.5) * spread)
 	_burst_index += 1
 	_burst_left = maxi(_burst_left - 1, 0)
 	_log("kunai thrown %d/%d" % [_burst_index, n])
 	BanditKunai.spawn(get_parent(), global_position + dir * 18.0, dir, self, _player, float(profile.get("throw_damage", 6.0)), float(profile.get("throw_speed", 520.0)))
+
+
+## A tag bomb (lobbed, blast) or paper tag (flat, sticks) off his belt instead of a kunai, when he carries one, the
+## target is within its range and the `item_throw_chance` roll says so. Rolls only when he has one, so a bandit with an
+## empty belt throws exactly as before.
+func _pick_throw_item(dist: float) -> String:
+	var options: Array[String] = []
+	if inventory.count_of("tag_bomb") > 0 and dist <= PaperTagBomb.MAX_RANGE:
+		options.append("tag_bomb")
+	if inventory.count_of("paper_tag") > 0 and dist <= PaperTagBomb.TAG_RANGE:
+		options.append("paper_tag")
+	if options.is_empty() or _rng.randf() >= float(profile.get("item_throw_chance", 0.0)):
+		return ""
+	return options[0]
+
+
+func _release_item() -> void:
+	var id := _throw_item
+	_throw_item = ""
+	if not inventory.consume(id):
+		return
+	items_thrown += 1
+	_log("throws a %s" % id)
+	PaperTagBomb.spawn(get_parent(), global_position + _atk_dir * 18.0, _atk_dir, self, "tag_bomb" if id == "tag_bomb" else "")
 
 
 ## Pay for a chakra move. Returns false (and flags that he wants to charge) when the pool is short. Nothing uses it yet; substitution is free.
@@ -846,6 +939,8 @@ func _substitution_spot_ok(p: Vector2) -> bool:
 		var b: Rect2 = arena.get_bounds()
 		if not b.grow(-8.0).has_point(p):
 			return false
+	if absf(ShrineElevation.target_at(p) - elevation) > ShrineElevation.HEIGHT * ShrineElevation.BOARD_AT:
+		return false  # never swap across levels, exactly like the player
 	return not test_move(Transform2D(0.0, p), Vector2(0.01, 0.0))
 
 
@@ -930,8 +1025,8 @@ func _try_hit(idx: int) -> void:
 		return
 	if not line_clear_to(_player.global_position):
 		return  # no hits through walls
-	if absf(float(_player.get("elevation") if "elevation" in _player else 0.0) - elevation) > ShrineElevation.HEIGHT * ShrineElevation.BOARD_AT:
-		return  # no hits between a cliff top and the ground below it
+	if not Combatants.same_level(self, _player):
+		return  # a blade cannot reach up a cliff or down off a landing; a kunai can
 	_atk_hit_done[idx] = true
 	if _player.call("take_hit", 8.0, to.normalized(), 180.0, self):
 		player_hits_landed += 1
@@ -988,6 +1083,11 @@ func _safe_direction(away: Vector2, probe: float) -> Vector2:
 ## Rare retreat: telegraph, then TWO short backward Body Flicker hops with a beat between them.
 func _begin_retreat() -> void:
 	_enter(State.RETREAT, "double flicker")
+	if _player != null and is_instance_valid(_player) and inventory.consume("smoke_tag_bomb"):
+		items_thrown += 1  # smoke between them covers the getaway
+		var aim := (_player.global_position - global_position).normalized()
+		SmokeTagBomb.spawn_smoke(get_parent(), global_position + aim * 18.0, aim, self)
+		_log("throws a smoke_tag_bomb to cover the retreat")
 	retreat_phase = RetreatPhase.TELEGRAPH
 	_retreat_timer = float(profile.retreat_telegraph)
 	velocity = Vector2.ZERO
@@ -1214,12 +1314,22 @@ func _begin_evade(to_player: Vector2) -> bool:
 	return false
 
 
-## Called by the player's attack hit-check. `knockback_dir` should already be normalized.
-func take_damage(amount: float, knockback_dir: Vector2, knockback_speed: float, hitstop_ms: float) -> void:
+## Same entry point as PlayerController.take_hit, so any fighter's blade or kunai lands on a bandit the same way.
+## Returns true if the hit landed (a flicker, a log swap or a dead body swallow it).
+func take_hit(damage: float, from_dir: Vector2, shove: float = 180.0, attacker: Variant = null) -> bool:
+	var before := hp
+	take_damage(damage, from_dir.normalized(), shove, 0.0, attacker as Node2D if attacker is Node2D else null)
+	return hp < before
+
+
+## Called by the player's attack hit-check (no attacker given: the nearest player is blamed). `knockback_dir` should
+## already be normalized.
+func take_damage(amount: float, knockback_dir: Vector2, knockback_speed: float, hitstop_ms: float, attacker: Node2D = null) -> void:
 	if state == State.DEAD:
 		return
 	if flicker_hopping or _sub_invuln > 0.0:
 		return  # mid-flicker (or just after a log swap) the body is not there to be hit
+	_note_attacker(attacker)
 	if _try_substitution():
 		return  # log took the hit
 	hp = maxf(hp - amount, 0.0)
@@ -1234,9 +1344,14 @@ func take_damage(amount: float, knockback_dir: Vector2, knockback_speed: float, 
 		_death_time = 0.0
 		react_kind = "death"
 		velocity = knockback_dir * maxf(knockback_speed, 140.0) * 0.9  # the body is thrown, then skids to a stop
+		drinking = ""
+		_drop_purse()
 		visual.queue_redraw()
 		defeated.emit()
 		return
+	if drinking != "":
+		_log("knocked the %s gourd from his lips" % drinking)
+		drinking = ""
 	if state in [State.ATTACK, State.THREATEN, State.REPOSITION, State.RETREAT]:
 		_atk_cooldown = maxf(_atk_cooldown, float(profile.attack_cooldown) * 0.5)
 	_enter(State.HIT_REACT, "damaged")
@@ -1256,11 +1371,261 @@ func is_alive() -> bool:
 	return state != State.DEAD
 
 
+## Picks the target: whoever he is already on stays his target while it is a living enemy, unless he is not engaged,
+## cannot see it and a different enemy (a player or a rival crew's bandit) is in sight -- then he turns to that one.
+## With nobody in sight the first player is the default, as before there were crews.
 func _find_player() -> void:
-	if _player != null and is_instance_valid(_player):
+	var keep := _player != null and is_instance_valid(_player) and _target_ok(_player)
+	if keep and (state in ENGAGED_STATES or sees_player or senses_player):
+		return
+	var rival := _spot_enemy()
+	if rival != null:
+		_player = rival
+		return
+	if keep:
 		return
 	var players := get_tree().get_nodes_in_group("player")
 	_player = players[0] if players.size() > 0 else null
+	if _player != null and not _target_ok(_player):
+		_player = null
+
+
+## A living enemy. A stand-in target with no crew/alive state of its own (tests) always counts.
+func _target_ok(t: Node2D) -> bool:
+	if not (t is Bandit) and not t.is_in_group("player"):
+		return true
+	return Combatants.alive(t) and Combatants.hostile(self, t)
+
+
+## Nearest living enemy he can see right now (or feel, while naruto-running), other than the current target.
+func _spot_enemy() -> Node2D:
+	var best: Node2D = null
+	var best_d := INF
+	for c in Combatants.all(get_tree()):
+		if c == _player or not Combatants.alive(c) or not Combatants.hostile(self, c):
+			continue
+		var d := global_position.distance_to(c.global_position)
+		if d >= best_d:
+			continue
+		if _can_see_fighter(c) or (is_sprinting and d <= sense_radius()):
+			best = c
+			best_d = d
+	return best
+
+
+## can_see against a fighter who is not his target yet: the sight ray only skips the target's own body, so for that
+## one check the candidate stands in as the target (otherwise its own collider would hide it).
+func _can_see_fighter(c: Node2D) -> bool:
+	var was := _player
+	_player = c
+	var seen := can_see(c.global_position, true)
+	_player = was
+	return seen
+
+
+## Whoever hurt him becomes his target (crewmates' stray kunai excepted). Without a named attacker the nearest player
+## is blamed, which is what the player's own blade and thrown weapons report.
+func _note_attacker(attacker: Node2D) -> void:
+	var who := attacker
+	if who == null and (_player == null or not is_instance_valid(_player) or _player is Bandit):
+		var best_d := INF
+		for p in get_tree().get_nodes_in_group("player"):
+			if p is Node2D and global_position.distance_to((p as Node2D).global_position) < best_d:
+				best_d = global_position.distance_to((p as Node2D).global_position)
+				who = p
+	if who == null or who == self or not is_instance_valid(who):
+		return
+	last_attacker = who
+	if Combatants.hostile(self, who) and who != _player:
+		_player = who
+		last_seen = who.global_position
+		_log("turns on %s" % who.name)
+
+
+func gain_ryo(amount: int) -> void:
+	if amount > 0:
+		ryo += amount
+		_log("pockets %d ryo (%d)" % [amount, ryo])
+
+
+func lose_ryo(amount: int) -> int:
+	var taken := clampi(amount, 0, ryo)
+	ryo -= taken
+	return taken
+
+
+func _drop_purse() -> void:
+	if ryo > 0 and get_parent() != null:
+		RyoPouch.drop(get_parent(), global_position, lose_ryo(ryo), self)
+
+
+static func crew_info(id: int) -> Dictionary:
+	return CREWS[posmod(id, CREWS.size())]
+
+
+# ---------------------------------------------------------------------------------- loot and self-care
+## Off the fight he scavenges: walks (naruto-running) to the nearest ryo pouch or wanted gourd in sight. Returns true
+## while he is going for one (the state tick is skipped). An enemy in sight always comes first.
+func _tick_loot(delta: float) -> bool:
+	if sees_player or senses_player:
+		loot_target = null
+		return false
+	_loot_scan -= delta
+	if not _loot_wanted(loot_target) and _loot_scan <= 0.0:
+		_loot_scan = 0.4
+		loot_target = _find_loot()
+		if loot_target != null:
+			_log("goes for %s" % loot_target.name)
+	if not _loot_wanted(loot_target):
+		loot_target = null
+		return false
+	is_sprinting = true
+	var reached := _follow(loot_target.global_position, chase_speed, delta, 10.0, false)
+	if reached or _in_pickup_reach(loot_target):
+		_grab(loot_target)
+	return true
+
+
+func _loot_wanted(item: Variant) -> bool:
+	if item == null or not is_instance_valid(item) or not (item is Node2D) or not item.is_inside_tree() or not item.is_visible_in_tree():
+		return false
+	if item is RyoPouch:
+		return (item as RyoPouch).amount > 0
+	if item is HealthGourd:
+		var g := item as HealthGourd
+		return g.available and inventory.wants(g.item_id())
+	return false
+
+
+## He knows his woods: anything within `loot_sight` that the nav can reach counts, line of sight or not, so loot up
+## a cliff stair or across a bridge is fair game. The walk itself may be up to LOOT_DETOUR times that long.
+func _find_loot() -> Node2D:
+	var sight := float(profile.get("loot_sight", 0.0))
+	if sight <= 0.0:
+		return null
+	var near: Array = []
+	for group in _loot_groups():
+		for n in get_tree().get_nodes_in_group(group):
+			var item := n as Node2D
+			if item == null or not _loot_wanted(item):
+				continue
+			var d := global_position.distance_to(item.global_position)
+			if d <= sight:
+				near.append([d, item])
+	near.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
+	for i in mini(near.size(), LOOT_PATH_QUERIES):
+		var item: Node2D = near[i][1]
+		if _loot_reachable(item, float(near[i][0]), sight):
+			return item
+	return null
+
+
+static func _loot_groups() -> Array:
+	var out: Array = [RyoPouch.GROUP]
+	for k: String in HealthGourd.KINDS:
+		var g := String(HealthGourd.KINDS[k].group)
+		if not out.has(g):
+			out.append(g)
+	return out
+
+
+func _loot_reachable(item: Node2D, d: float, sight: float) -> bool:
+	if nav == null:
+		return line_clear_to(item.global_position)
+	if d <= nav.cell:
+		return true
+	var path := nav.find_path(global_position, item.global_position)
+	if path.is_empty() or path[path.size() - 1].distance_to(item.global_position) > nav.cell:
+		return false
+	var length := global_position.distance_to(path[0])
+	for i in range(1, path.size()):
+		length += path[i - 1].distance_to(path[i])
+	return length <= sight * LOOT_DETOUR
+
+
+func _in_pickup_reach(item: Node2D) -> bool:
+	var d := item.global_position - global_position
+	return Vector2(d.x, d.y * 2.0).length() <= HealthGourd.PICKUP_RADIUS
+
+
+## Pouches collect themselves when he steps on them (RyoPouch scans every fighter); a pickup goes on his D-pad belt,
+## and when the belt is full he first puts down the least wanted kind to make room.
+func _grab(item: Node2D) -> void:
+	if item is HealthGourd and _in_pickup_reach(item):
+		var g := item as HealthGourd
+		var id := g.item_id()
+		if not inventory.room_for(id):
+			var slot := inventory.swap_slot_for(id)
+			if slot != "":
+				drop_slot(slot)
+		if inventory.room_for(id) and g.take_by(self):
+			loot_taken += 1
+			inventory.add(id)
+			_log("takes a %s (%d carried)" % [id, inventory.count_of(id)])
+	elif item is RyoPouch and (item as RyoPouch).taken_by == self:
+		loot_taken += 1
+	loot_target = null
+	velocity = Vector2.ZERO
+
+
+## Puts everything on D-pad `slot` on the ground at his feet as pickups anyone can take (they do not respawn).
+## Returns how many he dropped.
+func drop_slot(slot: String) -> int:
+	var parent := get_parent()
+	var held := inventory.drop_slot(slot)
+	var n := int(held.count)
+	if n <= 0 or parent == null:
+		return 0
+	for i in n:
+		var g := HealthGourd.new()
+		g.kind = BanditInventory.pickup_kind(String(held.id))
+		g.grounded = g.kind == "kunai"
+		g.respawns = false
+		g.name = "BanditDrop"
+		parent.add_child(g)
+		g.global_position = global_position + Vector2(-facing8.x, -facing8.y * 0.5).normalized() * (28.0 + 16.0 * i)
+	items_dropped += n
+	_log("drops %d %s to make room" % [n, held.id])
+	return n
+
+
+## Drinks a carried gourd: health when hurt (out of reach of his target, or when it is desperate), chakra when the pool
+## is low. Plants his feet for `drink_time`, like charging. Returns true while drinking.
+func _tick_self_care(delta: float) -> bool:
+	if drinking != "":
+		_drink_timer -= delta
+		velocity = Vector2.ZERO
+		if _drink_timer > 0.0:
+			return true
+		if drinking == "health":
+			hp = minf(hp + max_hp * GOURD_SHARE, max_hp)
+		else:
+			chakra = minf(chakra + max_chakra * GOURD_SHARE, max_chakra)
+			_chakra_wanted = chakra < float(profile.get("chakra_charge_low", 0.0)) * max_chakra
+		gourds_drunk += 1
+		_log("drank a %s gourd (hp %d, chakra %d)" % [drinking, int(hp), int(chakra)])
+		drinking = ""
+		return false
+	if state in [State.HIT_REACT, State.DEAD, State.EVADE, State.ATTACK] or atk_phase != AtkPhase.NONE or flicker_hopping:
+		return false
+	var hurt := hp < float(profile.get("heal_below", 0.0)) * max_hp
+	var desperate := hp < float(profile.get("heal_desperate", 0.0)) * max_hp
+	if health_gourds > 0 and hurt and (desperate or _chakra_safe()):
+		health_gourds -= 1
+		_begin_drink("health")
+		return true
+	if chakra_gourds > 0 and needs_chakra_charge() and not is_charging_chakra:
+		chakra_gourds -= 1
+		_begin_drink("chakra")
+		return true
+	return false
+
+
+func _begin_drink(kind: String) -> void:
+	drinking = kind
+	_drink_timer = float(profile.get("drink_time", 0.5))
+	velocity = Vector2.ZERO
+	_log("drinks a %s gourd" % kind)
 
 
 func get_state_name() -> String:

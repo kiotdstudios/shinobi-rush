@@ -37,7 +37,7 @@ func _ready() -> void:
 	title.add_theme_font_size_override("font_size",28)
 	layer.add_child(title)
 	var note := Label.new()
-	note.text = "Ivory explosive • Black smoke bomb / white ink / red seams     |     Smoke is visual; AI stealth is pending"
+	note.text = "Ivory explosive • Black smoke bomb / white ink / red seams     |     Smoke blocks sight both ways while it stands"
 	note.position = Vector2(30,58)
 	layer.add_child(note)
 	for i in 2:
@@ -110,7 +110,7 @@ func _process(delta: float) -> void:
 		var live: Array = []
 		for bomb in projectiles:
 			if is_instance_valid(bomb):
-				live.append({"kind":bomb.art_kind,"phase":int(bomb.phase),"detonated":bomb.detonated,"damaged":bomb.damaged.size(),"x":bomb.position.x,"age":bomb.age})
+				live.append({"kind":bomb.art_kind,"phase":int(bomb.phase),"detonated":bomb.detonated,"damaged":bomb.damaged.size(),"x":bomb.position.x,"age":bomb.age,"cover_radius":bomb.cover_radius() if bomb is SmokeTagBomb else 0.0,"banks":bomb.clouds.size() if bomb is SmokeTagBomb else 0})
 		state.bombs_json = JSON.stringify(live)
 
 func _draw() -> void:

@@ -5,6 +5,9 @@ var enemy: Bandit
 
 func _ready() -> void:
 	var query := str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
+	if OS.has_feature("web") and "integration_inspect=1" in query:
+		var inspector := load("res://scripts/art/integration_inspection.gd").new() as Node
+		get_parent().add_child.call_deferred(inspector)
 	if "pathdirt=review" in query or "--path-dirt-review" in OS.get_cmdline_user_args():
 		var review := load("res://scripts/art/path_dirt_review.gd").new() as Node
 		get_parent().add_child.call_deferred(review)

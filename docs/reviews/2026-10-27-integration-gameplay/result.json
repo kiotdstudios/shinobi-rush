@@ -1,0 +1,79 @@
+{
+  "checks": [
+    {
+      "name": "four live bandits in two crews",
+      "ok": true,
+      "detail": [
+        0,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "name": "real menu Square drops one kunai",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "inventory_json": "{\"chakra_gourd\":0,\"health_gourd\":0,\"kunai\":9,\"paper_tag\":3,\"smoke_tag_bomb\":0,\"tag_bomb\":0}",
+        "menu_open": true,
+        "menu_cursor": 2,
+        "player_x": 149.71633911132812,
+        "player_y": 125.55521392822266,
+        "kunai_drops_json": "[{\"owned\":true,\"x\":177.716339111328,\"y\":125.555213928223}]",
+        "crews_json": "[0,0,1,1]"
+      }
+    },
+    {
+      "name": "drop stays after unpausing inside pickup radius",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "inventory_json": "{\"chakra_gourd\":0,\"health_gourd\":0,\"kunai\":9,\"paper_tag\":3,\"smoke_tag_bomb\":0,\"tag_bomb\":0}",
+        "menu_open": false,
+        "menu_cursor": 2,
+        "player_x": 149.71633911132812,
+        "player_y": 125.55521392822266,
+        "kunai_drops_json": "[{\"owned\":true,\"x\":177.716339111328,\"y\":125.555213928223}]",
+        "crews_json": "[0,0,1,1]"
+      }
+    },
+    {
+      "name": "leave and return recovers dropped kunai",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "inventory_json": "{\"chakra_gourd\":0,\"health_gourd\":0,\"kunai\":10,\"paper_tag\":3,\"smoke_tag_bomb\":0,\"tag_bomb\":0}",
+        "menu_open": false,
+        "menu_cursor": 2,
+        "player_x": 202.21633911132812,
+        "player_y": 125.55521392822266,
+        "kunai_drops_json": "[]",
+        "crews_json": "[0,0,1,1]"
+      }
+    },
+    {
+      "name": "smoke has three animated banks and active sight cover",
+      "ok": true,
+      "detail": [
+        {
+          "age": 1.72546666666667,
+          "banks": 3,
+          "cover_radius": 20.5204999999999,
+          "damaged": 0,
+          "detonated": true,
+          "kind": "smoke_tag_bomb",
+          "phase": 2,
+          "x": 1045.34191894531
+        }
+      ]
+    },
+    {
+      "name": "no engine/browser errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "utc": "2026-10-27T08:05:10.369Z"
+}

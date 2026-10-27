@@ -6,7 +6,8 @@ func run(ck: Callable, root: Node) -> void:
 			ck.call(kind+" "+layer+": sixteen frames",TagBombArt.frames(kind,layer).size()==16)
 		ck.call(kind+": inventory icon", PlayerInventory.icon(kind)!=null)
 		ck.call(kind+": builder pickup",PlacedObjects.CATALOG.has(kind) and PlacedObjects.type_of(kind)=="Pickups")
-	ck.call("smoke: separate effect frames",TagBombArt.frames("smoke_tag_bomb","smoke").size()>=8)
+	for layer: String in ["screen_burst","screen_loop","screen_fade"]:
+		ck.call("smoke: separate "+layer+" frames",TagBombArt.frames("smoke_tag_bomb",layer).size()>=6)
 	var main := (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	for i in 5: await root.get_tree().process_frame
@@ -52,7 +53,7 @@ func run(ck: Callable, root: Node) -> void:
 			found.advance(1.3)
 			ck.call(kind+": detonates on fuse",found.detonated and found.phase==PaperTagBomb.Phase.BLAST)
 			if found is SmokeTagBomb:
-				ck.call("smoke: five independent clouds",found.clouds.size()==5)
+				ck.call("smoke: three independent banks",found.clouds.size()==SmokeTagBomb.BANKS.size() and SmokeTagBomb.BANKS.size()==3)
 				ck.call("smoke: no explosion or scorch",found._blast==null and found._glow==null and found.damaged.is_empty())
 				found.apply_damage()
 				ck.call("smoke: damage is inert",found.damaged.is_empty())
