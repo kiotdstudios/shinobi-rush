@@ -37,11 +37,13 @@ func run(p_ck: Callable, root: Node) -> void:
 	# --- hide the panel
 	ck.call("builder: panel starts shown", ed.panel.visible and not ed.tab.visible)
 	ed.set_panel_hidden(true)
-	ck.call("builder: HIDE collapses the panel to a tab, editor stays open", not ed.panel.visible and ed.tab.visible and ed.open)
+	# the black map editor collapses its left sidebar (re-opened by the edge handle or H); the old orange tab is gone
+	var collapsed: bool = (not ed.shell.left.visible and ed.shell.left_handle.visible) if ed.shell != null else (not ed.panel.visible and ed.tab.visible)
+	ck.call("builder: HIDE collapses the panel to a tab, editor stays open", collapsed and ed.open)
 	ed.set_panel_hidden(false)
-	ck.call("builder: the tab brings the panel back", ed.panel.visible and not ed.tab.visible)
+	ck.call("builder: the tab brings the panel back", ed.panel.visible and not ed.tab.visible and (ed.shell == null or ed.shell.left.visible))
 	ed.hide_button.pressed.emit()
-	ck.call("builder: the HIDE button hides it", not ed.panel.visible and ed.tab.visible)
+	ck.call("builder: the HIDE button hides it", (not ed.shell.left.visible) if ed.shell != null else (not ed.panel.visible and ed.tab.visible))
 	ed.tab.pressed.emit()
 	ck.call("builder: the tab button shows it", ed.panel.visible)
 
