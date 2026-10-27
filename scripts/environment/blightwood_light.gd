@@ -1,6 +1,8 @@
 class_name BlightwoodLight
 extends Node2D
 ## PixelLab fixture, separate pendulum/glass/flame layers, blue light and fireflies.
+## Every fixture is drawn at this fraction of its authored size (art, lights, glow, flame, sound all scale from the foot).
+const SIZE := 0.5
 const MANIFEST := "res://assets/environment/blightwood_lights/blightwood-lights.art.json"
 var data: Dictionary
 var auto_advance := true
@@ -24,6 +26,7 @@ var foot := Vector2.ZERO
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	scale = Vector2.ONE * SIZE
 	foot = Vector2(float(data.foot_anchor[0]), float(data.foot_anchor[1]))
 	phase = fposmod(position.x * 0.017 + position.y * 0.031 + float(str(data.id).hash() % 100), TAU)
 	body = Sprite2D.new()
@@ -103,7 +106,8 @@ func _ready() -> void:
 	swarm = ForestFireflies.new()
 	swarm.position = source + Vector2(-12, 22)
 	swarm.count = 12
-	swarm.radius = Vector2(float(data.fly_radius[0]), float(data.fly_radius[1]))
+	swarm.radius = Vector2(float(data.fly_radius[0]), float(data.fly_radius[1])) * SIZE
+	swarm.scale = Vector2.ONE / SIZE  # fireflies are 1-2 px dots: keep them crisp, only their orbit shrinks
 	swarm.seed_value = int(position.x * 37 + position.y * 17 + str(data.id).hash())
 	swarm.auto_advance = false
 	add_child(swarm)
