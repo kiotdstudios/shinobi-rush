@@ -3,6 +3,7 @@
 - Owner: Codex
 - Status: REVIEW — art ready; 3498/0 full native tests, 124/0 focused floor/import checks; not live
 - Branch: codex/brown-dirt-path
+- PR: https://github.com/kiotdstudios/shinobi-rush/pull/226
 - Dependencies: approved grass tiles and full-diamond floor standard
 
 ## Objective

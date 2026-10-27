@@ -3,7 +3,7 @@
 - Date: 2026-10-26 America/New_York
 - Order: `orders/Codex/2026-10-26-brown-dirt-path.md`
 - Status: IN_PROGRESS â€” art complete; final broad regression pending
-- Branch / PR: `codex/brown-dirt-path`; not committed yet
+- Branch / PR: `codex/brown-dirt-path`; implementation `8fe33d5b8c937c1082efacf244f281ff79c14472`; PR https://github.com/kiotdstudios/shinobi-rush/pull/226
 
 ## Work completed
 
@@ -42,6 +42,8 @@ This is the requested art pack for review, not a runtime/builder change. No cata
 None.
 
 ## Outstanding work
-Commit/push art PR. Subsequent approved integration can bind a Brown dirt path category/brush using the 16 side masks; no live deployment is claimed by this art-only delivery.
+Art PR #226 is pushed and ready for review. Subsequent approved integration can bind a Brown dirt path category/brush using the 16 side masks; no live deployment is claimed by this art-only delivery.
 
 Live deployment: not applicable to this art-only delivery; **NOT LIVE — awaiting builder integration**. No Web/gameplay test or export is claimed for unbound artwork. Existing floor art was verified unchanged. Source PNGs, binary alpha, all 25 diamonds, 16 distinct masks, source/grass hashes and ZIP CRC were checked directly. Order structure validator passed.
+
+Pre-commit suite was run on main base `ed9eaaa2`; main advanced independently during this art job. No integration or latest-main/live validation is claimed. PR CI performs its normal integration checks.
