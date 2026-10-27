@@ -35,6 +35,7 @@ func _initialize() -> void:
 	AncientShrineSection.enabled = false  # the shrine section adds ~40 objects to the default arena; layout tests assume the plain arena
 	PlayerController.death_sequence_enabled = false  # most tests assume the instant respawn; test_damage_reactions enables it locally
 	Bandit.substitution_enabled = false  # random log swaps would flake combat tests; test_bandit_sub_kunai enables it locally
+	await load("res://tests/test_locomotion_transitions.gd").new().run(ck, root)
 	await test_main_scene_and_movement()
 	await test_jump_and_dodge_chaining()
 	await test_lab_and_pause()
@@ -97,6 +98,7 @@ func _initialize() -> void:
 	await load("res://tests/test_lock_on.gd").new().run(ck, root)
 	await load("res://tests/test_lock_aim.gd").new().run(ck, root)
 	await load("res://tests/test_lock_switch.gd").new().run(ck, root)
+	await load("res://tests/test_ryo_pouch.gd").new().run(ck, root)
 	await load("res://tests/test_world_editor.gd").new().run(ck, root)
 	await load("res://tests/test_builder_ground.gd").new().run(ck, root)
 	await load("res://tests/test_builder_ashen.gd").new().run(ck, root)

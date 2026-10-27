@@ -1,0 +1,32 @@
+{
+  "status": "local validation; not live",
+  "full_native_before_keyboard_corner_fix": {
+    "passed": 3591,
+    "failed": 0
+  },
+  "final_focused_native": {
+    "passed": 492,
+    "failed": 0
+  },
+  "resource_walker": {
+    "scripts": 405,
+    "scenes": 30,
+    "resources": 2,
+    "failures": 0
+  },
+  "local_browser": {
+    "passed": 12,
+    "failed": 0,
+    "engine_browser_errors": 0
+  },
+  "character_canvas": [
+    128,
+    128
+  ],
+  "foot_anchor": [
+    64,
+    116
+  ],
+  "gameplay_controller_changes": "one traversal presentation call; no physics/input/AI/combat timing changes",
+  "source_policy": "references to original approved PNGs; no resampling or duplicated texture payloads"
+}

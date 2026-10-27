@@ -1423,7 +1423,7 @@ func draw_overlay(c: Node2D) -> void:
 		for it in clipboard:
 			var at: Array = PlacedObjects.art_texture(it.id, origin + Vector2(float(it.x), float(it.y)))
 			if at[0] != null:
-				c.draw_texture(at[0], at[1], Color(1, 1, 1, 0.6))
+				c.draw_texture_rect(at[0], Rect2(at[1], (at[0] as Texture2D).get_size() * PlacedObjects.art_scale(it.id)), false, Color(1, 1, 1, 0.6))
 	for pr: Dictionary in problems:
 		var col := Color(1, 0.25, 0.25, 0.95) if pr.kind in ["overlap", "stacked"] else Color(1, 0.8, 0.1, 0.95)
 		c.draw_arc(pr.pos, 26.0, 0.0, TAU, 28, col, 3.0)
@@ -1447,7 +1447,7 @@ func draw_overlay(c: Node2D) -> void:
 		var gtex: Texture2D = at[0]
 		var gcol := Color(1, 1, 1, 0.6) if ok else Color(1, 0.4, 0.4, 0.6)
 		if gtex != null:
-			c.draw_texture(gtex, at[1], gcol)
+			c.draw_texture_rect(gtex, Rect2(at[1], gtex.get_size() * PlacedObjects.art_scale(place_id)), false, gcol)
 		else:
 			c.draw_rect(PlacedObjects.hit_rect(place_id, pos), Color(gcol, 0.3))
 		if dims_on(PlacedObjects.type_of(place_id)) or not ok:
@@ -1704,6 +1704,7 @@ func _build_ui() -> void:
 	filters.columns = 3
 	filter_box.add_child(filters)
 	var filter_cats: Array = PlacedObjects.CATEGORIES.duplicate()
+	filter_cats.sort_custom(func(a: Array, b: Array) -> bool: return str(a[0]).nocasecmp_to(str(b[0])) < 0)
 	filter_cats.append(["HUD layout", []])  # the HUD piece controls are a section like the others (hidden until ticked)
 	for category: Array in filter_cats:
 		var name := str(category[0])

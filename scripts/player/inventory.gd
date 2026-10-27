@@ -30,9 +30,18 @@ const DEFAULT_JUTSU := {"square": "chidori", "triangle": "", "circle": "", "cros
 const SAVE_PATH := "user://inventory.json"
 
 var counts: Dictionary = START_COUNTS.duplicate()
+var ryo := 0  ## currency; picked up from ryo pouches, not a bag item and not saved
 var dpad: Dictionary = DEFAULT_DPAD.duplicate()
 var jutsu: Dictionary = DEFAULT_JUTSU.duplicate()
 var save_path := SAVE_PATH
+
+
+func add_ryo(amount: int) -> int:
+	if amount <= 0:
+		return 0
+	ryo += amount
+	changed.emit()
+	return amount
 
 
 func count_of(id: String) -> int:
