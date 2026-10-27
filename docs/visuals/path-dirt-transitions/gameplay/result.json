@@ -1,0 +1,53 @@
+{
+  "checks": [
+    {
+      "name": "native transition tiles placed in actual map",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "filter": true
+      }
+    },
+    {
+      "name": "dedicated builder filter exists",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "filter": true
+      }
+    },
+    {
+      "name": "real player crosses blended ground",
+      "ok": true,
+      "detail": {
+        "start": {
+          "ready": true,
+          "pieces": 121,
+          "player_x": 0,
+          "player_y": 135,
+          "filter": true
+        },
+        "moved": {
+          "ready": true,
+          "pieces": 121,
+          "player_x": 149.71633911132812,
+          "player_y": 125.55521392822266,
+          "filter": true
+        }
+      }
+    },
+    {
+      "name": "no engine/browser errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "utc": "2026-10-27T03:56:07.001Z"
+}
