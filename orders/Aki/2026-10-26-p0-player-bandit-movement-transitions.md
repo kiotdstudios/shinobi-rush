@@ -2,7 +2,7 @@
 
 **Owner: Aki (animation creation, integration, testing)**  
 **Priority: P0 â€” gameplay feel**  
-**Status: REVIEW — owner reassigned execution to Codex via PR #224; implementation and local tests complete, integration/live verification pending.**
+**Status: BLOCKED — implementation and all PR #224 checks pass; GitHub rejects merge because required checks are reported expected despite exact-head success. Not live. See the Codex execution report and merge-block evidence.**
 
 Implementation branch: `codex/movement-transitions` (submitted to this PR's existing head branch). Visual drivers only; existing gameplay state, physics, camera and attack timing remain authoritative.
 

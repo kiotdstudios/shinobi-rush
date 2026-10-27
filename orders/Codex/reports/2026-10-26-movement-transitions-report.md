@@ -1,6 +1,6 @@
 # PR 224 â€” player and bandit traversal transitions
 
-Status: REVIEW. Local implementation complete; PR/main CI and canonical live verification pending. NOT LIVE yet.
+Status: BLOCKED — implementation and all PR checks complete; GitHub rejects integration despite matching successful required checks. NOT LIVE.
 
 ## Assignment / scope
 
@@ -32,7 +32,7 @@ Both actors receive start, stop and pivot presentation, including run/sprint var
 - Final keyboard-corner regression: **491 passed / 0 failed**, no engine/script errors (`build/movement-targeted-corner.log`). Browser input exposed a transient diagonal intermediary; stable-heading tracking now recognizes it as a sharp turn without pivoting under slow steering.
 - Final Web re-export after that refinement: PASS (`build/movement-corner-export/export.log`).
 - Browser comparison: **12/12 passed**, zero browser/engine errors. Real input moves both comparison modes, attacks interrupt, player start/stop/pivot observed, bandit patrol start/stop observed and patrol keeps moving. Before/after clips and screenshots in `docs/visuals/movement-transitions/gameplay/`. The initial browser run caught the missing corner pivot and is preserved in ignored local logs, not counted as success.
-- Normal-map controls smoke test: pending.
+- Normal-map controls smoke test: **36/36 passed**, zero console errors; evidence `docs/visuals/movement-transitions/gameplay/normal-map-controls.json`.
 - Final pre-commit targeted suite including absent-set placeholder fallback: **492 passed / 0 failed**, no engine/script errors (`build/movement-targeted-commit.log`).
 - Final resource walker rerun: **405 scripts / 30 scenes / 2 resources / 0 failures** (`build/movement-commit-validation/validate-resources.log`).
 - Order structure and sprite-manifest validation: PASS.
@@ -47,3 +47,19 @@ Do not mark DONE or advertise the canonical deployment until the final tests, re
 ## Implementation commit
 
 Implementation: `98d73bf686b94ab9deb5d36aef90b04d01a2b37a`; PR https://github.com/kiotdstudios/shinobi-rush/pull/224. Follow-up commit only records this SHA and trims trailing blank lines.
+
+## Final PR CI and integration blocker
+
+PR head `249fab2ab3d5eb6521c7635bee2f16441e09038a`; base main `7050d32bc2b54a426720eddf61ed77eac63b5280`.
+
+- Repository checks: SUCCESS, run `40424877990`.
+- Pipeline self-test: SUCCESS, run `40424878003`.
+- Godot CI: SUCCESS, run `40424878107`, including pre-deploy browser controls/debug probe and `godot-ci-gate`.
+- Final exact-head native CI: **3594 passed / 0 failed** (job `121928154492`). Resource validation: **405 scripts / 30 scenes / 2 resources / 0 failures**.
+- Three ordinary merge attempts (merge with title, merge with defaults, and allowed squash), all guarded by the exact tested head SHA, were rejected with HTTP 405: `2 of 2 required status checks are expected.`
+- Both required names, `validate-orders-and-project` and `godot-ci-gate`, independently report SUCCESS on that exact head. Their app ID **15368** matches the repository ruleset's required integration ID. GitHub reports PR mergeability `clean`. Main has not advanced.
+- Public `build-info.json` still reports **7050d32b**, so this work is **NOT LIVE**. No deployment or final public animation verification is claimed.
+
+Evidence: `docs/visuals/movement-transitions/merge-block.json`. No branch rules were edited, no direct/force main push was attempted, no statuses were fabricated and no protection bypass was used. A repository administrator/GitHub must resolve the required-check association before normal integration can proceed. After resolution, merge the tested PR, require main CI/deploy/post-deploy gate success, verify the public SHA, then run `movement-transitions-probe.mjs --url <canonical URL>` and record final live evidence.
+
+This evidence branch changes documentation only and preserves PR #224's green implementation head. It does not constitute a second runtime delivery.

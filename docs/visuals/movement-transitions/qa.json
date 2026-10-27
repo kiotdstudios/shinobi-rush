@@ -1,5 +1,5 @@
 {
-  "status": "local validation; not live",
+  "status": "PR CI PASS; integration BLOCKED; NOT LIVE",
   "full_native_before_keyboard_corner_fix": {
     "passed": 3591,
     "failed": 0
@@ -28,5 +28,17 @@
     116
   ],
   "gameplay_controller_changes": "one traversal presentation call; no physics/input/AI/combat timing changes",
-  "source_policy": "references to original approved PNGs; no resampling or duplicated texture payloads"
+  "source_policy": "references to original approved PNGs; no resampling or duplicated texture payloads",
+  "exact_head_pr_ci": {
+    "sha": "249fab2ab3d5eb6521c7635bee2f16441e09038a",
+    "native_passed": 3594,
+    "native_failed": 0,
+    "godot_run": 40424878107,
+    "conclusion": "success"
+  },
+  "normal_map_controls": {
+    "passed": 36,
+    "failed": 0
+  },
+  "merge_block": "GitHub API 405: 2 of 2 required status checks are expected; both exact-head checks show success with matching app ID 15368"
 }

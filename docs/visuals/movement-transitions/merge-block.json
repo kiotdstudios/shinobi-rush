@@ -1,0 +1,80 @@
+{
+  "merge_error": "GitHub API 405: 2 of 2 required status checks are expected",
+  "utc": "2026-10-27T00:38:33.8109988Z",
+  "head": "249fab2ab3d5eb6521c7635bee2f16441e09038a",
+  "rules": [
+    {
+      "type": "deletion",
+      "ruleset_source_type": "Repository",
+      "ruleset_source": "kiotdstudios/shinobi-rush",
+      "ruleset_id": 25328492
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "validate-orders-and-project",
+            "integration_id": 15368
+          },
+          {
+            "context": "godot-ci-gate",
+            "integration_id": 15368
+          }
+        ]
+      },
+      "ruleset_source_type": "Repository",
+      "ruleset_source": "kiotdstudios/shinobi-rush",
+      "ruleset_id": 25328492
+    },
+    {
+      "type": "non_fast_forward",
+      "ruleset_source_type": "Repository",
+      "ruleset_source": "kiotdstudios/shinobi-rush",
+      "ruleset_id": 25328492
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews_on_push": false,
+        "required_reviewers": [],
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      },
+      "ruleset_source_type": "Repository",
+      "ruleset_source": "kiotdstudios/shinobi-rush",
+      "ruleset_id": 25328492
+    }
+  ],
+  "base": "7050d32bc2b54a426720eddf61ed77eac63b5280",
+  "mergeable_state": "clean",
+  "checks": [
+    {
+      "name": "godot-ci-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "app_id": 15368,
+      "head_sha": "249fab2ab3d5eb6521c7635bee2f16441e09038a",
+      "details_url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40424878107/job/121935877775"
+    },
+    {
+      "name": "validate-orders-and-project",
+      "status": "completed",
+      "conclusion": "success",
+      "app_id": 15368,
+      "head_sha": "249fab2ab3d5eb6521c7635bee2f16441e09038a",
+      "details_url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40424877990/job/121928018663"
+    }
+  ],
+  "pr": 224
+}
