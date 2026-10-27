@@ -76,6 +76,7 @@ var _palette_buttons: Dictionary = {}
 var _filter_buttons: Dictionary = {}
 var _category_sections: Dictionary = {}
 var palette_scroll: ScrollContainer
+var properties: PropertiesPanel = null  ## map editor: the Properties card (editable X / Y, duplicate, delete)
 var browser: AssetBrowser = null  ## map editor: TILES / OBJECTS / ENTITIES tabs, search and chips over the palette
 var _clear_armed := false
 var _js_state: JavaScriptObject
@@ -1314,6 +1315,65 @@ func _flash(text: String) -> void:
 	get_tree().create_timer(2.6).timeout.connect(_refresh)
 
 
+## Properties X / Y: move the selected object to an exact spot. Returns false (and says why) when it is not allowed.
+func move_selected_to(target: Vector2) -> bool:
+	if selected.is_empty():
+		return false
+	if placed.type_locked(selected.id):
+		_flash("That layer is locked")
+		return false
+	var pos := target
+	var is_floor := PlacedObjects.is_floor_tile(selected.id)
+	if is_floor:
+		pos = iso_cell_center(target)
+	if pos.is_equal_approx(selected.pos):
+		return true
+	if not placed.can_place(selected.id, pos):
+		_flash("Cannot move it there")
+		_refresh()
+		return false
+	if is_floor:  # a floor tile replaces whatever floor it lands on
+		for other in placed.floor_tiles_in_cell(PlacedObjects.lattice_center(pos)):
+			if other != selected:
+				placed.remove(other, false)
+	placed.move(selected, pos, true)
+	_refresh()
+	return true
+
+
+## Properties DUPLICATE: a copy beside the selection (the first free spot), selected so it can be dragged away.
+func duplicate_selected() -> bool:
+	if selected.is_empty() or placed.type_locked(selected.id):
+		return false
+	var id := str(selected.id)
+	if str(PlacedObjects.def_of(id).kind) == "spawn":
+		_flash("There is only one player spawn")
+		return false
+	var fp := PlacedObjects.footprint_of(id)
+	var is_floor := PlacedObjects.is_floor_tile(id)
+	var offsets: Array[Vector2] = [Vector2(fp.x + 8.0, 0), Vector2(-fp.x - 8.0, 0), Vector2(0, fp.y + 8.0), Vector2(0, -fp.y - 8.0)]
+	if is_floor:
+		offsets = [Vector2(36, 18), Vector2(36, -18), Vector2(72, 0)]
+	for off in offsets:
+		var pos: Vector2 = selected.pos + off
+		if not placed.can_place(id, pos):
+			continue
+		if is_floor:
+			for other in placed.floor_tiles_in_cell(PlacedObjects.lattice_center(pos)):
+				placed.remove(other, false)
+		var made := placed.add(id, pos)
+		if made.is_empty():
+			continue
+		selected = made
+		selection = []
+		dragging = false
+		_flash("Duplicated %s (Ctrl+Z undoes it)" % str(PlacedObjects.def_of(id).label))
+		_refresh()
+		return true
+	_flash("No free spot next to it")
+	return false
+
+
 func delete_selected() -> void:
 	if not selection.is_empty():
 		var n := 0
@@ -2319,7 +2379,9 @@ func _refresh() -> void:
 	var hud := hud_bar()
 	for id: String in _hud_buttons:
 		(_hud_buttons[id] as Button).set_pressed_no_signal(hud != null and hud.selected_element == id)
-	inspector.visible = not selected.is_empty()
+	inspector.visible = not selected.is_empty() or (properties != null and not selection.is_empty())
+	if properties != null:
+		properties.refresh()
 	if not selected.is_empty():
 		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
