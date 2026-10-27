@@ -73,9 +73,15 @@ func run(p_ck: Callable, root: Node) -> void:
 	var player := tree.get_first_node_in_group("player") as Node2D
 	ck.call("blightwood map: the player starts on the courtyard", player != null and (player.global_position - spawn).length() < 120.0)
 	var data := placed.to_dict()
+	var spawn_overlap := 0
+	for o in placed.objects:
+		if PlacedObjects.def_of(o.id).kind not in ["grass", "ground", "pickup", "spawn", "fireflies", "water_fx", "bridge", "bandit"] and placed.footprint_rect(o.id, o.pos).grow(60.0).has_point(spawn):
+			spawn_overlap += 1
+	ck.call("blightwood map: authored solids respect reload spawn clearance", spawn_overlap == 0, str(spawn_overlap))
 	ck.call("blightwood map: the flag is saved", bool(data.get("blightwood_map", false)))
 	var before := placed.objects.size()
 	placed.load_dict(data)
+	ck.call("blightwood map: populated layout roundtrips every saved item", placed.to_dict().items == data.items, "%d vs %d" % [placed.objects.size(), before])
 	BlightwoodMap.enabled = true
 	BlightwoodMap.populate(arena)
 	BlightwoodMap.enabled = false

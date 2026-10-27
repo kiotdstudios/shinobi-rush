@@ -485,6 +485,10 @@ func can_place(id: String, pos: Vector2) -> bool:
 		return false
 	if def_of(id).kind in ["grass", "ground", "pickup", "spawn", "fireflies", "water_fx", "bridge", "bandit"]:
 		return true  # grass and floating pickups never block anyone
+	# Match load_dict: otherwise a valid new piece can disappear on the next reload.
+	var spawn := spawn_point()
+	if spawn.is_finite() and footprint_rect(id, pos).grow(60.0).has_point(spawn):
+		return false
 	var actors: Array[Node] = []
 	actors.append_array(get_tree().get_nodes_in_group("player"))
 	actors.append_array(get_tree().get_nodes_in_group("enemy"))
