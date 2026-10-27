@@ -1,6 +1,6 @@
 # Brown / tan path earth
 
-Art-only delivery. **NOT LIVE — awaiting builder integration.** Existing green `ground9_*` and grass assets are untouched.
+Legacy reusable tile pack plus a natural authored-map revision. See [natural-path notes](../../../../docs/visuals/brown-dirt-path/NATURAL_PATH.md). Runtime integration is on PR226; canonical deployment remains pending until the job report records verification. Existing green ground and grass source PNGs are untouched.
 
 Extract the ZIP into `assets/environment/blightwood/brown_dirt_path/` so manifest paths resolve.
 
