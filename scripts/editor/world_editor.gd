@@ -362,6 +362,12 @@ func snapped_pos(p: Vector2) -> Vector2:
 		return PlacedObjects.iso_vertex(p)  # wall kit pieces sit on floor-diamond vertices so runs join
 	return p if snap <= 0 else (p / float(snap)).round() * float(snap)
 
+
+## snapped_pos, then (snap on) a stair / cliff ledge end pulled flush onto a nearby piece's joint.
+func placement_pos(id: String, p: Vector2, exclude: Dictionary = {}) -> Vector2:
+	var at := snapped_pos(p)
+	return placed.snap_joint(id, at, exclude) if snap > 0 else at
+
 ## Centre of the floor-grid diamond (72 x 36 tiles, centres at (36k, 18m) with k and m of equal parity) nearest to p.
 static func iso_cell_center(p: Vector2) -> Vector2:
 	var best := Vector2.ZERO
@@ -627,7 +633,7 @@ func press(world: Vector2) -> void:
 			_last_cell = Vector2(INF, INF)
 			paint_to(world)
 		"place":
-			var pos := snapped_pos(world)
+			var pos := placement_pos(place_id, world)
 			if placed.can_place(place_id, pos):
 				selected = {}
 				placed.add(place_id, pos)
@@ -671,7 +677,7 @@ func drag_to(world: Vector2) -> void:
 		group_drag_to(world)
 		return
 	if dragging and not selected.is_empty():
-		placed.move(selected, snapped_pos(world + _drag_offset), false)
+		placed.move(selected, placement_pos(selected.id, world + _drag_offset, selected), false)
 
 
 func release() -> void:
@@ -1433,7 +1439,7 @@ func draw_overlay(c: Node2D) -> void:
 				c.draw_texture(ptex, cell - Vector2(36, 18), Color(1, 1, 1, 0.65))
 			c.draw_polyline(_diamond(cell), Color(ACCENT, 0.9), 2.0)
 	if tool == "place" and place_id != "" and get_viewport().gui_get_hovered_control() == null:
-		var pos := snapped_pos(_mouse_world())
+		var pos := placement_pos(place_id, _mouse_world())
 		var ok := placed.can_place(place_id, pos)
 		# The ghost is the art itself: normal tint when the spot is legal, red when it is not. No separate
 		# footprint square (it never covered the art and did not guide placement).

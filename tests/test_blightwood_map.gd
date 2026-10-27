@@ -147,6 +147,9 @@ func _check_stairs(ck: Callable, placed: PlacedObjects) -> void:
 	var right_ok := false
 	var overlap := false
 	var ledge_sprites := 0
+	var art := stair.nodes[0] as Sprite2D
+	var art_rect := Rect2(art.position + art.offset, art.texture.get_size())
+	var art_in_front := zone.art.has(art)
 	for o in placed.objects:
 		if o.id != "cliff_ledge_se":
 			continue
@@ -159,7 +162,11 @@ func _check_stairs(ck: Callable, placed: PlacedObjects) -> void:
 		for n: Node in o.nodes:
 			if n is Sprite2D:
 				ledge_sprites += 1
+				var s := n as Sprite2D
+				if (o.pos as Vector2) + run == top - half and Rect2(s.position + s.offset, s.texture.get_size()).intersects(art_rect):
+					art_in_front = art_in_front and s.z_index == art.z_index and s.position.y < art.position.y
 	ck.call("stairs: left cliff face ends at the stair head", left_ok)
+	ck.call("stairs: stair art draws over the left cliff face behind it", art_in_front)
 	ck.call("stairs: right cliff face starts at the stair head", right_ok)
 	ck.call("stairs: no cliff collider reaches onto the tread", not overlap)
 	ck.call("stairs: every flanking ledge sprite is a zone occluder", ledge_sprites > 0 and zone.occluders.size() == ledge_sprites, "%d/%d" % [zone.occluders.size(), ledge_sprites])
