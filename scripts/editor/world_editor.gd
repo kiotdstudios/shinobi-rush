@@ -76,6 +76,7 @@ var _palette_buttons: Dictionary = {}
 var _filter_buttons: Dictionary = {}
 var _category_sections: Dictionary = {}
 var palette_scroll: ScrollContainer
+var browser: AssetBrowser = null  ## map editor: TILES / OBJECTS / ENTITIES tabs, search and chips over the palette
 var _clear_armed := false
 var _js_state: JavaScriptObject
 var _hud_buttons: Dictionary = {}
@@ -1113,6 +1114,13 @@ func _build_map_tabs(outer: VBoxContainer, foot: Control) -> void:
 	outer.add_child(build_page)
 	outer.move_child(build_page, 3)
 	palette_scroll.custom_minimum_size = Vector2(0, 90)
+	if brush_button != null:
+		brush_button.visible = false  # the browser's brush row replaces the cycling BRUSH button
+	ftoggle.visible = false  # the asset browser's tabs, search and chips replace the 20 filter boxes
+	browser = AssetBrowser.new()
+	browser.setup(self)
+	build_page.add_child(browser)
+	build_page.move_child(browser, ftoggle.get_index())
 	var scroll := ScrollContainer.new()
 	scroll.name = "SettingsPage"
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -2080,6 +2088,8 @@ func set_type_filter(category: String, shown: bool) -> void:
 	if category == "HUD layout" and not shown and hud_bar() != null:
 		hud_bar().select_element("")
 	(_filter_buttons[category] as CheckBox).set_pressed_no_signal(shown)
+	if browser != null:
+		browser.apply()
 	if not shown:
 		if place_id != "" and PlacedObjects.type_of(place_id) == category:
 			set_tool("select")
@@ -2298,6 +2308,8 @@ func _refresh() -> void:
 	if brush_button != null:
 		brush_button.text = "BRUSH  %d x %d" % [brush, brush]
 		brush_button.set_pressed_no_signal(false)
+	if browser != null:
+		browser.sync()
 	if hud_snap_button != null:
 		var hs: int = hud_bar().hud_snap if hud_bar() != null else 0
 		hud_snap_button.text = "HUD GRID  %s" % (str(hs) if hs > 0 else "OFF")

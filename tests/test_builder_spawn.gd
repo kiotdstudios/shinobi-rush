@@ -31,7 +31,8 @@ func run(p_ck: Callable, root: Node) -> void:
 	var all_on := true
 	for c: String in ed._filter_buttons:
 		if c != "HUD layout":
-			all_on = all_on and (ed._filter_buttons[c] as CheckBox).button_pressed and (ed._category_sections[c] as Control).visible
+			var in_tab: bool = ed.browser == null or AssetBrowser.tab_of(c) == ed.browser.tab  # the map editor shows one asset tab at a time
+			all_on = all_on and (ed._filter_buttons[c] as CheckBox).button_pressed and (not in_tab or (ed._category_sections[c] as Control).visible)
 	ck.call("builder: SELECT ALL turns every filter back on", all_on)
 
 	# --- hide the panel
