@@ -3,7 +3,7 @@
 - Date: 2026-10-26 America/New_York
 - Order: `orders/Codex/2026-10-26-natural-dirt-path-revision.md`
 - Status: REVIEW — implementation, final art, native regression and actual Web-game comparison passed; required PR integration/deployment pending.
-- Commit / PR: Not committed yet; extends https://github.com/kiotdstudios/shinobi-rush/pull/226 on `codex/brown-dirt-path`.
+- Commit / PR: Implementation `ed5ffac0daea8773f8a3d8564ef8547f778dabc9`; https://github.com/kiotdstudios/shinobi-rush/pull/226 on `codex/brown-dirt-path`. PR title/body updated with actual-game evidence and integration scope.
 
 ## Work completed
 Replaced tile-edge-only brown silhouettes with continuous map-space material blending before cutting diamonds. The existing broad clearing becomes asymmetrical, the authored connecting trails retain their route with rounded and variable-width boundaries. Existing soil/grass art supplies every color and detail. No grass regeneration, terrain geometry, collision, navigation, props, stairs, AI, movement or combat changes.
@@ -44,4 +44,4 @@ Existing gray/green ground was main's integrated before state; the rejected rect
 None.
 
 ## Outstanding work / next steps
-Commit/push PR226, complete required CI/review/integration, verify main deploy and canonical live game. **NOT LIVE — awaiting reviewed integration.** Local screenshots and local Web verification do not constitute canonical deployment.
+Required PR CI is running after push; repository checks already passed on the implementation head. Repository auto-merge is disabled (normal enable-auto-merge request returned that setting); use the ordinary reviewed merge after required CI succeeds, without changing protection settings. Then verify main deploy and canonical live game. **NOT LIVE — awaiting reviewed integration.** Local screenshots and local Web verification do not constitute canonical deployment.
