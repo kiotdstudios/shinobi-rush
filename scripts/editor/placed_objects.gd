@@ -219,9 +219,10 @@ const CATALOG := {
 	"paper_tag": {"label": "Paper tag (throwable bomb)", "kind": "pickup", "gourd": "paper_tag"},
 	"ryo_pouch": {"label": "Ryo pouch (+50 ryo)", "kind": "pickup", "gourd": "ryo"},
 	"bandit_l1": {"label": "Bandit (Level 1 robber)", "kind": "bandit", "level": 1},
+	"bandit_jade_l1": {"label": "Jade Fang bandit (Level 1, rival crew)", "kind": "bandit", "level": 1, "crew": 1},
 }
 ## Panel sections: [title, [ids]].
-const CATEGORIES := [["Player spawn", ["player_spawn"]], ["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Bridges", ["bridge_short_wood_u", "bridge_short_wood_v", "bridge_medium_wood_u", "bridge_medium_wood_v", "bridge_long_wood_u", "bridge_long_wood_v", "bridge_short_rope_u", "bridge_short_rope_v", "bridge_medium_rope_u", "bridge_medium_rope_v", "bridge_long_rope_u", "bridge_long_rope_v", "bridge_short_damaged_u", "bridge_short_damaged_v", "bridge_medium_damaged_u", "bridge_medium_damaged_v", "bridge_long_damaged_u", "bridge_long_damaged_v"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Path to dirt", ["path_dirt_00_a", "path_dirt_00_b", "path_dirt_00_c", "path_dirt_01_a", "path_dirt_01_b", "path_dirt_01_c", "path_dirt_02_a", "path_dirt_02_b", "path_dirt_02_c", "path_dirt_03_a", "path_dirt_03_b", "path_dirt_03_c", "path_dirt_04_a", "path_dirt_04_b", "path_dirt_04_c", "path_dirt_05_a", "path_dirt_05_b", "path_dirt_05_c", "path_dirt_06_a", "path_dirt_06_b", "path_dirt_06_c", "path_dirt_07_a", "path_dirt_07_b", "path_dirt_07_c", "path_dirt_08_a", "path_dirt_08_b", "path_dirt_08_c", "path_dirt_09_a", "path_dirt_09_b", "path_dirt_09_c", "path_dirt_10_a", "path_dirt_10_b", "path_dirt_10_c", "path_dirt_11_a", "path_dirt_11_b", "path_dirt_11_c", "path_dirt_12_a", "path_dirt_12_b", "path_dirt_12_c", "path_dirt_13_a", "path_dirt_13_b", "path_dirt_13_c", "path_dirt_14_a", "path_dirt_14_b", "path_dirt_14_c", "path_dirt_15_a", "path_dirt_15_b", "path_dirt_15_c"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine", "earth_stairs_se", "earth_stairs_sw", "cliff_ledge_se"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai", "ryo_pouch"]], ["Enemies", ["bandit_l1"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
+const CATEGORIES := [["Player spawn", ["player_spawn"]], ["Blightwood lights", ["blight_wooden_post", "blight_stone_pagoda", "blight_branch_lantern", "blight_stone_brazier", "blight_spirit_totem", "blight_fireflies"]], ["Ashen fire", ["fire_tall_pillar", "fire_short_brazier", "fire_tripod_brazier", "fire_wall_brazier", "fire_fire_pit"]], ["Volcanic trees", ["ashen_sentinel", "ashen_windbent", "ashen_elder"]], ["Trees", ["tree_1", "tree_2", "tree_3", "tree_4", "tree_5"]], ["Bridges", ["bridge_short_wood_u", "bridge_short_wood_v", "bridge_medium_wood_u", "bridge_medium_wood_v", "bridge_long_wood_u", "bridge_long_wood_v", "bridge_short_rope_u", "bridge_short_rope_v", "bridge_medium_rope_u", "bridge_medium_rope_v", "bridge_long_rope_u", "bridge_long_rope_v", "bridge_short_damaged_u", "bridge_short_damaged_v", "bridge_medium_damaged_u", "bridge_medium_damaged_v", "bridge_long_damaged_u", "bridge_long_damaged_v"]], ["Fences", ["fence_se_1", "fence_se_2", "fence_se_3", "fence_se_4", "fence_sw_1", "fence_sw_2", "fence_sw_3", "fence_sw_4"]], ["Temple walls", ["kit_se_2", "kit_se_3", "kit_se_4", "kit_se_5", "kit_se_6", "kit_sw_2", "kit_sw_3", "kit_sw_4", "kit_sw_5", "kit_sw_6", "kit_pillar", "kit_ruin_se", "kit_ruin_sw"]], ["Grass", ["grass9_corner_top", "grass9_edge_ne", "grass9_corner_right", "grass9_edge_nw", "grass9_center", "grass9_edge_se", "grass9_corner_left", "grass9_edge_sw", "grass9_corner_bottom"]], ["Tall grass", ["grass_tall_00", "grass_tall_01", "grass_tall_02", "grass_tall_03"]], ["Path to dirt", ["path_dirt_00_a", "path_dirt_00_b", "path_dirt_00_c", "path_dirt_01_a", "path_dirt_01_b", "path_dirt_01_c", "path_dirt_02_a", "path_dirt_02_b", "path_dirt_02_c", "path_dirt_03_a", "path_dirt_03_b", "path_dirt_03_c", "path_dirt_04_a", "path_dirt_04_b", "path_dirt_04_c", "path_dirt_05_a", "path_dirt_05_b", "path_dirt_05_c", "path_dirt_06_a", "path_dirt_06_b", "path_dirt_06_c", "path_dirt_07_a", "path_dirt_07_b", "path_dirt_07_c", "path_dirt_08_a", "path_dirt_08_b", "path_dirt_08_c", "path_dirt_09_a", "path_dirt_09_b", "path_dirt_09_c", "path_dirt_10_a", "path_dirt_10_b", "path_dirt_10_c", "path_dirt_11_a", "path_dirt_11_b", "path_dirt_11_c", "path_dirt_12_a", "path_dirt_12_b", "path_dirt_12_c", "path_dirt_13_a", "path_dirt_13_b", "path_dirt_13_c", "path_dirt_14_a", "path_dirt_14_b", "path_dirt_14_c", "path_dirt_15_a", "path_dirt_15_b", "path_dirt_15_c"]], ["Ground / paths", ["ground9_corner_top", "ground9_edge_ne", "ground9_corner_right", "ground9_edge_nw", "ground9_center", "ground9_edge_se", "ground9_corner_left", "ground9_edge_sw", "ground9_corner_bottom"]], ["Temple ground", ["temple_floor_center", "temple_floor_center_b", "temple_floor_cracked_a", "temple_floor_cracked_b", "temple_floor_moss_a", "temple_floor_edge_nw", "temple_floor_edge_ne", "temple_floor_edge_se", "temple_floor_edge_sw", "temple_floor_corner_top", "temple_floor_corner_right", "temple_floor_corner_bottom", "temple_floor_corner_left"]], ["Blightwood rocks", ["blight_rock_01", "blight_rock_02", "blight_rock_03"]], ["Dynamic shrine", ["dynamic_shrine"]], ["Landmarks", ["ancient_shrine", "earth_stairs_se", "earth_stairs_sw", "cliff_ledge_se"]], ["Pickups", ["health_gourd", "chakra_gourd", "paper_tag", "tag_bomb", "smoke_tag_bomb", "kunai", "ryo_pouch"]], ["Enemies", ["bandit_l1", "bandit_jade_l1"]], ["River water", ["water9_corner_top", "water9_edge_ne", "water9_corner_right", "water9_edge_nw", "water9_center", "water9_edge_se", "water9_corner_left", "water9_edge_sw", "water9_corner_bottom", "waterfall_small"]], ["Grass banks", ["shore_grass_00", "shore_grass_01", "shore_grass_02", "shore_grass_03", "shore_grass_04", "shore_grass_05", "shore_grass_06", "shore_grass_07", "shore_grass_08", "shore_grass_09", "shore_grass_10", "shore_grass_11", "shore_grass_12", "shore_grass_13", "shore_grass_14", "shore_grass_15"]], ["Dirt banks", ["shore_dirt_00", "shore_dirt_01", "shore_dirt_02", "shore_dirt_03", "shore_dirt_04", "shore_dirt_05", "shore_dirt_06", "shore_dirt_07", "shore_dirt_08", "shore_dirt_09", "shore_dirt_10", "shore_dirt_11", "shore_dirt_12", "shore_dirt_13", "shore_dirt_14", "shore_dirt_15"]], ["Rocky banks", ["shore_rock_00", "shore_rock_01", "shore_rock_02", "shore_rock_03", "shore_rock_04", "shore_rock_05", "shore_rock_06", "shore_rock_07", "shore_rock_08", "shore_rock_09", "shore_rock_10", "shore_rock_11", "shore_rock_12", "shore_rock_13", "shore_rock_14", "shore_rock_15"]]]
 ## Distance kept between a new object and the player / enemies so nothing is dropped on top of someone.
 const ACTOR_CLEARANCE := 36.0
 ## Ground footprint of a floating pickup (selection outline only; it never blocks).
@@ -430,6 +431,7 @@ static func art_texture(id: String, pos: Vector2) -> Array:
 		"bandit":
 			var btex: Texture2D = load("res://assets/characters/bandit/sprites/idle/S_000.png")
 			if btex != null:
+				btex = crew_texture(btex, int(def.get("crew", 0)))
 				return [btex, pos - Vector2(64, 116)]
 		"pickup":
 			var icon := HealthGourd.icon(str(def.get("gourd", "health")))
@@ -665,7 +667,7 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	elif def.kind == "wall":
 		nodes = _make_wall(id, pos)
 	elif def.kind == "bandit":
-		nodes = [make_bandit(pos, int(def.get("level", 1)), "PlacedBandit%d" % _serial)]
+		nodes = [make_bandit(pos, int(def.get("level", 1)), "PlacedBandit%d" % _serial, int(def.get("crew", 0)))]
 	elif def.kind == "pickup":
 		var gourd := HealthGourd.new()
 		gourd.kind = str(def.get("gourd", "health"))
@@ -742,14 +744,40 @@ static func _wall_slice_transform(def: Dictionary, pos: Vector2, x0: float, w: f
 ## [slice sprites..., collider]. Each slice sorts at its OWN local ground y (see _wall_slice_count/
 ## _wall_slice_transform); the collider stays a single thin parallelogram along the whole run --
 ## only the VISUAL sort is diagonal-aware, collision is already geometry-correct as-is.
+static var _crew_tex: Dictionary = {}
+
+
+## The bandit art in a crew's colours for the palette card and placement ghost: the same crimson-scarf hue swap
+## BanditVisual's CREW_SHADER does in play (hue 0.90..0.995, saturation >= 0.35 -> the crew hue). Crew 0 is as painted.
+static func crew_texture(tex: Texture2D, crew: int) -> Texture2D:
+	if crew == 0 or tex == null:
+		return tex
+	var key := "%s#%d" % [tex.resource_path, crew]
+	if _crew_tex.has(key):
+		return _crew_tex[key]
+	var img: Image = tex.get_image().duplicate()
+	if img.is_compressed():
+		img.decompress()
+	var hue := float(Bandit.crew_info(crew).hue)
+	for y in img.get_height():
+		for x in img.get_width():
+			var c := img.get_pixel(x, y)
+			if c.a > 0.0 and c.h >= 0.90 and c.h <= 0.995 and c.s >= 0.35:
+				img.set_pixel(x, y, Color.from_hsv(hue, c.s, c.v, c.a))
+	var out := ImageTexture.create_from_image(img)
+	_crew_tex[key] = out
+	return out
+
+
 ## A builder-placed Bandit: a real Bandit standing at `pos` (its home), at the chosen intelligence level.
 ## It is frozen while the world is being edited and wakes up in play (see `set_bandits_frozen`).
-func make_bandit(pos: Vector2, level: int, node_name: String) -> Bandit:
+func make_bandit(pos: Vector2, level: int, node_name: String, crew := 0) -> Bandit:
 	var packed := load("res://scenes/enemy/bandit.tscn") as PackedScene
 	var bandit := packed.instantiate() as Bandit
 	bandit.name = node_name
 	bandit.position = pos
 	bandit.set_meta("placed", true)
+	bandit.crew_id = crew
 	arena.add_child(bandit)
 	bandit.set_home(pos)
 	bandit.set_intelligence_level(level)
