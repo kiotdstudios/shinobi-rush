@@ -1,0 +1,192 @@
+{
+  "checks": [
+    {
+      "name": "exact deployed build",
+      "ok": true,
+      "detail": {
+        "built_at": "2026-10-27T22:36:12Z",
+        "commit_sha": "bf96f014dd10887cbed45b0f433c271d6db22740",
+        "event": "push",
+        "export_mode": "debug",
+        "export_preset": "Web",
+        "files": {
+          "editor.html": {
+            "sha256": "610385998d59dc5dd715f204c532b86dc81b263e6c015eb7408e1c1fe8b53cbc",
+            "size": 5505
+          },
+          "index.apple-touch-icon.png": {
+            "sha256": "c0e05e6ff0a9547cb4f02750338f06496c48cf4d9007e04dd98df271dd2f657b",
+            "size": 11516
+          },
+          "index.audio.position.worklet.js": {
+            "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+            "size": 2973
+          },
+          "index.audio.worklet.js": {
+            "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+            "size": 7298
+          },
+          "index.html": {
+            "sha256": "ac2215181984cb400515b4f792576a099769e39f566d0ab17ca44f82973cf88f",
+            "size": 5445
+          },
+          "index.icon.png": {
+            "sha256": "094807cb8c713447218ddddfed69772c91f56d787ce8ce05e615c7fac18770b5",
+            "size": 1183
+          },
+          "index.js": {
+            "sha256": "ffc3898b59fba6f5af0c02f76e5ee526cc061e65c7d2d6f4f98186876cea15c4",
+            "size": 315645
+          },
+          "index.pck": {
+            "sha256": "8a8e31c0fd656d71b3ae104f0701f82daa412db6548ec19688fe99aa7fcd8efc",
+            "size": 19954148
+          },
+          "index.png": {
+            "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e",
+            "size": 21443
+          },
+          "index.wasm": {
+            "sha256": "11ea19645368f8e73cf337b59cfd7ceeb4ebb51f7a3bbf77d1a5c3ddfedbc522",
+            "size": 37902138
+          }
+        },
+        "godot_version": "4.7.2-stable",
+        "godot_version_string": "4.7.2.stable.official.ed1daf0bf",
+        "head_sha": "bf96f014dd10887cbed45b0f433c271d6db22740",
+        "kind": "game",
+        "project_dir": ".",
+        "project_name": "Shinobi Rush",
+        "ref": "refs/heads/main",
+        "renderer": "gl_compatibility",
+        "repository": "kiotdstudios/shinobi-rush",
+        "run_attempt": "1",
+        "run_id": "40595087133",
+        "run_number": "695",
+        "schema_version": 1,
+        "templates": "4.7.2.stable",
+        "thread_support": false,
+        "workflow": "Godot CI"
+      }
+    },
+    {
+      "name": "grass_path actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_path",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "grass_temple actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_temple",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "dirt_temple actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "dirt_temple",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "grass_rock actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_rock",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "dirt_rock actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "dirt_rock",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "temple_rock actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "temple_rock",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "grass_dirt actual connected floor and bank filter",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_dirt",
+        "pieces": 121,
+        "player_x": 0,
+        "player_y": 135,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "real player crosses new floor",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "family": "grass_dirt",
+        "pieces": 121,
+        "player_x": 149.71633911132812,
+        "player_y": 125.55521392822266,
+        "categories": 31,
+        "brown_filter": true,
+        "buttons_json": "{\"dirt_rock\":{\"x\":808.5,\"y\":72.5},\"dirt_temple\":{\"x\":607.5,\"y\":72.5},\"grass_dirt\":{\"x\":1015.5,\"y\":72.5},\"grass_path\":{\"x\":379.5,\"y\":72.5},\"grass_rock\":{\"x\":713.0,\"y\":72.5},\"grass_temple\":{\"x\":492.0,\"y\":72.5},\"temple_rock\":{\"x\":910.5,\"y\":72.5}}"
+      }
+    },
+    {
+      "name": "no engine/browser errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "utc": "2026-10-27T22:44:14.035Z"
+}
