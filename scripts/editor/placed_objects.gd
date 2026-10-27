@@ -245,6 +245,8 @@ var _replaying := false
 var _recording := true
 var hidden_types: Dictionary = {}
 var locked_types: Dictionary = {}  ## category -> true: cannot be picked, dragged, erased or painted over
+var editor_hidden_layers: Dictionary = {}
+var editor_locked_layers: Dictionary = {}
 
 
 static func tree_info(index: int) -> Dictionary:
@@ -476,7 +478,7 @@ static func hit_rect(id: String, pos: Vector2) -> Rect2:
 
 
 func can_place(id: String, pos: Vector2) -> bool:
-	if arena == null or def_of(id).is_empty():
+	if arena == null or def_of(id).is_empty() or (bool(editor_hidden_layers.get(BlackInspector.group_of(id), false)) or editor_layer_locked(id)) and not _replaying:
 		return false
 	var rect := footprint_rect(id, pos).grow(8.0)
 	if not arena.bounds.encloses(rect):
@@ -851,7 +853,7 @@ static func type_of(id: String) -> String:
 
 
 func type_visible(id: String) -> bool:
-	return not bool(hidden_types.get(type_of(id), false))
+	return not bool(hidden_types.get(type_of(id), false)) and not bool(editor_hidden_layers.get(BlackInspector.group_of(id), false))
 
 
 func _apply_visibility(obj: Dictionary) -> void:
@@ -861,7 +863,11 @@ func _apply_visibility(obj: Dictionary) -> void:
 
 
 func type_locked(id: String) -> bool:
-	return bool(locked_types.get(type_of(id), false))
+	return bool(locked_types.get(type_of(id), false)) or editor_layer_locked(id)
+
+
+func editor_layer_locked(id: String) -> bool:
+	return bool(editor_locked_layers.get(BlackInspector.group_of(id), false))
 
 
 func set_type_locked(category: String, locked: bool) -> void:
@@ -880,6 +886,17 @@ func objects_in_rect(area: Rect2) -> Array:
 		if area.has_point(c):
 			out.append(o)
 	return out
+
+
+func set_editor_layer_visible(category: String, shown: bool) -> void:
+	editor_hidden_layers[category] = not shown
+	for obj in objects:
+		if BlackInspector.group_of(str(obj.id)) == category:
+			_apply_visibility(obj)
+
+
+func set_editor_layer_locked(category: String, locked: bool) -> void:
+	editor_locked_layers[category] = locked
 
 
 func set_type_visible(category: String, shown: bool) -> void:
@@ -958,14 +975,14 @@ func ground_at(cell: Vector2) -> Dictionary:
 ## Returns true when something changed. Never commits: the caller does one `_changed()` after a whole stroke.
 func paint_cell(id: String, cell: Vector2) -> bool:
 	var def := def_of(id)
-	if def.is_empty() or def.kind not in ["ground", "grass"] or arena == null:
+	if def.is_empty() or def.kind not in ["ground", "grass"] or arena == null or bool(editor_hidden_layers.get(BlackInspector.group_of(id), false)) or editor_layer_locked(id):
 		return false
 	if not arena.bounds.encloses(Rect2(cell - Vector2(36, 18), Vector2(72, 36))):
 		return false
 	if is_floor_tile(id):
 		var old := floor_tiles_in_cell(cell)
 		for o in old:
-			if type_locked(o.id):
+			if type_locked(o.id) or bool(editor_hidden_layers.get(BlackInspector.group_of(str(o.id)), false)):
 				return false
 		if old.size() == 1 and old[0].id == id and (old[0].pos as Vector2).distance_squared_to(cell) < 4.0:
 			return false
@@ -1019,6 +1036,8 @@ func dedupe_floor() -> int:
 func remove(obj: Dictionary, commit := true) -> void:
 	if not objects.has(obj):
 		return
+	if commit and type_locked(str(obj.id)) and not _replaying:
+		return
 	objects.erase(obj)
 	_record(["remove", str(obj.id), obj.pos])
 	var def := def_of(obj.id)
@@ -1038,6 +1057,8 @@ func remove(obj: Dictionary, commit := true) -> void:
 
 func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 	if not objects.has(obj):
+		return
+	if type_locked(str(obj.id)) and not _replaying:
 		return
 	_record(["move", str(obj.id), obj.pos, pos])
 	obj.pos = pos

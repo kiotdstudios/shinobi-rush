@@ -25,12 +25,12 @@ func run(p_ck: Callable, root: Node) -> void:
 	ck.call("map editor: BUILD and SETTINGS tabs exist", ed.tab_build_button != null and ed.tab_settings_button != null and ed.build_page != null and ed.settings_page != null)
 	ck.call("map editor: title says Map Editor", "MAP EDITOR" in ed.title_label.text)
 	ed.set_open(false)
-	ck.call("map editor: there is no playtest and the editor cannot be closed (only the panel hides)", ed.open and ed.panel.visible and not ed.tab.visible)
+	ck.call("map editor: editing cannot be closed", ed.open and ed.black_shell != null)
 	var vp := root.get_viewport().get_visible_rect()
-	ck.call("map editor: the panel fits on screen", vp.encloses(ed.panel.get_global_rect().grow(-1.0)), str(ed.panel.get_global_rect()) + " in " + str(vp))
-	ck.call("map editor: SAVE is visible on screen", ed.save_button.is_visible_in_tree() and vp.encloses(ed.save_button.get_global_rect().grow(-1.0)), str(ed.save_button.get_global_rect()) + " in " + str(vp))
-	ck.call("map editor: SAVE sits inside the panel", ed.panel.get_global_rect().encloses(ed.save_button.get_global_rect().grow(-1.0)))
-	ck.call("map editor: the palette keeps a usable height", ed.palette_scroll.get_global_rect().size.y >= 100.0, str(ed.palette_scroll.get_global_rect().size.y))
+	ck.call("map editor: black shell fits on screen", ed.black_shell.get_global_rect().size.x > 0.0 and ed.black_shell.get_global_rect().size.y > 0.0 and vp.encloses(ed.black_shell.get_global_rect().grow(-0.01)))
+	ck.call("map editor: SAVE toolbar visible on screen", ed.black_shell.toolbar_buttons["save"].is_visible_in_tree() and vp.encloses(ed.black_shell.toolbar_buttons["save"].get_global_rect().grow(-1.0)))
+	ck.call("map editor: SAVE sits inside toolbar", ed.black_shell.toolbar_panel.get_global_rect().encloses(ed.black_shell.toolbar_buttons["save"].get_global_rect().grow(-1.0)))
+	ck.call("map editor: palette keeps a usable height", ed.black_assets.palette_scroll.get_global_rect().size.y >= 100.0, str(ed.black_assets.palette_scroll.get_global_rect().size.y))
 	ck.call("map editor: the filters start collapsed", not (ed._ui["filters"] as Control).visible)
 	var plr := root.get_tree().get_first_node_in_group("player") as Node
 	ck.call("map editor: the player is frozen and hidden", plr != null and plr.process_mode == Node.PROCESS_MODE_DISABLED and not (plr as CanvasItem).visible)
@@ -40,10 +40,10 @@ func run(p_ck: Callable, root: Node) -> void:
 			if c is Bandit and (c.process_mode != Node.PROCESS_MODE_DISABLED or (c as CanvasItem).visible):
 				return false
 		return true).call())
-	ed._show_page(false)
-	ck.call("map editor: SETTINGS tab shows the settings page", ed.settings_page.get_parent().visible and not ed.build_page.visible)
-	ed._show_page(true)
-	ck.call("map editor: BUILD tab shows the palette", ed.build_page.visible and not ed.settings_page.get_parent().visible)
+	ed.black_shell.show_page(false)
+	ck.call("map editor: SETTINGS tab shows settings page", ed.settings_page.get_parent().visible and not ed.build_page.visible)
+	ed.black_shell.show_page(true)
+	ck.call("map editor: ASSETS tab shows browser", ed.black_assets.is_visible_in_tree() and not ed.settings_page.get_parent().visible)
 	for i in 3:
 		await tree.process_frame
 	var sp := SettingsPanel.instance()
@@ -52,12 +52,18 @@ func run(p_ck: Callable, root: Node) -> void:
 		ck.call("map editor: the bottom Settings popup is hidden", not sp.tab.visible and not sp.panel.visible)
 
 	# undo / redo
-	placed.clear_history()
 	var spot := Vector2(1008, 540)
+	# The authored layout can cover this cell; make the undo fixture independent.
+	placed._recording = false
+	for test_cell: Vector2 in [spot, spot + Vector2(72, 0)]:
+		for existing: Dictionary in placed.floor_tiles_in_cell(test_cell):
+			placed.remove(existing, false)
+	placed._recording = true
+	placed.clear_history()
 	var start := placed.objects.size()
 	var o := placed.add("ground9_center", spot)
 	ck.call("undo: a placement adds one object", not o.is_empty() and placed.objects.size() == start + 1 and placed.can_undo())
-	ck.call("undo: undo removes it", placed.undo() and placed.objects.size() == start and placed.floor_tiles_in_cell(spot).is_empty())
+	ck.call("undo: undo removes it", placed.undo() and placed.objects.size() == start and placed.floor_tiles_in_cell(spot).is_empty(), "n=%d baseline=%d tiles=%d" % [placed.objects.size(), start, placed.floor_tiles_in_cell(spot).size()])
 	ck.call("undo: redo puts it back", placed.redo() and placed.objects.size() == start + 1 and placed.floor_tiles_in_cell(spot).size() == 1)
 	var tile: Dictionary = placed.floor_tiles_in_cell(spot)[0]
 	placed.move(tile, spot + Vector2(72, 0))
@@ -100,7 +106,7 @@ func run(p_ck: Callable, root: Node) -> void:
 
 	# build only
 	ed.set_open(false)
-	ck.call("build only: the editor cannot be closed into a playable level", ed.open and ed.panel.visible)
+	ck.call("build only: the editor cannot be closed into a playable level", ed.open and ed.black_shell.is_visible_in_tree())
 	var f5 := InputEventKey.new()
 	f5.keycode = KEY_F5
 	f5.pressed = true

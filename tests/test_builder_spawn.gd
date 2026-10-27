@@ -34,17 +34,20 @@ func run(p_ck: Callable, root: Node) -> void:
 			all_on = all_on and (ed._filter_buttons[c] as CheckBox).button_pressed and (ed._category_sections[c] as Control).visible
 	ck.call("builder: SELECT ALL turns every filter back on", all_on)
 
-	# --- hide the panel
-	ck.call("builder: panel starts shown", ed.panel.visible and not ed.tab.visible)
+	# --- hide the panel; the black shell replaces the old floating tab with View-menu toggles.
+	ck.call("builder: editor chrome starts shown", ed.black_shell.left_panel.visible and ed.black_shell.right_panel.visible and ed.open)
 	ed.set_panel_hidden(true)
-	ck.call("builder: HIDE collapses the panel to a tab, editor stays open", not ed.panel.visible and ed.tab.visible and ed.open)
+	await tree.process_frame
+	ck.call("builder: HIDE collapses sidebars, editor stays open", not ed.black_shell.left_panel.visible and not ed.black_shell.right_panel.visible and ed.open)
 	ed.set_panel_hidden(false)
-	ck.call("builder: the tab brings the panel back", ed.panel.visible and not ed.tab.visible)
+	await tree.process_frame
+	ck.call("builder: H restores both sidebars", ed.black_shell.left_panel.visible and ed.black_shell.right_panel.visible)
 	ed.hide_button.pressed.emit()
-	ck.call("builder: the HIDE button hides it", not ed.panel.visible and ed.tab.visible)
-	ed.tab.pressed.emit()
-	ck.call("builder: the tab button shows it", ed.panel.visible)
-
+	await tree.process_frame
+	ck.call("builder: legacy HIDE action collapses sidebars", not ed.black_shell.left_panel.visible and not ed.black_shell.right_panel.visible)
+	ed.set_panel_hidden(false)
+	await tree.process_frame
+	ck.call("builder: View can restore sidebars", ed.black_shell.left_panel.visible and ed.black_shell.right_panel.visible)
 	# --- spawn icon
 	ck.call("spawn: starts at the arena spawn", placed.spawn_point().is_equal_approx((arena.get_node("Spawn") as Node2D).position))
 	var target := Vector2(600, 400)

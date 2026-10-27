@@ -107,7 +107,7 @@ func _set_cell(cell: Vector2, terrain: String) -> bool:
 		if old.is_empty():
 			return false
 		for o in old:
-			if placed.type_locked(o.id):
+			if placed.type_locked(o.id) or bool(placed.editor_hidden_layers.get(BlackInspector.group_of(str(o.id)), false)):
 				return false
 		for o in old:
 			placed.remove(o, false)

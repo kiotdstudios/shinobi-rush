@@ -107,6 +107,23 @@ var _ui: Dictionary = {}  ## map-editor layout pieces captured while the panel i
 var _map_world_frozen := false
 var _grid_button: Button = null
 var _dim_buttons: Dictionary = {}
+var black_shell: BlackEditorShell = null
+var black_assets: BlackAssetBrowser = null
+var black_inspector: BlackInspector = null
+var black_minimap: BlackMinimap = null
+var active_category := ""
+var active_layer := "Ground"
+var dirty := false
+var random_variation := false
+var _space_pan := false
+var _middle_pan := false
+var _middle_pan_moved := false
+var _middle_pan_world := Vector2.ZERO
+var _ui_stroke_block := false
+var _last_mouse_world := Vector2.ZERO
+var show_collision_overlay := false
+var show_lighting_overlay := false
+var show_navigation_overlay := false
 
 
 class Overlay extends Node2D:
@@ -183,6 +200,23 @@ func _ready() -> void:
 	placed.clear_history()
 	if map_mode:
 		_enter_map_mode()
+		black_shell = BlackEditorShell.new()
+		(get_node("Root") as Control).add_child(black_shell)
+		black_shell.setup(self)
+		black_assets = BlackAssetBrowser.new()
+		black_shell.asset_content.add_child(black_assets)
+		black_assets.setup(self)
+		BlackEditorShell.skin_tree(black_assets)  # _mini adds legacy orange button overrides after the shell theme
+		black_shell.legacy_build_scroll.visible = false
+		black_inspector = BlackInspector.new()
+		black_shell.properties_content.add_child(black_inspector)
+		black_inspector.setup(self)
+		BlackEditorShell.skin_tree(black_inspector)
+		black_minimap = BlackMinimap.new()
+		black_minimap.custom_minimum_size = Vector2(0, 150)
+		black_minimap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		black_shell.minimap_content.add_child(black_minimap)
+		black_minimap.setup(self)
 	if OS.has_feature("web"):
 		var query := str(JavaScriptBridge.eval("window.location.search", true))
 		_js_state = JavaScriptBridge.create_object("Object")
@@ -204,6 +238,12 @@ func _process(_d: float) -> void:
 	if undo_button != null:
 		undo_button.disabled = not placed.can_undo()
 		redo_button.disabled = not placed.can_redo()
+	if map_mode and black_shell != null:
+		black_shell.update_state()
+		if black_assets != null:
+			black_assets.update_state()
+		if black_inspector != null:
+			black_inspector.update_state()
 	if _js_state != null:
 		_js_state.open = open
 		_js_state.count = placed.objects.size()
@@ -231,12 +271,13 @@ func _process(_d: float) -> void:
 				filters[category] = {"x": center.x, "y": center.y, "shown": b.button_pressed}
 			_js_state.cards_json = JSON.stringify(cards)
 			_js_state.filters_json = JSON.stringify(filters)
-			var r := panel.get_global_rect()
+			var r := black_shell.left_panel.get_global_rect() if black_shell != null else panel.get_global_rect()
 			_js_state.panel_x = r.position.x
 			_js_state.panel_y = r.position.y
 			_js_state.panel_w = r.size.x
 			_js_state.panel_h = r.size.y
-			_js_state.save_accessible = save_button.is_visible_in_tree() and save_button.get_global_rect().end.y <= get_viewport().get_visible_rect().size.y
+			var save_control: Control = black_shell.toolbar_buttons["save"] if black_shell != null else save_button
+			_js_state.save_accessible = save_control.is_visible_in_tree() and save_control.get_global_rect().end.y <= get_viewport().get_visible_rect().size.y
 			_js_state.grass_count = (arena.get_node("WindGrassField") as WindGrassField).ground_count()
 			var ashen_count := 0
 			var ashen_capacity := 0
@@ -296,8 +337,8 @@ func _process(_d: float) -> void:
 func set_panel_hidden(hidden: bool) -> void:
 	if not map_mode:
 		return
-	panel.visible = not hidden
-	tab.visible = hidden
+	panel.visible = not hidden if black_shell == null else black_shell.legacy_open and not hidden
+	tab.visible = hidden if black_shell == null else false
 	panel_hidden = hidden
 
 
@@ -338,6 +379,9 @@ func _show_void(on: bool) -> void:
 
 func set_tool(t: String, id := "") -> void:
 	tool = t
+	if id != "":
+		active_category = PlacedObjects.type_of(id)
+		active_layer = BlackInspector.group_of(id)
 	if t == "paint":
 		if id != "":
 			place_id = id
@@ -400,10 +444,38 @@ func _mouse_world() -> Vector2:
 
 
 # ------------------------------------------------------------------ input
+## GUI chrome can consume the release event; never leave a canvas pan stuck on.
+func _input(event: InputEvent) -> void:
+	if map_mode and event is InputEventMouseButton and not event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			_panning = false
+			if _stroke:
+				end_stroke()
+			elif _shaping:
+				end_shape(_shape_end)
+			elif _boxing:
+				end_box(_box_end)
+			elif dragging or _group_dragging:
+				release()
+		elif event.button_index == MOUSE_BUTTON_MIDDLE and _middle_pan:
+			_middle_pan = false
+			if not _middle_pan_moved:
+				eyedrop(_middle_pan_world, Input.is_key_pressed(KEY_ALT))
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and map_mode and event.keycode == KEY_SPACE and not event.echo and not event.ctrl_pressed and not (get_viewport().gui_get_focus_owner() is LineEdit):
+		_space_pan = event.pressed
+		if event.pressed:
+			get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if map_mode and event.keycode == KEY_H and not event.ctrl_pressed and not (get_viewport().gui_get_focus_owner() is LineEdit):
 			set_panel_hidden(not panel_hidden)
+			get_viewport().set_input_as_handled()
+			return
+		if map_mode and event.keycode == KEY_ESCAPE:
+			set_tool("select")
 			get_viewport().set_input_as_handled()
 			return
 		if open and event.keycode == KEY_S and event.ctrl_pressed:
@@ -442,16 +514,57 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if not open:
 		return
+	if map_mode and event is InputEventMouseMotion and _middle_pan and not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		_middle_pan = false
+	if map_mode and event is InputEventMouseMotion and _space_pan and not Input.is_key_pressed(KEY_SPACE):
+		_space_pan = false
+	if map_mode and event is InputEventMouseMotion:
+		_last_mouse_world = _mouse_world()
+	if map_mode and event is InputEventMouseMotion and (_space_pan or _middle_pan) and (black_shell == null or black_shell.canvas_rect().has_point(get_viewport().get_mouse_position())):
+		_middle_pan_moved = _middle_pan_moved or (event as InputEventMouseMotion).relative.length_squared() > 4.0
+		pan_by((event as InputEventMouseMotion).relative)
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventMouseMotion and _panning:
 		pan_by((event as InputEventMouseMotion).relative)
 		get_viewport().set_input_as_handled()
 		return
 	if event is InputEventMouseButton:
 		var mb := event as InputEventMouseButton
+		if map_mode and mb.button_index == MOUSE_BUTTON_MIDDLE and (not mb.pressed or (black_shell == null or black_shell.canvas_rect().has_point(get_viewport().get_mouse_position()))):
+			_middle_pan = mb.pressed
+			if mb.pressed:
+				_middle_pan_moved = false
+				_middle_pan_world = _mouse_world()
+			get_viewport().set_input_as_handled()
+			return
+		if mb.button_index == MOUSE_BUTTON_LEFT and map_mode and black_shell != null and not black_shell.canvas_rect().has_point(get_viewport().get_mouse_position()):
+			if mb.pressed:
+				_ui_stroke_block = true
+			else:
+				if _stroke:
+					end_stroke()
+				elif _shaping:
+					end_shape(_shape_end)
+				elif _boxing:
+					end_box(_box_end)
+				elif dragging or _group_dragging:
+					release()
+				_ui_stroke_block = false
+			get_viewport().set_input_as_handled()
+			return
 		if mb.button_index == MOUSE_BUTTON_LEFT and tool == "pan":
 			_panning = mb.pressed
 			get_viewport().set_input_as_handled()
 		elif mb.button_index == MOUSE_BUTTON_LEFT:
+			if _ui_stroke_block:
+				if not mb.pressed:
+					_ui_stroke_block = false
+				get_viewport().set_input_as_handled()
+				return
+			if mb.pressed and _space_pan:
+				get_viewport().set_input_as_handled()
+				return
 			if mb.pressed:
 				if not press_hud(get_viewport().get_mouse_position()):
 					press(_mouse_world())
@@ -475,7 +588,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and hud_bar() != null and hud_bar().dragging_element:
 		hud_bar().drag_at(get_viewport().get_mouse_position(), not Input.is_key_pressed(KEY_SHIFT))
 	elif event is InputEventMouseMotion and _stroke:
-		paint_to(_mouse_world())
+		if black_shell == null or black_shell.canvas_rect().has_point(get_viewport().get_mouse_position()):
+			paint_to(_mouse_world())
 	elif event is InputEventMouseMotion and _shaping:
 		_shape_end = iso_cell_center(_mouse_world())
 	elif event is InputEventMouseMotion and _boxing:
@@ -582,7 +696,11 @@ func _apply_cells(cells: Array) -> bool:
 		return _auto.apply(cells, auto_terrain) > 0
 	var any := false
 	for cell: Vector2 in cells:
-		if placed.paint_cell(place_id, cell):
+		var id := place_id
+		if random_variation and BlackAssetBrowser.supports_random(place_id):
+			var ids := BlackAssetBrowser.RANDOM_VARIATION_IDS
+			id = ids[posmod(hash(str(PlacedObjects.lattice_center(cell)) + place_id), ids.size())]
+		if placed.paint_cell(id, cell):
 			any = true
 	return any
 
@@ -632,6 +750,8 @@ func press(world: Vector2) -> void:
 				selected = {}
 				placed.add(place_id, pos)
 				_refresh()
+			elif placed.editor_layer_locked(place_id) or not placed.type_visible(place_id):
+				_flash("Show and unlock that layer before placing")
 		"stamp":
 			paste_at(world)
 		"box":
@@ -640,7 +760,7 @@ func press(world: Vector2) -> void:
 			_box_end = world
 		"erase":
 			var o := placed.hit_test(world)
-			if not o.is_empty():
+			if not o.is_empty() and not placed.type_locked(str(o.id)):
 				if erase_autofix and PlacedObjects.is_floor_tile(o.id):
 					AutoTile.new(placed).erase(o)
 					placed._changed()
@@ -659,7 +779,7 @@ func press(world: Vector2) -> void:
 				return
 			selection = []
 			selected = hit
-			dragging = not selected.is_empty()
+			dragging = not selected.is_empty() and not placed.type_locked(str(selected.id))
 			if dragging:
 				_drag_origin = selected.pos
 				_drag_offset = (selected.pos as Vector2) - world
@@ -790,8 +910,12 @@ func end_group_drag() -> void:
 	_group_dragging = false
 	var ok := true
 	for o: Dictionary in selection:
-		if not PlacedObjects.is_floor_tile(o.id) and not placed.can_place(o.id, o.pos):
+		if placed.type_locked(str(o.id)) or (not PlacedObjects.is_floor_tile(o.id) and not placed.can_place(o.id, o.pos)):
 			ok = false
+		if PlacedObjects.is_floor_tile(o.id):
+			for other in placed.floor_tiles_in_cell(PlacedObjects.lattice_center(o.pos)):
+				if other != o and not selection.has(other) and (placed.type_locked(str(other.id)) or bool(placed.editor_hidden_layers.get(BlackInspector.group_of(str(other.id)), false))):
+					ok = false
 	if not ok:
 		for i in selection.size():
 			placed.move(selection[i], _group_from[i], false)
@@ -1291,7 +1415,7 @@ func delete_selected() -> void:
 		_flash("Deleted %d objects (Ctrl+Z undoes it)" % n)
 		_refresh()
 		return
-	if selected.is_empty():
+	if selected.is_empty() or placed.type_locked(str(selected.id)):
 		return
 	placed.remove(selected)
 	selected = {}
@@ -1384,31 +1508,50 @@ static func _clip_line(r: Rect2, m: float, cst: float) -> Array:
 func draw_overlay(c: Node2D) -> void:
 	if not open:
 		return
+	if map_mode:
+		if show_navigation_overlay and arena.nav != null:
+			for x in arena.nav.cols:
+				for y in arena.nav.rows:
+					var cell := Vector2i(x, y)
+					if arena.nav.grid.is_point_solid(cell):
+						var point := arena.nav.cell_center(cell)
+						c.draw_rect(Rect2(point - Vector2.ONE * arena.nav.cell * 0.5, Vector2.ONE * arena.nav.cell), Color(0.9, 0.9, 0.9, 0.12))
+		if show_collision_overlay:
+			for obj in placed.objects:
+				if not placed.type_visible(str(obj.id)):
+					continue
+				for node in obj.nodes:
+					if node is CollisionObject2D:
+						c.draw_rect(PlacedObjects.footprint_rect(str(obj.id), obj.pos), Color(1, 1, 1, 0.7), false, 2.0)
+		if show_lighting_overlay:
+			for obj in placed.objects:
+				if placed.type_visible(str(obj.id)) and PlacedObjects.def_of(str(obj.id)).kind in ["blight_light", "ashen_fire", "fireflies"]:
+					c.draw_arc(obj.pos, 65, 0.0, TAU, 24, Color(1, 1, 1, 0.4), 1.0)
 	for o in placed.objects:
 		if not placed.type_visible(o.id):
 			continue
 		var sel: bool = (o == selected)
 		if sel:
-			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95), false, 3.0)
+			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(0.95, 0.95, 0.95, 0.95), false, 3.0)
 		elif dims_on(PlacedObjects.type_of(o.id)):
-			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(ACCENT, 0.7), false, 2.0)
+			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(0.8, 0.8, 0.8, 0.7), false, 2.0)
 	for o: Dictionary in selection:
 		if placed.objects.has(o):
-			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(1, 0.84, 0.2, 0.95), false, 3.0)
+			c.draw_rect(PlacedObjects.art_rect(o.id, o.pos), Color(0.95, 0.95, 0.95, 0.95), false, 3.0)
 	if _boxing:
 		var br := Rect2(_box_start, Vector2.ZERO).expand(_box_end)
-		c.draw_rect(br, Color(ACCENT, 0.12))
-		c.draw_rect(br, Color(ACCENT, 0.95), false, 2.0)
-	var over_world := get_viewport().gui_get_hovered_control() == null
+		c.draw_rect(br, Color(0.8, 0.8, 0.8, 0.12))
+		c.draw_rect(br, Color(0.95, 0.95, 0.95, 0.95), false, 2.0)
+	var over_world: bool = get_viewport().gui_get_hovered_control() == null and (black_shell == null or black_shell.canvas_rect().has_point(get_viewport().get_mouse_position()))
 	if tool in ["paint", "terrain"] and shape != "brush" and over_world:
 		var a := _shape_start if _shaping else iso_cell_center(_mouse_world())
 		var b := _shape_end if _shaping else a
-		var tint: Color = TERRAIN_COLORS.get(auto_terrain, ACCENT) if tool == "terrain" else ACCENT
+		var tint: Color = Color(0.95, 0.95, 0.95)
 		for cell in shape_cells(a, b):
 			c.draw_colored_polygon(_diamond(cell), Color(tint, 0.28))
 			c.draw_polyline(_diamond(cell), Color(tint, 0.9), 1.5)
 	elif tool == "terrain" and over_world:
-		var tint2: Color = TERRAIN_COLORS.get(auto_terrain, ACCENT)
+		var tint2: Color = Color(0.95, 0.95, 0.95)
 		for cell in brush_cells(_mouse_world()):
 			c.draw_colored_polygon(_diamond(cell), Color(tint2, 0.3))
 			c.draw_polyline(_diamond(cell), Color(tint2, 0.95), 2.0)
@@ -1431,7 +1574,7 @@ func draw_overlay(c: Node2D) -> void:
 		for cell in brush_cells(_mouse_world()):
 			if ptex != null:
 				c.draw_texture(ptex, cell - Vector2(36, 18), Color(1, 1, 1, 0.65))
-			c.draw_polyline(_diamond(cell), Color(ACCENT, 0.9), 2.0)
+			c.draw_polyline(_diamond(cell), Color(0.95, 0.95, 0.95, 0.9), 2.0)
 	if tool == "place" and place_id != "" and get_viewport().gui_get_hovered_control() == null:
 		var pos := snapped_pos(_mouse_world())
 		var ok := placed.can_place(place_id, pos)
@@ -1445,7 +1588,7 @@ func draw_overlay(c: Node2D) -> void:
 		else:
 			c.draw_rect(PlacedObjects.hit_rect(place_id, pos), Color(gcol, 0.3))
 		if dims_on(PlacedObjects.type_of(place_id)) or not ok:
-			c.draw_rect(PlacedObjects.art_rect(place_id, pos), Color(ACCENT, 0.9) if ok else Color(1, 0.3, 0.3, 0.95), false, 2.0)
+			c.draw_rect(PlacedObjects.art_rect(place_id, pos), Color(0.95, 0.95, 0.95, 0.9) if ok else Color(1, 0.3, 0.3, 0.95), false, 2.0)
 
 
 # ------------------------------------------------------------------ UI
@@ -2028,6 +2171,8 @@ func set_type_filter(category: String, shown: bool) -> void:
 	if category == "HUD layout" and not shown and hud_bar() != null:
 		hud_bar().select_element("")
 	(_filter_buttons[category] as CheckBox).set_pressed_no_signal(shown)
+	if black_assets != null:
+		black_assets._apply_filters()
 	if not shown:
 		if place_id != "" and PlacedObjects.type_of(place_id) == category:
 			set_tool("select")
@@ -2139,22 +2284,24 @@ func _build_pro_tools(outer: VBoxContainer) -> void:
 	_mini(prow, "NEXT PROBLEM", next_problem, false).tooltip_text = "Fly the view to the next problem"
 	_mini(prow, "CLEAR FLAGS", clear_problem_flags, false)
 
-	_section(col, "Layers  (hide to see through, lock to keep from moving)")
-	for nm: String in layer_names():
-		var lrow := HBoxContainer.new()
-		lrow.add_theme_constant_override("separation", 4)
-		col.add_child(lrow)
-		var lab := Label.new()
-		lab.text = nm
-		lab.clip_text = true
-		lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		lab.add_theme_font_size_override("font_size", 11)
-		lrow.add_child(lab)
-		var hb := _mini(lrow, "HIDE", func(): set_layer_hidden(nm, not bool(placed.hidden_types.get(nm, false))))
-		var lb := _mini(lrow, "LOCK", func(): set_layer_locked(nm, not bool(placed.locked_types.get(nm, false))))
-		hb.size_flags_horizontal = Control.SIZE_SHRINK_END
-		lb.size_flags_horizontal = Control.SIZE_SHRINK_END
-		_layer_buttons[nm] = {"hide": hb, "lock": lb}
+	# The map editor uses the grouped inspector layers; legacy per-category controls stay in the classic builder.
+	if not MapEditorMode.active():
+		_section(col, "Layers  (hide to see through, lock to keep from moving)")
+		for nm: String in layer_names():
+			var lrow := HBoxContainer.new()
+			lrow.add_theme_constant_override("separation", 4)
+			col.add_child(lrow)
+			var lab := Label.new()
+			lab.text = nm
+			lab.clip_text = true
+			lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			lab.add_theme_font_size_override("font_size", 11)
+			lrow.add_child(lab)
+			var hb := _mini(lrow, "HIDE", func(): set_layer_hidden(nm, not bool(placed.hidden_types.get(nm, false))))
+			var lb := _mini(lrow, "LOCK", func(): set_layer_locked(nm, not bool(placed.locked_types.get(nm, false))))
+			hb.size_flags_horizontal = Control.SIZE_SHRINK_END
+			lb.size_flags_horizontal = Control.SIZE_SHRINK_END
+			_layer_buttons[nm] = {"hide": hb, "lock": lb}
 	set_pro_tools_open(MapEditorMode.active())
 
 
@@ -2250,7 +2397,7 @@ func _refresh() -> void:
 	var hud := hud_bar()
 	for id: String in _hud_buttons:
 		(_hud_buttons[id] as Button).set_pressed_no_signal(hud != null and hud.selected_element == id)
-	inspector.visible = not selected.is_empty()
+	inspector.visible = not map_mode and not selected.is_empty()
 	if not selected.is_empty():
 		inspector_name.text = str(PlacedObjects.def_of(selected.id).label)
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
