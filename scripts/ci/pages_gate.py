@@ -3,6 +3,7 @@
 
   pages_gate.py preflight --gh-exit-code N --json FILE --stderr FILE     (deploy job, before anything is uploaded)
   pages_gate.py gate                                                      (env NEEDS_JSON, EVENT_NAME, GIT_REF)
+  pages_gate.py regression                                                (full-regression.yml: env NEEDS_JSON, GITHUB_SHA)
 
 The gate never turns "skipped" into success by accident: with no project it passes ONLY because nothing exists to
 validate, says so loudly, and requires every Godot job to have been skipped.
@@ -101,8 +102,8 @@ def evaluate_gate(needs: Mapping[str, Mapping[str, object]], event_name: str, gi
     return Gate(True, "VALIDATED and DEPLOYED" if deploy_expected else "VALIDATED (not deployed: only main deploys)", rows, [])
 
 
-def render_summary(g: Gate) -> str:
-    lines = [f"## Godot CI gate: {'PASS' if g.ok else 'FAIL'}", "", f"**{g.headline}**", "", "| Stage | Result |", "| --- | --- |"]
+def render_summary(g: Gate, title: str = "Godot CI gate") -> str:
+    lines = [f"## {title}: {'PASS' if g.ok else 'FAIL'}", "", f"**{g.headline}**", "", "| Stage | Result |", "| --- | --- |"]
     lines += [f"| {a} | {sanitize(b, 200)} |" for a, b in g.rows]
     if "NOT VALIDATED" in g.headline:
         lines += ["", "This check is green only because there is nothing to validate. It is NOT evidence that the game builds, passes tests, is deployed, or starts in a browser. "
@@ -135,6 +136,43 @@ def cmd_gate(_: argparse.Namespace) -> int:
     return 0 if g.ok else 1
 
 
+REGRESSION_JOBS = (
+    ("build", "Build the Web export of this commit"),
+    ("smoke", "Browser smoke test"),
+    ("controls-probe", "Controls probe (walk, sprint, wall, camera, impact, vision)"),
+    ("debug-probe", "Debug-log probe"),
+)
+
+
+def evaluate_regression(needs: Mapping[str, Mapping[str, object]], sha: str) -> Gate:
+    """Full regression: every job must have run and succeeded. Skipped or missing is a FAILURE here, never a pass."""
+    rows: List[tuple] = []
+    problems: List[str] = []
+    for job, label in REGRESSION_JOBS:
+        res = result_of(needs, job)
+        rows.append((label, "PASS" if res == "success" else f"FAIL ({res})"))
+        if res != "success":
+            problems.append(f"{job}: {res}")
+    short = (sha or "unknown")[:12]
+    if problems:
+        return Gate(False, f"FULL REGRESSION FAILED on {short}: " + "; ".join(problems), rows, problems)
+    return Gate(True, f"FULL REGRESSION PASSED on {short}", rows, [])
+
+
+def cmd_regression(_args: argparse.Namespace) -> int:
+    try:
+        needs = json.loads(os.environ["NEEDS_JSON"])
+    except (KeyError, ValueError) as e:
+        annotate("error", f"NEEDS_JSON is missing or invalid: {e}", title="full-regression")
+        return 1
+    g = evaluate_regression(needs, os.environ.get("GITHUB_SHA", ""))
+    write_summary(render_summary(g, "Full browser regression"))
+    print(g.headline)
+    if not g.ok:
+        annotate("error", g.headline + ". Download the 'full-regression-*-evidence' artifacts of this run for screenshots and logs.", title="full-regression")
+    return 0 if g.ok else 1
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -144,6 +182,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     pf.add_argument("--stderr", required=True)
     pf.set_defaults(fn=cmd_preflight)
     sub.add_parser("gate").set_defaults(fn=cmd_gate)
+    sub.add_parser("regression").set_defaults(fn=cmd_regression)
     args = ap.parse_args(argv)
     return args.fn(args)
 

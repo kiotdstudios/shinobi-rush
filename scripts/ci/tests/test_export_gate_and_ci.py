@@ -188,6 +188,19 @@ class PagesGateTests(unittest.TestCase):
         self.assertFalse(pg.evaluate_gate(self.needs(build="cancelled", pre=S, deploy=S, post=S), "push", "refs/heads/main").ok)
         self.assertTrue(pg.evaluate_gate(self.needs(deploy=S, post=S), "workflow_dispatch", "refs/heads/feature").ok)
 
+    def test_full_regression_needs_every_job_to_pass_and_skipped_is_a_failure(self):
+        ok = {j: {"result": "success"} for j in ("build", "smoke", "controls-probe", "debug-probe")}
+        g = pg.evaluate_regression(ok, "0123456789abcdef")
+        self.assertTrue(g.ok)
+        self.assertIn("0123456789ab", g.headline)
+        for job in ok:
+            for bad in ("failure", "cancelled", "skipped"):
+                broken = {**ok, job: {"result": bad}}
+                res = pg.evaluate_regression(broken, "abc")
+                self.assertFalse(res.ok, f"{job}={bad} must fail the full regression")
+                self.assertTrue(res.headline.startswith("FULL REGRESSION FAILED"))
+        self.assertFalse(pg.evaluate_regression({}, "abc").ok, "missing results are a failure")
+
     def test_pages_preflight(self):
         ok = json.dumps({"build_type": "workflow", "cname": None, "html_url": "https://x.github.io/y/"})
         self.assertTrue(pg.evaluate_pages(0, ok, "", False).ok)

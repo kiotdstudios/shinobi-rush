@@ -111,7 +111,40 @@ async function sampleAndCheckCanvas(page, context, canvas) {
     record('input-effect', effect ? 'pass' : (cfg.require_input_effect ? 'fail' : 'warn'),
       `${(s.changedRatio * 100).toFixed(3)}% of sampled pixels changed after ${cfg.input_sequence.join(',')} (needs >= ${(MIN_CHANGED_RATIO * 100).toFixed(2)}%${cfg.require_input_effect ? '' : '; warning only unless require_input_effect=true'})`);
   }
+  await recordMovement(page);
   await analysis.close();
+}
+
+// Short bounded movement assertion (about 3 s worst case): real key input must change the player's x in
+// window.__SHINOBI_STATE__ (published ~10 Hz by the WebBridge autoload). Tries right, then left, in case a wall is in the way.
+async function recordMovement(page) {
+  const readX = () => page.evaluate(() => window.__SHINOBI_STATE__?.x);
+  let x0;
+  for (let i = 0; i < 20 && !Number.isFinite(x0); i++) { // up to 5 s for the first published state
+    x0 = await readX();
+    if (!Number.isFinite(x0)) await page.waitForTimeout(250);
+  }
+  if (!Number.isFinite(x0)) {
+    record('player-moves', 'fail', 'window.__SHINOBI_STATE__.x was never published, so movement cannot be asserted');
+    return;
+  }
+  await page.evaluate(() => document.querySelector('canvas')?.focus());
+  const tried = [];
+  for (const key of ['KeyD', 'KeyA']) {
+    const before = await readX();
+    await page.keyboard.down(key);
+    await page.waitForTimeout(700);
+    await page.keyboard.up(key);
+    await page.waitForTimeout(400); // let the next 10 Hz publish land
+    const after = await readX();
+    const dx = after - before;
+    tried.push(`${key}: x ${before?.toFixed?.(1)} -> ${after?.toFixed?.(1)}`);
+    if (Number.isFinite(dx) && Math.abs(dx) >= 0.5) {
+      record('player-moves', 'pass', `${tried.join('; ')} (moved ${dx.toFixed(1)} px)`);
+      return;
+    }
+  }
+  record('player-moves', 'fail', `holding KeyD then KeyA never changed the player's x (${tried.join('; ')}): input is not reaching the game or movement is broken`);
 }
 
 async function main() {
@@ -205,7 +238,7 @@ async function main() {
 
   if (start !== 'started') {
     await page.screenshot({ path: path.join(outDir, 'screenshots', '99-engine-start-failed.png') }).catch(() => {});
-    for (const name of ['canvas-visible', 'ready-hook', 'canvas-not-blank', 'input-effect', 'engine-evidence']) record(name, 'skip', 'engine did not start');
+    for (const name of ['canvas-visible', 'ready-hook', 'canvas-not-blank', 'input-effect', 'player-moves', 'engine-evidence']) record(name, 'skip', 'engine did not start');
   } else {
     const canvas = page.locator(cfg.canvas_selector).first();
     const c = await inspectCanvas(canvas);
