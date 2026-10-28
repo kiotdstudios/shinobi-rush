@@ -65,6 +65,19 @@ static func parse_transition(id: String) -> Dictionary:
 
 ## Material at each corner [top, right, left, bottom] of a known floor tile, or [] (shores, props, unknown art).
 static func signature_of(id: String) -> Array:
+	if id.begins_with("junction_"):
+		var parts := id.split("_")
+		if parts.size() != 5:
+			return []
+		var corners: Array = []
+		for i in range(1, 5):
+			if not parts[i].is_valid_int():
+				return []
+			var index := int(parts[i])
+			if index < 0 or index >= MATERIALS.size():
+				return []
+			corners.append(MATERIALS[index])
+		return corners
 	for mat: String in PURE_PREFIX:
 		if id.begins_with(PURE_PREFIX[mat]):
 			return [mat, mat, mat, mat]
