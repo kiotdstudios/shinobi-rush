@@ -110,6 +110,10 @@ static func resolve(own: String, corners: Array) -> Dictionary:
 			present.append(c)
 	if present.size() <= 1:
 		return {"pure": present[0] if present.size() == 1 else own}
+	if present.size() == 3:
+		var junction := TerrainJunctionArt.tile_id(corners)
+		if junction != "" and not PlacedObjects.def_of(junction).is_empty():
+			return {"junction": junction}
 	present.sort_custom(func(a: String, b: String) -> bool:
 		if (a == own) != (b == own):
 			return a == own
@@ -139,6 +143,8 @@ static func variant_for(cell: Vector2, reroll := 0) -> String:
 
 
 static func tile_id(res: Dictionary, cell: Vector2) -> String:
+	if res.has("junction"):
+		return String(res.junction)
 	if res.has("pure"):
 		return PURE_ID[res.pure]
 	var mask: int = res.mask
