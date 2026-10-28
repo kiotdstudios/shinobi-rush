@@ -1463,6 +1463,18 @@ func remove(obj: Dictionary, commit := true) -> void:
 func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 	if not objects.has(obj):
 		return
+	# Keep auto-blend ownership attached to a moved floor tile, not its old lattice cell.
+	# Both updates are recorded as part of the same undo/redo gesture as the move.
+	var old_cell := lattice_center(obj.pos as Vector2)
+	var new_cell := lattice_center(pos)
+	if is_floor_tile(str(obj.id)) and old_cell != new_cell:
+		var owner := String(cell_mat.get(old_cell, ""))
+		if owner != "":
+			# Do not overwrite a destination cell's existing ownership. A moved tile
+			# entering an occupied cell becomes a pinned manual tile instead.
+			var occupied := not floor_tiles_in_cell(new_cell).is_empty()
+			set_cell_mat(old_cell, "")
+			set_cell_mat(new_cell, "lock" if occupied else owner)
 	_record(["move", str(obj.id), obj.pos, pos])
 	obj.pos = pos
 	var def := def_of(obj.id)
