@@ -1,6 +1,6 @@
 # PR247 — Missing terrain pairs and three-material junction art
 
-Status: READY_FOR_REVIEW. Local art implementation and testing complete; separate implementation PR required by the order. PR247 itself remains a draft specification. No automatic-blending completion claim.
+Status: DONE for Codex art delivery, manual builder registration and live preview. Separate implementation PR248 merged and verified live. PR247 itself remains an unchanged draft specification; Aki's automatic placement acceptance remains separate.
 
 ## Scope and ownership
 
@@ -22,7 +22,10 @@ Native 72×36 RGBA, (36,18) anchor, transparent exterior/opaque floor diamond, n
 - Full native regression: **PASS, 4,986 passed / zero failed**, including 101 new art/lookup/import/builder assertions. Expected intentional malformed SpriteSet fixture warning only. Following isolated preview improvements, the final Web export/probe was rerun; CI will repeat the full suite on the submitted head.
 - Combined old/new generator idempotence: PASS, 456 registry/PNG/manifest files unchanged after rerunning both generators; zero existing art/map file diffs. Each new pair has 44 unique images and each triple 36.
 - Final local exported Web playtest/screenshots: **PASS, 15/15**, all 13 real button selections (two pairs, ten triples, exact 49-cell PR245 fixture), connected samples, autosave disabled, real player movement and zero engine/browser errors. `docs/visuals/terrain-junctions/gameplay/result.json`; full and clipped before/after screenshots at identical camera. Initial visual inspection caught a 10-pixel demo-origin offset and obscuring original props; the final preview uses the exact diamond lattice and an isolated in-memory floor, without modifying any authored map file. H hides controls for unobstructed inspection. Manifest parsing is cached once per review instance.
-- Required CI, reviewed integration and canonical live verification: pending.
+- Required PR CI: PASS, Godot CI `40620237089`, repository checks `40620237114`, pipeline self-test `40620237117`. CI repeated **4,986/0** and resource **434/30/2, zero failures** on the submitted head.
+- Full browser regression: PASS, run `40620237087`, including smoke, debug-log and the full controls/vision probe (zero console errors).
+- Reviewed integration: PR248 merged normally after required checks, with protected-main strict status policy active and zero required approving reviews; no bypass or force push. Main pipeline **40621591903 passed every job**, including deploy, smoke-postdeploy and gate.
+- Canonical live verification: **16/16 PASS** at **2026-10-27 22:47:49 America/New_York**, exact deployed SHA `7fa1a1677d22ad3b86031986c7ed46618ed8e556`. All thirteen review samples, actual movement, autosave off, no engine/browser errors; published screenshots visually inspected. Evidence: `docs/visuals/terrain-junctions/live-gameplay/`, `main-deployment.json`, and `LIVE_DELIVERY.md`.
 
 ## Remaining integration / limits
 
@@ -30,4 +33,10 @@ Aki must consume the two new family polarities and exact three-material signatur
 
 Questions: None. Blocking access failures: None observed.
 
-Commit/implementation PR/live build: pending tests and normal reviewed workflow.
+Implementation commit: `6c9a332cc87c16ca73e7b883b80e96d51123e0bc`.
+Implementation PR: https://github.com/kiotdstudios/shinobi-rush/pull/248 (separate from the unchanged draft order PR247).
+Runtime merge: `7fa1a1677d22ad3b86031986c7ed46618ed8e556`.
+Main CI: https://github.com/kiotdstudios/shinobi-rush/actions/runs/40621591903 — merged-build native suite passed 4,986/0; resource validation 434 scripts / 30 scenes / 2 resources, zero failures. Deployment and post-deploy smoke passed.
+Live review: https://kiotdstudios.github.io/shinobi-rush/?junctions=review&v=7fa1a167
+
+Evidence/report follow-up is documentation/screenshots only. **Live deployment: not applicable** to that follow-up: no runtime files change, and the implementation's canonical deployment was verified at the exact SHA above.
