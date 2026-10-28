@@ -1,0 +1,118 @@
+{
+  "runtime_sha": "7fa1a1677d22ad3b86031986c7ed46618ed8e556",
+  "implementation_sha": "6c9a332cc87c16ca73e7b883b80e96d51123e0bc",
+  "implementation_pr": 248,
+  "main_run": 40621591903,
+  "main_run_url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40621591903",
+  "jobs": [
+    {
+      "id": 122596672368,
+      "name": "Detect Godot project",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 122596775822,
+      "name": "Import, validate, test and export (Web)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 122599532276,
+      "name": "Pre-deploy browser smoke test",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 122600492843,
+      "name": "Deploy to GitHub Pages (main only)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 122600690025,
+      "name": "Post-deploy live smoke test",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 122601562183,
+      "name": "godot-ci-gate",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "native": {
+    "run": 40621591903,
+    "job": 122596775822,
+    "summary": [
+      "SUMMARY: 4986 passed, 0 failed"
+    ],
+    "resource": [
+      "VALIDATE_RESOURCES: scripts=434 scenes=30 resources=2 failures=0"
+    ]
+  },
+  "pr_native": {
+    "run": 40620237089,
+    "job": 122592339120,
+    "summary": [
+      "SUMMARY: 4986 passed, 0 failed"
+    ],
+    "resource": [
+      "VALIDATE_RESOURCES: scripts=434 scenes=30 resources=2 failures=0"
+    ]
+  },
+  "pr_workflows": {
+    "workflow_runs": [
+      {
+        "id": 40620237117,
+        "name": "Pipeline self-test",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 171,
+        "jobs_url": "https://api.github.com/repos/kiotdstudios/shinobi-rush/actions/runs/40620237117/jobs",
+        "logs_url": "https://api.github.com/repos/kiotdstudios/shinobi-rush/actions/runs/40620237117/logs",
+        "workflow_id": 388389040
+      },
+      {
+        "id": 40620237114,
+        "name": "Repository checks",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 724,
+        "jobs_url": "https://api.github.com/repos/kiotdstudios/shinobi-rush/actions/runs/40620237114/jobs",
+        "logs_url": "https://api.github.com/repos/kiotdstudios/shinobi-rush/actions/runs/40620237114/logs",
+        "workflow_id": 388126091
+      },
+      {
+        "id": 40620237089,
+        "name": "Godot CI",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 703,
+        "jobs_url": "https://api.github.com/repos/kiotdstudios/shinobi-rush/actions/runs/40620237089/jobs",
+        "logs_url": "https://api.github.com/repos/kiotdstudios/shinobi-rush/actions/runs/40620237089/logs",
+        "workflow_id": 388389041
+      },
+      {
+        "id": 40620237087,
+        "name": "Full browser regression",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 6,
+        "jobs_url": "https://api.github.com/repos/kiotdstudios/shinobi-rush/actions/runs/40620237087/jobs",
+        "logs_url": "https://api.github.com/repos/kiotdstudios/shinobi-rush/actions/runs/40620237087/logs",
+        "workflow_id": 398607800
+      }
+    ]
+  },
+  "full_controls": {
+    "run": 40620237087,
+    "job": 122592678026,
+    "tail": []
+  },
+  "canonical_review": "https://kiotdstudios.github.io/shinobi-rush/?junctions=review&v=7fa1a167",
+  "live_checks": 16,
+  "live_result": "live-gameplay/result.json",
+  "live_utc": "2026-10-28T02:47:49.468Z"
+}
