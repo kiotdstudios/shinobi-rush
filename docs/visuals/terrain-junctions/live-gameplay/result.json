@@ -1,0 +1,332 @@
+{
+  "checks": [
+    {
+      "name": "exact deployed build",
+      "ok": true,
+      "detail": {
+        "built_at": "2026-10-28T02:42:00Z",
+        "commit_sha": "7fa1a1677d22ad3b86031986c7ed46618ed8e556",
+        "event": "push",
+        "export_mode": "debug",
+        "export_preset": "Web",
+        "files": {
+          "editor.html": {
+            "sha256": "b8639ef2f1f8c3032661ac0d6c0ff886b25199a0c3bb43b260e4fbdf286b796b",
+            "size": 5505
+          },
+          "index.apple-touch-icon.png": {
+            "sha256": "c0e05e6ff0a9547cb4f02750338f06496c48cf4d9007e04dd98df271dd2f657b",
+            "size": 11516
+          },
+          "index.audio.position.worklet.js": {
+            "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+            "size": 2973
+          },
+          "index.audio.worklet.js": {
+            "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+            "size": 7298
+          },
+          "index.html": {
+            "sha256": "3b40c0e50cc45b75ff4460e5dae37e8a9609b1081aada38a98a97420c56ee3ac",
+            "size": 5445
+          },
+          "index.icon.png": {
+            "sha256": "094807cb8c713447218ddddfed69772c91f56d787ce8ce05e615c7fac18770b5",
+            "size": 1183
+          },
+          "index.js": {
+            "sha256": "ffc3898b59fba6f5af0c02f76e5ee526cc061e65c7d2d6f4f98186876cea15c4",
+            "size": 315645
+          },
+          "index.pck": {
+            "sha256": "882b54b632457a1911336230a45fa18026e3d5ce0ded8c0e2562149179296568",
+            "size": 21021248
+          },
+          "index.png": {
+            "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e",
+            "size": 21443
+          },
+          "index.wasm": {
+            "sha256": "11ea19645368f8e73cf337b59cfd7ceeb4ebb51f7a3bbf77d1a5c3ddfedbc522",
+            "size": 37902138
+          }
+        },
+        "godot_version": "4.7.2-stable",
+        "godot_version_string": "4.7.2.stable.official.ed1daf0bf",
+        "head_sha": "7fa1a1677d22ad3b86031986c7ed46618ed8e556",
+        "kind": "game",
+        "project_dir": ".",
+        "project_name": "Shinobi Rush",
+        "ref": "refs/heads/main",
+        "renderer": "gl_compatibility",
+        "repository": "kiotdstudios/shinobi-rush",
+        "run_attempt": "1",
+        "run_id": "40621591903",
+        "run_number": "706",
+        "schema_version": 1,
+        "templates": "4.7.2.stable",
+        "thread_support": false,
+        "workflow": "Godot CI"
+      }
+    },
+    {
+      "name": "actual connected group 0",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 0,
+        "before": false,
+        "pieces": 121,
+        "junctions": 0,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 1",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 1,
+        "before": false,
+        "pieces": 121,
+        "junctions": 0,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 2",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 2,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 3",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 3,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 4",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 4,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 5",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 5,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 6",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 6,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 7",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 7,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 8",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 8,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 9",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 9,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 10",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 10,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 11",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 11,
+        "before": false,
+        "pieces": 121,
+        "junctions": 1,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "actual connected group 12",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 12,
+        "before": false,
+        "pieces": 49,
+        "junctions": 2,
+        "player_x": -100,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "real player movement over joins",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "group": 12,
+        "before": false,
+        "pieces": 49,
+        "junctions": 2,
+        "player_x": -46.4375,
+        "player_y": 220,
+        "autosave": false,
+        "controls_visible": true,
+        "buttons_json": "[{\"x\":383.0,\"y\":67.5},{\"x\":482.5,\"y\":67.5},{\"x\":610.0,\"y\":67.5},{\"x\":789.5,\"y\":67.5},{\"x\":414.0,\"y\":102.5},{\"x\":582.0,\"y\":102.5},{\"x\":736.0,\"y\":102.5},{\"x\":893.5,\"y\":102.5},{\"x\":418.0,\"y\":137.5},{\"x\":587.5,\"y\":137.5},{\"x\":760.0,\"y\":137.5},{\"x\":932.0,\"y\":137.5},{\"x\":409.0,\"y\":172.5}]",
+        "compare_x": 669.5,
+        "compare_y": 207.5
+      }
+    },
+    {
+      "name": "zero engine/browser errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "utc": "2026-10-28T02:47:49.468Z"
+}

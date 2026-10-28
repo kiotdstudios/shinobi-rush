@@ -106,6 +106,7 @@ func _initialize() -> void:
 	await load("res://tests/test_path_dirt_transitions.gd").new().run(ck, root)
 	await load("res://tests/test_remaining_transitions.gd").new().run(ck, root)
 	await load("res://tests/test_terrain_blend.gd").new().run(ck, root)
+	await load("res://tests/test_terrain_junction_art.gd").new().run(ck, root)
 	await load("res://tests/test_proximity_sense.gd").new().run(ck, root)
 	await load("res://tests/test_lock_on.gd").new().run(ck, root)
 	await load("res://tests/test_smoke_screen.gd").new().run(ck, root)
@@ -763,6 +764,14 @@ func test_lab_and_pause() -> void:
 	var hud := main.get_node("DebugHud")
 	var player := main.get_node("TrainingArena/Player") as PlayerController
 	ck("lab: real art is selected without opening the panel", player.visual.sprite_set == lib.sets[0] and not lab.lab_on and not lab.stands[0].visible)
+	var zoom_before := lab.zoom_index
+	var editor_undo := InputEventKey.new()
+	editor_undo.keycode = KEY_Z
+	editor_undo.physical_keycode = KEY_Z
+	editor_undo.pressed = true
+	editor_undo.ctrl_pressed = true
+	lab._unhandled_input(editor_undo)
+	ck("lab: Ctrl+Z leaves zoom unchanged for editor undo", lab.zoom_index == zoom_before)
 	_press(lab, "dbg_toggle_lab")
 	ck("lab: explicit open shows the selected art stand", lab.lab_on and lab.stands[0].visible)
 	var base := _snap(lab)

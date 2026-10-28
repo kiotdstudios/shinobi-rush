@@ -142,7 +142,7 @@ def build():
  text=text.replace('const CATEGORIES := ', 'const TRANSITION_CATEGORIES := '+json.dumps(categories)+'\nconst CATEGORIES := ',1)
  # Append generated groups only once; existing category order/content retained byte-for-byte.
  line=next(l for l in text.splitlines() if l.startswith('const CATEGORIES := '))
- if not line.endswith(' + TRANSITION_CATEGORIES'):text=text.replace(line,line+' + TRANSITION_CATEGORIES')
+ if ' + TRANSITION_CATEGORIES' not in line:text=text.replace(line,line+' + TRANSITION_CATEGORIES')
  p.write_text(text,encoding='utf-8')
  result={'families':7,'flat_tiles':308,'brown_bank_layers':16,'seam_checks':total_seams,'source_art_regenerated':False}
  (DOC/'asset-qa.json').write_text(json.dumps(result,indent=2)+'\n');print(result)

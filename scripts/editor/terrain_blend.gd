@@ -101,7 +101,8 @@ static func pure_material(id: String) -> String:
 
 ## Reduce four wanted corner materials to something one registered tile can show.
 ## Returns {"pure": material} or {"family": id, "mask": 0..15}. `own` is the cell's own material (kept when possible).
-## 3+ materials, or a pair without art (path<->temple, path<->rock), fall back deterministically: the cell keeps its own
+## Exactly three materials use the registered exact-corner junction kit. Four distinct materials
+## have no authored kit and fall back deterministically: the cell keeps its own
 ## material plus the highest-priority partner that has a family; every other corner shows the lead material.
 static func resolve(own: String, corners: Array) -> Dictionary:
 	var present: Array[String] = []

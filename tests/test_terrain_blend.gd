@@ -108,7 +108,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	ck.call("blend: all 10 material pairs have art", TerrainBlend.pair_family("grass", "dirt") != "" and TerrainBlend.pair_family("dirt", "grass") != "" and TerrainBlend.pair_family("ground", "temple") == "path_temple" and TerrainBlend.pair_family("ground", "rock") == "path_rock")
 	ck.call("blend: bit convention bottom=1 left=2 right=4 top=8 (set corner = family 'one')", TerrainBlend.signature_of("grass_dirt_08_a") == ["grass", "dirt", "dirt", "dirt"] and TerrainBlend.signature_of("path_dirt_01_b") == ["ground", "ground", "ground", "dirt"] and TerrainBlend.signature_of("temple_rock_04_c") == ["rock", "temple", "rock", "rock"])
 	ck.call("blend: variants are deterministic", TerrainBlend.variant_for(Vector2(144, 72)) == TerrainBlend.variant_for(Vector2(144, 72)))
-	ck.call("blend: three materials never pick a missing tile", TerrainBlend.resolve("grass", ["grass", "dirt", "rock", "grass"]).has("family") and not PlacedObjects.def_of(TerrainBlend.tile_id(TerrainBlend.resolve("grass", ["grass", "dirt", "rock", "grass"]), Vector2.ZERO)).is_empty())
+	ck.call("blend: three materials never pick a missing tile", TerrainBlend.resolve("grass", ["grass", "dirt", "rock", "grass"]).has("junction") and not PlacedObjects.def_of(TerrainBlend.tile_id(TerrainBlend.resolve("grass", ["grass", "dirt", "rock", "grass"]), Vector2.ZERO)).is_empty())
 	ck.call("blend: ground next to temple uses path_temple", TerrainBlend.resolve("ground", ["ground", "temple", "temple", "ground"]).get("family", "") == "path_temple")
 
 	# Exact three-material junctions: all ten triples, each generated orientation.
@@ -124,9 +124,18 @@ func run(p_ck: Callable, root: Node) -> void:
 					triples_ok = triples_ok and id.begins_with("junction_") and not PlacedObjects.def_of(id).is_empty() and TerrainBlend.signature_of(id) == sig
 					triple_count += 1
 	ck.call("blend: all ten triples resolve to exact registered junctions", triples_ok, "signatures=%d" % triple_count)
+	var exact_count := 0
+	var all_exact := true
+	for family: Dictionary in TerrainJunctionArt.data().junctions:
+		for tile: Dictionary in family.tiles:
+			var resolved := TerrainBlend.tile_id(TerrainBlend.resolve(tile.corners[0],tile.corners),Vector2.ZERO)
+			all_exact = all_exact and resolved==tile.id and TerrainBlend.signature_of(resolved)==tile.corners
+			exact_count+=1
+	ck.call("blend: all 360 authored junction signatures round trip",all_exact and exact_count==360)
 
 	# ---- in the real builder
 	AncientShrineSection.enabled = false
+	var previous_map_mode := MapEditorMode.forced
 	MapEditorMode.forced = true
 	var main := (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
@@ -251,7 +260,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	var move_to: Vector2 = origin + SE * 3.0
 	move_tiler.apply([move_from], "dirt")
 	placed._changed(false)
-	var moving := placed.floor_tiles_in_cell(move_from)[0]
+	var moving: Dictionary = placed.floor_tiles_in_cell(move_from)[0]
 	placed.move(moving, move_to)
 	ck.call("blend: move transfers terrain owner", not placed.cell_mat.has(move_from) and String(placed.cell_mat.get(move_to, "")) == "dirt")
 	placed.undo()
@@ -306,8 +315,8 @@ func run(p_ck: Callable, root: Node) -> void:
 			mats[String(placed.cell_mat.get(v + d, ""))] = true
 		mats.erase("")
 		only_junctions = only_junctions and mats.size() >= 3
-	ck.call("blend: 3-material junction: seams can only break at a true 3-material vertex (art-limited: no tri-material tiles)", only_junctions, "bad=%d" % junction_bad.size())
-	print("INFO junction seam vertices (art-limited): ", junction_bad.size())
+	ck.call("blend: three-material junction has zero conflicting vertices", junction_bad.is_empty(), "bad=%d" % junction_bad.size())
+	print("INFO exact junction seam vertices: ", junction_bad.size())
 	ck.call("blend: a 4-way meeting of grass/dirt/rock/temple is tiled", _four_way(placed, origin))
 
 	# shorelines follow the land material
@@ -317,13 +326,41 @@ func run(p_ck: Callable, root: Node) -> void:
 	var wc: Vector2 = origin + SE * 4.0 + NE * 1.0
 	t8.apply([wc], "water")
 	placed._changed(false)
-	ck.call("blend: water next to dirt gets the dirt bank", _id(placed, wc).begins_with("shore_dirt_"), _id(placed, wc))
+	ck.call("blend: water next to brown dirt uses the brown bank", _id(placed, wc).begins_with("shore_brown_"), _id(placed, wc))
 	t8.apply(_block(origin, 4, 4), "rock")
 	placed._changed(false)
 	ck.call("blend: changing the nearby land to rock re-picks the rock bank", _id(placed, wc).begins_with("shore_rock_"), _id(placed, wc))
+	for material: String in ["dirt","rock"]:
+		_fresh(placed)
+		var plain := AutoTile.new(placed)
+		plain.apply(_block(origin,4,4),material)
+		plain.apply([wc],"water")
+		var expected_bank := "brown" if material=="dirt" else "rock"
+		ck.call("blend off: native "+material+" tiles and matching animated shore",_missing(placed,_block(origin,4,4))==0 and _id(placed,wc).begins_with("shore_"+expected_bank+"_"))
 
+	# Manual replacement, delete and clear must not leave orphan ownership or lose it on undo.
+	_fresh(placed)
+	var ownership := _tiler(placed)
+	ownership.apply([origin],"dirt")
+	placed._changed(false)
+	placed.remove(placed.ground_at(origin))
+	ck.call("blend: manual delete clears ownership",not placed.cell_mat.has(origin))
+	ck.call("blend: undo delete restores ownership",placed.undo() and placed.cell_mat.get(origin)=="dirt")
+	placed.paint_cell("grass_dirt_06_b",origin)
+	placed._changed(false)
+	ck.call("blend: manual replacement is persistently pinned",placed.cell_mat.get(origin)=="lock")
+	placed.clear_all()
+	ck.call("blend: clear removes all ownership",placed.cell_mat.is_empty())
+	ck.call("blend: undo clear restores pinned ownership",placed.undo() and placed.cell_mat.get(origin)=="lock" and _id(placed,origin)=="grass_dirt_06_b")
+	ck.call("blend: redo clear removes ownership",placed.redo() and placed.cell_mat.is_empty())
+	var tiles_tab := true
+	for category: Array in PlacedObjects.CATEGORIES:
+		if not category[1].is_empty() and PlacedObjects.is_floor_tile(category[1][0]):
+			tiles_tab=tiles_tab and AssetBrowser.tab_of(category[0])=="tiles"
+	ck.call("blend: every flat material and junction category is in TILES",tiles_tab)
 	main.queue_free()
 	await tree.process_frame
+	MapEditorMode.forced = previous_map_mode
 
 
 func _four_way(placed: PlacedObjects, origin: Vector2) -> bool:

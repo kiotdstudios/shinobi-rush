@@ -24,7 +24,9 @@ func run(p_ck: Callable, tree_root: Node) -> void:
 	_test_commit_outcome()
 	_test_push_outcome()
 	_test_web_gate_exists_in_source()
+	_test_pr_helpers()
 	await _test_load_default_from_repo(tree_root)
+	await _test_publish_flow(tree_root)
 
 
 func _test_commit_outcome() -> void:
@@ -108,3 +110,92 @@ func _test_load_default_from_repo(tree_root: Node) -> void:
 	DirAccess.remove_absolute(scratch_path)
 	main.queue_free()
 	await main.get_tree().process_frame
+
+
+func _test_pr_helpers() -> void:
+	ck.call("publish: repo slug from an https origin", WorldEditor._repo_slug("https://github.com/kiotdstudios/shinobi-rush.git\n") == "kiotdstudios/shinobi-rush")
+	ck.call("publish: repo slug from an ssh origin", WorldEditor._repo_slug("git@github.com:kiotdstudios/shinobi-rush.git") == "kiotdstudios/shinobi-rush")
+	ck.call("publish: a non-GitHub origin has no slug", WorldEditor._repo_slug("https://gitlab.com/a/b.git") == "" and WorldEditor._repo_slug("") == "")
+	var b := WorldEditor._publish_branch(0)
+	ck.call("publish: each publish gets its own builder/layout-<timestamp> branch, never main", b == "builder/layout-19700101-000000", b)
+	ck.call("publish: the PR url is the last https /pull/ line gh prints",
+		WorldEditor._pr_url(0, "Warning: 1 uncommitted change\nhttps://github.com/o/r/pull/7\n") == "https://github.com/o/r/pull/7")
+	ck.call("publish: a failed gh pr create yields no url", WorldEditor._pr_url(1, "https://github.com/o/r/pull/7") == "")
+	var am := WorldEditor._automerge_outcome(0, "https://github.com/o/r/pull/7", 9)
+	ck.call("publish: auto-merge on reports the PR and that it merges itself after CI", am.ok and am.message.contains("pull/7") and am.message.contains("CI"))
+	var off := WorldEditor._automerge_outcome(1, "https://github.com/o/r/pull/7", 9)
+	ck.call("publish: auto-merge refused still counts (the PR is open) and says to merge it by hand", off.ok and off.message.contains("merge it on GitHub") and off.message.contains("pull/7"))
+
+
+## Drives the whole publish with a fake runner: no real git/gh process runs and the real
+## res://data/world_layout.json is never written.
+func _test_publish_flow(tree_root: Node) -> void:
+	var main := (load("res://scenes/main.tscn") as PackedScene).instantiate()
+	tree_root.add_child(main)
+	for i in 6:
+		await main.get_tree().physics_frame
+	var arena := main.get_node("TrainingArena") as TrainingArena
+	var ed: WorldEditor = arena.editor
+	ed.void_check = false
+	var repo_file := ProjectSettings.globalize_path(WorldEditor.REPO_LAYOUT_PATH)
+	var repo_before := FileAccess.get_file_as_string(repo_file) if FileAccess.file_exists(repo_file) else "<absent>"
+	var calls: Array = []
+	var fail_on := {"step": ""}
+	var shipped := {"json": ""}
+	var wt := ed._publish_worktree()
+	ed.publish_runner = func(tool: String, args: Array) -> Dictionary:
+		calls.append([tool, args])
+		var joined := " ".join(args)
+		if fail_on.step != "" and joined.contains(fail_on.step):
+			return {"code": 1, "out": "nothing to commit, working tree clean" if fail_on.step == "commit" else "boom"}
+		if tool == "git" and args.has("get-url"):
+			return {"code": 0, "out": "https://github.com/kiotdstudios/shinobi-rush.git"}
+		if tool == "git" and args.has("commit"):
+			shipped.json = FileAccess.get_file_as_string(wt.path_join("data/world_layout.json"))
+		if tool == "gh" and args.has("create"):
+			return {"code": 0, "out": "https://github.com/kiotdstudios/shinobi-rush/pull/999"}
+		return {"code": 0, "out": ""}
+
+	var ok := ed.publish_to_github()
+	ck.call("publish flow: a clean run succeeds", ok)
+	var add_wt := _find(calls, "worktree add")
+	ck.call("publish flow: the layout is built in a throwaway worktree cut from a fresh origin/main",
+		_find(calls, "fetch origin main") != -1 and add_wt != -1 and _find(calls, "fetch origin main") < add_wt and (calls[add_wt][1] as Array).has("origin/main") and (calls[add_wt][1] as Array).has(wt))
+	ck.call("publish flow: the committed file is the current layout", shipped.json == ed.placed.to_json_string())
+	var commit_i := _find(calls, "commit -m")
+	ck.call("publish flow: the commit runs inside the worktree, scoped to the one layout file",
+		commit_i != -1 and (calls[commit_i][1] as Array)[1] == wt and (calls[commit_i][1] as Array).slice(-2) == ["--", "data/world_layout.json"])
+	var push_i := _find(calls, "push")
+	var push_args: Array = calls[push_i][1] if push_i != -1 else []
+	ck.call("publish flow: pushes only its own builder/layout-* branch, never main, never forced",
+		push_i != -1 and str(push_args[-1]).contains("refs/heads/builder/layout-") and not " ".join(push_args).contains(":main") and not push_args.has("--force") and not push_args.has("-f"))
+	var pr_i := _find(calls, "pr create")
+	ck.call("publish flow: opens a PR into main after the push", pr_i > push_i and (calls[pr_i][1] as Array).has("main"))
+	var am_i := _find(calls, "pr merge")
+	ck.call("publish flow: turns on auto-merge for that PR", am_i > pr_i and (calls[am_i][1] as Array).has("--auto") and (calls[am_i][1] as Array).has("https://github.com/kiotdstudios/shinobi-rush/pull/999"))
+	ck.call("publish flow: cleans up the worktree after", _find(calls, "worktree remove", am_i) != -1)
+	ck.call("publish flow: the status note names the PR and stays up long enough to read", ed._note.contains("pull/999") and ed._note_until - Time.get_ticks_msec() > 10000, ed._note)
+	var repo_after := FileAccess.get_file_as_string(repo_file) if FileAccess.file_exists(repo_file) else "<absent>"
+	ck.call("publish flow: the builder's own checkout is never written to", repo_after == repo_before)
+
+	calls.clear()
+	fail_on.step = "commit"
+	ck.call("publish flow: an unchanged layout is a clean no-op (no push, no PR)", ed.publish_to_github() and _find(calls, "push") == -1 and _find(calls, "pr create") == -1)
+	for step in ["fetch", "worktree add", "push -u", "pr create"]:
+		calls.clear()
+		fail_on.step = step
+		var r := ed.publish_to_github()
+		ck.call("publish flow: a failed '%s' reports failure and goes no further" % step,
+			not r and (ed._note.contains("FAIL") or ed._note.contains("failed")) and _find(calls, "pr merge") == -1, ed._note)
+		if step in ["push -u", "pr create"]:
+			ck.call("publish flow: a failed '%s' still removes the worktree" % step, _find(calls, "worktree remove", _find(calls, step)) != -1)
+	ed.publish_runner = Callable()
+	main.queue_free()
+	await main.get_tree().process_frame
+
+
+func _find(calls: Array, needle: String, after := -1) -> int:
+	for i in range(after + 1, calls.size()):
+		if " ".join(calls[i][1]).contains(needle):
+			return i
+	return -1
