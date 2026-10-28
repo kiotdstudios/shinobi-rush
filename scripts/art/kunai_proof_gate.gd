@@ -5,6 +5,9 @@ var enemy: Bandit
 
 func _ready() -> void:
 	var query := str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
+	if "junctions=review" in query or "--terrain-junctions-review" in OS.get_cmdline_user_args():
+		var junction_review := load("res://scripts/art/terrain_junction_review.gd").new() as Node
+		get_parent().add_child.call_deferred(junction_review)
 	if "terraintransitions=review" in query or "--terrain-transitions-review" in OS.get_cmdline_user_args():
 		var review := load("res://scripts/art/terrain_transitions_review.gd").new() as Node
 		get_parent().add_child.call_deferred(review)
