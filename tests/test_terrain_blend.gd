@@ -306,7 +306,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	ck.call("blend: water next to dirt gets the dirt bank", _id(placed, wc).begins_with("shore_dirt_"), _id(placed, wc))
 	t8.apply(_block(origin, 4, 4), "rock")
 	placed._changed(false)
-	ck.call("blend: changing the nearby land to rock re-picks the rock bank", _id(placed, wc).begins_with("shore_rock_") or _id(placed, wc).begins_with("shore_dirt_"), _id(placed, wc))
+	ck.call("blend: changing the nearby land to rock re-picks the rock bank", _id(placed, wc).begins_with("shore_rock_"), _id(placed, wc))
 
 	main.queue_free()
 	await tree.process_frame
