@@ -1,0 +1,1047 @@
+{
+  "source_pr": 245,
+  "source_head": "61b319f91a40cba144e4ece738f3e7a67c47fb4c",
+  "method": "read-only Python port of PR245 junction test, final vertex vote and fallback; Godot renders IDs without changing auto-tiling",
+  "before_seam_vertices": [
+    [
+      180,
+      0
+    ],
+    [
+      216,
+      18
+    ]
+  ],
+  "after_seam_vertices": [],
+  "cells": [
+    {
+      "cell": [
+        0,
+        0
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        36,
+        -18
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        72,
+        -36
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        108,
+        -54
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        144,
+        -72
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        180,
+        -90
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        216,
+        -108
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        36,
+        18
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        72,
+        0
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        108,
+        -18
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        144,
+        -36
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        180,
+        -54
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        216,
+        -72
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        252,
+        -90
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        72,
+        36
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "dirt",
+        "grass",
+        "dirt"
+      ],
+      "after_corners": [
+        "grass",
+        "dirt",
+        "grass",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_10_a",
+      "after_id": "grass_dirt_10_a"
+    },
+    {
+      "cell": [
+        108,
+        18
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "dirt",
+        "grass",
+        "dirt"
+      ],
+      "after_corners": [
+        "grass",
+        "dirt",
+        "grass",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_10_a",
+      "after_id": "grass_dirt_10_a"
+    },
+    {
+      "cell": [
+        144,
+        0
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "dirt",
+        "grass",
+        "dirt"
+      ],
+      "after_corners": [
+        "grass",
+        "dirt",
+        "grass",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_10_a",
+      "after_id": "grass_dirt_10_a"
+    },
+    {
+      "cell": [
+        180,
+        -18
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "rock",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "rock",
+        "grass",
+        "dirt"
+      ],
+      "before_id": "grass_rock_11_a",
+      "after_id": "junction_0_4_0_2"
+    },
+    {
+      "cell": [
+        216,
+        -36
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "rock",
+        "grass",
+        "rock"
+      ],
+      "after_corners": [
+        "grass",
+        "rock",
+        "grass",
+        "rock"
+      ],
+      "before_id": "grass_rock_10_a",
+      "after_id": "grass_rock_10_a"
+    },
+    {
+      "cell": [
+        252,
+        -54
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "rock",
+        "grass",
+        "rock"
+      ],
+      "after_corners": [
+        "grass",
+        "rock",
+        "grass",
+        "rock"
+      ],
+      "before_id": "grass_rock_10_a",
+      "after_id": "grass_rock_10_a"
+    },
+    {
+      "cell": [
+        288,
+        -72
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "rock",
+        "grass",
+        "rock"
+      ],
+      "after_corners": [
+        "grass",
+        "rock",
+        "grass",
+        "rock"
+      ],
+      "before_id": "grass_rock_10_a",
+      "after_id": "grass_rock_10_a"
+    },
+    {
+      "cell": [
+        108,
+        54
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_00_a",
+      "after_id": "grass_dirt_00_a"
+    },
+    {
+      "cell": [
+        144,
+        36
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_00_a",
+      "after_id": "grass_dirt_00_a"
+    },
+    {
+      "cell": [
+        180,
+        18
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_00_a",
+      "after_id": "grass_dirt_00_a"
+    },
+    {
+      "cell": [
+        216,
+        0
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "rock",
+        "rock",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "dirt_rock_03_a",
+      "after_id": "dirt_rock_03_a"
+    },
+    {
+      "cell": [
+        252,
+        -18
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "before_id": "grass_rock_00_a",
+      "after_id": "grass_rock_00_a"
+    },
+    {
+      "cell": [
+        288,
+        -36
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "before_id": "grass_rock_00_a",
+      "after_id": "grass_rock_00_a"
+    },
+    {
+      "cell": [
+        324,
+        -54
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "before_id": "grass_rock_00_a",
+      "after_id": "grass_rock_00_a"
+    },
+    {
+      "cell": [
+        144,
+        72
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_00_a",
+      "after_id": "grass_dirt_00_a"
+    },
+    {
+      "cell": [
+        180,
+        54
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_00_a",
+      "after_id": "grass_dirt_00_a"
+    },
+    {
+      "cell": [
+        216,
+        36
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "grass",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "grass",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_04_a",
+      "after_id": "grass_dirt_04_a"
+    },
+    {
+      "cell": [
+        252,
+        18
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "rock",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "rock",
+        "grass",
+        "dirt",
+        "grass"
+      ],
+      "before_id": "grass_rock_07_a",
+      "after_id": "junction_4_0_2_0"
+    },
+    {
+      "cell": [
+        288,
+        0
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "grass"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "grass"
+      ],
+      "before_id": "grass_rock_01_a",
+      "after_id": "grass_rock_01_a"
+    },
+    {
+      "cell": [
+        324,
+        -18
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "before_id": "grass_rock_00_a",
+      "after_id": "grass_rock_00_a"
+    },
+    {
+      "cell": [
+        360,
+        -36
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "before_id": "grass_rock_00_a",
+      "after_id": "grass_rock_00_a"
+    },
+    {
+      "cell": [
+        180,
+        90
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_00_a",
+      "after_id": "grass_dirt_00_a"
+    },
+    {
+      "cell": [
+        216,
+        72
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_00_a",
+      "after_id": "grass_dirt_00_a"
+    },
+    {
+      "cell": [
+        252,
+        54
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "grass",
+        "grass",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_12_a",
+      "after_id": "grass_dirt_12_a"
+    },
+    {
+      "cell": [
+        288,
+        36
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        324,
+        18
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_rock_03_a",
+      "after_id": "grass_rock_03_a"
+    },
+    {
+      "cell": [
+        360,
+        0
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "before_id": "grass_rock_00_a",
+      "after_id": "grass_rock_00_a"
+    },
+    {
+      "cell": [
+        396,
+        -18
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "before_id": "grass_rock_00_a",
+      "after_id": "grass_rock_00_a"
+    },
+    {
+      "cell": [
+        216,
+        108
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_00_a",
+      "after_id": "grass_dirt_00_a"
+    },
+    {
+      "cell": [
+        252,
+        90
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "dirt",
+        "dirt",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_00_a",
+      "after_id": "grass_dirt_00_a"
+    },
+    {
+      "cell": [
+        288,
+        72
+      ],
+      "owner": "dirt",
+      "before_corners": [
+        "grass",
+        "grass",
+        "dirt",
+        "dirt"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "dirt",
+        "dirt"
+      ],
+      "before_id": "grass_dirt_12_a",
+      "after_id": "grass_dirt_12_a"
+    },
+    {
+      "cell": [
+        324,
+        54
+      ],
+      "owner": "grass",
+      "before_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_dirt_15_a",
+      "after_id": "grass_dirt_15_a"
+    },
+    {
+      "cell": [
+        360,
+        36
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "grass",
+        "grass"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "grass",
+        "grass"
+      ],
+      "before_id": "grass_rock_03_a",
+      "after_id": "grass_rock_03_a"
+    },
+    {
+      "cell": [
+        396,
+        18
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "before_id": "grass_rock_00_a",
+      "after_id": "grass_rock_00_a"
+    },
+    {
+      "cell": [
+        432,
+        0
+      ],
+      "owner": "rock",
+      "before_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "after_corners": [
+        "rock",
+        "rock",
+        "rock",
+        "rock"
+      ],
+      "before_id": "grass_rock_00_a",
+      "after_id": "grass_rock_00_a"
+    }
+  ]
+}

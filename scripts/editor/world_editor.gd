@@ -16,7 +16,7 @@ var tool := "select"  ## "select" | "erase" | "place" | "paint" | "pan"
 const BRUSHES: Array[int] = [1, 3, 5]
 var brush := 1  ## paint tool: the brush is a brush x brush block of floor cells
 const SHAPES: Array[String] = ["brush", "rect", "line"]
-const BANK_LABELS := {"": "AUTO", "grass": "GRASS", "dirt": "DIRT", "rock": "ROCK"}
+const BANK_LABELS := {"": "AUTO", "grass": "GRASS", "dirt": "PATH", "brown": "BROWN DIRT", "rock": "ROCK"}
 const TERRAIN_COLORS := {"water": Color("#3aa0ff"), "grass": Color("#4fd25a"), "ground": Color("#b9824a"), "temple": Color("#b8b8c8"), "dirt": Color("#8a5a2b"), "rock": Color("#8c8f98"), "": Color("#ff4d4d")}
 var auto_terrain := "water"  ## terrain tool: "water" | "grass" | "ground" | "temple" | "" (clear floor)
 var bank_family := ""  ## terrain tool: "" follows the neighbouring land, else "grass" | "dirt" | "rock"
@@ -1393,6 +1393,60 @@ static func _push_outcome(code: int, output_text: String, object_count: int) -> 
 	return {"ok": true, "message": "PUBLISHED  %d objects -> GitHub" % object_count}
 
 
+## main only takes PRs that pass CI (the "Agent Rules" ruleset), so every publish ships on its own branch.
+const PUBLISH_BRANCH_PREFIX := "builder/layout-"
+const PUBLISH_NOTE_MS := 15000
+## Swapped by tests for a fake that records calls; takes (tool, args), returns {code, out}.
+var publish_runner := Callable()
+
+
+static func _publish_branch(unix_time: int) -> String:
+	var t := Time.get_datetime_dict_from_unix_time(unix_time)
+	return "%s%04d%02d%02d-%02d%02d%02d" % [PUBLISH_BRANCH_PREFIX, t.year, t.month, t.day, t.hour, t.minute, t.second]
+
+
+## "owner/repo" from an origin URL (https or ssh), "" when it is not a GitHub remote.
+static func _repo_slug(url: String) -> String:
+	var u := url.strip_edges().trim_suffix("/").trim_suffix(".git")
+	for host in ["github.com/", "github.com:"]:
+		var at := u.find(host)
+		if at != -1:
+			var slug := u.substr(at + host.length())
+			if slug.count("/") == 1 and not slug.begins_with("/") and not slug.ends_with("/"):
+				return slug
+	return ""
+
+
+## The PR URL gh prints as its last https line, "" when the PR could not be opened.
+static func _pr_url(code: int, output_text: String) -> String:
+	if code != 0:
+		return ""
+	var lines := output_text.strip_edges().split("\n")
+	for i in range(lines.size() - 1, -1, -1):
+		var l := lines[i].strip_edges()
+		if l.begins_with("https://") and l.contains("/pull/"):
+			return l
+	return ""
+
+
+static func _automerge_outcome(code: int, pr_url: String, object_count: int) -> Dictionary:
+	if code != 0:
+		return {"ok": true, "message": "PUBLISH: PR opened, auto-merge is off -- merge it on GitHub: %s" % pr_url}
+	return {"ok": true, "message": "PUBLISHED  %d objects -> %s (merges itself when CI passes, live ~10 min later)" % [object_count, pr_url]}
+
+
+func _run(tool: String, args: Array) -> Dictionary:
+	if publish_runner.is_valid():
+		return publish_runner.call(tool, args)
+	var out: Array = []
+	var code := OS.execute(tool, PackedStringArray(args), out, true)
+	return {"code": code, "out": "\n".join(out)}
+
+
+func _publish_worktree() -> String:
+	return OS.get_user_data_dir().path_join("publish_worktree")
+
+
 ## Desktop/editor only (owner 2026-10-23: "save button needs to commit and push straight to github
 ## all new level changes"). Deliberately does NOT exist on Web (see the button that calls this,
 ## created only when `not OS.has_feature("web")`) -- OS.execute has no effect in a Web export anyway,
@@ -1400,47 +1454,79 @@ static func _push_outcome(code: int, output_text: String, object_count: int) -> 
 ## already-configured git identity (SSH key / credential manager / `gh auth`) -- no token is ever
 ## read, stored, or embedded here or anywhere else in this project.
 ##
-## Safety: `git add` is scoped to ONLY this one file (never `-A` or `.`), and the commit is further
-## restricted to that same single pathspec (`git commit -- <path>`) even if something else happens
-## to already be staged -- this can never sweep up or publish unrelated work-in-progress changes
-## elsewhere in the repo. Does not force-push and does not attempt to bypass branch protection; a
-## rejected push (e.g. a protected branch requiring a PR) is reported plainly, not retried.
+## main rejects direct pushes, and the checkout the builder runs from can sit on any branch with
+## unrelated work in it, so the layout is committed in a throwaway worktree cut from a fresh
+## origin/main onto its own builder/layout-* branch, pushed, opened as a PR and set to auto-merge;
+## the PR's own CI decides whether it goes live. The builder's checkout is never written to, `git add`
+## and `git commit` stay scoped to the one layout file, and nothing is ever force-pushed.
 func publish_to_github() -> bool:
 	if OS.has_feature("web"):
 		return false
 	if _void_blocks_save():
 		return false
-	var abs_path := ProjectSettings.globalize_path(REPO_LAYOUT_PATH)
+	var repo_root := ProjectSettings.globalize_path("res://")
+	var rel_path := REPO_LAYOUT_PATH.trim_prefix("res://")
+	var wt := _publish_worktree()
+	var branch := _publish_branch(int(Time.get_unix_time_from_system()))
+	var count := placed.objects.size()
+	var r := _run("git", ["-C", repo_root, "remote", "get-url", "origin"])
+	var slug := _repo_slug(r.out) if r.code == 0 else ""
+	if slug == "":
+		return _publish_note(false, "PUBLISH FAILED: origin is not a GitHub remote (%s)" % str(r.out).left(60))
+	r = _run("git", ["-C", repo_root, "fetch", "origin", "main"])
+	if r.code != 0:
+		return _publish_note(false, "PUBLISH FAILED (fetch): %s" % str(r.out).left(90))
+	_run("git", ["-C", repo_root, "worktree", "remove", "--force", wt])
+	_run("git", ["-C", repo_root, "worktree", "prune"])
+	r = _run("git", ["-C", repo_root, "worktree", "add", "-b", branch, wt, "origin/main"])
+	if r.code != 0:
+		return _publish_note(false, "PUBLISH FAILED (worktree): %s" % str(r.out).left(90))
+	var ok := _ship(wt, branch, rel_path, slug, count)
+	_run("git", ["-C", repo_root, "worktree", "remove", "--force", wt])
+	_run("git", ["-C", repo_root, "branch", "-D", branch])
+	return ok
+
+
+func _ship(wt: String, branch: String, rel_path: String, slug: String, count: int) -> bool:
+	var abs_path := wt.path_join(rel_path)
 	DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
 	var f := FileAccess.open(abs_path, FileAccess.WRITE)
 	if f == null:
-		_flash("PUBLISH FAILED (could not write %s)" % REPO_LAYOUT_PATH)
-		return false
+		return _publish_note(false, "PUBLISH FAILED (could not write %s)" % rel_path)
 	f.store_string(placed.to_json_string())
 	f.close()
-	var repo_root := ProjectSettings.globalize_path("res://")
-	var rel_path := REPO_LAYOUT_PATH.trim_prefix("res://")
-	var out: Array = []
-	OS.execute("git", ["-C", repo_root, "add", "--", rel_path], out, true)
-	out.clear()
-	var msg := "World Builder: publish live layout (%d objects)" % placed.objects.size()
-	var commit_code := OS.execute("git", ["-C", repo_root, "commit", "-m", msg, "--", rel_path], out, true)
-	var commit := _commit_outcome(commit_code, "\n".join(out))
+	_run("git", ["-C", wt, "add", "--", rel_path])
+	var msg := "World Builder: publish live layout (%d objects)" % count
+	var r := _run("git", ["-C", wt, "commit", "-m", msg, "--", rel_path])
+	var commit := _commit_outcome(r.code, r.out)
 	if commit.done:
-		_flash(commit.message)
-		return commit.ok
-	out.clear()
-	var push_code := OS.execute("git", ["-C", repo_root, "push"], out, true)
-	var push := _push_outcome(push_code, "\n".join(out), placed.objects.size())
-	_flash(push.message)
-	return push.ok
+		if commit.ok:
+			return _publish_note(true, "PUBLISH: live already has this exact layout")
+		return _publish_note(false, commit.message)
+	r = _run("git", ["-C", wt, "push", "-u", "origin", "%s:refs/heads/%s" % [branch, branch]])
+	var push := _push_outcome(r.code, r.out, count)
+	if not push.ok:
+		return _publish_note(false, push.message)
+	var body := "Published from the World Builder (%d objects). Only `%s` changes; merges itself once CI passes, then Pages redeploys." % [count, rel_path]
+	r = _run("gh", ["pr", "create", "-R", slug, "--base", "main", "--head", branch, "--title", msg, "--body", body])
+	var url := _pr_url(r.code, r.out)
+	if url == "":
+		return _publish_note(false, "PUBLISH: pushed %s but the PR failed: %s" % [branch, str(r.out).left(70)])
+	r = _run("gh", ["pr", "merge", url, "-R", slug, "--auto", "--merge", "--delete-branch"])
+	var done := _automerge_outcome(r.code, url, count)
+	return _publish_note(done.ok, done.message)
 
 
-func _flash(text: String) -> void:
+func _publish_note(ok: bool, text: String) -> bool:
+	_flash(text, PUBLISH_NOTE_MS)
+	return ok
+
+
+func _flash(text: String, ms := 2500) -> void:
 	_note = text
-	_note_until = Time.get_ticks_msec() + 2500
+	_note_until = Time.get_ticks_msec() + ms
 	_refresh()
-	get_tree().create_timer(2.6).timeout.connect(_refresh)
+	get_tree().create_timer(ms / 1000.0 + 0.1).timeout.connect(_refresh)
 
 
 ## Properties X / Y: move the selected object to an exact spot. Returns false (and says why) when it is not allowed.
@@ -2186,7 +2272,7 @@ func _build_ui() -> void:
 	if not OS.has_feature("web"):
 		var pub := Button.new()
 		pub.text = "PUBLISH"
-		pub.tooltip_text = "Commit + push this layout to GitHub (desktop only, uses this machine's own git login)"
+		pub.tooltip_text = "Open a PR with this layout that merges itself once CI passes, then goes live (desktop only, uses this machine's own git/gh login)"
 		pub.focus_mode = Control.FOCUS_NONE
 		pub.custom_minimum_size = Vector2(0, 38)
 		_skin(pub)

@@ -8,7 +8,7 @@ extends RefCounted
 
 const TERRAINS: Array[String] = ["water", "grass", "ground", "temple", "dirt", "rock"]
 const PREFIX := {"water": "water9", "grass": "grass9", "ground": "ground9", "temple": "temple_floor", "dirt": "path_dirt", "rock": "grass_rock"}
-const BANK_FAMILIES: Array[String] = ["", "grass", "dirt", "rock"]  ## "" = follow the neighbouring land
+const BANK_FAMILIES: Array[String] = ["", "grass", "dirt", "brown", "rock"]  ## "" = follow the neighbouring land
 const BASE_ID := {"water": "water9_center", "grass": "grass9_center", "ground": "ground9_center", "temple": "temple_floor_center", "dirt": "path_dirt_15_a", "rock": "grass_rock_00_a"}
 ## Cells that share a corner with a cell: its 4 edge neighbours plus the 4 cells two steps away along the axes.
 const RING: Array[Vector2] = [Vector2(36, -18), Vector2(-36, -18), Vector2(36, 18), Vector2(-36, 18), Vector2(0, -36), Vector2(0, 36), Vector2(72, 0), Vector2(-72, 0)]
@@ -63,6 +63,10 @@ static func terrain_of(id: String) -> String:
 		return "ground"
 	if id.begins_with("temple_floor_"):
 		return "temple"
+	if id.begins_with("path_dirt_15_"):
+		return "dirt"
+	if id.begins_with("grass_rock_00_"):
+		return "rock"
 	return "land" if PlacedObjects.is_floor_tile(id) else ""
 
 
@@ -161,6 +165,8 @@ func raw_vertex_mat(v: Vector2) -> String:
 ## raw_vertex_mat(), except at a junction of 3+ materials: there the candidate that leaves every touching tile
 ## drawable with ONE two-material kit (<= 2 materials per tile, and a registered pair) wins, so the seam stays continuous.
 func vertex_mat(v: Vector2) -> String:
+	if blend:
+		return raw_vertex_mat(v)
 	var raw := raw_vertex_mat(v)
 	if raw == "":
 		return raw
@@ -315,10 +321,16 @@ func _retile_managed(cell: Vector2) -> void:
 	var own := mat_at(cell)
 	var res := TerrainBlend.resolve(own, corners_of(cell))
 	var want := ""
+	if res.has("junction"):
+		want = String(res.junction)
+		if want != cur and _lay(want, cell):
+			_map[cell] = want
+			changed += 1
+		return
 	if res.has("pure"):
 		var shown: String = res.pure
 		if TerrainBlend.pure_material(cur) == shown:
-			want = pick(cell, cur, shown) if shown in PREFIX else cur
+			want = pick(cell, cur, shown) if shown in PREFIX and shown not in ["dirt", "rock"] else cur
 		else:
 			want = pick(cell, "", shown) if shown in PREFIX and shown != "dirt" and shown != "rock" else TerrainBlend.tile_id(res, cell)
 	else:
@@ -336,6 +348,8 @@ func _retile_managed(cell: Vector2) -> void:
 
 ## The piece that belongs on `cell` given its neighbours. `cur` (its current tile) keeps variants and bank style stable.
 func pick(cell: Vector2, cur: String, t: String) -> String:
+	if t in ["dirt", "rock"]:
+		return TerrainBlend.PURE_ID[t] # These materials have no legacy nine-role atlas.
 	if t == "water":
 		var mask := corner_mask(cell)
 		if mask != 0:
@@ -413,7 +427,7 @@ func _bank_for(cell: Vector2, cur: String) -> String:
 			"temple", "rock":
 				return "rock"
 			"dirt":
-				return "dirt"
+				return "brown"
 			"land":
 				var id := id_at(cell + d)
 				if is_shore(id):

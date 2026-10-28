@@ -13,6 +13,8 @@ const BITS: Array[int] = [8, 4, 2, 1]  ## corner order everywhere: top, right, l
 ## family id -> [zero material, one material]. Manifest source: transitions.art.json / path-dirt.art.json.
 const FAMILIES := {
 	"path_dirt": ["ground", "dirt"],
+	"path_temple": ["temple", "ground"],
+	"path_rock": ["rock", "ground"],
 	"grass_path": ["ground", "grass"],
 	"grass_temple": ["temple", "grass"],
 	"dirt_temple": ["temple", "dirt"],
@@ -63,6 +65,19 @@ static func parse_transition(id: String) -> Dictionary:
 
 ## Material at each corner [top, right, left, bottom] of a known floor tile, or [] (shores, props, unknown art).
 static func signature_of(id: String) -> Array:
+	if id.begins_with("junction_"):
+		var parts := id.split("_")
+		if parts.size() != 5:
+			return []
+		var corners: Array = []
+		for i in range(1, 5):
+			if not parts[i].is_valid_int():
+				return []
+			var index := int(parts[i])
+			if index < 0 or index >= MATERIALS.size():
+				return []
+			corners.append(MATERIALS[index])
+		return corners
 	for mat: String in PURE_PREFIX:
 		if id.begins_with(PURE_PREFIX[mat]):
 			return [mat, mat, mat, mat]
@@ -86,7 +101,8 @@ static func pure_material(id: String) -> String:
 
 ## Reduce four wanted corner materials to something one registered tile can show.
 ## Returns {"pure": material} or {"family": id, "mask": 0..15}. `own` is the cell's own material (kept when possible).
-## 3+ materials, or a pair without art (path<->temple, path<->rock), fall back deterministically: the cell keeps its own
+## Exactly three materials use the registered exact-corner junction kit. Four distinct materials
+## have no authored kit and fall back deterministically: the cell keeps its own
 ## material plus the highest-priority partner that has a family; every other corner shows the lead material.
 static func resolve(own: String, corners: Array) -> Dictionary:
 	var present: Array[String] = []
@@ -95,6 +111,10 @@ static func resolve(own: String, corners: Array) -> Dictionary:
 			present.append(c)
 	if present.size() <= 1:
 		return {"pure": present[0] if present.size() == 1 else own}
+	if present.size() == 3:
+		var junction := TerrainJunctionArt.tile_id(corners)
+		if junction != "" and not PlacedObjects.def_of(junction).is_empty():
+			return {"junction": junction}
 	present.sort_custom(func(a: String, b: String) -> bool:
 		if (a == own) != (b == own):
 			return a == own
@@ -124,6 +144,8 @@ static func variant_for(cell: Vector2, reroll := 0) -> String:
 
 
 static func tile_id(res: Dictionary, cell: Vector2) -> String:
+	if res.has("junction"):
+		return String(res.junction)
 	if res.has("pure"):
 		return PURE_ID[res.pure]
 	var mask: int = res.mask
