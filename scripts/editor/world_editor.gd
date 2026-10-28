@@ -377,6 +377,18 @@ func snapped_pos(p: Vector2) -> Vector2:
 
 ## snapped_pos, then (snap on) a stair / cliff ledge end pulled flush onto a nearby piece's joint.
 func placement_pos(id: String, p: Vector2, exclude: Dictionary = {}) -> Vector2:
+	var def:=PlacedObjects.def_of(id)
+	if snap>0 and def.has("cells"):return placed.snap_joint(id,iso_cell_center(p),exclude)
+	if snap>0 and id=="cliff_cascade":
+		var best:=p
+		var distance:=40.0
+		for o in placed.objects:
+			if o.id!="cliff_waterfall_lip":continue
+			var socket: Vector2=o.pos+Vector2(0,18)
+			if p.distance_to(socket)<distance:
+				best=socket
+				distance=p.distance_to(socket)
+		return best
 	var at := snapped_pos(p)
 	return placed.snap_joint(id, at, exclude) if snap > 0 else at
 
@@ -2094,7 +2106,7 @@ func _build_ui() -> void:
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "water_fx":
-				b.icon = load(BlightwoodWater.DIR + "waterfall-icon.png") as Texture2D
+				b.icon = load(str(def.get("icon",BlightwoodWater.DIR + "waterfall-icon.png"))) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "grass":
@@ -2401,6 +2413,8 @@ func _mini(parent: Node, text: String, cb: Callable, toggle := true) -> Button:
 static func layer_names() -> Array[String]:
 	var seen := {}
 	for id: String in PlacedObjects.CATALOG:
+		seen[PlacedObjects.type_of(id)] = true
+	for id: String in CliffKit.IDS:
 		seen[PlacedObjects.type_of(id)] = true
 	var out: Array[String] = []
 	for k: String in seen:

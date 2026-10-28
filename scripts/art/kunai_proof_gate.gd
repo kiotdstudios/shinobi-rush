@@ -5,6 +5,8 @@ var enemy: Bandit
 
 func _ready() -> void:
 	var query := str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
+	if "cliffs=" in query or "--cliffs-fit" in OS.get_cmdline_user_args() or "--cliffs-review" in OS.get_cmdline_user_args():
+		get_parent().add_child.call_deferred(load("res://scripts/art/cliff_kit_review.gd").new())
 	if "autoblend=review" in query or "--auto-blend-review" in OS.get_cmdline_user_args():
 		var blend_review := load("res://scripts/art/auto_blend_review.gd").new() as Node
 		get_parent().add_child.call_deferred(blend_review)

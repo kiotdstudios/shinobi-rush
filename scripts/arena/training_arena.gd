@@ -341,9 +341,13 @@ func rebuild_nav() -> void:
 	# standing (moved or deleted walls included); live_blocks() is only the fallback before the layout exists.
 	nav = ArenaNav.build(bounds, placed.obstacles() if placed != null else WorldScale.live_blocks())
 	for z in ShrineElevation.terrain_zones:
-		if z is CliffElevation and is_ancestor_of(z):
+		if z is CliffElevation and is_ancestor_of(z) and not z.modular and not z.surface_only:
 			var route := climb_route(z)
 			nav.open_climb(route[0], route[1], route[2])
+	if placed!=null and is_instance_valid(placed.cliff_world):
+		var cliffs:=placed.cliff_world
+		for axis in cliffs.nav_axes:nav.open_climb(axis,[],[])
+		nav.open_climb(PackedVector2Array(),cliffs.nav_surfaces,cliffs.nav_rims)
 	for b in get_tree().get_nodes_in_group("bridge"):
 		if b is Bridge and is_ancestor_of(b):
 			var deck := (b as Bridge).nav_route()

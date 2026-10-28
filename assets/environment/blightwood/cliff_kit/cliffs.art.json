@@ -1,0 +1,1382 @@
+{
+  "version": 1,
+  "generator": "lossless approved-source cuts and native alpha-mask assembly; no AI pixels accepted",
+  "grid": {
+    "u": [
+      36,
+      18
+    ],
+    "v": [
+      -36,
+      18
+    ],
+    "diamond": [
+      72,
+      36
+    ],
+    "rise": 66
+  },
+  "source_sha256": {
+    "assets/environment/blightwood/stairs/cliff_ledge_se.png": "a794f29a1d031eb6b3a1699c791950dc6c1691255079c6a95dc7063d86644e50",
+    "assets/environment/blightwood/stairs/earth_stairs_se.png": "f3a241ed3d4a35b95db572ae48be73d00dd6db0631c2c5428cbe043b31f028e9",
+    "assets/environment/kosen_courtyard/grass/tiles/grass9_center.png": "9a66d27089525cdf65e49af4ed75d9664ed25da8a78446e50cd137df432965e1",
+    "assets/environment/blightwood/ground_path/ground9_center.png": "f2c589e286d59b02f3e1f740633791f3b8aaa3754b5c8b1b31f2eec81844541d",
+    "assets/environment/blightwood_water/waterfall-atlas.png": "ce0d20141b945c310f827d6bff9de3ffd41abb9a0d6ee67acc37ccd8185c58e5",
+    "assets/environment/blightwood_water/foam-atlas.png": "0e1ede210664c3415f8b8af8fe0cb0fa4606aa3a7ad8fbe9eba4ba349b52baa3",
+    "assets/environment/blightwood_water/tiles/water9_center.png": "1887fa838d9962db2b58671e72c5b15d2c9153b94dd60c26b8f77d6ca05e72a3"
+  },
+  "cascade": {
+    "atlas": "cascade-atlas.png",
+    "frame_size": [
+      56,
+      96
+    ],
+    "frame_count": 16,
+    "fps": 18,
+    "anchor": [
+      22,
+      74
+    ],
+    "rise": 66,
+    "lip": "y=8+0.5*(x-22)",
+    "basin": "lip+66",
+    "source_row": 52,
+    "foam_fps": 13,
+    "drops": 18
+  },
+  "components": {
+    "cap": {
+      "file": "cap.png",
+      "size": [
+        72,
+        36
+      ],
+      "anchor": [
+        36,
+        84
+      ]
+    },
+    "faces": [
+      {
+        "file": "face_0.png",
+        "size": [
+          74,
+          104
+        ],
+        "anchor": [
+          37,
+          84
+        ]
+      },
+      {
+        "file": "face_1.png",
+        "size": [
+          74,
+          104
+        ],
+        "anchor": [
+          37,
+          84
+        ]
+      },
+      {
+        "file": "face_2.png",
+        "size": [
+          74,
+          104
+        ],
+        "anchor": [
+          37,
+          84
+        ]
+      },
+      {
+        "file": "face_3.png",
+        "size": [
+          74,
+          104
+        ],
+        "anchor": [
+          37,
+          84
+        ]
+      }
+    ]
+  },
+  "modules": [
+    {
+      "id": "cliff_ground",
+      "label": "Elevated moss-stone ground",
+      "role": "fill",
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "size": [
+        74,
+        104
+      ],
+      "anchor": [
+        37,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -18,
+        36,
+        18
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "cliff_grass",
+      "label": "Elevated Blightwood grass",
+      "role": "fill",
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "size": [
+        74,
+        104
+      ],
+      "anchor": [
+        37,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -18,
+        36,
+        18
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ],
+      "surface": "grass"
+    },
+    {
+      "id": "cliff_path",
+      "label": "Elevated forest path",
+      "role": "fill",
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "size": [
+        74,
+        104
+      ],
+      "anchor": [
+        37,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -18,
+        36,
+        18
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ],
+      "surface": "path"
+    },
+    {
+      "id": "cliff_straight_se",
+      "label": "Straight cliff SE",
+      "role": "straight",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          36,
+          18
+        ]
+      ],
+      "size": [
+        110,
+        122
+      ],
+      "anchor": [
+        37,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -18,
+        72,
+        36
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          36,
+          36
+        ],
+        [
+          72,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "cliff_straight_sw",
+      "label": "Straight cliff SW",
+      "role": "straight",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          -36,
+          18
+        ]
+      ],
+      "size": [
+        110,
+        122
+      ],
+      "anchor": [
+        73,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -72,
+        -18,
+        36,
+        36
+      ],
+      "sockets": [
+        [
+          -72,
+          18
+        ],
+        [
+          -36,
+          0
+        ],
+        [
+          -36,
+          36
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "cliff_outer_s",
+      "label": "Outer corner S",
+      "role": "outer_corner",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          36,
+          18
+        ],
+        [
+          -36,
+          18
+        ],
+        [
+          0,
+          36
+        ]
+      ],
+      "size": [
+        146,
+        140
+      ],
+      "anchor": [
+        73,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -72,
+        -18,
+        72,
+        54
+      ],
+      "sockets": [
+        [
+          -72,
+          18
+        ],
+        [
+          -36,
+          0
+        ],
+        [
+          -36,
+          36
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          0,
+          54
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          36,
+          36
+        ],
+        [
+          72,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "cliff_inner_s",
+      "label": "Inner corner S",
+      "role": "inner_corner",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          36,
+          18
+        ],
+        [
+          -36,
+          18
+        ]
+      ],
+      "size": [
+        146,
+        122
+      ],
+      "anchor": [
+        73,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -72,
+        -18,
+        72,
+        36
+      ],
+      "sockets": [
+        [
+          -72,
+          18
+        ],
+        [
+          -36,
+          0
+        ],
+        [
+          -36,
+          36
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          36,
+          36
+        ],
+        [
+          72,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "cliff_outer_w",
+      "label": "Outer corner W",
+      "role": "outer_corner",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          -36,
+          18
+        ],
+        [
+          -36,
+          -18
+        ],
+        [
+          -72,
+          0
+        ]
+      ],
+      "size": [
+        146,
+        140
+      ],
+      "anchor": [
+        109,
+        102
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -108,
+        -36,
+        36,
+        36
+      ],
+      "sockets": [
+        [
+          -108,
+          0
+        ],
+        [
+          -72,
+          -18
+        ],
+        [
+          -72,
+          18
+        ],
+        [
+          -36,
+          -36
+        ],
+        [
+          -36,
+          0
+        ],
+        [
+          -36,
+          36
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "cliff_inner_w",
+      "label": "Inner corner W",
+      "role": "inner_corner",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          -36,
+          18
+        ],
+        [
+          -36,
+          -18
+        ]
+      ],
+      "size": [
+        110,
+        140
+      ],
+      "anchor": [
+        73,
+        102
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -72,
+        -36,
+        36,
+        36
+      ],
+      "sockets": [
+        [
+          -72,
+          -18
+        ],
+        [
+          -72,
+          18
+        ],
+        [
+          -36,
+          -36
+        ],
+        [
+          -36,
+          0
+        ],
+        [
+          -36,
+          36
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "cliff_outer_n",
+      "label": "Outer corner N",
+      "role": "outer_corner",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          -36,
+          -18
+        ],
+        [
+          36,
+          -18
+        ],
+        [
+          0,
+          -36
+        ]
+      ],
+      "size": [
+        146,
+        140
+      ],
+      "anchor": [
+        73,
+        120
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -72,
+        -54,
+        72,
+        18
+      ],
+      "sockets": [
+        [
+          -72,
+          -18
+        ],
+        [
+          -36,
+          -36
+        ],
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -54
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          -36
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          72,
+          -18
+        ]
+      ]
+    },
+    {
+      "id": "cliff_inner_n",
+      "label": "Inner corner N",
+      "role": "inner_corner",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          -36,
+          -18
+        ],
+        [
+          36,
+          -18
+        ]
+      ],
+      "size": [
+        146,
+        122
+      ],
+      "anchor": [
+        73,
+        102
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -72,
+        -36,
+        72,
+        18
+      ],
+      "sockets": [
+        [
+          -72,
+          -18
+        ],
+        [
+          -36,
+          -36
+        ],
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          -36
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          72,
+          -18
+        ]
+      ]
+    },
+    {
+      "id": "cliff_outer_e",
+      "label": "Outer corner E",
+      "role": "outer_corner",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          36,
+          -18
+        ],
+        [
+          36,
+          18
+        ],
+        [
+          72,
+          0
+        ]
+      ],
+      "size": [
+        146,
+        140
+      ],
+      "anchor": [
+        37,
+        102
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -36,
+        108,
+        36
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          -36
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          36,
+          36
+        ],
+        [
+          72,
+          -18
+        ],
+        [
+          72,
+          18
+        ],
+        [
+          108,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "cliff_inner_e",
+      "label": "Inner corner E",
+      "role": "inner_corner",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          36,
+          -18
+        ],
+        [
+          36,
+          18
+        ]
+      ],
+      "size": [
+        110,
+        140
+      ],
+      "anchor": [
+        37,
+        102
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -36,
+        72,
+        36
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          -36
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          36,
+          36
+        ],
+        [
+          72,
+          -18
+        ],
+        [
+          72,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "cliff_end_se",
+      "label": "Cliff end cap SE",
+      "role": "end_cap",
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "size": [
+        74,
+        104
+      ],
+      "anchor": [
+        37,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -18,
+        36,
+        18
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "cliff_end_sw",
+      "label": "Cliff end cap SW",
+      "role": "end_cap",
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "size": [
+        74,
+        104
+      ],
+      "anchor": [
+        37,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -18,
+        36,
+        18
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "cliff_stair_join_se",
+      "label": "Stair mouth join SE",
+      "role": "stair_join",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          36,
+          18
+        ]
+      ],
+      "size": [
+        110,
+        122
+      ],
+      "anchor": [
+        37,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -18,
+        72,
+        36
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          36,
+          36
+        ],
+        [
+          72,
+          18
+        ]
+      ]
+    },
+    {
+      "id": "cliff_stair_join_sw",
+      "label": "Stair mouth join SW",
+      "role": "stair_join",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          -36,
+          18
+        ]
+      ],
+      "size": [
+        110,
+        122
+      ],
+      "anchor": [
+        73,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -72,
+        -18,
+        36,
+        36
+      ],
+      "sockets": [
+        [
+          -72,
+          18
+        ],
+        [
+          -36,
+          0
+        ],
+        [
+          -36,
+          36
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "cliff_upper_river",
+      "label": "Elevated river",
+      "role": "river",
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "size": [
+        74,
+        104
+      ],
+      "anchor": [
+        37,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -18,
+        36,
+        18
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ]
+      ],
+      "water": true
+    },
+    {
+      "id": "cliff_waterfall_lip",
+      "label": "Waterfall opening / upper river lip",
+      "role": "waterfall_lip",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          36,
+          18
+        ]
+      ],
+      "size": [
+        110,
+        122
+      ],
+      "anchor": [
+        37,
+        84
+      ],
+      "rise": 66,
+      "collision": {
+        "mode": "exposed boundary edges only",
+        "layer": 64,
+        "thickness": 6,
+        "interior_edges": "removed",
+        "stairs": "open head edges; blocked sides"
+      },
+      "footprint_bounds": [
+        -36,
+        -18,
+        72,
+        36
+      ],
+      "sockets": [
+        [
+          -36,
+          0
+        ],
+        [
+          0,
+          -18
+        ],
+        [
+          0,
+          18
+        ],
+        [
+          36,
+          0
+        ],
+        [
+          36,
+          36
+        ],
+        [
+          72,
+          18
+        ]
+      ],
+      "water": true,
+      "fall_socket": [
+        0,
+        18
+      ],
+      "cascade_crop": [
+        40,
+        52,
+        56,
+        96
+      ]
+    }
+  ],
+  "rules": [
+    "Cells are ground-plane 72x36 diamonds; surfaces draw 66px above ground.",
+    "Shared cells and interior faces are removed deterministically. Exposed edges form collision rims.",
+    "Inner corners are real concave three-cell footprints; outer corners are four-cell turns.",
+    "SE/SW staircase wrappers retain exact approved art and open two consecutive boundary edges.",
+    "Cascade is separate from lip, with native 56x96 frames / 66px rise; no stretching; legacy waterfall defaults unchanged."
+  ]
+}
