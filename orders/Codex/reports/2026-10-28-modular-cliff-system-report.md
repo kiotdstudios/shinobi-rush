@@ -3,8 +3,8 @@
 - Agent: Codex
 - Order: `orders/Aki/2026-10-26-blightwood-modular-cliff-kit.md`, explicitly reassigned by the owner in full.
 - Date: 2026-10-28
-- Final status: REVIEW — implementation and pre-commit acceptance checks pass; reviewed integration/live verification pending.
-- Commit / PR: Not committed yet; tested delivery on `codex/modular-cliff-system`.
+- Final status: DONE — functional browser editor/gameplay delivery merged, deployed and verified on the exact canonical runtime.
+- Commit / PR: implementation `aa0deefb145257a68ad2bbf9b7f5623f2ff79d5d`; [PR254](https://github.com/kiotdstudios/shinobi-rush/pull/254), merged runtime `8f1f914ce3aa011930b26063508ca76dee461989`.
 - Base: main `c829538a64d8f5c2dcfea1552bb948a6519fd078`. Refetched main; no new upstream commits during implementation.
 
 ## Work completed
@@ -58,7 +58,7 @@ Environment: Windows, Godot 4.7.2 stable console, bundled Python/Pillow and Node
 - Browser held-key feedback initially overshot the stair opening under software WebGL. A controlled-clock experiment stalled Godot and was stopped. Discrete real keyboard press/release events plus explicit upper-mouth alignment passed the full 22-check flow. Native traversal retains precise endpoint checks. The final harness removes a redundant lower-mouth height wait while keeping the separate lower-ground elevation/depth assertion.
 - Screenshot review revealed that the right-side Layers list enumerated only the static legacy catalog, omitting the new manifest-backed category. Added the new IDs to that list and a native/browser regression check. Final verification includes actual hide/show eye clicks.
 - Static project validation initially rejected nine historical/current temporary `.gd` test helpers hidden by `build/.gdignore`. Preserved them outside the Godot project, then validation passed without errors or warnings. No tracked gameplay file was removed.
-- First full-suite run reported 5,127 passing assertions but correctly failed its engine-error scan: the new layer test accessed `shell.layer_rows` while booted in gameplay mode, where `shell` is null. Corrected the assertion to check the shared layer registry; actual panel construction/eye clicks remain covered in the browser. Focused rerun passed all 57 checks. Full suite rerun required before commit.
+- First full-suite run reported 5,127 passing assertions but correctly failed its engine-error scan: the new layer test accessed `shell.layer_rows` while booted in gameplay mode, where `shell` is null. Corrected the assertion to check the shared layer registry; actual panel construction/eye clicks remain covered in the browser. Focused rerun passed all 57 checks. The final full rerun passed 5,130 assertions with zero failures/engine errors before commit.
 - Recording precise browser input introduced extra latency and oscillation around the stair head. Separated recording into `cliff-kit-preview.mjs`; the final functional probe uses discrete real input without recording. Upper/lower mouth waypoints allow 10/12-pixel positioning tolerance within the 72-pixel stair width, while full-platform 66-pixel height and lower-ground zero height/depth remain required. The precise native physical endpoint tests remain unchanged. Final functional probe passed all 26 checks.
 - Waterfall first-fit showed an oversized/floating source mouth. Re-cut the existing falling column, aligned the diagonal lip and basin, and fixed sorting without changing legacy waterfall instances.
 
@@ -68,8 +68,24 @@ None required to finish. Missing desktop screenshots can be compared later if su
 
 ## Outstanding work / next steps
 
-Pre-commit implementation, browser, full native, resources, repository checks, normal/half-speed previews and screenshot review are complete. Commit tested implementation, open reviewed PR, pass required CI, integrate through the normal workflow, verify deploy and smoke-postdeploy, then run the browser probe on the exact canonical merged build. Update this report with results and links before marking DONE.
+None for functional delivery. The kit supports one 66px tier matching the approved stairs; stacked elevation tiers are outside this order. Completion evidence is a report-only follow-up.
 
 ## Live deployment
 
-Pending; no live-delivery claim yet.
+PR254 passed repository checks, tooling/self-tests, the complete browser regression (controls/smoke/debug-log), native/resource/export checks, pre-deploy smoke and `godot-ci-gate`. CI logs confirm 5,130 passing assertions. No unresolved review threads. Normal squash integration used the expected head SHA; no protections or checks were bypassed. `git diff --exit-code aa0deefb145257a68ad2bbf9b7f5623f2ff79d5d origin/main` passed: integration introduced no tree changes.
+
+- PR engine gate: https://github.com/kiotdstudios/shinobi-rush/actions/runs/40739973578
+- PR full browser regression: https://github.com/kiotdstudios/shinobi-rush/actions/runs/40739973646
+- Main pipeline: https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337484
+
+Main pipeline completed successfully, including engine tests/export, pre-deploy smoke, GitHub Pages deployment, post-deploy live smoke and godot-ci-gate. Main CI logs independently confirm 5,130 passed / zero failed. Repository and tooling/self-test checks also passed.
+
+Ran `node scripts/ci/smoke/cliff-kit-probe.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 8f1f914ce3aa011930b26063508ca76dee461989 --out-dir build/cliff-kit/live`: **27 passed, zero engine/browser errors**. The first assertion checked the exact deployed commit; all real gameplay/editor operations were repeated on that build. Verified both stair climbs/descents, upper-river chakra, blocked lower passage, waterfall geometry/timing, layer hide/show, catalog placement, drag, erase, history, file save/reload and the actual edited-map Playtest popup. Normal saved-world storage remained unchanged.
+
+Evidence: `docs/visuals/cliff-kit/deployment-checks.json`, `live-result.json`, `live-editor.png`, `live-overview.png`. Live test UTC: 2026-10-28T19:35:07.011Z.
+
+Live demo: https://kiotdstudios.github.io/shinobi-rush/?cliffs=review&editor=1&v=8f1f914c
+
+Live editor: https://kiotdstudios.github.io/shinobi-rush/?cliffs=review&map_editor=1&v=8f1f914c
+
+Report-only follow-up — **Live deployment: not applicable**. This update changes only order/report documentation and captured evidence; the runtime delivery above is already deployed and verified.

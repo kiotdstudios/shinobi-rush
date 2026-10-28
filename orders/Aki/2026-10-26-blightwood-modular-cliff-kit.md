@@ -1,6 +1,6 @@
 # Aki Order — Blightwood Modular Cliff Kit + Waterfall Integration
 
-**Status:** REVIEW — Codex completed art, engineering and pre-commit testing; PR integration/live verification pending.
+**Status:** DONE — Codex completed the full kit, browser editor integration, reviewed deployment and exact canonical live verification.
 **Owner:** Codex (explicit owner reassignment; complete engineering and art scope)
 **Priority:** High — first-area world building
 
@@ -79,4 +79,4 @@ Keep native pixel art with transparent backgrounds, exact nearest-neighbor rende
 Codex owns this entire implementation on `codex/modular-cliff-system`, based on main `c829538a`. Terrain auto-blending PR245/251 and evidence PR253 are already merged; preserve their floor ownership/retile behavior. Isolate cliff geometry/catalog/river alignment and avoid changing AutoTile/TerrainBlend algorithms. Preserve all legacy ids and layouts. The two named desktop PNGs are absent from available paths; reference-location question sent, committed source cliff/stair art inspected. No claim to have inspected missing files.
 
 ## Tested delivery — 2026-10-28
-22 editor entries / 19 native module assets; 134-cell demo; both original stair orientations and IDs supported. Full Godot suite: 5,130 passed, zero failures/engine errors. Final browser/editor probe: 26 passed, zero errors. Resource validation: 442 scripts / 30 scenes / 2 resources, zero failures. Native art/source-hash validator passes. See [Codex report](../Codex/reports/2026-10-28-modular-cliff-system-report.md) and [kit instructions/evidence](../../docs/visuals/cliff-kit/README.md). Normal and half-speed runtime videos/GIFs included. Await normal reviewed integration and exact canonical live verification before DONE.
+22 editor entries / 19 native module assets; 134-cell demo; both original stair orientations and IDs supported. Full Godot suite: 5,130 passed, zero failures/engine errors. Final browser/editor probe: 26 passed, zero errors. Resource validation: 442 scripts / 30 scenes / 2 resources, zero failures. Native art/source-hash validator passes. See [Codex report](../Codex/reports/2026-10-28-modular-cliff-system-report.md) and [kit instructions/evidence](../../docs/visuals/cliff-kit/README.md). Normal and half-speed runtime videos/GIFs included. Merged [PR254](https://github.com/kiotdstudios/shinobi-rush/pull/254), runtime `8f1f914ce3aa011930b26063508ca76dee461989`. Main deploy/post-deploy smoke/gate passed. Exact canonical live browser/editor probe: 27 passed, zero errors. See the report and live evidence for full verification.

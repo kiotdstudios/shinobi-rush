@@ -1,0 +1,61 @@
+{
+  "runtime_sha": "8f1f914ce3aa011930b26063508ca76dee461989",
+  "runtime_pr": 254,
+  "main_pipeline": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337484",
+  "checks": [
+    {
+      "name": "godot-ci-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337484/job/123023427507"
+    },
+    {
+      "name": "Post-deploy live smoke test",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337484/job/123021056460"
+    },
+    {
+      "name": "Deploy to GitHub Pages (main only)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337484/job/123019803719"
+    },
+    {
+      "name": "Pre-deploy browser smoke test",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337484/job/123017690983"
+    },
+    {
+      "name": "Import, validate, test and export (Web)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337484/job/123011301874"
+    },
+    {
+      "name": "Self-test - positive and negative cases (throwaway project, never deployed)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337445/job/123010767955"
+    },
+    {
+      "name": "Detect Godot project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337484/job/123010481794"
+    },
+    {
+      "name": "validate-orders-and-project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337613/job/123010481462"
+    },
+    {
+      "name": "Tooling lint and unit tests",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40743337445/job/123010474685"
+    }
+  ]
+}
