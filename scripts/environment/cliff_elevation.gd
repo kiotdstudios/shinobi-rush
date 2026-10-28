@@ -5,6 +5,9 @@ var mouth := Vector2(-50, 0)
 var top := Vector2(30, -40)
 var half_width := Vector2(72, 36)
 var height := 64.0
+var surface_only := false
+var modular := false
+var surfaces: Array[PackedVector2Array]=[]
 var landing := PackedVector2Array()
 var build_edges := true
 var edge_body: StaticBody2D
@@ -37,12 +40,14 @@ func stair_t(local: Vector2) -> float:
 	return (local - mouth).cross(half_width) / (top - mouth).cross(half_width)
 
 func in_stairs(local: Vector2) -> bool:
+	if surface_only:return false
 	var ext := (top - mouth).normalized() * 1.5
 	return Geometry2D.is_point_in_polygon(local, PackedVector2Array([mouth - half_width, mouth + half_width, top + half_width + ext, top - half_width + ext]))
 
 func elevation_at(local: Vector2) -> float:
 	if in_stairs(local):
 		return height * clampf(stair_t(local), 0.0, 1.0)
+	if contains_surface(local):return height
 	if landing.size() >= 3 and Geometry2D.is_point_in_polygon(local, landing):
 		return height
 	# Subpixel seam tolerance connects a catalog landing whose head edge was rounded.
@@ -51,6 +56,11 @@ func elevation_at(local: Vector2) -> float:
 		if not expanded.is_empty() and Geometry2D.is_point_in_polygon(local, expanded[0]):
 			return height
 	return 0.0
+
+func contains_surface(local: Vector2) -> bool:
+	for polygon in surfaces:
+		if Geometry2D.is_point_in_polygon(local,polygon):return true
+	return false
 
 func set_actor_level(actor: Node, _upper: bool, on_ramp: bool) -> void:
 	var id := actor.get_instance_id()

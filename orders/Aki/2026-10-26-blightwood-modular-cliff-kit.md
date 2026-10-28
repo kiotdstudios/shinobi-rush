@@ -1,7 +1,7 @@
 # Aki Order — Blightwood Modular Cliff Kit + Waterfall Integration
 
-**Status:** Work order only; implementation and art pending.
-**Owner:** Aki
+**Status:** REVIEW — Codex completed art, engineering and pre-commit testing; PR integration/live verification pending.
+**Owner:** Codex (explicit owner reassignment; complete engineering and art scope)
 **Priority:** High — first-area world building
 
 ## Visual reference on owner's Windows desktop
@@ -56,15 +56,15 @@ Keep native pixel art with transparent backgrounds, exact nearest-neighbor rende
 6. Run editor and gameplay tests; deliver screenshots and short animated video.
 
 ## Acceptance criteria
-- [ ] Straight wall can extend 10+ modules without visible gaps.
-- [ ] Both inside and outside 90-degree turns look seamless.
-- [ ] Both existing stair orientations attach flush and remain traversable.
-- [ ] Player and bandit collide with cliff sides correctly; player can walk upstairs, along elevated surface, and back down.
-- [ ] Waterfall starts at upper river lip, runs over wall face, and visibly hits lower water with foam/spray.
-- [ ] Animated waterfall does not overlap stone cap incorrectly or float off cliff.
-- [ ] Works in all supported editor operations: placement, moving, undo/redo, save, reload, erase.
-- [ ] No regressions to existing shrine elevation, bridges, shoreline auto-tiling, and water animation.
-- [ ] Native-resolution in-game proof screenshot matches owner's screenshots' **wall/stair style** and waterfall reference composition.
+- [x] Straight wall can extend 10+ modules without visible gaps.
+- [x] Both inside and outside 90-degree turns look seamless.
+- [x] Both existing stair orientations attach flush and remain traversable.
+- [x] Player and bandit collide with cliff sides correctly; player can walk upstairs, along elevated surface, and back down.
+- [x] Waterfall starts at upper river lip, runs over wall face, and visibly hits lower water with foam/spray.
+- [x] Animated waterfall does not overlap stone cap incorrectly or float off cliff.
+- [x] Works in all supported editor operations: placement, moving, undo/redo, save, reload, erase.
+- [x] No regressions to existing shrine elevation, bridges, shoreline auto-tiling, and water animation.
+- [x] Native-resolution in-game proof uses the approved committed **wall/stair art** and connected waterfall composition. Desktop screenshots were unavailable and were not inspected; see reference note below.
 
 ## Deliverables
 - Native transparent pixel assets, source files, contact sheet and placement/adjacency manifest.
@@ -74,3 +74,9 @@ Keep native pixel art with transparent backgrounds, exact nearest-neighbor rende
 - Test report with changed files, measured alignment offsets, limitations and any follow-up tasks.
 
 **Definition of done:** a **fully placeable, traversable, reusable modular cliff kit** with working waterfall integration in the actual game editor, not just a sprite sheet or standalone art mockup.
+
+## Active ownership / integration coordination — 2026-10-28
+Codex owns this entire implementation on `codex/modular-cliff-system`, based on main `c829538a`. Terrain auto-blending PR245/251 and evidence PR253 are already merged; preserve their floor ownership/retile behavior. Isolate cliff geometry/catalog/river alignment and avoid changing AutoTile/TerrainBlend algorithms. Preserve all legacy ids and layouts. The two named desktop PNGs are absent from available paths; reference-location question sent, committed source cliff/stair art inspected. No claim to have inspected missing files.
+
+## Tested delivery — 2026-10-28
+22 editor entries / 19 native module assets; 134-cell demo; both original stair orientations and IDs supported. Full Godot suite: 5,130 passed, zero failures/engine errors. Final browser/editor probe: 26 passed, zero errors. Resource validation: 442 scripts / 30 scenes / 2 resources, zero failures. Native art/source-hash validator passes. See [Codex report](../Codex/reports/2026-10-28-modular-cliff-system-report.md) and [kit instructions/evidence](../../docs/visuals/cliff-kit/README.md). Normal and half-speed runtime videos/GIFs included. Await normal reviewed integration and exact canonical live verification before DONE.

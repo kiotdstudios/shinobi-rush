@@ -142,6 +142,20 @@ static func update_actor(actor: Node2D, delta: float) -> void:
 			var lp := (z as Node2D).to_local(actor.global_position)
 			var local_height: float = z.elevation_at(lp)
 			z.set_actor_level(actor, local_height > 0.0 and e >= z.height * BOARD_AT, local_height > 0.0)
+	# Modular top surfaces use per-actor depth, rather than dropping all walls when one actor climbs.
+	var on_modular := false
+	for z in terrain_zones:
+		if is_instance_valid(z) and z.is_inside_tree() and bool(z.get("modular")):
+			on_modular = on_modular or (z.elevation_at(z.to_local(actor.global_position))>0.0 and e>=z.height*BOARD_AT)
+	var figure := actor.get_node_or_null("PlayerVisual") as Node2D
+	if figure==null:figure=actor.get_node_or_null("Visual") as Node2D
+	if figure != null:
+		if on_modular:
+			if not figure.has_meta("cliff_original_depth"):figure.set_meta("cliff_original_depth",figure.z_index)
+			figure.z_index=1
+		elif figure.has_meta("cliff_original_depth"):
+			figure.z_index=int(figure.get_meta("cliff_original_depth"))
+			figure.remove_meta("cliff_original_depth")
 
 
 ## How far in front of a stair mouth (in stair runs) a walker lines up before climbing.
@@ -172,9 +186,18 @@ static func _stair_ts(g: Dictionary, local: Vector2) -> Vector2:
 ## point, "direct": bool}: direct = steer straight at it (on or lined up with the stairs, where the grid nav has no
 ## say); not direct = path there with the nav (the line-up point in front of the mouth).
 static func climb_step(from: Vector2, to: Vector2) -> Dictionary:
+	var ordered: Array=[]
+	var modular: Array=[]
 	for z in zones + terrain_zones:
+		if z is CliffElevation and z.surface_only:continue
+		if z is CliffElevation and z.modular:modular.append(z)
+		else:ordered.append(z)
+	modular.sort_custom(func(a: CliffElevation,b: CliffElevation) -> bool:return _modular_route_cost(a,from,to)<_modular_route_cost(b,from,to))
+	ordered.append_array(modular)
+	for z in ordered:
 		if not is_instance_valid(z) or not (z as Node2D).is_inside_tree():
 			continue
+		if z is CliffElevation and z.surface_only:continue
 		var node := z as Node2D
 		var g := _stairs_of(node)
 		var a := node.to_local(from)
@@ -206,3 +229,9 @@ static func climb_step(from: Vector2, to: Vector2) -> Dictionary:
 			return {"target": line_up, "direct": true}
 		return {"target": to, "direct": true}
 	return {}
+
+static func _modular_route_cost(z: CliffElevation,from: Vector2,to: Vector2) -> float:
+	var local:=z.to_local(from)
+	if not z.in_stairs(local) and z.elevation_at(local)>0.0:
+		return from.distance_to(z.to_global(z.top))+to.distance_to(z.to_global(z.mouth))
+	return from.distance_to(z.to_global(z.mouth))+to.distance_to(z.to_global(z.top))

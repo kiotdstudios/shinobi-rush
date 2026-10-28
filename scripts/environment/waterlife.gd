@@ -58,13 +58,13 @@ func _process(delta: float) -> void:
 	if actor == null:return
 	# Water rule includes bridges. Suppress emissions in the air and during death/teleports.
 	var wet := actor.over_water and not actor.dying and actor.chakra > 0.0 and actor.get_state_name() not in ["JUMP","AIR_ATTACK"]
-	observe(actor.global_position, wet, delta)
+	observe(actor.global_position, wet, delta, actor.elevation)
 	_plant_scan += delta
 	if _plant_scan >= 1.0:
 		_plant_scan = 0.0
 		populate_plants()
 
-func observe(foot: Vector2, wet: bool, delta: float) -> void:
+func observe(foot: Vector2, wet: bool, delta: float, height: float=0.0) -> void:
 	var movement := foot - _last if _have_last else Vector2.ZERO
 	_last = foot
 	_have_last = true
@@ -73,7 +73,7 @@ func observe(foot: Vector2, wet: bool, delta: float) -> void:
 		aura[i].visible = wet
 		var across := Vector2(6,1) if absf(movement.x) < absf(movement.y) else Vector2(3,3)
 		var offset := across * (-1.0 if i == 0 else 1.0)
-		aura[i].global_position = (foot + offset + Vector2(0,-2)).round()
+		aura[i].global_position = (foot + offset + Vector2(0,-2-height)).round()
 		aura[i].frame = (int(clock * 24.0) + i * 7) % 16
 		aura[i].modulate.a = 0.85 if moving else 0.5
 	if not wet:
@@ -89,7 +89,8 @@ func observe(foot: Vector2, wet: bool, delta: float) -> void:
 			visits += 1
 			rolls += 1
 			if wins_roll(rng.randi_range(0,RARITY-1)):
-				spawn_frog(destination.global_position)
+				var visitor:=spawn_frog(destination.global_position)
+				visitor.z_index=destination.z_index
 	dry_time = 0.0
 	if not moving:
 		_stride = 0.0
@@ -99,19 +100,20 @@ func observe(foot: Vector2, wet: bool, delta: float) -> void:
 		_stride = fmod(_stride,32.0)
 		_foot = 1 - _foot
 		var side := Vector2(-movement.y,movement.x).normalized() * (4.0 if _foot == 0 else -4.0)
-		emit_splash((foot + side).round(),0.32,0.72)
+		emit_splash((foot + side).round(),0.32,0.72,height)
 
 static func wins_roll(value: int) -> bool:
 	return value == 0
 
-func emit_splash(foot: Vector2, effect_scale: float = 0.42, life: float = 0.72) -> void:
+func emit_splash(foot: Vector2, effect_scale: float = 0.42, life: float = 0.72, height: float=0.0, depth: int=0) -> void:
 	var slot := emissions % POOL_SIZE
 	emissions += 1
 	pool[slot]["age"] = 0.0
 	pool[slot]["life"] = life
 	pool[slot]["scale"] = effect_scale
 	var sprite: Sprite2D = pool[slot]["sprite"]
-	sprite.global_position = foot
+	sprite.global_position = foot-Vector2(0,height)
+	sprite.z_index=1 if height>0.0 else depth
 	sprite.scale = Vector2.ONE * effect_scale
 	sprite.frame = 0
 	sprite.visible = true
@@ -148,34 +150,38 @@ func add_plant(foot: Vector2, variant: int, phase: float = 0.0) -> Node2D:
 	plant.frame = clampi(variant,0,5)
 	plant.z_index = 0
 	add_child(plant)
-	plant.global_position = foot.round()
-	plant.set_meta("base",foot.round())
+	var height:=BlightwoodWater.modular_level_at(foot)
+	plant.z_index=1 if height>0.0 else 0
+	plant.global_position = (foot-Vector2(0,height)).round()
+	plant.set_meta("base",plant.global_position)
+	plant.set_meta("ground_foot",foot.round())
 	plant.set_meta("phase",phase)
 	plants.append(plant)
 	return plant
 
 func populate_plants() -> void:
 	for i in range(plants.size()-1,-1,-1):
-		if not BlightwoodWater.over_water(get_tree(),plants[i].global_position):
+		if not BlightwoodWater.over_water(get_tree(),plants[i].get_meta("ground_foot",plants[i].global_position)):
 			plants[i].queue_free()
 			plants.remove_at(i)
 	if actor == null or plants.size() >= 12:return
 	for tile: Node in get_tree().get_nodes_in_group("open_water"):
-		var foot := (tile as Node2D).global_position
+		var foot := (tile as BlightwoodWater).ground_position()
 		if foot.distance_to(actor.global_position) > 450.0:continue
 		if not BlightwoodWater.over_water(get_tree(),foot):continue
 		var seed_value := absi(int(foot.x)*73856093 ^ int(foot.y)*19349663)
 		if seed_value % 7 != 0:continue
 		var exists := false
 		for plant in plants:
-			if (plant.get_meta("base") as Vector2).distance_to(foot)<65.0:exists=true;break
+			if (plant.get_meta("ground_foot",plant.get_meta("base")) as Vector2).distance_to(foot)<65.0:exists=true;break
 		if exists:continue
 		add_plant(foot,seed_value%6,float(seed_value%100)*0.1)
 		if plants.size()>=12:break
 
 func nearby_lily(foot: Vector2) -> Node2D:
 	for plant in plants:
-		if plant.frame < 3 and plant.global_position.distance_to(foot) <= 240.0 and BlightwoodWater.over_water(get_tree(),plant.global_position):return plant
+		var ground: Vector2=plant.get_meta("ground_foot",plant.global_position)
+		if plant.frame < 3 and ground.distance_to(foot) <= 240.0 and BlightwoodWater.over_water(get_tree(),ground):return plant
 	return null
 
 func spawn_frog(foot: Vector2) -> Node2D:

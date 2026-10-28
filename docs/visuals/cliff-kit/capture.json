@@ -1,0 +1,19 @@
+{
+  "source": "actual Godot Web runtime, cliff-kit-preview.mjs",
+  "native_capture": {
+    "begin": 40.136,
+    "end": 46.701,
+    "passed": true,
+    "errors": []
+  },
+  "segment_seconds": 5.8,
+  "normal_fps": 24,
+  "half_speed_multiplier": 2,
+  "gif_crop": [
+    300,
+    180,
+    640,
+    480
+  ],
+  "gif_fps": 12
+}

@@ -1,0 +1,28 @@
+// Capture presentation separately from precise input tests: recording adds software-WebGL latency.
+import {chromium} from 'playwright';
+import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';
+import {startStaticServer} from './lib/serve.mjs';
+const arg=n=>{const i=process.argv.indexOf('--'+n);return i<0?undefined:process.argv[i+1]};
+const out=arg('out-dir')||'build/cliff-kit/preview';mkdirSync(out,{recursive:true});
+const server=arg('serve-dir')?await startStaticServer(arg('serve-dir')):null;
+const browser=await chromium.launch({headless:true});
+const layout=arg('layout'),still=!!arg('still');
+const context=await browser.newContext({viewport:{width:1280,height:720},serviceWorkers:'block',...(!still?{recordVideo:{dir:out,size:{width:1280,height:720}}}:{})});
+if(layout)await context.addInitScript(value=>localStorage.setItem('shinobi-rush:cliff-demo-review:v1',value),readFileSync(layout,'utf8'));
+const page=await context.newPage(),errors=[];const started=Date.now();
+page.on('pageerror',e=>errors.push(String(e)));
+page.on('console',m=>{if(m.type()==='error'||/SCRIPT ERROR|^ERROR:/.test(m.text()))errors.push(m.text())});
+await page.goto((arg('url')||server.url)+(layout?'?cliffs=play&editor=1':'?cliffs=review&editor=1'));
+await page.waitForFunction(()=>window.__CLIFF_REVIEW__?.ready,null,{timeout:180000});
+const rect=await page.evaluate(index=>JSON.parse(window.__CLIFF_REVIEW__.buttons_json)[index],layout?2:6);
+await page.mouse.click(rect.x,rect.y);await page.waitForTimeout(500);
+const begin=(Date.now()-started)/1000;
+const before=await page.evaluate(()=>({...window.__CLIFF_REVIEW__}));
+await page.waitForTimeout(still?250:6500);
+const after=await page.evaluate(()=>({...window.__CLIFF_REVIEW__}));
+const end=(Date.now()-started)/1000;
+await page.screenshot({path:out+(layout?'/overview.png':'/waterfall.png')});
+const passed=errors.length===0&&(layout?after.cells>0:before.fall_frame!==after.fall_frame||before.foam_frame!==after.foam_frame);
+await context.close();await browser.close();if(server)await server.close();
+writeFileSync(out+'/capture.json',JSON.stringify({begin,end,passed,cells:after.cells,errors},null,2));
+console.log(JSON.stringify({begin,end,passed,cells:after.cells,errors}));process.exit(passed?0:1);

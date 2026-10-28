@@ -47,7 +47,7 @@ func advance(delta: float) -> void:
 			body.visible = false
 			if not splash_done:
 				splash_done = true
-				host.emit_splash(global_position+Vector2(48,8),0.8,1.0)
+				host.emit_splash(global_position+Vector2(48,8),0.8,1.0,0.0,z_index)
 	fly.visible = age < 2.15
 	fly.position = Vector2(28+sin(age*9.0)*3,-17+sin(age*13.0)*2).round()
 	fly.scale.y = 0.7 if int(age*30.0)%2==0 else 1.0
