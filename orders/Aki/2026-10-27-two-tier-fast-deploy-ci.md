@@ -2,7 +2,7 @@
 
 **Owner:** Aki
 **Priority:** P0 / developer iteration speed
-**Status:** REVIEW — implementation and integration audited; final canonical evidence will be recorded in the Codex completion report.
+**Status:** DONE — implementation delivered and audited; PRs #251/#245 integrated as 090d8688, main deploy/postdeploy and 28/28 canonical checks passed. See orders/Codex/reports/2026-10-28-open-pr-completion-report.md. CI speed aspiration remains a measured follow-up.
 
 ## Goal
 Reduce routine commit-to-live deployment time from ~25 minutes to a **measured target of 7–10 minutes**, while retaining essential pre-deployment browser verification and live post-deployment smoke verification. Keep the complete browser regression suite available and running nightly, on demand, and before major releases.

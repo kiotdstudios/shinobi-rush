@@ -3,7 +3,7 @@
 **Owner:** Codex (pixel art, asset registration and visual validation)
 **Priority:** P0
 **Depends on:** PR #245 (Aki's automatic multi-material terrain blending; currently under review).
-**Status:** REVIEW — implementation and integration audited; final canonical evidence will be recorded in the Codex completion report.
+**Status:** DONE — implementation delivered and audited; PRs #251/#245 integrated as 090d8688, main deploy/postdeploy and 28/28 canonical checks passed. See orders/Codex/reports/2026-10-28-open-pr-completion-report.md. CI speed aspiration remains a measured follow-up.
 
 ## Why this order exists
 Aki's PR #245 implements automatic flat-floor transitions across eight supported material pairs using PR #230 and PR #240 assets. Its implementation report explicitly identifies **missing Ground/Path ↔ Temple and Ground/Path ↔ Flat Rock art** and **visible seams where three materials meet at one vertex**. We need art and precise handoff for those cases. Do not recreate the 308 flat tiles in PR #240, PR #230 Ground/Path↔Dirt, or existing shoreline sets.

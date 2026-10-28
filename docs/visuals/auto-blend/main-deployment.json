@@ -1,0 +1,60 @@
+{
+  "runtime_sha": "090d86885031a2f03cca3c7b1f8ab760a172adca",
+  "workflow_url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40675571037",
+  "jobs": [
+    {
+      "id": 122772980769,
+      "name": "Detect Godot project",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-28T10:52:46Z",
+      "completed_at": "2026-10-28T10:53:06Z"
+    },
+    {
+      "id": 122773141432,
+      "name": "Import, validate, test and export (Web)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-28T10:53:08Z",
+      "completed_at": "2026-10-28T11:02:46Z"
+    },
+    {
+      "id": 122777413312,
+      "name": "Pre-deploy browser smoke test",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-28T11:02:49Z",
+      "completed_at": "2026-10-28T11:05:36Z"
+    },
+    {
+      "id": 122778692599,
+      "name": "Deploy to GitHub Pages (main only)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-28T11:05:40Z",
+      "completed_at": "2026-10-28T11:06:17Z"
+    },
+    {
+      "id": 122778995145,
+      "name": "Post-deploy live smoke test",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-28T11:06:20Z",
+      "completed_at": "2026-10-28T11:08:17Z"
+    },
+    {
+      "id": 122779862796,
+      "name": "godot-ci-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-28T11:08:20Z",
+      "completed_at": "2026-10-28T11:08:39Z"
+    }
+  ],
+  "canonical_url": "https://kiotdstudios.github.io/shinobi-rush/?autoblend=review&editor=1",
+  "probe_result": "live-gameplay/result.json",
+  "checks": 28,
+  "passed": 28,
+  "errors": 0,
+  "utc": "2026-10-28T11:08:08.105Z"
+}

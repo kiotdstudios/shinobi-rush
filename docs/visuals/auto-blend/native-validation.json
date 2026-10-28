@@ -1,0 +1,33 @@
+{
+  "godot": "4.7.2",
+  "implementation_head": "51b7a838fdb54f76d19546941f196e7516ffe900",
+  "integrated_main": "090d86885031a2f03cca3c7b1f8ab760a172adca",
+  "native": {
+    "passed": 5073,
+    "failed": 0,
+    "local_log": "build/finish-prs/tests-pushed/tests-builtin.log",
+    "child_ci_job": 122761762286,
+    "main_ci_job": 122773141432
+  },
+  "focused_lab": {
+    "passed": 18,
+    "failed": 0
+  },
+  "resource_validation": {
+    "scripts": 438,
+    "scenes": 30,
+    "resources": 2,
+    "failures": 0
+  },
+  "local_browser": {
+    "passed": 27,
+    "failed": 0,
+    "result": "gameplay/result.json"
+  },
+  "orders_validator": "PASS",
+  "sprite_manifests": {
+    "checked": 1,
+    "errors": 0
+  },
+  "whitespace": "PASS"
+}

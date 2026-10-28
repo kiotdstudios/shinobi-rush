@@ -1,7 +1,7 @@
 # Finish open PRs 238 / 244 / 245 / 247 / 251
 
 - Agent: Codex, explicitly authorized by the owner to finish all five listed PRs, including their programming integration.
-- Status: REVIEW — local implementation and browser verification complete; remote checks and canonical delivery pending.
+- Status: DONE — all five requested PRs merged, required CI and canonical live verification passed.
 - Branch: `codex/finish-terrain-prs`, based on PR251, merging latest main `4c79fda602afb2352cc7b92d6b2a6c54b74c623b` without dropping either test suite.
 - Dependency order: PR251 into PR245 first, then PR245 into main. The three specification branches are preserved as ancestors; their documents are archived with implementation/evidence references rather than passed off as code.
 
@@ -49,4 +49,16 @@ All ten three-material combinations are supported. **Four distinct materials wit
 
 Questions: None. Access blockers: None. No protections, required checks, permissions or deployment gates changed or bypassed.
 
-Implementation commit / updated PR heads / CI / live SHA: pending tested push and normal reviewed integration.
+Implementation commit: `c1cb268b`. Preserved spec ancestry in `55a04a3d`, `d75cc67d`, `51b7a838`. Pushed tested child head `51b7a838fdb54f76d19546941f196e7516ffe900`.
+
+PR251 merged normally into PR245 as `9e2cfa319bdf3a804b6cf040c7dbbeb8904a4422`. PR245 merged normally into main as `090d86885031a2f03cca3c7b1f8ab760a172adca`. All three original specification PRs #238/#244/#247 were marked merged by GitHub through preserved ancestry. The five requested PRs are merged; open PR count was zero immediately after integration.
+
+Final local full rerun and remote child native suite: **5,073 passed / zero failed**, including the new modifier-key regression. Child [Godot CI 40672219683](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40672219683) passed all required jobs; [full browser regression 40672219602](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40672219602) passed smoke, controls and debug probes. Parent [Godot CI 40674130652](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40674130652) passed before merge. The parent and merged main trees are identical to the tested child tree.
+
+Main [deployment 40675571037](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40675571037): **all jobs passed**, including deploy, smoke-postdeploy and godot-ci-gate. Main native suite also reports **5,073/0**.
+
+Canonical live verification at **2026-10-28 11:08:08 UTC (07:08:08 America/New_York)**: `https://kiotdstudios.github.io/shinobi-rush/?autoblend=review&editor=1`, build-info exact SHA `090d86885031a2f03cca3c7b1f8ab760a172adca`; **28/28 actual Chromium checks**, zero engine/browser errors. All twenty brush layouts have zero missing or conflicting corners; exact save/reload and undo/redo, real movement, pointer painting, keyboard undo/redo and black-editor painting pass. Screenshots visually inspected; see `docs/visuals/auto-blend/live-gameplay/result.json`, `native-validation.json` and `main-deployment.json`.
+
+Follow-up evidence commit: documentation, screenshots and order statuses only. **Live deployment: not applicable** to that documentation-only commit. No runtime source, production art, authored map or workflow changes; the verified runtime deployment above remains the delivery evidence. No additional runtime retesting is required solely for this evidence commit.
+
+Remaining issues: four-material diamonds and the CI speed aspiration are documented above, not claimed complete. No blockers or unresolved review threads. All requested implementation work is complete.
