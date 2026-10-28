@@ -399,7 +399,10 @@ func _has_floor(cell: Vector2) -> bool:
 func _bank_for(cell: Vector2, cur: String) -> String:
 	if bank_family != "":
 		return bank_family
-	if is_shore(cur):
+	# In blend mode, the bank must follow the CURRENT neighbouring material.
+	# Keeping cur's previous shore family here leaves dirt banks after repainting
+	# their adjacent land as rock (or vice versa).
+	if not blend and is_shore(cur):
 		return shore_family_of(cur)
 	for d in [NW, NE, SW, SE, Vector2(0, -36), Vector2(0, 36), Vector2(72, 0), Vector2(-72, 0)]:
 		match terrain_at(cell + d):
@@ -415,4 +418,7 @@ func _bank_for(cell: Vector2, cur: String) -> String:
 				var id := id_at(cell + d)
 				if is_shore(id):
 					return shore_family_of(id)
+	# Retain the previous bank when the shoreline is temporarily isolated.
+	if is_shore(cur):
+		return shore_family_of(cur)
 	return "grass"
