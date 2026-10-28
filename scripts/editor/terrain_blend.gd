@@ -13,6 +13,8 @@ const BITS: Array[int] = [8, 4, 2, 1]  ## corner order everywhere: top, right, l
 ## family id -> [zero material, one material]. Manifest source: transitions.art.json / path-dirt.art.json.
 const FAMILIES := {
 	"path_dirt": ["ground", "dirt"],
+	"path_temple": ["temple", "ground"],
+	"path_rock": ["rock", "ground"],
 	"grass_path": ["ground", "grass"],
 	"grass_temple": ["temple", "grass"],
 	"dirt_temple": ["temple", "dirt"],
