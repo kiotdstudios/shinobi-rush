@@ -161,6 +161,8 @@ func raw_vertex_mat(v: Vector2) -> String:
 ## raw_vertex_mat(), except at a junction of 3+ materials: there the candidate that leaves every touching tile
 ## drawable with ONE two-material kit (<= 2 materials per tile, and a registered pair) wins, so the seam stays continuous.
 func vertex_mat(v: Vector2) -> String:
+	if blend:
+		return raw_vertex_mat(v)
 	var raw := raw_vertex_mat(v)
 	if raw == "":
 		return raw
@@ -315,6 +317,12 @@ func _retile_managed(cell: Vector2) -> void:
 	var own := mat_at(cell)
 	var res := TerrainBlend.resolve(own, corners_of(cell))
 	var want := ""
+	if res.has("junction"):
+		want = String(res.junction)
+		if want != cur and _lay(want, cell):
+			_map[cell] = want
+			changed += 1
+		return
 	if res.has("pure"):
 		var shown: String = res.pure
 		if TerrainBlend.pure_material(cur) == shown:
