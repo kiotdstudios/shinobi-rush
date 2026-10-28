@@ -2,7 +2,7 @@
 
 **Owner:** Aki
 **Priority:** P0 — first-map authoring
-**Status:** REVIEW — implementation and integration audited; final canonical evidence will be recorded in the Codex completion report.
+**Status:** DONE — implementation delivered and audited; PRs #251/#245 integrated as 090d8688, main deploy/postdeploy and 28/28 canonical checks passed. See orders/Codex/reports/2026-10-28-open-pr-completion-report.md. CI speed aspiration remains a measured follow-up.
 
 ## Mission
 Make the map editor automatically select the correct **16-corner-mask terrain transition tiles** when painting adjacent flat-floor materials. The map creator should paint **Grass, Brown Dirt, Ground/Path, Temple, and Flat Rock** naturally, with no manual search for corner/edge pieces. Retain manual artistic overrides. **Do not regenerate artwork.**
