@@ -1,0 +1,14 @@
+{
+  "native_summary": "SUMMARY: 4986 passed, 0 failed",
+  "native_log_sha256": "2fa7769580eebf3df0883f640573b472b2eac1900877d7634f5a50ef73d1e30e",
+  "new_art_checks": 101,
+  "resources": {
+    "scripts": 434,
+    "scenes": 30,
+    "resources": 2,
+    "failures": 0
+  },
+  "local_browser_checks": 15,
+  "combined_generator_idempotence_files": 456,
+  "authored_map_changed": false
+}

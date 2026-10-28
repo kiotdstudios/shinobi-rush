@@ -1,0 +1,9 @@
+{
+  "pair_tiles": 88,
+  "triples": 10,
+  "junction_tiles": 360,
+  "source_patterns": 6,
+  "exact_edge_checks": 26776,
+  "pair_checks": 1952,
+  "palette_and_alpha": true
+}
