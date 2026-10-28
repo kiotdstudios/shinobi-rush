@@ -103,13 +103,27 @@ func run(p_ck: Callable, root: Node) -> void:
 				all_ok = all_ok and not PlacedObjects.def_of(id2).is_empty()
 				var sig := TerrainBlend.signature_of(id2)
 				all_ok = all_ok and sig == corners
-	ck.call("blend: 8 families x 16 masks are all registered", reg_ok)
+	ck.call("blend: 10 families x 16 masks are all registered", reg_ok)
 	ck.call("blend: resolve() round-trips every family/mask for both polarities", all_ok)
-	ck.call("blend: 8 pairs have art, path<->temple and path<->rock do not", TerrainBlend.pair_family("grass", "dirt") != "" and TerrainBlend.pair_family("dirt", "grass") != "" and TerrainBlend.pair_family("ground", "temple") == "" and TerrainBlend.pair_family("ground", "rock") == "")
+	ck.call("blend: all 10 material pairs have art", TerrainBlend.pair_family("grass", "dirt") != "" and TerrainBlend.pair_family("dirt", "grass") != "" and TerrainBlend.pair_family("ground", "temple") == "path_temple" and TerrainBlend.pair_family("ground", "rock") == "path_rock")
 	ck.call("blend: bit convention bottom=1 left=2 right=4 top=8 (set corner = family 'one')", TerrainBlend.signature_of("grass_dirt_08_a") == ["grass", "dirt", "dirt", "dirt"] and TerrainBlend.signature_of("path_dirt_01_b") == ["ground", "ground", "ground", "dirt"] and TerrainBlend.signature_of("temple_rock_04_c") == ["rock", "temple", "rock", "rock"])
 	ck.call("blend: variants are deterministic", TerrainBlend.variant_for(Vector2(144, 72)) == TerrainBlend.variant_for(Vector2(144, 72)))
 	ck.call("blend: three materials never pick a missing tile", TerrainBlend.resolve("grass", ["grass", "dirt", "rock", "grass"]).has("family") and not PlacedObjects.def_of(TerrainBlend.tile_id(TerrainBlend.resolve("grass", ["grass", "dirt", "rock", "grass"]), Vector2.ZERO)).is_empty())
-	ck.call("blend: ground next to temple falls back to a pure tile (no art)", TerrainBlend.resolve("ground", ["ground", "temple", "temple", "ground"]).has("pure"))
+	ck.call("blend: ground next to temple uses path_temple", TerrainBlend.resolve("ground", ["ground", "temple", "temple", "ground"]).get("family", "") == "path_temple")
+
+	# Exact three-material junctions: all ten triples, each generated orientation.
+	var triples_ok := true
+	var triple_count := 0
+	for a in range(5):
+		for b in range(a + 1, 5):
+			for c in range(b + 1, 5):
+				var mats := [TerrainBlend.MATERIALS[a], TerrainBlend.MATERIALS[b], TerrainBlend.MATERIALS[c]]
+				for sig in [[mats[0], mats[0], mats[1], mats[2]], [mats[0], mats[1], mats[0], mats[2]], [mats[0], mats[1], mats[2], mats[0]]]:
+					var result := TerrainBlend.resolve(mats[0], sig)
+					var id: String = TerrainBlend.tile_id(result, Vector2.ZERO)
+					triples_ok = triples_ok and id.begins_with("junction_") and not PlacedObjects.def_of(id).is_empty() and TerrainBlend.signature_of(id) == sig
+					triple_count += 1
+	ck.call("blend: all ten triples resolve to exact registered junctions", triples_ok, "signatures=%d" % triple_count)
 
 	# ---- in the real builder
 	AncientShrineSection.enabled = false
@@ -127,7 +141,7 @@ func run(p_ck: Callable, root: Node) -> void:
 	var origin := PlacedObjects.lattice_center(arena.bounds.get_center())
 
 	# every pair: a stripe of B through a field of A is seam-free and fully tiled
-	var pairs := [["grass", "dirt"], ["grass", "ground"], ["ground", "dirt"], ["grass", "temple"], ["dirt", "temple"], ["grass", "rock"], ["dirt", "rock"], ["temple", "rock"]]
+	var pairs := [["grass", "dirt"], ["grass", "ground"], ["ground", "dirt"], ["grass", "temple"], ["dirt", "temple"], ["grass", "rock"], ["dirt", "rock"], ["temple", "rock"], ["ground", "temple"], ["ground", "rock"]]
 	for pr in pairs:
 		_fresh(placed)
 		var field := _block(origin, 7, 7)
