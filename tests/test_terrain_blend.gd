@@ -230,6 +230,21 @@ func run(p_ck: Callable, root: Node) -> void:
 	t5.unlock(locked)
 	ck.call("blend: unlock hands the tile back to auto-blend", not _tiler(placed).is_locked(locked))
 
+	# Moving a managed floor tile carries its owner and participates in undo/redo.
+	_fresh(placed)
+	var move_tiler := _tiler(placed)
+	var move_from: Vector2 = origin
+	var move_to: Vector2 = origin + SE * 3.0
+	move_tiler.apply([move_from], "dirt")
+	placed._changed(false)
+	var moving := placed.floor_tiles_in_cell(move_from)[0]
+	placed.move(moving, move_to)
+	ck.call("blend: move transfers terrain owner", not placed.cell_mat.has(move_from) and String(placed.cell_mat.get(move_to, "")) == "dirt")
+	placed.undo()
+	ck.call("blend: undo move restores terrain owner", String(placed.cell_mat.get(move_from, "")) == "dirt" and not placed.cell_mat.has(move_to))
+	placed.redo()
+	ck.call("blend: redo move transfers terrain owner again", not placed.cell_mat.has(move_from) and String(placed.cell_mat.get(move_to, "")) == "dirt")
+
 	# a hand-placed transition tile on a managed cell becomes a manual override
 	_fresh(placed)
 	var t6 := _tiler(placed)
