@@ -5,6 +5,9 @@ var enemy: Bandit
 
 func _ready() -> void:
 	var query := str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
+	if "autoblend=review" in query or "--auto-blend-review" in OS.get_cmdline_user_args():
+		var blend_review := load("res://scripts/art/auto_blend_review.gd").new() as Node
+		get_parent().add_child.call_deferred(blend_review)
 	if "junctions=review" in query or "--terrain-junctions-review" in OS.get_cmdline_user_args():
 		var junction_review := load("res://scripts/art/terrain_junction_review.gd").new() as Node
 		get_parent().add_child.call_deferred(junction_review)

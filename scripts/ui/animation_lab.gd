@@ -654,6 +654,9 @@ func flicker_demo(speed_scale: float = 1.0) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if player == null:
 		return
+	# Plain-key lab actions must not swallow editor shortcuts such as Ctrl+Z/Y.
+	if event is InputEventKey and (event.ctrl_pressed or event.meta_pressed or event.alt_pressed):
+		return
 	if event is InputEventMouseButton and event.pressed:
 		# Builder wheel input belongs to its scroll area, including when that area is at a limit.
 		var hovered := get_viewport().gui_get_hovered_control()

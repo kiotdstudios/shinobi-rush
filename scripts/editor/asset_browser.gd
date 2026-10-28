@@ -29,6 +29,14 @@ static func tab_of(category_name: String) -> String:
 		return "tiles"
 	if ENTITY_CATEGORIES.has(category_name):
 		return "entities"
+	# Newly registered terrain families belong with tiles without maintaining a
+	# second list of every art-kit category (including exact junction families).
+	for category_entry: Array in PlacedObjects.CATEGORIES:
+		if str(category_entry[0]) != category_name or category_entry[1].is_empty():
+			continue
+		var first_id: String = category_entry[1][0]
+		if PlacedObjects.is_floor_tile(first_id):
+			return "tiles"
 	return "objects"
 
 

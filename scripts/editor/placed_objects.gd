@@ -1053,6 +1053,10 @@ static func def_of(id: String) -> Dictionary:
 	return {}
 
 var arena: TrainingArena
+## Auto-blend ownership: floor-cell centre -> the material the owner painted there ("grass", "ground", "dirt", "temple",
+## "rock") or "lock" (hand-placed override, never retiled). Cells absent from here are unmanaged: legacy / hand art.
+var cell_mat: Dictionary = {}
+var _auto_paint := false
 var save_path := SAVE_PATH
 var autosave := true
 ## Each entry: {"id": String, "pos": Vector2, "nodes": Array[Node]}
@@ -1333,6 +1337,10 @@ func add(id: String, pos: Vector2, commit := true) -> Dictionary:
 	if arena == null or def_of(id).is_empty():
 		return {}
 	var def := def_of(id)
+	if not _auto_paint and not _replaying and is_floor_tile(id):
+		var mc := lattice_center(pos)
+		if cell_mat.has(mc) and cell_mat[mc] != "lock":
+			set_cell_mat(mc, "lock")  # a hand-placed tile on an auto-blended cell is a manual override: auto-blend leaves it alone
 	if def.kind == "spawn":
 		for o in objects:
 			if o.id == id:  # there is exactly one spawn: placing again moves it
@@ -1830,6 +1838,7 @@ func paint_cell(id: String, cell: Vector2) -> bool:
 	if not arena.bounds.encloses(Rect2(cell - Vector2(36, 18), Vector2(72, 36))):
 		return false
 	if is_floor_tile(id):
+		var manual_override := not _auto_paint and not _replaying and cell_mat.has(cell)
 		var old := floor_tiles_in_cell(cell)
 		for o in old:
 			if type_locked(o.id):
@@ -1838,6 +1847,8 @@ func paint_cell(id: String, cell: Vector2) -> bool:
 			return false
 		for o in old:
 			remove(o, false)
+		if manual_override:
+			set_cell_mat(cell,"lock")
 	else:
 		for o in objects:
 			if o.id == id and (o.pos as Vector2).distance_squared_to(cell) < 4.0:
@@ -1886,6 +1897,10 @@ func dedupe_floor() -> int:
 func remove(obj: Dictionary, commit := true) -> void:
 	if not objects.has(obj):
 		return
+	if not _auto_paint and not _replaying and is_floor_tile(str(obj.id)):
+		var cell := lattice_center(obj.pos as Vector2)
+		if floor_tiles_in_cell(cell).size()==1:
+			set_cell_mat(cell, "")
 	objects.erase(obj)
 	_record(["remove", str(obj.id), obj.pos])
 	var def := def_of(obj.id)
@@ -1906,6 +1921,18 @@ func remove(obj: Dictionary, commit := true) -> void:
 func move(obj: Dictionary, pos: Vector2, commit := true) -> void:
 	if not objects.has(obj):
 		return
+	# Keep auto-blend ownership attached to a moved floor tile, not its old lattice cell.
+	# Both updates are recorded as part of the same undo/redo gesture as the move.
+	var old_cell := lattice_center(obj.pos as Vector2)
+	var new_cell := lattice_center(pos)
+	if not _replaying and is_floor_tile(str(obj.id)) and old_cell != new_cell:
+		var owner := String(cell_mat.get(old_cell, ""))
+		if owner != "":
+			# Do not overwrite a destination cell's existing ownership. A moved tile
+			# entering an occupied cell becomes a pinned manual tile instead.
+			var occupied := not floor_tiles_in_cell(new_cell).is_empty()
+			set_cell_mat(old_cell, "")
+			set_cell_mat(new_cell, "lock" if occupied else owner)
 	_record(["move", str(obj.id), obj.pos, pos])
 	obj.pos = pos
 	var def := def_of(obj.id)
@@ -2031,6 +2058,8 @@ static func _wall_obstacles(def: Dictionary, pos: Vector2) -> Array:
 func clear_all(commit := true) -> void:
 	for o in objects.duplicate():
 		remove(o, false)
+	for cell: Vector2 in cell_mat.keys():
+		set_cell_mat(cell, "")
 	if commit:
 		_changed()
 
@@ -2038,7 +2067,12 @@ func clear_all(commit := true) -> void:
 func to_dict() -> Dictionary:
 	var items: Array = []
 	for o in objects:
-		items.append({"id": o.id, "x": snappedf(o.pos.x, 0.01), "y": snappedf(o.pos.y, 0.01)})
+		var entry := {"id": o.id, "x": snappedf(o.pos.x, 0.01), "y": snappedf(o.pos.y, 0.01)}
+		if not cell_mat.is_empty() and is_floor_tile(o.id):
+			var cm: String = String(cell_mat.get(lattice_center(o.pos as Vector2), ""))
+			if cm != "":
+				entry["mat"] = cm
+		items.append(entry)
 	return {"version": SAVE_VERSION, "shrine_section": shrine_section_applied, "blightwood_map": blightwood_map_applied, "items": items}
 
 
@@ -2119,6 +2153,9 @@ func load_dict(data: Dictionary) -> int:
 			continue
 		if not add(id, pos, false).is_empty():
 			made += 1
+			var saved_mat := str(item.get("mat", ""))
+			if saved_mat != "" and is_floor_tile(id) and (saved_mat == "lock" or saved_mat in TerrainBlend.MATERIALS):
+				cell_mat[lattice_center(pos)] = saved_mat
 	_recording = was_recording
 	clear_history()
 	link_stair_zones()
@@ -2400,6 +2437,22 @@ func can_redo() -> bool:
 	return not _redo.is_empty()
 
 
+## Record + set the owner material of one floor cell ("" = unmanaged). One undo step with the surrounding gesture.
+func set_cell_mat(cell: Vector2, mat: String) -> void:
+	var old := String(cell_mat.get(cell, ""))
+	if old == mat:
+		return
+	_put_mat(cell, mat)
+	_record(["mat", cell, old, mat])
+
+
+func _put_mat(cell: Vector2, mat: String) -> void:
+	if mat == "":
+		cell_mat.erase(cell)
+	else:
+		cell_mat[cell] = mat
+
+
 func _find_exact(id: String, pos: Vector2) -> Dictionary:
 	for i in range(objects.size() - 1, -1, -1):
 		var o := objects[i]
@@ -2428,6 +2481,8 @@ func undo() -> bool:
 				var o2 := _find_exact(op[1], op[3])
 				if not o2.is_empty():
 					move(o2, op[2], false)
+			"mat":
+				_put_mat(op[1], op[2])
 	_replaying = false
 	_redo.append(group)
 	_changed()
@@ -2451,6 +2506,8 @@ func redo() -> bool:
 				var o2 := _find_exact(op[1], op[2])
 				if not o2.is_empty():
 					move(o2, op[3], false)
+			"mat":
+				_put_mat(op[1], op[3])
 	_replaying = false
 	_undo.append(group)
 	_changed()

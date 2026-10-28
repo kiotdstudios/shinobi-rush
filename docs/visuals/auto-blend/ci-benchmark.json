@@ -1,0 +1,2657 @@
+{
+  "method": "successful main workflow run_started_at to final job completion, includes setup/queue gaps; p90 linear interpolation; not a hardware-controlled benchmark",
+  "stats": {
+    "baseline": {
+      "n": 3,
+      "median_seconds": 1804,
+      "p90_seconds": 1848
+    },
+    "fast": {
+      "n": 5,
+      "median_seconds": 820,
+      "p90_seconds": 944.6
+    }
+  },
+  "rows": [
+    {
+      "id": 40624435792,
+      "tier": "fast",
+      "sha": "4c79fda602afb2352cc7b92d6b2a6c54b74c623b",
+      "run_started_at": "2026-10-28T03:02:57Z",
+      "seconds": 926,
+      "jobs": [
+        {
+          "name": "Detect Godot project",
+          "conclusion": "success",
+          "seconds": 18,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 0
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 13
+            },
+            {
+              "name": "Check pins, workflow hygiene and doc pin markers",
+              "seconds": 0
+            },
+            {
+              "name": "Validate sprite manifests",
+              "seconds": 0
+            },
+            {
+              "name": "Discover Godot project at runtime",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Import, validate, test and export (Web)",
+          "conclusion": "success",
+          "seconds": 523,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 15
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Godot install cache",
+              "seconds": 3
+            },
+            {
+              "name": "Install pinned Godot and Web export templates",
+              "seconds": 0
+            },
+            {
+              "name": "Headless import",
+              "seconds": 41
+            },
+            {
+              "name": "Validate project settings and Web export preset",
+              "seconds": 1
+            },
+            {
+              "name": "Validate all scripts and scenes load",
+              "seconds": 5
+            },
+            {
+              "name": "Run GDScript tests (GUT or gdUnit4, if present)",
+              "seconds": 441
+            },
+            {
+              "name": "Export Web build (single-threaded, Compatibility renderer)",
+              "seconds": 6
+            },
+            {
+              "name": "Validate export and write build-info.json",
+              "seconds": 0
+            },
+            {
+              "name": "Upload web export (the exact bytes that get smoke-tested and deployed)",
+              "seconds": 4
+            },
+            {
+              "name": "Upload build evidence",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Godot install cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Pre-deploy browser smoke test",
+          "conclusion": "success",
+          "seconds": 146,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 12
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Download the web export built by the build job",
+              "seconds": 1
+            },
+            {
+              "name": "Verify export integrity against build-info.json",
+              "seconds": 5
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 5
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 1
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 2
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 12
+            },
+            {
+              "name": "Run browser smoke test (local static server, no COOP/COEP headers)",
+              "seconds": 102
+            },
+            {
+              "name": "Upload smoke-test evidence",
+              "seconds": 1
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 1
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Deploy to GitHub Pages (main only)",
+          "conclusion": "success",
+          "seconds": 35,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 3
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 11
+            },
+            {
+              "name": "Preflight - GitHub Pages is enabled for GitHub Actions deployments",
+              "seconds": 1
+            },
+            {
+              "name": "Download the smoke-tested web export",
+              "seconds": 3
+            },
+            {
+              "name": "Refuse anything that is not the smoke-tested game build of this commit",
+              "seconds": 3
+            },
+            {
+              "name": "Configure Pages",
+              "seconds": 0
+            },
+            {
+              "name": "Upload Pages artifact",
+              "seconds": 3
+            },
+            {
+              "name": "Deploy to GitHub Pages",
+              "seconds": 8
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Post-deploy live smoke test",
+          "conclusion": "success",
+          "seconds": 174,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 12
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 7
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 4
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 33
+            },
+            {
+              "name": "Run browser smoke test against the live URL (waits for this commit's build-info.json)",
+              "seconds": 110
+            },
+            {
+              "name": "Upload live smoke-test evidence (includes deploy-info.json)",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 1
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "godot-ci-gate",
+          "conclusion": "success",
+          "seconds": 14,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 11
+            },
+            {
+              "name": "Evaluate Godot CI gate",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40621591903,
+      "tier": "fast",
+      "sha": "7fa1a1677d22ad3b86031986c7ed46618ed8e556",
+      "run_started_at": "2026-10-28T02:33:02Z",
+      "seconds": 957,
+      "jobs": [
+        {
+          "name": "Detect Godot project",
+          "conclusion": "success",
+          "seconds": 18,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 12
+            },
+            {
+              "name": "Check pins, workflow hygiene and doc pin markers",
+              "seconds": 0
+            },
+            {
+              "name": "Validate sprite manifests",
+              "seconds": 0
+            },
+            {
+              "name": "Discover Godot project at runtime",
+              "seconds": 1
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Import, validate, test and export (Web)",
+          "conclusion": "success",
+          "seconds": 521,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 10
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Godot install cache",
+              "seconds": 1
+            },
+            {
+              "name": "Install pinned Godot and Web export templates",
+              "seconds": 0
+            },
+            {
+              "name": "Headless import",
+              "seconds": 26
+            },
+            {
+              "name": "Validate project settings and Web export preset",
+              "seconds": 0
+            },
+            {
+              "name": "Validate all scripts and scenes load",
+              "seconds": 6
+            },
+            {
+              "name": "Run GDScript tests (GUT or gdUnit4, if present)",
+              "seconds": 464
+            },
+            {
+              "name": "Export Web build (single-threaded, Compatibility renderer)",
+              "seconds": 8
+            },
+            {
+              "name": "Validate export and write build-info.json",
+              "seconds": 0
+            },
+            {
+              "name": "Upload web export (the exact bytes that get smoke-tested and deployed)",
+              "seconds": 3
+            },
+            {
+              "name": "Upload build evidence",
+              "seconds": 1
+            },
+            {
+              "name": "Post Restore Godot install cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Pre-deploy browser smoke test",
+          "conclusion": "success",
+          "seconds": 186,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 14
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Download the web export built by the build job",
+              "seconds": 4
+            },
+            {
+              "name": "Verify export integrity against build-info.json",
+              "seconds": 4
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 8
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 3
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 37
+            },
+            {
+              "name": "Run browser smoke test (local static server, no COOP/COEP headers)",
+              "seconds": 108
+            },
+            {
+              "name": "Upload smoke-test evidence",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Deploy to GitHub Pages (main only)",
+          "conclusion": "success",
+          "seconds": 34,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 3
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 11
+            },
+            {
+              "name": "Preflight - GitHub Pages is enabled for GitHub Actions deployments",
+              "seconds": 0
+            },
+            {
+              "name": "Download the smoke-tested web export",
+              "seconds": 2
+            },
+            {
+              "name": "Refuse anything that is not the smoke-tested game build of this commit",
+              "seconds": 5
+            },
+            {
+              "name": "Configure Pages",
+              "seconds": 0
+            },
+            {
+              "name": "Upload Pages artifact",
+              "seconds": 4
+            },
+            {
+              "name": "Deploy to GitHub Pages",
+              "seconds": 6
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Post-deploy live smoke test",
+          "conclusion": "success",
+          "seconds": 166,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 15
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 8
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 3
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 34
+            },
+            {
+              "name": "Run browser smoke test against the live URL (waits for this commit's build-info.json)",
+              "seconds": 98
+            },
+            {
+              "name": "Upload live smoke-test evidence (includes deploy-info.json)",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "godot-ci-gate",
+          "conclusion": "success",
+          "seconds": 15,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 0
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 11
+            },
+            {
+              "name": "Evaluate Godot CI gate",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40613332981,
+      "tier": "fast",
+      "sha": "7a4cf8b5523e2b43df2902840915ec25497fed99",
+      "run_started_at": "2026-10-28T01:12:05Z",
+      "seconds": 753,
+      "jobs": [
+        {
+          "name": "Import, validate, test and export (Web)",
+          "conclusion": "success",
+          "seconds": 420,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 9
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Godot install cache",
+              "seconds": 1
+            },
+            {
+              "name": "Install pinned Godot and Web export templates",
+              "seconds": 1
+            },
+            {
+              "name": "Headless import",
+              "seconds": 44
+            },
+            {
+              "name": "Validate project settings and Web export preset",
+              "seconds": 0
+            },
+            {
+              "name": "Validate all scripts and scenes load",
+              "seconds": 5
+            },
+            {
+              "name": "Run GDScript tests (GUT or gdUnit4, if present)",
+              "seconds": 343
+            },
+            {
+              "name": "Export Web build (single-threaded, Compatibility renderer)",
+              "seconds": 6
+            },
+            {
+              "name": "Validate export and write build-info.json",
+              "seconds": 0
+            },
+            {
+              "name": "Upload web export (the exact bytes that get smoke-tested and deployed)",
+              "seconds": 2
+            },
+            {
+              "name": "Upload build evidence",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Godot install cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Detect Godot project",
+          "conclusion": "success",
+          "seconds": 12,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 9
+            },
+            {
+              "name": "Check pins, workflow hygiene and doc pin markers",
+              "seconds": 0
+            },
+            {
+              "name": "Validate sprite manifests",
+              "seconds": 0
+            },
+            {
+              "name": "Discover Godot project at runtime",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Pre-deploy browser smoke test",
+          "conclusion": "success",
+          "seconds": 112,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 10
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Download the web export built by the build job",
+              "seconds": 2
+            },
+            {
+              "name": "Verify export integrity against build-info.json",
+              "seconds": 3
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 7
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 2
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 21
+            },
+            {
+              "name": "Run browser smoke test (local static server, no COOP/COEP headers)",
+              "seconds": 58
+            },
+            {
+              "name": "Upload smoke-test evidence",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Deploy to GitHub Pages (main only)",
+          "conclusion": "success",
+          "seconds": 43,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 12
+            },
+            {
+              "name": "Preflight - GitHub Pages is enabled for GitHub Actions deployments",
+              "seconds": 1
+            },
+            {
+              "name": "Download the smoke-tested web export",
+              "seconds": 2
+            },
+            {
+              "name": "Refuse anything that is not the smoke-tested game build of this commit",
+              "seconds": 5
+            },
+            {
+              "name": "Configure Pages",
+              "seconds": 0
+            },
+            {
+              "name": "Upload Pages artifact",
+              "seconds": 3
+            },
+            {
+              "name": "Deploy to GitHub Pages",
+              "seconds": 15
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Post-deploy live smoke test",
+          "conclusion": "success",
+          "seconds": 144,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 0
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 10
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 5
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 2
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 12
+            },
+            {
+              "name": "Run browser smoke test against the live URL (waits for this commit's build-info.json)",
+              "seconds": 110
+            },
+            {
+              "name": "Upload live smoke-test evidence (includes deploy-info.json)",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "godot-ci-gate",
+          "conclusion": "success",
+          "seconds": 20,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 0
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 16
+            },
+            {
+              "name": "Evaluate Godot CI gate",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40599315528,
+      "tier": "fast",
+      "sha": "28a46f182534322e0769cd3461744fdc9548b782",
+      "run_started_at": "2026-10-27T23:02:50Z",
+      "seconds": 799,
+      "jobs": [
+        {
+          "name": "Detect Godot project",
+          "conclusion": "success",
+          "seconds": 15,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 0
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 11
+            },
+            {
+              "name": "Check pins, workflow hygiene and doc pin markers",
+              "seconds": 0
+            },
+            {
+              "name": "Validate sprite manifests",
+              "seconds": 0
+            },
+            {
+              "name": "Discover Godot project at runtime",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Import, validate, test and export (Web)",
+          "conclusion": "success",
+          "seconds": 461,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 10
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Godot install cache",
+              "seconds": 1
+            },
+            {
+              "name": "Install pinned Godot and Web export templates",
+              "seconds": 0
+            },
+            {
+              "name": "Headless import",
+              "seconds": 34
+            },
+            {
+              "name": "Validate project settings and Web export preset",
+              "seconds": 0
+            },
+            {
+              "name": "Validate all scripts and scenes load",
+              "seconds": 7
+            },
+            {
+              "name": "Run GDScript tests (GUT or gdUnit4, if present)",
+              "seconds": 393
+            },
+            {
+              "name": "Export Web build (single-threaded, Compatibility renderer)",
+              "seconds": 8
+            },
+            {
+              "name": "Validate export and write build-info.json",
+              "seconds": 0
+            },
+            {
+              "name": "Upload web export (the exact bytes that get smoke-tested and deployed)",
+              "seconds": 3
+            },
+            {
+              "name": "Upload build evidence",
+              "seconds": 1
+            },
+            {
+              "name": "Post Restore Godot install cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Pre-deploy browser smoke test",
+          "conclusion": "success",
+          "seconds": 150,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 10
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Download the web export built by the build job",
+              "seconds": 2
+            },
+            {
+              "name": "Verify export integrity against build-info.json",
+              "seconds": 5
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 5
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 1
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 2
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 9
+            },
+            {
+              "name": "Run browser smoke test (local static server, no COOP/COEP headers)",
+              "seconds": 110
+            },
+            {
+              "name": "Upload smoke-test evidence",
+              "seconds": 1
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 1
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Deploy to GitHub Pages (main only)",
+          "conclusion": "success",
+          "seconds": 45,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 3
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 17
+            },
+            {
+              "name": "Preflight - GitHub Pages is enabled for GitHub Actions deployments",
+              "seconds": 3
+            },
+            {
+              "name": "Download the smoke-tested web export",
+              "seconds": 3
+            },
+            {
+              "name": "Refuse anything that is not the smoke-tested game build of this commit",
+              "seconds": 4
+            },
+            {
+              "name": "Configure Pages",
+              "seconds": 1
+            },
+            {
+              "name": "Upload Pages artifact",
+              "seconds": 4
+            },
+            {
+              "name": "Deploy to GitHub Pages",
+              "seconds": 7
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Post-deploy live smoke test",
+          "conclusion": "success",
+          "seconds": 101,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 9
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 5
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 1
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 2
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 12
+            },
+            {
+              "name": "Run browser smoke test against the live URL (waits for this commit's build-info.json)",
+              "seconds": 65
+            },
+            {
+              "name": "Upload live smoke-test evidence (includes deploy-info.json)",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "godot-ci-gate",
+          "conclusion": "success",
+          "seconds": 12,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 8
+            },
+            {
+              "name": "Evaluate Godot CI gate",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40595087133,
+      "tier": "fast",
+      "sha": "bf96f014dd10887cbed45b0f433c271d6db22740",
+      "run_started_at": "2026-10-27T22:28:29Z",
+      "seconds": 820,
+      "jobs": [
+        {
+          "name": "Detect Godot project",
+          "conclusion": "success",
+          "seconds": 13,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 8
+            },
+            {
+              "name": "Check pins, workflow hygiene and doc pin markers",
+              "seconds": 0
+            },
+            {
+              "name": "Validate sprite manifests",
+              "seconds": 0
+            },
+            {
+              "name": "Discover Godot project at runtime",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Import, validate, test and export (Web)",
+          "conclusion": "success",
+          "seconds": 454,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 10
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Godot install cache",
+              "seconds": 3
+            },
+            {
+              "name": "Install pinned Godot and Web export templates",
+              "seconds": 0
+            },
+            {
+              "name": "Headless import",
+              "seconds": 33
+            },
+            {
+              "name": "Validate project settings and Web export preset",
+              "seconds": 0
+            },
+            {
+              "name": "Validate all scripts and scenes load",
+              "seconds": 6
+            },
+            {
+              "name": "Run GDScript tests (GUT or gdUnit4, if present)",
+              "seconds": 383
+            },
+            {
+              "name": "Export Web build (single-threaded, Compatibility renderer)",
+              "seconds": 8
+            },
+            {
+              "name": "Validate export and write build-info.json",
+              "seconds": 0
+            },
+            {
+              "name": "Upload web export (the exact bytes that get smoke-tested and deployed)",
+              "seconds": 4
+            },
+            {
+              "name": "Upload build evidence",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Godot install cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Pre-deploy browser smoke test",
+          "conclusion": "success",
+          "seconds": 150,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 9
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Download the web export built by the build job",
+              "seconds": 2
+            },
+            {
+              "name": "Verify export integrity against build-info.json",
+              "seconds": 4
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 6
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 1
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 2
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 13
+            },
+            {
+              "name": "Run browser smoke test (local static server, no COOP/COEP headers)",
+              "seconds": 105
+            },
+            {
+              "name": "Upload smoke-test evidence",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Deploy to GitHub Pages (main only)",
+          "conclusion": "success",
+          "seconds": 33,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 3
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 9
+            },
+            {
+              "name": "Preflight - GitHub Pages is enabled for GitHub Actions deployments",
+              "seconds": 1
+            },
+            {
+              "name": "Download the smoke-tested web export",
+              "seconds": 3
+            },
+            {
+              "name": "Refuse anything that is not the smoke-tested game build of this commit",
+              "seconds": 4
+            },
+            {
+              "name": "Configure Pages",
+              "seconds": 0
+            },
+            {
+              "name": "Upload Pages artifact",
+              "seconds": 4
+            },
+            {
+              "name": "Deploy to GitHub Pages",
+              "seconds": 7
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Post-deploy live smoke test",
+          "conclusion": "success",
+          "seconds": 143,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 8
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 5
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 1
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 1
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 12
+            },
+            {
+              "name": "Run browser smoke test against the live URL (waits for this commit's build-info.json)",
+              "seconds": 110
+            },
+            {
+              "name": "Upload live smoke-test evidence (includes deploy-info.json)",
+              "seconds": 1
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 1
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "godot-ci-gate",
+          "conclusion": "success",
+          "seconds": 12,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 0
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 9
+            },
+            {
+              "name": "Evaluate Godot CI gate",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40540318653,
+      "tier": "baseline",
+      "sha": "bbf06b88c50b61c2e7b6486ef888e7a0830b37e7",
+      "run_started_at": "2026-10-27T16:22:46Z",
+      "seconds": 1804,
+      "jobs": [
+        {
+          "name": "Detect Godot project",
+          "conclusion": "success",
+          "seconds": 65,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 0
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 61
+            },
+            {
+              "name": "Check pins, workflow hygiene and doc pin markers",
+              "seconds": 0
+            },
+            {
+              "name": "Validate sprite manifests",
+              "seconds": 0
+            },
+            {
+              "name": "Discover Godot project at runtime",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Import, validate, test and export (Web)",
+          "conclusion": "success",
+          "seconds": 324,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 19
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Godot install cache",
+              "seconds": 2
+            },
+            {
+              "name": "Install pinned Godot and Web export templates",
+              "seconds": 1
+            },
+            {
+              "name": "Headless import",
+              "seconds": 15
+            },
+            {
+              "name": "Validate project settings and Web export preset",
+              "seconds": 0
+            },
+            {
+              "name": "Validate all scripts and scenes load",
+              "seconds": 4
+            },
+            {
+              "name": "Run GDScript tests (GUT or gdUnit4, if present)",
+              "seconds": 267
+            },
+            {
+              "name": "Export Web build (single-threaded, Compatibility renderer)",
+              "seconds": 5
+            },
+            {
+              "name": "Validate export and write build-info.json",
+              "seconds": 0
+            },
+            {
+              "name": "Upload web export (the exact bytes that get smoke-tested and deployed)",
+              "seconds": 4
+            },
+            {
+              "name": "Upload build evidence",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Godot install cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Pre-deploy browser smoke test",
+          "conclusion": "success",
+          "seconds": 1180,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 42
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Download the web export built by the build job",
+              "seconds": 6
+            },
+            {
+              "name": "Verify export integrity against build-info.json",
+              "seconds": 4
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 7
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 4
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 15
+            },
+            {
+              "name": "Run browser smoke test (local static server, no COOP/COEP headers)",
+              "seconds": 100
+            },
+            {
+              "name": "Run controls probe (walk, sprint and wall checks through window.__SHINOBI_STATE__)",
+              "seconds": 838
+            },
+            {
+              "name": "Run debug-log probe (opt-in ?debug=1 capture, export, privacy and flood checks; pre-deploy only)",
+              "seconds": 154
+            },
+            {
+              "name": "Upload smoke-test evidence",
+              "seconds": 3
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Deploy to GitHub Pages (main only)",
+          "conclusion": "success",
+          "seconds": 91,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 3
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 58
+            },
+            {
+              "name": "Preflight - GitHub Pages is enabled for GitHub Actions deployments",
+              "seconds": 1
+            },
+            {
+              "name": "Download the smoke-tested web export",
+              "seconds": 10
+            },
+            {
+              "name": "Refuse anything that is not the smoke-tested game build of this commit",
+              "seconds": 5
+            },
+            {
+              "name": "Configure Pages",
+              "seconds": 0
+            },
+            {
+              "name": "Upload Pages artifact",
+              "seconds": 4
+            },
+            {
+              "name": "Deploy to GitHub Pages",
+              "seconds": 7
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Post-deploy live smoke test",
+          "conclusion": "success",
+          "seconds": 108,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 19
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 1
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 8
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 2
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 11
+            },
+            {
+              "name": "Run browser smoke test against the live URL (waits for this commit's build-info.json)",
+              "seconds": 59
+            },
+            {
+              "name": "Upload live smoke-test evidence (includes deploy-info.json)",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "godot-ci-gate",
+          "conclusion": "success",
+          "seconds": 21,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 18
+            },
+            {
+              "name": "Evaluate Godot CI gate",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40524470044,
+      "tier": "baseline",
+      "sha": "0564d371394ac8b07854d6a09c726557701062fb",
+      "run_started_at": "2026-10-27T14:47:06Z",
+      "seconds": 1859,
+      "jobs": [
+        {
+          "name": "Detect Godot project",
+          "conclusion": "success",
+          "seconds": 34,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 28
+            },
+            {
+              "name": "Check pins, workflow hygiene and doc pin markers",
+              "seconds": 0
+            },
+            {
+              "name": "Validate sprite manifests",
+              "seconds": 0
+            },
+            {
+              "name": "Discover Godot project at runtime",
+              "seconds": 1
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Import, validate, test and export (Web)",
+          "conclusion": "success",
+          "seconds": 374,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 18
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Godot install cache",
+              "seconds": 3
+            },
+            {
+              "name": "Install pinned Godot and Web export templates",
+              "seconds": 0
+            },
+            {
+              "name": "Headless import",
+              "seconds": 25
+            },
+            {
+              "name": "Validate project settings and Web export preset",
+              "seconds": 1
+            },
+            {
+              "name": "Validate all scripts and scenes load",
+              "seconds": 6
+            },
+            {
+              "name": "Run GDScript tests (GUT or gdUnit4, if present)",
+              "seconds": 305
+            },
+            {
+              "name": "Export Web build (single-threaded, Compatibility renderer)",
+              "seconds": 7
+            },
+            {
+              "name": "Validate export and write build-info.json",
+              "seconds": 0
+            },
+            {
+              "name": "Upload web export (the exact bytes that get smoke-tested and deployed)",
+              "seconds": 3
+            },
+            {
+              "name": "Upload build evidence",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Godot install cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Pre-deploy browser smoke test",
+          "conclusion": "success",
+          "seconds": 1185,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 21
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Download the web export built by the build job",
+              "seconds": 10
+            },
+            {
+              "name": "Verify export integrity against build-info.json",
+              "seconds": 4
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 7
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 1
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 3
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 15
+            },
+            {
+              "name": "Run browser smoke test (local static server, no COOP/COEP headers)",
+              "seconds": 102
+            },
+            {
+              "name": "Run controls probe (walk, sprint and wall checks through window.__SHINOBI_STATE__)",
+              "seconds": 857
+            },
+            {
+              "name": "Run debug-log probe (opt-in ?debug=1 capture, export, privacy and flood checks; pre-deploy only)",
+              "seconds": 157
+            },
+            {
+              "name": "Upload smoke-test evidence",
+              "seconds": 3
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Deploy to GitHub Pages (main only)",
+          "conclusion": "success",
+          "seconds": 64,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 20
+            },
+            {
+              "name": "Preflight - GitHub Pages is enabled for GitHub Actions deployments",
+              "seconds": 1
+            },
+            {
+              "name": "Download the smoke-tested web export",
+              "seconds": 1
+            },
+            {
+              "name": "Refuse anything that is not the smoke-tested game build of this commit",
+              "seconds": 4
+            },
+            {
+              "name": "Configure Pages",
+              "seconds": 1
+            },
+            {
+              "name": "Upload Pages artifact",
+              "seconds": 3
+            },
+            {
+              "name": "Deploy to GitHub Pages",
+              "seconds": 29
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Post-deploy live smoke test",
+          "conclusion": "success",
+          "seconds": 145,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 18
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 5
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 1
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 1
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 12
+            },
+            {
+              "name": "Run browser smoke test against the live URL (waits for this commit's build-info.json)",
+              "seconds": 102
+            },
+            {
+              "name": "Upload live smoke-test evidence (includes deploy-info.json)",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "godot-ci-gate",
+          "conclusion": "success",
+          "seconds": 39,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 32
+            },
+            {
+              "name": "Evaluate Godot CI gate",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 40477062807,
+      "tier": "baseline",
+      "sha": "c4c336964e42e73a59b0b2984aa9aae57e4f15be",
+      "run_started_at": "2026-10-27T08:56:34Z",
+      "seconds": 1800,
+      "jobs": [
+        {
+          "name": "Detect Godot project",
+          "conclusion": "success",
+          "seconds": 23,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 0
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 19
+            },
+            {
+              "name": "Check pins, workflow hygiene and doc pin markers",
+              "seconds": 0
+            },
+            {
+              "name": "Validate sprite manifests",
+              "seconds": 0
+            },
+            {
+              "name": "Discover Godot project at runtime",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Import, validate, test and export (Web)",
+          "conclusion": "success",
+          "seconds": 355,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 19
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Godot install cache",
+              "seconds": 3
+            },
+            {
+              "name": "Install pinned Godot and Web export templates",
+              "seconds": 0
+            },
+            {
+              "name": "Headless import",
+              "seconds": 26
+            },
+            {
+              "name": "Validate project settings and Web export preset",
+              "seconds": 1
+            },
+            {
+              "name": "Validate all scripts and scenes load",
+              "seconds": 6
+            },
+            {
+              "name": "Run GDScript tests (GUT or gdUnit4, if present)",
+              "seconds": 282
+            },
+            {
+              "name": "Export Web build (single-threaded, Compatibility renderer)",
+              "seconds": 7
+            },
+            {
+              "name": "Validate export and write build-info.json",
+              "seconds": 1
+            },
+            {
+              "name": "Upload web export (the exact bytes that get smoke-tested and deployed)",
+              "seconds": 3
+            },
+            {
+              "name": "Upload build evidence",
+              "seconds": 2
+            },
+            {
+              "name": "Post Restore Godot install cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Pre-deploy browser smoke test",
+          "conclusion": "success",
+          "seconds": 1197,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 20
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Download the web export built by the build job",
+              "seconds": 3
+            },
+            {
+              "name": "Verify export integrity against build-info.json",
+              "seconds": 4
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 10
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 1
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 3
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 23
+            },
+            {
+              "name": "Run browser smoke test (local static server, no COOP/COEP headers)",
+              "seconds": 101
+            },
+            {
+              "name": "Run controls probe (walk, sprint and wall checks through window.__SHINOBI_STATE__)",
+              "seconds": 835
+            },
+            {
+              "name": "Run debug-log probe (opt-in ?debug=1 capture, export, privacy and flood checks; pre-deploy only)",
+              "seconds": 152
+            },
+            {
+              "name": "Upload smoke-test evidence",
+              "seconds": 3
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 1
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Deploy to GitHub Pages (main only)",
+          "conclusion": "success",
+          "seconds": 35,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 16
+            },
+            {
+              "name": "Preflight - GitHub Pages is enabled for GitHub Actions deployments",
+              "seconds": 1
+            },
+            {
+              "name": "Download the smoke-tested web export",
+              "seconds": 1
+            },
+            {
+              "name": "Refuse anything that is not the smoke-tested game build of this commit",
+              "seconds": 4
+            },
+            {
+              "name": "Configure Pages",
+              "seconds": 0
+            },
+            {
+              "name": "Upload Pages artifact",
+              "seconds": 3
+            },
+            {
+              "name": "Deploy to GitHub Pages",
+              "seconds": 7
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "Post-deploy live smoke test",
+          "conclusion": "success",
+          "seconds": 148,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 2
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 20
+            },
+            {
+              "name": "Prepare working directories",
+              "seconds": 0
+            },
+            {
+              "name": "Load pinned tool versions",
+              "seconds": 0
+            },
+            {
+              "name": "Set up Node.js (pinned)",
+              "seconds": 15
+            },
+            {
+              "name": "Install smoke-test dependencies (locked)",
+              "seconds": 0
+            },
+            {
+              "name": "Restore Playwright browser cache",
+              "seconds": 2
+            },
+            {
+              "name": "Install Chromium headless shell for Playwright",
+              "seconds": 14
+            },
+            {
+              "name": "Run browser smoke test against the live URL (waits for this commit's build-info.json)",
+              "seconds": 90
+            },
+            {
+              "name": "Upload live smoke-test evidence (includes deploy-info.json)",
+              "seconds": 1
+            },
+            {
+              "name": "Post Restore Playwright browser cache",
+              "seconds": 0
+            },
+            {
+              "name": "Post Set up Node.js (pinned)",
+              "seconds": 1
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        },
+        {
+          "name": "godot-ci-gate",
+          "conclusion": "success",
+          "seconds": 22,
+          "steps": [
+            {
+              "name": "Set up job",
+              "seconds": 1
+            },
+            {
+              "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 18
+            },
+            {
+              "name": "Evaluate Godot CI gate",
+              "seconds": 0
+            },
+            {
+              "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+              "seconds": 0
+            },
+            {
+              "name": "Complete job",
+              "seconds": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
