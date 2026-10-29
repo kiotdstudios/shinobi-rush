@@ -13,7 +13,7 @@ static func definition(id: String) -> Dictionary:
 	if _definitions.is_empty():
 		var data: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(DIR+"foliage.art.json"))
 		for item: Dictionary in data.items:
-			_definitions[item.id]={"kind":"foliage","label":item.label,"file":item.file,"size":Vector2(item.size[0],item.size[1]),"anchor":Vector2(item.anchor[0],item.anchor[1]),"pick":Vector2(item.pick_pixel[0],item.pick_pixel[1]),"lift":float(item.lift),"sort_dy":float(item.sort_dy),"hang":bool(item.hang),"footprint":Vector2(12,6)}
+			_definitions[item.id]={"kind":"foliage","label":item.label,"file":item.file,"size":Vector2(item.size[0],item.size[1]),"anchor":Vector2(item.anchor[0],item.anchor[1]),"pick":Vector2(item.pick_pixel[0],item.pick_pixel[1]),"lift":float(item.lift),"sort_dy":float(item.sort_dy),"hang":bool(item.hang),"sway_length":float(item.content_bounds[3]-item.content_bounds[1]),"footprint":Vector2(12,6)}
 	return _definitions.get(id,{})
 static func art(id: String) -> Texture2D:
 	return load(DIR+str(definition(id).file)) as Texture2D
@@ -30,6 +30,7 @@ func setup(id: String, at: Vector2) -> void:
 	wind.shader=load("res://shaders/blightwood_foliage.gdshader")
 	wind.set_shader_parameter("root_y",float(info.anchor.y))
 	wind.set_shader_parameter("hanging",bool(info.hang))
+	wind.set_shader_parameter("sway_length",float(info.sway_length))
 	wind.set_shader_parameter("amplitude",2.0 if bool(info.hang) else 1.3)
 	material=wind
 	advance(0.0)

@@ -2,7 +2,7 @@
 
 An editable composition based on the owner's forest waterfall reference, assembled from existing game assets. It is a starter section rather than a pixel-identical recreation of the concept image.
 
-Verified live on `9bf429cd29ef859918725549b73b325500ef8c6c`: [Open editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&v=9bf429cd) Â· [Play section](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&editor=1&v=9bf429cd). All 27 exact-build live checks passed with zero errors. [Live editor screenshot](live-editor.png) Â· [Live overview](live-overview.png) Â· [Live result](live-result.json) Â· [Deployment checks](deployment-checks.json) Â· [Native results](native-result.json).
+Verified live on `9bf429cd29ef859918725549b73b325500ef8c6c`: [Open editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&v=9bf429cd) · [Play section](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&editor=1&v=9bf429cd). All 27 exact-build live checks passed with zero errors. [Live editor screenshot](live-editor.png) · [Live overview](live-overview.png) · [Live result](live-result.json) · [Deployment checks](deployment-checks.json) · [Native results](native-result.json).
 
 ## Open and build
 

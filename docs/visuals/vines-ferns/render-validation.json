@@ -1,0 +1,44 @@
+[
+  {
+    "id": "blight_vine_01",
+    "changed_pixels": 168,
+    "root_pinned": true,
+    "palette_preserved": true,
+    "phases": 96
+  },
+  {
+    "id": "blight_vine_02",
+    "changed_pixels": 163,
+    "root_pinned": true,
+    "palette_preserved": true,
+    "phases": 96
+  },
+  {
+    "id": "blight_vine_03",
+    "changed_pixels": 256,
+    "root_pinned": true,
+    "palette_preserved": true,
+    "phases": 96
+  },
+  {
+    "id": "blight_fern_01",
+    "changed_pixels": 408,
+    "root_pinned": true,
+    "palette_preserved": true,
+    "phases": 96
+  },
+  {
+    "id": "blight_fern_02",
+    "changed_pixels": 319,
+    "root_pinned": true,
+    "palette_preserved": true,
+    "phases": 96
+  },
+  {
+    "id": "blight_fern_03",
+    "changed_pixels": 394,
+    "root_pinned": true,
+    "palette_preserved": true,
+    "phases": 96
+  }
+]

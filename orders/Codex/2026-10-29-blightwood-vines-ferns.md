@@ -1,4 +1,4 @@
-# ORDER â€” Blightwood hanging vines and fern clusters
+# ORDER — Blightwood hanging vines and fern clusters
 - Agent: Codex
 - Status: REVIEW
 - Owner: Codex; direct user request
