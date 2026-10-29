@@ -15,12 +15,18 @@ var open := false
 var tool := "select"  ## "select" | "erase" | "place" | "paint" | "pan"
 const BRUSHES: Array[int] = [1, 3, 5]
 var brush := 1  ## paint tool: the brush is a brush x brush block of floor cells
-const SHAPES: Array[String] = ["brush", "rect", "line"]
+const SHAPES: Array[String] = ["brush", "rect", "line", "fill"]
 const BANK_LABELS := {"": "AUTO", "grass": "GRASS", "dirt": "PATH", "brown": "BROWN DIRT", "rock": "ROCK"}
 const TERRAIN_COLORS := {"water": Color("#3aa0ff"), "grass": Color("#4fd25a"), "ground": Color("#b9824a"), "temple": Color("#b8b8c8"), "dirt": Color("#8a5a2b"), "rock": Color("#8c8f98"), "": Color("#ff4d4d")}
 var auto_terrain := "water"  ## terrain tool: "water" | "grass" | "ground" | "temple" | "" (clear floor)
 var bank_family := ""  ## terrain tool: "" follows the neighbouring land, else "grass" | "dirt" | "rock"
 var shape := "brush"  ## paint / terrain: "brush" (drag), "rect" (drag a box) or "line"
+var smart_terrain := false
+var smart_button: Button
+var family_dialog: ConfirmationDialog
+var family_choice: OptionButton
+var family_info: Label
+var _family_id := ""
 var auto_blend := true  ## terrain tool: neighbouring materials pick corner-mask transition tiles on their own
 var erase_autofix := true  ## erasing a floor tile re-picks the edges around the hole
 var selection: Array = []  ## box-selected objects (group move / copy / delete)
@@ -705,16 +711,21 @@ func paint_at(world: Vector2) -> bool:
 
 ## Lay the current brush (the terrain tool's auto-tiling, or the chosen floor piece) on `cells`. No commit.
 func _apply_cells(cells: Array) -> bool:
-	if tool == "terrain":
+	var smart_material := TerrainFamilyMatcher.material(place_id, placed.terrain_families) if smart_terrain and tool == "paint" else ""
+	if tool == "terrain" or smart_material != "":
 		if _auto == null:
 			_auto = AutoTile.new(placed, bank_family)
 		_auto.bank_family = bank_family
 		_auto.blend = auto_blend
-		return _auto.apply(cells, auto_terrain) > 0
+		return _auto.apply(cells, smart_material if smart_material != "" else auto_terrain) > 0
 	var any := false
 	for cell: Vector2 in cells:
 		if placed.paint_cell(place_id, cell):
 			any = true
+		if smart_terrain and PlacedObjects.is_floor_tile(place_id) and not placed.type_locked(place_id) and not placed._find_exact(place_id,cell).is_empty():
+			var old := String(placed.cell_mat.get(cell,""))
+			placed.set_cell_mat(cell,"lock")
+			any = any or old != "lock"
 	return any
 
 
@@ -746,6 +757,9 @@ func end_stroke() -> void:
 
 
 func press(world: Vector2) -> void:
+	if tool in ["paint", "terrain"] and shape == "fill":
+		flood_at(world)
+		return
 	if tool in ["paint", "terrain"] and shape != "brush":
 		_shaping = true
 		_shape_start = iso_cell_center(world)
@@ -1065,6 +1079,98 @@ func set_layer_locked(category: String, locked: bool) -> void:
 		selected = {}
 	selection = selection.filter(func(o): return PlacedObjects.type_of(o.id) != category)
 	_refresh()
+
+
+func toggle_smart_terrain() -> void:
+	end_stroke()
+	smart_terrain = not smart_terrain
+	if smart_terrain:
+		var id := place_id if PlacedObjects.is_floor_tile(place_id) else "temple_floor_center"
+		set_tool("paint", id)
+	_refresh()
+
+
+func review_tile_family() -> void:
+	end_stroke()
+	_family_id = place_id if PlacedObjects.is_floor_tile(place_id) else String(selected.get("id", ""))
+	if not PlacedObjects.is_floor_tile(_family_id):
+		_flash("Choose a floor tile first")
+		return
+	if family_dialog != null: family_dialog.queue_free()
+	family_dialog = ConfirmationDialog.new()
+	family_dialog.title = "Tile family: " + _family_id
+	family_dialog.min_size = Vector2i(460,260)
+	family_dialog.ok_button_text = "Apply choice"
+	family_dialog.process_mode = Node.PROCESS_MODE_ALWAYS
+	var box := VBoxContainer.new()
+	family_dialog.add_child(box)
+	family_info = Label.new()
+	var meta := TerrainFamilyMatcher.metadata(_family_id)
+	var current := TerrainFamilyMatcher.material(_family_id, placed.terrain_families)
+	family_info.text = "Current: %s\nSource: %s\nPixel matches are suggestions. Choose explicitly.\nApproved materials use the registered 72 x 36 terrain kit.\nExisting placed tiles keep their art." % [current if current != "" else "manual / ambiguous", "manual choice" if placed.terrain_families.has(_family_id) else str(meta.get("source","unknown"))]
+	box.add_child(family_info)
+	family_choice = OptionButton.new()
+	family_choice.add_item("Use metadata / reset override")
+	family_choice.set_item_metadata(0, "")
+	family_choice.add_item("Manual tile only / reject suggestions")
+	family_choice.set_item_metadata(1, TerrainFamilyMatcher.MANUAL)
+	var ranks := TerrainFamilyMatcher.suggestions(_family_id)
+	if ranks.is_empty():
+		for m: String in TerrainBlend.MATERIALS: ranks.append({"material":m,"score":0.0})
+	for rank: Dictionary in ranks:
+		family_choice.add_item("%s - pixel similarity %d%%" % [str(rank.material).capitalize(), roundi(float(rank.score)*100)] if float(rank.score)>0 else str(rank.material).capitalize()+" (manual assignment)")
+		family_choice.set_item_metadata(family_choice.item_count-1, rank.material)
+	# Water is registry-based only: pixel matching land colors must never infer water.
+	family_choice.add_item("Water (manual assignment)")
+	family_choice.set_item_metadata(family_choice.item_count-1, "water")
+	for i in family_choice.item_count:
+		if str(family_choice.get_item_metadata(i)) == str(placed.terrain_families.get(_family_id,"")): family_choice.select(i)
+	box.add_child(family_choice)
+	family_dialog.confirmed.connect(func():
+		placed.set_terrain_family(_family_id, str(family_choice.get_item_metadata(family_choice.selected)))
+		_auto = null
+		_refresh())
+	add_child(family_dialog)
+	family_dialog.popup_centered()
+
+
+## Finite connected-region fill. Discover the region before mutating; refuse over-limit fills atomically.
+## Empty space is deliberately excluded: use the existing FILL VOID for bounded empty-map filling.
+func flood_at(world: Vector2) -> int:
+	end_stroke()
+	var start := iso_cell_center(world)
+	var tiler := AutoTile.new(placed)
+	tiler.blend = true
+	var source := tiler.terrain_at(start)
+	var source_id := tiler.id_at(start)
+	if source == "":
+		_flash("Choose an existing floor region; FILL VOID handles empty cells")
+		return 0
+	var queue: Array[Vector2] = [start]
+	var seen := {start: true}
+	var cells: Array = []
+	var index := 0
+	while index < queue.size():
+		var cell := queue[index]
+		index += 1
+		if not arena.bounds.has_point(cell) or tiler.terrain_at(cell) != source: continue
+		if tiler.is_locked(cell) or placed.type_locked(tiler.id_at(cell)): continue
+		if source == "land" and tiler.id_at(cell) != source_id: continue
+		cells.append(cell)
+		if cells.size() > 4096:
+			_flash("Region exceeds 4096 cells; use a rectangle")
+			return 0
+		for offset in [AutoTile.NE,AutoTile.NW,AutoTile.SE,AutoTile.SW]:
+			var neighbor: Vector2 = cell+offset
+			if not seen.has(neighbor):
+				seen[neighbor] = true
+				queue.append(neighbor)
+	_auto = null
+	var changed := _apply_cells(cells)
+	_auto = null
+	if changed: placed._changed()
+	_refresh()
+	return cells.size() if changed else 0
 
 
 func toggle_auto_blend() -> void:
@@ -2169,7 +2275,7 @@ func _build_ui() -> void:
 				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_left = 3
 				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_right = 3
 			b.add_theme_font_size_override("font_size", 11)
-			b.pressed.connect(func(): set_tool("paint" if tool == "paint" and PlacedObjects.def_of(id).kind in ["ground", "grass"] else "place", id))
+			b.pressed.connect(func(): set_tool("paint" if (smart_terrain and PlacedObjects.is_floor_tile(id)) or (tool == "paint" and PlacedObjects.def_of(id).kind in ["ground", "grass"]) else "place", id))
 			grid.add_child(b)
 			_palette_buttons[id] = b
 
@@ -2461,6 +2567,10 @@ func _build_pro_tools(outer: VBoxContainer) -> void:
 	col.add_theme_constant_override("separation", 5)
 	gutter.add_child(col)
 
+	_section(col, "Smart Terrain Brush")
+	smart_button = _mini(col, "SMART BRUSH", toggle_smart_terrain)
+	smart_button.tooltip_text = "Choose a floor tile: known material families blend automatically. Review ambiguous tiles before assigning a material."
+	_mini(col, "REVIEW TILE FAMILY", review_tile_family, false)
 	_section(col, "Auto-tile terrain  (edges and banks pick themselves)")
 	var trow := _flow(col)
 	for t: String in ["water", "grass", "ground", "dirt", "temple", "rock", ""]:
@@ -2589,6 +2699,7 @@ func _reset_pressed() -> void:
 
 
 func _refresh() -> void:
+	if smart_button != null: smart_button.set_pressed_no_signal(smart_terrain)
 	if status == null:
 		return
 	for k: String in _tool_buttons:
@@ -2631,4 +2742,7 @@ func _refresh() -> void:
 		inspector_pos.text = "X %d   Y %d" % [int(selected.pos.x), int(selected.pos.y)]
 	var what := ("Terrain: %s  (%s, Auto Blend %s)" % [("clear floor" if auto_terrain == "" else auto_terrain), shape, "ON" if auto_blend else "OFF"]) if tool == "terrain" else "Box select: drag a box" if tool == "box" else "Stamp: click to drop (%d pieces)" % clipboard.size() if tool == "stamp" else "Painting: %s  (drag to lay tiles, %d x %d brush)" % [str(PlacedObjects.def_of(place_id).label), brush, brush] if tool == "paint" else "Placing: %s" % str(PlacedObjects.def_of(place_id).label) if tool == "place" else ("Erase mode" if tool == "erase" else "Pan: drag the map" if tool == "pan" else "Select / move")
 	count_label.text = "%d objects" % placed.objects.size()
+	if tool == "paint" and smart_terrain:
+		var mat := TerrainFamilyMatcher.material(place_id,placed.terrain_families)
+		what = "Smart terrain: %s (%s)" % [mat if mat != "" else "manual tile; review family to blend",shape]
 	status.text = _note if Time.get_ticks_msec() < _note_until else what
