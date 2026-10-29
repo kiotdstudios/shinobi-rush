@@ -6,6 +6,7 @@ const arg=n=>{const i=process.argv.indexOf('--'+n);return i<0?undefined:process.
 const out=arg('out-dir')||'docs/visuals/cliff-kit/gameplay';mkdirSync(out,{recursive:true});
 const server=arg('serve-dir')?await startStaticServer(arg('serve-dir')):null;
 const base=arg('url')||server.url;
+const preset=arg('preset')==='river'?'river':'review';
 const browser=await chromium.launch({headless:true});
 const context=await browser.newContext({viewport:{width:1280,height:720},serviceWorkers:'block'});
 const page=await context.newPage(),checks=[],errors=[];
@@ -36,7 +37,7 @@ async function moveTo(target,max=180,rules={}){
 }
 try{
  if(arg('expected-sha')){const b=await(await fetch(new URL('build-info.json?v='+Date.now(),base))).json();check('exact deployed build',b.commit_sha===arg('expected-sha'),b)}
- await page.goto(base+'?cliffs=review&editor=1');
+ await page.goto(base+'?cliffs='+preset+'&editor=1');
  await page.waitForFunction(()=>window.__CLIFF_REVIEW__?.ready,null,{timeout:180000});
  originalLayout=await page.evaluate(()=>localStorage.getItem('shinobi-rush:world-layout:v1'));
  check('full 134-cell demonstration in actual game',(await state()).cells===134,await state());
@@ -56,7 +57,7 @@ try{
   }
   const head=await moveTo({x:mouth.x+run.x,y:mouth.y+run.y},180,{tolerance:10});
   check(name+' aligns with actual upper stair mouth',head.arrived,head);
-  const entrance=await moveTo(mouth,180,{tolerance:12});
+  const entrance=await moveTo(mouth,180,{tolerance:preset==='river'?18:12});
   check(name+' traverses the stair ramp to its lower mouth',entrance.arrived,entrance);
   const down=await moveTo({x:mouth.x-run.x*.35,y:mouth.y-run.y*.35},180,{maxE:1});
   check(name+' real keyboard descends, restoring lower depth',down.arrived&&down.end.elevation<1&&down.end.depth===0,down);
@@ -70,9 +71,9 @@ try{
  check('native waterfall mouth and basin match 66px rise',fall.lip_y===42&&fall.basin_y===108&&fall.foam_y===107,fall);
  check('independent cascade and foam frames advance',fall.fall_frame!==fall2.fall_frame||fall.foam_frame!==fall2.foam_frame,{before:fall,after:fall2});
  await page.screenshot({path:path.join(out,'waterfall.png')});
- await page.goto(base+'?cliffs=review&map_editor=1');
+ await page.goto(base+'?cliffs='+preset+'&map_editor=1');
  await page.waitForFunction(()=>window.__CLIFF_REVIEW__?.ready,null,{timeout:180000});
- await click(3);
+ if(!(await state()).editor_open)await click(3);
  await page.waitForFunction(()=>{const c=JSON.parse(window.__CLIFF_REVIEW__.cards_json).cliff_ground;return c.visible&&c.y>80&&c.y<650});
  let layer=await state();await page.mouse.click(layer.layer_x,layer.layer_y);
  await page.waitForFunction(()=>window.__CLIFF_REVIEW__.cliffs_visible===false);
@@ -92,12 +93,12 @@ try{
  check('real keyboard redo restores placed module',true,await state());
  s=await state();let t=JSON.parse(s.tools_json).select;await page.mouse.click(t.x,t.y);
  // Drag the visible top by exactly two U cells (72x36), keeping pointer offset from the object's anchor.
- s=await state();await page.mouse.move(s.paint_x,s.paint_y-66*.9);await page.mouse.down();
- await page.mouse.move(s.paint_x+72*.9,s.paint_y-66*.9+36*.9,{steps:10});await page.mouse.up();
+ s=await state();const zoom=s.camera_zoom;await page.mouse.move(s.paint_x,s.paint_y-66*zoom);await page.mouse.down();
+ await page.mouse.move(s.paint_x+72*zoom,s.paint_y-66*zoom+36*zoom,{steps:10});await page.mouse.up();
  await page.waitForFunction(()=>window.__CLIFF_REVIEW__.probe_b===true&&window.__CLIFF_REVIEW__.probe_a===false);
  check('real editor drag rebuilds moved cliff topology',true,await state());
  s=await state();t=JSON.parse(s.tools_json).erase;await page.mouse.click(t.x,t.y);
- await page.mouse.click(s.paint_x+72*.9,s.paint_y-66*.9+36*.9);
+ await page.mouse.click(s.paint_x+72*zoom,s.paint_y-66*zoom+36*zoom);
  await page.waitForFunction(()=>window.__CLIFF_REVIEW__.probe_b===false);
  check('real editor erase removes moved geometry',(await state()).cells===134,await state());
  await page.keyboard.press('Control+KeyZ');await page.waitForFunction(()=>window.__CLIFF_REVIEW__.probe_b===true);

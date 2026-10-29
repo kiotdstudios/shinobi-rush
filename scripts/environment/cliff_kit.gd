@@ -59,10 +59,42 @@ func rebuild(occupied: Dictionary, openings: Array) -> void:
 			pictures.append(water)
 		else:
 			_picture("cap"+("_"+str(info.surface) if str(info.surface)!="" else "")+".png",cell-Vector2(36,84),cell.y-18)
+			if str(info.surface)=="grass":
+				_grass_fringe(cell,occupied)
 	if str(info.role)=="waterfall_lip":
 		_picture("lip_left.png",Vector2(-37,-84),1)
 		_picture("lip_right.png",Vector2(-37,-84),1)
 	_sync_visibility()
+func _grass_fringe(cell: Vector2, occupied: Dictionary) -> void:
+	# Keep the ground-plane anchor/save format; only the native vegetation pixels rise.
+	var field:=get_parent().get_node_or_null("WindGrassField") as WindGrassField
+	if field==null:return
+	var sprite:=Sprite2D.new()
+	sprite.texture=load(WindGrassTileset.DIR+"grass9_center.png")
+	sprite.centered=false
+	sprite.material=field.ground_wind
+	var depth:=cell.y-18
+	sprite.position=Vector2(position.x,position.y+depth)
+	sprite.offset=cell-Vector2(56,150)-Vector2(0,depth)
+	sprite.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
+	get_parent().add_child(sprite)
+	pictures.append(sprite)
+	# Sparse tall edge clusters rather than a uniform hedge around every cell.
+	var p:=position+cell
+	var exposed:=not occupied.has(p+NEIGHBORS[1]) or not occupied.has(p+NEIGHBORS[2])
+	if not exposed or posmod(int(p.x/36)+int(p.y/18),3)!=0:return
+	for d: Vector2 in NEIGHBORS:
+		var neighbor: CliffKit=occupied.get(p+d)
+		if neighbor!=null and bool(definition(neighbor.definition_id).water):return
+	var blades:=Sprite2D.new()
+	blades.texture=load(WindGrassTileset.DIR+"grass_tall_%02d.png"%posmod(int(p.x/36),4))
+	blades.centered=false
+	blades.material=field.tall_wind
+	blades.position=sprite.position
+	blades.offset=cell-Vector2(56,202)-Vector2(0,depth)
+	blades.texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
+	get_parent().add_child(blades)
+	pictures.append(blades)
 func _picture(file: String, origin: Vector2, depth: float) -> void:
 	var sprite:=Sprite2D.new()
 	sprite.texture=load(DIR+file)
