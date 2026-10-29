@@ -1,0 +1,57 @@
+{
+  "pr": "https://github.com/kiotdstudios/shinobi-rush/pull/261",
+  "tested_head": "8b5e57a28759426f1b23b760fd152c58168d85b6",
+  "merged_sha": "5a689112e7ce8c14444cd83ec412348b2dc8cd07",
+  "workflow": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40936827950",
+  "native_summary": "5209 passed, 0 failed",
+  "resources": {
+    "scripts": 446,
+    "scenes": 30,
+    "resources": 2,
+    "failures": 0
+  },
+  "checks": [
+    {
+      "name": "Post-deploy live smoke test",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40936827950/job/123675809502"
+    },
+    {
+      "name": "Deploy to GitHub Pages (main only)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40936827950/job/123675809226"
+    },
+    {
+      "name": "godot-ci-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40936827950/job/123675808322"
+    },
+    {
+      "name": "Pre-deploy browser smoke test",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40936827950/job/123674716683"
+    },
+    {
+      "name": "Import, validate, test and export (Web)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40936827950/job/123669708551"
+    },
+    {
+      "name": "validate-orders-and-project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40936828121/job/123669465722"
+    },
+    {
+      "name": "Detect Godot project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40936827950/job/123669465596"
+    }
+  ]
+}

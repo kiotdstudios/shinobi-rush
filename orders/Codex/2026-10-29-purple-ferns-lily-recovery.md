@@ -1,9 +1,9 @@
 # ORDER — Purple ferns and water-plant recovery
 - Agent: Codex
 - Owner: Codex; direct user assignment (includes presentation logic)
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
-- Branch/PR: codex/purple-ferns-lily-recovery
+- Branch/PR: [PR261](https://github.com/kiotdstudios/shinobi-rush/pull/261), merged `5a689112e7ce8c14444cd83ec412348b2dc8cd07`
 - Dependencies: integrated foliage PR258/259; preserve water movement/chakra and rare frog rules.
 
 ## Objective
@@ -20,3 +20,5 @@ Ferns render purple in game and editor without raw-art regeneration. Vines uncha
 
 ## Handoff / Notes
 Only cosmetic/presentation behavior and related editor appearance are owned here. Original PNGs/provenance stay intact; purple is an editable engine color setting, not newly generated bitmap art. No new art generation/API charge is needed.
+
+Completion: canonical build verified 2026-10-29T19:35:39.574Z; 16 live feature checks and main deploy/post-deploy smoke passed. [Completion report](reports/2026-10-29-purple-ferns-lily-recovery-report.md).
