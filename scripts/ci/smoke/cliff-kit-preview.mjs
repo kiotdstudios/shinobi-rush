@@ -12,9 +12,9 @@ if(layout)await context.addInitScript(value=>localStorage.setItem('shinobi-rush:
 const page=await context.newPage(),errors=[];const started=Date.now();
 page.on('pageerror',e=>errors.push(String(e)));
 page.on('console',m=>{if(m.type()==='error'||/SCRIPT ERROR|^ERROR:/.test(m.text()))errors.push(m.text())});
-await page.goto((arg('url')||server.url)+(layout?'?cliffs=play&editor=1':'?cliffs=review&editor=1'));
+await page.goto((arg('url')||server.url)+(arg('query')||(layout?'?cliffs=play&editor=1':'?cliffs=review&editor=1')));
 await page.waitForFunction(()=>window.__CLIFF_REVIEW__?.ready,null,{timeout:180000});
-const rect=await page.evaluate(index=>JSON.parse(window.__CLIFF_REVIEW__.buttons_json)[index],layout?2:6);
+const rect=await page.evaluate(index=>JSON.parse(window.__CLIFF_REVIEW__.buttons_json)[index],arg('view')?Number(arg('view')):layout?2:6);
 await page.mouse.click(rect.x,rect.y);await page.waitForTimeout(500);
 const begin=(Date.now()-started)/1000;
 const before=await page.evaluate(()=>({...window.__CLIFF_REVIEW__}));

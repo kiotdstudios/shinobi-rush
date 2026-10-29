@@ -151,6 +151,27 @@ func run(ck: Callable, root: Node) -> void:
 			var stair:=o.nodes.back() as CliffElevation
 			if not stair.modular and stair.landing.size()==4 and is_instance_valid(stair.edge_body):restored+=1
 	ck.call("modular cliff: removing kit restores legacy stairs without migration",restored==2,str(restored))
+	var river_demo: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/environment/blightwood/cliff_kit/river-section.json"))
+	var river_count:=placed.load_dict(river_demo)
+	var missing:=[]
+	for item: Dictionary in river_demo.items:
+		var found:=false
+		for o in placed.objects:
+			if o.id==item.id and o.pos==Vector2(item.x,item.y):found=true;break
+		if not found:missing.append(item)
+	ck.call("riverbank starter: every catalog item loads",river_count==river_demo.items.size(),str(missing))
+	ck.call("riverbank starter: original connected stair topology preserved",placed.cliff_world.occupied.size()==134 and placed.cliff_world.zones.size()==1)
+	var lush:=0
+	for o in placed.objects:
+		if o.id=="cliff_grass":
+			var module:=o.nodes[0] as CliffKit
+			for picture in module.pictures:
+				if picture is Sprite2D and picture.material!=null: lush+=1
+	ck.call("riverbank starter: native wind grass dresses the elevated banks",lush>50,str(lush))
+	var river_snapshot:=placed.to_json_string()
+	placed.load_dict(JSON.parse_string(river_snapshot))
+	ck.call("riverbank starter: exact editable map survives save reload",placed.to_json_string()==river_snapshot)
+	ck.call("riverbank starter: upper stream and lower catch pool are real water",BlightwoodWater.over_water(tree,Vector2(108,18)) and BlightwoodWater.over_water(tree,Vector2(36,198)))
 	main.queue_free()
 	for i in 4:await tree.process_frame
 	BlightwoodMap.enabled=old_map

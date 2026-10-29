@@ -7,6 +7,8 @@ var camera: Camera2D
 var buttons: Array[Button]=[]
 var operations:=0
 var demo:=false
+var river_section:=false
+var storage_key:="shinobi-rush:cliff-demo-review:v1"
 func _ready() -> void:
 	arena=get_parent().get_node("TrainingArena") as TrainingArena
 	player=arena.get_node("Player") as PlayerController
@@ -18,11 +20,15 @@ func _ready() -> void:
 	arena.placed.clear_all(false)
 	for enemy in get_tree().get_nodes_in_group("enemy"):enemy.queue_free()
 	var query:=str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
-	demo="cliffs=review" in query or "cliffs=play" in query or "--cliffs-review" in OS.get_cmdline_user_args()
+	river_section="cliffs=river" in query
+	if river_section:
+		storage_key="shinobi-rush:river-section-review:v1"
+		arena.placed.save_path="user://river-section-review.json"
+	demo=river_section or "cliffs=review" in query or "cliffs=play" in query or "--cliffs-review" in OS.get_cmdline_user_args()
 	if demo:
-		var source:=FileAccess.get_file_as_string("res://assets/environment/blightwood/cliff_kit/demo-layout.json")
-		if "cliffs=play" in query and OS.has_feature("web"):
-			var saved: Variant=JavaScriptBridge.eval("localStorage.getItem('shinobi-rush:cliff-demo-review:v1')",true)
+		var source:=FileAccess.get_file_as_string("res://assets/environment/blightwood/cliff_kit/"+("river-section.json" if river_section else "demo-layout.json"))
+		if ("cliffs=play" in query or "riverplay=1" in query) and OS.has_feature("web"):
+			var saved: Variant=JavaScriptBridge.eval("localStorage.getItem("+JSON.stringify(storage_key)+")",true)
 			if saved!=null and JSON.parse_string(str(saved)) is Dictionary:source=str(saved)
 		arena.placed.load_dict(JSON.parse_string(source))
 		arena.placed.clear_history()
@@ -43,7 +49,7 @@ func _ready() -> void:
 	arena.add_child(camera)
 	camera.make_current()
 	if demo:
-		player.position=arena.placed.spawn_point() if "cliffs=play" in query else Vector2(-340,90)
+		player.position=arena.placed.spawn_point() if "cliffs=play" in query or river_section else Vector2(-340,90)
 		var layer:=CanvasLayer.new()
 		layer.layer=100
 		add_child(layer)
@@ -59,6 +65,7 @@ func _ready() -> void:
 			buttons.append(button)
 		var caption:=Label.new()
 		caption.text="CLIFF DEMO — saves separately from your world"
+		if river_section:caption.text="BLIGHTWOOD RIVERBANK — editable starter map; normal world unchanged"
 		caption.position=Vector2(310,83)
 		layer.add_child(caption)
 		if arena.editor.shell!=null:
@@ -66,6 +73,9 @@ func _ready() -> void:
 			play.pressed.disconnect(Callable(arena.editor.shell,"_on_playtest"))
 			play.pressed.connect(_play_demo)
 			play.tooltip_text="Play the current cliff demo; your saved world stays unchanged"
+	if river_section:
+		_action(2)
+		if MapEditorMode.active():_action(3)
 	if OS.has_feature("web"):
 		bridge=JavaScriptBridge.create_object("Object")
 		JavaScriptBridge.get_interface("window").__CLIFF_REVIEW__=bridge
@@ -81,6 +91,8 @@ func _process(_delta: float) -> void:
 		bridge.operations=operations
 		bridge.editor_open=arena.editor.open
 		bridge.cells=arena.placed.cliff_world.occupied.size() if is_instance_valid(arena.placed.cliff_world) else 0
+		bridge.river_section=river_section
+		bridge.camera_zoom=camera.zoom.x
 		var rects:=[]
 		for button in buttons:rects.append({"x":button.get_global_rect().get_center().x,"y":button.get_global_rect().get_center().y})
 		bridge.buttons_json=JSON.stringify(rects)
@@ -133,8 +145,8 @@ func _action(index: int) -> void:
 		camera.position=mouth+run
 		camera.zoom=Vector2(1.4,1.4)
 	elif index==2:
-		camera.position=Vector2(0,-20)
-		camera.zoom=Vector2(.9,.9)
+		camera.position=Vector2(0,25) if river_section else Vector2(0,-20)
+		camera.zoom=Vector2(1.15,1.15) if river_section else Vector2(.9,.9)
 	elif index==3:
 		arena.editor.set_open(not arena.editor.open)
 		if arena.editor.browser!=null:
@@ -167,5 +179,5 @@ func _action(index: int) -> void:
 
 func _play_demo() -> void:
 	var snapshot:=arena.placed.to_json_string()
-	JavaScriptBridge.eval("localStorage.setItem('shinobi-rush:cliff-demo-review:v1',"+JSON.stringify(snapshot)+")",true)
-	MapEditorMode.open_page("index.html?cliffs=play&editor=1")
+	JavaScriptBridge.eval("localStorage.setItem("+JSON.stringify(storage_key)+","+JSON.stringify(snapshot)+")",true)
+	MapEditorMode.open_page("index.html?cliffs=river&riverplay=1&editor=1" if river_section else "index.html?cliffs=play&editor=1")
