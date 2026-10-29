@@ -8,6 +8,7 @@ var buttons: Array[Button]=[]
 var operations:=0
 var demo:=false
 var river_section:=false
+var foliage_review:=false
 var storage_key:="shinobi-rush:cliff-demo-review:v1"
 func _ready() -> void:
 	arena=get_parent().get_node("TrainingArena") as TrainingArena
@@ -20,6 +21,7 @@ func _ready() -> void:
 	arena.placed.clear_all(false)
 	for enemy in get_tree().get_nodes_in_group("enemy"):enemy.queue_free()
 	var query:=str(JavaScriptBridge.eval("window.location.search",true)) if OS.has_feature("web") else ""
+	foliage_review="foliage=1" in query
 	river_section="cliffs=river" in query
 	if river_section:
 		storage_key="shinobi-rush:river-section-review:v1"
@@ -98,7 +100,7 @@ func _process(_delta: float) -> void:
 		bridge.buttons_json=JSON.stringify(rects)
 		var cards:={}
 		if arena.editor.open:
-			for id in CliffKit.IDS:
+			for id in CliffKit.IDS+BlightwoodFoliage.IDS:
 				var button: Button=arena.editor._palette_buttons.get(id)
 				if button!=null:
 					var r:=button.get_global_rect()
@@ -126,8 +128,20 @@ func _process(_delta: float) -> void:
 				var eye: Rect2=row.eye.get_global_rect()
 				bridge.layer_x=eye.get_center().x
 				bridge.layer_y=eye.get_center().y
+			var plant_row: Dictionary=arena.editor.shell.layer_rows.get("Blightwood foliage",{})
+			if not plant_row.is_empty():
+				var eye: Rect2=plant_row.eye.get_global_rect()
+				bridge.foliage_layer_x=eye.get_center().x
+				bridge.foliage_layer_y=eye.get_center().y
 		bridge.cliffs_visible=not bool(arena.placed.hidden_types.get("Blightwood Cliffs",false))
+		bridge.foliage_visible=not bool(arena.placed.hidden_types.get("Blightwood foliage",false))
+		var plants:=[]
 		for o in arena.placed.objects:
+			if o.nodes.size()>0 and o.nodes[0] is BlightwoodFoliage:
+				var plant:=o.nodes[0] as BlightwoodFoliage
+				var def:=BlightwoodFoliage.definition(o.id)
+				var pick: Vector2=arena.get_global_transform_with_canvas()*((o.pos as Vector2)-(def.anchor as Vector2)-Vector2(0,float(def.lift))+(def.pick as Vector2))
+				plants.append({"id":o.id,"x":o.pos.x,"y":o.pos.y,"phase":int(floor(plant.clock*24))%96,"visible":plant.visible,"pick_x":pick.x,"pick_y":pick.y})
 			if o.id=="cliff_cascade":
 				var water:=o.nodes[0] as BlightwoodWater
 				bridge.fall_frame=water._cascade_atlas.region.position.x
@@ -135,6 +149,8 @@ func _process(_delta: float) -> void:
 				bridge.lip_y=water.fall.global_position.y-48+8
 				bridge.basin_y=water.fall.global_position.y-48+74
 				bridge.foam_y=water.foam.global_position.y
+		bridge.foliage_json=JSON.stringify(plants)
+		bridge.selected_id=str(arena.editor.selected.get("id",""))
 
 func _action(index: int) -> void:
 	if index in [0,1]:
@@ -151,7 +167,7 @@ func _action(index: int) -> void:
 		arena.editor.set_open(not arena.editor.open)
 		if arena.editor.browser!=null:
 			arena.editor.browser.set_tab("objects")
-			arena.editor.browser.set_category("Blightwood Cliffs")
+			arena.editor.browser.set_category("Blightwood foliage" if foliage_review else "Blightwood Cliffs")
 	elif index==6:
 		camera.position=Vector2(-18,60)
 		camera.zoom=Vector2(2,2)

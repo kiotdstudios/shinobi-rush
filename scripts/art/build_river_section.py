@@ -68,6 +68,12 @@ for id,x,y in [('tree_3',-475,-70),('tree_5',525,-30),('tree_2',-510,260),
                ('fence_se_2',-550,60),('fence_sw_1',430,220),
                ('player_spawn',-360,90)]:
     add(id,x,y)
+# Root positions are logical ground points; the vine renderer lifts its top 66px.
+for n,(x,y) in enumerate([(-198,27),(-126,63),(-90,81),(90,117),(162,135),(270,135)]):
+    add('blight_vine_%02d'%(n%3+1),x,y)
+for n,(x,y) in enumerate([(-225,180),(-100,290),(270,210),(290,230),(420,250),(330,380),(500,270),(-420,200),(-410,300)]):
+    assert not wet(x,y),'Fern roots must remain on the bank'
+    add('blight_fern_%02d'%(n%3+1),x,y)
 data = dict(version=5,blightwood_map=True,shrine_section=True,items=items)
 text=json.dumps(data,indent=2)+'\n'
 for p in [ROOT/'world/demos/blightwood-river-section.json',KIT/'river-section.json']:

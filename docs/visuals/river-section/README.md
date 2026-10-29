@@ -2,7 +2,7 @@
 
 An editable composition based on the owner's forest waterfall reference, assembled from existing game assets. It is a starter section rather than a pixel-identical recreation of the concept image.
 
-Verified live on `9bf429cd29ef859918725549b73b325500ef8c6c`: [Open editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&v=9bf429cd) · [Play section](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&editor=1&v=9bf429cd). All 27 exact-build live checks passed with zero errors. [Live editor screenshot](live-editor.png) · [Live overview](live-overview.png) · [Live result](live-result.json) · [Deployment checks](deployment-checks.json) · [Native results](native-result.json).
+Verified live on `9bf429cd29ef859918725549b73b325500ef8c6c`: [Open editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&v=9bf429cd) Â· [Play section](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&editor=1&v=9bf429cd). All 27 exact-build live checks passed with zero errors. [Live editor screenshot](live-editor.png) Â· [Live overview](live-overview.png) Â· [Live result](live-result.json) Â· [Deployment checks](deployment-checks.json) Â· [Native results](native-result.json).
 
 ## Open and build
 
@@ -25,7 +25,7 @@ The source map is [blightwood-river-section.json](../../../world/demos/blightwoo
 
 ## Remaining visual gaps
 
-The exact red/blue hanging banners, matching small fern/bush clusters, hanging cliff vines and densely fractured stone columns in the concept image are not all standalone matching catalog pieces. This map uses current weathered cliff faces, grass and existing decorations. No substitute logos or new raw artwork are introduced. Those decorative art gaps can be authored later; they do not block the usable stair/river/cliff composition.
+Matching small fern clusters and hanging cliff vines are now supplied by the [foliage batch](../vines-ferns/README.md), with six vines and nine fern placements in this starter. The exact red/blue hanging banners and densely fractured stone columns remain decorative gaps; they do not block the usable stair/river/cliff composition. The live verification above records the original starter revision; the foliage report tracks its subsequent deployment.
 
 ## Verification
 

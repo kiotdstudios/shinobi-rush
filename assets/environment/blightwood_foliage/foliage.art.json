@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "generator": "PixelLab MCP create_1_direction_object",
+  "palette_source": "assets\\environment\\kosen_courtyard\\grass\\tiles\\grass9_center.png",
+  "palette_source_sha256": "9a66d27089525cdf65e49af4ed75d9664ed25da8a78446e50cd137df432965e1",
+  "palette": [
+    "#0a0b17",
+    "#121720",
+    "#1c202b",
+    "#1e241a",
+    "#242b1c",
+    "#283026",
+    "#30382c",
+    "#383d35",
+    "#3c4437",
+    "#3f4650",
+    "#454e3e",
+    "#4d535b",
+    "#4f5846",
+    "#586069",
+    "#5a6351",
+    "#677077",
+    "#68705c",
+    "#777e6b",
+    "#888f79",
+    "#9aa08b",
+    "#b0b59e",
+    "#c2c6b2"
+  ],
+  "animation": {
+    "type": "anchored native-pixel shader sway; not AI in-between frames",
+    "fps": 24,
+    "loop_seconds": 4,
+    "phase_count": 96,
+    "amplitude_pixels": {
+      "vine": 2,
+      "fern": 1.3
+    },
+    "root_pinned": true
+  },
+  "items": [
+    {
+      "id": "blight_vine_01",
+      "label": "Short ivy",
+      "file": "vine_01.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        12
+      ],
+      "lift": 66,
+      "sort_dy": 1,
+      "hang": true,
+      "content_bounds": [
+        52,
+        12,
+        77,
+        78
+      ],
+      "pick_pixel": [
+        65,
+        45
+      ],
+      "footprint": [
+        12,
+        6
+      ],
+      "source_sha256": "8129019797a9ca36a6935717d52453b95f884b2c435c92b389232d6a75969808",
+      "object_id": "9978b91f-6c89-4741-b2b7-8b242e88f82e",
+      "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
+    },
+    {
+      "id": "blight_vine_02",
+      "label": "Curled ivy",
+      "file": "vine_02.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        12
+      ],
+      "lift": 66,
+      "sort_dy": 1,
+      "hang": true,
+      "content_bounds": [
+        42,
+        12,
+        86,
+        84
+      ],
+      "pick_pixel": [
+        65,
+        46
+      ],
+      "footprint": [
+        12,
+        6
+      ],
+      "source_sha256": "817cf6c27430ce47debee4e478864f1eb2bc3d1f133bef28663202009ec67ca6",
+      "object_id": "62e7aaa4-30ab-4b4d-9405-50d7a24abcfb",
+      "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
+    },
+    {
+      "id": "blight_vine_03",
+      "label": "Dense ivy",
+      "file": "vine_03.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        12
+      ],
+      "lift": 66,
+      "sort_dy": 1,
+      "hang": true,
+      "content_bounds": [
+        47,
+        12,
+        81,
+        78
+      ],
+      "pick_pixel": [
+        64,
+        45
+      ],
+      "footprint": [
+        12,
+        6
+      ],
+      "source_sha256": "7b8c716ebb00adacd172a346788e203d915bdd3afed349744f9ac5b98f605d02",
+      "object_id": "1475edfb-86e3-4809-a456-675985f97def",
+      "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
+    },
+    {
+      "id": "blight_fern_01",
+      "label": "Fan fern",
+      "file": "fern_01.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        116
+      ],
+      "lift": 0,
+      "sort_dy": 0,
+      "hang": false,
+      "content_bounds": [
+        28,
+        60,
+        100,
+        116
+      ],
+      "pick_pixel": [
+        63,
+        88
+      ],
+      "footprint": [
+        12,
+        6
+      ],
+      "source_sha256": "ca46cf39c09683384dc530e9abbda80d7d4d43787a66814b4ac8ea6391e776e5",
+      "object_id": "8b81e17a-9ef1-4840-8653-d912699fc877",
+      "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
+    },
+    {
+      "id": "blight_fern_02",
+      "label": "Spreading fern",
+      "file": "fern_02.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        116
+      ],
+      "lift": 0,
+      "sort_dy": 0,
+      "hang": false,
+      "content_bounds": [
+        30,
+        68,
+        98,
+        116
+      ],
+      "pick_pixel": [
+        63,
+        92
+      ],
+      "footprint": [
+        12,
+        6
+      ],
+      "source_sha256": "c865c14f7f7dd384e8f33c3d53568b4bc19203cd2e83ff40740bcddf9d48a82f",
+      "object_id": "3240eaf6-e99f-47b4-8623-481b25c8ff89",
+      "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
+    },
+    {
+      "id": "blight_fern_03",
+      "label": "Curled fern",
+      "file": "fern_03.png",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        64,
+        116
+      ],
+      "lift": 0,
+      "sort_dy": 0,
+      "hang": false,
+      "content_bounds": [
+        35,
+        74,
+        93,
+        116
+      ],
+      "pick_pixel": [
+        64,
+        95
+      ],
+      "footprint": [
+        12,
+        6
+      ],
+      "source_sha256": "b546083f391072b6c5ddeec593d0d6cf75e3690655b056d8445cf0d99f84d43d",
+      "object_id": "c63b5cd6-6594-468c-a20f-47f85f66ae84",
+      "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
+    }
+  ]
+}
