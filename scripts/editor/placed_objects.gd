@@ -7,12 +7,16 @@ extends Node
 ##   kind "wall":  a pre-drawn isometric wall piece from wall_kit_v2 (art, size, anchor = pixel of the front-bottom-left ground corner, col = ground vector of its collider).
 ##                 `pos` is that ground corner, snapped to a floor-diamond vertex, so a piece placed at the previous piece's pos + run joins it.
 const SAVE_PATH := "user://world_builder_layout.json"
-## Repo-tracked layout published via WorldEditor.publish_to_github() (owner 2026-10-23: desktop/editor
-## only, never read or written from a Web export). A fresh boot with no per-machine user:// save yet
-## falls back to this committed file instead of only the hand-authored defaults, so a layout Diel
-## publishes from his own machine shows up for every player once the site redeploys. Never used to
-## overwrite an existing user:// save -- that would silently discard a player's own local edits.
+## Repo-tracked layout published via WorldEditor.publish_to_github() (desktop), or committed from a
+## downloaded layout. It ships with every build and is the shared map: a boot with no per-machine save
+## loads it, and a per-machine save that is not based on the current published layout is set aside
+## (user://world_layout.superseded_*.json) and replaced by it, so every laptop shows the same map.
 const DEFAULT_LAYOUT_PATH := "res://data/world_layout.json"
+## Fingerprint of the published layout this world was loaded from (or last saved on top of). Saved with the
+## layout so a machine whose local save is based on an OLDER published layout, or on none, adopts the new one.
+var published_rev := ""
+## Where the published layout is read from; tests point it at a scratch file.
+var published_path := DEFAULT_LAYOUT_PATH
 ## v4 adds editable grass to v3 saves, which list EVERY solid object (starting trees and the arena's placeholder walls included, ids "base_N" = WorldScale.BLOCKS[N]).
 ## v1 saves only listed additions (so they also get the default trees + walls); v2 saves lacked the walls.
 const SAVE_VERSION := 7
@@ -2113,7 +2117,10 @@ func to_dict() -> Dictionary:
 			if cm != "":
 				entry["mat"] = cm
 		items.append(entry)
-	return {"version": SAVE_VERSION, "shrine_section": shrine_section_applied, "blightwood_map": blightwood_map_applied, "items": items, "terrain_families": terrain_families.duplicate()}
+	var out := {"version": SAVE_VERSION, "shrine_section": shrine_section_applied, "blightwood_map": blightwood_map_applied, "items": items, "terrain_families": terrain_families.duplicate()}
+	if published_rev != "":
+		out["published_rev"] = published_rev
+	return out
 
 
 func to_json_string() -> String:
@@ -2166,6 +2173,7 @@ func load_dict(data: Dictionary) -> int:
 	loaded_version = int(data.get("version", 1))
 	shrine_section_applied = bool(data.get("shrine_section", false))
 	blightwood_map_applied = bool(data.get("blightwood_map", false))
+	published_rev = str(data.get("published_rev", ""))
 	if int(data.get("version", 1)) < 2:
 		for i in WorldScale.TREE_POSITIONS.size():
 			add("tree_%d" % (i + 1), WorldScale.TREE_POSITIONS[i], false)
@@ -2387,6 +2395,30 @@ func _gourd_spot_ok(pos: Vector2, taken: Array[Vector2]) -> bool:
 	return true
 
 
+## Fingerprint of the layout published to the repo ("" when none has been published).
+func repo_layout_rev(path: String) -> String:
+	if not FileAccess.file_exists(path):
+		return ""
+	return FileAccess.get_file_as_string(path).md5_text()
+
+
+## True when a published layout exists that this local save was not built on. Only the real per-machine save
+## (SAVE_PATH) is ever superseded, so tests and scratch paths are untouched.
+func _superseded(local: Dictionary, text: String) -> bool:
+	if save_path != SAVE_PATH and published_path == DEFAULT_LAYOUT_PATH:
+		return false
+	var rev := repo_layout_rev(published_path)
+	if rev == "" or str(local.get("published_rev", "")) == rev:
+		return false
+	var keep := "user://world_layout.superseded_%s.json" % text.md5_text().left(8)
+	if not FileAccess.file_exists(keep):
+		var f := FileAccess.open(keep, FileAccess.WRITE)
+		if f != null:
+			f.store_string(text)
+			f.close()
+	return true
+
+
 func load_saved() -> int:
 	var backup: Variant = null
 	var snapshot := _web_layout_read()
@@ -2394,18 +2426,21 @@ func load_saved() -> int:
 		var parser := JSON.new()
 		if parser.parse(snapshot) == OK:
 			backup = parser.data
-	if typeof(backup) == TYPE_DICTIONARY and typeof(backup.get("items")) == TYPE_ARRAY and not backup.items.is_empty():
+	if typeof(backup) == TYPE_DICTIONARY and typeof(backup.get("items")) == TYPE_ARRAY and not backup.items.is_empty() and not _superseded(backup, snapshot):
 		var restored := load_dict(backup)
 		if restored > 0:
 			return restored
 	if not FileAccess.file_exists(save_path):
 		return 0
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(save_path))
+	var file_text := FileAccess.get_file_as_string(save_path)
+	var parsed: Variant = JSON.parse_string(file_text)
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return 0
 	var items: Variant = parsed.get("items", [])
 	if typeof(items) != TYPE_ARRAY or items.is_empty():
 		return 0  # empty/garbled saves (older Clear-all autosaves) keep the default trees + walls
+	if _superseded(parsed, file_text):
+		return 0  # a newer published layout wins; the caller falls back to load_default_from_repo()
 	var made := load_dict(parsed)
 	if objects.is_empty():
 		load_dict({"version": 1, "items": []})  # every entry was rejected: fall back to the defaults
@@ -2416,7 +2451,9 @@ func load_saved() -> int:
 ## normal, expected case (nothing has been published yet) -- just keeps the hand-authored defaults.
 ## `path` defaults to the real repo file; overridable so tests can point at a scratch user:// path
 ## instead of ever reading/writing the actual tracked res:// file during a test run.
-func load_default_from_repo(path := DEFAULT_LAYOUT_PATH) -> int:
+func load_default_from_repo(path := "") -> int:
+	if path == "":
+		path = published_path
 	if not FileAccess.file_exists(path):
 		return 0
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -2425,7 +2462,9 @@ func load_default_from_repo(path := DEFAULT_LAYOUT_PATH) -> int:
 	var items: Variant = parsed.get("items", [])
 	if typeof(items) != TYPE_ARRAY or items.is_empty():
 		return 0
-	return load_dict(parsed)
+	var made := load_dict(parsed)
+	published_rev = repo_layout_rev(path)  # later saves remember which published layout they sit on
+	return made
 
 
 

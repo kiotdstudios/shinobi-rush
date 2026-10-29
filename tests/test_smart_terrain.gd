@@ -83,10 +83,11 @@ func run(ck: Callable, root: Node) -> void:
 	actual.items.sort_custom(sort_items)
 	ck.call("smart: erase and undo restore exact tile positions and ownership",erased and undone and actual==expected)
 	p.set_terrain_family("grass9_center","rock")
+	p.published_rev="smart-terrain-published-fixture"
 	snapshot=p.to_json_string()
 	ck.call("smart: save",p.save())
 	p.load_dict(JSON.parse_string(FileAccess.get_file_as_string(p.save_path)))
-	ck.call("smart: exact save reload",p.to_json_string()==snapshot and p.terrain_families.get("grass9_center")=="rock")
+	ck.call("smart: exact reload preserves approval and published revision",p.to_json_string()==snapshot and p.terrain_families.get("grass9_center")=="rock" and p.published_rev=="smart-terrain-published-fixture")
 	e._auto=null
 	e.set_tool("paint","grass9_center")
 	e._apply_cells([c])

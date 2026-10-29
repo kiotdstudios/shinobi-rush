@@ -1,4 +1,4 @@
---- godot validate-resources: --headless --path C:\Users\dielp\Documents\ChatGPT\SHINOBI RUSH\repo --script C:\Users\dielp\AppData\Local\Temp\shinobi-walker-ygemtsvc\validate_resources.gd
+--- godot validate-resources: --headless --path C:\Users\dielp\Documents\ChatGPT\SHINOBI RUSH\repo --script C:\Users\dielp\AppData\Local\Temp\shinobi-walker-unjtajnk\validate_resources.gd
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
 VALIDATE_RESOURCES: scripts=448 scenes=30 resources=2 failures=0

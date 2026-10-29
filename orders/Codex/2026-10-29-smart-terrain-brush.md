@@ -26,3 +26,6 @@ Four-material diamonds retain the existing documented fallback. Approved materia
 
 ## Local validation
 35 focused native checks, 13 Smart Brush browser checks, 27 existing Auto Blend browser checks, 448/30/2 resource validation and Web export/content checks passed. The interim local full run is excluded because it spanned the last metadata update; fresh committed-revision CI is required. #262 foundation is incorporated; final integration and canonical verification pending.
+
+## Current-base integration
+Merged main e63b8bc (#263) locally; preserved its shared-map policy and both serialization fields. Before merge commit: 84 integration native checks, 13 browser checks, fresh export and 448/30/2 resource checks pass. Current-base CI pending.
