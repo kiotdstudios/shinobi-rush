@@ -65,10 +65,12 @@ func _process(delta: float) -> void:
 		populate_plants()
 
 func observe(foot: Vector2, wet: bool, delta: float, height: float=0.0) -> void:
-	var movement := foot - _last if _have_last else Vector2.ZERO
+	var previous := _last if _have_last else foot
+	var movement := foot - previous
 	_last = foot
 	_have_last = true
 	var moving := movement.length() > 0.2 and movement.length() < 70.0
+	_touch_plants(previous,foot,wet,moving,height)
 	for i in aura.size():
 		aura[i].visible = wet
 		var across := Vector2(6,1) if absf(movement.x) < absf(movement.y) else Vector2(3,3)
@@ -131,9 +133,20 @@ func advance(delta: float) -> void:
 			sprite.modulate.a = 1.0 - smoothstep(0.65,1.0,t)
 	for plant in plants:
 		var phase: float = plant.get_meta("phase")
-		var base: Vector2 = plant.get_meta("base")
-		plant.global_position = (base + Vector2(sin(clock*0.7+phase)*0.7,sin(clock*1.1+phase)*0.65)).round()
-		plant.rotation = sin(clock*0.8+phase)*0.018
+		var ground: Vector2 = plant.get_meta("ground_foot")
+		var height := BlightwoodWater.modular_level_at(ground)
+		var base := ground-Vector2(0,height)
+		plant.set_meta("base",base)
+		plant.z_index=1 if height>0.0 else 0
+		var decay := exp(-float(plant.get_meta("return_speed"))*delta)
+		var push: Vector2 = (plant.get_meta("push") as Vector2)*decay
+		var lean: float = float(plant.get_meta("lean"))*decay
+		if push.length()<0.025:push=Vector2.ZERO
+		if absf(lean)<0.0005:lean=0.0
+		plant.set_meta("push",push)
+		plant.set_meta("lean",lean)
+		plant.global_position = (base+push+Vector2(sin(clock*0.7+phase)*0.7,sin(clock*1.1+phase)*0.65)).round()
+		plant.rotation = lean+sin(clock*0.8+phase)*0.018
 	for i in range(frogs.size()-1,-1,-1):
 		var frog := frogs[i]
 		if not is_instance_valid(frog):frogs.remove_at(i);continue
@@ -156,6 +169,11 @@ func add_plant(foot: Vector2, variant: int, phase: float = 0.0) -> Node2D:
 	plant.set_meta("base",plant.global_position)
 	plant.set_meta("ground_foot",foot.round())
 	plant.set_meta("phase",phase)
+	plant.set_meta("return_speed",lerpf(2.6,5.4,fposmod(phase*0.6180339+float(variant)*0.271,1.0)))
+	plant.set_meta("push",Vector2.ZERO)
+	plant.set_meta("lean",0.0)
+	plant.set_meta("contact",false)
+	plant.set_meta("touches",0)
 	plants.append(plant)
 	return plant
 
@@ -192,3 +210,19 @@ func spawn_frog(foot: Vector2) -> Node2D:
 	frogs.append(frog)
 	frog_spawns += 1
 	return frog
+
+## One bounded presentation impulse on entering a pad, not a per-frame upward lift.
+## Recovery runs in advance() even after the player leaves water.
+func _touch_plants(from: Vector2, to: Vector2, wet: bool, moving: bool, height: float) -> void:
+	for plant in plants:
+		var ground: Vector2=plant.get_meta("ground_foot")
+		var same_water:=is_equal_approx(height,BlightwoodWater.modular_level_at(ground))
+		var a: Vector2=(from-ground)/Vector2(25,14)
+		var b: Vector2=(to-ground)/Vector2(25,14)
+		var crossed:=Geometry2D.get_closest_point_to_segment(Vector2.ZERO,a,b).length_squared()<=1.0
+		if wet and moving and same_water and crossed and not bool(plant.get_meta("contact")):
+			var direction: Vector2=(to-from).normalized()
+			plant.set_meta("push",Vector2(direction.x*3.5,2.8+maxf(direction.y,0.0)*1.2))
+			plant.set_meta("lean",direction.x*0.065)
+			plant.set_meta("touches",int(plant.get_meta("touches"))+1)
+		plant.set_meta("contact",wet and same_water and b.length_squared()<=1.0)

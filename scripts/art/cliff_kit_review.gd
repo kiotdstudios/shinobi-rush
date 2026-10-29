@@ -141,7 +141,7 @@ func _process(_delta: float) -> void:
 				var plant:=o.nodes[0] as BlightwoodFoliage
 				var def:=BlightwoodFoliage.definition(o.id)
 				var pick: Vector2=arena.get_global_transform_with_canvas()*((o.pos as Vector2)-(def.anchor as Vector2)-Vector2(0,float(def.lift))+(def.pick as Vector2))
-				plants.append({"id":o.id,"x":o.pos.x,"y":o.pos.y,"phase":int(floor(plant.clock*24))%96,"visible":plant.visible,"pick_x":pick.x,"pick_y":pick.y})
+				plants.append({"id":o.id,"tint":plant.self_modulate.to_html(),"x":o.pos.x,"y":o.pos.y,"phase":int(floor(plant.clock*24))%96,"visible":plant.visible,"pick_x":pick.x,"pick_y":pick.y})
 			if o.id=="cliff_cascade":
 				var water:=o.nodes[0] as BlightwoodWater
 				bridge.fall_frame=water._cascade_atlas.region.position.x

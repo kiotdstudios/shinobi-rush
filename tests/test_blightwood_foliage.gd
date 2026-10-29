@@ -23,6 +23,8 @@ func run(ck: Callable, root: Node) -> void:
 		var foot:=plant.position+plant.offset+(info.anchor as Vector2)+Vector2(0,float(info.lift))
 		ck.call("foliage: correct pinned top/root and 66px vine lift "+id,foot.is_equal_approx(origin) and plant.get_child_count()==0)
 		ck.call("foliage: native silhouette controls visible sway range "+id,float((plant.material as ShaderMaterial).get_shader_parameter("sway_length"))==float(info.sway_length) and float(info.sway_length)>0.0)
+		var icon: Button=arena.editor._palette_buttons.get(id)
+		ck.call("foliage: fern purple tint matches editor icon "+id,plant.self_modulate==BlightwoodFoliage.tint(id) and icon!=null and icon.get_theme_color("icon_normal_color")==plant.self_modulate if id.begins_with("blight_fern_") else plant.self_modulate==Color.WHITE)
 		var before:=plant.position
 		plant.advance(.75)
 		ck.call("foliage: wind phase advances without moving attachment "+id,plant.position==before and int((plant.material as ShaderMaterial).get_shader_parameter("phase_index"))==18)

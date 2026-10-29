@@ -79,6 +79,7 @@ func advance(delta: float) -> void:
 	fx.advance(delta)
 	var phase := fposmod(clock,4.0)/4.0
 	var p := Vector2(-100+200*phase*2.0,0) if phase<0.5 else Vector2(100-200*(phase-0.5)*2.0,0)
+	p.y = 60.0
 	body.position = p
 	body.show_animation(SpriteLibrary.get_instance().get_set("player_128"),"run","E" if phase<0.5 else "W")
 	body.sprite.speed_scale = speed if not paused else 0.0

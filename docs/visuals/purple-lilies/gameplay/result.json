@@ -1,0 +1,353 @@
+{
+  "utc": "2026-10-29T18:58:35.250Z",
+  "checks": [
+    {
+      "name": "all ferns are purple while vines keep original colors",
+      "ok": true,
+      "detail": [
+        {
+          "id": "blight_vine_01",
+          "phase": 6,
+          "pick_x": 413.450012207031,
+          "pick_y": 324.350006103516,
+          "tint": "ffffffff",
+          "visible": true,
+          "x": -198,
+          "y": 27
+        },
+        {
+          "id": "blight_vine_02",
+          "phase": 6,
+          "pick_x": 496.25,
+          "pick_y": 366.899993896484,
+          "tint": "ffffffff",
+          "visible": true,
+          "x": -126,
+          "y": 63
+        },
+        {
+          "id": "blight_vine_03",
+          "phase": 6,
+          "pick_x": 536.5,
+          "pick_y": 386.450012207031,
+          "tint": "ffffffff",
+          "visible": true,
+          "x": -90,
+          "y": 81
+        },
+        {
+          "id": "blight_vine_01",
+          "phase": 6,
+          "pick_x": 744.650024414062,
+          "pick_y": 427.850006103516,
+          "tint": "ffffffff",
+          "visible": true,
+          "x": 90,
+          "y": 117
+        },
+        {
+          "id": "blight_vine_02",
+          "phase": 6,
+          "pick_x": 827.450012207031,
+          "pick_y": 449.700012207031,
+          "tint": "ffffffff",
+          "visible": true,
+          "x": 162,
+          "y": 135
+        },
+        {
+          "id": "blight_vine_03",
+          "phase": 6,
+          "pick_x": 950.5,
+          "pick_y": 448.549987792969,
+          "tint": "ffffffff",
+          "visible": true,
+          "x": 270,
+          "y": 135
+        },
+        {
+          "id": "blight_fern_01",
+          "phase": 6,
+          "pick_x": 380.100006103516,
+          "pick_y": 506.049987792969,
+          "tint": "d27dffff",
+          "visible": true,
+          "x": -225,
+          "y": 180
+        },
+        {
+          "id": "blight_fern_02",
+          "phase": 6,
+          "pick_x": 523.849975585938,
+          "pick_y": 637.150024414062,
+          "tint": "d27dffff",
+          "visible": true,
+          "x": -100,
+          "y": 290
+        },
+        {
+          "id": "blight_fern_03",
+          "phase": 6,
+          "pick_x": 950.5,
+          "pick_y": 548.599975585938,
+          "tint": "d27dffff",
+          "visible": true,
+          "x": 270,
+          "y": 210
+        },
+        {
+          "id": "blight_fern_01",
+          "phase": 6,
+          "pick_x": 972.349975585938,
+          "pick_y": 563.549987792969,
+          "tint": "d27dffff",
+          "visible": true,
+          "x": 290,
+          "y": 230
+        },
+        {
+          "id": "blight_fern_02",
+          "phase": 6,
+          "pick_x": 1121.84997558594,
+          "pick_y": 591.150024414062,
+          "tint": "d27dffff",
+          "visible": true,
+          "x": 420,
+          "y": 250
+        },
+        {
+          "id": "blight_fern_03",
+          "phase": 6,
+          "pick_x": 1019.5,
+          "pick_y": 744.099975585938,
+          "tint": "d27dffff",
+          "visible": true,
+          "x": 330,
+          "y": 380
+        },
+        {
+          "id": "blight_fern_01",
+          "phase": 6,
+          "pick_x": 1213.84997558594,
+          "pick_y": 609.549987792969,
+          "tint": "d27dffff",
+          "visible": true,
+          "x": 500,
+          "y": 270
+        },
+        {
+          "id": "blight_fern_02",
+          "phase": 6,
+          "pick_x": 155.850006103516,
+          "pick_y": 533.650024414062,
+          "tint": "d27dffff",
+          "visible": true,
+          "x": -420,
+          "y": 200
+        },
+        {
+          "id": "blight_fern_03",
+          "phase": 6,
+          "pick_x": 168.5,
+          "pick_y": 652.099975585938,
+          "tint": "d27dffff",
+          "visible": true,
+          "x": -410,
+          "y": 300
+        }
+      ]
+    },
+    {
+      "name": "all six foliage cards remain available",
+      "ok": true
+    },
+    {
+      "name": "newly placed fern also uses purple variant",
+      "ok": true
+    },
+    {
+      "name": "real player starts dry with unchanged pool",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "clock": 0.12213333696126938,
+        "x": 300,
+        "y": 410,
+        "wet": false,
+        "chakra": 100,
+        "emissions": 0,
+        "aura": false,
+        "pool": 32,
+        "rolls": 0,
+        "frogs": 0,
+        "pads_json": "[{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":2.6,\"touches\":0,\"variant\":0,\"x\":500.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":3.9990831204,\"touches\":0,\"variant\":1,\"x\":564.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":5.3981662408,\"touches\":0,\"variant\":2,\"x\":628.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":411.0,\"push\":0.0,\"rate\":3.9972493612,\"touches\":0,\"variant\":3,\"x\":692.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":411.0,\"push\":0.0,\"rate\":5.3963324816,\"touches\":0,\"variant\":4,\"x\":756.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":411.0,\"push\":0.0,\"rate\":3.995415602,\"touches\":0,\"variant\":5,\"x\":820.0,\"y\":410.0}]"
+      }
+    },
+    {
+      "name": "real water-running reaches and disturbs multiple plants",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "clock": 1.2406333684921265,
+        "x": 664.625,
+        "y": 410,
+        "wet": true,
+        "chakra": 92.66666412353516,
+        "emissions": 9,
+        "aura": true,
+        "pool": 32,
+        "rolls": 1,
+        "frogs": 0,
+        "pads_json": "[{\"depth\":0,\"dip\":0.845037758350372,\"draw_y\":411.0,\"push\":1.3527204990387,\"rate\":2.6,\"touches\":1,\"variant\":0,\"x\":500.0,\"y\":410.0},{\"depth\":0,\"dip\":0.836075007915497,\"draw_y\":411.0,\"push\":1.33837306499481,\"rate\":3.9990831204,\"touches\":1,\"variant\":1,\"x\":564.0,\"y\":410.0},{\"depth\":0,\"dip\":1.49157619476318,\"draw_y\":412.0,\"push\":2.38768696784973,\"rate\":5.3981662408,\"touches\":1,\"variant\":2,\"x\":628.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":3.9972493612,\"touches\":0,\"variant\":3,\"x\":692.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":5.3963324816,\"touches\":0,\"variant\":4,\"x\":756.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":3.995415602,\"touches\":0,\"variant\":5,\"x\":820.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":339.0,\"push\":0.0,\"rate\":4.338866472,\"touches\":0,\"variant\":2,\"x\":556.0,\"y\":338.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":302.0,\"push\":0.0,\"rate\":4.897860376,\"touches\":0,\"variant\":0,\"x\":700.0,\"y\":302.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":338.0,\"push\":0.0,\"rate\":4.56569492,\"touches\":0,\"variant\":4,\"x\":628.0,\"y\":338.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":501.0,\"push\":0.0,\"rate\":3.984395936,\"touches\":0,\"variant\":0,\"x\":592.0,\"y\":500.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":427.0,\"push\":0.0,\"rate\":4.880585776,\"touches\":0,\"variant\":4,\"x\":952.0,\"y\":428.0}]"
+      }
+    },
+    {
+      "name": "touched plants have varied recovery speeds",
+      "ok": true,
+      "detail": [
+        {
+          "depth": 0,
+          "dip": 0.845037758350372,
+          "draw_y": 411,
+          "push": 1.3527204990387,
+          "rate": 2.6,
+          "touches": 1,
+          "variant": 0,
+          "x": 500,
+          "y": 410
+        },
+        {
+          "depth": 0,
+          "dip": 0.836075007915497,
+          "draw_y": 411,
+          "push": 1.33837306499481,
+          "rate": 3.9990831204,
+          "touches": 1,
+          "variant": 1,
+          "x": 564,
+          "y": 410
+        },
+        {
+          "depth": 0,
+          "dip": 1.49157619476318,
+          "draw_y": 412,
+          "push": 2.38768696784973,
+          "rate": 5.3981662408,
+          "touches": 1,
+          "variant": 2,
+          "x": 628,
+          "y": 410
+        }
+      ]
+    },
+    {
+      "name": "contact dips down and preserves water depth",
+      "ok": true,
+      "detail": [
+        {
+          "depth": 0,
+          "dip": 0.845037758350372,
+          "draw_y": 411,
+          "push": 1.3527204990387,
+          "rate": 2.6,
+          "touches": 1,
+          "variant": 0,
+          "x": 500,
+          "y": 410
+        },
+        {
+          "depth": 0,
+          "dip": 0.836075007915497,
+          "draw_y": 411,
+          "push": 1.33837306499481,
+          "rate": 3.9990831204,
+          "touches": 1,
+          "variant": 1,
+          "x": 564,
+          "y": 410
+        },
+        {
+          "depth": 0,
+          "dip": 1.49157619476318,
+          "draw_y": 412,
+          "push": 2.38768696784973,
+          "rate": 5.3981662408,
+          "touches": 1,
+          "variant": 2,
+          "x": 628,
+          "y": 410
+        }
+      ]
+    },
+    {
+      "name": "normal chakra cost is still applied",
+      "ok": true,
+      "detail": {
+        "start": 100,
+        "wet": 92.66666412353516
+      }
+    },
+    {
+      "name": "plants fully settle while player remains on water",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "clock": 2.7913665771484375,
+        "x": 675.125,
+        "y": 410,
+        "wet": true,
+        "chakra": 77.16666412353516,
+        "emissions": 9,
+        "aura": true,
+        "pool": 32,
+        "rolls": 1,
+        "frogs": 0,
+        "pads_json": "[{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":2.6,\"touches\":1,\"variant\":0,\"x\":500.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":3.9990831204,\"touches\":1,\"variant\":1,\"x\":564.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":5.3981662408,\"touches\":1,\"variant\":2,\"x\":628.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":409.0,\"push\":0.0,\"rate\":3.9972493612,\"touches\":1,\"variant\":3,\"x\":692.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":409.0,\"push\":0.0,\"rate\":5.3963324816,\"touches\":0,\"variant\":4,\"x\":756.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":409.0,\"push\":0.0,\"rate\":3.995415602,\"touches\":0,\"variant\":5,\"x\":820.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":338.0,\"push\":0.0,\"rate\":4.338866472,\"touches\":0,\"variant\":2,\"x\":556.0,\"y\":338.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":301.0,\"push\":0.0,\"rate\":4.897860376,\"touches\":0,\"variant\":0,\"x\":700.0,\"y\":302.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":337.0,\"push\":0.0,\"rate\":4.56569492,\"touches\":0,\"variant\":4,\"x\":628.0,\"y\":338.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":500.0,\"push\":0.0,\"rate\":3.984395936,\"touches\":0,\"variant\":0,\"x\":592.0,\"y\":500.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":428.0,\"push\":0.0,\"rate\":4.880585776,\"touches\":0,\"variant\":4,\"x\":952.0,\"y\":428.0}]"
+      }
+    },
+    {
+      "name": "standing creates no repeated running spray",
+      "ok": true
+    },
+    {
+      "name": "second crossing reuses bounded reactions",
+      "ok": true
+    },
+    {
+      "name": "recovery also completes after leaving water",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "clock": 5.620133399963379,
+        "x": 457.90826416015625,
+        "y": 344.43963623046875,
+        "wet": false,
+        "chakra": 66,
+        "emissions": 16,
+        "aura": false,
+        "pool": 32,
+        "rolls": 1,
+        "frogs": 0,
+        "pads_json": "[{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":2.6,\"touches\":2,\"variant\":0,\"x\":500.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":3.9990831204,\"touches\":2,\"variant\":1,\"x\":564.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":410.0,\"push\":0.0,\"rate\":5.3981662408,\"touches\":2,\"variant\":2,\"x\":628.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":411.0,\"push\":0.0,\"rate\":3.9972493612,\"touches\":1,\"variant\":3,\"x\":692.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":411.0,\"push\":0.0,\"rate\":5.3963324816,\"touches\":0,\"variant\":4,\"x\":756.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":411.0,\"push\":0.0,\"rate\":3.995415602,\"touches\":0,\"variant\":5,\"x\":820.0,\"y\":410.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":338.0,\"push\":0.0,\"rate\":4.338866472,\"touches\":0,\"variant\":2,\"x\":556.0,\"y\":338.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":303.0,\"push\":0.0,\"rate\":4.897860376,\"touches\":0,\"variant\":0,\"x\":700.0,\"y\":302.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":339.0,\"push\":0.0,\"rate\":4.56569492,\"touches\":0,\"variant\":4,\"x\":628.0,\"y\":338.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":500.0,\"push\":0.0,\"rate\":3.984395936,\"touches\":0,\"variant\":0,\"x\":592.0,\"y\":500.0},{\"depth\":0,\"dip\":0.0,\"draw_y\":428.0,\"push\":0.0,\"rate\":4.880585776,\"touches\":0,\"variant\":4,\"x\":952.0,\"y\":428.0}]"
+      }
+    },
+    {
+      "name": "original plant anchors never drift",
+      "ok": true
+    },
+    {
+      "name": "one eligible visit remains one frog rarity roll",
+      "ok": true,
+      "detail": {
+        "rolls": 1,
+        "pool": 32
+      }
+    },
+    {
+      "name": "zero browser or engine errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}
