@@ -17,3 +17,7 @@ All exported sprites are RGBA with nearest filtering; no baked ground rectangle,
 `Main/TrainingArena/Waterlife` is a presentation node. Changes to `DustPuff.play` suppress existing dry-land dust over water. Existing water-chakra drain and bridge exclusions stay owned by the original gameplay controller. Aki integration handoff: this feature reads those rules; further foot socket authoring can refine exact toe contact without changing this art pack or gameplay timers.
 
 Review: `?waterlife=review`, Normal/Half/Pause/Step/Frog again. The running loop is clearly labeled staged art; forced frog is preview-only. Production probability and eligibility are documented in [Chief's note](CHIEF-NOTE.md).
+
+## 2026-10-29 contact/recovery revision
+
+Lilies and lotuses react to actual wet crossings with a bounded dip/drift/tilt and recover at deterministic individual rates (2.6–5.4/s), including after the player stops or exits. Actual water elevation controls their resting draw position; ground anchors never move. No movement/chakra or rare-frog rules change. [Integration and evidence](../purple-lilies/README.md).

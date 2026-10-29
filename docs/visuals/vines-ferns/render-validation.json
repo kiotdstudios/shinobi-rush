@@ -4,6 +4,8 @@
     "changed_pixels": 168,
     "root_pinned": true,
     "palette_preserved": true,
+    "render_tint": "#ffffff",
+    "framebuffer_tolerance": 0,
     "phases": 96
   },
   {
@@ -11,6 +13,8 @@
     "changed_pixels": 163,
     "root_pinned": true,
     "palette_preserved": true,
+    "render_tint": "#ffffff",
+    "framebuffer_tolerance": 0,
     "phases": 96
   },
   {
@@ -18,6 +22,8 @@
     "changed_pixels": 256,
     "root_pinned": true,
     "palette_preserved": true,
+    "render_tint": "#ffffff",
+    "framebuffer_tolerance": 0,
     "phases": 96
   },
   {
@@ -25,6 +31,8 @@
     "changed_pixels": 408,
     "root_pinned": true,
     "palette_preserved": true,
+    "render_tint": "#d27dff",
+    "framebuffer_tolerance": 1,
     "phases": 96
   },
   {
@@ -32,6 +40,8 @@
     "changed_pixels": 319,
     "root_pinned": true,
     "palette_preserved": true,
+    "render_tint": "#d27dff",
+    "framebuffer_tolerance": 1,
     "phases": 96
   },
   {
@@ -39,6 +49,8 @@
     "changed_pixels": 394,
     "root_pinned": true,
     "palette_preserved": true,
+    "render_tint": "#d27dff",
+    "framebuffer_tolerance": 1,
     "phases": 96
   }
 ]

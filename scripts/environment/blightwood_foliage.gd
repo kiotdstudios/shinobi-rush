@@ -13,14 +13,17 @@ static func definition(id: String) -> Dictionary:
 	if _definitions.is_empty():
 		var data: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(DIR+"foliage.art.json"))
 		for item: Dictionary in data.items:
-			_definitions[item.id]={"kind":"foliage","label":item.label,"file":item.file,"size":Vector2(item.size[0],item.size[1]),"anchor":Vector2(item.anchor[0],item.anchor[1]),"pick":Vector2(item.pick_pixel[0],item.pick_pixel[1]),"lift":float(item.lift),"sort_dy":float(item.sort_dy),"hang":bool(item.hang),"sway_length":float(item.content_bounds[3]-item.content_bounds[1]),"footprint":Vector2(12,6)}
+			_definitions[item.id]={"kind":"foliage","label":item.label,"file":item.file,"size":Vector2(item.size[0],item.size[1]),"anchor":Vector2(item.anchor[0],item.anchor[1]),"pick":Vector2(item.pick_pixel[0],item.pick_pixel[1]),"lift":float(item.lift),"sort_dy":float(item.sort_dy),"hang":bool(item.hang),"tint":Color(str(item.get("render_tint","#ffffff"))),"sway_length":float(item.content_bounds[3]-item.content_bounds[1]),"footprint":Vector2(12,6)}
 	return _definitions.get(id,{})
+static func tint(id: String) -> Color:
+	return definition(id).get("tint",Color.WHITE)
 static func art(id: String) -> Texture2D:
 	return load(DIR+str(definition(id).file)) as Texture2D
 func setup(id: String, at: Vector2) -> void:
 	definition_id=id
 	var info:=definition(id)
 	texture=art(id)
+	self_modulate=tint(id)
 	texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
 	centered=false
 	sort_bias=float(info.sort_dy)
