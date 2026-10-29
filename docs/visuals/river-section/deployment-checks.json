@@ -1,0 +1,78 @@
+{
+  "runtime": "9bf429cd29ef859918725549b73b325500ef8c6c",
+  "pipeline": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490697",
+  "checks": [
+    {
+      "name": "godot-ci-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490697/job/123244727214",
+      "started_at": "2026-10-29T03:26:35Z",
+      "completed_at": "2026-10-29T03:26:52Z"
+    },
+    {
+      "name": "Post-deploy live smoke test",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490697/job/123244197976",
+      "started_at": "2026-10-29T03:24:48Z",
+      "completed_at": "2026-10-29T03:26:33Z"
+    },
+    {
+      "name": "Deploy to GitHub Pages (main only)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490697/job/123243984095",
+      "started_at": "2026-10-29T03:24:08Z",
+      "completed_at": "2026-10-29T03:24:46Z"
+    },
+    {
+      "name": "Pre-deploy browser smoke test",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490697/job/123243144486",
+      "started_at": "2026-10-29T03:21:29Z",
+      "completed_at": "2026-10-29T03:24:04Z"
+    },
+    {
+      "name": "Self-test - positive and negative cases (throwaway project, never deployed)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490677/job/123239546414",
+      "started_at": "2026-10-29T03:09:39Z",
+      "completed_at": "2026-10-29T03:12:51Z"
+    },
+    {
+      "name": "Import, validate, test and export (Web)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490697/job/123239475599",
+      "started_at": "2026-10-29T03:09:26Z",
+      "completed_at": "2026-10-29T03:21:27Z"
+    },
+    {
+      "name": "Tooling lint and unit tests",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490677/job/123239370260",
+      "started_at": "2026-10-29T03:09:05Z",
+      "completed_at": "2026-10-29T03:09:37Z"
+    },
+    {
+      "name": "Detect Godot project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490697/job/123239370173",
+      "started_at": "2026-10-29T03:09:05Z",
+      "completed_at": "2026-10-29T03:09:23Z"
+    },
+    {
+      "name": "validate-orders-and-project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40810490681/job/123239370134",
+      "started_at": "2026-10-29T03:09:05Z",
+      "completed_at": "2026-10-29T03:09:44Z"
+    }
+  ]
+}

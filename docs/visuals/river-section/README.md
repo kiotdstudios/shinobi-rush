@@ -2,9 +2,11 @@
 
 An editable composition based on the owner's forest waterfall reference, assembled from existing game assets. It is a starter section rather than a pixel-identical recreation of the concept image.
 
+Verified live on `9bf429cd29ef859918725549b73b325500ef8c6c`: [Open editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&v=9bf429cd) · [Play section](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&editor=1&v=9bf429cd). All 27 exact-build live checks passed with zero errors. [Live editor screenshot](live-editor.png) · [Live overview](live-overview.png) · [Live result](live-result.json) · [Deployment checks](deployment-checks.json) · [Native results](native-result.json).
+
 ## Open and build
 
-After this branch is integrated/deployed, open `?cliffs=river&map_editor=1` on the canonical game. The assembled map and editor open together. The **Blightwood Cliffs** category contains the connected terrace/stair/waterfall pieces. Select to move; Erase to remove; Ctrl+Z/Ctrl+Y for history. **Playtest** opens your edited section, including your spawn marker. File Save exports the layout for reuse; keep that JSON when editing a review preset. Ordinary saved worlds are separate.
+Open `?cliffs=river&map_editor=1` on the canonical game. The assembled map and editor open together. The **Blightwood Cliffs** category contains the connected terrace/stair/waterfall pieces. Select to move; Erase to remove; Ctrl+Z/Ctrl+Y for history. **Playtest** opens your edited section, including your spawn marker. **Download** exports your edited JSON for reuse; keep that file. Save writes the separate review file. Opening the starter link again starts from the template; Playtest uses your edited snapshot. Ordinary saved worlds are separate.
 
 The source map is [blightwood-river-section.json](../../../world/demos/blightwood-river-section.json). It uses the existing version-5 editor format. The matching runtime copy lives in `assets/environment/blightwood/cliff_kit/river-section.json`. Rebuild both with `python scripts/art/build_river_section.py`.
 
