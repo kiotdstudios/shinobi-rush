@@ -25,6 +25,8 @@ func _ready() -> void:
 	fx = Waterlife.new()
 	fx.actor = player
 	add_child(fx)
+	# Deterministic inspection row; production still uses populate_plants().
+	for i in 6:fx.add_plant(Vector2(500+i*64,410),i,float(i)*0.37)
 	var ui := CanvasLayer.new()
 	add_child(ui)
 	label = Label.new()
@@ -37,6 +39,7 @@ func _process(_delta: float) -> void:
 	label.text = "REAL WATER TEST | WASD / gamepad move • run right onto water • normal chakra cost\nChakra %.1f | water %s | contacts %d | no forced frog" % [player.chakra,player.over_water,fx.emissions]
 	if state != null:
 		state.ready = true
+		state.clock = fx.clock
 		state.x = player.global_position.x
 		state.y = player.global_position.y
 		state.wet = player.over_water
@@ -46,3 +49,9 @@ func _process(_delta: float) -> void:
 		state.pool = fx.pool.size()
 		state.rolls = fx.rolls
 		state.frogs = fx.frog_spawns
+		var pads:=[]
+		for plant in fx.plants:
+			var push: Vector2=plant.get_meta("push")
+			var ground: Vector2=plant.get_meta("ground_foot")
+			pads.append({"variant":plant.frame,"x":ground.x,"y":ground.y,"draw_y":plant.global_position.y,"push":push.length(),"dip":push.y,"rate":float(plant.get_meta("return_speed")),"touches":int(plant.get_meta("touches")),"depth":plant.z_index})
+		state.pads_json=JSON.stringify(pads)

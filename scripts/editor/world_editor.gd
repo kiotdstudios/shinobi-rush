@@ -1739,7 +1739,7 @@ func draw_overlay(c: Node2D) -> void:
 		for it in clipboard:
 			var at: Array = PlacedObjects.art_texture(it.id, origin + Vector2(float(it.x), float(it.y)))
 			if at[0] != null:
-				c.draw_texture_rect(at[0], Rect2(at[1], (at[0] as Texture2D).get_size() * PlacedObjects.art_scale(it.id)), false, Color(1, 1, 1, 0.6))
+				c.draw_texture_rect(at[0], Rect2(at[1], (at[0] as Texture2D).get_size() * PlacedObjects.art_scale(it.id)), false, Color(1, 1, 1, 0.6) * (BlightwoodFoliage.tint(it.id) if it.id in BlightwoodFoliage.IDS else Color.WHITE))
 	for pr: Dictionary in problems:
 		var col := Color(1, 0.25, 0.25, 0.95) if pr.kind in ["overlap", "stacked"] else Color(1, 0.8, 0.1, 0.95)
 		c.draw_arc(pr.pos, 26.0, 0.0, TAU, 28, col, 3.0)
@@ -1762,6 +1762,7 @@ func draw_overlay(c: Node2D) -> void:
 		var at := PlacedObjects.art_texture(place_id, pos)
 		var gtex: Texture2D = at[0]
 		var gcol := Color(1, 1, 1, 0.6) if ok else Color(1, 0.4, 0.4, 0.6)
+		if place_id in BlightwoodFoliage.IDS:gcol *= BlightwoodFoliage.tint(place_id)
 		if gtex != null:
 			c.draw_texture_rect(gtex, Rect2(at[1], gtex.get_size() * PlacedObjects.art_scale(place_id)), false, gcol)
 		else:
@@ -2111,6 +2112,8 @@ func _build_ui() -> void:
 				b.custom_minimum_size = Vector2(0, 96)
 			elif def.kind == "foliage":
 				b.icon=BlightwoodFoliage.art(id)
+				for icon_color in ["icon_normal_color","icon_hover_color","icon_pressed_color","icon_hover_pressed_color","icon_disabled_color"]:
+					b.add_theme_color_override(icon_color,BlightwoodFoliage.tint(id))
 				b.add_theme_constant_override("icon_max_width",96)
 				b.custom_minimum_size=Vector2(0,112)
 			elif def.kind == "grass":

@@ -68,6 +68,7 @@
         12,
         6
       ],
+      "render_tint": "#ffffff",
       "source_sha256": "8129019797a9ca36a6935717d52453b95f884b2c435c92b389232d6a75969808",
       "object_id": "9978b91f-6c89-4741-b2b7-8b242e88f82e",
       "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
@@ -101,6 +102,7 @@
         12,
         6
       ],
+      "render_tint": "#ffffff",
       "source_sha256": "817cf6c27430ce47debee4e478864f1eb2bc3d1f133bef28663202009ec67ca6",
       "object_id": "62e7aaa4-30ab-4b4d-9405-50d7a24abcfb",
       "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
@@ -134,6 +136,7 @@
         12,
         6
       ],
+      "render_tint": "#ffffff",
       "source_sha256": "7b8c716ebb00adacd172a346788e203d915bdd3afed349744f9ac5b98f605d02",
       "object_id": "1475edfb-86e3-4809-a456-675985f97def",
       "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
@@ -167,6 +170,7 @@
         12,
         6
       ],
+      "render_tint": "#d27dff",
       "source_sha256": "ca46cf39c09683384dc530e9abbda80d7d4d43787a66814b4ac8ea6391e776e5",
       "object_id": "8b81e17a-9ef1-4840-8653-d912699fc877",
       "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
@@ -200,6 +204,7 @@
         12,
         6
       ],
+      "render_tint": "#d27dff",
       "source_sha256": "c865c14f7f7dd384e8f33c3d53568b4bc19203cd2e83ff40740bcddf9d48a82f",
       "object_id": "3240eaf6-e99f-47b4-8623-481b25c8ff89",
       "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"
@@ -233,6 +238,7 @@
         12,
         6
       ],
+      "render_tint": "#d27dff",
       "source_sha256": "b546083f391072b6c5ddeec593d0d6cf75e3690655b056d8445cf0d99f84d43d",
       "object_id": "c63b5cd6-6594-468c-a20f-47f85f66ae84",
       "processing": "alpha crop, uniform nearest-neighbor reduction, fixed root placement; no raw pixels painted"

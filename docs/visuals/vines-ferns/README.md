@@ -4,7 +4,7 @@
 
 Three hanging ivy silhouettes and three small fern clusters generated in PixelLab, using the exact opaque palette sampled from existing `grass9_center.png`. Transparent 128×128 native canvases; nearest-neighbor reduction and fixed alignment only. Raw sources, selected PixelLab object IDs and hashes are retained in `assets/environment/blightwood_foliage/source/` and `foliage.art.json`.
 
-[Contact sheet](contact-sheet.png) · [Normal preview](normal.gif) · [Half-speed preview](half-speed.gif) · [Normal MP4](normal.mp4) · [Half-speed MP4](half-speed.mp4) · [Editor](gameplay/editor.png) · [Waterfall detail](gameplay/cliff-detail.png) · [Overview](gameplay/overview.png) · [Browser results](gameplay/result.json).
+[Original source contact sheet](contact-sheet.png) · [Normal preview](normal.gif) · [Half-speed preview](half-speed.gif) · [Normal MP4](normal.mp4) · [Half-speed MP4](half-speed.mp4) · [Editor](gameplay/editor.png) · [Waterfall detail](gameplay/cliff-detail.png) · [Overview](gameplay/overview.png) · [Browser results](gameplay/result.json).
 
 ## Assets and alignment
 
@@ -31,3 +31,7 @@ Reviewed and merged via [PR258](https://github.com/kiotdstudios/shinobi-rush/pul
 Rendered QA: `godot --path . --script tools/capture_blightwood_foliage.gd` (native GPU, without `--headless`) then `python scripts/art/validate_foliage_render.py`. [Rendered poses](rendered-poses.png) and [96-phase checks](render-validation.json) confirm visible movement, pinned nonempty attachment regions and exact palette for all six assets. Normal and half-speed previews show the six pieces together at 2× nearest-neighbor display scale.
 
 The sway correction in [PR259](https://github.com/kiotdstudios/shinobi-rush/pull/259) passed all **5,186 native assertions** and browser smoke checks. [Correction checks](correction-checks.json).
+
+## Owner purple-color revision
+
+The three ferns now use the native manifest tint `#d27dff`; source PNGs, shapes and anchors remain unchanged. Runtime, editor cards, ghosts and stamps use the same tint. Updated rendered previews above show purple; the original source contact sheet intentionally retains the original source colors. [Purple/recovery delivery](../purple-lilies/README.md) tracks its local tests and subsequent live verification.
