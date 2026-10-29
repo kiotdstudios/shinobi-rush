@@ -22,6 +22,7 @@ func run(ck: Callable, root: Node) -> void:
 		ck.call("foliage: transparent sprite and catalog "+id,plant!=null and not PlacedObjects.art_texture(id,origin).is_empty())
 		var foot:=plant.position+plant.offset+(info.anchor as Vector2)+Vector2(0,float(info.lift))
 		ck.call("foliage: correct pinned top/root and 66px vine lift "+id,foot.is_equal_approx(origin) and plant.get_child_count()==0)
+		ck.call("foliage: native silhouette controls visible sway range "+id,float((plant.material as ShaderMaterial).get_shader_parameter("sway_length"))==float(info.sway_length) and float(info.sway_length)>0.0)
 		var before:=plant.position
 		plant.advance(.75)
 		ck.call("foliage: wind phase advances without moving attachment "+id,plant.position==before and int((plant.material as ShaderMaterial).get_shader_parameter("phase_index"))==18)

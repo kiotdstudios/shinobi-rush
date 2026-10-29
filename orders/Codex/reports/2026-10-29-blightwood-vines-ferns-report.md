@@ -3,7 +3,7 @@
 - Order: `orders/Codex/2026-10-29-blightwood-vines-ferns.md`
 - Date: 2026-10-29 (America/New_York)
 - Final status: REVIEW — local acceptance passed; integration/live verification pending
-- Commit / PR: Not committed yet; report written before implementation commit.
+- Commit / PR: Implementation `a00adeb3e266cbdf859dd542943a4911b0de8de3`, [PR258](https://github.com/kiotdstudios/shinobi-rush/pull/258), merged as `ae03d6ad6e2e647dfc5952673cb6f2c9881e4f30`. Original report was written before the implementation commit.
 
 ## Work completed
 
@@ -33,7 +33,7 @@ Environment: Windows PowerShell, bundled Python/Node, Godot 4.7.2, Chromium Play
 | `python scripts/ci/godot_ci.py validate-resources --project . --log-dir build/vines-ferns/resources-final` | PASS: 444 scripts /30 scenes /2 resources /0 failures | resource validation log |
 | `python scripts/ci/validate_godot_project.py --project . --json-out build/vines-ferns/project-validation.json` | PASS: 0 errors /0 warnings | JSON |
 | `python scripts/ci/validate_orders.py`; `git diff --check` | PASS | console |
-| `python scripts/ci/godot_ci.py export --project . --out ../vines-ferns-web --log-dir build/vines-ferns/export`, `finalize-export --project . --out ../vines-ferns-web --kind game`, `check-export --out ../vines-ferns-web` | PASS: fresh Web pack, 2,378 sprite PNG imports | export log; local build-info labels base main, not deployed new content |
+| `python scripts/ci/godot_ci.py export --project . --out ../vines-ferns-web --log-dir build/vines-ferns/export`, `finalize-export --project . --out ../vines-ferns-web --kind game`, `check-export --dir ../vines-ferns-web --kind game --project .` | PASS: fresh Web pack, 2,378 sprite PNG imports | export log; local build-info labels base main, not deployed new content |
 | `node scripts/ci/smoke/foliage-probe.mjs --serve-dir ../vines-ferns-web --out-dir docs/visuals/vines-ferns/gameplay` | PASS: 13 checks, zero browser/engine errors | gameplay/result.json |
 | `node scripts/ci/smoke/cliff-kit-preview.mjs --serve-dir ../vines-ferns-web --query '?cliffs=river&editor=1&foliage=1' --view 6 --out-dir build/vines-ferns/preview` | PASS: real moving waterfall/foliage; FFmpeg timed normal/half-speed exports | capture.json; preview GIF/MP4 |
 | Visually inspected actual overview, waterfall detail, editor and contact sheet | PASS: attached ivy, small detailed fern clusters, clear water/stairs, correct palette and native pixels | PNGs in visual folder |
@@ -49,3 +49,36 @@ None.
 
 ## Outstanding work / next steps
 Push tested implementation, review PR and CI, integrate via expected-head normal merge, verify main deploy and smoke-postdeploy, then run the actual foliage probe against the exact canonical live revision. Update this report with SHAs, workflow link, live evidence and completion status. Do not claim new foliage is live until then.
+
+
+## Reviewed integration
+
+All PR checks passed, including normal Godot CI gate, full controls regression, full browser smoke, debug-log regression, repository validation, tooling and pipeline self-test. CI confirms **5,180 native assertions passed /0 failed**, with 444 scripts /30 scenes /2 resources /0 load failures. No inline review findings remained. Normal squash merge used the exact expected head SHA. `git diff --exit-code a00adeb3 origin/main` confirmed identical tested/integrated content immediately after merge.
+
+- [PR Godot CI](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371709)
+- [Full browser regression](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371489)
+- [Main deployment workflow](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40891548656) — running; completion/live evidence to follow.
+- Durable [PR check summary](../../../docs/visuals/vines-ferns/pr-checks.json) and [focused native results](../../../docs/visuals/vines-ferns/native-result.json).
+
+Report correction: the export-check CLI uses `--dir`, not `--out`. Re-ran that exact check after integration: PASS, project.binary +1 sprite manifest +2,378 sprite PNG imports. This corrects the recorded command spelling; no implementation changed.
+
+
+## Final motion correction — tested before follow-up implementation commit
+
+Final analysis found the shortest fern (42px opaque height) had zero rounded displacement when using a shared 72px sway span. The earlier phase-only test could not detect this. Corrected sway normalization to each sprite's actual opaque bounds, preserving the roots and whole-texel sampling. Added six native assertions and an actual GPU capture/validation path which checks **rendered pixels**, not just time metadata.
+
+Before this follow-up commit:
+
+- Same focused Godot command: **113 passed /0 failed**, `build/vines-ferns/sway-native.log`.
+- `godot --path . --rendering-method gl_compatibility --resolution 768x160 --position=-3000,-3000 --script tools/capture_blightwood_foliage.gd`: PASS, 96 actual GPU phases of all six sprites (NVIDIA RTX3080 /OpenGL3.3). No gameplay scene instantiated.
+- `python scripts/art/validate_foliage_render.py`: PASS, all six change actual visible pixels; each nonempty attachment region remains fixed throughout 96 phases; all colors remain in the source palette plus review background. Durable render-validation.json and rendered-poses.png.
+- Refreshed normal/half previews using those actual native GPU frames at 24/12 FPS. No source pixels redrawn.
+- `python scripts/ci/godot_ci.py validate-resources --project . --log-dir build/vines-ferns/sway-resources`: PASS, **445 scripts /30 scenes /2 resources /0 failures**.
+- Fresh export to `../vines-ferns-sway-web`, finalized and `check-export --dir ../vines-ferns-sway-web --kind game --project .`: PASS, 2,378 production PNG imports. It labels the base main SHA; local fixes are uncommitted, so this is not a deployed build claim.
+- Actual fresh Web editor probe result is recorded below before the follow-up commit.
+
+Intermediate main workflow40891548656 succeeded including deploy/postdeploy for PR258. This is an intermediate revision with the shortest-fern issue described above; final DONE requires the correction's reviewed integration and exact live test.
+
+Questions: None. No controller, movement, terrain, art palette or map layout changes in this correction. Reports also fix UTF-8 punctuation and the export-check command spelling.
+
+Fresh fixed-export browser probe (`node scripts/ci/smoke/foliage-probe.mjs --serve-dir ../vines-ferns-sway-web --out-dir build/vines-ferns/sway-gameplay`): **13 checks passed, zero errors** before follow-up commit. Updated committed gameplay evidence from this run. Orders validation and whitespace checks pass.

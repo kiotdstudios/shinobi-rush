@@ -1,0 +1,99 @@
+{
+  "revision": "a00adeb3e266cbdf859dd542943a4911b0de8de3",
+  "pr": "https://github.com/kiotdstudios/shinobi-rush/pull/258",
+  "godot_workflow": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371709",
+  "full_browser_workflow": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371489",
+  "native_summary": "5180 passed, 0 failed",
+  "resources": {
+    "scripts": 444,
+    "scenes": 30,
+    "resources": 2,
+    "failures": 0
+  },
+  "checks": [
+    {
+      "name": "Full regression result",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371489/job/123508409227"
+    },
+    {
+      "name": "Deploy to GitHub Pages (main only)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371709/job/123506665962"
+    },
+    {
+      "name": "Post-deploy live smoke test",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371709/job/123506665464"
+    },
+    {
+      "name": "godot-ci-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371709/job/123506663954"
+    },
+    {
+      "name": "Pre-deploy browser smoke test",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371709/job/123505047358"
+    },
+    {
+      "name": "Full regression - controls probe",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371489/job/123498909444"
+    },
+    {
+      "name": "Full regression - browser smoke",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371489/job/123498909178"
+    },
+    {
+      "name": "Full regression - debug-log probe",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371489/job/123498909154"
+    },
+    {
+      "name": "Self-test - positive and negative cases (throwaway project, never deployed)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371588/job/123498439141"
+    },
+    {
+      "name": "Import, validate, test and export (Web)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371709/job/123498319456"
+    },
+    {
+      "name": "Detect Godot project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371709/job/123498111335"
+    },
+    {
+      "name": "Tooling lint and unit tests",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371588/job/123498106252"
+    },
+    {
+      "name": "Build the Web export of this commit",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371489/job/123498105333"
+    },
+    {
+      "name": "validate-orders-and-project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40888371594/job/123498105317"
+    }
+  ]
+}
