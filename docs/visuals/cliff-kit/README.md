@@ -2,6 +2,8 @@
 
 Native 72×36 diamond cells, one 66-pixel elevation tier. Open the normal map editor and select **Blightwood Cliffs**. The 22 searchable entries include raised stone/grass/path/river surfaces, two-cell straight walls, four outer and four concave inner corners, end caps, stair joins, both staircase orientations, a waterfall lip, and a separately placeable cascade.
 
+Verified live on runtime `8f1f914ce3aa011930b26063508ca76dee461989`: all 27 canonical browser/editor checks passed, with zero errors. [Live demo](https://kiotdstudios.github.io/shinobi-rush/?cliffs=review&editor=1&v=8f1f914c) · [Live editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=review&map_editor=1&v=8f1f914c). See [live results](live-result.json), [live editor screenshot](live-editor.png), [live overview](live-overview.png), and [deployment checks](deployment-checks.json).
+
 Evidence: [contact sheet](contact-sheet.png), [original fit](before-fit.png), [gameplay overview](gameplay/overview.png), [actual editor](gameplay/editor.png), [normal preview](normal.gif), [half-speed preview](half-speed.gif), [normal video](normal.mp4), [half-speed video](half-speed.mp4). GIF previews are 640×480 crops of actual runtime video; the player/waterfall assets are unchanged by preview encoding.
 
 ## Build and play
