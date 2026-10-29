@@ -2109,6 +2109,10 @@ func _build_ui() -> void:
 				b.icon = load(str(def.get("icon",BlightwoodWater.DIR + "waterfall-icon.png"))) as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
 				b.custom_minimum_size = Vector2(0, 96)
+			elif def.kind == "foliage":
+				b.icon=BlightwoodFoliage.art(id)
+				b.add_theme_constant_override("icon_max_width",96)
+				b.custom_minimum_size=Vector2(0,112)
 			elif def.kind == "grass":
 				b.icon = load(WindGrassTileset.DIR + id + ".png") as Texture2D
 				b.add_theme_constant_override("icon_max_width", 64)
@@ -2415,6 +2419,8 @@ static func layer_names() -> Array[String]:
 	for id: String in PlacedObjects.CATALOG:
 		seen[PlacedObjects.type_of(id)] = true
 	for id: String in CliffKit.IDS:
+		seen[PlacedObjects.type_of(id)] = true
+	for id: String in BlightwoodFoliage.IDS:
 		seen[PlacedObjects.type_of(id)] = true
 	var out: Array[String] = []
 	for k: String in seen:

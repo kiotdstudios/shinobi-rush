@@ -6337,6 +6337,81 @@
       "id": "player_spawn",
       "x": -360,
       "y": 90
+    },
+    {
+      "id": "blight_vine_01",
+      "x": -198,
+      "y": 27
+    },
+    {
+      "id": "blight_vine_02",
+      "x": -126,
+      "y": 63
+    },
+    {
+      "id": "blight_vine_03",
+      "x": -90,
+      "y": 81
+    },
+    {
+      "id": "blight_vine_01",
+      "x": 90,
+      "y": 117
+    },
+    {
+      "id": "blight_vine_02",
+      "x": 162,
+      "y": 135
+    },
+    {
+      "id": "blight_vine_03",
+      "x": 270,
+      "y": 135
+    },
+    {
+      "id": "blight_fern_01",
+      "x": -225,
+      "y": 180
+    },
+    {
+      "id": "blight_fern_02",
+      "x": -100,
+      "y": 290
+    },
+    {
+      "id": "blight_fern_03",
+      "x": 270,
+      "y": 210
+    },
+    {
+      "id": "blight_fern_01",
+      "x": 290,
+      "y": 230
+    },
+    {
+      "id": "blight_fern_02",
+      "x": 420,
+      "y": 250
+    },
+    {
+      "id": "blight_fern_03",
+      "x": 330,
+      "y": 380
+    },
+    {
+      "id": "blight_fern_01",
+      "x": 500,
+      "y": 270
+    },
+    {
+      "id": "blight_fern_02",
+      "x": -420,
+      "y": 200
+    },
+    {
+      "id": "blight_fern_03",
+      "x": -410,
+      "y": 300
     }
   ]
 }

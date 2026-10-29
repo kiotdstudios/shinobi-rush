@@ -1,0 +1,25 @@
+{
+  "generator": "PixelLab MCP create_1_direction_object",
+  "vine_review": "684d0004-d2eb-4210-98d8-433667caf322",
+  "fern_review": "4903c2be-6b25-42d5-bb58-fad222f09d62",
+  "selected_frames": {
+    "vines": [
+      0,
+      2,
+      3
+    ],
+    "ferns": [
+      0,
+      1,
+      3
+    ]
+  },
+  "objects": [
+    "9978b91f-6c89-4741-b2b7-8b242e88f82e",
+    "62e7aaa4-30ab-4b4d-9405-50d7a24abcfb",
+    "1475edfb-86e3-4809-a456-675985f97def",
+    "8b81e17a-9ef1-4840-8653-d912699fc877",
+    "3240eaf6-e99f-47b4-8623-481b25c8ff89",
+    "c63b5cd6-6594-468c-a20f-47f85f66ae84"
+  ]
+}
