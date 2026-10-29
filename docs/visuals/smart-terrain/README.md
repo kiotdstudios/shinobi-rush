@@ -1,6 +1,6 @@
 # Smart Terrain Brush proof
 
-Local affected-system acceptance: **33 native checks, 13 Smart Brush browser checks, 27 existing Auto Blend browser checks; zero browser errors**. Fresh Godot 4.7.2 Web export and 448-script /30-scene /2-resource validation passed. NOT LIVE until reviewed integration and canonical exact-build verification.
+Local affected-system acceptance: **35 native checks, 13 Smart Brush browser checks, 27 existing Auto Blend browser checks; zero browser errors**. Fresh Godot 4.7.2 Web export and 448-script /30-scene /2-resource validation passed. NOT LIVE until reviewed integration and canonical exact-build verification.
 
 ![Actual native family review dialog](family-review.png)
 ![Actual editor after smart paint, fill and erase undo](editor.png)

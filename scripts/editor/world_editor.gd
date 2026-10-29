@@ -2275,7 +2275,7 @@ func _build_ui() -> void:
 				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_left = 3
 				(b.get_theme_stylebox(sn) as StyleBoxFlat).content_margin_right = 3
 			b.add_theme_font_size_override("font_size", 11)
-			b.pressed.connect(func(): set_tool("paint" if (smart_terrain or tool == "paint") and PlacedObjects.is_floor_tile(id) else "place", id))
+			b.pressed.connect(func(): set_tool("paint" if (smart_terrain and PlacedObjects.is_floor_tile(id)) or (tool == "paint" and PlacedObjects.def_of(id).kind in ["ground", "grass"]) else "place", id))
 			grid.add_child(b)
 			_palette_buttons[id] = b
 

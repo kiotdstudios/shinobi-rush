@@ -41,6 +41,11 @@ func run(ck: Callable, root: Node) -> void:
 	p.autosave=false
 	p.save_path="user://smart-terrain-test.json"
 	e.void_check=false
+	for enabled in [false,true]:
+		e.smart_terrain=enabled
+		e.set_tool("paint","grass9_center")
+		(e._palette_buttons["grass_tall_00"] as Button).pressed.emit()
+		ck.call("smart: tall-grass palette keeps existing paint behavior (enabled=%s)"%enabled,e.tool=="paint" and e.place_id=="grass_tall_00")
 	p.load_dict({"version":7,"items":[]})
 	p.clear_history()
 	ck.call("smart: validate override inputs",not p.set_terrain_family("tree_1","grass") and not p.set_terrain_family("grass9_center","unknown"))

@@ -17,6 +17,8 @@ PASS smart: actual pixel self match ground
 PASS smart: actual pixel self match dirt
 PASS smart: actual pixel self match temple
 PASS smart: actual pixel self match rock
+PASS smart: tall-grass palette keeps existing paint behavior (enabled=false)
+PASS smart: tall-grass palette keeps existing paint behavior (enabled=true)
 PASS smart: validate override inputs
 PASS smart: approval undo
 PASS smart: approval redo
@@ -33,4 +35,4 @@ PASS smart: manual choice preserves raw tile and pins it
 PASS smart: flood respects manual lock
 PASS smart: empty fill is bounded no-op
 PASS smart: review dialog does not approve automatically
-SUMMARY: 33 passed, 0 failed
+SUMMARY: 35 passed, 0 failed

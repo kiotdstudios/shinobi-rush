@@ -25,4 +25,4 @@ Smart palette paint, review/override dialog, persistent approvals, bounded fill,
 Four-material diamonds retain the existing documented fallback. Approved materials use registered terrain kits; suggestions do not synthesize new transition art.
 
 ## Local validation
-33 focused native checks, 13 Smart Brush browser checks, 27 existing Auto Blend browser checks, 448/30/2 resource validation and Web export/content checks passed. Full native regression remains running. #262 foundation is incorporated; final integration and canonical verification pending.
+35 focused native checks, 13 Smart Brush browser checks, 27 existing Auto Blend browser checks, 448/30/2 resource validation and Web export/content checks passed. The interim local full run is excluded because it spanned the last metadata update; fresh committed-revision CI is required. #262 foundation is incorporated; final integration and canonical verification pending.

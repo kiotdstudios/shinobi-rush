@@ -33,14 +33,14 @@ Environment: Windows PowerShell, bundled Python/Node, Godot 4.7.2 and Playwright
 | Exact command / steps | Observed result |
 | --- | --- |
 | godot --headless --path . --editor --import | fresh project imported; initial premature focused run was stopped and excluded |
-| godot --headless --path . --script ../focused-smart.gd | final focused Smart Brush suite: 33 passed / 0 failed |
+| godot --headless --path . --script ../focused-smart.gd | initial focused Smart Brush suite: 33 passed / 0 failed; final compatibility rerun: 35 passed / 0 failed |
 | godot --headless --path . --script ../focused.gd | interim 113 passed / 1 failed: erase undo comparison incorrectly required object list order; semantic comparison corrected and final focused rerun passes |
 | python scripts/ci/godot_ci.py validate-resources --project . --godot <godot> --log-dir ../resources-final | 448 scripts / 30 scenes / 2 resources / 0 failures |
 | python scripts/ci/godot_ci.py export --project . --godot <godot> --out ../web-complete --log-dir ../export-complete | fresh 56 MiB Web export passed |
 | python scripts/ci/godot_ci.py finalize-export --project . --out ../web-complete --kind game --godot <godot> --commit-sha 5a689112e7ce8c14444cd83ec412348b2dc8cd07; python scripts/ci/godot_ci.py check-export --dir ../web-complete --kind game --project . | PASS: project.binary, 1 production manifest and 2378 sprite PNG imports. This LOCAL dirty export is labeled with the BASE SHA and is not a claim of deployed code |
 | node scripts/ci/smoke/auto-blend-probe.mjs --serve-dir ../web-final --out-dir ../blend-browser | 27/27 passed, zero errors: all twenty pair/triple layouts, real movement, pointer painting, keyboard undo/redo, exact serialization and black editor |
 | node scripts/ci/smoke/smart-terrain-probe.mjs --serve-dir ../web-complete --out-dir ../browser-complete | 13/13 passed with zero errors at 2026-10-29T20:04:08.487Z; actual menu selection, pointer paint/fill/erase, keyboard history, exact serialization and normal-slot preservation |
-| godot --headless --path . --script tests/run_tests.gd > ../native-final.log | Pending full regression result; earlier run interrupted after #262 incorporation and excluded |
+| godot --headless --path . --script tests/run_tests.gd > ../native-final.log | Interim local full run: 5241 passed / 1 failed (cached pre-update matcher in the shoreline assertion). This process spanned a source update and is excluded from final acceptance; the fresh 35-check isolated run passes. Required fresh CI on the committed revision remains pending. Earlier interrupted run is also excluded. |
 | python scripts/ci/validate_orders.py; python scripts/ci/validate_godot_project.py --project . --json-out ../project-validation.json; git diff --check | PASS; 0 project errors / 0 warnings |
 
 ## Issues encountered
@@ -50,6 +50,8 @@ Environment: Windows PowerShell, bundled Python/Node, Godot 4.7.2 and Playwright
 - Export wrapper requires a fresh directory and explicit Godot path even for finalize; corrected commands pass. Intermediate failed harness exports/results are retained locally, not presented as successful proof.
 
 - Packaged native log lines contained trailing spaces after the initial whitespace check; normalized evidence-only whitespace in a follow-up before opening the PR. Runtime files are unchanged.
+
+- Final review caught that the new palette condition would switch tall-grass painting to single placement. Restored the existing handler behavior with Smart Brush both off/on, added two actual card-signal regression checks, and reran all 35 focused checks plus a fresh Web export before the compatibility commit.
 
 ## Questions for project owner
 None.
