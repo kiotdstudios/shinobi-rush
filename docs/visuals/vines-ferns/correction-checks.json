@@ -1,0 +1,51 @@
+{
+  "revision": "64cb9d70120c2f2b6179fd37f6d6b3391a990301",
+  "merged_revision": "aeb5968179b94f15b7f4c72761f1ee0a561d07c1",
+  "pr": "https://github.com/kiotdstudios/shinobi-rush/pull/259",
+  "workflow": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40895478037",
+  "native_summary": "5186 passed, 0 failed",
+  "checks": [
+    {
+      "name": "Post-deploy live smoke test",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40895478037/job/123532496207"
+    },
+    {
+      "name": "Deploy to GitHub Pages (main only)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40895478037/job/123532494703"
+    },
+    {
+      "name": "godot-ci-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40895478037/job/123532494095"
+    },
+    {
+      "name": "Pre-deploy browser smoke test",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40895478037/job/123531133411"
+    },
+    {
+      "name": "Import, validate, test and export (Web)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40895478037/job/123523512894"
+    },
+    {
+      "name": "Detect Godot project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40895478037/job/123523278950"
+    },
+    {
+      "name": "validate-orders-and-project",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40895477826/job/123523275875"
+    }
+  ]
+}
