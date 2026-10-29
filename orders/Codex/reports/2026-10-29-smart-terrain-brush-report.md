@@ -3,7 +3,7 @@
 - Order: orders/Codex/2026-10-29-smart-terrain-brush.md
 - Date: 2026-10-29 (America/New_York)
 - Final status: REVIEW — local affected-system checks passed; full regression/integration pending
-- Commit / PR: Implementation commit/PR pending below; pre-commit evidence recorded
+- Commit / PR: Implementation: 377a3cc796d58923684e30caf191c850efcf8b9b; PR pending below
 
 ## Verified starting status
 GitHub #251 merged into #245 as 9e2cfa319bdf3a804b6cf040c7dbbeb8904a4422; #245 merged into main as 090d86885031a2f03cca3c7b1f8ab760a172adca. #253 publishes the prior exact-build deployment evidence: 5,073 native assertions and 28 browser checks. The original branch names remain on GitHub; their presence is not unfinished integration. Code history confirms no subsequent AutoTile/TerrainBlend changes through main 5a689112 (#261). Later #254/#256/#258/#259/#261 add cliffs, authored composition and foliage/editor behavior.
@@ -48,6 +48,8 @@ Environment: Windows PowerShell, bundled Python/Node, Godot 4.7.2 and Playwright
 - Erase undo restores identical tile positions/materials but appends restored objects; the test now compares normalized contents, not array order. Save/reload remains exact.
 - Browser harness initially used a taller viewport and window-local modal coordinates. Fixed native canvas viewport, settled window positions and direct native menu selection. Canvas popup timing required timer-based observations and a 120s UI timeout on this Windows headless runner; strict postconditions remain enforced. Fixture controls overlapped a target fill click; harness now hides them for world input. No production input workaround was added.
 - Export wrapper requires a fresh directory and explicit Godot path even for finalize; corrected commands pass. Intermediate failed harness exports/results are retained locally, not presented as successful proof.
+
+- Packaged native log lines contained trailing spaces after the initial whitespace check; normalized evidence-only whitespace in a follow-up before opening the PR. Runtime files are unchanged.
 
 ## Questions for project owner
 None.
