@@ -1067,6 +1067,8 @@ var cliff_world: CliffWorld
 ## Auto-blend ownership: floor-cell centre -> the material the owner painted there ("grass", "ground", "dirt", "temple",
 ## "rock") or "lock" (hand-placed override, never retiled). Cells absent from here are unmanaged: legacy / hand art.
 var cell_mat: Dictionary = {}
+## Per-layout tile-family approvals. Empty/old layouts retain registry behavior.
+var terrain_families: Dictionary = {}
 var _auto_paint := false
 var save_path := SAVE_PATH
 var autosave := true
@@ -2111,7 +2113,7 @@ func to_dict() -> Dictionary:
 			if cm != "":
 				entry["mat"] = cm
 		items.append(entry)
-	return {"version": SAVE_VERSION, "shrine_section": shrine_section_applied, "blightwood_map": blightwood_map_applied, "items": items}
+	return {"version": SAVE_VERSION, "shrine_section": shrine_section_applied, "blightwood_map": blightwood_map_applied, "items": items, "terrain_families": terrain_families.duplicate()}
 
 
 func to_json_string() -> String:
@@ -2155,6 +2157,12 @@ func load_dict(data: Dictionary) -> int:
 	var was_recording := _recording
 	_recording = false
 	clear_all(false)
+	terrain_families = {}
+	var families: Variant = data.get("terrain_families", {})
+	if families is Dictionary:
+		for id: String in families:
+			if PlacedObjects.is_floor_tile(id) and str(families[id]) in AutoTile.TERRAINS + [TerrainFamilyMatcher.MANUAL]:
+				terrain_families[id] = str(families[id])
 	loaded_version = int(data.get("version", 1))
 	shrine_section_applied = bool(data.get("shrine_section", false))
 	blightwood_map_applied = bool(data.get("blightwood_map", false))
@@ -2488,7 +2496,23 @@ func can_redo() -> bool:
 	return not _redo.is_empty()
 
 
-## Record + set the owner material of one floor cell ("" = unmanaged). One undo step with the surrounding gesture.
+## Explicit per-layout family approval; grouped separately from subsequent painting.
+func set_terrain_family(id: String, material: String) -> bool:
+	if not is_floor_tile(id) or material not in AutoTile.TERRAINS + [TerrainFamilyMatcher.MANUAL, ""]:
+		return false
+	var old := String(terrain_families.get(id, ""))
+	if old == material: return false
+	_put_family(id, material)
+	_record(["family", id, old, material])
+	_changed()
+	return true
+
+func _put_family(id: String, material: String) -> void:
+	if material == "": terrain_families.erase(id)
+	else: terrain_families[id] = material
+
+
+## Record + set the owner material of one floor cell ("" = unmanaged).
 func set_cell_mat(cell: Vector2, mat: String) -> void:
 	var old := String(cell_mat.get(cell, ""))
 	if old == mat:
@@ -2532,6 +2556,8 @@ func undo() -> bool:
 				var o2 := _find_exact(op[1], op[3])
 				if not o2.is_empty():
 					move(o2, op[2], false)
+			"family":
+				_put_family(op[1], op[2])
 			"mat":
 				_put_mat(op[1], op[2])
 	_replaying = false
@@ -2557,6 +2583,8 @@ func redo() -> bool:
 				var o2 := _find_exact(op[1], op[2])
 				if not o2.is_empty():
 					move(o2, op[3], false)
+			"family":
+				_put_family(op[1], op[3])
 			"mat":
 				_put_mat(op[1], op[3])
 	_replaying = false

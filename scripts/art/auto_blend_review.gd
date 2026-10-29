@@ -67,6 +67,33 @@ func _ready() -> void:
 	brush_button.pressed.connect(_brush)
 	panel.add_child(brush_button)
 	buttons.append(brush_button)
+	var smart := Button.new()
+	smart.text="Smart brush: mixed tile"
+	smart.focus_mode=Control.FOCUS_NONE
+	smart.pressed.connect(func():
+		_brush()
+		arena.editor.smart_terrain=true
+		arena.editor.set_tool("paint","grass_dirt_06_b"))
+	panel.add_child(smart)
+	buttons.append(smart)
+	var review := Button.new()
+	review.text="Review selected tile family"
+	review.focus_mode=Control.FOCUS_NONE
+	review.pressed.connect(arena.editor.review_tile_family)
+	panel.add_child(review)
+	buttons.append(review)
+	var fill := Button.new()
+	fill.text="Connected fill with selected tile"
+	fill.focus_mode=Control.FOCUS_NONE
+	fill.pressed.connect(func():arena.editor.set_shape("fill"))
+	panel.add_child(fill)
+	buttons.append(fill)
+	var erase := Button.new()
+	erase.text="Erase pointer test"
+	erase.focus_mode=Control.FOCUS_NONE
+	erase.pressed.connect(func():arena.editor.set_tool("erase"))
+	panel.add_child(erase)
+	buttons.append(erase)
 	_show(0)
 	if OS.has_feature("web"):
 		state=JavaScriptBridge.create_object("Object")
@@ -155,6 +182,29 @@ func _process(_delta: float) -> void:
 	state.paint_before=paint_before
 	state.paint_target=paint_target
 	state.paint_mat=String(arena.placed.cell_mat.get(PAINT_CELL,""))
+	state.family_json=JSON.stringify(arena.placed.terrain_families)
+	state.paint_id=arena.editor.place_id
+	state.smart=arena.editor.smart_terrain
+	state.shape=arena.editor.shape
+	state.tool=arena.editor.tool
+	state.tile_count=arena.placed.floor_tiles_in_cell(PAINT_CELL).size()
+	var options := []
+	var dialog := arena.editor.family_dialog
+	state.family_open=is_instance_valid(dialog) and dialog.visible
+	if state.family_open:
+		var choice := arena.editor.family_choice
+		state.family_selected=str(choice.get_item_metadata(choice.selected))
+		state.family_popup=choice.get_popup().visible
+		state.family_focus=choice.get_popup().get_focused_item()
+		for i in choice.item_count: options.append(str(choice.get_item_metadata(i)))
+		var r := choice.get_global_rect()
+		state.family_x=r.get_center().x+dialog.position.x
+		state.family_y=r.get_center().y+dialog.position.y
+		var ok := dialog.get_ok_button().get_global_rect()
+		state.approve_x=ok.get_center().x+dialog.position.x
+		state.approve_y=ok.get_center().y+dialog.position.y
+	state.family_options=JSON.stringify(options)
+	state.materials_json=JSON.stringify(arena.placed.cell_mat.values())
 	state.last_shortcut=last_shortcut
 	state.editor_open=arena.editor.open
 	state.undo_count=arena.placed._undo.size()
@@ -164,6 +214,10 @@ func _process(_delta: float) -> void:
 	var pointer := arena.get_global_transform_with_canvas()*PAINT_CELL
 	state.paint_x=pointer.x
 	state.paint_y=pointer.y
+	var fill_pointer := arena.get_global_transform_with_canvas()*(PAINT_CELL+AutoTile.NE)
+	state.fill_x=fill_pointer.x
+	state.fill_y=fill_pointer.y
+	state.fill_mat=String(arena.placed.cell_mat.get(PAINT_CELL+AutoTile.NE,""))
 	var rects := []
 	for button in buttons:
 		var r := button.get_global_rect()
