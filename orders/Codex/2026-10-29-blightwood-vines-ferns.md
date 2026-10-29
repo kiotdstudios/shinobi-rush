@@ -1,9 +1,9 @@
 # ORDER — Blightwood hanging vines and fern clusters
 - Agent: Codex
-- Status: REVIEW
+- Status: DONE
 - Owner: Codex; direct user request
 - Priority: P1
-- Branch/PR: codex/blightwood-vines-ferns
+- Branch/PR: codex/blightwood-vines-ferns / PR258; codex/foliage-sway-range / PR259; evidence: codex/foliage-live-report
 - Dependencies: merged riverbank starter PR256; preserve ongoing editor/terrain work.
 
 ## Objective
@@ -24,4 +24,4 @@ Match palette/pixel scale; no opaque backgrounds; pinned vine tops and fern root
 ## Handoff / Notes
 PixelLab MCP reviewed and connected. Prefer native generation with fixed sampled palette for these small props; preserve approved art files.
 
-Implementation and local acceptance checks pass. Await reviewed PR integration and canonical deployment verification; see the matching job report.
+Completed and live at `aeb5968179b94f15b7f4c72761f1ee0a561d07c1`. Both PRs merged after passing checks. Main deploy and postdeploy passed; 14 exact-build live checks passed with zero errors at 2026-10-29T15:26:49.821Z. See the matching job report and docs/visuals/vines-ferns/live/result.json.

@@ -2,7 +2,7 @@
 
 An editable composition based on the owner's forest waterfall reference, assembled from existing game assets. It is a starter section rather than a pixel-identical recreation of the concept image.
 
-Verified live on `9bf429cd29ef859918725549b73b325500ef8c6c`: [Open editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&v=9bf429cd) · [Play section](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&editor=1&v=9bf429cd). All 27 exact-build live checks passed with zero errors. [Live editor screenshot](live-editor.png) · [Live overview](live-overview.png) · [Live result](live-result.json) · [Deployment checks](deployment-checks.json) · [Native results](native-result.json).
+Original starter verified live on `9bf429cd29ef859918725549b73b325500ef8c6c`: [Open editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&v=9bf429cd) · [Play section](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&editor=1&v=9bf429cd). All 27 exact-build live checks passed with zero errors. [Live editor screenshot](live-editor.png) · [Live overview](live-overview.png) · [Live result](live-result.json) · [Deployment checks](deployment-checks.json) · [Native results](native-result.json).
 
 ## Open and build
 
@@ -30,3 +30,5 @@ Matching small fern clusters and hanging cliff vines are now supplied by the [fo
 ## Verification
 
 Actual game/editor screenshots and browser probe results are in `gameplay/`. The job report records native, resource, export, browser and deployment results. Normal worlds, existing engineering demo, terrain auto-blending algorithms, combat and camera controllers are preserved.
+
+Current vine/fern dressing verified live on `aeb5968179b94f15b7f4c72761f1ee0a561d07c1`: [Open foliage editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&foliage=1&v=aeb59681). [Live evidence](../vines-ferns/README.md). The dressed template contains 1,282 objects with the same 134 elevation cells.

@@ -1,0 +1,676 @@
+{
+  "utc": "2026-10-29T15:26:49.821Z",
+  "checks": [
+    {
+      "name": "exact deployed runtime",
+      "ok": true,
+      "detail": {
+        "built_at": "2026-10-29T15:19:02Z",
+        "commit_sha": "aeb5968179b94f15b7f4c72761f1ee0a561d07c1",
+        "event": "push",
+        "export_mode": "debug",
+        "export_preset": "Web",
+        "files": {
+          "editor.html": {
+            "sha256": "0e924a5737de4eb0ccc6824f47423675c9d4556f0c3ce01e01137af8ba39a599",
+            "size": 5505
+          },
+          "index.apple-touch-icon.png": {
+            "sha256": "c0e05e6ff0a9547cb4f02750338f06496c48cf4d9007e04dd98df271dd2f657b",
+            "size": 11516
+          },
+          "index.audio.position.worklet.js": {
+            "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+            "size": 2973
+          },
+          "index.audio.worklet.js": {
+            "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+            "size": 7298
+          },
+          "index.html": {
+            "sha256": "a8a45e15a5339a4378bd87e753afe34658c0c01e9908ddbcc5462792743084e3",
+            "size": 5445
+          },
+          "index.icon.png": {
+            "sha256": "094807cb8c713447218ddddfed69772c91f56d787ce8ce05e615c7fac18770b5",
+            "size": 1183
+          },
+          "index.js": {
+            "sha256": "ffc3898b59fba6f5af0c02f76e5ee526cc061e65c7d2d6f4f98186876cea15c4",
+            "size": 315645
+          },
+          "index.pck": {
+            "sha256": "3ee5ddba55fd258acea36be18256f7070ab6741daddd766e86d82ec7ac77ecf4",
+            "size": 21362024
+          },
+          "index.png": {
+            "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e",
+            "size": 21443
+          },
+          "index.wasm": {
+            "sha256": "11ea19645368f8e73cf337b59cfd7ceeb4ebb51f7a3bbf77d1a5c3ddfedbc522",
+            "size": 37902138
+          }
+        },
+        "godot_version": "4.7.2-stable",
+        "godot_version_string": "4.7.2.stable.official.ed1daf0bf",
+        "head_sha": "aeb5968179b94f15b7f4c72761f1ee0a561d07c1",
+        "kind": "game",
+        "project_dir": ".",
+        "project_name": "Shinobi Rush",
+        "ref": "refs/heads/main",
+        "renderer": "gl_compatibility",
+        "repository": "kiotdstudios/shinobi-rush",
+        "run_attempt": "1",
+        "run_id": "40898248082",
+        "run_number": "727",
+        "schema_version": 1,
+        "templates": "4.7.2.stable",
+        "thread_support": false,
+        "workflow": "Godot CI"
+      }
+    },
+    {
+      "name": "dressed map contains six distinct assets and fifteen plants",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "x": -360,
+        "y": 90,
+        "elevation": 0,
+        "depth": 0,
+        "over_water": false,
+        "chakra": 100,
+        "operations": 0,
+        "editor_open": false,
+        "cells": 134,
+        "river_section": true,
+        "camera_zoom": 1.149999976158142,
+        "buttons_json": "[{\"x\":362.0,\"y\":63.5},{\"x\":473.0,\"y\":63.5},{\"x\":572.5,\"y\":63.5},{\"x\":644.5,\"y\":63.5},{\"x\":758.5,\"y\":63.5},{\"x\":883.0,\"y\":63.5},{\"x\":964.5,\"y\":63.5}]",
+        "cards_json": "{}",
+        "tool": "select",
+        "place_id": "",
+        "paint_x": 308.8000183105469,
+        "paint_y": 124.25,
+        "placed_count": 1282,
+        "probe_a": false,
+        "probe_b": false,
+        "tools_json": "{\"box\":{\"x\":714.0,\"y\":83.0},\"erase\":{\"x\":901.0,\"y\":147.0},\"paint\":{\"x\":1049.0,\"y\":147.0},\"pan\":{\"x\":1197.0,\"y\":147.0},\"select\":{\"x\":753.0,\"y\":147.0}}",
+        "cliffs_visible": true,
+        "foliage_visible": true,
+        "fall_frame": 0,
+        "foam_frame": 3,
+        "lip_y": 42,
+        "basin_y": 108,
+        "foam_y": 107,
+        "foliage_json": "[{\"id\":\"blight_vine_01\",\"phase\":6,\"pick_x\":413.450012207031,\"pick_y\":324.350006103516,\"visible\":true,\"x\":-198.0,\"y\":27.0},{\"id\":\"blight_vine_02\",\"phase\":6,\"pick_x\":496.25,\"pick_y\":366.899993896484,\"visible\":true,\"x\":-126.0,\"y\":63.0},{\"id\":\"blight_vine_03\",\"phase\":6,\"pick_x\":536.5,\"pick_y\":386.450012207031,\"visible\":true,\"x\":-90.0,\"y\":81.0},{\"id\":\"blight_vine_01\",\"phase\":6,\"pick_x\":744.650024414062,\"pick_y\":427.850006103516,\"visible\":true,\"x\":90.0,\"y\":117.0},{\"id\":\"blight_vine_02\",\"phase\":6,\"pick_x\":827.450012207031,\"pick_y\":449.700012207031,\"visible\":true,\"x\":162.0,\"y\":135.0},{\"id\":\"blight_vine_03\",\"phase\":6,\"pick_x\":950.5,\"pick_y\":448.549987792969,\"visible\":true,\"x\":270.0,\"y\":135.0},{\"id\":\"blight_fern_01\",\"phase\":6,\"pick_x\":380.100006103516,\"pick_y\":506.049987792969,\"visible\":true,\"x\":-225.0,\"y\":180.0},{\"id\":\"blight_fern_02\",\"phase\":6,\"pick_x\":523.849975585938,\"pick_y\":637.150024414062,\"visible\":true,\"x\":-100.0,\"y\":290.0},{\"id\":\"blight_fern_03\",\"phase\":6,\"pick_x\":950.5,\"pick_y\":548.599975585938,\"visible\":true,\"x\":270.0,\"y\":210.0},{\"id\":\"blight_fern_01\",\"phase\":6,\"pick_x\":972.349975585938,\"pick_y\":563.549987792969,\"visible\":true,\"x\":290.0,\"y\":230.0},{\"id\":\"blight_fern_02\",\"phase\":6,\"pick_x\":1121.84997558594,\"pick_y\":591.150024414062,\"visible\":true,\"x\":420.0,\"y\":250.0},{\"id\":\"blight_fern_03\",\"phase\":6,\"pick_x\":1019.5,\"pick_y\":744.099975585938,\"visible\":true,\"x\":330.0,\"y\":380.0},{\"id\":\"blight_fern_01\",\"phase\":6,\"pick_x\":1213.84997558594,\"pick_y\":609.549987792969,\"visible\":true,\"x\":500.0,\"y\":270.0},{\"id\":\"blight_fern_02\",\"phase\":6,\"pick_x\":155.850006103516,\"pick_y\":533.650024414062,\"visible\":true,\"x\":-420.0,\"y\":200.0},{\"id\":\"blight_fern_03\",\"phase\":6,\"pick_x\":168.5,\"pick_y\":652.099975585938,\"visible\":true,\"x\":-410.0,\"y\":300.0}]",
+        "selected_id": ""
+      }
+    },
+    {
+      "name": "anchored sway advances without root movement",
+      "ok": true,
+      "detail": {
+        "before": [
+          {
+            "id": "blight_vine_01",
+            "phase": 6,
+            "pick_x": 413.450012207031,
+            "pick_y": 324.350006103516,
+            "visible": true,
+            "x": -198,
+            "y": 27
+          },
+          {
+            "id": "blight_vine_02",
+            "phase": 6,
+            "pick_x": 496.25,
+            "pick_y": 366.899993896484,
+            "visible": true,
+            "x": -126,
+            "y": 63
+          },
+          {
+            "id": "blight_vine_03",
+            "phase": 6,
+            "pick_x": 536.5,
+            "pick_y": 386.450012207031,
+            "visible": true,
+            "x": -90,
+            "y": 81
+          },
+          {
+            "id": "blight_vine_01",
+            "phase": 6,
+            "pick_x": 744.650024414062,
+            "pick_y": 427.850006103516,
+            "visible": true,
+            "x": 90,
+            "y": 117
+          },
+          {
+            "id": "blight_vine_02",
+            "phase": 6,
+            "pick_x": 827.450012207031,
+            "pick_y": 449.700012207031,
+            "visible": true,
+            "x": 162,
+            "y": 135
+          },
+          {
+            "id": "blight_vine_03",
+            "phase": 6,
+            "pick_x": 950.5,
+            "pick_y": 448.549987792969,
+            "visible": true,
+            "x": 270,
+            "y": 135
+          },
+          {
+            "id": "blight_fern_01",
+            "phase": 6,
+            "pick_x": 380.100006103516,
+            "pick_y": 506.049987792969,
+            "visible": true,
+            "x": -225,
+            "y": 180
+          },
+          {
+            "id": "blight_fern_02",
+            "phase": 6,
+            "pick_x": 523.849975585938,
+            "pick_y": 637.150024414062,
+            "visible": true,
+            "x": -100,
+            "y": 290
+          },
+          {
+            "id": "blight_fern_03",
+            "phase": 6,
+            "pick_x": 950.5,
+            "pick_y": 548.599975585938,
+            "visible": true,
+            "x": 270,
+            "y": 210
+          },
+          {
+            "id": "blight_fern_01",
+            "phase": 6,
+            "pick_x": 972.349975585938,
+            "pick_y": 563.549987792969,
+            "visible": true,
+            "x": 290,
+            "y": 230
+          },
+          {
+            "id": "blight_fern_02",
+            "phase": 6,
+            "pick_x": 1121.84997558594,
+            "pick_y": 591.150024414062,
+            "visible": true,
+            "x": 420,
+            "y": 250
+          },
+          {
+            "id": "blight_fern_03",
+            "phase": 6,
+            "pick_x": 1019.5,
+            "pick_y": 744.099975585938,
+            "visible": true,
+            "x": 330,
+            "y": 380
+          },
+          {
+            "id": "blight_fern_01",
+            "phase": 6,
+            "pick_x": 1213.84997558594,
+            "pick_y": 609.549987792969,
+            "visible": true,
+            "x": 500,
+            "y": 270
+          },
+          {
+            "id": "blight_fern_02",
+            "phase": 6,
+            "pick_x": 155.850006103516,
+            "pick_y": 533.650024414062,
+            "visible": true,
+            "x": -420,
+            "y": 200
+          },
+          {
+            "id": "blight_fern_03",
+            "phase": 6,
+            "pick_x": 168.5,
+            "pick_y": 652.099975585938,
+            "visible": true,
+            "x": -410,
+            "y": 300
+          }
+        ],
+        "after": [
+          {
+            "id": "blight_vine_01",
+            "phase": 15,
+            "pick_x": 413.450012207031,
+            "pick_y": 324.350006103516,
+            "visible": true,
+            "x": -198,
+            "y": 27
+          },
+          {
+            "id": "blight_vine_02",
+            "phase": 15,
+            "pick_x": 496.25,
+            "pick_y": 366.899993896484,
+            "visible": true,
+            "x": -126,
+            "y": 63
+          },
+          {
+            "id": "blight_vine_03",
+            "phase": 15,
+            "pick_x": 536.5,
+            "pick_y": 386.450012207031,
+            "visible": true,
+            "x": -90,
+            "y": 81
+          },
+          {
+            "id": "blight_vine_01",
+            "phase": 15,
+            "pick_x": 744.650024414062,
+            "pick_y": 427.850006103516,
+            "visible": true,
+            "x": 90,
+            "y": 117
+          },
+          {
+            "id": "blight_vine_02",
+            "phase": 15,
+            "pick_x": 827.450012207031,
+            "pick_y": 449.700012207031,
+            "visible": true,
+            "x": 162,
+            "y": 135
+          },
+          {
+            "id": "blight_vine_03",
+            "phase": 15,
+            "pick_x": 950.5,
+            "pick_y": 448.549987792969,
+            "visible": true,
+            "x": 270,
+            "y": 135
+          },
+          {
+            "id": "blight_fern_01",
+            "phase": 15,
+            "pick_x": 380.100006103516,
+            "pick_y": 506.049987792969,
+            "visible": true,
+            "x": -225,
+            "y": 180
+          },
+          {
+            "id": "blight_fern_02",
+            "phase": 15,
+            "pick_x": 523.849975585938,
+            "pick_y": 637.150024414062,
+            "visible": true,
+            "x": -100,
+            "y": 290
+          },
+          {
+            "id": "blight_fern_03",
+            "phase": 15,
+            "pick_x": 950.5,
+            "pick_y": 548.599975585938,
+            "visible": true,
+            "x": 270,
+            "y": 210
+          },
+          {
+            "id": "blight_fern_01",
+            "phase": 15,
+            "pick_x": 972.349975585938,
+            "pick_y": 563.549987792969,
+            "visible": true,
+            "x": 290,
+            "y": 230
+          },
+          {
+            "id": "blight_fern_02",
+            "phase": 15,
+            "pick_x": 1121.84997558594,
+            "pick_y": 591.150024414062,
+            "visible": true,
+            "x": 420,
+            "y": 250
+          },
+          {
+            "id": "blight_fern_03",
+            "phase": 15,
+            "pick_x": 1019.5,
+            "pick_y": 744.099975585938,
+            "visible": true,
+            "x": 330,
+            "y": 380
+          },
+          {
+            "id": "blight_fern_01",
+            "phase": 15,
+            "pick_x": 1213.84997558594,
+            "pick_y": 609.549987792969,
+            "visible": true,
+            "x": 500,
+            "y": 270
+          },
+          {
+            "id": "blight_fern_02",
+            "phase": 15,
+            "pick_x": 155.850006103516,
+            "pick_y": 533.650024414062,
+            "visible": true,
+            "x": -420,
+            "y": 200
+          },
+          {
+            "id": "blight_fern_03",
+            "phase": 15,
+            "pick_x": 168.5,
+            "pick_y": 652.099975585938,
+            "visible": true,
+            "x": -410,
+            "y": 300
+          }
+        ]
+      }
+    },
+    {
+      "name": "actual editor opens six foliage cards",
+      "ok": true,
+      "detail": [
+        [
+          "blight_fern_01",
+          {
+            "visible": true,
+            "x": 50.5,
+            "y": 493
+          }
+        ],
+        [
+          "blight_fern_02",
+          {
+            "visible": true,
+            "x": 137.5,
+            "y": 493
+          }
+        ],
+        [
+          "blight_fern_03",
+          {
+            "visible": true,
+            "x": 224,
+            "y": 493
+          }
+        ],
+        [
+          "blight_vine_01",
+          {
+            "visible": true,
+            "x": 50.5,
+            "y": 403
+          }
+        ],
+        [
+          "blight_vine_02",
+          {
+            "visible": true,
+            "x": 137.5,
+            "y": 403
+          }
+        ],
+        [
+          "blight_vine_03",
+          {
+            "visible": true,
+            "x": 224,
+            "y": 403
+          }
+        ]
+      ]
+    },
+    {
+      "name": "layer eye hides every foliage sprite while retaining cliffs",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "x": -360,
+        "y": 90,
+        "elevation": 0,
+        "depth": 0,
+        "over_water": false,
+        "chakra": 100,
+        "operations": 0,
+        "editor_open": true,
+        "cells": 134,
+        "river_section": true,
+        "camera_zoom": 1.149999976158142,
+        "buttons_json": "[{\"x\":362.0,\"y\":63.5},{\"x\":473.0,\"y\":63.5},{\"x\":572.5,\"y\":63.5},{\"x\":644.5,\"y\":63.5},{\"x\":758.5,\"y\":63.5},{\"x\":883.0,\"y\":63.5},{\"x\":964.5,\"y\":63.5}]",
+        "cards_json": "{\"blight_fern_01\":{\"visible\":true,\"x\":50.5,\"y\":493.0},\"blight_fern_02\":{\"visible\":true,\"x\":137.5,\"y\":493.0},\"blight_fern_03\":{\"visible\":true,\"x\":224.0,\"y\":493.0},\"blight_vine_01\":{\"visible\":true,\"x\":50.5,\"y\":403.0},\"blight_vine_02\":{\"visible\":true,\"x\":137.5,\"y\":403.0},\"blight_vine_03\":{\"visible\":true,\"x\":224.0,\"y\":403.0},\"cliff_cascade\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_end_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_end_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_grass\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_ground\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_e\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_n\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_s\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_w\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_e\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_n\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_s\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_w\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_path\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stair_join_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stair_join_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stairs_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stairs_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_straight_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_straight_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_upper_river\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_waterfall_lip\":{\"visible\":false,\"x\":13.0,\"y\":383.0}}",
+        "tool": "select",
+        "place_id": "",
+        "paint_x": 308.8000183105469,
+        "paint_y": 124.25,
+        "placed_count": 1282,
+        "probe_a": false,
+        "probe_b": false,
+        "tools_json": "{\"box\":{\"x\":42.0,\"y\":119.0},\"erase\":{\"x\":133.0,\"y\":123.0},\"paint\":{\"x\":197.0,\"y\":123.0},\"pan\":{\"x\":261.0,\"y\":123.0},\"select\":{\"x\":54.0,\"y\":123.0}}",
+        "play_x": 490.5,
+        "play_y": 24,
+        "layer_x": 1045,
+        "layer_y": 200,
+        "foliage_layer_x": 1045,
+        "foliage_layer_y": 228,
+        "cliffs_visible": true,
+        "foliage_visible": false,
+        "fall_frame": 56,
+        "foam_frame": 15,
+        "lip_y": 42,
+        "basin_y": 108,
+        "foam_y": 107,
+        "foliage_json": "[{\"id\":\"blight_vine_01\",\"phase\":28,\"pick_x\":413.450012207031,\"pick_y\":324.350006103516,\"visible\":false,\"x\":-198.0,\"y\":27.0},{\"id\":\"blight_vine_02\",\"phase\":28,\"pick_x\":496.25,\"pick_y\":366.899993896484,\"visible\":false,\"x\":-126.0,\"y\":63.0},{\"id\":\"blight_vine_03\",\"phase\":28,\"pick_x\":536.5,\"pick_y\":386.450012207031,\"visible\":false,\"x\":-90.0,\"y\":81.0},{\"id\":\"blight_vine_01\",\"phase\":28,\"pick_x\":744.650024414062,\"pick_y\":427.850006103516,\"visible\":false,\"x\":90.0,\"y\":117.0},{\"id\":\"blight_vine_02\",\"phase\":28,\"pick_x\":827.450012207031,\"pick_y\":449.700012207031,\"visible\":false,\"x\":162.0,\"y\":135.0},{\"id\":\"blight_vine_03\",\"phase\":28,\"pick_x\":950.5,\"pick_y\":448.549987792969,\"visible\":false,\"x\":270.0,\"y\":135.0},{\"id\":\"blight_fern_01\",\"phase\":28,\"pick_x\":380.100006103516,\"pick_y\":506.049987792969,\"visible\":false,\"x\":-225.0,\"y\":180.0},{\"id\":\"blight_fern_02\",\"phase\":28,\"pick_x\":523.849975585938,\"pick_y\":637.150024414062,\"visible\":false,\"x\":-100.0,\"y\":290.0},{\"id\":\"blight_fern_03\",\"phase\":28,\"pick_x\":950.5,\"pick_y\":548.599975585938,\"visible\":false,\"x\":270.0,\"y\":210.0},{\"id\":\"blight_fern_01\",\"phase\":28,\"pick_x\":972.349975585938,\"pick_y\":563.549987792969,\"visible\":false,\"x\":290.0,\"y\":230.0},{\"id\":\"blight_fern_02\",\"phase\":28,\"pick_x\":1121.84997558594,\"pick_y\":591.150024414062,\"visible\":false,\"x\":420.0,\"y\":250.0},{\"id\":\"blight_fern_03\",\"phase\":28,\"pick_x\":1019.5,\"pick_y\":744.099975585938,\"visible\":false,\"x\":330.0,\"y\":380.0},{\"id\":\"blight_fern_01\",\"phase\":28,\"pick_x\":1213.84997558594,\"pick_y\":609.549987792969,\"visible\":false,\"x\":500.0,\"y\":270.0},{\"id\":\"blight_fern_02\",\"phase\":28,\"pick_x\":155.850006103516,\"pick_y\":533.650024414062,\"visible\":false,\"x\":-420.0,\"y\":200.0},{\"id\":\"blight_fern_03\",\"phase\":28,\"pick_x\":168.5,\"pick_y\":652.099975585938,\"visible\":false,\"x\":-410.0,\"y\":300.0}]",
+        "selected_id": ""
+      }
+    },
+    {
+      "name": "layer eye restores foliage",
+      "ok": true
+    },
+    {
+      "name": "real card places a separate fern",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "x": -360,
+        "y": 90,
+        "elevation": 0,
+        "depth": 0,
+        "over_water": false,
+        "chakra": 100,
+        "operations": 0,
+        "editor_open": true,
+        "cells": 134,
+        "river_section": true,
+        "camera_zoom": 1.149999976158142,
+        "buttons_json": "[{\"x\":362.0,\"y\":63.5},{\"x\":473.0,\"y\":63.5},{\"x\":572.5,\"y\":63.5},{\"x\":644.5,\"y\":63.5},{\"x\":758.5,\"y\":63.5},{\"x\":883.0,\"y\":63.5},{\"x\":964.5,\"y\":63.5}]",
+        "cards_json": "{\"blight_fern_01\":{\"visible\":true,\"x\":50.5,\"y\":493.0},\"blight_fern_02\":{\"visible\":true,\"x\":137.5,\"y\":493.0},\"blight_fern_03\":{\"visible\":true,\"x\":224.0,\"y\":493.0},\"blight_vine_01\":{\"visible\":true,\"x\":50.5,\"y\":403.0},\"blight_vine_02\":{\"visible\":true,\"x\":137.5,\"y\":403.0},\"blight_vine_03\":{\"visible\":true,\"x\":224.0,\"y\":403.0},\"cliff_cascade\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_end_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_end_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_grass\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_ground\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_e\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_n\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_s\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_w\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_e\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_n\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_s\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_w\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_path\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stair_join_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stair_join_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stairs_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stairs_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_straight_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_straight_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_upper_river\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_waterfall_lip\":{\"visible\":false,\"x\":13.0,\"y\":383.0}}",
+        "tool": "place",
+        "place_id": "blight_fern_01",
+        "paint_x": 308.8000183105469,
+        "paint_y": 124.25,
+        "placed_count": 1283,
+        "probe_a": false,
+        "probe_b": false,
+        "tools_json": "{\"box\":{\"x\":42.0,\"y\":119.0},\"erase\":{\"x\":133.0,\"y\":123.0},\"paint\":{\"x\":197.0,\"y\":123.0},\"pan\":{\"x\":261.0,\"y\":123.0},\"select\":{\"x\":54.0,\"y\":123.0}}",
+        "play_x": 490.5,
+        "play_y": 24,
+        "layer_x": 1045,
+        "layer_y": 200,
+        "foliage_layer_x": 1045,
+        "foliage_layer_y": 228,
+        "cliffs_visible": true,
+        "foliage_visible": true,
+        "fall_frame": 0,
+        "foam_frame": 6,
+        "lip_y": 42,
+        "basin_y": 108,
+        "foam_y": 107,
+        "foliage_json": "[{\"id\":\"blight_vine_01\",\"phase\":70,\"pick_x\":413.450012207031,\"pick_y\":324.350006103516,\"visible\":true,\"x\":-198.0,\"y\":27.0},{\"id\":\"blight_vine_02\",\"phase\":70,\"pick_x\":496.25,\"pick_y\":366.899993896484,\"visible\":true,\"x\":-126.0,\"y\":63.0},{\"id\":\"blight_vine_03\",\"phase\":70,\"pick_x\":536.5,\"pick_y\":386.450012207031,\"visible\":true,\"x\":-90.0,\"y\":81.0},{\"id\":\"blight_vine_01\",\"phase\":70,\"pick_x\":744.650024414062,\"pick_y\":427.850006103516,\"visible\":true,\"x\":90.0,\"y\":117.0},{\"id\":\"blight_vine_02\",\"phase\":70,\"pick_x\":827.450012207031,\"pick_y\":449.700012207031,\"visible\":true,\"x\":162.0,\"y\":135.0},{\"id\":\"blight_vine_03\",\"phase\":70,\"pick_x\":950.5,\"pick_y\":448.549987792969,\"visible\":true,\"x\":270.0,\"y\":135.0},{\"id\":\"blight_fern_01\",\"phase\":70,\"pick_x\":380.100006103516,\"pick_y\":506.049987792969,\"visible\":true,\"x\":-225.0,\"y\":180.0},{\"id\":\"blight_fern_02\",\"phase\":70,\"pick_x\":523.849975585938,\"pick_y\":637.150024414062,\"visible\":true,\"x\":-100.0,\"y\":290.0},{\"id\":\"blight_fern_03\",\"phase\":70,\"pick_x\":950.5,\"pick_y\":548.599975585938,\"visible\":true,\"x\":270.0,\"y\":210.0},{\"id\":\"blight_fern_01\",\"phase\":70,\"pick_x\":972.349975585938,\"pick_y\":563.549987792969,\"visible\":true,\"x\":290.0,\"y\":230.0},{\"id\":\"blight_fern_02\",\"phase\":70,\"pick_x\":1121.84997558594,\"pick_y\":591.150024414062,\"visible\":true,\"x\":420.0,\"y\":250.0},{\"id\":\"blight_fern_03\",\"phase\":70,\"pick_x\":1019.5,\"pick_y\":744.099975585938,\"visible\":true,\"x\":330.0,\"y\":380.0},{\"id\":\"blight_fern_01\",\"phase\":70,\"pick_x\":1213.84997558594,\"pick_y\":609.549987792969,\"visible\":true,\"x\":500.0,\"y\":270.0},{\"id\":\"blight_fern_02\",\"phase\":70,\"pick_x\":155.850006103516,\"pick_y\":533.650024414062,\"visible\":true,\"x\":-420.0,\"y\":200.0},{\"id\":\"blight_fern_03\",\"phase\":70,\"pick_x\":168.5,\"pick_y\":652.099975585938,\"visible\":true,\"x\":-410.0,\"y\":300.0},{\"id\":\"blight_fern_01\",\"phase\":9,\"pick_x\":293.850006103516,\"pick_y\":92.0500030517578,\"visible\":true,\"x\":-300.0,\"y\":-180.0}]",
+        "selected_id": ""
+      }
+    },
+    {
+      "name": "actual undo and redo preserve placed fern",
+      "ok": true
+    },
+    {
+      "name": "real leaf picking and drag moves the fern",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "x": -360,
+        "y": 90,
+        "elevation": 0,
+        "depth": 0,
+        "over_water": false,
+        "chakra": 100,
+        "operations": 0,
+        "editor_open": true,
+        "cells": 134,
+        "river_section": true,
+        "camera_zoom": 1.149999976158142,
+        "buttons_json": "[{\"x\":362.0,\"y\":63.5},{\"x\":473.0,\"y\":63.5},{\"x\":572.5,\"y\":63.5},{\"x\":644.5,\"y\":63.5},{\"x\":758.5,\"y\":63.5},{\"x\":883.0,\"y\":63.5},{\"x\":964.5,\"y\":63.5}]",
+        "cards_json": "{\"blight_fern_01\":{\"visible\":true,\"x\":50.5,\"y\":493.0},\"blight_fern_02\":{\"visible\":true,\"x\":137.5,\"y\":493.0},\"blight_fern_03\":{\"visible\":true,\"x\":224.0,\"y\":493.0},\"blight_vine_01\":{\"visible\":true,\"x\":50.5,\"y\":403.0},\"blight_vine_02\":{\"visible\":true,\"x\":137.5,\"y\":403.0},\"blight_vine_03\":{\"visible\":true,\"x\":224.0,\"y\":403.0},\"cliff_cascade\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_end_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_end_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_grass\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_ground\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_e\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_n\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_s\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_w\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_e\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_n\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_s\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_w\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_path\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stair_join_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stair_join_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stairs_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stairs_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_straight_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_straight_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_upper_river\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_waterfall_lip\":{\"visible\":false,\"x\":13.0,\"y\":383.0}}",
+        "tool": "select",
+        "place_id": "",
+        "paint_x": 308.8000183105469,
+        "paint_y": 124.25,
+        "placed_count": 1283,
+        "probe_a": false,
+        "probe_b": false,
+        "tools_json": "{\"box\":{\"x\":42.0,\"y\":119.0},\"erase\":{\"x\":133.0,\"y\":123.0},\"paint\":{\"x\":197.0,\"y\":123.0},\"pan\":{\"x\":261.0,\"y\":123.0},\"select\":{\"x\":54.0,\"y\":123.0}}",
+        "play_x": 490.5,
+        "play_y": 24,
+        "layer_x": 1045,
+        "layer_y": 200,
+        "foliage_layer_x": 1045,
+        "foliage_layer_y": 228,
+        "cliffs_visible": true,
+        "foliage_visible": true,
+        "fall_frame": 56,
+        "foam_frame": 0,
+        "lip_y": 42,
+        "basin_y": 108,
+        "foam_y": 107,
+        "foliage_json": "[{\"id\":\"blight_vine_01\",\"phase\":45,\"pick_x\":413.450012207031,\"pick_y\":324.350006103516,\"visible\":true,\"x\":-198.0,\"y\":27.0},{\"id\":\"blight_vine_02\",\"phase\":45,\"pick_x\":496.25,\"pick_y\":366.899993896484,\"visible\":true,\"x\":-126.0,\"y\":63.0},{\"id\":\"blight_vine_03\",\"phase\":45,\"pick_x\":536.5,\"pick_y\":386.450012207031,\"visible\":true,\"x\":-90.0,\"y\":81.0},{\"id\":\"blight_vine_01\",\"phase\":45,\"pick_x\":744.650024414062,\"pick_y\":427.850006103516,\"visible\":true,\"x\":90.0,\"y\":117.0},{\"id\":\"blight_vine_02\",\"phase\":45,\"pick_x\":827.450012207031,\"pick_y\":449.700012207031,\"visible\":true,\"x\":162.0,\"y\":135.0},{\"id\":\"blight_vine_03\",\"phase\":45,\"pick_x\":950.5,\"pick_y\":448.549987792969,\"visible\":true,\"x\":270.0,\"y\":135.0},{\"id\":\"blight_fern_01\",\"phase\":45,\"pick_x\":431.850006103516,\"pick_y\":506.049987792969,\"visible\":true,\"x\":-180.0,\"y\":180.0},{\"id\":\"blight_fern_02\",\"phase\":45,\"pick_x\":523.849975585938,\"pick_y\":637.150024414062,\"visible\":true,\"x\":-100.0,\"y\":290.0},{\"id\":\"blight_fern_03\",\"phase\":45,\"pick_x\":950.5,\"pick_y\":548.599975585938,\"visible\":true,\"x\":270.0,\"y\":210.0},{\"id\":\"blight_fern_01\",\"phase\":45,\"pick_x\":972.349975585938,\"pick_y\":563.549987792969,\"visible\":true,\"x\":290.0,\"y\":230.0},{\"id\":\"blight_fern_02\",\"phase\":45,\"pick_x\":1121.84997558594,\"pick_y\":591.150024414062,\"visible\":true,\"x\":420.0,\"y\":250.0},{\"id\":\"blight_fern_03\",\"phase\":45,\"pick_x\":1019.5,\"pick_y\":744.099975585938,\"visible\":true,\"x\":330.0,\"y\":380.0},{\"id\":\"blight_fern_01\",\"phase\":45,\"pick_x\":1213.84997558594,\"pick_y\":609.549987792969,\"visible\":true,\"x\":500.0,\"y\":270.0},{\"id\":\"blight_fern_02\",\"phase\":45,\"pick_x\":155.850006103516,\"pick_y\":533.650024414062,\"visible\":true,\"x\":-420.0,\"y\":200.0},{\"id\":\"blight_fern_03\",\"phase\":45,\"pick_x\":168.5,\"pick_y\":652.099975585938,\"visible\":true,\"x\":-410.0,\"y\":300.0},{\"id\":\"blight_fern_01\",\"phase\":45,\"pick_x\":293.850006103516,\"pick_y\":92.0500030517578,\"visible\":true,\"x\":-300.0,\"y\":-180.0}]",
+        "selected_id": "blight_fern_01"
+      }
+    },
+    {
+      "name": "real erase and undo restores the decoration",
+      "ok": true
+    },
+    {
+      "name": "actual file save reload preserves all edited foliage",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "x": -360,
+        "y": 90,
+        "elevation": 0,
+        "depth": 0,
+        "over_water": false,
+        "chakra": 100,
+        "operations": 1,
+        "editor_open": true,
+        "cells": 134,
+        "river_section": true,
+        "camera_zoom": 1.149999976158142,
+        "buttons_json": "[{\"x\":362.0,\"y\":63.5},{\"x\":473.0,\"y\":63.5},{\"x\":572.5,\"y\":63.5},{\"x\":644.5,\"y\":63.5},{\"x\":758.5,\"y\":63.5},{\"x\":883.0,\"y\":63.5},{\"x\":964.5,\"y\":63.5}]",
+        "cards_json": "{\"blight_fern_01\":{\"visible\":true,\"x\":50.5,\"y\":493.0},\"blight_fern_02\":{\"visible\":true,\"x\":137.5,\"y\":493.0},\"blight_fern_03\":{\"visible\":true,\"x\":224.0,\"y\":493.0},\"blight_vine_01\":{\"visible\":true,\"x\":50.5,\"y\":403.0},\"blight_vine_02\":{\"visible\":true,\"x\":137.5,\"y\":403.0},\"blight_vine_03\":{\"visible\":true,\"x\":224.0,\"y\":403.0},\"cliff_cascade\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_end_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_end_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_grass\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_ground\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_e\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_n\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_s\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_inner_w\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_e\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_n\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_s\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_outer_w\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_path\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stair_join_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stair_join_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stairs_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_stairs_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_straight_se\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_straight_sw\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_upper_river\":{\"visible\":false,\"x\":13.0,\"y\":383.0},\"cliff_waterfall_lip\":{\"visible\":false,\"x\":13.0,\"y\":383.0}}",
+        "tool": "erase",
+        "place_id": "",
+        "paint_x": 308.8000183105469,
+        "paint_y": 124.25,
+        "placed_count": 1283,
+        "probe_a": false,
+        "probe_b": false,
+        "tools_json": "{\"box\":{\"x\":42.0,\"y\":119.0},\"erase\":{\"x\":133.0,\"y\":123.0},\"paint\":{\"x\":197.0,\"y\":123.0},\"pan\":{\"x\":261.0,\"y\":123.0},\"select\":{\"x\":54.0,\"y\":123.0}}",
+        "play_x": 490.5,
+        "play_y": 24,
+        "layer_x": 1045,
+        "layer_y": 200,
+        "foliage_layer_x": 1045,
+        "foliage_layer_y": 228,
+        "cliffs_visible": true,
+        "foliage_visible": true,
+        "fall_frame": 56,
+        "foam_frame": 8,
+        "lip_y": 42,
+        "basin_y": 108,
+        "foam_y": 107,
+        "foliage_json": "[{\"id\":\"blight_vine_01\",\"phase\":12,\"pick_x\":413.450012207031,\"pick_y\":324.350006103516,\"visible\":true,\"x\":-198.0,\"y\":27.0},{\"id\":\"blight_vine_02\",\"phase\":12,\"pick_x\":496.25,\"pick_y\":366.899993896484,\"visible\":true,\"x\":-126.0,\"y\":63.0},{\"id\":\"blight_vine_03\",\"phase\":12,\"pick_x\":536.5,\"pick_y\":386.450012207031,\"visible\":true,\"x\":-90.0,\"y\":81.0},{\"id\":\"blight_vine_01\",\"phase\":12,\"pick_x\":744.650024414062,\"pick_y\":427.850006103516,\"visible\":true,\"x\":90.0,\"y\":117.0},{\"id\":\"blight_vine_02\",\"phase\":12,\"pick_x\":827.450012207031,\"pick_y\":449.700012207031,\"visible\":true,\"x\":162.0,\"y\":135.0},{\"id\":\"blight_vine_03\",\"phase\":12,\"pick_x\":950.5,\"pick_y\":448.549987792969,\"visible\":true,\"x\":270.0,\"y\":135.0},{\"id\":\"blight_fern_02\",\"phase\":12,\"pick_x\":523.849975585938,\"pick_y\":637.150024414062,\"visible\":true,\"x\":-100.0,\"y\":290.0},{\"id\":\"blight_fern_03\",\"phase\":12,\"pick_x\":950.5,\"pick_y\":548.599975585938,\"visible\":true,\"x\":270.0,\"y\":210.0},{\"id\":\"blight_fern_01\",\"phase\":12,\"pick_x\":972.349975585938,\"pick_y\":563.549987792969,\"visible\":true,\"x\":290.0,\"y\":230.0},{\"id\":\"blight_fern_02\",\"phase\":12,\"pick_x\":1121.84997558594,\"pick_y\":591.150024414062,\"visible\":true,\"x\":420.0,\"y\":250.0},{\"id\":\"blight_fern_03\",\"phase\":12,\"pick_x\":1019.5,\"pick_y\":744.099975585938,\"visible\":true,\"x\":330.0,\"y\":380.0},{\"id\":\"blight_fern_01\",\"phase\":12,\"pick_x\":1213.84997558594,\"pick_y\":609.549987792969,\"visible\":true,\"x\":500.0,\"y\":270.0},{\"id\":\"blight_fern_02\",\"phase\":12,\"pick_x\":155.850006103516,\"pick_y\":533.650024414062,\"visible\":true,\"x\":-420.0,\"y\":200.0},{\"id\":\"blight_fern_03\",\"phase\":12,\"pick_x\":168.5,\"pick_y\":652.099975585938,\"visible\":true,\"x\":-410.0,\"y\":300.0},{\"id\":\"blight_fern_01\",\"phase\":12,\"pick_x\":293.850006103516,\"pick_y\":92.0500030517578,\"visible\":true,\"x\":-300.0,\"y\":-180.0},{\"id\":\"blight_fern_01\",\"phase\":12,\"pick_x\":380.100006103516,\"pick_y\":506.049987792969,\"visible\":true,\"x\":-225.0,\"y\":180.0}]",
+        "selected_id": ""
+      }
+    },
+    {
+      "name": "Playtest loads edited foliage in actual game",
+      "ok": true,
+      "detail": {
+        "ready": true,
+        "x": -360,
+        "y": 90,
+        "elevation": 0,
+        "depth": 0,
+        "over_water": false,
+        "chakra": 100,
+        "operations": 0,
+        "editor_open": false,
+        "cells": 134,
+        "river_section": true,
+        "camera_zoom": 1.149999976158142,
+        "buttons_json": "[{\"x\":362.0,\"y\":63.5},{\"x\":473.0,\"y\":63.5},{\"x\":572.5,\"y\":63.5},{\"x\":644.5,\"y\":63.5},{\"x\":758.5,\"y\":63.5},{\"x\":883.0,\"y\":63.5},{\"x\":964.5,\"y\":63.5}]",
+        "cards_json": "{}",
+        "tool": "select",
+        "place_id": "",
+        "paint_x": 308.8000183105469,
+        "paint_y": 124.25,
+        "placed_count": 1283,
+        "probe_a": false,
+        "probe_b": false,
+        "tools_json": "{\"box\":{\"x\":714.0,\"y\":83.0},\"erase\":{\"x\":901.0,\"y\":147.0},\"paint\":{\"x\":1049.0,\"y\":147.0},\"pan\":{\"x\":1197.0,\"y\":147.0},\"select\":{\"x\":753.0,\"y\":147.0}}",
+        "cliffs_visible": true,
+        "foliage_visible": true,
+        "fall_frame": 0,
+        "foam_frame": 3,
+        "lip_y": 42,
+        "basin_y": 108,
+        "foam_y": 107,
+        "foliage_json": "[{\"id\":\"blight_vine_01\",\"phase\":6,\"pick_x\":413.450012207031,\"pick_y\":324.350006103516,\"visible\":true,\"x\":-198.0,\"y\":27.0},{\"id\":\"blight_vine_02\",\"phase\":6,\"pick_x\":496.25,\"pick_y\":366.899993896484,\"visible\":true,\"x\":-126.0,\"y\":63.0},{\"id\":\"blight_vine_03\",\"phase\":6,\"pick_x\":536.5,\"pick_y\":386.450012207031,\"visible\":true,\"x\":-90.0,\"y\":81.0},{\"id\":\"blight_vine_01\",\"phase\":6,\"pick_x\":744.650024414062,\"pick_y\":427.850006103516,\"visible\":true,\"x\":90.0,\"y\":117.0},{\"id\":\"blight_vine_02\",\"phase\":6,\"pick_x\":827.450012207031,\"pick_y\":449.700012207031,\"visible\":true,\"x\":162.0,\"y\":135.0},{\"id\":\"blight_vine_03\",\"phase\":6,\"pick_x\":950.5,\"pick_y\":448.549987792969,\"visible\":true,\"x\":270.0,\"y\":135.0},{\"id\":\"blight_fern_02\",\"phase\":6,\"pick_x\":523.849975585938,\"pick_y\":637.150024414062,\"visible\":true,\"x\":-100.0,\"y\":290.0},{\"id\":\"blight_fern_03\",\"phase\":6,\"pick_x\":950.5,\"pick_y\":548.599975585938,\"visible\":true,\"x\":270.0,\"y\":210.0},{\"id\":\"blight_fern_01\",\"phase\":6,\"pick_x\":972.349975585938,\"pick_y\":563.549987792969,\"visible\":true,\"x\":290.0,\"y\":230.0},{\"id\":\"blight_fern_02\",\"phase\":6,\"pick_x\":1121.84997558594,\"pick_y\":591.150024414062,\"visible\":true,\"x\":420.0,\"y\":250.0},{\"id\":\"blight_fern_03\",\"phase\":6,\"pick_x\":1019.5,\"pick_y\":744.099975585938,\"visible\":true,\"x\":330.0,\"y\":380.0},{\"id\":\"blight_fern_01\",\"phase\":6,\"pick_x\":1213.84997558594,\"pick_y\":609.549987792969,\"visible\":true,\"x\":500.0,\"y\":270.0},{\"id\":\"blight_fern_02\",\"phase\":6,\"pick_x\":155.850006103516,\"pick_y\":533.650024414062,\"visible\":true,\"x\":-420.0,\"y\":200.0},{\"id\":\"blight_fern_03\",\"phase\":6,\"pick_x\":168.5,\"pick_y\":652.099975585938,\"visible\":true,\"x\":-410.0,\"y\":300.0},{\"id\":\"blight_fern_01\",\"phase\":6,\"pick_x\":293.850006103516,\"pick_y\":92.0500030517578,\"visible\":true,\"x\":-300.0,\"y\":-180.0},{\"id\":\"blight_fern_01\",\"phase\":6,\"pick_x\":380.100006103516,\"pick_y\":506.049987792969,\"visible\":true,\"x\":-225.0,\"y\":180.0}]",
+        "selected_id": ""
+      }
+    },
+    {
+      "name": "normal saved world remains unchanged",
+      "ok": true
+    },
+    {
+      "name": "zero browser or engine errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}
