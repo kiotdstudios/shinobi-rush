@@ -1,0 +1,20 @@
+{
+  "merge_sha": "4f84ff39c9bdae55b7c9c5ceaa99e24fbbf750d6",
+  "pr": "https://github.com/kiotdstudios/shinobi-rush/pull/265",
+  "url": "https://kiotdstudios.github.io/shinobi-rush/",
+  "workflow": "https://github.com/kiotdstudios/shinobi-rush/actions/runs/40975744375",
+  "native_pass": 5252,
+  "native_fail": 0,
+  "resources": {
+    "scripts": 448,
+    "scenes": 30,
+    "resources": 2,
+    "failures": 0
+  },
+  "deploy": "success",
+  "postdeploy": "success",
+  "gate": "success",
+  "smart_browser_checks": 14,
+  "autoblend_browser_checks": 28,
+  "browser_errors": 0
+}
