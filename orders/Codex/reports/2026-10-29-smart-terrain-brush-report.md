@@ -1,14 +1,14 @@
-# Job Report — Smart Terrain Brush and Tile Family Detection
+# Job Report â€” Smart Terrain Brush and Tile Family Detection
 - Agent: Codex
 - Order: orders/Codex/2026-10-29-smart-terrain-brush.md
 - Date: 2026-10-29 (America/New_York)
-- Final status: REVIEW — local affected-system checks passed; full regression/integration pending
-- Commit / PR: Implementation: 377a3cc796d58923684e30caf191c850efcf8b9b; PR pending below
+- Final status: DONE - merged and exact-build canonical verification passed
+- Commit / PR: https://github.com/kiotdstudios/shinobi-rush/pull/265; merged as 4f84ff39c9bdae55b7c9c5ceaa99e24fbbf750d6
 
 ## Verified starting status
 GitHub #251 merged into #245 as 9e2cfa319bdf3a804b6cf040c7dbbeb8904a4422; #245 merged into main as 090d86885031a2f03cca3c7b1f8ab760a172adca. #253 publishes the prior exact-build deployment evidence: 5,073 native assertions and 28 browser checks. The original branch names remain on GitHub; their presence is not unfinished integration. Code history confirms no subsequent AutoTile/TerrainBlend changes through main 5a689112 (#261). Later #254/#256/#258/#259/#261 add cliffs, authored composition and foliage/editor behavior.
 
-During this session draft #262 appeared on feat/smart-terrain-family-suggestions-20261029, head dc8bd0d7a2ac77220ba90c6e8669aff217715f5e. Its description explicitly leaves UI, persistence, real texture paths, diamond sampling, tests and browser integration unfinished. Incorporated that branch with a pending normal merge, then expanded its TerrainFamilyMatcher rather than introducing a second matcher. Coordination comment: https://github.com/kiotdstudios/shinobi-rush/pull/262#issuecomment-6506621896. Other concurrent PRs: #263 shared-layout synchronization and #264 foliage delivery evidence; neither is included or overwritten here.
+During this session draft #262 appeared on feat/smart-terrain-family-suggestions-20261029, head dc8bd0d7a2ac77220ba90c6e8669aff217715f5e. Its description explicitly leaves UI, persistence, real texture paths, diamond sampling, tests and browser integration unfinished. Incorporated that branch with a pending normal merge, then expanded its TerrainFamilyMatcher rather than introducing a second matcher. Coordination comment: https://github.com/kiotdstudios/shinobi-rush/pull/262#issuecomment-6506621896. Concurrent #263 shared-layout synchronization was later integrated as described below; #264 foliage delivery evidence was left untouched. #262 closed as merged through #265 ancestry.
 
 ## Work completed
 Smart Brush converts a selected known floor tile into the existing material-aware AutoTile brush. Catalog terrain_material, existing corner registries and shoreline metadata provide identity before any pixels are considered. Mixed/unknown tiles require explicit material approval; rejected/manual choices pin their raw tiles against later adoption. Existing terrain buttons remain available.
@@ -57,11 +57,24 @@ Environment: Windows PowerShell, bundled Python/Node, Godot 4.7.2 and Playwright
 None.
 
 ## Limitations / outstanding work
-Full native regression completion, PR checks, reviewed integration and canonical deployment verification remain pending. Focused native and complete browser acceptance passed. The required checks are validate-orders-and-project and godot-ci-gate with strict current-base policy; no bypass actors are allowed. Reviews are inspected before normal merge.
+All committed-revision PR checks and normal integration passed. Main native suite passed 5,252 assertions with zero failures. Canonical deployment verification passed as recorded below. The required checks are validate-orders-and-project and godot-ci-gate with strict current-base policy; no bypass actors are allowed. Reviews are inspected before normal merge.
 
 Four distinct materials in one diamond retain the existing deterministic fallback and may show seams. Pixel statistics do not infer artistic meaning/collision/polarity. Manual approval maps catalog art to existing material kits; this feature does not import arbitrary files, synthesize new transition artwork or create novel material registries. Connected fill is capped at 4096 cells and excludes empty space. No authored maps, art, camera, movement, combat or shared-layout policy were changed.
 
 ## Integration with shared-map synchronization (#263)
 After c97c248 passed fresh CI (5,244 native assertions, 448/30/2 resources, full smoke/controls/debug regression and required gates), main moved to e63b8bc44e7f34bbbf73b3e865e0271b671ccf11 through #263. This created one serialization conflict. Preserved #263's published_rev, published_path and superseded-save policy and appended terrain_families to its output dictionary. Added an interaction assertion that both the published revision and approved family survive exact file save/reload. No upstream policy was rewritten.
 
-Before the merge-resolution commit: godot --headless --path . --script ../focused-integration.gd passed **84/84** (35 Smart Brush + 49 publisher/shared-map checks); a fresh ../web-integration export passed; resource validation again passed 448 scripts/30 scenes/2 resources; node scripts/ci/smoke/smart-terrain-probe.mjs --serve-dir ../web-integration --out-dir ../browser-integration passed **13/13**, zero errors. Browser screenshots/result and integration-native.log are packaged under docs/visuals/smart-terrain/. New current-base CI must pass before integration.
+Before the merge-resolution commit: godot --headless --path . --script ../focused-integration.gd passed **84/84** (35 Smart Brush + 49 publisher/shared-map checks); a fresh ../web-integration export passed; resource validation again passed 448 scripts/30 scenes/2 resources; node scripts/ci/smoke/smart-terrain-probe.mjs --serve-dir ../web-integration --out-dir ../browser-integration passed **13/13**, zero errors. Browser screenshots/result and integration-native.log are packaged under docs/visuals/smart-terrain/. Fresh current-base CI passed all 5,252 native assertions, resource checks, full browser smoke/controls/debug regression, tooling, pipeline self-test and required gates before normal merge. Reviews and comments contained no unresolved findings. Main run again passed 5,252 assertions and 448/30/2 resource validation.
+
+## Final integrated live verification
+PR #265 merged normally as 4f84ff39c9bdae55b7c9c5ceaa99e24fbbf750d6. Its tree exactly matches tested head 1db91727b8a39517b0bb21e7bae07ce185f9f914. Main Godot CI https://github.com/kiotdstudios/shinobi-rush/actions/runs/40975744375 passed: 5,252 native assertions / 0 failures, 448 scripts / 30 scenes / 2 resources / 0 failures, export, pre-deploy browser smoke, Pages deployment, post-deploy live smoke and gate.
+
+On 2026-10-29 America/New_York (2026-10-30 UTC), both probes opened the canonical https://kiotdstudios.github.io/shinobi-rush/ and required build-info.json to equal the full merged SHA before testing:
+- node scripts/ci/smoke/smart-terrain-probe.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 4f84ff39c9bdae55b7c9c5ceaa99e24fbbf750d6 --out-dir ../smart-live: 14/14 passed.
+- node scripts/ci/smoke/auto-blend-probe.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 4f84ff39c9bdae55b7c9c5ceaa99e24fbbf750d6 --out-dir ../blend-live: 28/28 passed.
+
+Zero browser/engine errors. Verified actual native approval menu, real pointer paint/fill/erase, keyboard undo/redo, exact save/reload with approvals, unchanged normal save slot, all 20 pair/triple examples, shared corners, movement and black editor. Live review screenshot visually inspected. JSON records contain exact UTC completion times; evidence is in docs/visuals/smart-terrain/live/. Windows Chromium only; no claim of Safari/mobile coverage.
+
+#262 closed as merged through ancestry; #264 remains separate. No outstanding implementation or deployment work. Existing documented limitations remain. This follow-up changes documentation/evidence only. Live deployment: not applicable to this follow-up because runtime bytes are unchanged and the integrated runtime was verified above.
+
+Documentation follow-up checks before commit: validate_orders.py passed; validate_godot_project.py --project . --json-out ../proof-project.json passed with 0 errors / 0 warnings; git diff --check passed. Packaged both live result JSON files were parsed and every check asserted true with empty errors before copying. Converted the pre-existing Windows-encoded order/report to UTF-8.

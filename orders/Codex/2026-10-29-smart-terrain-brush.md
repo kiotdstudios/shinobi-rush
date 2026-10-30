@@ -1,7 +1,7 @@
-# ORDER — Smart Terrain Brush and Tile Family Detection
+# ORDER â€” Smart Terrain Brush and Tile Family Detection
 - Agent: Codex
 - Owner: Codex, explicitly assigned by owner in this chat
-- Status: REVIEW
+- Status: DONE
 - Priority: P1
 - Branch/PR: codex/smart-terrain-brush
 - Dependencies: merged #245/#251
@@ -29,3 +29,6 @@ Four-material diamonds retain the existing documented fallback. Approved materia
 
 ## Current-base integration
 Merged main e63b8bc (#263) locally; preserved its shared-map policy and both serialization fields. Before merge commit: 84 integration native checks, 13 browser checks, fresh export and 448/30/2 resource checks pass. Current-base CI pending.
+
+## Completed integration and live verification
+PR https://github.com/kiotdstudios/shinobi-rush/pull/265 merged as 4f84ff39c9bdae55b7c9c5ceaa99e24fbbf750d6. Main CI https://github.com/kiotdstudios/shinobi-rush/actions/runs/40975744375 passed all 5,252 native assertions, deployment and post-deploy smoke. Canonical exact-build browser verification: 14 Smart Brush + 28 existing blending checks, zero errors. See report and docs/visuals/smart-terrain/live/. Final evidence update is documentation-only; live deployment not applicable to the update.
