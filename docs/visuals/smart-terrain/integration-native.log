@@ -1,0 +1,87 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS smart: registry groups pure materials
+PASS smart: pure bank metadata keeps brown dirt distinct from path
+PASS smart: water registry remains water
+PASS smart: mixed corners require approval
+PASS smart: explicit override precedes metadata
+PASS smart: rejection preserves manual mode
+PASS smart: objects never become terrain
+PASS smart: native diamond features match exactly
+PASS smart: different colors rank lower
+PASS smart: edge bands distinguish mirrored equal-average tiles
+PASS smart: incompatible canvas rejected
+PASS smart: transparent images rejected
+PASS smart: actual pixel self match grass
+PASS smart: actual pixel self match ground
+PASS smart: actual pixel self match dirt
+PASS smart: actual pixel self match temple
+PASS smart: actual pixel self match rock
+PASS smart: tall-grass palette keeps existing paint behavior (enabled=false)
+PASS smart: tall-grass palette keeps existing paint behavior (enabled=true)
+PASS smart: validate override inputs
+PASS smart: approval undo
+PASS smart: approval redo
+PASS smart: paint from selected tile
+PASS smart: selected tile creates managed ownership
+PASS smart: finite connected fill
+PASS smart: fill one undo
+PASS smart: fill exact redo
+PASS smart: erase and undo restore exact tile positions and ownership
+PASS smart: save
+PASS smart: exact reload preserves approval and published revision
+PASS smart: reloaded approval drives auto tiler
+PASS smart: manual choice preserves raw tile and pins it
+PASS smart: flood respects manual lock
+PASS smart: empty fill is bounded no-op
+PASS smart: review dialog does not approve automatically
+PASS publish: a successful commit (exit 0) is not done yet -- the caller still pushes
+PASS publish: 'nothing to commit' is a benign no-op, not a failure, and ends the publish
+PASS publish: 'nothing added' (untracked-only) is also treated as a benign no-op
+PASS publish: a real commit failure is reported as failed and done (does not proceed to push)
+PASS publish: a long git error message is truncated so the flash banner stays readable
+PASS publish: a successful push reports the object count
+PASS publish: a rejected push (e.g. protected branch) is reported as a plain failure, not retried or force-pushed
+PASS publish: publish_to_github() exists
+PASS publish: publish_to_github()'s very first check is the Web-export gate (OS.has_feature("web") -> return false)
+PASS publish: the PUBLISH button is only created inside a `not OS.has_feature("web")` guard (never exists at all on Web, not just hidden)
+PASS publish: git add is never called with -A or a bare '.' anywhere in this file (must stay scoped to the one layout file)
+PASS publish: repo slug from an https origin
+PASS publish: repo slug from an ssh origin
+PASS publish: a non-GitHub origin has no slug
+PASS publish: each publish gets its own builder/layout-<timestamp> branch, never main builder/layout-19700101-000000
+PASS publish: the PR url is the last https /pull/ line gh prints
+PASS publish: a failed gh pr create yields no url
+PASS publish: auto-merge on reports the PR and that it merges itself after CI
+PASS publish: auto-merge refused still counts (the PR is open) and says to merge it by hand
+PASS publish: main scene has a usable PlacedObjects
+PASS publish: load_default_from_repo() on a missing file returns 0 (normal case: nothing published yet)
+PASS publish: load_default_from_repo() loads a valid published layout from the given path 1
+PASS publish: load_default_from_repo() on well-formed JSON of the wrong shape (not a Dictionary) returns 0 instead of crashing
+PASS publish: load_default_from_repo() on an empty-items published layout returns 0 (keeps defaults, same rule as load_saved())
+PASS publish flow: a clean run succeeds
+PASS publish flow: the layout is built in a throwaway worktree cut from a fresh origin/main
+PASS publish flow: the committed file is the current layout
+PASS publish flow: the commit runs inside the worktree, scoped to the one layout file
+PASS publish flow: pushes only its own builder/layout-* branch, never main, never forced
+PASS publish flow: opens a PR into main after the push
+PASS publish flow: turns on auto-merge for that PR
+PASS publish flow: cleans up the worktree after
+PASS publish flow: the status note names the PR and stays up long enough to read PUBLISHED  376 objects -> https://github.com/kiotdstudios/shinobi-rush/pull/999 (merges itself when CI passes, live ~10 min later)
+PASS publish flow: the builder's own checkout is never written to
+PASS publish flow: an unchanged layout is a clean no-op (no push, no PR)
+PASS publish flow: a failed 'fetch' reports failure and goes no further PUBLISH FAILED (fetch): boom
+PASS publish flow: a failed 'worktree add' reports failure and goes no further PUBLISH FAILED (worktree): boom
+PASS publish flow: a failed 'push -u' reports failure and goes no further PUBLISH FAILED (push): boom
+PASS publish flow: a failed 'push -u' still removes the worktree
+PASS publish flow: a failed 'pr create' reports failure and goes no further PUBLISH: pushed builder/layout-20261029-232706 but the PR failed: boom
+PASS publish flow: a failed 'pr create' still removes the worktree
+PASS sync: with nothing published the local save loads
+PASS sync: a published layout has a fingerprint
+PASS sync: a local save not based on it is set aside (load_saved returns 0)
+PASS sync: the set-aside copy is kept
+PASS sync: the published layout then loads
+PASS sync: saving records the published fingerprint
+PASS sync: a save built on the current published layout is kept, not replaced
+PASS sync: a newer publish supersedes that save too
+SUMMARY: 84 passed, 0 failed

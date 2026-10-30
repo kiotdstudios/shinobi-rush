@@ -1,0 +1,38 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS smart: registry groups pure materials
+PASS smart: pure bank metadata keeps brown dirt distinct from path
+PASS smart: water registry remains water
+PASS smart: mixed corners require approval
+PASS smart: explicit override precedes metadata
+PASS smart: rejection preserves manual mode
+PASS smart: objects never become terrain
+PASS smart: native diamond features match exactly
+PASS smart: different colors rank lower
+PASS smart: edge bands distinguish mirrored equal-average tiles
+PASS smart: incompatible canvas rejected
+PASS smart: transparent images rejected
+PASS smart: actual pixel self match grass
+PASS smart: actual pixel self match ground
+PASS smart: actual pixel self match dirt
+PASS smart: actual pixel self match temple
+PASS smart: actual pixel self match rock
+PASS smart: tall-grass palette keeps existing paint behavior (enabled=false)
+PASS smart: tall-grass palette keeps existing paint behavior (enabled=true)
+PASS smart: validate override inputs
+PASS smart: approval undo
+PASS smart: approval redo
+PASS smart: paint from selected tile
+PASS smart: selected tile creates managed ownership
+PASS smart: finite connected fill
+PASS smart: fill one undo
+PASS smart: fill exact redo
+PASS smart: erase and undo restore exact tile positions and ownership
+PASS smart: save
+PASS smart: exact save reload
+PASS smart: reloaded approval drives auto tiler
+PASS smart: manual choice preserves raw tile and pins it
+PASS smart: flood respects manual lock
+PASS smart: empty fill is bounded no-op
+PASS smart: review dialog does not approve automatically
+SUMMARY: 35 passed, 0 failed

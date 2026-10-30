@@ -67,3 +67,7 @@ Command: `node docs/visuals/purple-lilies/browser-proof.mjs --url https://kiotds
 [Open editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&foliage=1&v=5a689112) · [Live editor](../../../docs/visuals/purple-lilies/live/editor.png) · [Contact](../../../docs/visuals/purple-lilies/live/contact.png) · [Settled](../../../docs/visuals/purple-lilies/live/settled.png) · [Live results](../../../docs/visuals/purple-lilies/live/result.json) · [Deployment evidence](../../../docs/visuals/purple-lilies/deployment-checks.json).
 
 Coordination: a separate owner-assigned Smart Terrain Brush task is working from this integrated SHA in another checkout. This follow-up changes only reports/evidence; no further terrain/editor implementation edits are being made here.
+
+## Report integration refresh
+
+After Smart Terrain Brush PR265 integrated as `4f84ff39c9bdae55b7c9c5ceaa99e24fbbf750d6` and its owner reported canonical verification, refreshed report PR264 onto that current main. No conflicts. The PR diff remains documentation/evidence only; runtime content is identical to current main. Re-ran orders validation, relative documentation links, evidence JSON parsing and whitespace checks before the merge commit. Earlier live results above identify the exact foliage revision tested; they are not relabeled as tests of the newer brush build. PR264 uses the normal required-check workflow.

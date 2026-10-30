@@ -27,6 +27,7 @@ func run(p_ck: Callable, tree_root: Node) -> void:
 	_test_pr_helpers()
 	await _test_load_default_from_repo(tree_root)
 	await _test_publish_flow(tree_root)
+	await _test_published_layout_wins(tree_root)
 
 
 func _test_commit_outcome() -> void:
@@ -199,3 +200,58 @@ func _find(calls: Array, needle: String, after := -1) -> int:
 		if " ".join(calls[i][1]).contains(needle):
 			return i
 	return -1
+
+
+## Two laptops, one map: a local save not built on the current published layout is replaced by it (and kept
+## aside), a save built on it stays, and with no published layout the local save is untouched.
+func _test_published_layout_wins(tree_root: Node) -> void:
+	AncientShrineSection.enabled = false
+	var main := (load("res://scenes/main.tscn") as PackedScene).instantiate()
+	tree_root.add_child(main)
+	for i in 8:
+		await main.get_tree().physics_frame
+	var placed := (main.get_node("TrainingArena") as TrainingArena).placed
+	var local_path := "user://test_sync_local.json"
+	var pub_path := "user://test_sync_published.json"
+	for pth in [local_path, pub_path]:
+		if FileAccess.file_exists(pth):
+			DirAccess.remove_absolute(pth)
+	placed.save_path = local_path
+	placed.autosave = false
+	placed.published_path = pub_path
+
+	var local := {"version": 7, "items": [{"id": "tree_1", "x": -500.0, "y": 300.0}]}
+	_write(local_path, local)
+	ck.call("sync: with nothing published the local save loads", placed.load_saved() == 1 and placed.published_rev == "")
+
+	_write(pub_path, {"version": 7, "items": [{"id": "tree_1", "x": -500.0, "y": 300.0}, {"id": "tree_2", "x": 500.0, "y": 300.0}]})
+	var rev := placed.repo_layout_rev(pub_path)
+	ck.call("sync: a published layout has a fingerprint", rev != "")
+	ck.call("sync: a local save not based on it is set aside (load_saved returns 0)", placed.load_saved() == 0)
+	ck.call("sync: the set-aside copy is kept", _superseded_copy_exists())
+	ck.call("sync: the published layout then loads", placed.load_default_from_repo() == 2 and placed.published_rev == rev)
+	ck.call("sync: saving records the published fingerprint", placed.to_dict().get("published_rev", "") == rev)
+
+	placed.save()
+	ck.call("sync: a save built on the current published layout is kept, not replaced", placed.load_saved() == 2 and placed.published_rev == rev)
+
+	_write(pub_path, {"version": 7, "items": [{"id": "tree_3", "x": 0.0, "y": 300.0}]})
+	ck.call("sync: a newer publish supersedes that save too", placed.load_saved() == 0 and placed.load_default_from_repo() == 1)
+
+	MapEditorMode.forced = false
+	main.queue_free()
+	await main.get_tree().process_frame
+
+
+func _write(path: String, data: Dictionary) -> void:
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string(JSON.stringify(data))
+	f.close()
+
+
+func _superseded_copy_exists() -> bool:
+	var dir := DirAccess.open("user://")
+	for n in dir.get_files():
+		if n.begins_with("world_layout.superseded_"):
+			return true
+	return false

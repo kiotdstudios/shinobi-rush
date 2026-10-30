@@ -1,0 +1,59 @@
+{
+  "checks": [
+    {
+      "name": "smart brush selects ambiguous tile without assignment",
+      "ok": true
+    },
+    {
+      "name": "review requires explicit approval",
+      "ok": true
+    },
+    {
+      "name": "pixel suggestions include dirt",
+      "ok": true
+    },
+    {
+      "name": "manual family approval applied",
+      "ok": true
+    },
+    {
+      "name": "real pointer smart-paints approved material",
+      "ok": true
+    },
+    {
+      "name": "real keyboard undo restores original ownership",
+      "ok": true
+    },
+    {
+      "name": "real keyboard redo restores smart paint",
+      "ok": true
+    },
+    {
+      "name": "connected fill remains bounded",
+      "ok": true
+    },
+    {
+      "name": "exact undo redo save reload with approvals",
+      "ok": true
+    },
+    {
+      "name": "pointer erase removes selected floor",
+      "ok": true
+    },
+    {
+      "name": "erase undo restores floor",
+      "ok": true
+    },
+    {
+      "name": "normal saved world remains unchanged",
+      "ok": true
+    },
+    {
+      "name": "zero engine/browser errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "utc": "2026-10-29T23:29:49.412Z"
+}
