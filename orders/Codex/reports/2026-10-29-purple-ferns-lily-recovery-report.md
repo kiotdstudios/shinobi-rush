@@ -2,8 +2,8 @@
 - Agent: Codex
 - Date: 2026-10-29 (America/New_York)
 - Order: `orders/Codex/2026-10-29-purple-ferns-lily-recovery.md`
-- Final status: REVIEW — local acceptance passed; integration/live verification pending
-- Commit / PR: Not committed yet; this report precedes the implementation commit.
+- Final status: DONE — integrated and verified on the canonical live build
+- Commit / PR: Implementation `8b5e57a28759426f1b23b760fd152c58168d85b6`, [PR261](https://github.com/kiotdstudios/shinobi-rush/pull/261); merged as `5a689112e7ce8c14444cd83ec412348b2dc8cd07`. Initial report preceded the implementation commit.
 
 ## Work completed
 
@@ -45,6 +45,29 @@ The recovery test initially assumed zero frog rolls despite a valid wet visit; c
 None.
 
 ## Outstanding work / next steps
-Complete reviewed PR/CI and main deployment; run exact canonical build feature checks and update this report with SHAs, workflow, live evidence and completion status. The new variant/recovery is NOT LIVE until that sequence succeeds.
+None for this delivery. Completion evidence is a report-only follow-up; Live deployment: not applicable to that follow-up because it changes documentation/evidence only. Runtime PR261 is deployed and verified below.
 
 Preview recording before commit: `node docs/visuals/purple-lilies/capture-preview.mjs ../purple-lilies-web build/purple-lilies/preview` passed with zero console/page errors. Actual Normal (5s) and Half (8.5s) segments were cropped with nearest-neighbor display scaling and exported as GIF/MP4. Screenshots visually inspected.
+
+
+## Reviewed integration
+
+All PR261 checks passed: **5,209 native assertions /0 failed**,446 scripts /30 scenes /2 resources /0 load failures, Web export, pre-deploy browser smoke, repository validation and final gate. No review threads remained. Normal squash merge used the exact expected head SHA; `git diff --exit-code HEAD origin/main` immediately after fetch confirmed identical tested/integrated content.
+
+- [PR CI](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40936827950)
+- [Durable PR check evidence](../../../docs/visuals/purple-lilies/pr-checks.json)
+- [Main deployment workflow](https://github.com/kiotdstudios/shinobi-rush/actions/runs/40939001761) — **success**, including deploy, post-deploy smoke and final gate.
+
+## Exact canonical live verification
+
+Verified at 2026-10-29T19:35:39.574Z against merged runtime `5a689112e7ce8c14444cd83ec412348b2dc8cd07`. Main repeated **5,209 native assertions /0 failures** and passed the full deployment pipeline.
+
+Command: `node docs/visuals/purple-lilies/browser-proof.mjs --url https://kiotdstudios.github.io/shinobi-rush/ --expected-sha 5a689112e7ce8c14444cd83ec412348b2dc8cd07 --out-dir build/purple-lilies/live`. **16 PASS /zero browser or engine errors**. Real editor clicks confirmed all existing/new ferns purple and vines unchanged. Real movement disturbed several pads at varied rates; they settled while still wet and after dry exit, with normal chakra cost, stable anchors, bounded repeated reactions and unchanged rarity/pool. Live editor and settled screenshots were visually inspected.
+
+[Open editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&foliage=1&v=5a689112) · [Live editor](../../../docs/visuals/purple-lilies/live/editor.png) · [Contact](../../../docs/visuals/purple-lilies/live/contact.png) · [Settled](../../../docs/visuals/purple-lilies/live/settled.png) · [Live results](../../../docs/visuals/purple-lilies/live/result.json) · [Deployment evidence](../../../docs/visuals/purple-lilies/deployment-checks.json).
+
+Coordination: a separate owner-assigned Smart Terrain Brush task is working from this integrated SHA in another checkout. This follow-up changes only reports/evidence; no further terrain/editor implementation edits are being made here.
+
+## Report integration refresh
+
+After Smart Terrain Brush PR265 integrated as `4f84ff39c9bdae55b7c9c5ceaa99e24fbbf750d6` and its owner reported canonical verification, refreshed report PR264 onto that current main. No conflicts. The PR diff remains documentation/evidence only; runtime content is identical to current main. Re-ran orders validation, relative documentation links, evidence JSON parsing and whitespace checks before the merge commit. Earlier live results above identify the exact foliage revision tested; they are not relabeled as tests of the newer brush build. PR264 uses the normal required-check workflow.

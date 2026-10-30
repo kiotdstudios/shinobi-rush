@@ -1,6 +1,8 @@
 # Blightwood hanging vines and fern clusters
 
-**Live:** [Open the foliage editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&foliage=1&v=aeb59681). Verified `aeb5968179b94f15b7f4c72761f1ee0a561d07c1` at 2026-10-29T15:26:49.821Z: 14 actual live checks passed, zero errors. [Live editor](live/editor.png) · [Live waterfall](live/cliff-detail.png) · [Live result](live/result.json) · [Deployment checks](deployment-checks.json).
+**Current live purple revision:** [Open the foliage editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&foliage=1&v=5a689112). Runtime `5a689112e7ce8c14444cd83ec412348b2dc8cd07` verified 2026-10-29T19:35:39.574Z; 16 live checks pass with zero errors, main deployment/post-deploy smoke green. [Purple editor](../purple-lilies/live/editor.png) · [Completion evidence](../purple-lilies/README.md).
+
+**Original green-fern baseline:** [Open the foliage editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&foliage=1&v=aeb59681). Verified `aeb5968179b94f15b7f4c72761f1ee0a561d07c1` at 2026-10-29T15:26:49.821Z: 14 actual live checks passed, zero errors. [Live editor](live/editor.png) · [Live waterfall](live/cliff-detail.png) · [Live result](live/result.json) · [Deployment checks](deployment-checks.json).
 
 Three hanging ivy silhouettes and three small fern clusters generated in PixelLab, using the exact opaque palette sampled from existing `grass9_center.png`. Transparent 128×128 native canvases; nearest-neighbor reduction and fixed alignment only. Raw sources, selected PixelLab object IDs and hashes are retained in `assets/environment/blightwood_foliage/source/` and `foliage.art.json`.
 

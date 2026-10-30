@@ -1,6 +1,8 @@
 # Purple ferns and water-plant recovery
 
-Status: REVIEW — local/native/Web checks pass; reviewed integration and canonical verification pending.
+Status: DONE — [PR261](https://github.com/kiotdstudios/shinobi-rush/pull/261) merged and canonical runtime `5a689112e7ce8c14444cd83ec412348b2dc8cd07` verified 2026-10-29T19:35:39.574Z. Main passed 5,209 native assertions, deployment and post-deploy smoke. **16 live feature checks pass, zero errors**.
+
+[Open foliage editor](https://kiotdstudios.github.io/shinobi-rush/?cliffs=river&map_editor=1&foliage=1&v=5a689112) · [Live editor](live/editor.png) · [Live contact](live/contact.png) · [Settled on water](live/settled.png) · [Live results](live/result.json) · [Deployment checks](deployment-checks.json).
 
 Three existing fern silhouettes now use the editable native Godot tint `#d27dff`. Production PNGs and PixelLab sources are unchanged; no bitmap regeneration or extra generation charge. Vines keep their original colors. The same manifest setting colors runtime sprites, editor cards, placement ghosts and copied stamps. Anchors, picking, transparent pixels and 96-phase sway are preserved.
 
